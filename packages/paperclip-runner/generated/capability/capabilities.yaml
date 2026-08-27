@@ -4,8 +4,8 @@
     {
       "id": "skill:skills/paperclip/SKILL.md:10",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/SKILL.md#L10:paperclip-skill",
-      "heading": "Paperclip Skill",
+      "sourceAnchor": "skills/paperclip/SKILL.md#L10:thinkingmach-skill",
+      "heading": "ThinkingMach Skill",
       "primaryDisposition": "optional_agent_tool",
       "semanticOperation": "scoped_discovery",
       "expectedMockState": "operation_result"
@@ -256,8 +256,8 @@
     {
       "id": "skill:skills/paperclip/references/api-reference.md:1",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/api-reference.md#L1:paperclip-api-reference",
-      "heading": "Paperclip API Reference",
+      "sourceAnchor": "skills/paperclip/references/api-reference.md#L1:thinkingmach-api-reference",
+      "heading": "ThinkingMach API Reference",
       "primaryDisposition": "optional_agent_tool",
       "semanticOperation": "scoped_discovery",
       "expectedMockState": "operation_result"
@@ -562,8 +562,8 @@
     {
       "id": "skill:skills/paperclip/references/api-reference.md:619",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/api-reference.md#L619:load-tests-depend-on-caching-layer-being-done-first-paperclip-will-auto-wake-agent-55-when-the-blocker-resolves",
-      "heading": "^ Load tests depend on caching layer being done first. Paperclip will auto-wake agent-55 when the blocker resolves.",
+      "sourceAnchor": "skills/paperclip/references/api-reference.md#L619:load-tests-depend-on-caching-layer-being-done-first-thinkingmach-will-auto-wake-agent-55-when-the-blocker-resolves",
+      "heading": "^ Load tests depend on caching layer being done first. ThinkingMach will auto-wake agent-55 when the blocker resolves.",
       "primaryDisposition": "control_plane_owned",
       "semanticOperation": "runtime_reconciliation",
       "expectedMockState": "runtime_decision_record"
@@ -1192,8 +1192,8 @@
     {
       "id": "skill:skills/paperclip/references/routines.md:1",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/routines.md#L1:paperclip-routines",
-      "heading": "Paperclip Routines",
+      "sourceAnchor": "skills/paperclip/references/routines.md#L1:thinkingmach-routines",
+      "heading": "ThinkingMach Routines",
       "primaryDisposition": "optional_agent_tool",
       "semanticOperation": "scoped_discovery",
       "expectedMockState": "operation_result"
@@ -1327,8 +1327,8 @@
     {
       "id": "skill:skills/paperclip/references/workflows.md:1",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/workflows.md#L1:paperclip-workflow-playbooks",
-      "heading": "Paperclip Workflow Playbooks",
+      "sourceAnchor": "skills/paperclip/references/workflows.md#L1:thinkingmach-workflow-playbooks",
+      "heading": "ThinkingMach Workflow Playbooks",
       "primaryDisposition": "control_plane_owned",
       "semanticOperation": "runtime_reconciliation",
       "expectedMockState": "runtime_decision_record"

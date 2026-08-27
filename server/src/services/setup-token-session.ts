@@ -33,9 +33,9 @@
 
 import { randomBytes } from "node:crypto";
 import { and, eq, gt, inArray, isNotNull, isNull, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { adapterAuthSessions } from "@paperclipai/db";
-import type { AgentAdapterType } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { adapterAuthSessions } from "@thinkingmach/db";
+import type { AgentAdapterType } from "@thinkingmach/shared";
 
 // The setup-token login flow supports only the `claude_local` adapter. The
 // unified `adapter_auth_sessions` table also holds the Codex device-login rows,

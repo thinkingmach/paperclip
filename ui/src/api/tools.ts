@@ -67,7 +67,7 @@ import type {
   ConnectionGrantsResponse,
   ToolConnectionCreateCapabilities,
   ToolAppMetadataPreflightResult,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { api } from "./client";
 
 /**

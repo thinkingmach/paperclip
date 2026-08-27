@@ -149,10 +149,10 @@ describe("instance database backup routes", () => {
 
   describe("cloud-managed floor", () => {
     beforeEach(() => {
-      process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
+      process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
     });
     afterEach(() => {
-      delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
+      delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
     });
 
     it("floors the manual trigger off for every instance admin on a cloud-managed instance", async () => {

@@ -24,7 +24,7 @@ function renderRunner(config: Record<string, unknown>): string {
   );
 }
 
-describe("Paperclip Runner Codex configuration", () => {
+describe("ThinkingMach Runner Codex configuration", () => {
   it("exposes all qualified provider choices", () => {
     const html = renderRunner({ provider: "codex" });
 
@@ -78,7 +78,7 @@ describe("Paperclip Runner Codex configuration", () => {
     const html = renderRunner({ codexPermissionMode: "unrestricted" });
 
     expect(html).toContain('value="__unsupported__" disabled="" selected=""');
-    expect(html).toContain("cannot start or recover a Paperclip Runner run");
+    expect(html).toContain("cannot start or recover a ThinkingMach Runner run");
     expect(html).toContain("Select Automatic (isolated) to remediate it");
     expect(html).not.toContain("Full auto (never ask)");
   });

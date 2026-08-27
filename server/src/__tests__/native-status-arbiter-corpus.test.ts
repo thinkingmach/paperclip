@@ -20,7 +20,7 @@ import {
   statusDecisions,
   workAssessments,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { NativeEvidenceAssessment } from "../services/native-runtime/evidence-classifier.js";
 import { classifyNativeEvidence } from "../services/native-runtime/evidence-classifier.js";
 import {

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   DEFAULT_GITHUB_TOKEN_SECRET_NAMES,
   GIT_CREDENTIAL_TOKEN_ENV_KEY,
@@ -51,7 +51,7 @@ describe("createGitRemoteAuthProvider", () => {
   const githubUrl = "https://github.com/example/repo.git";
 
   it("prefers company secrets in declared order", async () => {
-    const secrets = buildSecretsFake({ GH_TOKEN: "gh-token", PAPERCLIP_GITHUB_TOKEN: "pc-token" });
+    const secrets = buildSecretsFake({ GH_TOKEN: "gh-token", THINKINGMACH_GITHUB_TOKEN: "pc-token" });
     const provider = createGitRemoteAuthProvider(fakeDb, "company-1", undefined, {
       secrets,
       env: { GITHUB_TOKEN: "env-token" },
@@ -288,7 +288,7 @@ describe("DEFAULT_GITHUB_TOKEN_SECRET_NAMES", () => {
     expect([...DEFAULT_GITHUB_TOKEN_SECRET_NAMES]).toEqual([
       "GITHUB_TOKEN",
       "GH_TOKEN",
-      "PAPERCLIP_GITHUB_TOKEN",
+      "THINKINGMACH_GITHUB_TOKEN",
     ]);
   });
 });

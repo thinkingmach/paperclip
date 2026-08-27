@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { and, desc, eq, inArray } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { toolAccessAuditEvents, toolRuntimeSlots } from "@paperclipai/db";
-import type { DeploymentExposure, DeploymentMode, ToolRuntimeSlotStatus } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { toolAccessAuditEvents, toolRuntimeSlots } from "@thinkingmach/db";
+import type { DeploymentExposure, DeploymentMode, ToolRuntimeSlotStatus } from "@thinkingmach/shared";
 import { logActivity } from "./activity-log.js";
 
 const ACTIVE_SLOT_STATUSES: ToolRuntimeSlotStatus[] = ["starting", "running", "idle"];
@@ -134,8 +134,8 @@ export function createToolRuntimeSupervisor(db: Db, options: ToolRuntimeSupervis
   const deploymentExposure = options.deploymentExposure ?? "private";
   const trustedLocalStdioRuntimeHost =
     options.trustedLocalStdioRuntimeHost
-    ?? process.env.PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST
-    ?? process.env.PAPERCLIP_TOOL_RUNTIME_TRUSTED_HOST
+    ?? process.env.THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST
+    ?? process.env.THINKINGMACH_TOOL_RUNTIME_TRUSTED_HOST
     ?? null;
   const hostId = options.hostId ?? trustedLocalStdioRuntimeHost ?? process.env.HOSTNAME ?? "local-host";
   const idleTtlMs = numberOption(options.idleTtlMs, DEFAULT_IDLE_TTL_MS, 1);

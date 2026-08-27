@@ -2,7 +2,7 @@
 
 import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
-import type { CompanySecret, EnvBinding, UserSecretDefinition } from "@paperclipai/shared";
+import type { CompanySecret, EnvBinding, UserSecretDefinition } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EnvironmentVariablesEditor } from "./environment-variables-editor";
 

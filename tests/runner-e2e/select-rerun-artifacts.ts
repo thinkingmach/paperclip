@@ -306,18 +306,18 @@ async function main() {
     return value;
   };
   const expected = JSON.parse(
-    required("PAPERCLIP_RUNNER_E2E_EXPECTED_IDS"),
+    required("THINKINGMACH_RUNNER_E2E_EXPECTED_IDS"),
   ) as unknown;
   if (
     !Array.isArray(expected) ||
     expected.some((value) => typeof value !== "string")
   ) {
     throw new Error(
-      "PAPERCLIP_RUNNER_E2E_EXPECTED_IDS must be a JSON string array",
+      "THINKINGMACH_RUNNER_E2E_EXPECTED_IDS must be a JSON string array",
     );
   }
   const jobs = JSON.parse(
-    await readFile(required("PAPERCLIP_RUNNER_E2E_JOBS_JSON"), "utf8"),
+    await readFile(required("THINKINGMACH_RUNNER_E2E_JOBS_JSON"), "utf8"),
   ) as WorkflowJobsResponse;
   if (!jobs || !Array.isArray(jobs.jobs) || !Array.isArray(jobs.attempts)) {
     throw new Error("workflow jobs JSON must contain jobs and attempts arrays");
@@ -326,14 +326,14 @@ async function main() {
   const serverUrl = required("GITHUB_SERVER_URL");
   const repository = required("GITHUB_REPOSITORY");
   const selections = await selectRerunArtifacts({
-    artifactRoot: required("PAPERCLIP_RUNNER_E2E_ARTIFACT_ROOT"),
-    selectedRoot: required("PAPERCLIP_RUNNER_E2E_SELECTED_ROOT"),
+    artifactRoot: required("THINKINGMACH_RUNNER_E2E_ARTIFACT_ROOT"),
+    selectedRoot: required("THINKINGMACH_RUNNER_E2E_SELECTED_ROOT"),
     jobs,
     expectedExecutionIds: expected,
     workflowRunId: runId,
     workflowRunAttempt: Number(required("GITHUB_RUN_ATTEMPT")),
-    sourceSha: required("PAPERCLIP_RUNNER_E2E_SOURCE_SHA"),
-    sourceRef: required("PAPERCLIP_RUNNER_E2E_SOURCE_REF"),
+    sourceSha: required("THINKINGMACH_RUNNER_E2E_SOURCE_SHA"),
+    sourceRef: required("THINKINGMACH_RUNNER_E2E_SOURCE_REF"),
     workflowRunUrl: `${serverUrl}/${repository}/actions/runs/${runId}`,
   });
   console.log(

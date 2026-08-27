@@ -4,7 +4,7 @@ import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import type { ToolMcpGatewayToken, ToolMcpGatewayWithTokens } from "@paperclipai/shared";
+import type { ToolMcpGatewayToken, ToolMcpGatewayWithTokens } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TokensPanel } from "./TokensPanel";
 

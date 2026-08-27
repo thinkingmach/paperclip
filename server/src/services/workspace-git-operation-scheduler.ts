@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
-import { setExpensiveWorkspaceGitExecutor } from "@paperclipai/adapter-utils/git-workspace-sync";
+import { setExpensiveWorkspaceGitExecutor } from "@thinkingmach/adapter-utils/git-workspace-sync";
 import { HttpError } from "../errors.js";
 import { logger } from "../middleware/logger.js";
 
@@ -204,10 +204,10 @@ export function workspaceGitSchedulerOptionsFromEnv(
   "concurrency" | "queueCapacity" | "timeoutMs" | "defaultCacheTtlMs"
 >> {
   return {
-    concurrency: envInteger(env, "PAPERCLIP_WORKSPACE_GIT_SCAN_CONCURRENCY", DEFAULT_CONCURRENCY, 1, 16),
-    queueCapacity: envInteger(env, "PAPERCLIP_WORKSPACE_GIT_SCAN_QUEUE_CAPACITY", DEFAULT_QUEUE_CAPACITY, 0, 1_024),
-    timeoutMs: envInteger(env, "PAPERCLIP_WORKSPACE_GIT_SCAN_TIMEOUT_MS", DEFAULT_TIMEOUT_MS, 100, 120_000),
-    defaultCacheTtlMs: envInteger(env, "PAPERCLIP_WORKSPACE_GIT_SCAN_CACHE_TTL_MS", DEFAULT_CACHE_TTL_MS, 0, 60_000),
+    concurrency: envInteger(env, "THINKINGMACH_WORKSPACE_GIT_SCAN_CONCURRENCY", DEFAULT_CONCURRENCY, 1, 16),
+    queueCapacity: envInteger(env, "THINKINGMACH_WORKSPACE_GIT_SCAN_QUEUE_CAPACITY", DEFAULT_QUEUE_CAPACITY, 0, 1_024),
+    timeoutMs: envInteger(env, "THINKINGMACH_WORKSPACE_GIT_SCAN_TIMEOUT_MS", DEFAULT_TIMEOUT_MS, 100, 120_000),
+    defaultCacheTtlMs: envInteger(env, "THINKINGMACH_WORKSPACE_GIT_SCAN_CACHE_TTL_MS", DEFAULT_CACHE_TTL_MS, 0, 60_000),
   };
 }
 

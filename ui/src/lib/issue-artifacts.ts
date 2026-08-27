@@ -1,5 +1,5 @@
-import type { IssueAttachment, IssueDocumentSummary, IssueWorkProduct } from "@paperclipai/shared";
-import { getAttachmentArtifactWorkProductMetadata } from "@paperclipai/shared";
+import type { IssueAttachment, IssueDocumentSummary, IssueWorkProduct } from "@thinkingmach/shared";
+import { getAttachmentArtifactWorkProductMetadata } from "@thinkingmach/shared";
 
 /**
  * Selectors for the properties pane's Artifacts tab (PAP-491): which
@@ -20,7 +20,7 @@ export function isAgentAttachment(
 }
 
 /**
- * Attachment ids owned by valid attachment-backed Paperclip work products.
+ * Attachment ids owned by valid attachment-backed ThinkingMach work products.
  * Unlike `getPromotedOutputAttachmentIds`, this includes document-like content
  * types (e.g. Markdown) that the binary Output surface intentionally excludes,
  * so it is the right dedupe set for the Artifacts tab's Files section.

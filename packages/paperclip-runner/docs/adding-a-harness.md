@@ -1,6 +1,6 @@
 # Adding a Harness
 
-Every Paperclip Runner harness must declare its permission behavior as part of
+Every ThinkingMach Runner harness must declare its permission behavior as part of
 the provider contract. A driver is not complete until its permission modes,
 maximum non-interactive default, durable request translation, recovery
 identity, isolation behavior, and conformance coverage are defined.
@@ -14,13 +14,13 @@ identity, isolation behavior, and conformance coverage are defined.
 | ACPX (Claude, Codex) | `acpxPermissionMode` | `approve-all`, `approve-reads`, `deny-all` | `approve-all` |
 
 The browser-safe source of truth for labels, defaults, and configuration
-validation is `PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES` in
-`@paperclipai/adapter-utils`. Native process boundaries validate the pinned
+validation is `THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES` in
+`@thinkingmach/adapter-utils`. Native process boundaries validate the pinned
 provider value again; they must not silently accept an unknown mode.
 
 “Full auto” means the harness does not pause for a duplicate approval inside
 the environment assigned to the run. It does not grant host-wide filesystem
-access, unrestricted network access, Paperclip credentials, or write access in
+access, unrestricted network access, ThinkingMach credentials, or write access in
 read-only planning mode. Workspace containment, protected-path and symlink
 checks, network policy, credential bindings, and authenticated PRP
 authorization remain authoritative and run before any harness auto-approval.
@@ -31,7 +31,7 @@ When adding or upgrading a harness:
 
 1. Declare the exact native modes supported by the provider. Choose the
    provider's highest non-interactive mode as the default for a fresh
-   Paperclip Runner execution.
+   ThinkingMach Runner execution.
 2. Add its labels, configuration key, options, and default to the shared
    provider-discriminated capability catalog. The agent form must show only
    the selected provider's setting and retain stored choices when the provider
@@ -43,13 +43,13 @@ When adding or upgrading a harness:
    lifecycle: emit one durable request, recover it after reconnect, accept
    allow-once, allow-for-session, deny, and cancellation where the provider
    supports them, and send exactly one provider-native resolution.
-5. Authorize Paperclip semantic and question tools through authenticated PRP.
+5. Authorize ThinkingMach semantic and question tools through authenticated PRP.
    These tools may bypass duplicate harness approval, but never their
    control-plane authorization.
 6. Emit the provider and effective permission mode in session-start
    diagnostics without including credentials or unredacted provider input.
 7. Keep standalone local adapters unchanged unless their own contract is
-   deliberately revised. Paperclip Runner defaults apply only to
+   deliberately revised. ThinkingMach Runner defaults apply only to
    `paperclip_runner` executions.
 
 ## Compatibility rules

@@ -24,7 +24,7 @@ describe("bridge exec", () => {
       command: "claude",
       args: ["--version"],
       cwd: "/workspace/paperclip",
-      env: { PAPERCLIP_TEST_FLAG: "1" },
+      env: { THINKINGMACH_TEST_FLAG: "1" },
       sessionStrategy: "named",
       sessionId: "paperclip",
       timeoutMs: 12_345,
@@ -43,7 +43,7 @@ describe("bridge exec", () => {
     expect(commandArg).not.toContain("NVM_DIR");
     expect(commandArg).toContain("cd ");
     expect(commandArg).toContain("/workspace/paperclip");
-    expect(commandArg).toContain("PAPERCLIP_TEST_FLAG");
+    expect(commandArg).toContain("THINKINGMACH_TEST_FLAG");
     expect(commandArg).toContain("claude");
     expect(commandArg).toContain("--version");
   });

@@ -9,11 +9,11 @@ another.
 
 | Actor | What it is in Capability | What it is **not** |
 | --- | --- | --- |
-| **Real Codex** | A real Codex app-server session driving the turn loop. The agent has no Paperclip skill; it sees only the semantic tools the scenario exposes. | Not a scripted stand-in, and not a Paperclip-aware agent. |
-| **Real runnerd** | The real package-local `paperclip-runnerd` binary. It owns the Codex child process group and proxies newline-delimited JSON-RPC over stdio. | Not an in-process fake and not the production Paperclip runtime. |
-| **Mock Paperclip** | The deterministic in-process `ControlPlanePort` adapter. It holds every issue, comment, document, interaction, approval, and audit record as mock state. | Not the Paperclip control plane, database, or API. No request leaves the process for a Paperclip service. |
+| **Real Codex** | A real Codex app-server session driving the turn loop. The agent has no ThinkingMach skill; it sees only the semantic tools the scenario exposes. | Not a scripted stand-in, and not a ThinkingMach-aware agent. |
+| **Real runnerd** | The real package-local `paperclip-runnerd` binary. It owns the Codex child process group and proxies newline-delimited JSON-RPC over stdio. | Not an in-process fake and not the production ThinkingMach runtime. |
+| **Mock ThinkingMach** | The deterministic in-process `ControlPlanePort` adapter. It holds every issue, comment, document, interaction, approval, and audit record as mock state. | Not the ThinkingMach control plane, database, or API. No request leaves the process for a ThinkingMach service. |
 
-The live surface renders a `Real Codex`, `Real runnerd`, and `Mock Paperclip`
+The live surface renders a `Real Codex`, `Real runnerd`, and `Mock ThinkingMach`
 marker at all times. Mock records carry an `MCK-` identifier prefix so a mock
 issue is never confused with a real `PAP-` issue.
 

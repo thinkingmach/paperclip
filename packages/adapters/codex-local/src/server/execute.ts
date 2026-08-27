@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { inferOpenAiCompatibleBiller, type AdapterExecutionContext, type AdapterExecutionResult } from "@paperclipai/adapter-utils";
+import { inferOpenAiCompatibleBiller, type AdapterExecutionContext, type AdapterExecutionResult } from "@thinkingmach/adapter-utils";
 import { buildCodexAuthInboundProvision } from "./codex-auth-merge-scripts.js";
 import { copyBackCodexAuth } from "./codex-auth-copyback.js";
 import {
@@ -16,7 +16,7 @@ import {
   overrideAdapterExecutionTargetRemoteCwd,
   adapterExecutionTargetSessionIdentity,
   adapterExecutionTargetSessionMatches,
-  adapterExecutionTargetUsesPaperclipBridge,
+  adapterExecutionTargetUsesThinkingMachBridge,
   describeAdapterExecutionTarget,
   ensureAdapterExecutionTargetCommandResolvable,
   ensureAdapterExecutionTargetRuntimeCommandInstalled,
@@ -28,35 +28,35 @@ import {
   resolveAdapterExecutionTargetCommandForLogs,
   runAdapterExecutionTargetProcess,
   runAdapterExecutionTargetShellCommand,
-  startAdapterExecutionTargetPaperclipBridge,
-} from "@paperclipai/adapter-utils/execution-target";
+  startAdapterExecutionTargetThinkingMachBridge,
+} from "@thinkingmach/adapter-utils/execution-target";
 import {
   asString,
   asNumber,
   parseObject,
-  buildPaperclipEnv,
+  buildThinkingMachEnv,
   buildInvocationEnvForLogs,
   ensureAbsoluteDirectory,
-  ensurePaperclipSkillSymlink,
+  ensureThinkingMachSkillSymlink,
   ensurePathInEnv,
-  refreshPaperclipWorkspaceEnvForExecution,
-  isPaperclipSkillSourceMissing,
-  readPaperclipRuntimeSkillEntries,
-  readPaperclipIssueWorkModeFromContext,
+  refreshThinkingMachWorkspaceEnvForExecution,
+  isThinkingMachSkillSourceMissing,
+  readThinkingMachRuntimeSkillEntries,
+  readThinkingMachIssueWorkModeFromContext,
   renderTemplate,
-  renderPaperclipWakePrompt,
-  isPaperclipRecoveryWakePayload,
-  stringifyPaperclipWakePayload,
-  DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+  renderThinkingMachWakePrompt,
+  isThinkingMachRecoveryWakePayload,
+  stringifyThinkingMachWakePayload,
+  DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   joinPromptSections,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 import {
   parseLocalProcessFilesystemScope,
   parseLocalProcessSandboxExtraPaths,
   parseLocalProcessNetworkAllowlist,
   parseLocalProcessNetworkScope,
   type LocalProcessSandboxOptions,
-} from "@paperclipai/adapter-utils/local-process-sandbox";
+} from "@thinkingmach/adapter-utils/local-process-sandbox";
 import {
   parseCodexJsonl,
   classifyCodexAuthRefreshFailure,
@@ -198,7 +198,7 @@ function resolveCodexBiller(env: Record<string, string>, billingType: "api" | "s
   return billingType === "subscription" ? "chatgpt" : openAiCompatibleBiller ?? "openai";
 }
 
-async function isLikelyPaperclipRepoRoot(candidate: string): Promise<boolean> {
+async function isLikelyThinkingMachRepoRoot(candidate: string): Promise<boolean> {
   const [hasWorkspace, hasPackageJson, hasServerDir, hasAdapterUtilsDir] = await Promise.all([
     pathExists(path.join(candidate, "pnpm-workspace.yaml")),
     pathExists(path.join(candidate, "package.json")),
@@ -209,7 +209,7 @@ async function isLikelyPaperclipRepoRoot(candidate: string): Promise<boolean> {
   return hasWorkspace && hasPackageJson && hasServerDir && hasAdapterUtilsDir;
 }
 
-async function isLikelyPaperclipRuntimeSkillPath(
+async function isLikelyThinkingMachRuntimeSkillPath(
   candidate: string,
   skillName: string,
   options: { requireSkillMarkdown?: boolean } = {},
@@ -223,7 +223,7 @@ async function isLikelyPaperclipRuntimeSkillPath(
 
   let cursor = path.dirname(skillsRoot);
   for (let depth = 0; depth < 6; depth += 1) {
-    if (await isLikelyPaperclipRepoRoot(cursor)) return true;
+    if (await isLikelyThinkingMachRepoRoot(cursor)) return true;
     const parent = path.dirname(cursor);
     if (parent === cursor) break;
     cursor = parent;
@@ -232,7 +232,7 @@ async function isLikelyPaperclipRuntimeSkillPath(
   return false;
 }
 
-async function pruneBrokenUnavailablePaperclipSkillSymlinks(
+async function pruneBrokenUnavailableThinkingMachSkillSymlinks(
   skillsHome: string,
   allowedSkillNames: Iterable<string>,
   onLog: AdapterExecutionContext["onLog"],
@@ -250,7 +250,7 @@ async function pruneBrokenUnavailablePaperclipSkillSymlinks(
     const resolvedLinkedPath = path.resolve(path.dirname(target), linkedPath);
     if (await pathExists(resolvedLinkedPath)) continue;
     if (
-      !(await isLikelyPaperclipRuntimeSkillPath(resolvedLinkedPath, entry.name, {
+      !(await isLikelyThinkingMachRuntimeSkillPath(resolvedLinkedPath, entry.name, {
         requireSkillMarkdown: false,
       }))
     ) {
@@ -485,7 +485,7 @@ function buildCodexTransientHandoffNote(input: {
   continuationSummaryBody: string | null;
 }): string {
   return [
-    "Paperclip session handoff:",
+    "ThinkingMach session handoff:",
     input.previousSessionId ? `- Previous session: ${input.previousSessionId}` : "",
     "- Rotation reason: repeated Codex transient remote-compaction failures",
     `- Fallback mode: ${input.fallbackMode}`,
@@ -503,8 +503,8 @@ export async function ensureCodexSkillsInjected(
   options: EnsureCodexSkillsInjectedOptions = {},
 ) {
   const allSkillsEntries = options.skillsEntries
-    ?? (await readPaperclipRuntimeSkillEntries({}, __moduleDir)).filter(
-      (entry) => !isPaperclipSkillSourceMissing(entry),
+    ?? (await readThinkingMachRuntimeSkillEntries({}, __moduleDir)).filter(
+      (entry) => !isThinkingMachSkillSourceMissing(entry),
     );
   const desiredSkillNames =
     options.desiredSkillNames ?? allSkillsEntries.map((entry) => entry.key);
@@ -528,7 +528,7 @@ export async function ensureCodexSkillsInjected(
         if (
           resolvedLinkedPath &&
           resolvedLinkedPath !== entry.source &&
-          (await isLikelyPaperclipRuntimeSkillPath(resolvedLinkedPath, entry.runtimeName))
+          (await isLikelyThinkingMachRuntimeSkillPath(resolvedLinkedPath, entry.runtimeName))
         ) {
           await fs.unlink(target);
           if (linkSkill) {
@@ -544,7 +544,7 @@ export async function ensureCodexSkillsInjected(
         }
       }
 
-      const result = await ensurePaperclipSkillSymlink(entry.source, target, linkSkill);
+      const result = await ensureThinkingMachSkillSymlink(entry.source, target, linkSkill);
       if (result === "skipped") continue;
 
       await onLog(
@@ -559,7 +559,7 @@ export async function ensureCodexSkillsInjected(
     }
   }
 
-  await pruneBrokenUnavailablePaperclipSkillSymlinks(
+  await pruneBrokenUnavailableThinkingMachSkillSymlinks(
     skillsHome,
     skillsEntries.map((entry) => entry.runtimeName),
     onLog,
@@ -588,7 +588,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
 
   const promptTemplate = asString(
     config.promptTemplate,
-    DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+    DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   );
   const command = asString(config.command, "codex");
   const model = asString(config.model, "");
@@ -636,9 +636,9 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     typeof envConfig.CODEX_HOME === "string" && envConfig.CODEX_HOME.trim().length > 0
       ? path.resolve(envConfig.CODEX_HOME.trim())
       : null;
-  const codexSkillEntries = (await readPaperclipRuntimeSkillEntries(config, __moduleDir))
+  const codexSkillEntries = (await readThinkingMachRuntimeSkillEntries(config, __moduleDir))
     // A missing-source entry would become a dangling skill symlink; skip it.
-    .filter((entry) => !isPaperclipSkillSourceMissing(entry));
+    .filter((entry) => !isThinkingMachSkillSourceMissing(entry));
   const desiredSkillNames = resolveCodexDesiredSkillNames(config, codexSkillEntries);
   if (!executionTargetIsRemote) {
     await ensureAbsoluteDirectory(cwd, { createIfMissing: true });
@@ -647,7 +647,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     typeof envConfig.OPENAI_API_KEY === "string" && envConfig.OPENAI_API_KEY.trim().length > 0
       ? envConfig.OPENAI_API_KEY.trim()
       : null;
-  // A configured CODEX_HOME that lives under the Paperclip-managed company tree
+  // A configured CODEX_HOME that lives under the ThinkingMach-managed company tree
   // (the per-agent home set by the server isolation guard) still needs auth
   // seeded — it ships with no credentials and OPENAI_API_KEY="" by default.
   // Only a genuine external/user-supplied override is treated as self-managed
@@ -714,7 +714,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     cwd,
     onLog,
   });
-  // Merge custom model providers (PAPERCLIP_CODEX_PROVIDERS) into the managed
+  // Merge custom model providers (THINKINGMACH_CODEX_PROVIDERS) into the managed
   // CODEX_HOME's config.toml BEFORE the home is shipped to a remote execution
   // target, so both local and sandboxed Codex processes pick up the routing.
   // An explicit env.CODEX_HOME override is treated as user-managed and skipped.
@@ -735,7 +735,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     for (const note of preparedRuntimeConfig.notes) {
       await onLog("stdout", `[paperclip] ${note}\n`);
     }
-    const paperclipBaseEnv = buildPaperclipEnv(agent);
+    const paperclipBaseEnv = buildThinkingMachEnv(agent);
     const runtimeMcpGateways = (ctx.runtimeMcp?.getServers() ?? []).map((server) => ({
       name: server.name,
       endpointPath: server.url,
@@ -747,7 +747,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     );
     const managedMcp = await writeManagedCodexMcpConfig({
       codexHome: effectiveCodexHome,
-      apiBaseUrl: paperclipBaseEnv.PAPERCLIP_API_URL,
+      apiBaseUrl: paperclipBaseEnv.THINKINGMACH_API_URL,
       gateways: managedMcpGateways,
     });
     if (managedMcpGateways.length > 0) {
@@ -859,7 +859,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     const restoreRemoteWorkspace = preparedExecutionTargetRuntime
       ? () => preparedExecutionTargetRuntime.restoreWorkspace((line) => onLog("stdout", line))
       : null;
-    let paperclipBridge: Awaited<ReturnType<typeof startAdapterExecutionTargetPaperclipBridge>> = null;
+    let thinkingmachBridge: Awaited<ReturnType<typeof startAdapterExecutionTargetThinkingMachBridge>> = null;
     const remoteCodexHome = executionTargetIsRemote
       ? preparedExecutionTargetRuntime?.assetDirs.home ??
         path.posix.join(effectiveExecutionCwd, ".paperclip-runtime", "codex", "home")
@@ -874,7 +874,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       onEvent,
     });
     const env: Record<string, string> = { ...paperclipBaseEnv };
-    env.PAPERCLIP_RUN_ID = runId;
+    env.THINKINGMACH_RUN_ID = runId;
     const wakeTaskId =
       (typeof context.taskId === "string" && context.taskId.trim().length > 0 && context.taskId.trim()) ||
       (typeof context.issueId === "string" && context.issueId.trim().length > 0 && context.issueId.trim()) ||
@@ -898,33 +898,33 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     const linkedIssueIds = Array.isArray(context.issueIds)
       ? context.issueIds.filter((value): value is string => typeof value === "string" && value.trim().length > 0)
       : [];
-    const wakePayloadJson = stringifyPaperclipWakePayload(context.paperclipWake);
-    const issueWorkMode = readPaperclipIssueWorkModeFromContext(context);
+    const wakePayloadJson = stringifyThinkingMachWakePayload(context.thinkingmachWake);
+    const issueWorkMode = readThinkingMachIssueWorkModeFromContext(context);
     if (wakeTaskId) {
-      env.PAPERCLIP_TASK_ID = wakeTaskId;
+      env.THINKINGMACH_TASK_ID = wakeTaskId;
     }
     if (issueWorkMode) {
-      env.PAPERCLIP_ISSUE_WORK_MODE = issueWorkMode;
+      env.THINKINGMACH_ISSUE_WORK_MODE = issueWorkMode;
     }
     if (wakeReason) {
-      env.PAPERCLIP_WAKE_REASON = wakeReason;
+      env.THINKINGMACH_WAKE_REASON = wakeReason;
     }
     if (wakeCommentId) {
-      env.PAPERCLIP_WAKE_COMMENT_ID = wakeCommentId;
+      env.THINKINGMACH_WAKE_COMMENT_ID = wakeCommentId;
     }
     if (approvalId) {
-      env.PAPERCLIP_APPROVAL_ID = approvalId;
+      env.THINKINGMACH_APPROVAL_ID = approvalId;
     }
     if (approvalStatus) {
-      env.PAPERCLIP_APPROVAL_STATUS = approvalStatus;
+      env.THINKINGMACH_APPROVAL_STATUS = approvalStatus;
     }
     if (linkedIssueIds.length > 0) {
-      env.PAPERCLIP_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
+      env.THINKINGMACH_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
     }
     if (wakePayloadJson) {
-      env.PAPERCLIP_WAKE_PAYLOAD_JSON = wakePayloadJson;
+      env.THINKINGMACH_WAKE_PAYLOAD_JSON = wakePayloadJson;
     }
-    refreshPaperclipWorkspaceEnvForExecution({
+    refreshThinkingMachWorkspaceEnvForExecution({
       env,
       envConfig,
       workspaceCwd: effectiveWorkspaceCwd,
@@ -941,24 +941,24 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       executionCwd: effectiveExecutionCwd,
     });
     if (targetWorkspaceRealization) {
-      env.PAPERCLIP_WORKSPACE_REALIZATION_MODE = targetWorkspaceRealization.mode;
-      env.PAPERCLIP_WORKSPACE_AUTHORITATIVE_ROOT = targetWorkspaceRealization.authoritativeRoot;
+      env.THINKINGMACH_WORKSPACE_REALIZATION_MODE = targetWorkspaceRealization.mode;
+      env.THINKINGMACH_WORKSPACE_AUTHORITATIVE_ROOT = targetWorkspaceRealization.authoritativeRoot;
     }
     if (runtimeServiceIntents.length > 0) {
-      env.PAPERCLIP_RUNTIME_SERVICE_INTENTS_JSON = JSON.stringify(runtimeServiceIntents);
+      env.THINKINGMACH_RUNTIME_SERVICE_INTENTS_JSON = JSON.stringify(runtimeServiceIntents);
     }
     if (runtimeServices.length > 0) {
-      env.PAPERCLIP_RUNTIME_SERVICES_JSON = JSON.stringify(runtimeServices);
+      env.THINKINGMACH_RUNTIME_SERVICES_JSON = JSON.stringify(runtimeServices);
     }
     if (runtimePrimaryUrl) {
-      env.PAPERCLIP_RUNTIME_PRIMARY_URL = runtimePrimaryUrl;
+      env.THINKINGMACH_RUNTIME_PRIMARY_URL = runtimePrimaryUrl;
     }
     env.CODEX_HOME = remoteCodexHome ?? effectiveCodexHome;
     if (authToken) {
-      env.PAPERCLIP_API_KEY = authToken;
+      env.THINKINGMACH_API_KEY = authToken;
     }
-    if (executionTargetIsRemote && adapterExecutionTargetUsesPaperclipBridge(runtimeExecutionTarget)) {
-      paperclipBridge = await startAdapterExecutionTargetPaperclipBridge({
+    if (executionTargetIsRemote && adapterExecutionTargetUsesThinkingMachBridge(runtimeExecutionTarget)) {
+      thinkingmachBridge = await startAdapterExecutionTargetThinkingMachBridge({
         runId,
         target: runtimeExecutionTarget,
         enableSandboxDuplexBridge: adapterExecutionTargetEnablesSandboxDuplexBridge(runtimeExecutionTarget),
@@ -966,11 +966,11 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         runtimeRootDir: preparedExecutionTargetRuntime?.runtimeRootDir,
         adapterKey: "codex",
         timeoutSec,
-        hostApiToken: env.PAPERCLIP_API_KEY,
+        hostApiToken: env.THINKINGMACH_API_KEY,
         onLog,
       });
-      if (paperclipBridge) {
-        Object.assign(env, paperclipBridge.env);
+      if (thinkingmachBridge) {
+        Object.assign(env, thinkingmachBridge.env);
       }
     }
     const effectiveEnv = Object.fromEntries(
@@ -996,7 +996,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
             networkScope,
             networkAllowlist: parseLocalProcessNetworkAllowlist(config.networkAllowlist),
             networkTrustedUrls: [
-              paperclipBaseEnv.PAPERCLIP_API_URL,
+              paperclipBaseEnv.THINKINGMACH_API_URL,
               ...runtimeMcpGateways.map((gateway) => gateway.endpointPath),
             ],
             command: asString(config.filesystemSandboxCommand, "bwrap"),
@@ -1091,7 +1091,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       }
     }
     const repoAgentsNote =
-      "Codex exec automatically applies repo-scoped AGENTS.md instructions from the current workspace; Paperclip does not currently suppress that discovery.";
+      "Codex exec automatically applies repo-scoped AGENTS.md instructions from the current workspace; ThinkingMach does not currently suppress that discovery.";
     const bootstrapPromptTemplate = asString(config.bootstrapPromptTemplate, "");
     const templateData = {
       agentId: agent.id,
@@ -1106,7 +1106,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       !sessionId && bootstrapPromptTemplate.trim().length > 0
         ? renderTemplate(bootstrapPromptTemplate, templateData).trim()
         : "";
-    const wakePrompt = renderPaperclipWakePrompt(context.paperclipWake, { resumedSession: Boolean(sessionId) });
+    const wakePrompt = renderThinkingMachWakePrompt(context.thinkingmachWake, { resumedSession: Boolean(sessionId) });
     const shouldUseResumeDeltaPrompt = Boolean(sessionId) && wakePrompt.length > 0;
     const promptInstructionsPrefix = shouldUseResumeDeltaPrompt ? "" : instructionsPrefix;
     instructionsChars = promptInstructionsPrefix.length;
@@ -1179,7 +1179,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     if (preparedRuntimeConfig.notes.length > 0) {
       commandNotes.unshift(...preparedRuntimeConfig.notes);
     }
-    const renderedPrompt = shouldUseResumeDeltaPrompt || isPaperclipRecoveryWakePayload(context.paperclipWake)
+    const renderedPrompt = shouldUseResumeDeltaPrompt || isThinkingMachRecoveryWakePayload(context.thinkingmachWake)
       ? ""
       : renderTemplate(promptTemplate, templateData);
     const sessionHandoffNote = asString(context.paperclipSessionHandoffMarkdown, "").trim();
@@ -1318,8 +1318,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
             if (!cleaned.trim()) return;
             await onLog(stream, cleaned);
           },
-          runLogTail: paperclipBridge?.runLogTail,
-          settleRunDisposition: paperclipBridge?.settleRunDisposition,
+          runLogTail: thinkingmachBridge?.runLogTail,
+          settleRunDisposition: thinkingmachBridge?.settleRunDisposition,
           localProcessSandbox,
         });
         const cleanedStderr = stripCodexRolloutNoise(proc.stderr);
@@ -1544,8 +1544,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
 
       return toResult(initial, false, false);
     } finally {
-      if (paperclipBridge) {
-        await paperclipBridge.stop();
+      if (thinkingmachBridge) {
+        await thinkingmachBridge.stop();
       }
       if (restoreRemoteWorkspace) {
         // This teardown runs in a `finally`, so a throw here replaces the
@@ -1587,7 +1587,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         );
       });
     }
-    // Restore the managed config.toml so PAPERCLIP_CODEX_PROVIDERS changes
+    // Restore the managed config.toml so THINKINGMACH_CODEX_PROVIDERS changes
     // (or removal) between runs never leave stale provider routing behind. This
     // finally starts the moment prepareCodexRuntimeConfig returns, so a throw
     // anywhere in the remaining setup (skill injection, remote runtime

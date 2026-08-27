@@ -9,7 +9,7 @@ import {
   executionWorkspaces,
   projects,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { eq } from "drizzle-orm";
 import { getWorkspaceOperationLogStore } from "../services/workspace-operation-log-store.js";
 import {

@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { and, desc, eq, inArray, lte } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   environmentCustomImageSetupSessions,
   environmentCustomImageTemplates,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   ENVIRONMENT_CUSTOM_IMAGE_SETUP_CONNECTION_TYPES,
   ENVIRONMENT_CUSTOM_IMAGE_SETUP_SESSION_STATUSES,
@@ -16,14 +16,14 @@ import {
   type EnvironmentCustomImageTemplateKind,
   type SandboxEnvironmentConfig,
   redactEnvironmentCustomImageValue,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type {
   PluginEnvironmentCancelInteractiveSetupResult,
   PluginEnvironmentCaptureTemplateResult,
   PluginEnvironmentInteractiveSetupConnectionPayload,
   PluginEnvironmentInteractiveSetupSession,
   PluginEnvironmentTemplateRefKind,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import { conflict, notFound, unprocessable } from "../errors.js";
 import {
   parseEnvironmentDriverConfig,

@@ -8,7 +8,7 @@ const packageRoot = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   resolve: {
     alias: [
-      { find: "@paperclipai/paperclip-runner/react", replacement: resolve(packageRoot, "src/react/index.ts") },
+      { find: "@thinkingmach/paperclip-runner/react", replacement: resolve(packageRoot, "src/react/index.ts") },
       { find: "@paperclip-runner-local/capability", replacement: resolve(packageRoot, "src/scenarios/index.ts") },
     ],
   },

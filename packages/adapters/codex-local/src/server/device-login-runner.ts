@@ -4,7 +4,7 @@ import {
   type LoginRunnerLifecycleOptions,
   type LoginRunnerOutcome,
   type LoginRunnerResult,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import { parseDeviceLoginPrompt, type DeviceLoginPrompt } from "./device-login-parse.js";
 
 // The device-login runner. It runs the Codex device-login command through an

@@ -9,7 +9,7 @@ import {
   type CompanySearchResult,
   type CompanySearchScope,
   type CompanySearchSort,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,7 @@ import {
   type FilterChipLookups,
 } from "../lib/search-filters";
 import type { ReactNode } from "react";
-import type { Agent, IssueLabel, Project } from "@paperclipai/shared";
+import type { Agent, IssueLabel, Project } from "@thinkingmach/shared";
 
 const SEARCH_DEBOUNCE_MS = 250;
 const IDENTIFIER_PATTERN = /^[A-Z]+-\d+$/;

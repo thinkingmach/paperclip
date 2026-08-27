@@ -1,6 +1,6 @@
 # Dev-Plane Deploy & Restart Hygiene
 
-Operational runbook for restarting a dev/shared Paperclip control plane without killing in-flight agent work. Written after the 2026-07-06/07 failure spike, where a restart-heavy deploy window was the single largest source of failed tasks.
+Operational runbook for restarting a dev/shared ThinkingMach control plane without killing in-flight agent work. Written after the 2026-07-06/07 failure spike, where a restart-heavy deploy window was the single largest source of failed tasks.
 
 ## Why this matters
 

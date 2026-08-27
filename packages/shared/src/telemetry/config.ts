@@ -68,7 +68,7 @@ export function resolveTelemetryConfig(
 ): TelemetryConfig {
   const caps = resolveCaps(fileConfig);
 
-  if (process.env.PAPERCLIP_TELEMETRY_DISABLED === "1") {
+  if (process.env.THINKINGMACH_TELEMETRY_DISABLED === "1") {
     return { enabled: false, ...caps };
   }
   if (process.env.DO_NOT_TRACK === "1") {
@@ -81,6 +81,6 @@ export function resolveTelemetryConfig(
     return { enabled: false, ...caps };
   }
 
-  const endpoint = process.env.PAPERCLIP_TELEMETRY_ENDPOINT || undefined;
+  const endpoint = process.env.THINKINGMACH_TELEMETRY_ENDPOINT || undefined;
   return { enabled: true, endpoint, ...caps };
 }

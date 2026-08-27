@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionContext } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext } from "@thinkingmach/adapter-utils";
 import { execute } from "./execute.js";
 
 type MockRunOptions = {
@@ -100,7 +100,7 @@ function createContext(
       CURSOR_API_KEY: "cursor-secret",
       EXTRA_FLAG: "1",
     },
-    repoUrl: "https://github.com/paperclipai/paperclip.git",
+    repoUrl: "https://github.com/thinkingmach/paperclip.git",
     repoStartingRef: "main",
     runtimeEnvType: "cloud",
     promptTemplate: "Do the work for {{agent.name}}",
@@ -142,7 +142,7 @@ describe("cursor_cloud execute", () => {
     getRunMock.mockReset();
   });
 
-  it("creates a fresh Cursor agent and injects Paperclip env without CURSOR_API_KEY", async () => {
+  it("creates a fresh Cursor agent and injects ThinkingMach env without CURSOR_API_KEY", async () => {
     const run = createMockRun({
       agentId: "agent-fresh",
       streamMessages: [
@@ -165,23 +165,23 @@ describe("cursor_cloud execute", () => {
     expect(getRunMock).not.toHaveBeenCalled();
     expect(createMock.mock.calls[0]?.[0]).toMatchObject({
       apiKey: "cursor-secret",
-      name: "Paperclip Cursor Cloud Agent",
+      name: "ThinkingMach Cursor Cloud Agent",
       model: { id: "gpt-5.4" },
       cloud: {
         env: { type: "cloud" },
-        repos: [{ url: "https://github.com/paperclipai/paperclip.git", startingRef: "main" }],
+        repos: [{ url: "https://github.com/thinkingmach/paperclip.git", startingRef: "main" }],
       },
     });
     expect(createMock.mock.calls[0]?.[0]?.cloud?.envVars).toMatchObject({
       EXTRA_FLAG: "1",
-      PAPERCLIP_RUN_ID: "run-heartbeat-1",
-      PAPERCLIP_TASK_ID: "issue-1",
-      PAPERCLIP_WAKE_REASON: "issue_commented",
-      PAPERCLIP_API_KEY: "paperclip-run-jwt",
+      THINKINGMACH_RUN_ID: "run-heartbeat-1",
+      THINKINGMACH_TASK_ID: "issue-1",
+      THINKINGMACH_WAKE_REASON: "issue_commented",
+      THINKINGMACH_API_KEY: "paperclip-run-jwt",
     });
     // When a run JWT is present the callback URL is retained so the worker can
-    // authenticate its Paperclip API calls.
-    expect(createMock.mock.calls[0]?.[0]?.cloud?.envVars).toHaveProperty("PAPERCLIP_API_URL");
+    // authenticate its ThinkingMach API calls.
+    expect(createMock.mock.calls[0]?.[0]?.cloud?.envVars).toHaveProperty("THINKINGMACH_API_URL");
     expect(createMock.mock.calls[0]?.[0]?.cloud?.envVars).not.toHaveProperty("CURSOR_API_KEY");
 
     expect(result).toMatchObject({
@@ -195,7 +195,7 @@ describe("cursor_cloud execute", () => {
         latestRunId: "run-123",
         runtime: "cloud",
         envType: "cloud",
-        repos: [{ url: "https://github.com/paperclipai/paperclip.git", startingRef: "main" }],
+        repos: [{ url: "https://github.com/thinkingmach/paperclip.git", startingRef: "main" }],
       },
     });
     expect(ctx.logs.map((entry) => entry.chunk)).toEqual(
@@ -219,7 +219,7 @@ describe("cursor_cloud execute", () => {
     expect(onDispatch.mock.invocationCallOrder[0]).toBeLessThan(createMock.mock.invocationCallOrder[0]!);
   });
 
-  it("omits the Paperclip API callback when no run JWT is issued (remote worker cannot call home)", async () => {
+  it("omits the ThinkingMach API callback when no run JWT is issued (remote worker cannot call home)", async () => {
     const run = createMockRun({ agentId: "agent-no-jwt" });
     const sdkAgent = createMockSdkAgent({ agentId: "agent-no-jwt", sendRun: run });
     createMock.mockResolvedValue(sdkAgent);
@@ -231,14 +231,14 @@ describe("cursor_cloud execute", () => {
     await execute(ctx);
 
     const envVars = (createMock.mock.calls[0]?.[0]?.cloud?.envVars ?? {}) as Record<string, string>;
-    expect(envVars).not.toHaveProperty("PAPERCLIP_API_KEY");
-    expect(envVars).not.toHaveProperty("PAPERCLIP_API_URL");
-    expect(envVars).not.toHaveProperty("PAPERCLIP_API_BRIDGE_MODE");
-    // Informational Paperclip env (non-credential) still flows through.
+    expect(envVars).not.toHaveProperty("THINKINGMACH_API_KEY");
+    expect(envVars).not.toHaveProperty("THINKINGMACH_API_URL");
+    expect(envVars).not.toHaveProperty("THINKINGMACH_API_BRIDGE_MODE");
+    // Informational ThinkingMach env (non-credential) still flows through.
     expect(envVars).toMatchObject({
-      PAPERCLIP_RUN_ID: "run-heartbeat-1",
-      PAPERCLIP_AGENT_ID: "agent-1",
-      PAPERCLIP_COMPANY_ID: "company-1",
+      THINKINGMACH_RUN_ID: "run-heartbeat-1",
+      THINKINGMACH_AGENT_ID: "agent-1",
+      THINKINGMACH_COMPANY_ID: "company-1",
     });
   });
 
@@ -257,7 +257,7 @@ describe("cursor_cloud execute", () => {
           latestRunId: "run-previous",
           runtime: "cloud",
           envType: "cloud",
-          repos: [{ url: "https://github.com/paperclipai/paperclip.git", startingRef: "main" }],
+          repos: [{ url: "https://github.com/thinkingmach/paperclip.git", startingRef: "main" }],
         },
       },
     });
@@ -317,7 +317,7 @@ describe("cursor_cloud execute", () => {
           latestRunId: "run-attached",
           runtime: "cloud",
           envType: "cloud",
-          repos: [{ url: "https://github.com/paperclipai/paperclip.git", startingRef: "main" }],
+          repos: [{ url: "https://github.com/thinkingmach/paperclip.git", startingRef: "main" }],
         },
       },
     });
@@ -349,12 +349,12 @@ describe("cursor_cloud execute", () => {
     expect(ctx.meta[0]?.context).toMatchObject({
       cursorCloud: {
         canReuseSession: true,
-        repoUrl: "https://github.com/paperclipai/paperclip.git",
+        repoUrl: "https://github.com/thinkingmach/paperclip.git",
       },
     });
   });
 
-  it("maps non-finished Cursor results to failing Paperclip runs", async () => {
+  it("maps non-finished Cursor results to failing ThinkingMach runs", async () => {
     const cancelledRun = createMockRun({
       id: "run-cancelled",
       agentId: "agent-cancelled",

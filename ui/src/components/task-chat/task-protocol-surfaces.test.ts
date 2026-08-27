@@ -24,7 +24,7 @@ function enumStrings(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
 }
 
-describe("Paperclip task protocol surface registry", () => {
+describe("ThinkingMach task protocol surface registry", () => {
   it("classifies every canonical event exactly once", () => {
     const eventSchema = schema("event.schema.json");
     const properties = record(eventSchema.properties);

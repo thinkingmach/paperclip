@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Clock, Pencil, ShieldCheck } from "lucide-react";
-import type { ToolRiskLevel } from "@paperclipai/shared";
+import type { ToolRiskLevel } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

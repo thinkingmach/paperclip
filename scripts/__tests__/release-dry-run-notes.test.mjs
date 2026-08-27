@@ -36,7 +36,7 @@ git_current_branch() { printf 'master\\n'; }
 get_last_stable_tag() { printf 'v2026.709.0\\n'; }
 get_current_stable_version() { printf '2026.709.0\\n'; }
 utc_date_iso() { printf '2026-07-10\\n'; }
-list_public_package_info() { printf 'cli\\tpaperclipai\\t0.0.0\\n'; }
+list_public_package_info() { printf 'cli\\tthinkingmach\\t0.0.0\\n'; }
 next_stable_version() { printf '2026.710.0\\n'; }
 next_prerelease_version() { printf '2026.710.0-%s.0\\n' "$1"; }
 release_notes_file() { printf '%s/releases/v%s.md\\n' "$REPO_ROOT" "$1"; }
@@ -70,7 +70,7 @@ set_public_package_version() { :; }
     `#!/usr/bin/env node
 const [mode] = process.argv.slice(2);
 if (mode === "fetch") {
-  process.stdout.write('{"paperclipai":[]}\\n');
+  process.stdout.write('{"thinkingmach":[]}\\n');
   process.exit(0);
 }
 if (mode === "assert-absent") {

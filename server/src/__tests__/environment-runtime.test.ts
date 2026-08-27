@@ -9,7 +9,7 @@ import {
   getSshEnvLabSupport,
   startSshEnvLabFixture,
   stopSshEnvLabFixture,
-} from "@paperclipai/adapter-utils/ssh";
+} from "@thinkingmach/adapter-utils/ssh";
 import {
   agents,
   builtInManagedResources,
@@ -23,7 +23,7 @@ import {
   heartbeatRuns,
   plugins,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -46,7 +46,7 @@ import {
   getActiveStepContext,
   runWithRuntimeParent,
   type StartupSpanContext,
-} from "@paperclipai/adapter-utils/acpx-engine/startup-timing";
+} from "@thinkingmach/adapter-utils/acpx-engine/startup-timing";
 import { traceparentFromContextToken } from "../instrumentation.ts";
 import { ROOT_CONTEXT, trace } from "@opentelemetry/api";
 import { buildNativeHarnessBackupManifest } from "../services/native-runtime/native-session-executor.ts";
@@ -349,7 +349,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Reusable Sandbox Provider",
         description: "Test provider with reusable lease support",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -940,7 +940,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-sandbox",
+      packageName: "@thinkingmach/plugin-fake-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -950,7 +950,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Sandbox Provider",
         description: "Test fake plugin provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -1278,7 +1278,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-sandbox",
+      packageName: "@thinkingmach/plugin-fake-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -1288,7 +1288,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Sandbox Provider",
         description: "Test fake plugin provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -2055,7 +2055,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-sandbox",
+      packageName: "@thinkingmach/plugin-fake-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -2065,7 +2065,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Sandbox Provider",
         description: "Test fake plugin provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -2422,7 +2422,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-ready-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-ready-sandbox",
+      packageName: "@thinkingmach/plugin-fake-ready-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -2432,7 +2432,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Ready Sandbox Provider",
         description: "Test fake plugin provider readiness",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -2521,7 +2521,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-reload-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-reload-sandbox",
+      packageName: "@thinkingmach/plugin-fake-reload-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -2531,7 +2531,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Reload Sandbox Provider",
         description: "Test fake plugin provider reload readiness",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -2639,7 +2639,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-missing-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-missing-sandbox",
+      packageName: "@thinkingmach/plugin-fake-missing-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -2649,7 +2649,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Missing Sandbox Provider",
         description: "Test fake plugin provider missing readiness",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -2772,7 +2772,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: SECRET_REF_PLUGIN_KEY,
-      packageName: "@paperclipai/plugin-secret-sandbox",
+      packageName: "@thinkingmach/plugin-secret-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -2782,7 +2782,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Secret Plugin Sandbox Provider",
         description: "Test plugin provider with a secret-ref config field",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -3024,7 +3024,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-sandbox",
+      packageName: "@thinkingmach/plugin-fake-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -3034,7 +3034,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Sandbox Provider",
         description: "Test fake plugin provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -3148,7 +3148,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-sandbox",
+      packageName: "@thinkingmach/plugin-fake-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -3158,7 +3158,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Sandbox Provider",
         description: "Test fake plugin provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -3287,7 +3287,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-sandbox",
+      packageName: "@thinkingmach/plugin-fake-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -3297,7 +3297,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Sandbox Provider",
         description: "Test fake plugin provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -3606,7 +3606,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.fake-plugin-sandbox-provider",
-      packageName: "@paperclipai/plugin-fake-sandbox",
+      packageName: "@thinkingmach/plugin-fake-sandbox",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -3616,7 +3616,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Plugin Sandbox Provider",
         description: "Test fake plugin provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -3849,7 +3849,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Secure Sandbox Provider",
         description: "Test schema-driven provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -4003,7 +4003,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Secure Sandbox Provider",
         description: "Test schema-driven provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -4342,7 +4342,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Long Lease Sandbox Provider",
         description: "Test plugin worker acquire timeout",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -4439,7 +4439,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Sandbox Provider",
         description: "Test schema-driven provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -4635,8 +4635,8 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
   it("permits native-runner replacement only after verifying the stamped backup", async () => {
     const seeded = await seedReusablePluginSandboxLease("paperclip_runner");
     const backupBase = await mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-replacement-"));
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = backupBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = backupBase;
     try {
       const normalizedSessionId = "native-replacement-session";
       const runnerInstanceId = "native-replacement-runner";
@@ -4740,9 +4740,9 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
       });
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(backupBase, { recursive: true, force: true });
     }
@@ -4781,7 +4781,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Sandbox Provider",
         description: "Test schema-driven provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -4986,7 +4986,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Sandbox Provider",
         description: "Test schema-driven provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -5149,7 +5149,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Fake Sandbox Provider",
         description: "Test schema-driven provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -5337,7 +5337,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Secure Sandbox Provider",
         description: "Test schema-driven provider",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -5559,7 +5559,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Non-reusable Sandbox Provider",
         description: "Test provider without reusable lease support",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -5705,7 +5705,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Nested-disabled Sandbox Provider",
         description: "Test provider with a legacy flag and a disabled nested capability",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -5867,7 +5867,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Unverified-worker Sandbox Provider",
         description: "Test provider that declares reusable leases but whose worker lacks the reuse methods",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -6252,7 +6252,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
           version: "1.0.0",
           displayName: "Reusable Sandbox Provider",
           description: "Owner plugin that denies reusable leases",
-          author: "Paperclip",
+          author: "ThinkingMach",
           categories: ["automation"],
           capabilities: ["environment.drivers.register"],
           entrypoints: { worker: "dist/worker.js" },
@@ -6288,7 +6288,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
         version: "1.0.0",
         displayName: "Colliding Sandbox Provider",
         description: "Earlier plugin that shares the driver key",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -6391,7 +6391,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
           version: "1.0.0",
           displayName: "Reusable Sandbox Provider",
           description: "Owner plugin that no longer declares the provider key",
-          author: "Paperclip",
+          author: "ThinkingMach",
           categories: ["automation"],
           capabilities: ["environment.drivers.register"],
           entrypoints: { worker: "dist/worker.js" },
@@ -6451,7 +6451,7 @@ describeEmbeddedPostgres("environmentRuntimeService", () => {
           version: "1.0.0",
           displayName: "Reusable Sandbox Provider",
           description: "Owner plugin that omits the capability declaration",
-          author: "Paperclip",
+          author: "ThinkingMach",
           categories: ["automation"],
           capabilities: ["environment.drivers.register"],
           entrypoints: { worker: "dist/worker.js" },

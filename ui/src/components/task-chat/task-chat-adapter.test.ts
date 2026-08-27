@@ -45,7 +45,7 @@ describe("commentsToTaskChatItems", () => {
     const comments = [
       {
         id: "c-sys",
-        body: "Paperclip automatically retried dispatch, but it still has no live execution path.",
+        body: "ThinkingMach automatically retried dispatch, but it still has no live execution path.",
         authorType: "system",
         authorAgentId: null,
         derivedAuthorAgentId: "agent-1",

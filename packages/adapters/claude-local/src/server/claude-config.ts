@@ -6,7 +6,7 @@ import type {
   AdapterExecutionContext,
   AdapterEnvironmentCheck,
   AdapterRuntimeMcpServer,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   adapterExecutionTargetUsesManagedHome,
   maybeRunSandboxInstallCommand,
@@ -14,9 +14,9 @@ import {
   runAdapterExecutionTargetShellCommand,
   type AdapterExecutionTarget,
   type AdapterExecutionTargetShellOptions,
-} from "@paperclipai/adapter-utils/execution-target";
-import { resolvePaperclipInstanceRootForAdapter } from "@paperclipai/adapter-utils/server-utils";
-import { shellQuote } from "@paperclipai/adapter-utils/ssh";
+} from "@thinkingmach/adapter-utils/execution-target";
+import { resolveThinkingMachInstanceRootForAdapter } from "@thinkingmach/adapter-utils/server-utils";
+import { shellQuote } from "@thinkingmach/adapter-utils/ssh";
 import { classifyThrownErrorClass, logSandboxProbeDiagnostic } from "./probe-diagnostics.js";
 
 const SEEDED_SHARED_FILES = ["settings.json", "CLAUDE.md"] as const;
@@ -131,9 +131,9 @@ export function resolveManagedClaudeConfigSeedDir(
   env: NodeJS.ProcessEnv,
   companyId?: string,
 ): string {
-  const instanceRoot = resolvePaperclipInstanceRootForAdapter({
-    homeDir: nonEmpty(env.PAPERCLIP_HOME) ?? undefined,
-    instanceId: nonEmpty(env.PAPERCLIP_INSTANCE_ID) ?? undefined,
+  const instanceRoot = resolveThinkingMachInstanceRootForAdapter({
+    homeDir: nonEmpty(env.THINKINGMACH_HOME) ?? undefined,
+    instanceId: nonEmpty(env.THINKINGMACH_INSTANCE_ID) ?? undefined,
     env,
   });
   return companyId
@@ -146,15 +146,15 @@ export function resolveManagedClaudeRuntimeStateDir(
   companyId: string,
   agentId: string,
 ): string {
-  const instanceRoot = resolvePaperclipInstanceRootForAdapter({
-    homeDir: nonEmpty(env.PAPERCLIP_HOME) ?? undefined,
-    instanceId: nonEmpty(env.PAPERCLIP_INSTANCE_ID) ?? undefined,
+  const instanceRoot = resolveThinkingMachInstanceRootForAdapter({
+    homeDir: nonEmpty(env.THINKINGMACH_HOME) ?? undefined,
+    instanceId: nonEmpty(env.THINKINGMACH_INSTANCE_ID) ?? undefined,
     env,
   });
   return path.join(instanceRoot, "companies", companyId, "agents", agentId, "claude-runtime");
 }
 
-export async function writePaperclipClaudeMcpConfig(input: {
+export async function writeThinkingMachClaudeMcpConfig(input: {
   stateDir: string;
   runId: string;
   servers: AdapterRuntimeMcpServer[];
@@ -258,7 +258,7 @@ function isNonEmptyString(value: unknown): value is string {
 /**
  * Prepare the sandbox runtime that a Claude hello probe needs. The step
  * installs the Claude CLI in the sandbox when the CLI is absent, and it
- * materializes the Paperclip-managed Claude config directory. Both the CLI
+ * materializes the ThinkingMach-managed Claude config directory. Both the CLI
  * Test lane and the ACP Test lane call this helper, so the two lanes probe
  * the same login state. The Claude CLI and the Claude ACP engine share the
  * same stored Claude login.
@@ -345,7 +345,7 @@ export async function prepareSandboxClaudeProbeRuntime(input: {
       checks.push({
         code: "claude_managed_config_dir",
         level: "info",
-        message: "The environment probe is using Paperclip-managed Claude config materialization.",
+        message: "The environment probe is using ThinkingMach-managed Claude config materialization.",
         detail: remoteClaudeConfigDir,
       });
     } catch (err) {
@@ -353,14 +353,14 @@ export async function prepareSandboxClaudeProbeRuntime(input: {
       // only the fixed context, the allowlisted classification, and a safe
       // error class name.
       logSandboxProbeDiagnostic(
-        "Could not materialize Paperclip-managed Claude config for the environment probe",
+        "Could not materialize ThinkingMach-managed Claude config for the environment probe",
         "spawn_error",
         { errorClass: classifyThrownErrorClass(err) },
       );
       checks.push({
         code: "claude_managed_config_dir_failed",
         level: "error",
-        message: "Could not materialize Paperclip-managed Claude config for the environment probe.",
+        message: "Could not materialize ThinkingMach-managed Claude config for the environment probe.",
         hint: "Retry the Test. If the failure repeats, check the server log for the redacted diagnostic.",
       });
     } finally {

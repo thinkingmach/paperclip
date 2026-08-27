@@ -17,7 +17,7 @@ import {
   instanceSettings,
   issues,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -986,13 +986,13 @@ describeEmbeddedPostgres("environmentService leases", () => {
       })
       .returning();
 
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
     try {
       const adopted = await svc.ensureLocalEnvironment(companyId);
 
       expect(adopted.id).toBe(existing?.id);
       expect(adopted.name).toBe("Tenant Local");
-      expect(adopted.metadata).toEqual({ owner: "operator", managedByPaperclip: true });
+      expect(adopted.metadata).toEqual({ owner: "operator", managedByThinkingMach: true });
 
       // Re-ensuring an already-adopted row must not rewrite it.
       const adoptedRow = await db
@@ -1001,7 +1001,7 @@ describeEmbeddedPostgres("environmentService leases", () => {
         .where(eq(environments.driver, "local"))
         .then((rows) => rows[0]);
       const reused = await svc.ensureLocalEnvironment(companyId);
-      expect(reused.metadata).toEqual({ owner: "operator", managedByPaperclip: true });
+      expect(reused.metadata).toEqual({ owner: "operator", managedByThinkingMach: true });
       const reusedRow = await db
         .select()
         .from(environments)
@@ -1009,7 +1009,7 @@ describeEmbeddedPostgres("environmentService leases", () => {
         .then((rows) => rows[0]);
       expect(reusedRow?.updatedAt.toISOString()).toBe(adoptedRow?.updatedAt.toISOString());
     } finally {
-      delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
+      delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
     }
   });
 
@@ -1153,7 +1153,7 @@ describeEmbeddedPostgres("environmentService leases", () => {
     expect(created.name).toBe("Daytona");
     expect(created.config.provider).toBe("daytona");
     expect(created.config.target).toBe("us");
-    expect(created.metadata?.managedByPaperclip).toBe(true);
+    expect(created.metadata?.managedByThinkingMach).toBe(true);
     expect(created.metadata?.managedSandboxProvider).toBe("daytona");
 
     // A stock update advances config and name in place, and a description
@@ -1555,7 +1555,7 @@ describeEmbeddedPostgres("environmentService leases", () => {
       status: "active",
       config: { provider: "daytona", target: "us" },
     });
-    expect(handMade.metadata?.managedByPaperclip).toBeUndefined();
+    expect(handMade.metadata?.managedByThinkingMach).toBeUndefined();
 
     const reconciliation = await svc.ensureManagedSandboxEnvironment({
       companyId,
@@ -1570,7 +1570,7 @@ describeEmbeddedPostgres("environmentService leases", () => {
     });
     expect(reconciliation.environment.id).toBe(handMade.id);
     expect(reconciliation.environment.config.target).toBe("us");
-    expect(reconciliation.environment.metadata?.managedByPaperclip).toBeUndefined();
+    expect(reconciliation.environment.metadata?.managedByThinkingMach).toBeUndefined();
 
     const rows = await db
       .select()
@@ -1683,13 +1683,13 @@ describeEmbeddedPostgres("environmentService leases", () => {
       driver: "sandbox",
       status: "active",
       config: { provider: "kubernetes" },
-      metadata: { managedByPaperclip: true, managedKubernetesSandbox: true },
+      metadata: { managedByThinkingMach: true, managedKubernetesSandbox: true },
       createdAt: now,
       updatedAt: now,
     });
 
     // Partial unique index environments_company_managed_sandbox_idx rejects a
-    // second row matching driver='sandbox' AND managedByPaperclip=true for the
+    // second row matching driver='sandbox' AND managedByThinkingMach=true for the
     // same company. This is the DB-level invariant that replaced the previous
     // application-side post-insert convergence loop.
     const secondInsert = db.insert(environments).values({
@@ -1697,7 +1697,7 @@ describeEmbeddedPostgres("environmentService leases", () => {
       driver: "sandbox",
       status: "active",
       config: { provider: "kubernetes" },
-      metadata: { managedByPaperclip: true, managedKubernetesSandbox: true },
+      metadata: { managedByThinkingMach: true, managedKubernetesSandbox: true },
       createdAt: new Date(now.getTime() + 1),
       updatedAt: new Date(now.getTime() + 1),
     });
@@ -1713,7 +1713,7 @@ describeEmbeddedPostgres("environmentService leases", () => {
     }
     expect(raisedConstraint).toBe("environments_managed_sandbox_idx");
 
-    // Index does NOT cover tenant-created sandbox rows (no managedByPaperclip
+    // Index does NOT cover tenant-created sandbox rows (no managedByThinkingMach
     // marker) — operators must be able to keep multiple tenant sandbox envs.
     await db.insert(environments).values({
       name: "Tenant Sandbox",

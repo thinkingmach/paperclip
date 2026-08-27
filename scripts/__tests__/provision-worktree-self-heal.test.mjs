@@ -9,7 +9,7 @@ const script = new URL("../provision-worktree.sh", import.meta.url).pathname;
 const runtimeScript = new URL("../provision-worktree-runtime.sh", import.meta.url).pathname;
 
 // Keep the PATH minimal so the fallback ladder is deterministic: node must be
-// reachable, but a globally installed `paperclipai` must not shadow the paths
+// reachable, but a globally installed `thinkingmach` must not shadow the paths
 // under test.
 const testPath = [path.dirname(process.execPath), "/usr/bin", "/bin"].join(":");
 
@@ -70,7 +70,7 @@ if (cliArgs[0] === "worktree" && cliArgs[1] === "init") {
   }
   fs.mkdirSync(".paperclip", { recursive: true });
   fs.writeFileSync(".paperclip/config.json", JSON.stringify({ $meta: { source: "fake-cli" } }));
-  fs.writeFileSync(".paperclip/.env", "PAPERCLIP_IN_WORKTREE=true\\n");
+  fs.writeFileSync(".paperclip/.env", "THINKINGMACH_IN_WORKTREE=true\\n");
   process.exit(0);
 }
 if (cliArgs[0] === "worktree" && cliArgs[1] === "ensure-seeded") {
@@ -105,41 +105,41 @@ process.exit(0);
 function runProvision(baseCwd, { pathPrefix } = {}) {
   const worktreeCwd = makeTempDir("paperclip-provision-worktree-");
   const worktreesHome = makeTempDir("paperclip-provision-home-");
-  const paperclipHome = makeInstanceHome();
+  const thinkingmachHome = makeInstanceHome();
   const result = spawnSync("bash", [script], {
     cwd: worktreeCwd,
     encoding: "utf8",
     env: {
       PATH: pathPrefix ? `${pathPrefix}:${testPath}` : testPath,
       HOME: os.homedir(),
-      PAPERCLIP_WORKSPACE_BASE_CWD: baseCwd,
-      PAPERCLIP_WORKSPACE_CWD: worktreeCwd,
-      PAPERCLIP_WORKSPACE_BRANCH: "feature/provision-test",
-      PAPERCLIP_WORKTREES_DIR: worktreesHome,
-      PAPERCLIP_HOME: paperclipHome,
-      PAPERCLIP_PROJECT_WORKSPACE_ID: "project-workspace-1",
-      PAPERCLIP_SEED_EXPECTED_COMPANY_ID: "company-1",
+      THINKINGMACH_WORKSPACE_BASE_CWD: baseCwd,
+      THINKINGMACH_WORKSPACE_CWD: worktreeCwd,
+      THINKINGMACH_WORKSPACE_BRANCH: "feature/provision-test",
+      THINKINGMACH_WORKTREES_DIR: worktreesHome,
+      THINKINGMACH_HOME: thinkingmachHome,
+      THINKINGMACH_PROJECT_WORKSPACE_ID: "project-workspace-1",
+      THINKINGMACH_SEED_EXPECTED_COMPANY_ID: "company-1",
     },
   });
-  return { result, worktreeCwd, worktreesHome, paperclipHome };
+  return { result, worktreeCwd, worktreesHome, thinkingmachHome };
 }
 
 function runRuntimeProvision(baseCwd, worktreeCwd) {
   const worktreesHome = makeTempDir("paperclip-provision-runtime-home-");
-  const paperclipHome = makeInstanceHome();
+  const thinkingmachHome = makeInstanceHome();
   return spawnSync("bash", [runtimeScript], {
     cwd: worktreeCwd,
     encoding: "utf8",
     env: {
       PATH: testPath,
       HOME: os.homedir(),
-      PAPERCLIP_WORKSPACE_BASE_CWD: baseCwd,
-      PAPERCLIP_WORKSPACE_CWD: worktreeCwd,
-      PAPERCLIP_WORKSPACE_BRANCH: "feature/provision-runtime-test",
-      PAPERCLIP_WORKTREES_DIR: worktreesHome,
-      PAPERCLIP_HOME: paperclipHome,
-      PAPERCLIP_PROJECT_WORKSPACE_ID: "project-workspace-1",
-      PAPERCLIP_COMPANY_ID: "company-1",
+      THINKINGMACH_WORKSPACE_BASE_CWD: baseCwd,
+      THINKINGMACH_WORKSPACE_CWD: worktreeCwd,
+      THINKINGMACH_WORKSPACE_BRANCH: "feature/provision-runtime-test",
+      THINKINGMACH_WORKTREES_DIR: worktreesHome,
+      THINKINGMACH_HOME: thinkingmachHome,
+      THINKINGMACH_PROJECT_WORKSPACE_ID: "project-workspace-1",
+      THINKINGMACH_COMPANY_ID: "company-1",
     },
   });
 }
@@ -222,7 +222,7 @@ test("falls back to an isolated config when the base CLI cannot boot", () => {
     `expected ${dataDir} to live under ${worktreesHome}`,
   );
   const env = fs.readFileSync(path.join(worktreeCwd, ".paperclip", ".env"), "utf8");
-  assert.match(env, /PAPERCLIP_IN_WORKTREE=true/);
+  assert.match(env, /THINKINGMACH_IN_WORKTREE=true/);
   assert.equal(
     JSON.parse(fs.readFileSync(path.join(worktreeCwd, ".paperclip", "seed-manifest.json"), "utf8")).state,
     "pending",
@@ -231,7 +231,7 @@ test("falls back to an isolated config when the base CLI cannot boot", () => {
 
 test("reconciles deployment mode from the registered source when reusing a guest config", () => {
   const baseCwd = makeBaseWorkspace({ helpExit: 1, initExit: 0 });
-  const { result: first, worktreeCwd, worktreesHome, paperclipHome } = runProvision(baseCwd);
+  const { result: first, worktreeCwd, worktreesHome, thinkingmachHome } = runProvision(baseCwd);
   assert.equal(first.status, 0, first.stderr);
   assert.equal(readWorktreeConfig(worktreeCwd).server.deploymentMode, "local_trusted");
 
@@ -253,19 +253,19 @@ test("reconciles deployment mode from the registered source when reusing a guest
     env: {
       PATH: testPath,
       HOME: os.homedir(),
-      PAPERCLIP_WORKSPACE_BASE_CWD: baseCwd,
-      PAPERCLIP_WORKSPACE_CWD: worktreeCwd,
-      PAPERCLIP_WORKSPACE_BRANCH: "feature/provision-test",
-      PAPERCLIP_WORKTREES_DIR: worktreesHome,
-      PAPERCLIP_HOME: paperclipHome,
-      PAPERCLIP_PROJECT_WORKSPACE_ID: "project-workspace-1",
-      PAPERCLIP_SEED_EXPECTED_COMPANY_ID: "company-1",
+      THINKINGMACH_WORKSPACE_BASE_CWD: baseCwd,
+      THINKINGMACH_WORKSPACE_CWD: worktreeCwd,
+      THINKINGMACH_WORKSPACE_BRANCH: "feature/provision-test",
+      THINKINGMACH_WORKTREES_DIR: worktreesHome,
+      THINKINGMACH_HOME: thinkingmachHome,
+      THINKINGMACH_PROJECT_WORKSPACE_ID: "project-workspace-1",
+      THINKINGMACH_SEED_EXPECTED_COMPANY_ID: "company-1",
     },
   });
 
   assert.equal(second.status, 0, second.stderr);
-  assert.match(second.stderr, /Reusing existing isolated Paperclip worktree config/);
-  assert.match(second.stderr, /Reconciled isolated Paperclip worktree deployment mode/);
+  assert.match(second.stderr, /Reusing existing isolated ThinkingMach worktree config/);
+  assert.match(second.stderr, /Reconciled isolated ThinkingMach worktree deployment mode/);
   assert.equal(readWorktreeConfig(worktreeCwd).server.deploymentMode, "authenticated");
   assert.equal(readWorktreeConfig(worktreeCwd).server.exposure, "private");
 });
@@ -299,7 +299,7 @@ if (cliArgs.includes("--help")) {
 if (cliArgs[0] === "worktree" && cliArgs[1] === "init") {
   fs.mkdirSync(".paperclip", { recursive: true });
   fs.writeFileSync(".paperclip/config.json", JSON.stringify({ $meta: { source: "fake-cli" } }));
-  fs.writeFileSync(".paperclip/.env", "PAPERCLIP_IN_WORKTREE=true\\n");
+  fs.writeFileSync(".paperclip/.env", "THINKINGMACH_IN_WORKTREE=true\\n");
   process.exit(0);
 }
 process.exit(0);

@@ -183,7 +183,7 @@ describe("buildReusableExecutionWorkspaceOptionGroups", () => {
     const groups = buildReusableExecutionWorkspaceOptionGroups([
       workspace({
         id: "workspace-1",
-        name: "Paperclip app",
+        name: "ThinkingMach app",
         cwd: "/repo/paperclip",
         branchName: "feature/workspaces",
         status: "active",
@@ -192,16 +192,16 @@ describe("buildReusableExecutionWorkspaceOptionGroups", () => {
     ], { now });
 
     const option = groups[0]!.options[0]!;
-    expect(option.label).toBe("Paperclip app");
+    expect(option.label).toBe("ThinkingMach app");
     expect(option.description).toBe("feature/workspaces");
-    expect(option.searchText).toBe("Paperclip app active feature/workspaces /repo/paperclip workspace-1");
+    expect(option.searchText).toBe("ThinkingMach app active feature/workspaces /repo/paperclip workspace-1");
   });
 
   it("matches workspace options with fuzzy query tokens", () => {
     const groups = buildReusableExecutionWorkspaceOptionGroups([
       workspace({
         id: "workspace-1",
-        name: "Paperclip app",
+        name: "ThinkingMach app",
         cwd: "/srv/paperclip",
         branchName: "feature/reusable-workspaces",
         status: "active",
@@ -219,7 +219,7 @@ describe("buildReusableExecutionWorkspaceOptionGroups", () => {
       workspace({
         id: "routine-bodies",
         name: "PAP-11694-editing-routine-bodies-should-have-revision-tracking",
-        cwd: "/srv/paperclip/home/paperclipai/paperclip/.paperclip/worktrees/PAP-11694-editing-routine-bodies",
+        cwd: "/srv/paperclip/home/thinkingmach/paperclip/.paperclip/worktrees/PAP-11694-editing-routine-bodies",
         branchName: "PAP-11694-editing-routine-bodies-should-have-revision-tracking",
         status: "active",
         lastUsedAt: "2026-01-10T00:00:00.000Z",
@@ -227,7 +227,7 @@ describe("buildReusableExecutionWorkspaceOptionGroups", () => {
       workspace({
         id: "mobile-agent-chat",
         name: "PAP-11446-on-mobile-the-agent-chat-shouldn-t-hone-indented",
-        cwd: "/srv/paperclip/home/paperclipai/paperclip/.paperclip/worktrees/PAP-11446-on-mobile-agent-chat",
+        cwd: "/srv/paperclip/home/thinkingmach/paperclip/.paperclip/worktrees/PAP-11446-on-mobile-agent-chat",
         branchName: "PAP-11446-on-mobile-the-agent-chat-shouldnt-hone-indented",
         status: "active",
         lastUsedAt: "2026-01-09T00:00:00.000Z",
@@ -235,7 +235,7 @@ describe("buildReusableExecutionWorkspaceOptionGroups", () => {
       workspace({
         id: "simultaneous-work",
         name: "PAP-11429-why-are-these-live-simultaneously",
-        cwd: "/srv/paperclip/home/paperclipai/paperclip/.paperclip/worktrees/PAP-11429-live-simultaneously",
+        cwd: "/srv/paperclip/home/thinkingmach/paperclip/.paperclip/worktrees/PAP-11429-live-simultaneously",
         branchName: "PAP-11429-why-are-these-live-simultaneously",
         status: "active",
         lastUsedAt: "2026-01-08T00:00:00.000Z",
@@ -257,7 +257,7 @@ describe("buildReusableExecutionWorkspaceOptionGroups", () => {
     const groups = buildReusableExecutionWorkspaceOptionGroups([
       workspace({
         id: "path-only-mobile",
-        name: "Paperclip app",
+        name: "ThinkingMach app",
         cwd: "/srv/paperclip/mobile-checkout",
         branchName: "feature/workspace-reuse",
         lastUsedAt: "2026-01-10T00:00:00.000Z",

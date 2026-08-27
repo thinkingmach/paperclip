@@ -1,16 +1,16 @@
 import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import type { Issue, PaperclipPluginManifestV1 } from "@paperclipai/shared";
+import type { Issue, ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import { createTestHarness } from "../../../packages/plugins/sdk/src/testing.js";
 
-function manifest(capabilities: PaperclipPluginManifestV1["capabilities"]): PaperclipPluginManifestV1 {
+function manifest(capabilities: ThinkingMachPluginManifestV1["capabilities"]): ThinkingMachPluginManifestV1 {
   return {
     id: "paperclip.test-orchestration",
     apiVersion: 1,
     version: "0.1.0",
     displayName: "Test Orchestration",
     description: "Test plugin",
-    author: "Paperclip",
+    author: "ThinkingMach",
     categories: ["automation"],
     capabilities,
     entrypoints: { worker: "./dist/worker.js" },

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { and, asc, desc, eq, gt, inArray, ne, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   heartbeatRuns,
@@ -20,7 +20,7 @@ import {
   toolProfileEntries,
   toolProfiles,
   toolRateLimitCounters,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   ToolAccessDecision,
   ToolAccessDecisionInput,
@@ -39,8 +39,8 @@ import type {
   ToolRedactedValueSummary,
   ToolTrustRuleArgumentFilters,
   ToolRiskLevel,
-} from "@paperclipai/shared";
-import { toolPolicyConditionsSchema } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { toolPolicyConditionsSchema } from "@thinkingmach/shared";
 import { badRequest, conflict, notFound, unprocessable } from "../errors.js";
 import {
   effectiveToolProfileBindings,
@@ -516,7 +516,7 @@ function evaluatePolicyConditions(
       return conditionGroupFail("trustBoundary", "Policy condition requires a remote HTTP MCP tool.");
     }
     if (boolCondition(boundary.paperclipSelfOnly) === true && ctx.providerType !== "paperclip_self") {
-      return conditionGroupFail("trustBoundary", "Policy condition requires a Paperclip self tool.");
+      return conditionGroupFail("trustBoundary", "Policy condition requires a ThinkingMach self tool.");
     }
     matchedGroups.push("trustBoundary");
   }

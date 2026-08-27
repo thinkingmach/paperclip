@@ -1,4 +1,4 @@
-# Quickstart: single-container Paperclip with embedded database.
+# Quickstart: single-container ThinkingMach with embedded database.
 # Copy this file and set the required env vars before running.
 #
 #   cd docker
@@ -17,10 +17,10 @@ services:
     # dies visibly rather than starving the host of pids.
     pids_limit: 2048
     ports:
-      - "${PAPERCLIP_PORT:-3100}:3100"
+      - "${THINKINGMACH_PORT:-3100}:3100"
     environment:
       HOST: "0.0.0.0"
-      PAPERCLIP_HOME: "/paperclip"
+      THINKINGMACH_HOME: "/paperclip"
 
       # ── LLM provider keys (at least one is needed for agents to work) ──
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
@@ -28,17 +28,17 @@ services:
 
       # ── Deployment settings ──
       # "authenticated" requires login, "local_trusted" skips auth
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated"
       # "private" = LAN only, "public" = internet-facing (use with TLS)
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private"
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "private"
       # Base URL users will access the UI at
-      PAPERCLIP_PUBLIC_URL: "${PAPERCLIP_PUBLIC_URL:-http://localhost:3100}"
+      THINKINGMACH_PUBLIC_URL: "${THINKINGMACH_PUBLIC_URL:-http://localhost:3100}"
       # Extra hostnames the instance accepts beyond the public URL host
       # (LAN or Tailscale aliases), comma-separated; empty means none
-      PAPERCLIP_ALLOWED_HOSTNAMES: "${PAPERCLIP_ALLOWED_HOSTNAMES:-}"
+      THINKINGMACH_ALLOWED_HOSTNAMES: "${THINKINGMACH_ALLOWED_HOSTNAMES:-}"
 
       # ── Required secret for session signing (generate with: openssl rand -hex 32) ──
       BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}"
     volumes:
       # Persistent data directory (database, agent workspaces, uploads)
-      - "${PAPERCLIP_DATA_DIR:-../data/docker-paperclip}:/paperclip"
+      - "${THINKINGMACH_DATA_DIR:-../data/docker-paperclip}:/paperclip"

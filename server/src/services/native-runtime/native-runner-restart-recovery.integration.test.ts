@@ -15,7 +15,7 @@ import {
   issues,
   nativeRunFinalizations,
   nativeRunResults,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
@@ -106,7 +106,7 @@ describeEmbeddedPostgres("native runner restart recovery with real processes", (
   let paperclipHome: string;
   let server: Server | null = null;
   let apiUrl: string;
-  let originalPaperclipHome: string | undefined;
+  let originalThinkingMachHome: string | undefined;
 
   const companyId = randomUUID();
   const agentId = randomUUID();
@@ -118,8 +118,8 @@ describeEmbeddedPostgres("native runner restart recovery with real processes", (
     );
     runtimeRoot = await mkdtemp(resolve(tmpdir(), "native-restart-runtime-"));
     paperclipHome = await mkdtemp(resolve(tmpdir(), "native-restart-home-"));
-    originalPaperclipHome = process.env.PAPERCLIP_HOME;
-    process.env.PAPERCLIP_HOME = paperclipHome;
+    originalThinkingMachHome = process.env.THINKINGMACH_HOME;
+    process.env.THINKINGMACH_HOME = paperclipHome;
     const controllerStartedAt = await readProcessStartedAt(process.pid);
     successor = {
       bootId: randomUUID(),
@@ -167,8 +167,8 @@ describeEmbeddedPostgres("native runner restart recovery with real processes", (
       rm(runtimeRoot, { recursive: true, force: true }),
       rm(paperclipHome, { recursive: true, force: true }),
     ]);
-    if (originalPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-    else process.env.PAPERCLIP_HOME = originalPaperclipHome;
+    if (originalThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+    else process.env.THINKINGMACH_HOME = originalThinkingMachHome;
   });
 
   async function seedRun(

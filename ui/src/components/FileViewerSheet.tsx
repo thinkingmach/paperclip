@@ -9,25 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Ban,
-  Check,
-  Cloud,
-  Copy,
-  Download,
-  Eye,
-  FileCode2,
-  FileSearch,
-  FolderOpen,
-  FolderSearch,
-  Link2,
-  Loader2,
-  Lock,
-  RefreshCcw,
-  X,
-} from "lucide-react";
+import { AlertTriangle, ArrowLeft, Ban, Check, Cloud, Copy, Download, Eye, FileCode2, FileSearch, FolderOpen, FolderSearch, Link2, Loader2, Lock, RefreshCcw, X,  } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -51,7 +33,7 @@ import type {
   ResolvedWorkspaceResource,
   WorkspaceFileContent,
   WorkspaceFileSelector,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 const FILE_VIEWER_LABELLED_BY_ID = "paperclip-file-viewer-title";
 const FILE_VIEWER_DESCRIBED_BY_ID = "paperclip-file-viewer-description";

@@ -129,7 +129,7 @@
   --paperclip-doc-annotation-highlight-y-outset: 0.125rem;
   --paperclip-doc-annotation-highlight-radius: 0.1875rem;
 
-  /* Brand agent-capsule gradient stops (paperclip.ing/brand/).
+  /* Brand agent-capsule gradient stops (thinkingmach.com/brand/).
      "The capsule is the agent" — each agent gets a 2-stop gradient,
      --agent-Na (top) → --agent-Nb (bottom). Brand-fixed hex, identical
      across themes. Indices 1–10; consumed by AgentCapsule. */

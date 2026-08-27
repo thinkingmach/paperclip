@@ -99,7 +99,7 @@ describe("workspace handoff key derivation", () => {
 
   it("prefers a dedicated secret and otherwise derives one that is not the auth secret", () => {
     expect(
-      resolveWorkspaceHandoffRootSecret({ PAPERCLIP_WORKSPACE_HANDOFF_SECRET: "dedicated" }),
+      resolveWorkspaceHandoffRootSecret({ THINKINGMACH_WORKSPACE_HANDOFF_SECRET: "dedicated" }),
     ).toEqual({ secret: "dedicated", source: "dedicated" });
 
     const derived = resolveWorkspaceHandoffRootSecret({ BETTER_AUTH_SECRET: "auth-secret" });

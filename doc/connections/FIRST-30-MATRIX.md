@@ -56,7 +56,7 @@ grant/revocation proof.
 ## Reuse Classification
 
 Use **direct MCP** when the provider exposes an official or stable MCP server
-whose tool/resource semantics match Paperclip grants: Linear, Notion, Sentry,
+whose tool/resource semantics match ThinkingMach grants: Linear, Notion, Sentry,
 Vercel, PostHog, Exa, Apify, Canva where available, Fireflies, and most Google
 Workspace reads.
 

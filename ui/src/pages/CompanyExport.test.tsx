@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ExportFidelityReport } from "@paperclipai/shared/portability-fidelity";
+import type { ExportFidelityReport } from "@thinkingmach/shared/portability-fidelity";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CompanyExport, resolveExportPreviewImageSrc } from "./CompanyExport";
 
@@ -45,7 +45,7 @@ vi.mock("../context/BreadcrumbContext", () => ({
 vi.mock("../context/CompanyContext", () => ({
   useCompany: () => ({
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach" },
   }),
   useOptionalCompany: () => null,
 }));
@@ -89,12 +89,12 @@ function buildExportPreviewResult() {
       issues: [],
       envInputs: [],
       includes: { company: true, agents: true, projects: true, issues: true, skills: false },
-      company: { name: "Paperclip", description: null },
+      company: { name: "ThinkingMach", description: null },
       schemaVersion: 1,
       generatedAt: "2026-01-01T00:00:00.000Z",
       source: null,
     },
-    files: { "README.md": "# Paperclip\n" },
+    files: { "README.md": "# ThinkingMach\n" },
     fileInventory: [],
     counts: { files: 1, agents: 0, skills: 0, projects: 0, issues: 0 },
     warnings: [],
@@ -117,7 +117,7 @@ function buildRichExportPreviewResult() {
   return {
     ...base,
     files: {
-      "README.md": "# Paperclip\n",
+      "README.md": "# ThinkingMach\n",
       ".paperclip.yaml": "schema: paperclip/v1\n",
       "agents/ceo/AGENT.md": "# CEO\n",
       "tasks/one-off/TASK.md": "# One-off\n",
@@ -270,7 +270,7 @@ describe("CompanyExport", () => {
     await clickElement(retry!);
 
     expect(mockCompaniesApi.exportPreview).toHaveBeenCalledTimes(2);
-    expect(container.textContent).toContain("Paperclip export");
+    expect(container.textContent).toContain("ThinkingMach export");
   });
 
   it("starts the preview without waiting for sidebar-order dependencies", async () => {
@@ -284,7 +284,7 @@ describe("CompanyExport", () => {
     await renderPage();
 
     expect(mockCompaniesApi.exportPreview).toHaveBeenCalledTimes(1);
-    expect(container.textContent).toContain("Paperclip export");
+    expect(container.textContent).toContain("ThinkingMach export");
 
     await act(async () => {
       resolveSession({ user: { id: "user-1" } });

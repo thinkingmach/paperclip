@@ -1,25 +1,11 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { IssueWorkProduct } from "@paperclipai/shared";
+import type { IssueWorkProduct } from "@thinkingmach/shared";
 import { issuesApi } from "../api/issues";
 import { queryKeys } from "../lib/queryKeys";
 import { MarkdownBody } from "./MarkdownBody";
 import { cn } from "../lib/utils";
-import {
-  FileText,
-  ExternalLink,
-  GitBranch,
-  GitCommit,
-  Globe,
-  Server,
-  Package,
-  Loader2,
-  ArrowLeft,
-  X,
-  CheckCircle2,
-  XCircle,
-  RotateCcw,
-} from "lucide-react";
+import { FileText, ExternalLink, GitBranch, GitCommit, Globe, Server, Package, Loader2, ArrowLeft, X, CheckCircle2, XCircle, RotateCcw,  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 

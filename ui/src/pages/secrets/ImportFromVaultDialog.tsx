@@ -1,20 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  AlertCircle,
-  AlertTriangle,
-  CheckCircle2,
-  Cloud,
-  Database,
-  ExternalLink,
-  Info,
-  Link2,
-  Loader2,
-  RefreshCw,
-  Search,
-  X,
-  XCircle,
-} from "lucide-react";
+import { AlertCircle, AlertTriangle, CheckCircle2, Cloud, Database, ExternalLink, Info, Link2, Loader2, RefreshCw, Search, X, XCircle,  } from "lucide-react";
 import type {
   CompanySecret,
   CompanySecretProviderConfig,
@@ -22,7 +8,7 @@ import type {
   RemoteSecretImportPreviewResult,
   RemoteSecretImportResult,
   RemoteSecretImportRowResult,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { ApiError } from "../../api/client";
 import {
   secretsApi,
@@ -284,10 +270,10 @@ function validateDraftRow(
 
   for (const existingSecret of existing) {
     if (existingSecret.name.trim().toLowerCase() === lowerName) {
-      return "A Paperclip secret already uses this name.";
+      return "A ThinkingMach secret already uses this name.";
     }
     if (existingSecret.key.trim().toLowerCase() === lowerKey) {
-      return "A Paperclip secret already uses this key.";
+      return "A ThinkingMach secret already uses this key.";
     }
   }
 
@@ -658,7 +644,7 @@ export function ImportFromVaultDialog({
               Import from AWS Secrets Manager
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              Bring AWS-managed secrets into Paperclip as external references.
+              Bring AWS-managed secrets into ThinkingMach as external references.
             </DialogDescription>
             <Stepper step={step} />
           </div>
@@ -1245,7 +1231,7 @@ function ReviewStep({ drafts, reviewErrors, updateDraft, removeDraft, importing 
                   </div>
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                     <label className="flex flex-col gap-1 text-xs">
-                      <span className="text-muted-foreground">Paperclip name</span>
+                      <span className="text-muted-foreground">ThinkingMach name</span>
                       <Input
                         value={draft.name}
                         onChange={(e) =>

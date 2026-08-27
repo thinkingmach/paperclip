@@ -57,19 +57,19 @@ const modeCopy: Record<
   { eyebrow: string; title: string; description: string }
 > = {
   console: {
-    eyebrow: "Paperclip Runner Protocol · Live console",
+    eyebrow: "ThinkingMach Runner Protocol · Live console",
     title: "Live Codex protocol console",
     description:
       "Chat with a live session, steer it, stop it, answer its requests, and inspect the canonical protocol behind every surface.",
   },
   live: {
-    eyebrow: "Paperclip Runner Protocol · Local runner",
+    eyebrow: "ThinkingMach Runner Protocol · Local runner",
     title: "Live runner diagnostics",
     description:
       "Run the local harness, stream validated events, and compare the live and replayed state.",
   },
   replay: {
-    eyebrow: "Paperclip Runner Protocol · Replay",
+    eyebrow: "ThinkingMach Runner Protocol · Replay",
     title: "Static protocol replay",
     description:
       "Validate a protocol fixture, replay its events, and inspect the resulting session state.",
@@ -603,7 +603,7 @@ export function App() {
           <h1>{header.title}</h1>
           <p>{header.description}</p>
         </div>
-        <Badge tone="neutral">Standalone · no Paperclip core</Badge>
+        <Badge tone="neutral">Standalone · no ThinkingMach core</Badge>
       </header>
 
       <nav className="mode-switch" aria-label="Runner devtool mode">

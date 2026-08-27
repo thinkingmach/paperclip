@@ -55,7 +55,7 @@ factory validated by the shared environment schema.
 The local environment is instance-managed: company creation ensures it exists,
 and the public API intentionally rejects a second local environment. The setup
 registry therefore discovers that row through the public environments API.
-This still provides full isolation because every cell starts a new Paperclip
+This still provides full isolation because every cell starts a new ThinkingMach
 instance and database.
 
 Daytona creates a sandbox environment through the public API. Keep
@@ -95,7 +95,7 @@ interaction. `plan_approval_completion` must target the exact two-step
 canonical Plan revision, capture its pending UI, approve in the browser, and
 prove exactly two successful runs.
 
-Every selected case runs in its own isolated Paperclip process, and independent
+Every selected case runs in its own isolated ThinkingMach process, and independent
 cases may run concurrently. Follow-up turns inside one case retain their shared
 task state. Each case creates and tears down its own company, secrets,
 environment selection, agent, and browser-created task. The current plan case
@@ -114,7 +114,7 @@ Adding a task expands its suite's matrix. Update the suite's intentional size,
 the complete-catalog size, and credential-free unit tests in the same change.
 Paid tests never silently skip a missing credential or unsupported artifact.
 
-## New Paperclip object fixtures
+## New ThinkingMach object fixtures
 
 Register new objects in `live-fixtures.ts` with explicit dependencies in
 `FixtureRegistry`. Setup must use a public API. Teardown runs in reverse order

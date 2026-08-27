@@ -6,7 +6,7 @@ import type {
   EnvBinding,
   UserSecretCoverageSummary,
   UserSecretDefinition,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { MemoryRouter } from "react-router-dom";
 import { MyUserSecretsTab } from "@/pages/secrets/MyUserSecretsTab";
 import { UserSecretDefinitionsTab } from "@/pages/secrets/UserSecretDefinitionsTab";

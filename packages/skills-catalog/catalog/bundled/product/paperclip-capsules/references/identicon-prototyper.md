@@ -1,6 +1,6 @@
 # Identicon Prototyper
 
-Use this reference when generating or reviewing deterministic Paperclip capsule identicons/profile pills. Prototype source paths, when the Paperclip content repository is available:
+Use this reference when generating or reviewing deterministic ThinkingMach capsule identicons/profile pills. Prototype source paths, when the ThinkingMach content repository is available:
 
 - `paperclip-content/design/PAP-11825/paperclip-capsule-identicon-prototyper/README.md`
 - `paperclip-content/design/PAP-11825/paperclip-capsule-identicon-prototyper/src/identicon.ts`

@@ -117,7 +117,7 @@ vi.mock("./pages/PluginPage", () => ({
 
 const PAP_COMPANY = {
   id: "company-1",
-  name: "Paperclip",
+  name: "ThinkingMach",
   issuePrefix: "PAP",
   status: "active",
 };

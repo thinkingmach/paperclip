@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { ProviderQuotaResult, QuotaWindow } from "@paperclipai/adapter-utils";
+import type { ProviderQuotaResult, QuotaWindow } from "@thinkingmach/adapter-utils";
 import {
   classifyCodexAuthRefreshFailure,
   type CodexAuthRefreshFailureClass,

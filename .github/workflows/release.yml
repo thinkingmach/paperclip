@@ -150,8 +150,8 @@ jobs:
     permissions:
       contents: read
     env:
-      PAPERCLIPAI_VERSION: ${{ needs.publish_canary.outputs.canary_version }}
-      PAPERCLIP_PLAYWRIGHT_CHANNEL: chrome
+      THINKINGMACH_VERSION: ${{ needs.publish_canary.outputs.canary_version }}
+      THINKINGMACH_PLAYWRIGHT_CHANNEL: chrome
 
     steps:
       - name: Checkout repository
@@ -175,7 +175,7 @@ jobs:
 
       - name: Smoke exact published canary through onboarding
         env:
-          PAPERCLIP_CANARY_SMOKE_SERVER_LOG: ${{ runner.temp }}/canary-onboarding-server.log
+          THINKINGMACH_CANARY_SMOKE_SERVER_LOG: ${{ runner.temp }}/canary-onboarding-server.log
         run: pnpm run test:canary-onboarding-smoke
 
       - name: Upload failed canary onboarding diagnostics
@@ -866,7 +866,7 @@ jobs:
 
           beta_version="${beta_tag#beta/v}"
           echo "beta_version=${beta_version}" >> "$GITHUB_OUTPUT"
-          publish_time="$(npm view "paperclipai@${beta_version}" time --json 2>/dev/null \
+          publish_time="$(npm view "thinkingmach@${beta_version}" time --json 2>/dev/null \
             | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const t=JSON.parse(d);process.stdout.write(typeof t === "string" ? t : (t[process.argv[1]] ?? ""))})' "$beta_version" || true)"
           if [ -z "$publish_time" ]; then
             fail_or_justify "could not determine the npm publish time of beta ${beta_version}."

@@ -15,7 +15,7 @@
  *   splitting through a value that carries `\r\n`.
  *
  * `Authorization` is deliberately allowed: it is the header the bearer-key path
- * uses, and its value is stored as a Paperclip secret like every other one.
+ * uses, and its value is stored as a ThinkingMach secret like every other one.
  */
 
 /** RFC 9110 field-name = token. */
@@ -25,12 +25,12 @@ const MAX_HEADER_NAME_LENGTH = 128;
 const MAX_HEADER_VALUE_LENGTH = 8_192;
 
 /**
- * Headers Paperclip refuses to project from a user-supplied config.
+ * Headers ThinkingMach refuses to project from a user-supplied config.
  *
  * `connection`/`keep-alive`/`te`/`trailer`/`transfer-encoding`/`upgrade` are
  * hop-by-hop (RFC 9110 §7.6.1) and belong to the fetch implementation.
  * `content-length`/`host` frame and route the request. `cookie` would attach
- * ambient browser-style credentials that Paperclip cannot scope or rotate.
+ * ambient browser-style credentials that ThinkingMach cannot scope or rotate.
  * `proxy-*` targets an intermediary rather than the MCP server.
  */
 const FORBIDDEN_HEADER_NAMES = new Set([
@@ -72,7 +72,7 @@ export interface McpRemoteHeaderCheck {
 const OK: McpRemoteHeaderCheck = { ok: true };
 
 /**
- * Is `name` a header Paperclip is willing to send on a user-configured remote
+ * Is `name` a header ThinkingMach is willing to send on a user-configured remote
  * MCP request? Returns the specific rejection reason so callers can produce an
  * actionable, UI-safe message.
  */
@@ -124,7 +124,7 @@ export function mcpRemoteHeaderRejectionMessage(
     case "invalid_characters":
       return `"${headerName.slice(0, MAX_HEADER_NAME_LENGTH)}" is not a valid header name. Use letters, digits, and dashes.`;
     case "forbidden":
-      return `Paperclip manages the "${headerName}" header and cannot send a custom value for it.`;
+      return `ThinkingMach manages the "${headerName}" header and cannot send a custom value for it.`;
     case "value_too_long":
       return `The value for "${headerName}" is too long.`;
     case "value_control_characters":

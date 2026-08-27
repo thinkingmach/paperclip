@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://paperclip.dev/schemas/prp/v1/conformance-output.schema.json",
-  "title": "Paperclip Runner cross-language conformance output",
+  "title": "ThinkingMach Runner cross-language conformance output",
   "type": "object",
   "required": ["schemaVersion", "runIdentity", "result"],
   "properties": {

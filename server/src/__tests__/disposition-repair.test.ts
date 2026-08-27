@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ISSUE_RECOVERY_ACTION_KINDS } from "@paperclipai/shared";
+import { ISSUE_RECOVERY_ACTION_KINDS } from "@thinkingmach/shared";
 import { classifyContinuationFailure } from "../services/recovery/service.ts";
 import {
   DISPOSITION_REPAIR_BASE_DELAYS_MS,

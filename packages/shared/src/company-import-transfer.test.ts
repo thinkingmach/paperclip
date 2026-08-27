@@ -4,9 +4,9 @@ import { buildAlreadyImportedMessage } from "./company-import-transfer.js";
 describe("buildAlreadyImportedMessage", () => {
   it("names the landed company with its prefix", () => {
     expect(
-      buildAlreadyImportedMessage({ id: "company-2", name: "Paperclip", issuePrefix: "PAPA" }),
+      buildAlreadyImportedMessage({ id: "company-2", name: "ThinkingMach", issuePrefix: "PAPA" }),
     ).toBe(
-      'This exact package was already imported by a completed transfer. The earlier import landed in the company "Paperclip" (PAPA) — open it from the company switcher. Re-export the package to import it again.',
+      'This exact package was already imported by a completed transfer. The earlier import landed in the company "ThinkingMach" (PAPA) — open it from the company switcher. Re-export the package to import it again.',
     );
   });
 

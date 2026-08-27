@@ -1,4 +1,4 @@
-import type { Issue, IssueComment } from "@paperclipai/shared";
+import type { Issue, IssueComment } from "@thinkingmach/shared";
 
 /**
  * First-page size for the issue-detail comment feed. Single source of truth so

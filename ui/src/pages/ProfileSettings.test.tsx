@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { sanitizeAssetNamespace } from "@paperclipai/shared";
+import { sanitizeAssetNamespace } from "@thinkingmach/shared";
 import { ProfileSettings } from "./ProfileSettings";
 
 const mockAuthApi = vi.hoisted(() => ({
@@ -40,7 +40,7 @@ vi.mock("../context/BreadcrumbContext", () => ({
 vi.mock("../context/CompanyContext", () => ({
   useCompany: () => ({
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip", issuePrefix: "PAP" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach", issuePrefix: "PAP" },
   }),
 }));
 
@@ -88,7 +88,7 @@ describe("ProfileSettings", () => {
     vi.clearAllMocks();
   });
 
-  it("uploads a clicked avatar into Paperclip storage and persists the returned asset path", async () => {
+  it("uploads a clicked avatar into ThinkingMach storage and persists the returned asset path", async () => {
     const root = createRoot(container);
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },

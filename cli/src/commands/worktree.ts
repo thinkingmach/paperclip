@@ -25,12 +25,12 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import {
   resolveCanonicalWorktreeSeedSource,
   resolveRegisteredWorktreeSeedSource,
-} from "@paperclipai/shared/worktree-seed-source";
+} from "@thinkingmach/shared/worktree-seed-source";
 import {
   readWorktreePortRegistry,
   withWorktreePortRegistryLock,
   writeWorktreePortRegistry,
-} from "@paperclipai/shared/worktree-port-registry";
+} from "@thinkingmach/shared/worktree-port-registry";
 import {
   applyPendingMigrations,
   agents,
@@ -65,13 +65,20 @@ import {
   formatEmbeddedPostgresError,
   loadWithoutEmbeddedPostgresExitHooks,
   prepareEmbeddedPostgresNativeRuntime,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { Command } from "commander";
-import { ensureAgentJwtSecret, ensureToolActionSigningSecret, loadPaperclipEnvFile, mergePaperclipEnvEntries, readPaperclipEnvEntries, resolvePaperclipEnvFile } from "../config/env.js";
+import {
+  ensureAgentJwtSecret,
+  ensureToolActionSigningSecret,
+  loadThinkingMachEnvFile,
+  mergeThinkingMachEnvEntries,
+  readThinkingMachEnvEntries,
+  resolveThinkingMachEnvFile,
+} from "../config/env.js";
 import { expandHomePrefix } from "../config/home.js";
-import type { PaperclipConfig } from "../config/schema.js";
+import type { ThinkingMachConfig } from "../config/schema.js";
 import { readConfig, resolveConfigPath, writeConfig } from "../config/store.js";
-import { printPaperclipCliBanner } from "../utils/banner.js";
+import { printThinkingMachCliBanner } from "../utils/banner.js";
 import { resolveRuntimeLikePath } from "../utils/path-resolver.js";
 import {
   buildWorktreeConfig,
@@ -276,7 +283,7 @@ function nonEmpty(value: string | null | undefined): string | null {
 }
 
 function isCurrentSourceConfigPath(sourceConfigPath: string): boolean {
-  const currentConfigPath = process.env.PAPERCLIP_CONFIG;
+  const currentConfigPath = process.env.THINKINGMACH_CONFIG;
   if (!currentConfigPath || currentConfigPath.trim().length === 0) {
     return false;
   }
@@ -314,11 +321,11 @@ function resolveWorktreeMakeName(name: string): string {
 }
 
 function resolveWorktreeHome(explicit?: string): string {
-  return explicit ?? process.env.PAPERCLIP_WORKTREES_DIR ?? DEFAULT_WORKTREE_HOME;
+  return explicit ?? process.env.THINKINGMACH_WORKTREES_DIR ?? DEFAULT_WORKTREE_HOME;
 }
 
 function resolveWorktreeStartPoint(explicit?: string): string | undefined {
-  return explicit ?? nonEmpty(process.env.PAPERCLIP_WORKTREE_START_POINT) ?? undefined;
+  return explicit ?? nonEmpty(process.env.THINKINGMACH_WORKTREE_START_POINT) ?? undefined;
 }
 
 type ConfiguredStorage = {
@@ -397,7 +404,7 @@ function buildS3ObjectKey(prefix: string, objectKey: string): string {
 
 const dynamicImport = new Function("specifier", "return import(specifier);") as (specifier: string) => Promise<any>;
 
-function createConfiguredStorageFromPaperclipConfig(config: PaperclipConfig): ConfiguredStorage {
+function createConfiguredStorageFromThinkingMachConfig(config: ThinkingMachConfig): ConfiguredStorage {
   if (config.storage.provider === "local_disk") {
     const baseDir = expandHomePrefix(config.storage.localDisk.baseDir);
     return {
@@ -466,7 +473,7 @@ function openConfiguredStorage(configPath: string): ConfiguredStorage {
   if (!config) {
     throw new Error(`Config not found at ${configPath}.`);
   }
-  return createConfiguredStorageFromPaperclipConfig(config);
+  return createConfiguredStorageFromThinkingMachConfig(config);
 }
 
 async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
@@ -959,13 +966,13 @@ export function resolveWorktreeReseedTargetPaths(input: {
   configPath: string;
   rootPath: string;
 }): WorktreeLocalPaths {
-  const envEntries = readPaperclipEnvEntries(resolvePaperclipEnvFile(input.configPath));
-  const homeDir = nonEmpty(envEntries.PAPERCLIP_HOME);
-  const instanceId = nonEmpty(envEntries.PAPERCLIP_INSTANCE_ID);
+  const envEntries = readThinkingMachEnvEntries(resolveThinkingMachEnvFile(input.configPath));
+  const homeDir = nonEmpty(envEntries.THINKINGMACH_HOME);
+  const instanceId = nonEmpty(envEntries.THINKINGMACH_INSTANCE_ID);
 
   if (!homeDir || !instanceId) {
     throw new Error(
-      `Target config ${input.configPath} does not look like a worktree-local Paperclip instance. Expected PAPERCLIP_HOME and PAPERCLIP_INSTANCE_ID in the adjacent .env.`,
+      `Target config ${input.configPath} does not look like a worktree-local ThinkingMach instance. Expected THINKINGMACH_HOME and THINKINGMACH_INSTANCE_ID in the adjacent .env.`,
     );
   }
 
@@ -986,7 +993,7 @@ function resolveExistingGitWorktree(selector: string, cwd: string): MergeSourceC
       worktree: directPath,
       branch: null,
       branchLabel: path.basename(directPath),
-      hasPaperclipConfig: existsSync(path.resolve(directPath, ".paperclip", "config.json")),
+      hasThinkingMachConfig: existsSync(path.resolve(directPath, ".paperclip", "config.json")),
       isCurrent: directPath === path.resolve(cwd),
     };
   }
@@ -1075,7 +1082,7 @@ async function ensureRepairTargetWorktree(input: {
   };
 }
 
-function resolveSourceConnectionString(config: PaperclipConfig, envEntries: Record<string, string>, portOverride?: number): string {
+function resolveSourceConnectionString(config: ThinkingMachConfig, envEntries: Record<string, string>, portOverride?: number): string {
   if (config.database.mode === "postgres") {
     const connectionString = nonEmpty(envEntries.DATABASE_URL) ?? nonEmpty(config.database.connectionString);
     if (!connectionString) {
@@ -1092,7 +1099,7 @@ function resolveSourceConnectionString(config: PaperclipConfig, envEntries: Reco
 
 export function copySeededSecretsKey(input: {
   sourceConfigPath: string;
-  sourceConfig: PaperclipConfig;
+  sourceConfig: ThinkingMachConfig;
   sourceEnvEntries: Record<string, string>;
   targetKeyFilePath: string;
 }): void {
@@ -1104,8 +1111,8 @@ export function copySeededSecretsKey(input: {
 
   const allowProcessEnvFallback = isCurrentSourceConfigPath(input.sourceConfigPath);
   const sourceInlineMasterKey =
-    nonEmpty(input.sourceEnvEntries.PAPERCLIP_SECRETS_MASTER_KEY) ??
-    (allowProcessEnvFallback ? nonEmpty(process.env.PAPERCLIP_SECRETS_MASTER_KEY) : null);
+    nonEmpty(input.sourceEnvEntries.THINKINGMACH_SECRETS_MASTER_KEY) ??
+    (allowProcessEnvFallback ? nonEmpty(process.env.THINKINGMACH_SECRETS_MASTER_KEY) : null);
   if (sourceInlineMasterKey) {
     writeFileSync(input.targetKeyFilePath, sourceInlineMasterKey, {
       encoding: "utf8",
@@ -1120,8 +1127,8 @@ export function copySeededSecretsKey(input: {
   }
 
   const sourceKeyFileOverride =
-    nonEmpty(input.sourceEnvEntries.PAPERCLIP_SECRETS_MASTER_KEY_FILE) ??
-    (allowProcessEnvFallback ? nonEmpty(process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE) : null);
+    nonEmpty(input.sourceEnvEntries.THINKINGMACH_SECRETS_MASTER_KEY_FILE) ??
+    (allowProcessEnvFallback ? nonEmpty(process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE) : null);
   const sourceConfiguredKeyPath = sourceKeyFileOverride ?? input.sourceConfig.secrets.localEncrypted.keyFilePath;
   const sourceKeyFilePath = resolveRuntimeLikePath(sourceConfiguredKeyPath, input.sourceConfigPath);
 
@@ -1457,7 +1464,7 @@ type WorktreeSeedValidationExpectation = {
 };
 
 export function requiresWorktreeSeedCredentialAccount(
-  deploymentMode: PaperclipConfig["server"]["deploymentMode"],
+  deploymentMode: ThinkingMachConfig["server"]["deploymentMode"],
 ): boolean {
   return deploymentMode === "authenticated";
 }
@@ -1475,7 +1482,7 @@ export function resolveWorktreeSeedMigrationRevision(
     appliedMigrationNames.size !== expectedAppliedPrefix.length ||
     expectedAppliedPrefix.some((migration) => !appliedMigrationNames.has(migration))
   ) {
-    throw new Error("Migration journal is not a prefix of this Paperclip checkout's migration journal.");
+    throw new Error("Migration journal is not a prefix of this ThinkingMach checkout's migration journal.");
   }
 
   if (requirement === "upToDate" && migrationState.status !== "upToDate") {
@@ -1494,7 +1501,7 @@ export function resolveWorktreeSeedMigrationRevision(
 /**
  * Markerless worktrees predate the versioned seed manifest. Adopt one only
  * after proving that its configured database already has a compatible
- * migration journal and the core Paperclip tables. The physical PG_VERSION
+ * migration journal and the core ThinkingMach tables. The physical PG_VERSION
  * check prevents this read-only probe from initializing a missing embedded
  * database and then mistaking that empty cluster for legacy evidence.
  */
@@ -1504,7 +1511,7 @@ export async function inspectLegacyWorktreeDatabase(
   const config = readConfig(configPath);
   if (!config) return null;
 
-  const envEntries = readPaperclipEnvEntries(resolvePaperclipEnvFile(configPath));
+  const envEntries = readThinkingMachEnvEntries(resolveThinkingMachEnvFile(configPath));
   let embeddedHandle: EmbeddedPostgresHandle | null = null;
   let db: ReturnType<typeof createDb> | null = null;
   try {
@@ -1539,7 +1546,7 @@ export async function inspectLegacyWorktreeDatabase(
 async function inspectVerifiedSeedDatabase(
   connectionString: string,
   options: {
-    deploymentMode: PaperclipConfig["server"]["deploymentMode"];
+    deploymentMode: ThinkingMachConfig["server"]["deploymentMode"];
     expected?: WorktreeSeedValidationExpectation;
     migrationRequirement?: "sourcePrefix" | "upToDate";
     requiredCompanyId?: string;
@@ -1679,8 +1686,8 @@ async function inspectVerifiedSeedDatabase(
 
 async function seedWorktreeDatabase(input: {
   sourceConfigPath: string;
-  sourceConfig: PaperclipConfig;
-  targetConfig: PaperclipConfig;
+  sourceConfig: ThinkingMachConfig;
+  targetConfig: ThinkingMachConfig;
   targetPaths: WorktreeLocalPaths;
   instanceId: string;
   seedMode: WorktreeSeedMode;
@@ -1689,8 +1696,8 @@ async function seedWorktreeDatabase(input: {
   onPhase?: (phase: WorktreeSeedPhase, status: "started" | "succeeded", message?: string) => void;
 }): Promise<SeedWorktreeDatabaseResult> {
   const seedPlan = resolveWorktreeSeedPlan(input.seedMode);
-  const sourceEnvFile = resolvePaperclipEnvFile(input.sourceConfigPath);
-  const sourceEnvEntries = readPaperclipEnvEntries(sourceEnvFile);
+  const sourceEnvFile = resolveThinkingMachEnvFile(input.sourceConfigPath);
+  const sourceEnvEntries = readThinkingMachEnvEntries(sourceEnvFile);
   let sourceHandle: EmbeddedPostgresHandle | null = null;
   let targetHandle: EmbeddedPostgresHandle | null = null;
 
@@ -1879,8 +1886,8 @@ type LegacyWorktreeSeedPendingMarker = {
 };
 
 function resolveSeedInstanceId(configPath: string): string {
-  const envEntries = readPaperclipEnvEntries(resolvePaperclipEnvFile(configPath));
-  return nonEmpty(envEntries.PAPERCLIP_INSTANCE_ID)
+  const envEntries = readThinkingMachEnvEntries(resolveThinkingMachEnvFile(configPath));
+  return nonEmpty(envEntries.THINKINGMACH_INSTANCE_ID)
     ?? sanitizeWorktreeInstanceId(path.basename(path.dirname(path.resolve(configPath))));
 }
 
@@ -2164,8 +2171,8 @@ function startWorktreeSeedAttempt(configPath: string, now = new Date()): Worktre
 async function runVerifiedWorktreeSeed(input: {
   configPath: string;
   sourceConfigPath: string;
-  sourceConfig: PaperclipConfig;
-  targetConfig: PaperclipConfig;
+  sourceConfig: ThinkingMachConfig;
+  targetConfig: ThinkingMachConfig;
   targetPaths: WorktreeLocalPaths;
   instanceId: string;
   seedMode: WorktreeSeedMode;
@@ -2279,7 +2286,7 @@ export async function ensureWorktreeSeeded(
       })
     : null;
   const registeredBaseWorkspaceCwd = opts.registeredBaseWorkspaceCwd
-    ?? nonEmpty(process.env.PAPERCLIP_WORKSPACE_BASE_CWD)
+    ?? nonEmpty(process.env.THINKINGMACH_WORKSPACE_BASE_CWD)
     ?? null;
   if (!initialManifest && !legacyPending && !hasExplicitSource && !registeredBaseWorkspaceCwd) {
     if (existsSync(markers.lock)) {
@@ -2289,11 +2296,11 @@ export async function ensureWorktreeSeeded(
     return { seeded: false, reason: "legacy_unmarked" };
   }
   const registeredProjectWorkspaceId = opts.registeredProjectWorkspaceId
-    ?? nonEmpty(process.env.PAPERCLIP_PROJECT_WORKSPACE_ID)
+    ?? nonEmpty(process.env.THINKINGMACH_PROJECT_WORKSPACE_ID)
     ?? null;
   const expectedCompanyId = opts.expectedCompanyId
-    ?? nonEmpty(process.env.PAPERCLIP_SEED_EXPECTED_COMPANY_ID)
-    ?? nonEmpty(process.env.PAPERCLIP_COMPANY_ID)
+    ?? nonEmpty(process.env.THINKINGMACH_SEED_EXPECTED_COMPANY_ID)
+    ?? nonEmpty(process.env.THINKINGMACH_COMPANY_ID)
     ?? undefined;
   if (!explicitSourceConfigPath && registeredBaseWorkspaceCwd && (!registeredProjectWorkspaceId || !expectedCompanyId)) {
     throw new Error(
@@ -2526,24 +2533,24 @@ async function runWorktreeInit(opts: WorktreeInitOptions): Promise<void> {
     targetInstanceId: instanceId,
     seedMode,
   });
-  const sourceEnvEntries = readPaperclipEnvEntries(resolvePaperclipEnvFile(sourceConfigPath));
+  const sourceEnvEntries = readThinkingMachEnvEntries(resolveThinkingMachEnvFile(sourceConfigPath));
   const existingAgentJwtSecret =
-    nonEmpty(sourceEnvEntries.PAPERCLIP_AGENT_JWT_SECRET) ??
-    nonEmpty(process.env.PAPERCLIP_AGENT_JWT_SECRET);
+    nonEmpty(sourceEnvEntries.THINKINGMACH_AGENT_JWT_SECRET) ??
+    nonEmpty(process.env.THINKINGMACH_AGENT_JWT_SECRET);
   const existingToolActionSigningSecret =
-    nonEmpty(sourceEnvEntries.PAPERCLIP_TOOL_ACTION_SIGNING_SECRET) ??
-    nonEmpty(process.env.PAPERCLIP_TOOL_ACTION_SIGNING_SECRET);
-  mergePaperclipEnvEntries(
+    nonEmpty(sourceEnvEntries.THINKINGMACH_TOOL_ACTION_SIGNING_SECRET) ??
+    nonEmpty(process.env.THINKINGMACH_TOOL_ACTION_SIGNING_SECRET);
+  mergeThinkingMachEnvEntries(
     {
       ...buildWorktreeEnvEntries(paths, branding),
-      ...(existingAgentJwtSecret ? { PAPERCLIP_AGENT_JWT_SECRET: existingAgentJwtSecret } : {}),
-      ...(existingToolActionSigningSecret ? { PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: existingToolActionSigningSecret } : {}),
+      ...(existingAgentJwtSecret ? { THINKINGMACH_AGENT_JWT_SECRET: existingAgentJwtSecret } : {}),
+      ...(existingToolActionSigningSecret ? { THINKINGMACH_TOOL_ACTION_SIGNING_SECRET: existingToolActionSigningSecret } : {}),
     },
     paths.envPath,
   );
   ensureAgentJwtSecret(paths.configPath);
   ensureToolActionSigningSecret(paths.configPath);
-  loadPaperclipEnvFile(paths.configPath);
+  loadThinkingMachEnvFile(paths.configPath);
   const copiedGitHooks = copyGitHooksToWorktreeGitDir(cwd);
 
   let seedSummary: string | null = null;
@@ -2617,20 +2624,20 @@ async function runWorktreeInit(opts: WorktreeInitOptions): Promise<void> {
   }
   p.outro(
     pc.green(
-      `Worktree ready. Run Paperclip inside this repo and the CLI/server will use ${paths.instanceId} automatically.`,
+      `Worktree ready. Run ThinkingMach inside this repo and the CLI/server will use ${paths.instanceId} automatically.`,
     ),
   );
 }
 
 export async function worktreeInitCommand(opts: WorktreeInitOptions): Promise<void> {
-  printPaperclipCliBanner();
-  p.intro(pc.bgCyan(pc.black(" paperclipai worktree init ")));
+  printThinkingMachCliBanner();
+  p.intro(pc.bgCyan(pc.black(" thinkingmach worktree init ")));
   await runWorktreeInit(opts);
 }
 
 export async function worktreeEnsureSeededCommand(opts: WorktreeEnsureSeededOptions): Promise<void> {
-  printPaperclipCliBanner();
-  p.intro(pc.bgCyan(pc.black(" paperclipai worktree ensure-seeded ")));
+  printThinkingMachCliBanner();
+  p.intro(pc.bgCyan(pc.black(" thinkingmach worktree ensure-seeded ")));
 
   const spinner = p.spinner();
   spinner.start("Checking isolated worktree database seed state...");
@@ -2665,8 +2672,8 @@ export async function worktreeEnsureSeededCommand(opts: WorktreeEnsureSeededOpti
 }
 
 export async function worktreeMakeCommand(nameArg: string, opts: WorktreeMakeOptions): Promise<void> {
-  printPaperclipCliBanner();
-  p.intro(pc.bgCyan(pc.black(" paperclipai worktree:make ")));
+  printThinkingMachCliBanner();
+  p.intro(pc.bgCyan(pc.black(" thinkingmach worktree:make ")));
 
   const name = resolveWorktreeMakeName(nameArg);
   const startPoint = resolveWorktreeStartPoint(opts.startPoint);
@@ -2781,7 +2788,7 @@ type MergeSourceChoice = {
   worktree: string;
   branch: string | null;
   branchLabel: string;
-  hasPaperclipConfig: boolean;
+  hasThinkingMachConfig: boolean;
   isCurrent: boolean;
 };
 
@@ -2852,7 +2859,7 @@ function toMergeSourceChoices(cwd: string): MergeSourceChoice[] {
       worktree: worktreePath,
       branch: entry.branch,
       branchLabel,
-      hasPaperclipConfig: existsSync(path.resolve(worktreePath, ".paperclip", "config.json")),
+      hasThinkingMachConfig: existsSync(path.resolve(worktreePath, ".paperclip", "config.json")),
       isCurrent: worktreePath === currentCwd,
     };
   });
@@ -2898,8 +2905,8 @@ function worktreePathHasUncommittedChanges(worktreePath: string): boolean {
 }
 
 export async function worktreeCleanupCommand(nameArg: string, opts: WorktreeCleanupOptions): Promise<void> {
-  printPaperclipCliBanner();
-  p.intro(pc.bgCyan(pc.black(" paperclipai worktree:cleanup ")));
+  printThinkingMachCliBanner();
+  p.intro(pc.bgCyan(pc.black(" thinkingmach worktree:cleanup ")));
 
   const name = resolveWorktreeMakeName(nameArg);
   const sourceCwd = process.cwd();
@@ -3035,13 +3042,13 @@ export async function worktreeCleanupCommand(nameArg: string, opts: WorktreeClea
 
 export async function worktreeEnvCommand(opts: WorktreeEnvOptions): Promise<void> {
   const configPath = resolveConfigPath(opts.config);
-  const envPath = resolvePaperclipEnvFile(configPath);
-  const envEntries = readPaperclipEnvEntries(envPath);
+  const envPath = resolveThinkingMachEnvFile(configPath);
+  const envEntries = readThinkingMachEnvEntries(envPath);
   const out = {
-    PAPERCLIP_CONFIG: configPath,
-    ...(envEntries.PAPERCLIP_HOME ? { PAPERCLIP_HOME: envEntries.PAPERCLIP_HOME } : {}),
-    ...(envEntries.PAPERCLIP_INSTANCE_ID ? { PAPERCLIP_INSTANCE_ID: envEntries.PAPERCLIP_INSTANCE_ID } : {}),
-    ...(envEntries.PAPERCLIP_CONTEXT ? { PAPERCLIP_CONTEXT: envEntries.PAPERCLIP_CONTEXT } : {}),
+    THINKINGMACH_CONFIG: configPath,
+    ...(envEntries.THINKINGMACH_HOME ? { THINKINGMACH_HOME: envEntries.THINKINGMACH_HOME } : {}),
+    ...(envEntries.THINKINGMACH_INSTANCE_ID ? { THINKINGMACH_INSTANCE_ID: envEntries.THINKINGMACH_INSTANCE_ID } : {}),
+    ...(envEntries.THINKINGMACH_CONTEXT ? { THINKINGMACH_CONTEXT: envEntries.THINKINGMACH_CONTEXT } : {}),
     ...envEntries,
   };
 
@@ -3093,7 +3100,7 @@ function resolveAttachmentLookupStorages(input: {
     resolveCurrentWorktreeEndpoint().configPath,
     input.targetEndpoint.configPath,
     ...toMergeSourceChoices(process.cwd())
-      .filter((choice) => choice.hasPaperclipConfig)
+      .filter((choice) => choice.hasThinkingMachConfig)
       .map((choice) => path.resolve(choice.worktree, ".paperclip", "config.json")),
   ];
   const seen = new Set<string>();
@@ -3112,7 +3119,7 @@ async function openConfiguredDb(configPath: string): Promise<OpenDbHandle> {
   if (!config) {
     throw new Error(`Config not found at ${configPath}.`);
   }
-  const envEntries = readPaperclipEnvEntries(resolvePaperclipEnvFile(configPath));
+  const envEntries = readThinkingMachEnvEntries(resolveThinkingMachEnvFile(configPath));
   let embeddedHandle: EmbeddedPostgresHandle | null = null;
 
   try {
@@ -3130,7 +3137,7 @@ async function openConfiguredDb(configPath: string): Promise<OpenDbHandle> {
           ? ` Pending migrations: ${migrationState.pendingMigrations.join(", ")}.`
           : "";
       throw new Error(
-        `Database for ${configPath} is not up to date.${pending} Run \`pnpm db:migrate\` (or start Paperclip once) before using worktree merge history.`,
+        `Database for ${configPath} is not up to date.${pending} Run \`pnpm db:migrate\` (or start ThinkingMach once) before using worktree merge history.`,
       );
     }
     const db = createDb(connectionString) as ClosableDb;
@@ -3301,7 +3308,7 @@ function renderMergePlan(plan: Awaited<ReturnType<typeof collectMergePlan>>["pla
   return lines.join("\n");
 }
 
-function resolveRunningEmbeddedPostgresPid(config: PaperclipConfig): number | null {
+function resolveRunningEmbeddedPostgresPid(config: ThinkingMachConfig): number | null {
   if (config.database.mode !== "embedded-postgres") {
     return null;
   }
@@ -3653,7 +3660,7 @@ export async function worktreeListCommand(opts: WorktreeListOptions): Promise<vo
   for (const choice of choices) {
     const flags = [
       choice.isCurrent ? "current" : null,
-      choice.hasPaperclipConfig ? "paperclip" : "no-paperclip-config",
+      choice.hasThinkingMachConfig ? "paperclip" : "no-paperclip-config",
     ].filter((value): value is string => value !== null);
     p.log.message(`${choice.branchLabel}  ${choice.worktree}  [${flags.join(", ")}]`);
   }
@@ -3715,8 +3722,8 @@ function resolveWorktreeEndpointFromSelector(
       `Could not resolve worktree "${selector}". Use a path, a listed worktree directory name, branch name, or "current".`,
     );
   }
-  if (!matched.hasPaperclipConfig && !matched.isCurrent) {
-    throw new Error(`Resolved worktree "${selector}" does not look like a Paperclip worktree.`);
+  if (!matched.hasThinkingMachConfig && !matched.isCurrent) {
+    throw new Error(`Resolved worktree "${selector}" does not look like a ThinkingMach worktree.`);
   }
   return resolveEndpointFromChoice(matched);
 }
@@ -3725,7 +3732,7 @@ async function promptForSourceEndpoint(excludeWorktreePath?: string): Promise<Re
   const excluded = excludeWorktreePath ? path.resolve(excludeWorktreePath) : null;
   const currentEndpoint = resolveCurrentWorktreeEndpoint();
   const choices = toMergeSourceChoices(process.cwd())
-    .filter((choice) => choice.hasPaperclipConfig || choice.isCurrent)
+    .filter((choice) => choice.hasThinkingMachConfig || choice.isCurrent)
     .filter((choice) => path.resolve(choice.worktree) !== excluded)
     .map((choice) => ({
       value: choice.isCurrent ? "__current__" : choice.worktree,
@@ -3733,7 +3740,7 @@ async function promptForSourceEndpoint(excludeWorktreePath?: string): Promise<Re
       hint: `${choice.worktree}${choice.isCurrent ? " (current)" : ""}`,
     }));
   if (choices.length === 0) {
-    throw new Error("No Paperclip worktrees were found. Run `paperclipai worktree:list` to inspect the repo worktrees.");
+    throw new Error("No ThinkingMach worktrees were found. Run `thinkingmach worktree:list` to inspect the repo worktrees.");
   }
   const selection = await p.select<string>({
     message: "Choose the source worktree to import from",
@@ -4160,7 +4167,7 @@ export async function worktreeMergeHistoryCommand(sourceArg: string | undefined,
       : await promptForSourceEndpoint(targetEndpoint.rootPath);
 
   if (path.resolve(sourceEndpoint.configPath) === path.resolve(targetEndpoint.configPath)) {
-    throw new Error("Source and target Paperclip configs are the same. Choose different --from/--to worktrees.");
+    throw new Error("Source and target ThinkingMach configs are the same. Choose different --from/--to worktrees.");
   }
 
   const scopes = parseWorktreeMergeScopes(opts.scope);
@@ -4250,7 +4257,7 @@ export async function worktreeMergeHistoryCommand(sourceArg: string | undefined,
 }
 
 async function backupWorktreeReseedTarget(input: {
-  targetConfig: PaperclipConfig;
+  targetConfig: ThinkingMachConfig;
   targetPaths: WorktreeLocalPaths;
 }): Promise<string> {
   if (input.targetConfig.database.mode !== "embedded-postgres") {
@@ -4289,7 +4296,7 @@ async function runWorktreeReseed(opts: WorktreeReseedOptions): Promise<void> {
   const source = resolveWorktreeReseedSource(opts);
 
   if (path.resolve(source.configPath) === path.resolve(targetEndpoint.configPath)) {
-    throw new Error("Source and target Paperclip configs are the same. Choose different --from/--to values.");
+    throw new Error("Source and target ThinkingMach configs are the same. Choose different --from/--to values.");
   }
   if (!existsSync(source.configPath)) {
     throw new Error(`Source config not found at ${source.configPath}.`);
@@ -4311,14 +4318,14 @@ async function runWorktreeReseed(opts: WorktreeReseedOptions): Promise<void> {
   const runningTargetPid = resolveRunningEmbeddedPostgresPid(targetConfig);
   if (runningTargetPid && !opts.allowLiveTarget) {
     throw new Error(
-      `Target worktree database appears to be running (pid ${runningTargetPid}). Stop Paperclip in ${targetEndpoint.rootPath} before reseeding, or re-run with --allow-live-target if you want to override this guard.`,
+      `Target worktree database appears to be running (pid ${runningTargetPid}). Stop ThinkingMach in ${targetEndpoint.rootPath} before reseeding, or re-run with --allow-live-target if you want to override this guard.`,
     );
   }
 
   const confirmed = opts.yes
     ? true
     : await p.confirm({
-      message: `Overwrite the isolated Paperclip DB for ${targetEndpoint.label} from ${source.label} using ${seedMode} seed mode?`,
+      message: `Overwrite the isolated ThinkingMach DB for ${targetEndpoint.label} from ${source.label} using ${seedMode} seed mode?`,
       initialValue: false,
     });
   if (p.isCancel(confirmed) || !confirmed) {
@@ -4356,7 +4363,7 @@ async function runWorktreeReseed(opts: WorktreeReseedOptions): Promise<void> {
       instanceId: targetPaths.instanceId,
       seedMode,
       preserveLiveWork: opts.preserveLiveWork,
-      expectedCompanyId: nonEmpty(process.env.PAPERCLIP_SEED_EXPECTED_COMPANY_ID) ?? undefined,
+      expectedCompanyId: nonEmpty(process.env.THINKINGMACH_SEED_EXPECTED_COMPANY_ID) ?? undefined,
       seedDatabase: seedWorktreeDatabase,
     });
     spinner.stop(`Reseeded ${targetEndpoint.label} (${seedMode}).`);
@@ -4386,14 +4393,14 @@ async function runWorktreeReseed(opts: WorktreeReseedOptions): Promise<void> {
 }
 
 export async function worktreeReseedCommand(opts: WorktreeReseedOptions): Promise<void> {
-  printPaperclipCliBanner();
-  p.intro(pc.bgCyan(pc.black(" paperclipai worktree reseed ")));
+  printThinkingMachCliBanner();
+  p.intro(pc.bgCyan(pc.black(" thinkingmach worktree reseed ")));
   await runWorktreeReseed(opts);
 }
 
 export async function worktreeRepairCommand(opts: WorktreeRepairOptions): Promise<void> {
-  printPaperclipCliBanner();
-  p.intro(pc.bgCyan(pc.black(" paperclipai worktree repair ")));
+  printThinkingMachCliBanner();
+  p.intro(pc.bgCyan(pc.black(" thinkingmach worktree repair ")));
 
   const seedMode = opts.seedMode ?? "minimal";
   if (!isWorktreeSeedMode(seedMode)) {
@@ -4416,13 +4423,13 @@ export async function worktreeRepairCommand(opts: WorktreeRepairOptions): Promis
     throw new Error(`Source config not found at ${source.configPath}.`);
   }
   if (path.resolve(source.configPath) === path.resolve(target.configPath)) {
-    throw new Error("Source and target Paperclip configs are the same. Use --from-config/--from-instance to point repair at a different source.");
+    throw new Error("Source and target ThinkingMach configs are the same. Use --from-config/--from-instance to point repair at a different source.");
   }
 
   const targetConfig = existsSync(target.configPath) ? readConfig(target.configPath) : null;
-  const targetEnvEntries = readPaperclipEnvEntries(resolvePaperclipEnvFile(target.configPath));
+  const targetEnvEntries = readThinkingMachEnvEntries(resolveThinkingMachEnvFile(target.configPath));
   const targetHasWorktreeEnv = Boolean(
-    nonEmpty(targetEnvEntries.PAPERCLIP_HOME) && nonEmpty(targetEnvEntries.PAPERCLIP_INSTANCE_ID),
+    nonEmpty(targetEnvEntries.THINKINGMACH_HOME) && nonEmpty(targetEnvEntries.THINKINGMACH_INSTANCE_ID),
   );
 
   if (targetConfig && targetHasWorktreeEnv && opts.noSeed) {
@@ -4452,7 +4459,7 @@ export async function worktreeRepairCommand(opts: WorktreeRepairOptions): Promis
   const runningTargetPid = readRunningPostmasterPid(path.resolve(repairPaths.embeddedPostgresDataDir, "postmaster.pid"));
   if (runningTargetPid && !opts.allowLiveTarget) {
     throw new Error(
-      `Target worktree database appears to be running (pid ${runningTargetPid}). Stop Paperclip in ${target.rootPath} before repairing, or re-run with --allow-live-target if you want to override this guard.`,
+      `Target worktree database appears to be running (pid ${runningTargetPid}). Stop ThinkingMach in ${target.rootPath} before repairing, or re-run with --allow-live-target if you want to override this guard.`,
     );
   }
   if (runningTargetPid && opts.allowLiveTarget) {
@@ -4478,17 +4485,17 @@ export async function worktreeRepairCommand(opts: WorktreeRepairOptions): Promis
 }
 
 export function registerWorktreeCommands(program: Command): void {
-  const worktree = program.command("worktree").description("Worktree-local Paperclip instance helpers");
+  const worktree = program.command("worktree").description("Worktree-local ThinkingMach instance helpers");
 
   program
     .command("worktree:make")
-    .description("Create ~/NAME as a git worktree, then initialize an isolated Paperclip instance inside it")
+    .description("Create ~/NAME as a git worktree, then initialize an isolated ThinkingMach instance inside it")
     .argument("<name>", "Worktree name — auto-prefixed with paperclip- if needed (created at ~/paperclip-NAME)")
-    .option("--start-point <ref>", "Remote ref to base the new branch on (env: PAPERCLIP_WORKTREE_START_POINT)")
+    .option("--start-point <ref>", "Remote ref to base the new branch on (env: THINKINGMACH_WORKTREE_START_POINT)")
     .option("--instance <id>", "Explicit isolated instance id")
-    .option("--home <path>", `Home root for worktree instances (env: PAPERCLIP_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
+    .option("--home <path>", `Home root for worktree instances (env: THINKINGMACH_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
     .option("--from-config <path>", "Source config.json to seed from")
-    .option("--from-data-dir <path>", "Source PAPERCLIP_HOME used when deriving the source config")
+    .option("--from-data-dir <path>", "Source THINKINGMACH_HOME used when deriving the source config")
     .option("--from-instance <id>", "Source instance id when deriving the source config", "default")
     .option("--server-port <port>", "Preferred server port", (value) => Number(value))
     .option("--db-port <port>", "Preferred embedded Postgres port", (value) => Number(value))
@@ -4503,9 +4510,9 @@ export function registerWorktreeCommands(program: Command): void {
     .description("Create repo-local config/env and an isolated instance for this worktree")
     .option("--name <name>", "Display name used to derive the instance id")
     .option("--instance <id>", "Explicit isolated instance id")
-    .option("--home <path>", `Home root for worktree instances (env: PAPERCLIP_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
+    .option("--home <path>", `Home root for worktree instances (env: THINKINGMACH_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
     .option("--from-config <path>", "Source config.json to seed from")
-    .option("--from-data-dir <path>", "Source PAPERCLIP_HOME used when deriving the source config")
+    .option("--from-data-dir <path>", "Source THINKINGMACH_HOME used when deriving the source config")
     .option("--from-instance <id>", "Source instance id when deriving the source config", "default")
     .option("--server-port <port>", "Preferred server port", (value) => Number(value))
     .option("--db-port <port>", "Preferred embedded Postgres port", (value) => Number(value))
@@ -4517,7 +4524,7 @@ export function registerWorktreeCommands(program: Command): void {
 
   worktree
     .command("env")
-    .description("Print shell exports for the current worktree-local Paperclip instance")
+    .description("Print shell exports for the current worktree-local ThinkingMach instance")
     .option("-c, --config <path>", "Path to config file")
     .option("--json", "Print JSON instead of shell exports")
     .action(worktreeEnvCommand);
@@ -4527,14 +4534,14 @@ export function registerWorktreeCommands(program: Command): void {
     .description("Seed a seed-pending worktree database exactly once from its source instance")
     .option("-c, --config <path>", "Path to the target worktree config file")
     .option("--from-config <path>", "Source config.json to seed from (defaults to the seed-pending marker)")
-    .option("--from-data-dir <path>", "Source PAPERCLIP_HOME used when deriving the source config")
+    .option("--from-data-dir <path>", "Source THINKINGMACH_HOME used when deriving the source config")
     .option("--from-instance <id>", "Source instance id when deriving the source config")
     .option("--preserve-live-work", "Do not quarantine copied agent work or workspace runtime services", false)
     .action(worktreeEnsureSeededCommand);
 
   program
     .command("worktree:list")
-    .description("List git worktrees visible from this repo and whether they look like Paperclip worktrees")
+    .description("List git worktrees visible from this repo and whether they look like ThinkingMach worktrees")
     .option("--json", "Print JSON instead of text output")
     .action(worktreeListCommand);
 
@@ -4553,11 +4560,11 @@ export function registerWorktreeCommands(program: Command): void {
 
   worktree
     .command("reseed")
-    .description("Re-seed an existing worktree-local instance from another Paperclip instance or worktree")
+    .description("Re-seed an existing worktree-local instance from another ThinkingMach instance or worktree")
     .option("--from <worktree>", "Source worktree path, directory name, branch name, or current")
     .option("--to <worktree>", "Target worktree path, directory name, branch name, or current (defaults to current)")
     .option("--from-config <path>", "Source config.json to seed from")
-    .option("--from-data-dir <path>", "Source PAPERCLIP_HOME used when deriving the source config")
+    .option("--from-data-dir <path>", "Source THINKINGMACH_HOME used when deriving the source config")
     .option("--from-instance <id>", "Source instance id when deriving the source config")
     .option("--seed-mode <mode>", "Seed profile: minimal or full (default: full)", "full")
     .option("--preserve-live-work", "Do not quarantine copied agent work or workspace runtime services in the seeded worktree", false)
@@ -4568,11 +4575,11 @@ export function registerWorktreeCommands(program: Command): void {
 
   worktree
     .command("repair")
-    .description("Create or repair a linked worktree-local Paperclip instance without touching the primary checkout")
+    .description("Create or repair a linked worktree-local ThinkingMach instance without touching the primary checkout")
     .option("--branch <name>", "Existing branch/worktree selector to repair, or a branch name to create under .paperclip/worktrees")
-    .option("--home <path>", `Home root for worktree instances (env: PAPERCLIP_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
+    .option("--home <path>", `Home root for worktree instances (env: THINKINGMACH_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
     .option("--from-config <path>", "Source config.json to seed from")
-    .option("--from-data-dir <path>", "Source PAPERCLIP_HOME used when deriving the source config")
+    .option("--from-data-dir <path>", "Source THINKINGMACH_HOME used when deriving the source config")
     .option("--from-instance <id>", "Source instance id when deriving the source config (default: default)")
     .option("--seed-mode <mode>", "Seed profile: minimal or full (default: minimal)", "minimal")
     .option("--preserve-live-work", "Do not quarantine copied agent work or workspace runtime services in the seeded worktree", false)
@@ -4585,7 +4592,7 @@ export function registerWorktreeCommands(program: Command): void {
     .description("Safely remove a worktree, its branch, and its isolated instance data")
     .argument("<name>", "Worktree name — auto-prefixed with paperclip- if needed")
     .option("--instance <id>", "Explicit instance id (if different from the worktree name)")
-    .option("--home <path>", `Home root for worktree instances (env: PAPERCLIP_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
+    .option("--home <path>", `Home root for worktree instances (env: THINKINGMACH_WORKTREES_DIR, default: ${DEFAULT_WORKTREE_HOME})`)
     .option("--force", "Bypass safety checks (uncommitted changes, unique commits)", false)
     .action(worktreeCleanupCommand);
 }

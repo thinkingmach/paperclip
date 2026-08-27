@@ -1,14 +1,7 @@
 import type { KeyboardEvent, ReactNode } from "react";
 import { useMemo, useRef, useState } from "react";
 import { cn } from "../lib/utils";
-import {
-  ChevronDown,
-  ChevronRight,
-  FileCode2,
-  FileText,
-  Folder,
-  FolderOpen,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, FileCode2, FileText, Folder, FolderOpen,  } from "lucide-react";
 import { statusBadge, statusBadgeDefault } from "../lib/status-colors";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";

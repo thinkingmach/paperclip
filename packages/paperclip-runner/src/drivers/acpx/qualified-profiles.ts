@@ -23,7 +23,7 @@ export interface QualifiedAcpxProfile {
    * resolution first binds the caller's exact canonical model request. Most
    * agents use that same identifier at the ACP boundary; Claude exposes its
    * stable SDK selector (`sonnet`) while the SDK resolves it to the canonical
-   * wire model (`claude-sonnet-5`). Paperclip selects only this profile-pinned
+   * wire model (`claude-sonnet-5`). ThinkingMach selects only this profile-pinned
    * identifier and verifies the provider reports it before publishing the
    * canonical model as the qualified effective model.
    */

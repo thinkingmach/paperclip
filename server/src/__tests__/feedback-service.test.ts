@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { eq } from "drizzle-orm";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { writePaperclipSkillSyncPreference } from "@paperclipai/adapter-utils/server-utils";
+import { writeThinkingMachSkillSyncPreference } from "@thinkingmach/adapter-utils/server-utils";
 import {
   agents,
   companies,
@@ -20,7 +20,7 @@ import {
   issueComments,
   issueDocuments,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { feedbackService } from "../services/feedback.ts";
 import {
   getEmbeddedPostgresTestSupport,
@@ -87,7 +87,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `F${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -147,7 +147,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `R${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -156,10 +156,10 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
       {
         id: randomUUID(),
         companyId,
-        key: "paperclipai/paperclip/paperclip",
+        key: "thinkingmach/paperclip/paperclip",
         slug: "paperclip",
-        name: "Paperclip",
-        markdown: "# Paperclip",
+        name: "ThinkingMach",
+        markdown: "# ThinkingMach",
         sourceType: "catalog",
         sourceLocator: null,
         sourceRef: null,
@@ -186,7 +186,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
       role: "engineer",
       status: "active",
       adapterType: "codex_local",
-      adapterConfig: writePaperclipSkillSyncPreference(
+      adapterConfig: writeThinkingMachSkillSyncPreference(
         {
           model: "gpt-5.4",
           instructionsBundleMode: "external",
@@ -194,7 +194,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
           instructionsEntryFile: "AGENTS.md",
           instructionsFilePath: instructionsPath,
         },
-        ["paperclipai/paperclip/paperclip", "octo/research/public-skill"],
+        ["thinkingmach/paperclip/paperclip", "octo/research/public-skill"],
       ),
       runtimeConfig: {
         heartbeat: {
@@ -291,7 +291,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `D${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -360,7 +360,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -886,7 +886,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
       JSON.stringify([{ content: "Verify exported traces" }]),
       "utf8",
     );
-    vi.stubEnv("PAPERCLIP_OPENCODE_STORAGE_DIR", opencodeRoot);
+    vi.stubEnv("THINKINGMACH_OPENCODE_STORAGE_DIR", opencodeRoot);
     const uploadTraceBundle = vi.fn().mockResolvedValue({ objectKey: "feedback-traces/test.json" });
     const flushingSvc = feedbackService(db, {
       shareClient: {
@@ -933,7 +933,7 @@ describeEmbeddedPostgres("feedbackService.saveIssueVote", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `H${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });

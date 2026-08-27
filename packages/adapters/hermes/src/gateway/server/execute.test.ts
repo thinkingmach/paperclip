@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import type { AdapterExecutionContext } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext } from "@thinkingmach/adapter-utils";
 import { execute, mapFinalResultForTest, parseSseFramesForTest, resolveSessionKey } from "./execute.js";
 import { testEnvironment } from "./test.js";
 
@@ -23,7 +23,7 @@ function makeCtx(config: Record<string, unknown>): AdapterExecutionContext {
     context: {
       issueId: "issue-1",
       wakeReason: "manual",
-      paperclipWake: {
+      thinkingmachWake: {
         issue: { identifier: "PAP-1", title: "Do the thing" },
       },
     },
@@ -177,7 +177,7 @@ describe("execute", () => {
   it("sends the task brief once on fresh runs and compacts it on stable-session resumes", async () => {
     const description = "Update launch-card.svg and change the CTA to Try Team free.";
     const fullTaskMarkdown = [
-      "Paperclip task context:",
+      "ThinkingMach task context:",
       '- Issue: "PAP-1"',
       "",
       "Issue description:",
@@ -185,7 +185,7 @@ describe("execute", () => {
       description,
       "```",
     ].join("\n");
-    const compactTaskMarkdown = ["Paperclip task context:", '- Issue: "PAP-1"'].join("\n");
+    const compactTaskMarkdown = ["ThinkingMach task context:", '- Issue: "PAP-1"'].join("\n");
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.endsWith("/v1/runs")) {
@@ -200,7 +200,7 @@ describe("execute", () => {
       wakeReason: reason,
       paperclipTaskMarkdown: fullTaskMarkdown,
       paperclipTaskMarkdownCompact: compactTaskMarkdown,
-      paperclipWake: {
+      thinkingmachWake: {
         reason,
         issue: {
           id: "issue-1",
@@ -238,7 +238,7 @@ describe("execute", () => {
     // Fresh run: brief exactly once (task markdown only; wake-prompt copy suppressed).
     expect(runBodies[0]!.input.split(description)).toHaveLength(2);
     // Stable-session resume: compact task markdown, no re-sent brief.
-    expect(runBodies[1]!.input).toContain("Paperclip task context:");
+    expect(runBodies[1]!.input).toContain("ThinkingMach task context:");
     expect(runBodies[1]!.input).not.toContain(description);
   });
 
@@ -376,7 +376,7 @@ describe("execute", () => {
     expect(logText).not.toContain("paperclip:company:company-1:agent:agent-1:issue:issue-1");
   });
 
-  it("redacts agent-scoped Paperclip session keys from logs and public result metadata", async () => {
+  it("redacts agent-scoped ThinkingMach session keys from logs and public result metadata", async () => {
     const ctx = makeCtx({
       apiBaseUrl: "http://127.0.0.1:8642",
       apiKey: "secret-key",

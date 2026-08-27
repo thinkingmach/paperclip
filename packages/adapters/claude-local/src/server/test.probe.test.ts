@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { chmod, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
 
 const {
   ensureAdapterExecutionTargetDirectory,
@@ -42,9 +42,9 @@ const {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
@@ -675,6 +675,6 @@ describe("claude CLI local hello probe hardening", () => {
 
     const targetCheck = result.checks.find((check) => check.code === "claude_environment_target");
     expect(targetCheck).toBeTruthy();
-    expect(targetCheck?.message).toContain("Paperclip host");
+    expect(targetCheck?.message).toContain("ThinkingMach host");
   });
 });

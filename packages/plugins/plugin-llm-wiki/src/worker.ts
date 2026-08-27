@@ -5,34 +5,34 @@ import {
   type PluginContext,
   type PluginManagedRoutineDeclaration,
   type PluginManagedRoutineResolution,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import {
-  PAPERCLIP_DISTILL_SKILL_KEY,
+  THINKINGMACH_DISTILL_SKILL_KEY,
   WIKI_MAINTENANCE_ROUTINE_KEYS,
   WIKI_ROOT_FOLDER_KEY,
 } from "./manifest.js";
 import {
   bootstrapWikiRoot,
   bootstrapSpace,
-  assemblePaperclipSourceBundle,
+  assembleThinkingMachSourceBundle,
   archiveSpace,
   captureWikiSource,
   createSpace,
-  createPaperclipDistillationRun,
-  createPaperclipDistillationWorkItem,
+  createThinkingMachDistillationRun,
+  createThinkingMachDistillationWorkItem,
   createOperationIssue,
-  distillPaperclipProjectPage,
+  distillThinkingMachProjectPage,
   enableActiveProjectDistillation,
   fileQueryAnswerAsPage,
   getDistillationOverview,
   getDistillationPageProvenance,
   getDistillationAutoApplyRestriction,
   getEventIngestionSettings,
-  listPaperclipIngestionCandidates,
-  getPaperclipIngestionProfile,
+  listThinkingMachIngestionCandidates,
+  getThinkingMachIngestionProfile,
   getOverview,
   listSpaces,
-  handlePaperclipEventIngestion,
+  handleThinkingMachEventIngestion,
   listWikiAgentOptions,
   listWikiProjectOptions,
   listOperations,
@@ -41,7 +41,7 @@ import {
   readCompanyIdFromParams,
   readTemplate,
   readWikiPage,
-  recordPaperclipDistillationOutcome,
+  recordThinkingMachDistillationOutcome,
   reconcileWikiAgentResource,
   reconcileWikiProjectResource,
   reconcileWikiRoutineResources,
@@ -55,7 +55,7 @@ import {
   startWikiQuerySession,
   spaceFolderStatus,
   updateEventIngestionSettings,
-  updatePaperclipIngestionProfile,
+  updateThinkingMachIngestionProfile,
   updateSpace,
   writeTemplate,
   writeWikiPage,
@@ -86,7 +86,7 @@ function routineOverridesFromParams(params: Record<string, unknown>) {
 }
 
 let activeContext: PluginContext | null = null;
-const PAPERCLIP_EVENT_INGESTION_EVENTS = [
+const THINKINGMACH_EVENT_INGESTION_EVENTS = [
   "issue.created",
   "issue.updated",
   "issue.comment.created",
@@ -127,7 +127,7 @@ function buildManualDistillPrompt(input: { companyId: string; projectId?: string
     "Manual LLM Wiki distillation requested outside recurring cadence.",
     "",
     "Prompt source: LLM Wiki plugin action `distill-paperclip-now` (`packages/plugins/plugin-llm-wiki/src/worker.ts`).",
-    `Required skill: use the installed \`${PAPERCLIP_DISTILL_SKILL_KEY}\` skill before changing wiki files.`,
+    `Required skill: use the installed \`${THINKINGMACH_DISTILL_SKILL_KEY}\` skill before changing wiki files.`,
     "",
     "Scope:",
     `- Company ID: ${input.companyId}`,
@@ -135,12 +135,12 @@ function buildManualDistillPrompt(input: { companyId: string; projectId?: string
     input.projectId ? `- Source project ID: ${input.projectId}` : null,
     input.rootIssueId ? `- Source root issue ID: ${input.rootIssueId}` : null,
     !input.projectId && !input.rootIssueId
-      ? "- Do not hardcode a single project. Find non-plugin Paperclip issues/comments/documents that changed in any project after the last processed cursor and are old enough for the stale/debounce threshold."
+      ? "- Do not hardcode a single project. Find non-plugin ThinkingMach issues/comments/documents that changed in any project after the last processed cursor and are old enough for the stale/debounce threshold."
       : null,
     "",
     "Process:",
     "1. Read the wiki root AGENTS.md, wiki/index.md, and recent wiki/log.md entries.",
-    "2. Assemble bounded Paperclip source bundles for every eligible project or root issue, excluding LLM Wiki plugin-operation issues.",
+    "2. Assemble bounded ThinkingMach source bundles for every eligible project or root issue, excluding LLM Wiki plugin-operation issues.",
     "3. Turn durable signal into project standups, wiki-insightful project pages, decisions, history, index, and log updates per the paperclip-distill skill.",
     "4. Surface clipped, low-signal, stale-hash, or source-window warnings instead of hiding them.",
   ].filter((line): line is string => line !== null).join("\n");
@@ -188,11 +188,11 @@ const plugin = definePlugin({
     activeContext = ctx;
     await registerWikiTools(ctx);
 
-    for (const eventName of PAPERCLIP_EVENT_INGESTION_EVENTS) {
+    for (const eventName of THINKINGMACH_EVENT_INGESTION_EVENTS) {
       ctx.events.on(eventName, async (event) => {
-        const result = await handlePaperclipEventIngestion(ctx, event);
+        const result = await handleThinkingMachEventIngestion(ctx, event);
         if (result.status === "recorded") {
-          ctx.logger.info("LLM Wiki recorded Paperclip event for cursor discovery", {
+          ctx.logger.info("LLM Wiki recorded ThinkingMach event for cursor discovery", {
             eventType: event.eventType,
             companyId: event.companyId,
             sourceKind: result.sourceKind,
@@ -371,7 +371,7 @@ const plugin = definePlugin({
     });
 
     ctx.data.register("paperclip-ingestion-profile", async (params) => {
-      return getPaperclipIngestionProfile(ctx, {
+      return getThinkingMachIngestionProfile(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),
@@ -379,7 +379,7 @@ const plugin = definePlugin({
     });
 
     ctx.data.register("paperclip-ingestion-candidates", async (params) => {
-      return listPaperclipIngestionCandidates(ctx, {
+      return listThinkingMachIngestionCandidates(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),
@@ -388,7 +388,7 @@ const plugin = definePlugin({
     });
 
     ctx.actions.register("update-paperclip-ingestion-profile", async (params) => {
-      return updatePaperclipIngestionProfile(ctx, {
+      return updateThinkingMachIngestionProfile(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),
@@ -426,7 +426,7 @@ const plugin = definePlugin({
       const queued: Array<{ workItemId: string; issueId: string; projectId: string | null; rootIssueId: string | null }> = [];
       for (const scope of scopes) {
         const idempotencyScope = scope.rootIssueId ? `root:${scope.rootIssueId}` : `project:${scope.projectId}`;
-        const workItem = await createPaperclipDistillationWorkItem(ctx, {
+        const workItem = await createThinkingMachDistillationWorkItem(ctx, {
           companyId,
           wikiId,
           spaceSlug,
@@ -445,9 +445,9 @@ const plugin = definePlugin({
           wikiId,
           spaceSlug,
           operationType: "backfill",
-          title: scope.rootIssueId ? "Backfill Paperclip root issue wiki history" : "Backfill Paperclip project wiki history",
+          title: scope.rootIssueId ? "Backfill ThinkingMach root issue wiki history" : "Backfill ThinkingMach project wiki history",
           prompt: [
-            "Backfill LLM Wiki distillation was queued from a per-space Paperclip ingestion profile.",
+            "Backfill LLM Wiki distillation was queued from a per-space ThinkingMach ingestion profile.",
             scope.projectId ? `Project ID: ${scope.projectId}` : null,
             scope.rootIssueId ? `Root issue ID: ${scope.rootIssueId}` : null,
             backfillStartAt ? `Start: ${backfillStartAt}` : null,
@@ -509,7 +509,7 @@ const plugin = definePlugin({
     });
 
     ctx.actions.register("assemble-paperclip-source-bundle", async (params) => {
-      return assemblePaperclipSourceBundle(ctx, {
+      return assembleThinkingMachSourceBundle(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),
@@ -526,7 +526,7 @@ const plugin = definePlugin({
     });
 
     ctx.actions.register("create-paperclip-distillation-run", async (params) => {
-      return createPaperclipDistillationRun(ctx, {
+      return createThinkingMachDistillationRun(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),
@@ -551,7 +551,7 @@ const plugin = definePlugin({
       }
       const runId = stringField(params.runId);
       if (!runId) throw new Error("runId is required");
-      return recordPaperclipDistillationOutcome(ctx, {
+      return recordThinkingMachDistillationOutcome(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),
@@ -567,7 +567,7 @@ const plugin = definePlugin({
     });
 
     ctx.actions.register("distill-paperclip-project-page", async (params) => {
-      return distillPaperclipProjectPage(ctx, {
+      return distillThinkingMachProjectPage(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),
@@ -594,7 +594,7 @@ const plugin = definePlugin({
       const projectId = stringField(params.projectId);
       const rootIssueId = stringField(params.rootIssueId);
       const idempotencyScope = rootIssueId ? `root:${rootIssueId}` : projectId ? `project:${projectId}` : "company";
-      const workItem = await createPaperclipDistillationWorkItem(ctx, {
+      const workItem = await createThinkingMachDistillationWorkItem(ctx, {
         companyId,
         wikiId: stringField(params.wikiId),
         spaceSlug,
@@ -612,10 +612,10 @@ const plugin = definePlugin({
         spaceSlug,
         operationType: "distill",
         title: rootIssueId
-          ? "Distill Paperclip root issue into wiki"
+          ? "Distill ThinkingMach root issue into wiki"
           : projectId
-            ? "Distill Paperclip project into wiki"
-            : "Distill Paperclip changes into wiki",
+            ? "Distill ThinkingMach project into wiki"
+            : "Distill ThinkingMach changes into wiki",
         prompt: buildManualDistillPrompt({ companyId, projectId, rootIssueId }),
       });
       return { status: "queued", workItem, operation };
@@ -639,7 +639,7 @@ const plugin = definePlugin({
       const backfillStartAt = stringField(params.backfillStartAt);
       const backfillEndAt = stringField(params.backfillEndAt);
       const idempotencyScope = rootIssueId ? `root:${rootIssueId}` : `project:${projectId}`;
-      const workItem = await createPaperclipDistillationWorkItem(ctx, {
+      const workItem = await createThinkingMachDistillationWorkItem(ctx, {
         companyId,
         wikiId: stringField(params.wikiId),
         spaceSlug,
@@ -656,9 +656,9 @@ const plugin = definePlugin({
         wikiId: stringField(params.wikiId),
         spaceSlug,
         operationType: "backfill",
-        title: rootIssueId ? "Backfill Paperclip root issue wiki history" : "Backfill Paperclip project wiki history",
+        title: rootIssueId ? "Backfill ThinkingMach root issue wiki history" : "Backfill ThinkingMach project wiki history",
         prompt: [
-          "Backfill LLM Wiki distillation requested for a bounded Paperclip source window.",
+          "Backfill LLM Wiki distillation requested for a bounded ThinkingMach source window.",
           projectId ? `Project ID: ${projectId}` : null,
           rootIssueId ? `Root issue ID: ${rootIssueId}` : null,
           backfillStartAt ? `Start: ${backfillStartAt}` : null,
@@ -666,7 +666,7 @@ const plugin = definePlugin({
           "Do not process whole-company history; stay within the selected project/root issue and date window.",
         ].filter(Boolean).join("\n"),
       });
-      const result = await distillPaperclipProjectPage(ctx, {
+      const result = await distillThinkingMachProjectPage(ctx, {
         companyId,
         wikiId: stringField(params.wikiId),
         spaceSlug,
@@ -703,7 +703,7 @@ const plugin = definePlugin({
       if (priority && priority !== "critical" && priority !== "high" && priority !== "medium" && priority !== "low") {
         throw new Error("priority must be critical, high, medium, or low");
       }
-      return createPaperclipDistillationWorkItem(ctx, {
+      return createThinkingMachDistillationWorkItem(ctx, {
         companyId: readCompanyIdFromParams(params),
         wikiId: stringField(params.wikiId),
         spaceSlug: stringField(params.spaceSlug),

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { LiveEvent, SummarySlotIssueRef } from "@paperclipai/shared";
+import type { LiveEvent, SummarySlotIssueRef } from "@thinkingmach/shared";
 
 import type { RunLogChunk } from "@/adapters";
 import { heartbeatsApi } from "@/api/heartbeats";

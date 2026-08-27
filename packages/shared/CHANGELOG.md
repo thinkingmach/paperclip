@@ -1,17 +1,17 @@
-# @paperclipai/shared
+# @thinkingmach/shared
 
-## 0.3.1
+## 0.3.3
 
 ### Patch Changes
 
-- Stable release preparation for 0.3.1
+- Stable release preparation for 0.3.3
 
-## 0.3.0
+## 0.3.3
 
 ### Minor Changes
 
 - 6077ae6: Add support for Pi local adapter in constants and onboarding UI.
-- Stable release preparation for 0.3.0
+- Stable release preparation for 0.3.3
 
 ## 0.2.7
 

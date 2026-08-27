@@ -8,7 +8,7 @@ import {
   heartbeatRuns,
   issueThreadInteractions,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -52,7 +52,7 @@ describeEmbeddedPostgres("changeConsentGateService", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       defaultResponsibleUserId: "board-user",
     });

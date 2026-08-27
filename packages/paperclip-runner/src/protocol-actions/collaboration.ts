@@ -14,7 +14,7 @@ import { setDependenciesAction } from "./set-dependencies.js";
 import { deepFreezeProtocolAction } from "./freeze.js";
 
 /** Optional discovery, delegation, dependency, and governance actions. */
-export const PAPERCLIP_COLLABORATION_PROTOCOL_ACTIONS = deepFreezeProtocolAction([
+export const THINKINGMACH_COLLABORATION_PROTOCOL_ACTIONS = deepFreezeProtocolAction([
   commentOnApprovalAction,
   createTaskAction,
   decideApprovalAction,

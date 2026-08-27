@@ -31,14 +31,14 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
-import type { Db } from "@paperclipai/db";
-import { PLUGIN_RPC_ERROR_CODES } from "@paperclipai/plugin-sdk";
+import type { Db } from "@thinkingmach/db";
+import { PLUGIN_RPC_ERROR_CODES } from "@thinkingmach/plugin-sdk";
 import type {
-  PaperclipPluginManifestV1,
+  ThinkingMachPluginManifestV1,
   PluginLauncherDeclaration,
   PluginRecord,
   PluginUiSlotDeclaration,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { logger } from "../middleware/logger.js";
 import { pluginManifestValidator } from "./plugin-manifest-validator.js";
 import { pluginCapabilityValidator } from "./plugin-capability-validator.js";
@@ -58,15 +58,15 @@ export const REPO_ROOT = path.resolve(__dirname, "../../..");
 export const BUNDLED_LOCAL_PLUGIN_ROOT = path.join(REPO_ROOT, "packages", "plugins");
 export const STANDALONE_BUNDLED_PLUGIN_ROOT = path.join(BUNDLED_LOCAL_PLUGIN_ROOT, "sandbox-providers");
 export const LOCAL_PLUGIN_AUTOBUILD_TIMEOUT_MS = 120_000;
-const STANDALONE_BUNDLED_PLUGIN_SDK_PACKAGE = "@paperclipai/plugin-sdk";
+const STANDALONE_BUNDLED_PLUGIN_SDK_PACKAGE = "@thinkingmach/plugin-sdk";
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
 /**
- * Naming convention for npm-published Paperclip plugins.
- * Packages matching this pattern are considered Paperclip plugins.
+ * Naming convention for npm-published ThinkingMach plugins.
+ * Packages matching this pattern are considered ThinkingMach plugins.
  *
  * @see PLUGIN_SPEC.md §10 — Package Contract
  */
@@ -88,7 +88,7 @@ const DEV_TSX_LOADER_PATH = path.resolve(__dirname, "../../../cli/node_modules/t
 
 /**
  * Model-provider API keys that sandbox-provider plugins (e.g.
- * `@paperclipai/plugin-kubernetes`) are allowed to read from the
+ * `@thinkingmach/plugin-kubernetes`) are allowed to read from the
  * server's process environment so they can inject them into per-run
  * pod Secrets. All other host env vars remain stripped from plugin
  * workers (see `PluginWorkerManager.spawnProcess`). The passthrough
@@ -106,7 +106,7 @@ const ADAPTER_ENV_PASSTHROUGH = [
 
 /**
  * In-cluster Kubernetes service-discovery vars. A sandbox-provider plugin that
- * runs in-cluster (e.g. `@paperclipai/plugin-kubernetes` with inCluster=true)
+ * runs in-cluster (e.g. `@thinkingmach/plugin-kubernetes` with inCluster=true)
  * builds its API client via `KubeConfig.loadFromCluster()`, which reads these
  * to construct the apiserver URL. Without them the worker fails with "Invalid
  * URL" at lease acquisition. The CA + token are files under
@@ -131,7 +131,7 @@ const K8S_IN_CLUSTER_ENV_PASSTHROUGH = [
  * manifest's declared driver key — but name and manifest are both
  * plugin-authored, so neither is proof of identity on its own. The gate
  * therefore also requires a trusted install origin: a registry install
- * (`packagePath` null — the `@paperclipai` scope is project-controlled at
+ * (`packagePath` null — the `@thinkingmach` scope is project-controlled at
  * the registry), or a local path inside the repo/bundled plugin catalog,
  * which ships inside the release image and is as trusted as the server
  * code itself. An operator-added local plugin directory can claim any
@@ -141,14 +141,14 @@ const SANDBOX_PROVIDER_CREDENTIAL_ENV_PASSTHROUGH: Record<
   string,
   { driverKey: string; envVars: readonly string[] }
 > = {
-  "@paperclipai/plugin-daytona": { driverKey: "daytona", envVars: ["DAYTONA_API_KEY"] },
-  "@paperclipai/plugin-e2b": { driverKey: "e2b", envVars: ["E2B_API_KEY"] },
-  "@paperclipai/plugin-exe-dev": { driverKey: "exe-dev", envVars: ["EXE_API_KEY"] },
-  "@paperclipai/plugin-novita-sandbox": { driverKey: "novita", envVars: ["NOVITA_API_KEY"] },
+  "@thinkingmach/plugin-daytona": { driverKey: "daytona", envVars: ["DAYTONA_API_KEY"] },
+  "@thinkingmach/plugin-e2b": { driverKey: "e2b", envVars: ["E2B_API_KEY"] },
+  "@thinkingmach/plugin-exe-dev": { driverKey: "exe-dev", envVars: ["EXE_API_KEY"] },
+  "@thinkingmach/plugin-novita-sandbox": { driverKey: "novita", envVars: ["NOVITA_API_KEY"] },
 };
 
 export function buildPluginWorkerEnv(input: {
-  manifest: Pick<PaperclipPluginManifestV1, "capabilities"> & {
+  manifest: Pick<ThinkingMachPluginManifestV1, "capabilities"> & {
     environmentDrivers?: ReadonlyArray<{ driverKey: string }>;
   };
   packageName?: string;
@@ -161,8 +161,8 @@ export function buildPluginWorkerEnv(input: {
 }): Record<string, string> {
   const processEnv = input.processEnv ?? process.env;
   const env: Record<string, string> = {
-    PAPERCLIP_DEPLOYMENT_MODE: input.instanceInfo.deploymentMode ?? "",
-    PAPERCLIP_DEPLOYMENT_EXPOSURE: input.instanceInfo.deploymentExposure ?? "",
+    THINKINGMACH_DEPLOYMENT_MODE: input.instanceInfo.deploymentMode ?? "",
+    THINKINGMACH_DEPLOYMENT_EXPOSURE: input.instanceInfo.deploymentExposure ?? "",
   };
   const canRegisterEnvironmentDrivers = Array.isArray(input.manifest.capabilities)
     && input.manifest.capabilities.includes("environment.drivers.register");
@@ -209,7 +209,7 @@ export interface DiscoveredPlugin {
   /** Source that found this package. */
   source: PluginSource;
   /** The parsed and validated manifest if available, null if discovery-only. */
-  manifest: PaperclipPluginManifestV1 | null;
+  manifest: ThinkingMachPluginManifestV1 | null;
 }
 
 /**
@@ -254,7 +254,7 @@ type LocalPluginBuildCommand = {
   cwd: string;
 };
 
-function getDeclaredPageRoutePaths(manifest: PaperclipPluginManifestV1): string[] {
+function getDeclaredPageRoutePaths(manifest: ThinkingMachPluginManifestV1): string[] {
   return (manifest.ui?.slots ?? [])
     .filter((slot): slot is PluginUiSlotDeclaration => slot.type === "page" && typeof slot.routePath === "string" && slot.routePath.length > 0)
     .map((slot) => slot.routePath!);
@@ -366,7 +366,7 @@ export interface PluginRuntimeServices {
    * events.emit, config.get). Each plugin gets its own set of handlers
    * scoped to its capabilities and plugin ID.
    */
-  buildHostHandlers: (pluginId: string, manifest: PaperclipPluginManifestV1) => WorkerToHostHandlers;
+  buildHostHandlers: (pluginId: string, manifest: ThinkingMachPluginManifestV1) => WorkerToHostHandlers;
   /**
    * Host instance information passed to the worker during initialization.
    * Includes the instance ID and host version.
@@ -482,7 +482,7 @@ export interface PluginLoader {
   discoverFromLocalFilesystem(dir?: string): Promise<PluginDiscoveryResult>;
 
   /**
-   * Discover Paperclip plugins installed as npm packages in the current
+   * Discover ThinkingMach plugins installed as npm packages in the current
    * Node.js environment matching the "paperclip-plugin-*" naming convention.
    *
    * Looks for packages in node_modules that match the naming convention.
@@ -498,12 +498,12 @@ export interface PluginLoader {
    * the "paperclipPlugin.manifest" key, loads the manifest module, and
    * validates it against the plugin manifest schema.
    *
-   * Returns null if the package is not a Paperclip plugin.
-   * Throws if the package is a Paperclip plugin but the manifest is invalid.
+   * Returns null if the package is not a ThinkingMach plugin.
+   * Throws if the package is a ThinkingMach plugin but the manifest is invalid.
    *
    * @see PLUGIN_SPEC.md §10 — Package Contract
    */
-  loadManifest(packagePath: string): Promise<PaperclipPluginManifestV1 | null>;
+  loadManifest(packagePath: string): Promise<ThinkingMachPluginManifestV1 | null>;
 
   /**
    * Install a plugin package and register it in the database.
@@ -536,8 +536,8 @@ export interface PluginLoader {
    * @see PLUGIN_SPEC.md §25.3 — Upgrade Lifecycle
    */
   upgradePlugin(pluginId: string, options: Omit<PluginInstallOptions, "installDir">): Promise<{
-    oldManifest: PaperclipPluginManifestV1;
-    newManifest: PaperclipPluginManifestV1;
+    oldManifest: ThinkingMachPluginManifestV1;
+    newManifest: ThinkingMachPluginManifestV1;
     discovered: DiscoveredPlugin;
   }>;
 
@@ -646,14 +646,14 @@ export interface PluginLoader {
 // ---------------------------------------------------------------------------
 
 /**
- * Check whether a package name matches the Paperclip plugin naming convention.
+ * Check whether a package name matches the ThinkingMach plugin naming convention.
  * Accepts both the "paperclip-plugin-" prefix and scoped "@scope/plugin-" packages.
  *
  * @see PLUGIN_SPEC.md §10 — Package Contract
  */
 export function isPluginPackageName(name: string): boolean {
   if (name.startsWith(NPM_PLUGIN_PACKAGE_PREFIX)) return true;
-  // Also accept scoped packages like @acme/plugin-linear or @paperclipai/plugin-*
+  // Also accept scoped packages like @acme/plugin-linear or @thinkingmach/plugin-*
   if (name.includes("/")) {
     const localPart = name.split("/")[1] ?? "";
     return localPart.startsWith("plugin-");
@@ -782,8 +782,8 @@ function formatLocalPluginManualBuildHint(
   const manualBuildCommand = buildLocalPluginRecoveryCommand(packageRoot, pkgJson, { repoRoot: options.repoRoot });
   if (!manualBuildCommand) return "";
 
-  const autoBuildDisabled = (options.processEnv ?? process.env)["PAPERCLIP_DISABLE_PLUGIN_AUTOBUILD"] === "1"
-    ? " Auto-build is disabled by PAPERCLIP_DISABLE_PLUGIN_AUTOBUILD=1."
+  const autoBuildDisabled = (options.processEnv ?? process.env)["THINKINGMACH_DISABLE_PLUGIN_AUTOBUILD"] === "1"
+    ? " Auto-build is disabled by THINKINGMACH_DISABLE_PLUGIN_AUTOBUILD=1."
     : "";
 
   return `${autoBuildDisabled} Run \`${manualBuildCommand}\` from the repo root and retry.`;
@@ -875,7 +875,7 @@ export async function ensureLocalPluginBuilt(
   } = {},
 ): Promise<void> {
   const processEnv = options.processEnv ?? process.env;
-  if (processEnv["PAPERCLIP_DISABLE_PLUGIN_AUTOBUILD"] === "1") return;
+  if (processEnv["THINKINGMACH_DISABLE_PLUGIN_AUTOBUILD"] === "1") return;
   if (!isRepoBundledPluginPath(packageRoot, { repoRoot: options.repoRoot })) return;
 
   const missingEntrypoints = listMissingDeclaredPluginEntrypoints(packageRoot, pkgJson);
@@ -1042,8 +1042,8 @@ function compareSemver(left: string, right: string): number {
   return 0;
 }
 
-function getMinimumHostVersion(manifest: PaperclipPluginManifestV1): string | undefined {
-  return manifest.minimumHostVersion ?? manifest.minimumPaperclipVersion;
+function getMinimumHostVersion(manifest: ThinkingMachPluginManifestV1): string | undefined {
+  return manifest.minimumHostVersion ?? manifest.minimumThinkingMachVersion;
 }
 
 /**
@@ -1054,7 +1054,7 @@ function getMinimumHostVersion(manifest: PaperclipPluginManifestV1): string | un
  * `launchers` field and the preferred `ui.launchers` field.
  */
 export function getPluginUiContributionMetadata(
-  manifest: PaperclipPluginManifestV1,
+  manifest: ThinkingMachPluginManifestV1,
 ): PluginUiContributionMetadata | null {
   const slots = manifest.ui?.slots ?? [];
   const launchers = [
@@ -1149,7 +1149,7 @@ export function pluginLoader(
   const log = logger.child({ service: "plugin-loader" });
   const hostVersion = runtimeServices?.instanceInfo.hostVersion;
 
-  async function assertPageRoutePathsAvailable(manifest: PaperclipPluginManifestV1): Promise<void> {
+  async function assertPageRoutePathsAvailable(manifest: ThinkingMachPluginManifestV1): Promise<void> {
     const requestedRoutePaths = getDeclaredPageRoutePaths(manifest);
     if (requestedRoutePaths.length === 0) return;
 
@@ -1161,7 +1161,7 @@ export function pluginLoader(
     const installedPlugins = await registry.listInstalled();
     for (const plugin of installedPlugins) {
       if (plugin.pluginKey === manifest.id) continue;
-      const installedManifest = plugin.manifestJson as PaperclipPluginManifestV1 | null;
+      const installedManifest = plugin.manifestJson as ThinkingMachPluginManifestV1 | null;
       if (!installedManifest) continue;
       const installedRoutePaths = new Set(getDeclaredPageRoutePaths(installedManifest));
       const conflictingRoute = requestedRoutePaths.find((routePath) => installedRoutePaths.has(routePath));
@@ -1279,7 +1279,7 @@ export function pluginLoader(
         ? formatLocalPluginManualBuildHint(resolvedPackagePath, pkgJson)
         : "";
       throw new Error(
-        `Package ${resolvedPackageName} at ${resolvedPackagePath} does not appear to be a Paperclip plugin (no manifest found).${manualBuildHint}`,
+        `Package ${resolvedPackageName} at ${resolvedPackagePath} does not appear to be a ThinkingMach plugin (no manifest found).${manualBuildHint}`,
       );
     }
 
@@ -1333,7 +1333,7 @@ export function pluginLoader(
    */
   async function loadManifestFromPath(
     manifestPath: string,
-  ): Promise<PaperclipPluginManifestV1> {
+  ): Promise<ThinkingMachPluginManifestV1> {
     let raw: unknown;
 
     try {
@@ -1355,7 +1355,7 @@ export function pluginLoader(
 
   async function loadManifestFromPackageRoot(
     packageRoot: string,
-  ): Promise<PaperclipPluginManifestV1 | null> {
+  ): Promise<ThinkingMachPluginManifestV1 | null> {
     const pkgJson = await readPackageJson(packageRoot);
     if (!pkgJson) return null;
 
@@ -1371,7 +1371,7 @@ export function pluginLoader(
   ): Promise<PluginRecord> {
     const manifest = await loadManifestFromPackageRoot(packageRoot);
     if (!manifest) {
-      throw new Error(`Plugin package ${plugin.packageName} no longer exposes a Paperclip manifest`);
+      throw new Error(`Plugin package ${plugin.packageName} no longer exposes a ThinkingMach manifest`);
     }
     if (manifest.id !== plugin.pluginKey) {
       throw new Error(
@@ -1400,7 +1400,7 @@ export function pluginLoader(
 
   /**
    * Build a DiscoveredPlugin from a resolved package directory, or null
-   * if the package is not a Paperclip plugin.
+   * if the package is not a ThinkingMach plugin.
    */
   async function buildDiscoveredPlugin(
     packagePath: string,
@@ -1413,10 +1413,10 @@ export function pluginLoader(
     const version = typeof pkgJson["version"] === "string" ? pkgJson["version"] : "0.0.0";
 
     // Determine if this is a plugin package at all
-    const hasPaperclipPlugin = "paperclipPlugin" in pkgJson;
+    const hasThinkingMachPlugin = "paperclipPlugin" in pkgJson;
     const nameMatchesConvention = isPluginPackageName(packageName);
 
-    if (!hasPaperclipPlugin && !nameMatchesConvention) {
+    if (!hasThinkingMachPlugin && !nameMatchesConvention) {
       return null;
     }
 
@@ -1686,15 +1686,15 @@ export function pluginLoader(
     // loadManifest
     // -----------------------------------------------------------------------
 
-    async loadManifest(packagePath: string): Promise<PaperclipPluginManifestV1 | null> {
+    async loadManifest(packagePath: string): Promise<ThinkingMachPluginManifestV1 | null> {
       const pkgJson = await readPackageJson(packagePath);
       if (!pkgJson) return null;
 
-      const hasPaperclipPlugin = "paperclipPlugin" in pkgJson;
+      const hasThinkingMachPlugin = "paperclipPlugin" in pkgJson;
       const packageName = typeof pkgJson["name"] === "string" ? pkgJson["name"] : "";
       const nameMatchesConvention = isPluginPackageName(packageName);
 
-      if (!hasPaperclipPlugin && !nameMatchesConvention) {
+      if (!hasThinkingMachPlugin && !nameMatchesConvention) {
         return null;
       }
 
@@ -1775,15 +1775,15 @@ export function pluginLoader(
       pluginId: string,
       upgradeOptions: Omit<PluginInstallOptions, "installDir">,
     ): Promise<{
-      oldManifest: PaperclipPluginManifestV1;
-      newManifest: PaperclipPluginManifestV1;
+      oldManifest: ThinkingMachPluginManifestV1;
+      newManifest: ThinkingMachPluginManifestV1;
       discovered: DiscoveredPlugin;
     }> {
       const plugin = (await registry.getById(pluginId)) as {
         id: string;
         packageName: string;
         packagePath: string | null;
-        manifestJson: PaperclipPluginManifestV1;
+        manifestJson: ThinkingMachPluginManifestV1;
       } | null;
       if (!plugin) throw new Error(`Plugin not found: ${pluginId}`);
 
@@ -2324,7 +2324,7 @@ export function pluginLoader(
       };
 
       // Repo-local plugin installs can resolve workspace TS sources at runtime
-      // (for example @paperclipai/shared exports). Run those workers through
+      // (for example @thinkingmach/shared exports). Run those workers through
       // the tsx loader so first-party example plugins work in development.
       if (activePlugin.packagePath && existsSync(DEV_TSX_LOADER_PATH)) {
         workerOptions.execArgv = ["--import", DEV_TSX_LOADER_PATH];

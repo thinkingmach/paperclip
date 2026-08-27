@@ -9,10 +9,10 @@ import { FixtureRegistry } from "./fixture-registry.js";
 import { classifyFailure, shouldRetryFailure } from "./failure-classifier.js";
 import {
   assertIsolatedServerEnvironment,
-  buildPaperclipServerEnvironment,
+  buildThinkingMachServerEnvironment,
   buildRunnerE2EProcessEnvironment,
-  resolvePaperclipRemoteRunnerBinaryForHarness,
-  resolvePaperclipRunnerBinaryForHarness,
+  resolveThinkingMachRemoteRunnerBinaryForHarness,
+  resolveThinkingMachRunnerBinaryForHarness,
   runnerE2EServerControlPaths,
 } from "./harness-env.js";
 import { runnerExecutionById, runnerMatrix } from "./catalog.js";
@@ -64,7 +64,7 @@ describe("runner E2E local binary resolution", () => {
 
   it("uses the debug runner binary built by the E2E workflow", () => {
     expect(
-      resolvePaperclipRunnerBinaryForHarness(
+      resolveThinkingMachRunnerBinaryForHarness(
         [localNativeExecution],
         "/repository",
         undefined,
@@ -80,7 +80,7 @@ describe("runner E2E local binary resolution", () => {
 
   it("preserves an explicit runner binary override", () => {
     expect(
-      resolvePaperclipRunnerBinaryForHarness(
+      resolveThinkingMachRunnerBinaryForHarness(
         [localNativeExecution],
         "/repository",
         "/custom/paperclip-runnerd",
@@ -90,7 +90,7 @@ describe("runner E2E local binary resolution", () => {
   });
 
   it("uses and stages the same build-once binary for remote native cells", () => {
-    const runnerBinary = resolvePaperclipRunnerBinaryForHarness(
+    const runnerBinary = resolveThinkingMachRunnerBinaryForHarness(
       [remoteNativeExecution],
       "/repository",
       undefined,
@@ -103,13 +103,13 @@ describe("runner E2E local binary resolution", () => {
       ),
     );
     expect(
-      resolvePaperclipRemoteRunnerBinaryForHarness(
+      resolveThinkingMachRemoteRunnerBinaryForHarness(
         [remoteNativeExecution],
         runnerBinary,
       ),
     ).toBe(runnerBinary);
     expect(
-      resolvePaperclipRemoteRunnerBinaryForHarness(
+      resolveThinkingMachRemoteRunnerBinaryForHarness(
         [localNativeExecution],
         runnerBinary,
       ),
@@ -184,7 +184,7 @@ describe("runner E2E server port allocation", () => {
 
 describe("runner E2E sensitive API boundary", () => {
   it("keeps secret request bodies out of Playwright API tracing", async () => {
-    vi.stubEnv("PAPERCLIP_RUNNER_E2E_PORT", "43123");
+    vi.stubEnv("THINKINGMACH_RUNNER_E2E_PORT", "43123");
     const playwrightPost = vi.fn();
     const fetchMock = vi.fn().mockResolvedValue(
       new Response(JSON.stringify({ id: "secret-id" }), {
@@ -313,17 +313,17 @@ describe("runner E2E matchers", () => {
   it("normalizes message text and evaluates state invariants", async () => {
     const results = await evaluateMatchers(
       [
-        { kind: "message_contains", expected: "PAPERCLIP_E2E_OK_nonce" },
+        { kind: "message_contains", expected: "THINKINGMACH_E2E_OK_nonce" },
         {
           kind: "message_occurrences",
-          expected: "PAPERCLIP_E2E_OK_nonce",
+          expected: "THINKINGMACH_E2E_OK_nonce",
           count: 1,
         },
         { kind: "issue_status", expected: "done" },
         { kind: "runtime_mode", expected: "native" },
       ],
       {
-        message: "  complete   PAPERCLIP\\_E2E\\_OK\\_nonce  ",
+        message: "  complete   THINKINGMACH\\_E2E\\_OK\\_nonce  ",
         issueStatus: "done",
         runtimeMode: "native",
       },
@@ -676,8 +676,8 @@ describe("runner E2E server isolation", () => {
     });
   });
 
-  it("strips database and paid-provider credentials from the Paperclip process", () => {
-    const env = buildPaperclipServerEnvironment(
+  it("strips database and paid-provider credentials from the ThinkingMach process", () => {
+    const env = buildThinkingMachServerEnvironment(
       {
         PATH: "/bin",
         DATABASE_URL: "postgres://existing",
@@ -687,21 +687,21 @@ describe("runner E2E server isolation", () => {
         OPENROUTER_API_KEY: "openrouter",
         DAYTONA_API_KEY: "daytona",
         OPENAI_ORG_ID: "also-provider-sensitive",
-        PAPERCLIP_API_KEY: "ambient-board-key",
-        PAPERCLIP_AGENT_API_KEY: "ambient-agent-key",
-        PAPERCLIP_TASK_BRIDGE_TOKEN: "ambient-task-token",
-        PAPERCLIP_SETUP_TOKEN: "ambient-setup-token",
-        PAPERCLIP_SECRETS_MASTER_KEY: "ambient-master-key",
-        PAPERCLIP_SECRETS_MASTER_KEY_FILE: "/outside/master.key",
-        PAPERCLIP_STORAGE_S3_BUCKET: "production-bucket",
+        THINKINGMACH_API_KEY: "ambient-board-key",
+        THINKINGMACH_AGENT_API_KEY: "ambient-agent-key",
+        THINKINGMACH_TASK_BRIDGE_TOKEN: "ambient-task-token",
+        THINKINGMACH_SETUP_TOKEN: "ambient-setup-token",
+        THINKINGMACH_SECRETS_MASTER_KEY: "ambient-master-key",
+        THINKINGMACH_SECRETS_MASTER_KEY_FILE: "/outside/master.key",
+        THINKINGMACH_STORAGE_S3_BUCKET: "production-bucket",
       },
       {
-        PAPERCLIP_HOME: "/tmp/cell/paperclip-home",
-        PAPERCLIP_CONFIG: "/tmp/cell/paperclip-home/instances/e2e/config.json",
+        THINKINGMACH_HOME: "/tmp/cell/paperclip-home",
+        THINKINGMACH_CONFIG: "/tmp/cell/paperclip-home/instances/e2e/config.json",
         XDG_CACHE_HOME: "/tmp/cell/xdg-cache",
-        PAPERCLIP_AGENT_JWT_SECRET: "generated-agent-jwt",
-        PAPERCLIP_DECISION_SIGNING_SECRET: "generated-decision-key",
-        PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: "generated-tool-key",
+        THINKINGMACH_AGENT_JWT_SECRET: "generated-agent-jwt",
+        THINKINGMACH_DECISION_SIGNING_SECRET: "generated-decision-key",
+        THINKINGMACH_TOOL_ACTION_SIGNING_SECRET: "generated-tool-key",
         BETTER_AUTH_SECRET: "generated-auth-key",
       },
     );
@@ -709,15 +709,15 @@ describe("runner E2E server isolation", () => {
     expect(env.DATABASE_URL).toBeUndefined();
     expect(env.OPENAI_API_KEY).toBeUndefined();
     expect(env.OPENAI_ORG_ID).toBeUndefined();
-    expect(env.PAPERCLIP_API_KEY).toBeUndefined();
-    expect(env.PAPERCLIP_AGENT_API_KEY).toBeUndefined();
+    expect(env.THINKINGMACH_API_KEY).toBeUndefined();
+    expect(env.THINKINGMACH_AGENT_API_KEY).toBeUndefined();
     expect(env.XDG_CACHE_HOME).toBe("/tmp/cell/xdg-cache");
-    expect(env.PAPERCLIP_AGENT_JWT_SECRET).toBe("generated-agent-jwt");
-    expect(env.PAPERCLIP_TASK_BRIDGE_TOKEN).toBeUndefined();
-    expect(env.PAPERCLIP_SETUP_TOKEN).toBeUndefined();
-    expect(env.PAPERCLIP_SECRETS_MASTER_KEY).toBeUndefined();
-    expect(env.PAPERCLIP_SECRETS_MASTER_KEY_FILE).toBeUndefined();
-    expect(env.PAPERCLIP_STORAGE_S3_BUCKET).toBeUndefined();
+    expect(env.THINKINGMACH_AGENT_JWT_SECRET).toBe("generated-agent-jwt");
+    expect(env.THINKINGMACH_TASK_BRIDGE_TOKEN).toBeUndefined();
+    expect(env.THINKINGMACH_SETUP_TOKEN).toBeUndefined();
+    expect(env.THINKINGMACH_SECRETS_MASTER_KEY).toBeUndefined();
+    expect(env.THINKINGMACH_SECRETS_MASTER_KEY_FILE).toBeUndefined();
+    expect(env.THINKINGMACH_STORAGE_S3_BUCKET).toBeUndefined();
     expect(() =>
       assertIsolatedServerEnvironment(env, {
         temporaryRoot: "/tmp/cell",
@@ -994,7 +994,7 @@ describe("runner E2E evidence redaction", () => {
     await writeFile(
       path.join(privateDir, "snapshots", "api-state.json"),
       JSON.stringify({
-        log: String.raw`curl -H \"Authorization: Bearer temporary-run-token\" \\\n+  \"$PAPERCLIP_API_URL/api/issues\"`,
+        log: String.raw`curl -H \"Authorization: Bearer temporary-run-token\" \\\n+  \"$THINKINGMACH_API_URL/api/issues\"`,
       }),
     );
     await packageEvidence({

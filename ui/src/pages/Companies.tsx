@@ -18,19 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import {
-  Pencil,
-  Check,
-  X,
-  Plus,
-  MoreHorizontal,
-  Trash2,
-  Users,
-  CircleDot,
-  DollarSign,
-  Calendar,
-  ArchiveRestore,
-} from "lucide-react";
+import { Pencil, Check, X, Plus, MoreHorizontal, Trash2, Users, CircleDot, DollarSign, Calendar, ArchiveRestore,  } from "lucide-react";
 
 export function Companies() {
   const {

@@ -5,17 +5,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { PAPERCLIP_RUNNERD_BUILD_METADATA_SCHEMA } from "./build-metadata.js";
+import { THINKINGMACH_RUNNERD_BUILD_METADATA_SCHEMA } from "./build-metadata.js";
 import {
-  PaperclipRunnerdArtifactError,
-  parsePaperclipRunnerdBuildMetadata,
-  resolvePaperclipRunnerdArtifact,
+  ThinkingMachRunnerdArtifactError,
+  parseThinkingMachRunnerdBuildMetadata,
+  resolveThinkingMachRunnerdArtifact,
 } from "./runnerd-artifact.js";
 
 const valid = {
-  schema: PAPERCLIP_RUNNERD_BUILD_METADATA_SCHEMA,
+  schema: THINKINGMACH_RUNNERD_BUILD_METADATA_SCHEMA,
   binaryName: "paperclip-runnerd",
-  packageName: "@paperclipai/paperclip-runner",
+  packageName: "@thinkingmach/paperclip-runner",
   packageVersion: "0.0.0",
   binaryContractVersion: 2,
   nativeExecutionVersion: 1,
@@ -25,18 +25,18 @@ const valid = {
 
 describe("runnerd artifact metadata", () => {
   it("parses the exact runnerd identity", () => {
-    expect(parsePaperclipRunnerdBuildMetadata(valid)).toEqual(valid);
+    expect(parseThinkingMachRunnerdBuildMetadata(valid)).toEqual(valid);
   });
 
   it("rejects an unknown binary metadata schema", () => {
-    expect(() => parsePaperclipRunnerdBuildMetadata({ ...valid, schema: "runnerd/v2" }))
-      .toThrow(PaperclipRunnerdArtifactError);
-    expect(() => parsePaperclipRunnerdBuildMetadata({ ...valid, schema: "runnerd/v2" }))
+    expect(() => parseThinkingMachRunnerdBuildMetadata({ ...valid, schema: "runnerd/v2" }))
+      .toThrow(ThinkingMachRunnerdArtifactError);
+    expect(() => parseThinkingMachRunnerdBuildMetadata({ ...valid, schema: "runnerd/v2" }))
       .toThrow(/unsupported/);
   });
 
   it("rejects an invalid or mismatched explicit artifact digest before execution", async () => {
-    await expect(resolvePaperclipRunnerdArtifact({
+    await expect(resolveThinkingMachRunnerdArtifact({
       executablePath: "/does/not/matter",
       expectedSha256: "not-a-digest",
     })).rejects.toMatchObject({ issue: "digest_invalid" });
@@ -45,7 +45,7 @@ describe("runnerd artifact metadata", () => {
     const executablePath = join(root, "paperclip-runnerd");
     try {
       await writeFile(executablePath, "not the expected binary");
-      await expect(resolvePaperclipRunnerdArtifact({
+      await expect(resolveThinkingMachRunnerdArtifact({
         executablePath,
         expectedSha256: `sha256:${"0".repeat(64)}`,
       })).rejects.toMatchObject({
@@ -77,7 +77,7 @@ describe("runnerd artifact metadata", () => {
           },
         };
 
-        await expect(resolvePaperclipRunnerdArtifact(input)).resolves.toMatchObject({
+        await expect(resolveThinkingMachRunnerdArtifact(input)).resolves.toMatchObject({
           executablePath,
           sha256: expectedSha256,
           byteSize: Buffer.byteLength(verifiedScript),

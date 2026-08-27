@@ -3,7 +3,7 @@
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { InboxAgentPolicy } from "@paperclipai/shared";
+import type { InboxAgentPolicy } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { InboxAgentPolicyControl } from "./InboxAgentPolicyControl";
 

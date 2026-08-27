@@ -1,5 +1,5 @@
 import { Router, type Request } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   CONNECTION_REQUEST_TOOL_DESCRIPTION,
   CONNECTIONS_SEARCH_TOOL_DESCRIPTION,
@@ -7,7 +7,7 @@ import {
   connectionRequestInputSchema,
   connectionsSearchInputSchema,
   declineConnectionIntentSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { forbidden, unauthorized } from "../errors.js";
 import { verifyRuntimeToolsToken } from "../runtime-tools-token.js";
 import { connectionIntentService } from "../services/connection-intents.js";

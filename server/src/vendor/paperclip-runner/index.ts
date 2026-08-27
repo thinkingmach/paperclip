@@ -7,21 +7,21 @@
  * tree so published server packages have no workspace runtime dependency.
  * Keep server imports pointed at this relative boundary.
  */
-type RunnerModule = typeof import("@paperclipai/paperclip-runner");
+type RunnerModule = typeof import("@thinkingmach/paperclip-runner");
 
 export type {
-  PaperclipJsonValue,
-  PaperclipQuestionResponse,
-  PaperclipSemanticActionBinding,
-  PaperclipSemanticActionId,
-  PaperclipSemanticAuthorizationRecord,
-  PaperclipSemanticRunContext,
-  PaperclipSemanticToolCall,
-  PaperclipSemanticToolDefinition,
-  PaperclipSemanticToolResult,
-  PaperclipRunnerAuthorizedToolSet,
-  PaperclipQuestionSet,
-  PaperclipRuntimeInputRequest,
+  ThinkingMachJsonValue,
+  ThinkingMachQuestionResponse,
+  ThinkingMachSemanticActionBinding,
+  ThinkingMachSemanticActionId,
+  ThinkingMachSemanticAuthorizationRecord,
+  ThinkingMachSemanticRunContext,
+  ThinkingMachSemanticToolCall,
+  ThinkingMachSemanticToolDefinition,
+  ThinkingMachSemanticToolResult,
+  ThinkingMachRunnerAuthorizedToolSet,
+  ThinkingMachQuestionSet,
+  ThinkingMachRuntimeInputRequest,
   CompleteControlPlaneRunInput,
   ControlPlanePort,
   HarnessRuntimeRequestKind,
@@ -54,11 +54,11 @@ export type {
   RunnerProcessLaunchSpec,
   StrictCompletionContractInput,
   TransportCloseReason,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 export type DurablePrpControlPlane =
-  import("@paperclipai/paperclip-runner").DurablePrpControlPlane;
-export type PaperclipSemanticDispatcher =
-  import("@paperclipai/paperclip-runner").PaperclipSemanticDispatcher;
+  import("@thinkingmach/paperclip-runner").DurablePrpControlPlane;
+export type ThinkingMachSemanticDispatcher =
+  import("@thinkingmach/paperclip-runner").ThinkingMachSemanticDispatcher;
 
 const sourceUrl = new URL(
   "../../../../packages/paperclip-runner/src/index.ts",
@@ -67,23 +67,23 @@ const sourceUrl = new URL(
 const runner = await import(sourceUrl.href) as RunnerModule;
 
 export const DurablePrpControlPlane = runner.DurablePrpControlPlane;
-export const PaperclipSemanticDispatcher = runner.PaperclipSemanticDispatcher;
+export const ThinkingMachSemanticDispatcher = runner.ThinkingMachSemanticDispatcher;
 export const CAPABILITY_SEMANTIC_TOOL_CATALOG =
   runner.CAPABILITY_SEMANTIC_TOOL_CATALOG;
 export const HarnessRuntimeRequestResolutionError =
   runner.HarnessRuntimeRequestResolutionError;
 export const NATIVE_RUNTIME_ASSET_SCHEMA = runner.NATIVE_RUNTIME_ASSET_SCHEMA;
-export const PAPERCLIP_EXECUTION_PROMPT = runner.PAPERCLIP_EXECUTION_PROMPT;
-export const PAPERCLIP_EXECUTION_PROMPT_REVISION =
-  runner.PAPERCLIP_EXECUTION_PROMPT_REVISION;
+export const THINKINGMACH_EXECUTION_PROMPT = runner.THINKINGMACH_EXECUTION_PROMPT;
+export const THINKINGMACH_EXECUTION_PROMPT_REVISION =
+  runner.THINKINGMACH_EXECUTION_PROMPT_REVISION;
 export const canonicalNativeRuntimeContextDigest =
   runner.canonicalNativeRuntimeContextDigest;
 export const createNativeSessionBackend = runner.createNativeSessionBackend;
-export const createPaperclipRunnerAuthorizedToolSet =
-  runner.createPaperclipRunnerAuthorizedToolSet;
+export const createThinkingMachRunnerAuthorizedToolSet =
+  runner.createThinkingMachRunnerAuthorizedToolSet;
 export const createRunnerdCodexTransport: (
-  options?: import("@paperclipai/paperclip-runner").RunnerdCodexTransportOptions,
-) => import("@paperclipai/paperclip-runner").RunnerdCodexTransport =
+  options?: import("@thinkingmach/paperclip-runner").RunnerdCodexTransportOptions,
+) => import("@thinkingmach/paperclip-runner").RunnerdCodexTransport =
   runner.createRunnerdCodexTransport;
 export const defaultCapabilityRunnerdBinary =
   runner.defaultCapabilityRunnerdBinary;
@@ -95,8 +95,8 @@ export const parseHarnessRuntimeRequestResolution =
   runner.parseHarnessRuntimeRequestResolution;
 export const parseNativeExecutionInput = runner.parseNativeExecutionInput;
 export const parseNativeRuntimeContext = runner.parseNativeRuntimeContext;
-export const parsePaperclipQuestionSet = runner.parsePaperclipQuestionSet;
-export const parsePaperclipQuestionResponse = runner.parsePaperclipQuestionResponse;
+export const parseThinkingMachQuestionSet = runner.parseThinkingMachQuestionSet;
+export const parseThinkingMachQuestionResponse = runner.parseThinkingMachQuestionResponse;
 export const resolveQualifiedAcpxProfile = runner.resolveQualifiedAcpxProfile;
 export const resolveSourceCodexHome = runner.resolveSourceCodexHome;
 export const validatePrpEvent = runner.validatePrpEvent;

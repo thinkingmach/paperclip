@@ -101,7 +101,7 @@ export const directAcceptanceProfiles: readonly RunnerAcceptanceProfile[] = [
 export const nativeAcceptanceProfiles: readonly RunnerAcceptanceProfile[] = [
   nativeProfile({
     id: "runner-codex",
-    label: "Paperclip Runner Codex",
+    label: "ThinkingMach Runner Codex",
     provider: "codex",
     model: DEFAULT_CODEX_LOCAL_MODEL,
     adapterConfig: {
@@ -112,7 +112,7 @@ export const nativeAcceptanceProfiles: readonly RunnerAcceptanceProfile[] = [
   }),
   nativeProfile({
     id: "runner-opencode",
-    label: "Paperclip Runner OpenCode",
+    label: "ThinkingMach Runner OpenCode",
     provider: "opencode",
     model: QUALIFIED_OPENCODE_MODEL,
     adapterConfig: {
@@ -124,7 +124,7 @@ export const nativeAcceptanceProfiles: readonly RunnerAcceptanceProfile[] = [
   }),
   nativeProfile({
     id: "runner-acpx-claude",
-    label: "Paperclip Runner ACPX Claude",
+    label: "ThinkingMach Runner ACPX Claude",
     provider: "acpx",
     model: QUALIFIED_ACPX_PROFILES.claude.qualificationModel,
     adapterConfig: {
@@ -137,7 +137,7 @@ export const nativeAcceptanceProfiles: readonly RunnerAcceptanceProfile[] = [
   }),
   nativeProfile({
     id: "runner-acpx-codex",
-    label: "Paperclip Runner ACPX Codex",
+    label: "ThinkingMach Runner ACPX Codex",
     provider: "acpx",
     model: QUALIFIED_ACPX_PROFILES.codex.qualificationModel,
     adapterConfig: {

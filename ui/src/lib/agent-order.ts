@@ -1,4 +1,4 @@
-import type { Agent } from "@paperclipai/shared";
+import type { Agent } from "@thinkingmach/shared";
 
 export const AGENT_ORDER_UPDATED_EVENT = "paperclip:agent-order-updated";
 export const AGENT_SORT_MODE_UPDATED_EVENT = "paperclip:agent-sort-mode-updated";

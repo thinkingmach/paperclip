@@ -12,7 +12,7 @@ import type {
   ExternalObjectLivenessState,
   ExternalObjectStatusCategory,
   ExternalObjectStatusTone,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { companies } from "./companies.js";
 import { plugins } from "./plugins.js";
 

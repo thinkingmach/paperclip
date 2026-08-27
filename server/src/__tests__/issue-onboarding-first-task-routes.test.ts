@@ -15,8 +15,8 @@ import {
   heartbeatRuns,
   issueComments,
   issues,
-} from "@paperclipai/db";
-import { ONBOARDING_FIRST_TASK_ORIGIN_KIND } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { ONBOARDING_FIRST_TASK_ORIGIN_KIND } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -117,7 +117,7 @@ describeEmbeddedPostgres("issue create onboarding first-task routes", () => {
     const companyId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `D${companyId.replace(/-/g, "").slice(0, 5).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });

@@ -52,7 +52,7 @@ required v2 protocol cannot be replayed by this consumer.
 ## Within-turn checklist snapshots
 
 `plan.updated` / `paperclip.plan.updated.v1` is a complete, ordered snapshot of
-the provider's checklist for one active turn. It is not a Paperclip Plan
+the provider's checklist for one active turn. It is not a ThinkingMach Plan
 document and must never be inferred from assistant prose, Codex proposed-plan
 items, or generic TodoWrite output. Every replacement uses the provider turn ID
 as `planId`; PRP `sourceSeq`, not an optional provider revision, determines
@@ -126,7 +126,7 @@ instead of silently degrading. ACPX sidecars advertise only form elicitation
 and use sidecar protocol v2 `runtime.input_requested` / `input.resolve` frames.
 
 The live lifecycle pauses and resumes the same provider turn. If the provider
-process is lost first, Paperclip emits one non-replayable
+process is lost first, ThinkingMach emits one non-replayable
 `runtime_request.expired` fact and materializes an idempotent durable
 `ask_user_questions` interaction using the identical question set. Explicit
 cancellation and already-resolved requests never create that fallback.
@@ -233,8 +233,8 @@ remain in v1 only when old consumers can safely ignore them.
 
 PRP is one independently versioned component of the runner bundle. Catalog,
 runner-client, control-plane-adapter, testkit, and eval-corpus compatibility is
-declared by `PAPERCLIP_RUNNER_COMPATIBILITY` and checked before execution by
-`assertPaperclipRunnerCompatibility`. A mismatch fails with
+declared by `THINKINGMACH_RUNNER_COMPATIBILITY` and checked before execution by
+`assertThinkingMachRunnerCompatibility`. A mismatch fails with
 `paperclip_runner_incompatible` and stable per-issue codes; a provider-specific
 tool error is not a compatibility negotiation mechanism.
 
@@ -244,7 +244,7 @@ component rules and clean-consumer packaging gate.
 ## Evals integration negotiation
 
 The packed `./evals` entry point adds a stricter execution preflight for the
-App/Evals join. `assertPaperclipRunnerEvalCompatibility` requires simultaneous
+App/Evals join. `assertThinkingMachRunnerEvalCompatibility` requires simultaneous
 agreement on package semver, runnerd build metadata, a common PRP version,
 semantic catalog version and SHA-256 digest, harness-driver contract and
 required capabilities, and the native-execution version. It reports
@@ -253,7 +253,7 @@ mismatch and must run before launching a provider.
 
 runnerd itself reports `paperclip-runner/runnerd-build-metadata/v1` from
 `--build-metadata`. The consumer passes its path and expected content digest to
-`resolvePaperclipRunnerdArtifact`; implicit PATH or source-tree discovery is
+`resolveThinkingMachRunnerdArtifact`; implicit PATH or source-tree discovery is
 not part of the contract. Native attempt output is
 `paperclip-runner/native-execution/v1`, whose parser accepts unknown additive
 fields but rejects unknown required versions and inconsistent terminal,

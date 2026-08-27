@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "${PAPERCLIP_INSTALL_TEST_LOG:?PAPERCLIP_INSTALL_TEST_LOG is required}"
-node --version >"${PAPERCLIP_INSTALL_TEST_LOG}.node"
+: "${THINKINGMACH_INSTALL_TEST_LOG:?THINKINGMACH_INSTALL_TEST_LOG is required}"
+node --version >"${THINKINGMACH_INSTALL_TEST_LOG}.node"
 {
   printf 'NPM_CONFIG_REGISTRY=%s\n' "${NPM_CONFIG_REGISTRY:-}"
   printf 'npm_config_registry=%s\n' "${npm_config_registry:-}"
@@ -12,4 +12,4 @@ node --version >"${PAPERCLIP_INSTALL_TEST_LOG}.node"
     sed 's/^/npmrc:/' "$NPM_CONFIG_USERCONFIG"
   fi
   printf '%s\n' "$@"
-} >>"$PAPERCLIP_INSTALL_TEST_LOG"
+} >>"$THINKINGMACH_INSTALL_TEST_LOG"

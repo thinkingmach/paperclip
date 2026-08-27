@@ -1,14 +1,14 @@
 {
-  "name": "@paperclipai/adapter-utils",
-  "version": "0.3.1",
+  "name": "@thinkingmach/adapter-utils",
+  "version": "0.3.3",
   "license": "MIT",
-  "homepage": "https://github.com/paperclipai/paperclip",
+  "homepage": "https://github.com/thinkingmach/paperclip",
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/adapter-utils"
   },
   "type": "module",
@@ -43,7 +43,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@paperclipai/shared": "workspace:*",
+    "@thinkingmach/shared": "workspace:*",
     "acpx": "0.12.0",
     "picocolors": "^1.1.1"
   },

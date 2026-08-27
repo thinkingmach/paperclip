@@ -3,14 +3,14 @@ import express, { Router, type NextFunction, type Request, type Response } from 
 import multer from "multer";
 import { and, count as countFn, eq } from "drizzle-orm";
 import { z } from "zod";
-import type { Db } from "@paperclipai/db";
-import { agents as agentsTable } from "@paperclipai/db";
-import type { CompanyPortabilityImportResult } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { agents as agentsTable } from "@thinkingmach/db";
+import type { CompanyPortabilityImportResult } from "@thinkingmach/shared";
 import {
   MAX_ZIP_ENTRY_DECOMPRESSED_BYTES,
   MAX_ZIP_TOTAL_DECOMPRESSED_BYTES,
   readZipArchive,
-} from "@paperclipai/shared/portability-zip";
+} from "@thinkingmach/shared/portability-zip";
 import {
   DEFAULT_FEEDBACK_DATA_SHARING_TERMS_VERSION,
   SETTINGS_OPERATOR_MANAGED_ERROR_CODE,
@@ -25,7 +25,7 @@ import {
   hidesCompanyPage,
   updateCompanyBrandingSchema,
   updateCompanySchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   COMPANY_IMPORT_TRANSFERS_ROUTE_PATH,
   companyImportTransferDeclarationSchema,
@@ -33,7 +33,7 @@ import {
   type CompanyImportTransferDeclaration,
   type CompanyImportTransferPartUploadResult,
   type CompanyImportTransferStatus,
-} from "@paperclipai/shared/company-import-transfer";
+} from "@thinkingmach/shared/company-import-transfer";
 import { badRequest, conflict, forbidden, notFound, unprocessable } from "../errors.js";
 import { PORTABLE_ZIP_UPLOAD_LIMIT_BYTES } from "../http/body-limits.js";
 import { logger } from "../middleware/logger.js";
@@ -99,7 +99,7 @@ const zipPackageUpload = multer({
 const IMPORT_TRANSFER_PART_SIZE_LIMIT_BYTES = 64 * 1024 * 1024;
 
 // The declaration body and response shapes are the shared wire contract in
-// @paperclipai/shared/company-import-transfer — the browser and CLI clients
+// @thinkingmach/shared/company-import-transfer — the browser and CLI clients
 // type against the same schemas and path builders.
 const importTransferManifestSchema = companyImportTransferDeclarationSchema;
 
@@ -538,7 +538,7 @@ export function companyRoutes(db: Db, storage?: StorageService, options?: Compan
    *   provisions the company, so materializing imported companies on a
    *   managed instance is disabled unconditionally;
    * - the operator hiding the Import page (`company.import` in
-   *   `PAPERCLIP_HIDDEN_SETTINGS` → `settings_operator_managed`): hiding the
+   *   `THINKINGMACH_HIDDEN_SETTINGS` → `settings_operator_managed`): hiding the
    *   page also disables its API, so the hide is real rather than cosmetic.
    *
    * Export routes stay open either way — they are the tenant's
@@ -1182,7 +1182,7 @@ export function companyRoutes(db: Db, storage?: StorageService, options?: Compan
   router.post("/", (req, _res, next) => {
     assertBoard(req);
     if (isCloudManagedInstance()) {
-      throw forbidden("Company creation is managed by Paperclip Cloud", {
+      throw forbidden("Company creation is managed by ThinkingMach Cloud", {
         code: "cloud_managed",
       });
     }

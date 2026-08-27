@@ -1,13 +1,13 @@
 ---
 title: Adapters Overview
-summary: What adapters are and how they connect agents to Paperclip
+summary: What adapters are and how they connect agents to ThinkingMach
 ---
 
-Adapters are the bridge between Paperclip's orchestration layer and agent runtimes. Each adapter knows how to invoke a specific type of AI agent and capture its results.
+Adapters are the bridge between ThinkingMach's orchestration layer and agent runtimes. Each adapter knows how to invoke a specific type of AI agent and capture its results.
 
 ## How Adapters Work
 
-When a heartbeat fires, Paperclip:
+When a heartbeat fires, ThinkingMach:
 
 1. Looks up the agent's `adapterType` and `adapterConfig`
 2. Calls the adapter's `execute()` function with the execution context
@@ -25,22 +25,22 @@ When a heartbeat fires, Paperclip:
 | OpenCode | `opencode_local` | Runs OpenCode CLI locally (multi-provider `provider/model`) |
 | Cursor | `cursor` | Runs Cursor in background mode |
 | Pi | `pi_local` | Runs an embedded Pi agent locally |
-| Hermes | `hermes_local` | Runs the local Hermes CLI through `@paperclipai/hermes-paperclip-adapter` |
-| Hermes Gateway | `hermes_gateway` | Calls an already-running Hermes API server through `@paperclipai/hermes-paperclip-adapter/gateway` |
+| Hermes | `hermes_local` | Runs the local Hermes CLI through `@thinkingmach/hermes-paperclip-adapter` |
+| Hermes Gateway | `hermes_gateway` | Calls an already-running Hermes API server through `@thinkingmach/hermes-paperclip-adapter/gateway` |
 | OpenClaw Gateway | `openclaw_gateway` | Connects to an OpenClaw gateway endpoint |
 | [Process](/adapters/process) | `process` | Executes arbitrary shell commands |
 | [HTTP](/adapters/http) | `http` | Sends webhooks to external agents |
 
 ## Credential ownership for sandbox targets
 
-Local CLI adapters can run on the Paperclip host, SSH targets, or managed
+Local CLI adapters can run on the ThinkingMach host, SSH targets, or managed
 sandbox targets. The adapter decides which credential home is authoritative
 before the CLI starts:
 
 | Adapter | Credential topology | Which credential file wins on managed sandbox targets |
 |---------|---------------------|-------------------------------------------------------|
-| [`codex_local`](/adapters/codex-local) | Host-owns-auth for Paperclip-managed `CODEX_HOME` | A host-owned `auth.json` is symlinked into the managed `CODEX_HOME` and uploaded to the sandbox. If a per-agent `OPENAI_API_KEY` is configured, Paperclip writes an API-key `auth.json` instead and that file wins. A login baked into the sandbox image is shadowed because Codex runs with Paperclip's uploaded `CODEX_HOME`. |
-| [`claude_local`](/adapters/claude-local) | Snapshot-owns-auth for managed remote Claude config | A configured `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` (agent or environment env) wins over any stored login. Otherwise Paperclip uploads only sanitized settings and skill/runtime assets, and when the remote managed config has no Claude credential files it copies `.credentials.json` or `credentials.json` from the sandbox image's own `$HOME/.claude`, so the image's login wins. |
+| [`codex_local`](/adapters/codex-local) | Host-owns-auth for ThinkingMach-managed `CODEX_HOME` | A host-owned `auth.json` is symlinked into the managed `CODEX_HOME` and uploaded to the sandbox. If a per-agent `OPENAI_API_KEY` is configured, ThinkingMach writes an API-key `auth.json` instead and that file wins. A login baked into the sandbox image is shadowed because Codex runs with ThinkingMach's uploaded `CODEX_HOME`. |
+| [`claude_local`](/adapters/claude-local) | Snapshot-owns-auth for managed remote Claude config | A configured `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` (agent or environment env) wins over any stored login. Otherwise ThinkingMach uploads only sanitized settings and skill/runtime assets, and when the remote managed config has no Claude credential files it copies `.credentials.json` or `credentials.json` from the sandbox image's own `$HOME/.claude`, so the image's login wins. |
 
 Worked examples:
 
@@ -48,22 +48,22 @@ Worked examples:
   is symlinked into the managed home, then uploaded as the sandbox
   `CODEX_HOME`. Codex reads that uploaded file and does not use any
   `auth.json` already present inside the sandbox image.
-- **Claude sandbox with image login:** Paperclip materializes a remote
+- **Claude sandbox with image login:** ThinkingMach materializes a remote
   `CLAUDE_CONFIG_DIR`, then fills missing `.credentials.json` /
   `credentials.json` from the sandbox image's own `$HOME/.claude`. The
   snapshot's Claude login is the credential source for the run.
 
 ### Hermes local vs gateway
 
-Use `hermes_local` when Paperclip should start the local `hermes` CLI on the
+Use `hermes_local` when ThinkingMach should start the local `hermes` CLI on the
 same host for each heartbeat. Use `hermes_gateway` when Hermes is already
-running as an HTTP/SSE API server and Paperclip should call that server instead
+running as an HTTP/SSE API server and ThinkingMach should call that server instead
 of spawning a process. Both type keys are stable built-ins.
 
 The unified Hermes package owns both built-in adapters. The older
-`@paperclipai/adapter-hermes-gateway` package remains only as a deprecated
+`@thinkingmach/adapter-hermes-gateway` package remains only as a deprecated
 compatibility shim that re-exports the gateway entrypoints for one release.
-New plugin overrides should target `@paperclipai/hermes-paperclip-adapter` and
+New plugin overrides should target `@thinkingmach/hermes-paperclip-adapter` and
 set the desired type key (`hermes_local` or `hermes_gateway`).
 
 ### External (plugin) adapters
@@ -76,7 +76,7 @@ These adapters ship as standalone npm packages and are installed via the plugin 
 
 ## External Adapters
 
-You can build and distribute adapters as standalone packages — no changes to Paperclip's source code required. External adapters are loaded at startup via the plugin system.
+You can build and distribute adapters as standalone packages — no changes to ThinkingMach's source code required. External adapters are loaded at startup via the plugin system.
 
 ```sh
 # Install from npm via API
@@ -104,7 +104,7 @@ my-adapter/
       test.ts           # Environment diagnostics
     ui-parser.ts        # Self-contained UI transcript parser (for external adapters)
     cli/
-      format-event.ts   # Terminal output for `paperclipai run --watch`
+      format-event.ts   # Terminal output for `thinkingmach run --watch`
 ```
 
 | Registry | What it does | Source |
@@ -136,4 +136,4 @@ Rough tiers, richest first:
 
 ## UI Parser Contract
 
-External adapters can ship a self-contained UI parser that tells the Paperclip web UI how to render their stdout. Without it, the UI uses a generic shell parser. See the [UI Parser Contract](/adapters/adapter-ui-parser) for details.
+External adapters can ship a self-contained UI parser that tells the ThinkingMach web UI how to render their stdout. Without it, the UI uses a generic shell parser. See the [UI Parser Contract](/adapters/adapter-ui-parser) for details.

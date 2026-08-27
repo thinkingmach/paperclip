@@ -66,9 +66,9 @@ describe("TelemetryClient runtime event gate", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true }));
     const { client, stateFactory } = makeClient();
 
-    // @ts-expect-error constructor is grammar-valid but not a registered Paperclip event.
+    // @ts-expect-error constructor is grammar-valid but not a registered ThinkingMach event.
     client.track("constructor", {});
-    // @ts-expect-error toString is grammar-valid but not a registered Paperclip event.
+    // @ts-expect-error toString is grammar-valid but not a registered ThinkingMach event.
     client.track("toString", {});
 
     await client.flush();

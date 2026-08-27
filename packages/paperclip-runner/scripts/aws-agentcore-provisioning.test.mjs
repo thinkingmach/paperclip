@@ -98,7 +98,7 @@ test("AgentCore wrapper is valid shell and writes only nonsecret profile metadat
   assert.ok(teardownBlock.length > 0);
   assert.doesNotMatch(generatedBlock, /AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|AWS_SESSION_TOKEN|Authorization|X-Amz-Signature/);
   assert.doesNotMatch(teardownBlock, /AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|AWS_SESSION_TOKEN|Authorization|X-Amz-Signature/);
-  assert.match(teardownBlock, /PAPERCLIP_AWS_AGENTCORE_STACK_NAME=\$STACK_NAME/);
+  assert.match(teardownBlock, /THINKINGMACH_AWS_AGENTCORE_STACK_NAME=\$STACK_NAME/);
   assert.match(teardownBlock, /chmod 600 "\$tmp"/);
   assert.match(source, /chmod 600 "\$tmp"/);
   assert.match(source, /printf '%q\\n'/);
@@ -128,7 +128,7 @@ test("AgentCore wrapper is valid shell and writes only nonsecret profile metadat
   assert.match(provisionBlock, /existing_cost_center.*paperclip:cost-center/s);
   assert.ok(provisionBlock.indexOf("ownership tags or template provenance") < provisionBlock.indexOf("cloudformation delete-stack"));
   assert.ok(provisionBlock.indexOf("REPLACE_FAILED_STACK") < provisionBlock.indexOf("cloudformation delete-stack"));
-  assert.match(provisionBlock, /Unable to verify whether stack .* exists and is owned by Paperclip/);
+  assert.match(provisionBlock, /Unable to verify whether stack .* exists and is owned by ThinkingMach/);
   assert.match(source, /cloudformation wait stack-delete-complete/);
   assert.match(source, /--query harness\.status/);
   assert.match(source, /AgentCore tool allowlist drift/);
@@ -137,9 +137,9 @@ test("AgentCore wrapper is valid shell and writes only nonsecret profile metadat
   assert.match(source, /o\.endpoint\?\.arn/);
   assert.match(source, /--marketplace-product-id/);
   assert.match(source, /BedrockMarketplaceProductId=\$MARKETPLACE_PRODUCT_ID/);
-  assert.match(generatedBlock, /PAPERCLIP_AWS_AGENTCORE_CONTEXT_BUCKET=\$context_bucket/);
-  assert.match(generatedBlock, /PAPERCLIP_AWS_AGENTCORE_CONTEXT_PREFIX=\$context_prefix/);
-  assert.match(generatedBlock, /PAPERCLIP_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN=\$context_kms_key_arn/);
+  assert.match(generatedBlock, /THINKINGMACH_AWS_AGENTCORE_CONTEXT_BUCKET=\$context_bucket/);
+  assert.match(generatedBlock, /THINKINGMACH_AWS_AGENTCORE_CONTEXT_PREFIX=\$context_prefix/);
+  assert.match(generatedBlock, /THINKINGMACH_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN=\$context_kms_key_arn/);
   assert.match(source, /ContextPrefix=\$CONTEXT_PREFIX/);
   assert.match(source, /s3 rm "s3:\/\/\$context_bucket\/\$context_prefix\/assets\/" --recursive/);
   assert.ok(source.indexOf("delete-harness-endpoint") < source.lastIndexOf("cloudformation delete-stack"));
@@ -180,7 +180,7 @@ fi
     ...process.env,
     PATH: `${temp}:${process.env.PATH}`,
     MOCK_AWS_LOG: commandLog,
-    MOCK_STACK_DESCRIPTION: "Paperclip proof-of-concept Amazon Bedrock AgentCore Harness and least-privilege invocation roles.",
+    MOCK_STACK_DESCRIPTION: "ThinkingMach proof-of-concept Amazon Bedrock AgentCore Harness and least-privilege invocation roles.",
     MOCK_STACK_OWNED: "true",
   };
   try {
@@ -218,9 +218,9 @@ test("Runner Lab accepts and resolves the complete qualified AgentCore profile",
   assert.match(source, /AWS AgentCore requires exact model global\.anthropic\.claude-sonnet-4-6/);
   assert.match(source, /function resolveAgentCoreProfile\(configuration\)/);
   for (const field of [
-    "PAPERCLIP_AWS_AGENTCORE_CONTEXT_BUCKET",
-    "PAPERCLIP_AWS_AGENTCORE_CONTEXT_PREFIX",
-    "PAPERCLIP_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN",
+    "THINKINGMACH_AWS_AGENTCORE_CONTEXT_BUCKET",
+    "THINKINGMACH_AWS_AGENTCORE_CONTEXT_PREFIX",
+    "THINKINGMACH_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN",
   ]) assert.match(source, new RegExp(field));
   assert.match(source, /agentCoreProfile: resolveAgentCoreProfile\(configuration\)/);
   assert.match(source, /agentCoreProfileId: snapshot\.config\.agentCoreProfile\.profileId/);
@@ -234,7 +234,7 @@ test("Runner Lab qualifies Claude Managed and exposes remote governance for both
   assert.match(source, /Claude Managed requires exact model claude-sonnet-5/);
   assert.match(source, /function resolveManagedProfile\(configuration\)/);
   for (const field of [
-    "PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID",
+    "THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID",
     "ANTHROPIC_API_KEY",
     "ANTHROPIC_MANAGED_AGENT_ID",
     "ANTHROPIC_MANAGED_AGENT_VERSION",

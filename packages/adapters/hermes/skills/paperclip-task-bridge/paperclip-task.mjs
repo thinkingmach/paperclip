@@ -7,7 +7,7 @@ const PRIORITIES = new Set(["critical", "high", "medium", "low"]);
 const WORK_MODES = new Set(["standard", "ask", "planning"]);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-const HELP = `Paperclip task bridge for Hermes
+const HELP = `ThinkingMach task bridge for Hermes
 
 Usage:
   paperclip-task.mjs list-assigned [--status todo,in_progress,in_review,blocked] [--limit 20]
@@ -16,13 +16,13 @@ Usage:
   paperclip-task.mjs update-status --issue <id|identifier> --status <status> [--comment <text>|--comment-file <path|->]
 
 Environment:
-  PAPERCLIP_API_URL    Paperclip base URL, with or without /api.
-  PAPERCLIP_BRIDGE_API_KEY
-                       Task-bridge Paperclip API key with kind=task_bridge scope.
-  PAPERCLIP_API_KEY    Fallback bridge key env var. Do not use a full agent key.
-  PAPERCLIP_COMPANY_ID Optional company id override.
-  PAPERCLIP_AGENT_ID   Optional agent id override.
-  PAPERCLIP_RUN_ID     Optional run id for X-Paperclip-Run-Id on mutations.
+  THINKINGMACH_API_URL    ThinkingMach base URL, with or without /api.
+  THINKINGMACH_BRIDGE_API_KEY
+                       Task-bridge ThinkingMach API key with kind=task_bridge scope.
+  THINKINGMACH_API_KEY    Fallback bridge key env var. Do not use a full agent key.
+  THINKINGMACH_COMPANY_ID Optional company id override.
+  THINKINGMACH_AGENT_ID   Optional agent id override.
+  THINKINGMACH_RUN_ID     Optional run id for X-ThinkingMach-Run-Id on mutations.
 
 create-task options:
   --assignee-agent-id <uuid|self>  Assign to an agent. Defaults to self.
@@ -45,7 +45,7 @@ class UsageError extends Error {
 
 class ApiError extends Error {
   constructor(status, body) {
-    const message = typeof body?.error === "string" ? body.error : `Paperclip API request failed with status ${status}`;
+    const message = typeof body?.error === "string" ? body.error : `ThinkingMach API request failed with status ${status}`;
     super(message);
     this.name = "ApiError";
     this.status = status;
@@ -96,21 +96,21 @@ function boolFlag(args, name) {
 
 function normalizeApiBaseUrl(raw) {
   if (!raw || typeof raw !== "string" || raw.trim().length === 0) {
-    throw new UsageError("PAPERCLIP_API_URL is required");
+    throw new UsageError("THINKINGMACH_API_URL is required");
   }
   const trimmed = raw.trim().replace(/\/+$/, "");
   return trimmed.endsWith("/api") ? trimmed : `${trimmed}/api`;
 }
 
 function getConfig() {
-  const apiKey = process.env.PAPERCLIP_BRIDGE_API_KEY?.trim() || process.env.PAPERCLIP_API_KEY?.trim();
-  if (!apiKey) throw new UsageError("PAPERCLIP_BRIDGE_API_KEY is required");
+  const apiKey = process.env.THINKINGMACH_BRIDGE_API_KEY?.trim() || process.env.THINKINGMACH_API_KEY?.trim();
+  if (!apiKey) throw new UsageError("THINKINGMACH_BRIDGE_API_KEY is required");
   return {
-    apiBaseUrl: normalizeApiBaseUrl(process.env.PAPERCLIP_API_URL),
+    apiBaseUrl: normalizeApiBaseUrl(process.env.THINKINGMACH_API_URL),
     apiKey,
-    runId: process.env.PAPERCLIP_RUN_ID?.trim() || null,
-    companyId: process.env.PAPERCLIP_COMPANY_ID?.trim() || null,
-    agentId: process.env.PAPERCLIP_AGENT_ID?.trim() || null,
+    runId: process.env.THINKINGMACH_RUN_ID?.trim() || null,
+    companyId: process.env.THINKINGMACH_COMPANY_ID?.trim() || null,
+    agentId: process.env.THINKINGMACH_AGENT_ID?.trim() || null,
   };
 }
 
@@ -139,7 +139,7 @@ async function apiFetch(config, path, options = {}) {
     Authorization: `Bearer ${config.apiKey}`,
     Accept: "application/json",
     ...(options.body !== undefined ? { "Content-Type": "application/json" } : {}),
-    ...(options.mutating && config.runId ? { "X-Paperclip-Run-Id": config.runId } : {}),
+    ...(options.mutating && config.runId ? { "X-ThinkingMach-Run-Id": config.runId } : {}),
   };
   const response = await fetch(`${config.apiBaseUrl}${path}`, {
     method: options.method ?? "GET",
@@ -166,7 +166,7 @@ async function resolveIdentity(config) {
   const agent = await apiFetch(config, "/agents/me");
   const companyId = config.companyId || agent.companyId;
   const agentId = config.agentId || agent.id;
-  if (!companyId || !agentId) throw new ApiError(500, { error: "Paperclip identity response did not include companyId and agent id" });
+  if (!companyId || !agentId) throw new ApiError(500, { error: "ThinkingMach identity response did not include companyId and agent id" });
   return { companyId, agentId, agent };
 }
 

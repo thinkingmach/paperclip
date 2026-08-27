@@ -269,7 +269,7 @@ describe("plugin SDK FileTree bridge", () => {
           onSelectFile: () => undefined,
         }),
       ),
-    ).toThrow('Paperclip plugin UI runtime is not initialized for "FileTree"');
+    ).toThrow('ThinkingMach plugin UI runtime is not initialized for "FileTree"');
   });
 });
 

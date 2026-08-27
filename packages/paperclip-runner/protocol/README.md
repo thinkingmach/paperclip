@@ -1,7 +1,7 @@
 # PRP v1 Contract
 
 The JSON Schema files in `schemas/` are the language-neutral source of truth for
-Paperclip Runner Protocol version 1. The fixtures in `fixtures/` define accepted
+ThinkingMach Runner Protocol version 1. The fixtures in `fixtures/` define accepted
 and rejected compatibility cases.
 
 ## Compatibility

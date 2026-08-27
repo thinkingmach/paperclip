@@ -73,7 +73,7 @@ export function readinessVerdict({ pullRequest, checks, greptile, behindBy, orig
   if (pullRequest.reviewDecision === "CHANGES_REQUESTED") reasons.push(reason("changes_requested", "A review requests changes"));
   if (pullRequest.reviewDecision === "REVIEW_REQUIRED") reasons.push(reason("review_required", "Required review approval is missing"));
   if (behindBy > 0) reasons.push(reason("base_behind", `Head is ${behindBy} commit(s) behind base`, "blocking", { behindBy }));
-  if (!originatingIssue) reasons.push(reason("originating_issue_missing", "No originating Paperclip issue was identified", "reporting"));
+  if (!originatingIssue) reasons.push(reason("originating_issue_missing", "No originating ThinkingMach issue was identified", "reporting"));
   else if (!isTerminalIssue(originatingIssue.status)) {
     reasons.push(reason("originating_issue_active", `Originating issue ${originatingIssue.identifier ?? originatingIssue.issueId} is ${originatingIssue.status}`, "reporting"));
   }

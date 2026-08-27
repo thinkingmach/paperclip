@@ -2,7 +2,7 @@ import { createReadStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
 import { Router, type Request, type Response } from "express";
 import { ZodError } from "zod";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   workspaceFileAvailabilityRequestSchema,
   workspaceFileListQuerySchema,
@@ -12,7 +12,7 @@ import {
   type WorkspaceFileAvailabilityResponse,
   type WorkspaceFileContent,
   type WorkspaceFileListResponse,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { badRequest, HttpError, notFound, unprocessable } from "../errors.js";
 import { workspaceFileResourceService } from "../services/index.js";
 import { assertBoard, getActorInfo, hasCompanyAccess } from "./authz.js";

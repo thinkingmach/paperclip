@@ -1,20 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Issue, IssueLabel, Project } from "@paperclipai/shared";
+import type { Issue, IssueLabel, Project } from "@thinkingmach/shared";
 import type { RunForIssue } from "@/api/activity";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  ArrowDownAZ,
-  ArrowUpDown,
-  Check,
-  Columns3,
-  Filter,
-  GitBranch,
-  LayoutList,
-  Link2,
-  PanelRight,
-  Rows3,
-} from "lucide-react";
+import { ArrowDownAZ, ArrowUpDown, Check, Columns3, Filter, GitBranch, LayoutList, Link2, PanelRight, Rows3,  } from "lucide-react";
 import { IssueColumnPicker, InboxIssueMetaLeading, InboxIssueTrailingColumns } from "@/components/IssueColumns";
 import { IssueContinuationHandoff } from "@/components/IssueContinuationHandoff";
 import { IssueDocumentsSection } from "@/components/IssueDocumentsSection";

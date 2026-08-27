@@ -23,7 +23,7 @@ import {
   type PrpStructuredRunResult,
   type PrpTerminalState,
 } from "./protocol/replay-contract.js";
-import { parsePaperclipQuestionSet } from "./contracts/question-set.js";
+import { parseThinkingMachQuestionSet } from "./contracts/question-set.js";
 
 export const DEFAULT_NATIVE_RUNTIME_INPUT_LIVE_WINDOW_MS = 120_000;
 export const DEFAULT_NATIVE_SEMANTIC_RESULT_TERMINAL_GRACE_MS = 5_000;
@@ -774,7 +774,7 @@ async function consumeTurn(
         return settleDurableResult(
           semanticResultEvent,
           governedResult,
-          "Paperclip accepted the durable semantic result.",
+          "ThinkingMach accepted the durable semantic result.",
         );
       }
       pendingNext = null;
@@ -835,7 +835,7 @@ async function consumeTurn(
         typeof request.turnId === "string"
       ) {
         try {
-          parsePaperclipQuestionSet(request.input);
+          parseThinkingMachQuestionSet(request.input);
           const requestId = request.requestId;
           const turnId = request.turnId;
           clearInputTimer(requestId);
@@ -927,7 +927,7 @@ async function consumeTurn(
         return settleDurableResult(
           event,
           governedResult,
-          "Paperclip parked this turn on a durable governed interaction.",
+          "ThinkingMach parked this turn on a durable governed interaction.",
         );
       }
       if (isTurnTerminal(event)) {
@@ -1240,7 +1240,7 @@ function checkpointedResultlessDispositionFallback(input: {
 }
 
 /**
- * Package-owned normalized session loop. Paperclip supplies persistence and
+ * Package-owned normalized session loop. ThinkingMach supplies persistence and
  * authority through ControlPlanePort; provider/session behavior stays here.
  */
 export async function executeNativeSession(
@@ -1731,7 +1731,7 @@ export async function executeNativeSession(
           );
           if (dispositionOnlyRecovery) {
             modelEnvelope.task.prompt = [
-              "Paperclip semantic-result recovery for a prior completed provider turn.",
+              "ThinkingMach semantic-result recovery for a prior completed provider turn.",
               "The prior turn already performed the work and its user-facing final answer is recorded.",
               "Do not repeat implementation, tests, research, or the final answer.",
               "Use the existing session context to invoke exactly one paperclip_finish or paperclip_block with the accurate current disposition, then stop without additional user-facing prose.",

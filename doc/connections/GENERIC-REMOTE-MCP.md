@@ -1,12 +1,12 @@
 # Connecting any remote MCP server
 
-Paperclip can connect a standards-compliant remote HTTP MCP server without a
-Paperclip code change. A curated `AppDefinition` is a **convenience layer** —
+ThinkingMach can connect a standards-compliant remote HTTP MCP server without a
+ThinkingMach code change. A curated `AppDefinition` is a **convenience layer** —
 branding, tailored fields, scoped defaults, support copy — not a prerequisite.
 
 This is the documented baseline for connecting anything. Read
 [Connection authoring runbook](./CONNECTOR-PLAYBOOK.md) when you want to add the branded
-convenience layer on top for a vendor Paperclip should promote.
+convenience layer on top for a vendor ThinkingMach should promote.
 
 Accepted in the [generic remote MCP plan](/PAP/issues/PAP-17078#document-plan),
 implemented in [PAP-17087](/PAP/issues/PAP-17087).
@@ -15,8 +15,8 @@ implemented in [PAP-17087](/PAP/issues/PAP-17087).
 
 | Route | Where | Use it when |
 | --- | --- | --- |
-| Guided URL | **Apps → Connect an app → Connect your own MCP server** | You have the server's address. Paperclip probes it and walks you through whatever it needs. |
-| Paste a config | **Advanced → Paste a config** | A README gave you an `mcpServers` snippet, or the server needs headers with names Paperclip could not guess. |
+| Guided URL | **Apps → Connect an app → Connect your own MCP server** | You have the server's address. ThinkingMach probes it and walks you through whatever it needs. |
+| Paste a config | **Advanced → Paste a config** | A README gave you an `mcpServers` snippet, or the server needs headers with names ThinkingMach could not guess. |
 
 Both routes normalize through the same backend contract, so auth discovery,
 secret handling, catalog refresh and review cannot diverge between them.
@@ -28,13 +28,13 @@ Don't know the address or the headers? The question-mark control beside
 **Paste a config** gives you a request you can hand to an agent: it asks the
 agent to consult the vendor's current documentation and reply with one
 paste-ready `mcpServers` JSON object using credential *placeholders*, plus notes
-on how to obtain each credential. Paste only the JSON block back into Paperclip;
-Paperclip reads the header names from it and asks you for the values, which it
-stores as Paperclip secrets.
+on how to obtain each credential. Paste only the JSON block back into ThinkingMach;
+ThinkingMach reads the header names from it and asks you for the values, which it
+stores as ThinkingMach secrets.
 
 ## What the guided URL flow does
 
-After you paste an address and press **Check link**, Paperclip probes the
+After you paste an address and press **Check link**, ThinkingMach probes the
 endpoint and branches:
 
 | Endpoint says | You get |
@@ -60,11 +60,11 @@ Collapsed by default. Open it when the server's docs are specific:
 - **Browser sign-in** — optionally with a client ID and secret you registered
   yourself, for providers that require preregistration.
 
-Every value you enter becomes a Paperclip secret. Values are write-only: they
+Every value you enter becomes a ThinkingMach secret. Values are write-only: they
 never appear in stored config JSON, logs, activity details, API responses after
 write, or UI readback. Only header *names* are shown in review and diagnostics.
 
-Paperclip refuses to send header names it manages or that belong to the
+ThinkingMach refuses to send header names it manages or that belong to the
 transport — `Host`, `Cookie`, `Content-Length`, `Transfer-Encoding`,
 hop-by-hop headers, and anything under `Proxy-*` or `Sec-*` — and rejects
 values containing line breaks or control characters. This is enforced in shared
@@ -74,23 +74,23 @@ real request.
 
 ## How sign-in gets a client
 
-You never choose this; Paperclip resolves it and the wizard shows none of it.
+You never choose this; ThinkingMach resolves it and the wizard shows none of it.
 Recorded here for security review and diagnostics. In preference order:
 
-1. **Deployment-preconfigured client.** `PAPERCLIP_TOOL_OAUTH_<PROVIDER>_CLIENT_ID`
-   / `_SECRET`, or the unsuffixed `PAPERCLIP_TOOL_OAUTH_CLIENT_ID` / `_SECRET`.
+1. **Deployment-preconfigured client.** `THINKINGMACH_TOOL_OAUTH_<PROVIDER>_CLIENT_ID`
+   / `_SECRET`, or the unsuffixed `THINKINGMACH_TOOL_OAUTH_CLIENT_ID` / `_SECRET`.
    Always wins when set.
 2. **Client ID Metadata Document (CIMD).** When the authorization server
-   advertises `client_id_metadata_document_supported`, Paperclip presents the URL
+   advertises `client_id_metadata_document_supported`, ThinkingMach presents the URL
    of its own published metadata document as the `client_id`. Nothing is
-   registered. **Requires a public HTTPS base URL** (`PAPERCLIP_PUBLIC_URL`):
+   registered. **Requires a public HTTPS base URL** (`THINKINGMACH_PUBLIC_URL`):
    the authorization server has to fetch that document server-to-server, so
    loopback and plain-HTTP deployments fall through to the next tier.
    The document is served unauthenticated at `/api/tools/oauth/client-metadata`
    and contains only this deployment's callback and the grant/response/auth
-   methods Paperclip uses — no company, connection or secret data.
+   methods ThinkingMach uses — no company, connection or secret data.
 3. **Dynamic client registration (RFC 7591).** When the authorization server
-   advertises a `registration_endpoint`. Paperclip registers a public client
+   advertises a `registration_endpoint`. ThinkingMach registers a public client
    (`token_endpoint_auth_method: none`, `application_type: web`, PKCE S256).
 4. **Manual preregistered client.** The client ID and secret you paste under
    **Advanced authentication → Browser sign-in**.
@@ -105,8 +105,8 @@ that merely returns a 401 does not earn a registration.
 Client material is bound to the authorization-server issuer, the MCP resource
 URL, the callback URI, and the company. If any of those change:
 
-- a Paperclip-minted client (CIMD or DCR) is **re-registered**;
-- a client you supplied yourself is **not** — Paperclip stops and asks you to
+- a ThinkingMach-minted client (CIMD or DCR) is **re-registered**;
+- a client you supplied yourself is **not** — ThinkingMach stops and asks you to
   re-enter it, because it cannot register on your behalf in a console it does
   not control.
 
@@ -118,13 +118,13 @@ Every OAuth endpoint address is chosen by the remote server — in discovered
 metadata, in a `WWW-Authenticate` hint, in a pasted config, or in a gallery
 default — and the authorization endpoint additionally becomes a top-level browser
 navigation. All of them are parsed by one shared validator
-(`checkOAuthEndpointUrl` in `@paperclipai/shared`) and must be:
+(`checkOAuthEndpointUrl` in `@thinkingmach/shared`) and must be:
 
 - **`https:`.** Plain `http:` is refused, except for a loopback host under the
   local-development policy (the same policy that allows private remote
   endpoints), and except for this deployment's own origin.
 - **Free of embedded credentials.** `https://accounts.google.com@evil.test/…`
-  reads as the wrong site to a human, so Paperclip refuses it.
+  reads as the wrong site to a human, so ThinkingMach refuses it.
 - **Free of a fragment**, and a well-formed absolute URL.
 
 `javascript:`, `data:`, `file:` and friends are therefore refused before they can
@@ -188,13 +188,13 @@ QA but is not required for deterministic verification.
 `pnpm smoke:notion-generic-live` exercises the generic **Advanced → Paste a
 config** route against `https://mcp.notion.com/mcp`. It is intentionally outside
 the normal unit, browser, and CI-required suites. Run it only against an
-already-running, browser-reachable HTTPS Paperclip instance with these bindings
+already-running, browser-reachable HTTPS ThinkingMach instance with these bindings
 provided by the execution environment:
 
-- `PAPERCLIP_E2E_BASE_URL`, `PAPERCLIP_E2E_EMAIL`, and
-  `PAPERCLIP_DEV_LOGIN_PASSWORD` for the target instance;
-- `PAPERCLIP_API_URL`, `PAPERCLIP_API_KEY`, `PAPERCLIP_RUN_ID`, and
-  `PAPERCLIP_TASK_ID` for the control plane;
+- `THINKINGMACH_E2E_BASE_URL`, `THINKINGMACH_E2E_EMAIL`, and
+  `THINKINGMACH_DEV_LOGIN_PASSWORD` for the target instance;
+- `THINKINGMACH_API_URL`, `THINKINGMACH_API_KEY`, `THINKINGMACH_RUN_ID`, and
+  `THINKINGMACH_TASK_ID` for the control plane;
 - the approved on-demand secret binding
   `access.notion_generic_flow_test_account`, delivered by the agent secret API
   under its normalized key `generic-flow-test-account`, for the existing Notion
@@ -214,12 +214,12 @@ pnpm smoke:notion-generic-live -- --dry-run
 ```
 
 The live command retrieves the credential only after the safe preflight and
-Paperclip login succeed. It disables trace, video, and HAR capture, takes only
+ThinkingMach login succeed. It disables trace, video, and HAR capture, takes only
 post-callback screenshots, enables and invokes only `notion-get-self`, proves
 `notion-create-pages` remains locally denied, and removes its uniquely named
 connection in a `finally` cleanup. Its `summary.json` and PNG files contain
 sanitized IDs, decisions, outcomes, and endpoint origins/paths only; they
-default to `PAPERCLIP_RUN_SCRATCH_DIR`, or to `NOTION_EVIDENCE_DIR` when set.
+default to `THINKINGMACH_RUN_SCRATCH_DIR`, or to `NOTION_EVIDENCE_DIR` when set.
 
 Run the credential-free harness checks with:
 

@@ -213,11 +213,11 @@ for (const name of [
 Object.assign(process.env, {
   TMPDIR: join(smokeRoot, "tmp"),
   HOME: join(smokeRoot, "home"),
-  PAPERCLIP_HOME: join(smokeRoot, "paperclip-home"),
+  THINKINGMACH_HOME: join(smokeRoot, "paperclip-home"),
   CODEX_HOME: join(smokeRoot, "codex-home"),
   CLAUDE_CONFIG_DIR: join(smokeRoot, "claude-home"),
   NO_BROWSER: "1",
-  PAPERCLIP_OPEN_ON_LISTEN: "false",
+  THINKINGMACH_OPEN_ON_LISTEN: "false",
 });
 
 let cleanupPromise;
@@ -234,7 +234,7 @@ process.once("SIGTERM", () => exitAfterCleanup(143));
 let failed = false;
 try {
   // Import only after the disposable homes are authoritative so no provider
-  // module can snapshot the developer's normal Paperclip or provider state.
+  // module can snapshot the developer's normal ThinkingMach or provider state.
   const {
     RUNNER_LIVE_CANDIDATE_SLOTS,
     executeLiveRunnerWorkflow,
@@ -303,9 +303,9 @@ try {
             // This smoke proves the provider launch/message/semantic-terminal path.
             // Usage conformance remains covered by the dedicated eval campaign.
             allowMissingUsage: true,
-            expectedAssistantText: "PAPERCLIP_LOCAL_PROVIDER_SMOKE_OK",
+            expectedAssistantText: "THINKINGMACH_LOCAL_PROVIDER_SMOKE_OK",
             promptOverride:
-              "Reply with exactly PAPERCLIP_LOCAL_PROVIDER_SMOKE_OK and no other text. Do not call tools.",
+              "Reply with exactly THINKINGMACH_LOCAL_PROVIDER_SMOKE_OK and no other text. Do not call tools.",
             runnerBinary: runnerd,
           }),
       });

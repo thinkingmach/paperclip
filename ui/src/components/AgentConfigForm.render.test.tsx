@@ -5,8 +5,8 @@ import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Agent, Environment, UserSecretDefinition } from "@paperclipai/shared";
-import { getEnvironmentCapabilities } from "@paperclipai/shared";
+import type { Agent, Environment, UserSecretDefinition } from "@thinkingmach/shared";
+import { getEnvironmentCapabilities } from "@thinkingmach/shared";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "../context/ToastContext";
 import { AgentConfigForm, AdapterLoginPanel, type AdapterLoginDescriptor } from "./AgentConfigForm";
@@ -74,9 +74,9 @@ vi.mock("../lib/clipboard", () => ({
 
 vi.mock("../context/CompanyContext", () => ({
   useCompany: () => ({
-    companies: [{ id: "company-1", name: "Paperclip" }],
+    companies: [{ id: "company-1", name: "ThinkingMach" }],
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach" },
     selectionSource: "bootstrap",
     loading: false,
     error: null,
@@ -921,18 +921,18 @@ describe("AgentConfigForm environment selector", () => {
     const result = await renderForm([
       makeEnvironment({
         id: "managed-1",
-        name: "Paperclip Computer",
+        name: "ThinkingMach Computer",
         driver: "sandbox",
         config: { provider: "daytona" },
-        metadata: { managedByPaperclip: true },
+        metadata: { managedByThinkingMach: true },
       }),
     ]);
     roots.push(result.root);
 
     const selector = result.container.querySelector("select");
 
-    expect(selector?.textContent).toContain("Default: Paperclip Computer");
-    expect(selector?.textContent).toContain("Paperclip Computer");
+    expect(selector?.textContent).toContain("Default: ThinkingMach Computer");
+    expect(selector?.textContent).toContain("ThinkingMach Computer");
     expect(selector?.textContent).not.toContain("(sandbox)");
     expect(selector?.textContent).not.toContain("· sandbox");
   });
@@ -1430,7 +1430,7 @@ describe("AgentConfigForm environment selector", () => {
           name: "Managed",
           driver: "sandbox",
           config: { provider: "daytona" },
-          metadata: { managedByPaperclip: true },
+          metadata: { managedByThinkingMach: true },
         }),
       ],
       { adapterType: "claude_local", defaultEnvironmentId: null },

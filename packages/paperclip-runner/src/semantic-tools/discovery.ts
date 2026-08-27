@@ -42,7 +42,7 @@ export const CAPABILITY_DISCOVERY_NAMESPACES = Object.freeze([
 export const CAPABILITY_DISCOVERY_GATEWAY_DEFINITIONS = Object.freeze([{
   name: "discover_capabilities",
   title: "Discover optional capabilities",
-  description: `Search authorized optional Paperclip capabilities. Namespaces: ${CAPABILITY_DISCOVERY_NAMESPACES.map((item) => `${item.name} (${item.description})`).join("; ")}`,
+  description: `Search authorized optional ThinkingMach capabilities. Namespaces: ${CAPABILITY_DISCOVERY_NAMESPACES.map((item) => `${item.name} (${item.description})`).join("; ")}`,
   inputSchema: {
     type: "object", properties: {
       query: { type: "string", minLength: 1, maxLength: 500 },
@@ -61,7 +61,7 @@ export const CAPABILITY_DISCOVERY_GATEWAY_DEFINITIONS = Object.freeze([{
 }, {
   name: "invoke_discovered_capability",
   title: "Invoke a discovered capability",
-  description: "Invoke one optional Paperclip operation returned by discover_capabilities. Authority is rechecked at invocation.",
+  description: "Invoke one optional ThinkingMach operation returned by discover_capabilities. Authority is rechecked at invocation.",
   inputSchema: {
     type: "object", properties: {
       operationId: { type: "string" }, input: { type: "object", additionalProperties: true },

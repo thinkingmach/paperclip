@@ -22,7 +22,7 @@ import {
   projects,
   workspaceOperations,
   workspaceRuntimeServices,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { eq } from "drizzle-orm";
 import {
   buildWorkspaceRuntimeDesiredStatePatch,
@@ -39,7 +39,7 @@ import {
   UnresolvedWorkspaceBaseRefError,
   resetRuntimeServicesForTests,
   MANAGED_RUNTIME_PUBLIC_URL_ENV,
-  resolveManagedPaperclipRuntimePublicOrigin,
+  resolveManagedThinkingMachRuntimePublicOrigin,
   resolveRuntimeProvisionCommand,
   resolveWorkspaceRuntimeReadinessTimeoutSec,
   resolveShell,
@@ -69,9 +69,9 @@ import {
   deriveViteHmrPort,
   type Environment,
   type EnvironmentLease,
-} from "@paperclipai/shared";
-import { resolvePaperclipConfigPath } from "../paths.ts";
-import type { WorkspaceOperation } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { resolveThinkingMachConfigPath } from "../paths.ts";
+import type { WorkspaceOperation } from "@thinkingmach/shared";
 import type { WorkspaceOperationRecorder } from "../services/workspace-operations.ts";
 import { deriveWorktreeInstanceId } from "../services/workspace-instance-cleanup.ts";
 import {
@@ -153,7 +153,7 @@ async function writeRegisteredSourceConfig(baseCwd: string, instanceId = "source
   await fs.writeFile(path.join(configDir, "config.json"), "{}\n", "utf8");
   await fs.writeFile(
     path.join(configDir, ".env"),
-    `PAPERCLIP_INSTANCE_ID=${instanceId}\n`,
+    `THINKINGMACH_INSTANCE_ID=${instanceId}\n`,
     "utf8",
   );
 }
@@ -162,7 +162,7 @@ async function createTempRepo(defaultBranch = "main") {
   const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-worktree-repo-"));
   await runGit(repoRoot, ["init"]);
   await runGit(repoRoot, ["config", "user.email", "paperclip@example.com"]);
-  await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+  await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
   await fs.writeFile(path.join(repoRoot, "README.md"), "hello\n", "utf8");
   await runGit(repoRoot, ["add", "README.md"]);
   await runGit(repoRoot, ["commit", "-m", "Initial commit"]);
@@ -253,7 +253,7 @@ async function createClonedRepoWithRemote() {
   const repoRoot = path.join(cloneRoot, "paperclip");
   await execFileAsync("git", ["clone", remotePath, repoRoot]);
   await runGit(repoRoot, ["config", "user.email", "paperclip@example.com"]);
-  await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+  await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
   return { sourceRepo, remotePath, repoRoot };
 }
 
@@ -443,21 +443,21 @@ afterEach(async () => {
       leasedRunIds.delete(runId);
     }),
   );
-  delete process.env.PAPERCLIP_CONFIG;
-  delete process.env.PAPERCLIP_HOME;
-  delete process.env.PAPERCLIP_INSTANCE_ID;
-  delete process.env.PAPERCLIP_WORKTREES_DIR;
+  delete process.env.THINKINGMACH_CONFIG;
+  delete process.env.THINKINGMACH_HOME;
+  delete process.env.THINKINGMACH_INSTANCE_ID;
+  delete process.env.THINKINGMACH_WORKTREES_DIR;
   delete process.env.DATABASE_URL;
   await resetRuntimeServicesForTests();
 });
 
 describe("sanitizeRuntimeServiceBaseEnv", () => {
-  it("removes inherited Paperclip and pnpm auth flags before spawning runtime services", () => {
+  it("removes inherited ThinkingMach and pnpm auth flags before spawning runtime services", () => {
     const sanitized = sanitizeRuntimeServiceBaseEnv({
       PATH: process.env.PATH,
       DATABASE_URL: "postgres://example.test/paperclip",
-      PAPERCLIP_HOME: "/tmp/paperclip-home",
-      PAPERCLIP_INSTANCE_ID: "runtime-instance",
+      THINKINGMACH_HOME: "/tmp/paperclip-home",
+      THINKINGMACH_INSTANCE_ID: "runtime-instance",
       BETTER_AUTH_URL: "https://parent.example.test",
       BETTER_AUTH_BASE_URL: "https://legacy-parent.example.test",
       npm_config_tailscale_auth: "true",
@@ -465,8 +465,8 @@ describe("sanitizeRuntimeServiceBaseEnv", () => {
       HOST: "0.0.0.0",
     });
 
-    expect(sanitized.PAPERCLIP_HOME).toBeUndefined();
-    expect(sanitized.PAPERCLIP_INSTANCE_ID).toBeUndefined();
+    expect(sanitized.THINKINGMACH_HOME).toBeUndefined();
+    expect(sanitized.THINKINGMACH_INSTANCE_ID).toBeUndefined();
     expect(sanitized.BETTER_AUTH_URL).toBeUndefined();
     expect(sanitized.BETTER_AUTH_BASE_URL).toBeUndefined();
     expect(sanitized.DATABASE_URL).toBeUndefined();
@@ -476,20 +476,20 @@ describe("sanitizeRuntimeServiceBaseEnv", () => {
   });
 });
 
-describe("resolveManagedPaperclipRuntimePublicOrigin", () => {
+describe("resolveManagedThinkingMachRuntimePublicOrigin", () => {
   const baseInput = {
     serviceName: "paperclip-dev",
     command: "pnpm dev --bind lan",
   };
 
   it("leaves explicit operator origin configuration unchanged", () => {
-    expect(resolveManagedPaperclipRuntimePublicOrigin({
+    expect(resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
-      environment: { PAPERCLIP_PUBLIC_URL: "https://operator.example.com" },
+      environment: { THINKINGMACH_PUBLIC_URL: "https://operator.example.com" },
       exposedUrl: "https://managed-worktree.example.com",
     })).toBeNull();
 
-    expect(resolveManagedPaperclipRuntimePublicOrigin({
+    expect(resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
       environment: { BETTER_AUTH_URL: "https://auth.example.com" },
       exposedUrl: "https://managed-worktree.example.com",
@@ -497,13 +497,13 @@ describe("resolveManagedPaperclipRuntimePublicOrigin", () => {
   });
 
   it("infers browser-reachable HTTPS and loopback origins", () => {
-    expect(resolveManagedPaperclipRuntimePublicOrigin({
+    expect(resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
       environment: {},
       exposedUrl: "https://paperclip-dev.tail29c1aa.ts.net/path?ignored=true",
       exposedUrlTemplate: "https://{{workspace.branchName}}.tail29c1aa.ts.net",
     })).toBe("https://paperclip-dev.tail29c1aa.ts.net");
-    expect(resolveManagedPaperclipRuntimePublicOrigin({
+    expect(resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
       environment: {},
       exposedUrl: "http://127.0.0.1:45439",
@@ -511,12 +511,12 @@ describe("resolveManagedPaperclipRuntimePublicOrigin", () => {
   });
 
   it("rejects internal-only and unsafe inferred origins with actionable guidance", () => {
-    expect(() => resolveManagedPaperclipRuntimePublicOrigin({
+    expect(() => resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
       environment: {},
       exposedUrl: "http://paperclip-dev:45439",
-    })).toThrow(/internal-only.*Configure PAPERCLIP_PUBLIC_URL or BETTER_AUTH_URL/);
-    expect(() => resolveManagedPaperclipRuntimePublicOrigin({
+    })).toThrow(/internal-only.*Configure THINKINGMACH_PUBLIC_URL or BETTER_AUTH_URL/);
+    expect(() => resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
       environment: {},
       exposedUrl: "http://10.0.0.8:45439",
@@ -524,14 +524,14 @@ describe("resolveManagedPaperclipRuntimePublicOrigin", () => {
   });
 
   it("keeps interpolated hostnames inside the operator-configured domain", () => {
-    expect(() => resolveManagedPaperclipRuntimePublicOrigin({
+    expect(() => resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
       environment: {},
       exposedUrl: "https://evil.com/workaround.tail29c1aa.ts.net",
       exposedUrlTemplate: "https://{{workspace.branchName}}.tail29c1aa.ts.net",
     })).toThrow(/outside the hostname boundary configured by expose\.urlTemplate/);
 
-    expect(() => resolveManagedPaperclipRuntimePublicOrigin({
+    expect(() => resolveManagedThinkingMachRuntimePublicOrigin({
       ...baseInput,
       environment: {},
       exposedUrl: "https://managed-worktree.paperclip.dev",
@@ -659,7 +659,7 @@ describe("ensureServerWorkspaceLinksCurrent", () => {
   it("relinks stale server workspace dependencies inside the current repo root", async () => {
     const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-links-"));
     const staleRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-links-stale-"));
-    const serverNodeModulesScopeDir = path.join(repoRoot, "server", "node_modules", "@paperclipai");
+    const serverNodeModulesScopeDir = path.join(repoRoot, "server", "node_modules", "@thinkingmach");
     const expectedPackageDir = path.join(repoRoot, "packages", "db");
     const stalePackageDir = path.join(staleRoot, "db");
 
@@ -672,21 +672,21 @@ describe("ensureServerWorkspaceLinksCurrent", () => {
     await fs.writeFile(
       path.join(repoRoot, "server", "package.json"),
       JSON.stringify({
-        name: "@paperclipai/server",
+        name: "@thinkingmach/server",
         dependencies: {
-          "@paperclipai/db": "workspace:*",
+          "@thinkingmach/db": "workspace:*",
         },
       }),
       "utf8",
     );
     await fs.writeFile(
       path.join(expectedPackageDir, "package.json"),
-      JSON.stringify({ name: "@paperclipai/db" }),
+      JSON.stringify({ name: "@thinkingmach/db" }),
       "utf8",
     );
     await fs.writeFile(
       path.join(stalePackageDir, "package.json"),
-      JSON.stringify({ name: "@paperclipai/db" }),
+      JSON.stringify({ name: "@thinkingmach/db" }),
       "utf8",
     );
     await fs.symlink(stalePackageDir, path.join(serverNodeModulesScopeDir, "db"));
@@ -697,7 +697,7 @@ describe("ensureServerWorkspaceLinksCurrent", () => {
 
   it("skips relinking when server workspace dependencies already point at the repo", async () => {
     const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-links-current-"));
-    const serverNodeModulesScopeDir = path.join(repoRoot, "server", "node_modules", "@paperclipai");
+    const serverNodeModulesScopeDir = path.join(repoRoot, "server", "node_modules", "@thinkingmach");
     const expectedPackageDir = path.join(repoRoot, "packages", "db");
 
     await fs.mkdir(path.join(repoRoot, "server"), { recursive: true });
@@ -708,16 +708,16 @@ describe("ensureServerWorkspaceLinksCurrent", () => {
     await fs.writeFile(
       path.join(repoRoot, "server", "package.json"),
       JSON.stringify({
-        name: "@paperclipai/server",
+        name: "@thinkingmach/server",
         dependencies: {
-          "@paperclipai/db": "workspace:*",
+          "@thinkingmach/db": "workspace:*",
         },
       }),
       "utf8",
     );
     await fs.writeFile(
       path.join(expectedPackageDir, "package.json"),
-      JSON.stringify({ name: "@paperclipai/db" }),
+      JSON.stringify({ name: "@thinkingmach/db" }),
       "utf8",
     );
     await fs.symlink(expectedPackageDir, path.join(serverNodeModulesScopeDir, "db"));
@@ -728,7 +728,7 @@ describe("ensureServerWorkspaceLinksCurrent", () => {
   it("skips relinking outside linked git worktrees", async () => {
     const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-links-non-worktree-"));
     const staleRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-links-non-worktree-stale-"));
-    const serverNodeModulesScopeDir = path.join(repoRoot, "server", "node_modules", "@paperclipai");
+    const serverNodeModulesScopeDir = path.join(repoRoot, "server", "node_modules", "@thinkingmach");
     const expectedPackageDir = path.join(repoRoot, "packages", "db");
     const stalePackageDir = path.join(staleRoot, "db");
 
@@ -741,21 +741,21 @@ describe("ensureServerWorkspaceLinksCurrent", () => {
     await fs.writeFile(
       path.join(repoRoot, "server", "package.json"),
       JSON.stringify({
-        name: "@paperclipai/server",
+        name: "@thinkingmach/server",
         dependencies: {
-          "@paperclipai/db": "workspace:*",
+          "@thinkingmach/db": "workspace:*",
         },
       }),
       "utf8",
     );
     await fs.writeFile(
       path.join(expectedPackageDir, "package.json"),
-      JSON.stringify({ name: "@paperclipai/db" }),
+      JSON.stringify({ name: "@thinkingmach/db" }),
       "utf8",
     );
     await fs.writeFile(
       path.join(stalePackageDir, "package.json"),
-      JSON.stringify({ name: "@paperclipai/db" }),
+      JSON.stringify({ name: "@thinkingmach/db" }),
       "utf8",
     );
     await fs.symlink(stalePackageDir, path.join(serverNodeModulesScopeDir, "db"));
@@ -776,7 +776,7 @@ describe("realizeExecutionWorkspace", () => {
     const repoRoot = path.join(cloneRoot, "paperclip");
     await execFileAsync("git", ["clone", remotePath, repoRoot]);
     await runGit(repoRoot, ["config", "user.email", "paperclip@example.com"]);
-    await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+    await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
 
     await fs.writeFile(path.join(sourceRepo, "auth-fix.txt"), "cookie fix\n", "utf8");
     await runGit(sourceRepo, ["add", "auth-fix.txt"]);
@@ -1498,9 +1498,9 @@ describe("realizeExecutionWorkspace", () => {
       [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
-        "printf '%s\\n' \"$PAPERCLIP_WORKSPACE_BRANCH\" > .paperclip-provision-branch",
-        "printf '%s\\n' \"$PAPERCLIP_WORKSPACE_BASE_CWD\" > .paperclip-provision-base",
-        "printf '%s\\n' \"$PAPERCLIP_WORKSPACE_CREATED\" > .paperclip-provision-created",
+        "printf '%s\\n' \"$THINKINGMACH_WORKSPACE_BRANCH\" > .paperclip-provision-branch",
+        "printf '%s\\n' \"$THINKINGMACH_WORKSPACE_BASE_CWD\" > .paperclip-provision-base",
+        "printf '%s\\n' \"$THINKINGMACH_WORKSPACE_CREATED\" > .paperclip-provision-created",
       ].join("\n"),
       "utf8",
     );
@@ -1666,27 +1666,27 @@ describe("realizeExecutionWorkspace", () => {
     await expect(fs.readFile(path.join(reused.cwd, ".paperclip-provision-version"), "utf8")).resolves.toBe("v2\n");
   }, 30_000);
 
-  it("writes an isolated repo-local Paperclip config and worktree branding when provisioning", async () => {
+  it("writes an isolated repo-local ThinkingMach config and worktree branding when provisioning", async () => {
     const repoRoot = await createTempRepo();
     await writeRegisteredSourceConfig(repoRoot, "worktree-base-source");
     const previousCwd = process.cwd();
     const previousPath = process.env.PATH;
-    const previousConfig = process.env.PAPERCLIP_CONFIG;
-    const previousHome = process.env.PAPERCLIP_HOME;
-    const previousInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    const previousWorktreesDir = process.env.PAPERCLIP_WORKTREES_DIR;
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-worktree-home-"));
+    const previousConfig = process.env.THINKINGMACH_CONFIG;
+    const previousHome = process.env.THINKINGMACH_HOME;
+    const previousInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    const previousWorktreesDir = process.env.THINKINGMACH_WORKTREES_DIR;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-worktree-home-"));
     const isolatedWorktreeHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-worktrees-"));
     const isolatedBin = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-worktree-bin-"));
     const instanceId = "worktree-base";
-    const sharedConfigDir = path.join(paperclipHome, "instances", instanceId);
+    const sharedConfigDir = path.join(thinkingmachHome, "instances", instanceId);
     const sharedConfigPath = path.join(sharedConfigDir, "config.json");
     const sharedEnvPath = path.join(sharedConfigDir, ".env");
 
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = instanceId;
-    process.env.PAPERCLIP_WORKTREES_DIR = isolatedWorktreeHome;
-    delete process.env.PAPERCLIP_CONFIG;
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = instanceId;
+    process.env.THINKINGMACH_WORKTREES_DIR = isolatedWorktreeHome;
+    delete process.env.THINKINGMACH_CONFIG;
     // Keep this server-side fixture on provision-worktree.sh's config writer path;
     // CLI/database seeding is covered by the CLI worktree tests.
     await fs.symlink(process.execPath, path.join(isolatedBin, "node"));
@@ -1815,14 +1815,14 @@ describe("realizeExecutionWorkspace", () => {
       );
       expect(envContents).not.toContain("DATABASE_URL=");
       const envVars = parseEnvContents(envContents);
-      expect(envVars.PAPERCLIP_HOME).toBe(isolatedWorktreeHome);
-      expect(envVars.PAPERCLIP_INSTANCE_ID).toBe(expectedInstanceId);
-      expect(await fs.realpath(envVars.PAPERCLIP_CONFIG!)).toBe(await fs.realpath(configPath));
-      expect(envVars.PAPERCLIP_IN_WORKTREE).toBe("true");
-      expect(envVars.PAPERCLIP_WORKTREE_NAME).toBe("PAP-885-show-worktree-banner");
+      expect(envVars.THINKINGMACH_HOME).toBe(isolatedWorktreeHome);
+      expect(envVars.THINKINGMACH_INSTANCE_ID).toBe(expectedInstanceId);
+      expect(await fs.realpath(envVars.THINKINGMACH_CONFIG!)).toBe(await fs.realpath(configPath));
+      expect(envVars.THINKINGMACH_IN_WORKTREE).toBe("true");
+      expect(envVars.THINKINGMACH_WORKTREE_NAME).toBe("PAP-885-show-worktree-banner");
 
       process.chdir(workspace.cwd);
-      expect(resolvePaperclipConfigPath()).toBe(configPath);
+      expect(resolveThinkingMachConfigPath()).toBe(configPath);
 
       const preservedPort = 39999;
       await fs.writeFile(
@@ -1840,7 +1840,7 @@ describe("realizeExecutionWorkspace", () => {
         ) + "\n",
         "utf8",
       );
-      await fs.writeFile(envPath, `${envContents}PAPERCLIP_WORKTREE_COLOR="#112233"\n`, "utf8");
+      await fs.writeFile(envPath, `${envContents}THINKINGMACH_WORKTREE_COLOR="#112233"\n`, "utf8");
 
       const reusedWorkspace = await realizeExecutionWorkspace(workspaceInput);
       const reusedConfigContents = JSON.parse(await fs.readFile(configPath, "utf8"));
@@ -1850,7 +1850,7 @@ describe("realizeExecutionWorkspace", () => {
       expect(reusedWorkspace.created).toBe(false);
       expect(reusedConfigContents.server.port).toBe(preservedPort);
       expect(reusedConfigContents.database.embeddedPostgresDataDir).toBe(path.join(expectedInstanceRoot, "db"));
-      expect(reusedEnvContents).toContain('PAPERCLIP_WORKTREE_COLOR="#112233"');
+      expect(reusedEnvContents).toContain('THINKINGMACH_WORKTREE_COLOR="#112233"');
     } finally {
       process.chdir(previousCwd);
       if (previousPath === undefined) {
@@ -1859,10 +1859,10 @@ describe("realizeExecutionWorkspace", () => {
         process.env.PATH = previousPath;
       }
       for (const [key, value] of [
-        ["PAPERCLIP_CONFIG", previousConfig],
-        ["PAPERCLIP_HOME", previousHome],
-        ["PAPERCLIP_INSTANCE_ID", previousInstanceId],
-        ["PAPERCLIP_WORKTREES_DIR", previousWorktreesDir],
+        ["THINKINGMACH_CONFIG", previousConfig],
+        ["THINKINGMACH_HOME", previousHome],
+        ["THINKINGMACH_INSTANCE_ID", previousInstanceId],
+        ["THINKINGMACH_WORKTREES_DIR", previousWorktreesDir],
       ] as const) {
         if (value === undefined) {
           delete process.env[key];
@@ -2096,7 +2096,7 @@ describe("realizeExecutionWorkspace", () => {
         fakePnpmPath,
         [
           "#!/bin/sh",
-          "if [ \"$1\" = \"paperclipai\" ] && [ \"$2\" = \"--help\" ]; then",
+          "if [ \"$1\" = \"thinkingmach\" ] && [ \"$2\" = \"--help\" ]; then",
           "  exit 1",
           "fi",
           "if [ \"$1\" = \"install\" ] && [ \"$2\" = \"--prod=false\" ] && [ \"$3\" = \"--frozen-lockfile\" ]; then",
@@ -2116,8 +2116,8 @@ describe("realizeExecutionWorkspace", () => {
         env: {
           ...process.env,
           PATH: `${fakeBin}:${process.env.PATH ?? ""}`,
-          PAPERCLIP_WORKSPACE_BASE_CWD: baseRoot,
-          PAPERCLIP_WORKSPACE_CWD: worktreeRoot,
+          THINKINGMACH_WORKSPACE_BASE_CWD: baseRoot,
+          THINKINGMACH_WORKSPACE_CWD: worktreeRoot,
         },
       });
 
@@ -2165,10 +2165,10 @@ describe("realizeExecutionWorkspace", () => {
         fakePnpmPath,
         [
           "#!/bin/sh",
-          "if [ \"$1\" = \"paperclipai\" ] && [ \"$2\" = \"--help\" ]; then",
+          "if [ \"$1\" = \"thinkingmach\" ] && [ \"$2\" = \"--help\" ]; then",
           "  exit 0",
           "fi",
-          "if [ \"$1\" = \"paperclipai\" ] && [ \"$2\" = \"worktree\" ] && [ \"$3\" = \"init\" ]; then",
+          "if [ \"$1\" = \"thinkingmach\" ] && [ \"$2\" = \"worktree\" ] && [ \"$3\" = \"init\" ]; then",
           "  echo \"simulated init failure\" >&2",
           "  exit 42",
           "fi",
@@ -2186,8 +2186,8 @@ describe("realizeExecutionWorkspace", () => {
           env: {
             ...process.env,
             PATH: `${fakeBin}:${process.env.PATH ?? ""}`,
-            PAPERCLIP_WORKSPACE_BASE_CWD: baseRoot,
-            PAPERCLIP_WORKSPACE_CWD: worktreeRoot,
+            THINKINGMACH_WORKSPACE_BASE_CWD: baseRoot,
+            THINKINGMACH_WORKSPACE_CWD: worktreeRoot,
           },
         });
       } catch (error) {
@@ -2248,9 +2248,9 @@ describe("realizeExecutionWorkspace", () => {
       await fs.writeFile(
         path.join(paperclipDir, ".env"),
         [
-          "PAPERCLIP_HOME=/Users/example/.paperclip-worktrees",
-          "PAPERCLIP_INSTANCE_ID=stale",
-          `PAPERCLIP_CONFIG=/Users/example/paperclip/${path.basename(worktreeRoot)}/.paperclip/config.json`,
+          "THINKINGMACH_HOME=/Users/example/.paperclip-worktrees",
+          "THINKINGMACH_INSTANCE_ID=stale",
+          `THINKINGMACH_CONFIG=/Users/example/paperclip/${path.basename(worktreeRoot)}/.paperclip/config.json`,
           "",
         ].join("\n"),
         "utf8",
@@ -2259,13 +2259,13 @@ describe("realizeExecutionWorkspace", () => {
         fakePnpmPath,
         [
           "#!/bin/sh",
-          "if [ \"$1\" = \"paperclipai\" ] && [ \"$2\" = \"--help\" ]; then",
+          "if [ \"$1\" = \"thinkingmach\" ] && [ \"$2\" = \"--help\" ]; then",
           "  exit 0",
           "fi",
-          "if [ \"$1\" = \"paperclipai\" ] && [ \"$2\" = \"worktree\" ] && [ \"$3\" = \"init\" ]; then",
+          "if [ \"$1\" = \"thinkingmach\" ] && [ \"$2\" = \"worktree\" ] && [ \"$3\" = \"init\" ]; then",
           "  mkdir -p \"$PWD/.paperclip\"",
           "  printf '%s\\n' '{\"database\":{\"embeddedPostgresDataDir\":\"'$PWD'/.paperclip/runtime/db\"}}' > \"$PWD/.paperclip/config.json\"",
-          "  printf '%s\\n' \"PAPERCLIP_HOME=$PWD/.paperclip/runtime\" \"PAPERCLIP_INSTANCE_ID=healthy\" \"PAPERCLIP_CONFIG=$PWD/.paperclip/config.json\" > \"$PWD/.paperclip/.env\"",
+          "  printf '%s\\n' \"THINKINGMACH_HOME=$PWD/.paperclip/runtime\" \"THINKINGMACH_INSTANCE_ID=healthy\" \"THINKINGMACH_CONFIG=$PWD/.paperclip/config.json\" > \"$PWD/.paperclip/.env\"",
           "  exit 0",
           "fi",
           "exit 0",
@@ -2280,14 +2280,14 @@ describe("realizeExecutionWorkspace", () => {
         env: {
           ...process.env,
           PATH: `${fakeBin}:${process.env.PATH ?? ""}`,
-          PAPERCLIP_WORKSPACE_BASE_CWD: baseRoot,
-          PAPERCLIP_WORKSPACE_CWD: worktreeRoot,
+          THINKINGMACH_WORKSPACE_BASE_CWD: baseRoot,
+          THINKINGMACH_WORKSPACE_CWD: worktreeRoot,
         },
       });
 
-      expect(result.stderr).toContain("Existing isolated Paperclip worktree config is stale for this host; regenerating.");
+      expect(result.stderr).toContain("Existing isolated ThinkingMach worktree config is stale for this host; regenerating.");
       await expect(fs.readFile(path.join(paperclipDir, ".env"), "utf8")).resolves.toContain(
-        `PAPERCLIP_CONFIG=${worktreeRoot}/.paperclip/config.json`,
+        `THINKINGMACH_CONFIG=${worktreeRoot}/.paperclip/config.json`,
       );
       await expect(fs.readFile(path.join(paperclipDir, "config.json"), "utf8")).resolves.toContain(worktreeRoot);
     } finally {
@@ -2332,7 +2332,7 @@ describe("realizeExecutionWorkspace", () => {
         fakePnpmPath,
         [
           "#!/bin/sh",
-          "if [ \"$1\" = \"paperclipai\" ] && [ \"$2\" = \"--help\" ]; then",
+          "if [ \"$1\" = \"thinkingmach\" ] && [ \"$2\" = \"--help\" ]; then",
           "  exit 1",
           "fi",
           "if [ \"$1\" = \"install\" ] && [ \"$2\" = \"--prod=false\" ] && [ \"$3\" = \"--frozen-lockfile\" ]; then",
@@ -2356,8 +2356,8 @@ describe("realizeExecutionWorkspace", () => {
         env: {
           ...process.env,
           PATH: `${fakeBin}:${process.env.PATH ?? ""}`,
-          PAPERCLIP_WORKSPACE_BASE_CWD: baseRoot,
-          PAPERCLIP_WORKSPACE_CWD: worktreeRoot,
+          THINKINGMACH_WORKSPACE_BASE_CWD: baseRoot,
+          THINKINGMACH_WORKSPACE_CWD: worktreeRoot,
         },
       });
 
@@ -2638,7 +2638,7 @@ describe("realizeExecutionWorkspace", () => {
       [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
-        "printf '%s\\n' \"$PAPERCLIP_WORKSPACE_BRANCH\" > .paperclip-restored-branch",
+        "printf '%s\\n' \"$THINKINGMACH_WORKSPACE_BRANCH\" > .paperclip-restored-branch",
       ].join("\n"),
       "utf8",
     );
@@ -4007,10 +4007,10 @@ describe("realizeExecutionWorkspace", () => {
     await fs.mkdir(path.join(workspace.cwd, ".paperclip"), { recursive: true });
     await fs.writeFile(
       path.join(workspace.cwd, ".paperclip", ".env"),
-      `PAPERCLIP_HOME=${JSON.stringify(worktreesDir)}\nPAPERCLIP_INSTANCE_ID=${JSON.stringify(instanceId)}\n`,
+      `THINKINGMACH_HOME=${JSON.stringify(worktreesDir)}\nTHINKINGMACH_INSTANCE_ID=${JSON.stringify(instanceId)}\n`,
       "utf8",
     );
-    process.env.PAPERCLIP_WORKTREES_DIR = worktreesDir;
+    process.env.THINKINGMACH_WORKTREES_DIR = worktreesDir;
 
     await cleanupExecutionWorkspaceArtifacts({
       workspace: {
@@ -4060,15 +4060,15 @@ describe("realizeExecutionWorkspace", () => {
 
 describe("ensureRuntimeServicesForRun", () => {
   function configureRuntimeProvisionTestHome(workspaceRoot: string, suffix: string) {
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    process.env.PAPERCLIP_HOME = workspaceRoot;
-    process.env.PAPERCLIP_INSTANCE_ID = `${suffix}-${randomUUID()}`;
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    process.env.THINKINGMACH_HOME = workspaceRoot;
+    process.env.THINKINGMACH_INSTANCE_ID = `${suffix}-${randomUUID()}`;
     return () => {
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousPaperclipInstanceId;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousThinkingMachInstanceId;
     };
   }
 
@@ -4125,7 +4125,7 @@ describe("ensureRuntimeServicesForRun", () => {
 
   it("runs runtime provisioning once when service starts race for the same workspace", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-provision-race-"));
-    const restorePaperclipEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-provision-race");
+    const restoreThinkingMachEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-provision-race");
     const counterPath = path.join(workspaceRoot, "runtime-provision-count.txt");
     const provisionScript = [
       "const fs = require('node:fs');",
@@ -4164,13 +4164,13 @@ describe("ensureRuntimeServicesForRun", () => {
         workspaceCwd: workspaceRoot,
       });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
-      restorePaperclipEnv();
+      restoreThinkingMachEnv();
     }
   });
 
   it("logs runtime provisioning failure and retries it on the next service start", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-provision-retry-"));
-    const restorePaperclipEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-provision-retry");
+    const restoreThinkingMachEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-provision-retry");
     const attemptPath = path.join(workspaceRoot, "runtime-provision-attempt.txt");
     const provisionScript = [
       "const fs = require('node:fs');",
@@ -4216,13 +4216,13 @@ describe("ensureRuntimeServicesForRun", () => {
         workspaceCwd: workspaceRoot,
       });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
-      restorePaperclipEnv();
+      restoreThinkingMachEnv();
     }
   });
 
   it("records the built-in deferred seed as failed when its manifest is not verified", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-workspace-seed-operation-"));
-    const restorePaperclipEnv = configureRuntimeProvisionTestHome(workspaceRoot, "workspace-seed-operation");
+    const restoreThinkingMachEnv = configureRuntimeProvisionTestHome(workspaceRoot, "workspace-seed-operation");
     const scriptsDir = path.join(workspaceRoot, "scripts");
     const markerDir = path.join(workspaceRoot, ".paperclip");
     await fs.mkdir(scriptsDir, { recursive: true });
@@ -4274,13 +4274,13 @@ describe("ensureRuntimeServicesForRun", () => {
         workspaceCwd: workspaceRoot,
       });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
-      restorePaperclipEnv();
+      restoreThinkingMachEnv();
     }
   });
 
   it("keeps an explicit command matching the built-in seed command as runtime provisioning", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-explicit-runtime-provision-"));
-    const restorePaperclipEnv = configureRuntimeProvisionTestHome(workspaceRoot, "explicit-runtime-provision");
+    const restoreThinkingMachEnv = configureRuntimeProvisionTestHome(workspaceRoot, "explicit-runtime-provision");
     const scriptsDir = path.join(workspaceRoot, "scripts");
     await fs.mkdir(scriptsDir, { recursive: true });
     await fs.writeFile(
@@ -4317,13 +4317,13 @@ describe("ensureRuntimeServicesForRun", () => {
         workspaceCwd: workspaceRoot,
       });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
-      restorePaperclipEnv();
+      restoreThinkingMachEnv();
     }
   });
 
   it("does not create a runtime provision operation when the command is absent", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-provision-noop-"));
-    const restorePaperclipEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-provision-noop");
+    const restoreThinkingMachEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-provision-noop");
     const workspace = buildWorkspace(workspaceRoot);
     const config = runtimeProvisionTestConfig({});
     const { recorder, operations } = createWorkspaceOperationRecorderDouble();
@@ -4340,14 +4340,14 @@ describe("ensureRuntimeServicesForRun", () => {
         workspaceCwd: workspaceRoot,
       });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
-      restorePaperclipEnv();
+      restoreThinkingMachEnv();
     }
   });
 
   it("preserves the selected persisted runtime id when starting one configured service", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-selected-id-"));
     const workspace = buildWorkspace(workspaceRoot);
-    const restorePaperclipEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-selected-id");
+    const restoreThinkingMachEnv = configureRuntimeProvisionTestHome(workspaceRoot, "runtime-selected-id");
     const runtimeServiceId = randomUUID();
     const config = runtimeProvisionTestConfig({});
 
@@ -4366,7 +4366,7 @@ describe("ensureRuntimeServicesForRun", () => {
         workspaceCwd: workspaceRoot,
       });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
-      restorePaperclipEnv();
+      restoreThinkingMachEnv();
     }
   });
 
@@ -4401,7 +4401,7 @@ describe("ensureRuntimeServicesForRun", () => {
     expect(services).toEqual([]);
   });
 
-  it("enables UI dev middleware by default for managed Paperclip worktree runtimes", async () => {
+  it("enables UI dev middleware by default for managed ThinkingMach worktree runtimes", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-ui-dev-"));
     const workspace = buildWorkspace(workspaceRoot);
     const serviceScript =
@@ -4409,7 +4409,7 @@ describe("ensureRuntimeServicesForRun", () => {
       + "http.createServer((req,res)=>{"
       + "if(req.url==='/api/health'){res.setHeader('content-type','application/json');"
       + "res.end(JSON.stringify({status:'ok'}));return;}"
-      + "res.end(process.env.PAPERCLIP_UI_DEV_MIDDLEWARE||'missing');"
+      + "res.end(process.env.THINKINGMACH_UI_DEV_MIDDLEWARE||'missing');"
       + "}).listen(Number(process.env.PORT),'127.0.0.1');";
 
     try {
@@ -4541,7 +4541,7 @@ describe("ensureRuntimeServicesForRun", () => {
     }
   }, 15_000);
 
-  it("requires Paperclip dev runtime services to pass /api/health readiness", async () => {
+  it("requires ThinkingMach dev runtime services to pass /api/health readiness", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-health-"));
     const workspace = buildWorkspace(workspaceRoot);
     const runId = "run-paperclip-health";
@@ -4597,7 +4597,7 @@ describe("ensureRuntimeServicesForRun", () => {
     }
   });
 
-  it("replaces a reused Paperclip dev runtime whose 2xx health payload is unhealthy", async () => {
+  it("replaces a reused ThinkingMach dev runtime whose 2xx health payload is unhealthy", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-misreported-health-"));
     const workspace = buildWorkspace(workspaceRoot);
     const serviceCommand =
@@ -4640,7 +4640,7 @@ describe("ensureRuntimeServicesForRun", () => {
     }
   });
 
-  it("reuses a shared Paperclip dev runtime after one transient unhealthy response", async () => {
+  it("reuses a shared ThinkingMach dev runtime after one transient unhealthy response", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-transient-health-"));
     const workspace = buildWorkspace(workspaceRoot);
     const serviceCommand =
@@ -4721,7 +4721,7 @@ describe("ensureRuntimeServicesForRun", () => {
           },
         },
         adapterEnv: {},
-      })).rejects.toThrow(/internal-only or non-resolvable.*Configure PAPERCLIP_PUBLIC_URL or BETTER_AUTH_URL/);
+      })).rejects.toThrow(/internal-only or non-resolvable.*Configure THINKINGMACH_PUBLIC_URL or BETTER_AUTH_URL/);
     } finally {
       await releaseRuntimeServicesForRun(runId);
     }
@@ -4840,10 +4840,10 @@ describe("ensureRuntimeServicesForRun", () => {
       branchName: "PAP-874-chat-speed-issues",
       worktreePath: worktreeWorkspaceRoot,
     };
-    // A Paperclip dev runtime must answer `/api/health` semantically before it may
+    // A ThinkingMach dev runtime must answer `/api/health` semantically before it may
     // be published, so the fake serves the same shape a real one does.
     const serviceCommand =
-      "node -e \"require('node:http').createServer((req,res)=>{if(req.url==='/api/health'){res.setHeader('content-type','application/json');res.end(JSON.stringify({status:'ok'}));return;}res.end(process.env.PAPERCLIP_HOME)}).listen(Number(process.env.PORT), '127.0.0.1')\"";
+      "node -e \"require('node:http').createServer((req,res)=>{if(req.url==='/api/health'){res.setHeader('content-type','application/json');res.end(JSON.stringify({status:'ok'}));return;}res.end(process.env.THINKINGMACH_HOME)}).listen(Number(process.env.PORT), '127.0.0.1')\"";
     const config = {
       workspaceRuntime: {
         services: [
@@ -4852,7 +4852,7 @@ describe("ensureRuntimeServicesForRun", () => {
             command: serviceCommand,
             cwd: ".",
             env: {
-              PAPERCLIP_HOME: "{{workspace.cwd}}/.paperclip/runtime-services",
+              THINKINGMACH_HOME: "{{workspace.cwd}}/.paperclip/runtime-services",
             },
             port: { type: "auto" },
             readiness: {
@@ -4923,7 +4923,7 @@ describe("ensureRuntimeServicesForRun", () => {
     expect(await executionResponse.text()).toBe(path.join(worktreeWorkspaceRoot, ".paperclip", "runtime-services"));
   });
 
-  it("does not leak parent Paperclip instance env into runtime service commands", async () => {
+  it("does not leak parent ThinkingMach instance env into runtime service commands", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-env-"));
     const workspace = buildWorkspace(workspaceRoot);
     const envCapturePath = path.join(workspaceRoot, "captured-env.json");
@@ -4933,9 +4933,9 @@ describe("ensureRuntimeServicesForRun", () => {
         [
           "const fs = require('node:fs');",
           `fs.writeFileSync(${JSON.stringify(envCapturePath)}, JSON.stringify({`,
-          "paperclipConfig: process.env.PAPERCLIP_CONFIG ?? null,",
-          "paperclipHome: process.env.PAPERCLIP_HOME ?? null,",
-          "paperclipInstanceId: process.env.PAPERCLIP_INSTANCE_ID ?? null,",
+          "paperclipConfig: process.env.THINKINGMACH_CONFIG ?? null,",
+          "thinkingmachHome: process.env.THINKINGMACH_HOME ?? null,",
+          "thinkingmachInstanceId: process.env.THINKINGMACH_INSTANCE_ID ?? null,",
           "databaseUrl: process.env.DATABASE_URL ?? null,",
           "customEnv: process.env.RUNTIME_CUSTOM_ENV ?? null,",
           "port: process.env.PORT ?? null,",
@@ -4945,9 +4945,9 @@ describe("ensureRuntimeServicesForRun", () => {
       ),
     ].join(" ");
 
-    process.env.PAPERCLIP_CONFIG = "/tmp/base-paperclip-config.json";
-    process.env.PAPERCLIP_HOME = "/tmp/base-paperclip-home";
-    process.env.PAPERCLIP_INSTANCE_ID = "base-instance";
+    process.env.THINKINGMACH_CONFIG = "/tmp/base-paperclip-config.json";
+    process.env.THINKINGMACH_HOME = "/tmp/base-paperclip-home";
+    process.env.THINKINGMACH_INSTANCE_ID = "base-instance";
     process.env.DATABASE_URL = "postgres://shared-db.example.com/paperclip";
 
     const runId = "run-env";
@@ -4993,8 +4993,8 @@ describe("ensureRuntimeServicesForRun", () => {
     expect(services).toHaveLength(1);
     const captured = JSON.parse(await fs.readFile(envCapturePath, "utf8")) as Record<string, string | null>;
     expect(captured.paperclipConfig).toBeNull();
-    expect(captured.paperclipHome).toBeNull();
-    expect(captured.paperclipInstanceId).toBeNull();
+    expect(captured.thinkingmachHome).toBeNull();
+    expect(captured.thinkingmachInstanceId).toBeNull();
     expect(captured.databaseUrl).toBeNull();
     expect(captured.customEnv).toBe("from-adapter");
     expect(captured.port).toMatch(/^\d+$/);
@@ -5566,9 +5566,9 @@ describe("readLocalServicePortOwner", () => {
     const address = server.address();
     const port = typeof address === "object" && address ? address.port : null;
     const serviceKey = `unsupported-cwd-${randomUUID()}`;
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `unsupported-cwd-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `unsupported-cwd-${randomUUID()}`;
     expect(port).toBeTypeOf("number");
 
     try {
@@ -5602,7 +5602,7 @@ describe("readLocalServicePortOwner", () => {
       await new Promise<void>((resolve, reject) => {
         server.close((error) => error ? reject(error) : resolve());
       });
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
     }
   });
 
@@ -5627,9 +5627,9 @@ describe("readLocalServicePortOwner", () => {
 
     const targetWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-target-"));
     const ownerWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-owner-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `cross-workspace-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `cross-workspace-${randomUUID()}`;
     const serviceKey = `cross-workspace-${randomUUID()}`;
     const child = spawn(
       process.execPath,
@@ -5706,7 +5706,7 @@ describe("readLocalServicePortOwner", () => {
     } finally {
       child.kill("SIGTERM");
       await new Promise<void>((resolve) => child.once("exit", () => resolve()));
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
     }
   });
 
@@ -5719,9 +5719,9 @@ describe("readLocalServicePortOwner", () => {
     }
 
     const workspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-adopt-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `adopt-port-owner-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `adopt-port-owner-${randomUUID()}`;
     const serviceKey = `adopt-port-owner-${randomUUID()}`;
     // Detach, because managed runtime services also start detached
     // (`detached: process.platform !== "win32"`). An attached child shares the
@@ -5759,7 +5759,7 @@ describe("readLocalServicePortOwner", () => {
     } finally {
       child.kill("SIGTERM");
       await new Promise<void>((resolve) => child.once("exit", () => resolve()));
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
       await fs.rm(workspace, { recursive: true, force: true });
     }
   });
@@ -5778,9 +5778,9 @@ describe("readLocalServicePortOwner", () => {
     // adopted into the other.
     const lookalike = `${workspace} `;
     await fs.mkdir(lookalike, { recursive: true });
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `adopt-whitespace-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `adopt-whitespace-${randomUUID()}`;
     const serviceKey = `adopt-whitespace-${randomUUID()}`;
     const child = spawn(
       process.execPath,
@@ -5812,7 +5812,7 @@ describe("readLocalServicePortOwner", () => {
     } finally {
       child.kill("SIGTERM");
       await new Promise<void>((resolve) => child.once("exit", () => resolve()));
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
       await fs.rm(lookalike, { recursive: true, force: true });
       await fs.rm(workspace, { recursive: true, force: true });
     }
@@ -5879,7 +5879,7 @@ describeEmbeddedPostgres("workspace dirty quarantine branch repair", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `Q${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -5897,7 +5897,7 @@ describeEmbeddedPostgres("workspace dirty quarantine branch repair", () => {
     await db.insert(projects).values({
       id: projectId,
       companyId,
-      name: "Paperclip App",
+      name: "ThinkingMach App",
       status: "in_progress",
     });
     await db.insert(projectWorkspaces).values({
@@ -6497,11 +6497,11 @@ describeEmbeddedPostgres("workspace runtime service control persistence", () => 
 
   it("persists provisioning before starting and excludes provision time from readiness timeout", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-slow-control-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-control-home-"));
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `runtime-control-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-control-home-"));
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `runtime-control-${randomUUID()}`;
 
     const companyId = randomUUID();
     const projectId = randomUUID();
@@ -6529,7 +6529,7 @@ describeEmbeddedPostgres("workspace runtime service control persistence", () => 
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -6699,11 +6699,11 @@ describeEmbeddedPostgres("workspace runtime service control persistence", () => 
         executionWorkspaceId,
         workspaceCwd: workspaceRoot,
       });
-      await fs.rm(paperclipHome, { recursive: true, force: true });
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousPaperclipInstanceId;
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousThinkingMachInstanceId;
     }
   }, 15_000);
 
@@ -6829,17 +6829,17 @@ describeEmbeddedPostgres("workspace runtime service control persistence", () => 
   }
 
   async function createRuntimeHome() {
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-port-home-"));
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `runtime-ports-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-port-home-"));
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `runtime-ports-${randomUUID()}`;
     return async () => {
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousPaperclipInstanceId;
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousThinkingMachInstanceId;
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
     };
   }
 
@@ -6859,7 +6859,7 @@ describeEmbeddedPostgres("workspace runtime service control persistence", () => 
         services: [{
           name: "paperclip-dev",
           command,
-          env: { PAPERCLIP_PUBLIC_URL: "http://127.0.0.1:3100" },
+          env: { THINKINGMACH_PUBLIC_URL: "http://127.0.0.1:3100" },
           port: { type: "fixed", value: 45_439, envKey: "PORT" },
           readiness: {
             type: "http",
@@ -6871,7 +6871,7 @@ describeEmbeddedPostgres("workspace runtime service control persistence", () => 
             type: "tailscale_https",
             hostname: "auto",
             publicPort: "same",
-            includePaperclipViteHmr: true,
+            includeThinkingMachViteHmr: true,
             failurePolicy: "fail_closed",
           },
           lifecycle: "shared",
@@ -7547,9 +7547,9 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
   it("restores desired services when one row is stopped and a live registered service has no row", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-desired-reconcile-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `runtime-desired-reconcile-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `runtime-desired-reconcile-${randomUUID()}`;
 
     const reservePort = async () => {
       const probe = net.createServer();
@@ -7616,7 +7616,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -7656,7 +7656,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
       },
     });
 
-    const actor = { id: null, name: "Paperclip", companyId };
+    const actor = { id: null, name: "ThinkingMach", companyId };
     const workspace = {
       ...buildWorkspace(workspaceRoot),
       projectId,
@@ -7718,7 +7718,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
         executionWorkspaceId,
         workspaceCwd: workspaceRoot,
       });
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
     }
   }, 20_000);
 
@@ -7727,12 +7727,12 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
     // forward on the *same* workspace/runtime-service row — not by recreating it
     // — and must never keep its HTTP URL as a healthy fallback.
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-https-backfill-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    const previousHttpsMode = process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `runtime-https-backfill-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    const previousHttpsMode = process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS;
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `runtime-https-backfill-${randomUUID()}`;
 
     const reservePort = async () => {
       for (let attempt = 0; attempt < 100; attempt += 1) {
@@ -7771,7 +7771,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
         {
           name: "paperclip-dev",
           command,
-          env: { PAPERCLIP_PUBLIC_URL: "http://127.0.0.1:3100" },
+          env: { THINKINGMACH_PUBLIC_URL: "http://127.0.0.1:3100" },
           port: legacyPort,
           // The pre-feature block: backend URL only, no exposure declaration.
           expose: { type: "url", urlTemplate: "http://127.0.0.1:{{port}}" },
@@ -7785,7 +7785,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -7812,7 +7812,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
       },
     });
 
-    const actor = { id: null, name: "Paperclip", companyId };
+    const actor = { id: null, name: "ThinkingMach", companyId };
     const workspace = {
       ...buildWorkspace(workspaceRoot),
       projectId,
@@ -7864,7 +7864,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     try {
       // ---- Before: the workspace as it exists today, on plain HTTP. ----
-      process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS = "off";
+      process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS = "off";
       const before = await startRuntimeServicesForWorkspaceControl({
         db,
         actor,
@@ -7883,9 +7883,9 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
       await expect(fetch(`http://127.0.0.1:${legacyPort}`)).resolves.toMatchObject({ ok: true });
       expect(brokerCalls).toEqual([]);
 
-      // ---- Deploy: the feature turns on and Paperclip restarts. ----
+      // ---- Deploy: the feature turns on and ThinkingMach restarts. ----
       await resetRuntimeServicesForTests();
-      delete process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS;
+      delete process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS;
       installExposureDeps();
 
       const result = await reconcilePersistedRuntimeServicesOnStartup(db);
@@ -7930,22 +7930,22 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
         workspaceCwd: workspaceRoot,
       }).catch(() => undefined);
       await resetRuntimeServicesForTests();
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousPaperclipInstanceId;
-      if (previousHttpsMode === undefined) delete process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS;
-      else process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS = previousHttpsMode;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousThinkingMachInstanceId;
+      if (previousHttpsMode === undefined) delete process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS;
+      else process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS = previousHttpsMode;
     }
   }, 40_000);
 
   it("re-adopts a request-logging service on the same auto port after supervisor stdio closes", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-reconcile-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `runtime-reconcile-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `runtime-reconcile-${randomUUID()}`;
 
     const companyId = randomUUID();
     const agentId = randomUUID();
@@ -7953,7 +7953,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -8057,7 +8057,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await resetRuntimeServicesForTests({ terminateProcesses: true });
     leasedRunIds.delete(runId);
-    await fs.rm(paperclipHome, { recursive: true, force: true });
+    await fs.rm(thinkingmachHome, { recursive: true, force: true });
     await fs.rm(workspaceRoot, { recursive: true, force: true });
 
     await expect(fetch(service!.url!)).rejects.toThrow();
@@ -8065,11 +8065,11 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
   it("re-adopts a live service whose shell command differs from the surviving process argv", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-pnpm-reconcile-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `runtime-pnpm-reconcile-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `runtime-pnpm-reconcile-${randomUUID()}`;
 
     // Reserve a port outside the runtime exposure app-port range (42000-42999).
     // The reconciler stores this port on the row. A port inside that range makes
@@ -8154,7 +8154,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
         requireBoardApprovalForNewAgents: false,
       });
@@ -8269,20 +8269,20 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
         }
       }
       await resetRuntimeServicesForTests();
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousInstanceId;
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousInstanceId;
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
       await fs.rm(workspaceRoot, { recursive: true, force: true });
     }
   }, 20_000);
 
   it("does not reuse a stopped auto-port service port while another process owns it", async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-unhealthy-adopt-"));
-    const paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = `runtime-unhealthy-adopt-${randomUUID()}`;
+    const thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = `runtime-unhealthy-adopt-${randomUUID()}`;
 
     const portProbe = net.createServer();
     await new Promise<void>((resolve) => portProbe.listen(0, "127.0.0.1", resolve));
@@ -8349,7 +8349,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
         requireBoardApprovalForNewAgents: false,
       });
@@ -8511,7 +8511,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -8604,7 +8604,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -8709,7 +8709,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -8829,7 +8829,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -8881,7 +8881,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
           {
             name: "web",
             command: serviceCommand,
-            env: { PAPERCLIP_TEST_RUNTIME_FLAG: flag },
+            env: { THINKINGMACH_TEST_RUNTIME_FLAG: flag },
             port: { type: "auto" },
             readiness: {
               type: "http",
@@ -8954,7 +8954,7 @@ describeEmbeddedPostgres("workspace runtime startup reconciliation", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });

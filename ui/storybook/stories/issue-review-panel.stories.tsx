@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { AttentionItem } from "@paperclipai/shared";
+import type { AttentionItem } from "@thinkingmach/shared";
 import { AttentionQueueRow } from "@/components/AttentionQueueRow";
 
 // Stalled review actions remain available where decisions are handled. The

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Inbox, LoaderCircle, Save } from "lucide-react";
-import type { InboxAgentPolicy, InboxAgentPolicyMode } from "@paperclipai/shared";
+import type { InboxAgentPolicy, InboxAgentPolicyMode } from "@thinkingmach/shared";
 import { agentsApi } from "@/api/agents";
 import { inboxAgentPolicyApi } from "@/api/inbox-agent-policy";
 import { queryKeys } from "@/lib/queryKeys";

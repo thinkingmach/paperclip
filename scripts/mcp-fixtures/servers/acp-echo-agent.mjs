@@ -25,7 +25,7 @@ async function handleRequest(request) {
         sessionId: request.params.sessionId,
         update: {
           sessionUpdate: "agent_message_chunk",
-          content: { type: "text", text: process.env.PAPERCLIP_ACPX_SPAWN_SMOKE ?? "missing" },
+          content: { type: "text", text: process.env.THINKINGMACH_ACPX_SPAWN_SMOKE ?? "missing" },
         },
       },
     });

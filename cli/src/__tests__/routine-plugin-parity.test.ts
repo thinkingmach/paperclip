@@ -24,8 +24,8 @@ async function run(args: string[]): Promise<void> {
 describe("routine and plugin parity commands", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    delete process.env.PAPERCLIP_API_KEY;
-    delete process.env.PAPERCLIP_API_URL;
+    delete process.env.THINKINGMACH_API_KEY;
+    delete process.env.THINKINGMACH_API_URL;
     vi.spyOn(console, "log").mockImplementation(() => {});
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
   });
@@ -127,7 +127,7 @@ describe("routine and plugin parity commands", () => {
   it("resolves plugin config company context from the environment", async () => {
     const fetchMock = vi.fn().mockImplementation(() => Promise.resolve(jsonResponse()));
     vi.stubGlobal("fetch", fetchMock);
-    process.env.PAPERCLIP_COMPANY_ID = COMPANY_ID;
+    process.env.THINKINGMACH_COMPANY_ID = COMPANY_ID;
 
     await run(["plugin", "config", "plug"]);
 

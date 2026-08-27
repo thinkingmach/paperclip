@@ -129,7 +129,7 @@ describe("project workspace skill discovery", () => {
     await writeSkillDir(workspace, "Workspace Root");
     await writeSkillDir(path.join(workspace, "skills", "find-skills"), "Find Skills");
     await writeSkillDir(path.join(workspace, ".agents", "skills", "release"), "Release");
-    await writeSkillDir(path.join(workspace, "skills", ".system", "paperclip"), "Paperclip");
+    await writeSkillDir(path.join(workspace, "skills", ".system", "paperclip"), "ThinkingMach");
     await fs.writeFile(path.join(workspace, "README.md"), "# ignore\n", "utf8");
 
     const discovered = await discoverProjectWorkspaceSkillDirectories({
@@ -219,7 +219,7 @@ describe("project workspace skill discovery", () => {
         "metadata:",
         "  sources:",
         "    - kind: github-dir",
-        "      repo: paperclipai/paperclip",
+        "      repo: thinkingmach/paperclip",
         "      path: skills/paperclip",
         "---",
         "",
@@ -240,7 +240,7 @@ describe("project workspace skill discovery", () => {
       sources: [
         {
           kind: "github-dir",
-          repo: "paperclipai/paperclip",
+          repo: "thinkingmach/paperclip",
           path: "skills/paperclip",
         },
       ],

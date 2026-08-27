@@ -106,7 +106,7 @@ export function ConnectModelPreview({
           <OnboardingHeading
             center
             title="Connect a model"
-            lede="Paperclip works with your existing subscription or API keys."
+            lede="ThinkingMach works with your existing subscription or API keys."
           />
         </div>
 

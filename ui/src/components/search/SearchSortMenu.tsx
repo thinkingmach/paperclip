@@ -1,5 +1,5 @@
 import { ArrowUpDown, Check } from "lucide-react";
-import { COMPANY_SEARCH_SORTS, type CompanySearchSort } from "@paperclipai/shared";
+import { COMPANY_SEARCH_SORTS, type CompanySearchSort } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

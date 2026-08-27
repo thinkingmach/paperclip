@@ -14,7 +14,7 @@
 //   node scripts/repair-pr-prep-workspace-attachment.mjs PAP-16555=PAP-14380-salvage-pap-9514 [more ISSUE=BRANCH ...] [--apply]
 //
 // Without --apply it reports the current binding and the patch it would send.
-// Requires PAPERCLIP_API_URL and PAPERCLIP_API_KEY in the environment.
+// Requires THINKINGMACH_API_URL and THINKINGMACH_API_KEY in the environment.
 
 const args = process.argv.slice(2);
 const apply = args.includes("--apply");
@@ -31,17 +31,17 @@ if (pairs.length === 0) {
   process.exit(1);
 }
 
-const apiUrl = process.env.PAPERCLIP_API_URL;
-const apiKey = process.env.PAPERCLIP_API_KEY;
+const apiUrl = process.env.THINKINGMACH_API_URL;
+const apiKey = process.env.THINKINGMACH_API_KEY;
 if (!apiUrl || !apiKey) {
-  console.error("PAPERCLIP_API_URL and PAPERCLIP_API_KEY are required.");
+  console.error("THINKINGMACH_API_URL and THINKINGMACH_API_KEY are required.");
   process.exit(1);
 }
 const apiBase = apiUrl.replace(/\/$/, "").replace(/\/api$/, "");
 const headers = {
   Authorization: `Bearer ${apiKey}`,
   "Content-Type": "application/json",
-  ...(process.env.PAPERCLIP_RUN_ID ? { "X-Paperclip-Run-Id": process.env.PAPERCLIP_RUN_ID } : {}),
+  ...(process.env.THINKINGMACH_RUN_ID ? { "X-ThinkingMach-Run-Id": process.env.THINKINGMACH_RUN_ID } : {}),
 };
 
 let failed = false;

@@ -109,7 +109,7 @@ describe("parseManagedConfigEnv", () => {
 
   it("throws on invalid JSON", () => {
     expect(() => parseManagedConfigEnv(envWith("{not json"))).toThrow(
-      /PAPERCLIP_MANAGED_CONFIG is not valid JSON/,
+      /THINKINGMACH_MANAGED_CONFIG is not valid JSON/,
     );
   });
 

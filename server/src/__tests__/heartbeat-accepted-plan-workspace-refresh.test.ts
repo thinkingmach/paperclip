@@ -28,7 +28,7 @@ import {
   projects,
   projectWorkspaces,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -84,7 +84,7 @@ async function createGitRepo() {
   await runGit(repoRoot, ["init"]);
   await runGit(repoRoot, ["checkout", "-B", "master"]);
   await runGit(repoRoot, ["config", "user.email", "paperclip-test@example.com"]);
-  await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+  await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
   await writeFile(path.join(repoRoot, "README.md"), "accepted plan workspace refresh\n");
   await runGit(repoRoot, ["add", "README.md"]);
   await runGit(repoRoot, ["commit", "-m", "initial"]);

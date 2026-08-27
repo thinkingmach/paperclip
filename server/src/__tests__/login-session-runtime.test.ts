@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
-import type { AgentAdapterType } from "@paperclipai/shared";
+import type { AgentAdapterType } from "@thinkingmach/shared";
 
 // The production runtime resolves the environment through `environmentService`.
 // These tests replace it with a fake, so the runtime runs with no database. The

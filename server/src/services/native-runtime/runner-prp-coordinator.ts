@@ -2,16 +2,16 @@ import { resolve } from "node:path";
 
 import { and, eq } from "drizzle-orm";
 
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   completionContracts,
   heartbeatRuns,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   DurablePrpControlPlane,
-  type PaperclipSemanticToolDefinition,
+  type ThinkingMachSemanticToolDefinition,
   type PrpStructuredRunResult,
   type PrpTerminalState,
 } from "../../vendor/paperclip-runner/index.js";
@@ -23,7 +23,7 @@ import {
   projectNativeRuntimeRequest,
   registerNativeQuestionCommandTarget,
 } from "./native-question-bridge.js";
-import { PaperclipRunnerSemanticAuthority } from "./runner-semantic-authority.js";
+import { ThinkingMachRunnerSemanticAuthority } from "./runner-semantic-authority.js";
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -50,7 +50,7 @@ export interface PreparedRunnerPrpSession {
   readonly connectUrl: string;
   /** One-use secret. Pass it only through the runner's protected bootstrap channel. */
   readonly bootstrapTicket: string;
-  readonly semanticTools: readonly PaperclipSemanticToolDefinition[];
+  readonly semanticTools: readonly ThinkingMachSemanticToolDefinition[];
   queueCommand(
     type: string,
     payload?: Record<string, unknown>,
@@ -224,7 +224,7 @@ export function runnerPrpCoordinator(
       );
       if (!criterionIds) throw new Error("runner_prp_run_not_authorized");
 
-      const semanticAuthority = new PaperclipRunnerSemanticAuthority(db, {
+      const semanticAuthority = new ThinkingMachRunnerSemanticAuthority(db, {
         companyId: input.companyId,
         issueId: input.issueId,
         runId: input.runId,

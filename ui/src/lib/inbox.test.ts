@@ -10,7 +10,7 @@ import type {
   Issue,
   JoinRequest,
   ProjectWorkspace,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   DEFAULT_INBOX_ISSUE_COLUMNS,
   buildGroupedInboxSections,
@@ -1473,11 +1473,11 @@ describe("inbox helpers", () => {
 
     expect(groupInboxWorkItems(items, "project", {
       projectById: new Map([
-        ["project-1", { name: "Paperclip App" }],
+        ["project-1", { name: "ThinkingMach App" }],
         ["project-2", { name: "Onboarding" }],
       ]),
     })).toEqual([
-      { key: "project:project-1", label: "Paperclip App", items: [items[0]] },
+      { key: "project:project-1", label: "ThinkingMach App", items: [items[0]] },
       { key: "kind:join_request", label: "Join requests", items: [items[2]] },
       { key: "project:project-2", label: "Onboarding", items: [items[1]] },
       { key: "project:none", label: "No project", items: [items[3]] },

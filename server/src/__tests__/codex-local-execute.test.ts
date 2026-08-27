@@ -2,14 +2,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { runChildProcess } from "@paperclipai/adapter-utils/server-utils";
-import { execute } from "@paperclipai/adapter-codex-local/server";
+import { runChildProcess } from "@thinkingmach/adapter-utils/server-utils";
+import { execute } from "@thinkingmach/adapter-codex-local/server";
 
 async function writeFakeCodexCommand(commandPath: string): Promise<void> {
   const script = `#!/usr/bin/env node
 const fs = require("node:fs");
 
-const capturePath = process.env.PAPERCLIP_TEST_CAPTURE_PATH;
+const capturePath = process.env.THINKINGMACH_TEST_CAPTURE_PATH;
 const payload = {
   argv: process.argv.slice(2),
   prompt: fs.readFileSync(0, "utf8"),
@@ -17,12 +17,12 @@ const payload = {
   codexConfigContents: process.env.CODEX_HOME && fs.existsSync(process.env.CODEX_HOME + "/config.toml")
     ? fs.readFileSync(process.env.CODEX_HOME + "/config.toml", "utf8")
     : null,
-  paperclipWakePayloadJson: process.env.PAPERCLIP_WAKE_PAYLOAD_JSON || null,
-  paperclipApiUrl: process.env.PAPERCLIP_API_URL || null,
-  paperclipApiKey: process.env.PAPERCLIP_API_KEY || null,
-  paperclipApiBridgeMode: process.env.PAPERCLIP_API_BRIDGE_MODE || null,
+  thinkingmachWakePayloadJson: process.env.THINKINGMACH_WAKE_PAYLOAD_JSON || null,
+  paperclipApiUrl: process.env.THINKINGMACH_API_URL || null,
+  paperclipApiKey: process.env.THINKINGMACH_API_KEY || null,
+  paperclipApiBridgeMode: process.env.THINKINGMACH_API_BRIDGE_MODE || null,
   paperclipEnvKeys: Object.keys(process.env)
-    .filter((key) => key.startsWith("PAPERCLIP_"))
+    .filter((key) => key.startsWith("THINKINGMACH_"))
     .sort(),
 };
 if (capturePath) {
@@ -50,7 +50,7 @@ type CapturePayload = {
   prompt: string;
   codexHome: string | null;
   codexConfigContents?: string | null;
-  paperclipWakePayloadJson: string | null;
+  thinkingmachWakePayloadJson: string | null;
   paperclipApiUrl?: string | null;
   paperclipApiKey?: string | null;
   paperclipApiBridgeMode?: string | null;
@@ -117,15 +117,15 @@ function createLocalSandboxRunner() {
 }
 
 describe("codex execute", () => {
-  it("uses a Paperclip-managed CODEX_HOME outside worktree mode while preserving shared auth and config", async () => {
+  it("uses a ThinkingMach-managed CODEX_HOME outside worktree mode while preserving shared auth and config", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-codex-execute-default-"));
     const workspace = path.join(root, "workspace");
     const commandPath = path.join(root, "codex");
     const capturePath = path.join(root, "capture.json");
     const sharedCodexHome = path.join(root, "shared-codex-home");
-    const paperclipHome = path.join(root, "paperclip-home");
+    const thinkingmachHome = path.join(root, "paperclip-home");
     const managedCodexHome = path.join(
-      paperclipHome,
+      thinkingmachHome,
       "instances",
       "default",
       "companies",
@@ -139,14 +139,14 @@ describe("codex execute", () => {
     await writeFakeCodexCommand(commandPath);
 
     const previousHome = process.env.HOME;
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    const previousPaperclipInWorktree = process.env.PAPERCLIP_IN_WORKTREE;
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    const previousThinkingMachInWorktree = process.env.THINKINGMACH_IN_WORKTREE;
     const previousCodexHome = process.env.CODEX_HOME;
     process.env.HOME = root;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    delete process.env.PAPERCLIP_INSTANCE_ID;
-    delete process.env.PAPERCLIP_IN_WORKTREE;
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    delete process.env.THINKINGMACH_INSTANCE_ID;
+    delete process.env.THINKINGMACH_IN_WORKTREE;
     process.env.CODEX_HOME = sharedCodexHome;
 
     try {
@@ -171,7 +171,7 @@ describe("codex execute", () => {
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -201,18 +201,18 @@ describe("codex execute", () => {
       expect(logs).toContainEqual(
         expect.objectContaining({
           stream: "stdout",
-          chunk: expect.stringContaining("Using Paperclip-managed Codex home"),
+          chunk: expect.stringContaining("Using ThinkingMach-managed Codex home"),
         }),
       );
     } finally {
       if (previousHome === undefined) delete process.env.HOME;
       else process.env.HOME = previousHome;
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousPaperclipInstanceId;
-      if (previousPaperclipInWorktree === undefined) delete process.env.PAPERCLIP_IN_WORKTREE;
-      else process.env.PAPERCLIP_IN_WORKTREE = previousPaperclipInWorktree;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousThinkingMachInstanceId;
+      if (previousThinkingMachInWorktree === undefined) delete process.env.THINKINGMACH_IN_WORKTREE;
+      else process.env.THINKINGMACH_IN_WORKTREE = previousThinkingMachInWorktree;
       if (previousCodexHome === undefined) delete process.env.CODEX_HOME;
       else process.env.CODEX_HOME = previousCodexHome;
       await fs.rm(root, { recursive: true, force: true });
@@ -225,9 +225,9 @@ describe("codex execute", () => {
     const commandPath = path.join(root, "codex");
     const capturePath = path.join(root, "capture.json");
     const sharedCodexHome = path.join(root, "shared-codex-home");
-    const paperclipHome = path.join(root, "paperclip-home");
+    const thinkingmachHome = path.join(root, "paperclip-home");
     const managedCodexHome = path.join(
-      paperclipHome,
+      thinkingmachHome,
       "instances",
       "default",
       "companies",
@@ -251,14 +251,14 @@ describe("codex execute", () => {
     await writeFakeCodexCommand(commandPath);
 
     const previousHome = process.env.HOME;
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipApiUrl = process.env.PAPERCLIP_API_URL;
-    const previousPaperclipRuntimeApiUrl = process.env.PAPERCLIP_RUNTIME_API_URL;
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachApiUrl = process.env.THINKINGMACH_API_URL;
+    const previousThinkingMachRuntimeApiUrl = process.env.THINKINGMACH_RUNTIME_API_URL;
     const previousCodexHome = process.env.CODEX_HOME;
     process.env.HOME = root;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_API_URL = "http://paperclip.local:3100";
-    process.env.PAPERCLIP_RUNTIME_API_URL = "http://paperclip.local:3100";
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_API_URL = "http://paperclip.local:3100";
+    process.env.THINKINGMACH_RUNTIME_API_URL = "http://paperclip.local:3100";
     process.env.CODEX_HOME = sharedCodexHome;
 
     try {
@@ -283,7 +283,7 @@ describe("codex execute", () => {
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -316,7 +316,7 @@ describe("codex execute", () => {
         expect.arrayContaining([
           expect.objectContaining({
             stream: "stderr",
-            chunk: expect.stringContaining("Paperclip cannot enforce policies for that direct entry"),
+            chunk: expect.stringContaining("ThinkingMach cannot enforce policies for that direct entry"),
           }),
         ]),
       );
@@ -324,12 +324,12 @@ describe("codex execute", () => {
     } finally {
       if (previousHome === undefined) delete process.env.HOME;
       else process.env.HOME = previousHome;
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipApiUrl === undefined) delete process.env.PAPERCLIP_API_URL;
-      else process.env.PAPERCLIP_API_URL = previousPaperclipApiUrl;
-      if (previousPaperclipRuntimeApiUrl === undefined) delete process.env.PAPERCLIP_RUNTIME_API_URL;
-      else process.env.PAPERCLIP_RUNTIME_API_URL = previousPaperclipRuntimeApiUrl;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachApiUrl === undefined) delete process.env.THINKINGMACH_API_URL;
+      else process.env.THINKINGMACH_API_URL = previousThinkingMachApiUrl;
+      if (previousThinkingMachRuntimeApiUrl === undefined) delete process.env.THINKINGMACH_RUNTIME_API_URL;
+      else process.env.THINKINGMACH_RUNTIME_API_URL = previousThinkingMachRuntimeApiUrl;
       if (previousCodexHome === undefined) delete process.env.CODEX_HOME;
       else process.env.CODEX_HOME = previousCodexHome;
       await fs.rm(root, { recursive: true, force: true });
@@ -370,7 +370,7 @@ describe("codex execute", () => {
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -385,7 +385,7 @@ describe("codex execute", () => {
       expect(result.exitCode).toBe(0);
       expect(result.errorMessage).toBeNull();
       expect(commandNotes).toContain(
-        "Codex exec automatically applies repo-scoped AGENTS.md instructions from the current workspace; Paperclip does not currently suppress that discovery.",
+        "Codex exec automatically applies repo-scoped AGENTS.md instructions from the current workspace; ThinkingMach does not currently suppress that discovery.",
       );
     } finally {
       if (previousHome === undefined) delete process.env.HOME;
@@ -433,7 +433,7 @@ describe("codex execute", () => {
           command: "codex",
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -450,7 +450,7 @@ describe("codex execute", () => {
       expect(result.errorMessage).toBeNull();
       expect(loggedCommand).toBe(commandPath);
       expect(loggedEnv.HOME).toBe(root);
-      expect(loggedEnv.PAPERCLIP_RESOLVED_COMMAND).toBe(commandPath);
+      expect(loggedEnv.THINKINGMACH_RESOLVED_COMMAND).toBe(commandPath);
     } finally {
       if (previousHome === undefined) delete process.env.HOME;
       else process.env.HOME = previousHome;
@@ -500,7 +500,7 @@ describe("codex execute", () => {
           command: commandPath,
           cwd: localWorkspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -536,7 +536,7 @@ describe("codex execute", () => {
     }
   });
 
-  it("injects structured Paperclip wake payloads into env and prompt", async () => {
+  it("injects structured ThinkingMach wake payloads into env and prompt", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-codex-execute-wake-"));
     const workspace = path.join(root, "workspace");
     const commandPath = path.join(root, "codex");
@@ -569,7 +569,7 @@ describe("codex execute", () => {
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -578,7 +578,7 @@ describe("codex execute", () => {
           taskId: "issue-1",
           wakeReason: "issue_commented",
           wakeCommentId: "comment-2",
-          paperclipWake: {
+          thinkingmachWake: {
             reason: "issue_commented",
             issue: {
               id: "issue-1",
@@ -624,14 +624,14 @@ describe("codex execute", () => {
       expect(result.errorMessage).toBeNull();
 
       const capture = JSON.parse(await fs.readFile(capturePath, "utf8")) as CapturePayload;
-      expect(capture.paperclipEnvKeys).toContain("PAPERCLIP_WAKE_PAYLOAD_JSON");
-      expect(capture.paperclipWakePayloadJson).not.toBeNull();
-      expect(JSON.parse(capture.paperclipWakePayloadJson ?? "{}")).toMatchObject({
+      expect(capture.paperclipEnvKeys).toContain("THINKINGMACH_WAKE_PAYLOAD_JSON");
+      expect(capture.thinkingmachWakePayloadJson).not.toBeNull();
+      expect(JSON.parse(capture.thinkingmachWakePayloadJson ?? "{}")).toMatchObject({
         reason: "issue_commented",
         latestCommentId: "comment-2",
         commentIds: ["comment-1", "comment-2"],
       });
-      expect(capture.prompt).toContain("## Paperclip Wake Payload");
+      expect(capture.prompt).toContain("## ThinkingMach Wake Payload");
       expect(capture.prompt).toContain("Treat this wake payload as the highest-priority change for the current heartbeat.");
       expect(capture.prompt).toContain("Do not switch to another issue until you have handled this wake.");
       expect(capture.prompt).toContain(
@@ -914,7 +914,7 @@ process.exit(1);
           fastMode: true,
           model: "gpt-5.4",
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -942,7 +942,7 @@ process.exit(1);
       expect(capture.argv).not.toContain("resume");
       expect(capture.argv).not.toContain('service_tier="fast"');
       expect(capture.argv).not.toContain("features.fast_mode=true");
-      expect(capture.prompt).toContain("Paperclip session handoff:");
+      expect(capture.prompt).toContain("ThinkingMach session handoff:");
       expect(capture.prompt).toContain("Issue continuation summary for the next fresh session.");
       expect(commandNotes).toContain("Codex transient fallback requested safer invocation settings for this retry.");
       expect(commandNotes).toContain("Codex transient fallback forced a fresh session with a continuation handoff.");
@@ -986,7 +986,7 @@ process.exit(1);
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -994,7 +994,7 @@ process.exit(1);
           issueId: "issue-1",
           taskId: "issue-1",
           wakeReason: "execution_review_requested",
-          paperclipWake: {
+          thinkingmachWake: {
             reason: "execution_review_requested",
             issue: {
               id: "issue-1",
@@ -1056,7 +1056,7 @@ process.exit(1);
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: executorCapturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: executorCapturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -1064,7 +1064,7 @@ process.exit(1);
           issueId: "issue-1",
           taskId: "issue-1",
           wakeReason: "execution_changes_requested",
-          paperclipWake: {
+          thinkingmachWake: {
             reason: "execution_changes_requested",
             issue: {
               id: "issue-1",
@@ -1143,7 +1143,7 @@ process.exit(1);
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -1151,7 +1151,7 @@ process.exit(1);
           issueId: "issue-1",
           taskId: "issue-1",
           wakeReason: "issue_assigned",
-          paperclipWake: {
+          thinkingmachWake: {
             reason: "issue_assigned",
             issue: {
               id: "issue-1",
@@ -1181,9 +1181,9 @@ process.exit(1);
       expect(result.errorMessage).toBeNull();
 
       const capture = JSON.parse(await fs.readFile(capturePath, "utf8")) as CapturePayload;
-      expect(capture.paperclipEnvKeys).toContain("PAPERCLIP_WAKE_PAYLOAD_JSON");
-      expect(capture.paperclipWakePayloadJson).not.toBeNull();
-      expect(JSON.parse(capture.paperclipWakePayloadJson ?? "{}")).toMatchObject({
+      expect(capture.paperclipEnvKeys).toContain("THINKINGMACH_WAKE_PAYLOAD_JSON");
+      expect(capture.thinkingmachWakePayloadJson).not.toBeNull();
+      expect(JSON.parse(capture.thinkingmachWakePayloadJson ?? "{}")).toMatchObject({
         reason: "issue_assigned",
         issue: {
           identifier: "PAP-1201",
@@ -1194,7 +1194,7 @@ process.exit(1);
         checkedOutByHarness: true,
         commentIds: [],
       });
-      expect(capture.prompt).toContain("## Paperclip Wake Payload");
+      expect(capture.prompt).toContain("## ThinkingMach Wake Payload");
       expect(capture.prompt).toContain("Do not switch to another issue until you have handled this wake.");
       expect(capture.prompt).toContain("- issue: PAP-1201 Fix gallery opening for inline images");
       expect(capture.prompt).not.toContain("- pending comments:");
@@ -1252,7 +1252,7 @@ process.exit(1);
           cwd: workspace,
           instructionsFilePath: instructionsPath,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -1261,7 +1261,7 @@ process.exit(1);
           taskId: "issue-1",
           wakeReason: "issue_commented",
           wakeCommentId: "comment-2",
-          paperclipWake: {
+          thinkingmachWake: {
             reason: "issue_commented",
             issue: {
               id: "issue-1",
@@ -1305,12 +1305,12 @@ process.exit(1);
 
       const capture = JSON.parse(await fs.readFile(capturePath, "utf8")) as CapturePayload;
       expect(capture.argv).toEqual(expect.arrayContaining(["resume", "codex-session-1", "-"]));
-      expect(capture.prompt).toContain("## Paperclip Resume Delta");
+      expect(capture.prompt).toContain("## ThinkingMach Resume Delta");
       expect(capture.prompt).toContain("Do not switch to another issue until you have handled this wake.");
       expect(capture.prompt).toContain("Second comment");
       expect(capture.prompt).not.toContain("Follow the paperclip heartbeat.");
       expect(capture.prompt).not.toContain("You are managed instructions.");
-      expect(invocationPrompt).toContain("## Paperclip Resume Delta");
+      expect(invocationPrompt).toContain("## ThinkingMach Resume Delta");
       expect(invocationNotes).toContain(
         "Skipped stdin instruction reinjection because an existing Codex session is being resumed with a wake delta.",
       );
@@ -1328,9 +1328,9 @@ process.exit(1);
     const commandPath = path.join(root, "codex");
     const capturePath = path.join(root, "capture.json");
     const sharedCodexHome = path.join(root, "shared-codex-home");
-    const paperclipHome = path.join(root, "paperclip-home");
+    const thinkingmachHome = path.join(root, "paperclip-home");
     const isolatedCodexHome = path.join(
-      paperclipHome,
+      thinkingmachHome,
       "instances",
       "worktree-1",
       "companies",
@@ -1345,14 +1345,14 @@ process.exit(1);
     await writeFakeCodexCommand(commandPath);
 
     const previousHome = process.env.HOME;
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    const previousPaperclipInWorktree = process.env.PAPERCLIP_IN_WORKTREE;
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    const previousThinkingMachInWorktree = process.env.THINKINGMACH_IN_WORKTREE;
     const previousCodexHome = process.env.CODEX_HOME;
     process.env.HOME = root;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = "worktree-1";
-    process.env.PAPERCLIP_IN_WORKTREE = "true";
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = "worktree-1";
+    process.env.THINKINGMACH_IN_WORKTREE = "true";
     process.env.CODEX_HOME = sharedCodexHome;
 
     try {
@@ -1377,7 +1377,7 @@ process.exit(1);
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -1397,11 +1397,11 @@ process.exit(1);
       expect(capture.prompt).toContain("Follow the paperclip heartbeat.");
       expect(capture.paperclipEnvKeys).toEqual(
         expect.arrayContaining([
-          "PAPERCLIP_AGENT_ID",
-          "PAPERCLIP_API_KEY",
-          "PAPERCLIP_API_URL",
-          "PAPERCLIP_COMPANY_ID",
-          "PAPERCLIP_RUN_ID",
+          "THINKINGMACH_AGENT_ID",
+          "THINKINGMACH_API_KEY",
+          "THINKINGMACH_API_URL",
+          "THINKINGMACH_COMPANY_ID",
+          "THINKINGMACH_RUN_ID",
         ]),
       );
 
@@ -1428,12 +1428,12 @@ process.exit(1);
     } finally {
       if (previousHome === undefined) delete process.env.HOME;
       else process.env.HOME = previousHome;
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousPaperclipInstanceId;
-      if (previousPaperclipInWorktree === undefined) delete process.env.PAPERCLIP_IN_WORKTREE;
-      else process.env.PAPERCLIP_IN_WORKTREE = previousPaperclipInWorktree;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousThinkingMachInstanceId;
+      if (previousThinkingMachInWorktree === undefined) delete process.env.THINKINGMACH_IN_WORKTREE;
+      else process.env.THINKINGMACH_IN_WORKTREE = previousThinkingMachInWorktree;
       if (previousCodexHome === undefined) delete process.env.CODEX_HOME;
       else process.env.CODEX_HOME = previousCodexHome;
       await fs.rm(root, { recursive: true, force: true });
@@ -1447,21 +1447,21 @@ process.exit(1);
     const capturePath = path.join(root, "capture.json");
     const sharedCodexHome = path.join(root, "shared-codex-home");
     const explicitCodexHome = path.join(root, "explicit-codex-home");
-    const paperclipHome = path.join(root, "paperclip-home");
+    const thinkingmachHome = path.join(root, "paperclip-home");
     await fs.mkdir(workspace, { recursive: true });
     await fs.mkdir(sharedCodexHome, { recursive: true });
     await fs.writeFile(path.join(sharedCodexHome, "auth.json"), `${fakeCodexAuthJson}\n`, "utf8");
     await writeFakeCodexCommand(commandPath);
 
     const previousHome = process.env.HOME;
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    const previousPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-    const previousPaperclipInWorktree = process.env.PAPERCLIP_IN_WORKTREE;
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    const previousThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+    const previousThinkingMachInWorktree = process.env.THINKINGMACH_IN_WORKTREE;
     const previousCodexHome = process.env.CODEX_HOME;
     process.env.HOME = root;
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = "worktree-1";
-    process.env.PAPERCLIP_IN_WORKTREE = "true";
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    process.env.THINKINGMACH_INSTANCE_ID = "worktree-1";
+    process.env.THINKINGMACH_IN_WORKTREE = "true";
     process.env.CODEX_HOME = sharedCodexHome;
 
     try {
@@ -1485,7 +1485,7 @@ process.exit(1);
           command: commandPath,
           cwd: workspace,
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
             CODEX_HOME: explicitCodexHome,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
@@ -1504,16 +1504,16 @@ process.exit(1);
       const capture = JSON.parse(await fs.readFile(capturePath, "utf8")) as CapturePayload;
       expect(capture.codexHome).toBe(explicitCodexHome);
       expect((await fs.lstat(path.join(explicitCodexHome, "skills", "paperclip"))).isSymbolicLink()).toBe(true);
-      await expect(fs.lstat(path.join(paperclipHome, "instances", "worktree-1", "codex-home"))).rejects.toThrow();
+      await expect(fs.lstat(path.join(thinkingmachHome, "instances", "worktree-1", "codex-home"))).rejects.toThrow();
     } finally {
       if (previousHome === undefined) delete process.env.HOME;
       else process.env.HOME = previousHome;
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousPaperclipInstanceId;
-      if (previousPaperclipInWorktree === undefined) delete process.env.PAPERCLIP_IN_WORKTREE;
-      else process.env.PAPERCLIP_IN_WORKTREE = previousPaperclipInWorktree;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousThinkingMachInstanceId;
+      if (previousThinkingMachInWorktree === undefined) delete process.env.THINKINGMACH_IN_WORKTREE;
+      else process.env.THINKINGMACH_IN_WORKTREE = previousThinkingMachInWorktree;
       if (previousCodexHome === undefined) delete process.env.CODEX_HOME;
       else process.env.CODEX_HOME = previousCodexHome;
       await fs.rm(root, { recursive: true, force: true });

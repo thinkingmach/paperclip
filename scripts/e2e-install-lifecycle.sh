@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# End-to-end proof of the paperclipai managed install lifecycle on a CLEAN machine.
+# End-to-end proof of the thinkingmach managed install lifecycle on a CLEAN machine.
 #
 # Exercises the real user journey against real GitHub + real npm:
 #   bootstrap build -> install (npm latest) -> install --ref (build-from-source)
@@ -10,7 +10,7 @@
 # The machine's $HOME must not already contain a managed install.
 #
 # Env knobs:
-#   E2E_REPO          GitHub repo to install from (default: paperclipai/paperclip)
+#   E2E_REPO          GitHub repo to install from (default: thinkingmach/paperclip)
 #   E2E_REF           branch/tag/sha to install   (default: master)
 #   E2E_SKIP_NPM=1      skip the npm-channel install step (canary is tested separately;
 #                       the npm leg uses the latest channel)
@@ -18,17 +18,17 @@
 #   E2E_SERVICE_TIMEOUT_SECS  how long to wait for the service to go active (default 300)
 set -uo pipefail
 
-E2E_REPO="${E2E_REPO:-paperclipai/paperclip}"
+E2E_REPO="${E2E_REPO:-thinkingmach/paperclip}"
 E2E_REF="${E2E_REF:-master}"
 E2E_SERVICE_TIMEOUT_SECS="${E2E_SERVICE_TIMEOUT_SECS:-300}"
 
-# A clean environment: no inherited Paperclip or build-mode state.
-for var in $(env | grep -o '^PAPERCLIP_[A-Z_]*' || true); do unset "$var"; done
+# A clean environment: no inherited ThinkingMach or build-mode state.
+for var in $(env | grep -o '^THINKINGMACH_[A-Z_]*' || true); do unset "$var"; done
 unset NODE_ENV npm_config_prefix 2>/dev/null || true
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI="${CI:-1}"
 
-SHIM="$HOME/.local/bin/paperclipai"
+SHIM="$HOME/.local/bin/thinkingmach"
 STORE="$HOME/.paperclip/cli"
 RESULTS=()
 FAILED=0
@@ -51,7 +51,7 @@ echo "repo=$E2E_REPO ref=$E2E_REF home=$HOME"
 
 note "1. Bootstrap: build the new CLI from the GitHub tarball of $E2E_REF"
 # Nothing published on npm has the install/update/service commands yet, so the
-# bootstrap simulates what `npx paperclipai@<channel> install` will run post-release:
+# bootstrap simulates what `npx thinkingmach@<channel> install` will run post-release:
 # the same CLI code, built from the exact ref under test.
 BOOT="$HOME/e2e-bootstrap"
 mkdir -p "$BOOT"
@@ -82,7 +82,7 @@ if (cd "$HOME/e2e-bootstrap-cli" && npm install --no-fund --no-audit "$BOOT/cli/
 else
   tail -40 "$HOME/e2e-bootstrap-npm.log"; fail_ "1d bootstrap CLI npm install"; exit 1
 fi
-BOOTSTRAP_CLI="$HOME/e2e-bootstrap-cli/node_modules/paperclipai/dist/index.js"
+BOOTSTRAP_CLI="$HOME/e2e-bootstrap-cli/node_modules/thinkingmach/dist/index.js"
 node "$BOOTSTRAP_CLI" --version >/dev/null || { fail_ "1e bootstrap CLI smoke"; exit 1; }
 cd "$HOME"
 
@@ -93,14 +93,14 @@ if [ "${E2E_SKIP_NPM:-0}" != "1" ]; then
   else
     fail_ "2a install (latest) exits 0"
   fi
-  [ -x "$SHIM" ] && pass "2b shim created at ~/.local/bin/paperclipai" || fail_ "2b shim created"
+  [ -x "$SHIM" ] && pass "2b shim created at ~/.local/bin/thinkingmach" || fail_ "2b shim created"
   case "$(current_target)" in
     *"installs/npm/"*) pass "2c current -> installs/npm/<version> ($(basename "$(current_target)"))" ;;
     *) fail_ "2c current -> installs/npm/<version> (got: $(current_target))" ;;
   esac
   [ -f "$STORE/install.json" ] && pass "2d install.json manifest present" || fail_ "2d install.json manifest present"
   NPM_VERSION="$("$SHIM" --version 2>/dev/null || true)"
-  [ -n "$NPM_VERSION" ] && pass "2e shim runs: paperclipai --version = $NPM_VERSION" || fail_ "2e shim runs paperclipai --version"
+  [ -n "$NPM_VERSION" ] && pass "2e shim runs: thinkingmach --version = $NPM_VERSION" || fail_ "2e shim runs thinkingmach --version"
 else
   skip_ "2 install (npm latest)" "E2E_SKIP_NPM=1"
 fi

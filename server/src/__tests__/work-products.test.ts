@@ -41,8 +41,8 @@ describe("workProductService", () => {
     });
 
     expect(summary).toEqual({ changedFiles: 3, additions: 17, deletions: 5 });
-    expect(enrichWorkProductMetadataWithDiff({ repo: "paperclipai/paperclip" }, summary)).toEqual({
-      repo: "paperclipai/paperclip",
+    expect(enrichWorkProductMetadataWithDiff({ repo: "thinkingmach/paperclip" }, summary)).toEqual({
+      repo: "thinkingmach/paperclip",
       changedFiles: 3,
       additions: 17,
       deletions: 5,
@@ -67,9 +67,9 @@ describe("workProductService", () => {
   it("refreshes pull-request state without mutating the stored work product", async () => {
     const product = createWorkProductRow({
       companyId: "company-1",
-      url: "https://github.com/paperclipai/paperclip/pull/42",
+      url: "https://github.com/thinkingmach/paperclip/pull/42",
       metadata: {
-        repo: "paperclipai/paperclip",
+        repo: "thinkingmach/paperclip",
         number: 42,
         additions: 17,
         deletions: 5,
@@ -94,7 +94,7 @@ describe("workProductService", () => {
 
     expect(resolve).toHaveBeenCalledWith("company-1", {
       host: "github.com",
-      owner: "paperclipai",
+      owner: "thinkingmach",
       repo: "paperclip",
       number: 42,
     });
@@ -116,12 +116,12 @@ describe("workProductService", () => {
 
     await expect(svc.resolveCommitDiffSummary("company-1", {
       provider: "github",
-      url: "https://github.com/paperclipai/paperclip/commit/9c12ae7b41e5",
+      url: "https://github.com/thinkingmach/paperclip/commit/9c12ae7b41e5",
       metadata: null,
     })).resolves.toEqual({ additions: 13, deletions: 2, changedFiles: 3 });
     expect(resolveCommitDetails).toHaveBeenCalledWith("company-1", {
       host: "github.com",
-      owner: "paperclipai",
+      owner: "thinkingmach",
       repo: "paperclip",
       sha: "9c12ae7b41e5",
     });

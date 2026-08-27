@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import {
   createDuplexRouteSlotController,
   createPluginWorkerHandle,
@@ -13,13 +13,13 @@ const DUPLEX_CHANNEL_WORKER_ENTRYPOINT = path.join(
   "plugin-worker-duplex-channel.cjs",
 );
 
-const TEST_MANIFEST: PaperclipPluginManifestV1 = {
+const TEST_MANIFEST: ThinkingMachPluginManifestV1 = {
   id: "test.plugin",
   apiVersion: 1,
   version: "1.0.0",
   displayName: "Test plugin",
   description: "Test plugin",
-  author: "Paperclip",
+  author: "ThinkingMach",
   categories: ["automation"],
   capabilities: [],
   entrypoints: { worker: "dist/worker.js" },

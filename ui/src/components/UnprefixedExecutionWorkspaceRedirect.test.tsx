@@ -15,7 +15,7 @@ vi.mock("@/api/execution-workspaces", () => ({
   executionWorkspacesApi: mockExecutionWorkspacesApi,
 }));
 
-const PAP = { id: "company-pap", name: "Paperclip", issuePrefix: "PAP", status: "active" };
+const PAP = { id: "company-pap", name: "ThinkingMach", issuePrefix: "PAP", status: "active" };
 const FOR = { id: "company-for", name: "Forgotten Runes", issuePrefix: "FOR", status: "active" };
 vi.mock("@/context/CompanyContext", () => ({
   useCompany: () => ({

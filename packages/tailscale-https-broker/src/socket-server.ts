@@ -3,7 +3,7 @@
  * protocol controls from PAP-17050 verdict requirement #5: length-prefixed
  * frames with a hard byte cap, per-connection read/write/idle deadlines, a
  * maximum concurrent-client bound, a per-UID client bound, reserved capacity
- * for the Paperclip service UID, and bounded single-frame responses. All
+ * for the ThinkingMach service UID, and bounded single-frame responses. All
  * security decisions are delegated to the tested `BrokerCore`; this layer
  * frames bytes, resolves peer identity, and bounds transport resource usage.
  */

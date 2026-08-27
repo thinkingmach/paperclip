@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import express from "express";
 import request from "supertest";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { activityLog, agents, companies, companySkillPolicies, createDb } from "@paperclipai/db";
+import { activityLog, agents, companies, companySkillPolicies, createDb } from "@thinkingmach/db";
 import { errorHandler } from "../middleware/error-handler.js";
 import { companySkillPolicyRoutes } from "../routes/company-skill-policy.js";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";

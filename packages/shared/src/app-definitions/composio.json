@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "composio",
   "name": "Composio",
-  "description": "Connect Composio so Paperclip can discover and manage the toolkits in your project.",
+  "description": "Connect Composio so ThinkingMach can discover and manage the toolkits in your project.",
   "categories": [
     "productivity"
   ],

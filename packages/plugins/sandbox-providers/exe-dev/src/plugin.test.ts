@@ -70,7 +70,7 @@ describe("exe.dev sandbox provider plugin", () => {
       driverKey: "exe-dev",
       config: {
         apiUrl: "https://exe.dev",
-        namePrefix: " Paperclip Sandbox ",
+        namePrefix: " ThinkingMach Sandbox ",
         image: " ubuntu:22.04 ",
         cpu: "4.8",
         memory: " 8GB ",
@@ -89,7 +89,7 @@ describe("exe.dev sandbox provider plugin", () => {
     expect(result).toEqual({
       ok: true,
       warnings: [
-        "The Paperclip host must have SSH access to the created exe.dev VM, and its SSH key must be registered with exe.dev. The API token only covers provisioning.",
+        "The ThinkingMach host must have SSH access to the created exe.dev VM, and its SSH key must be registered with exe.dev. The API token only covers provisioning.",
         "reuseLease keeps the VM alive between runs; this provider does not suspend retained VMs.",
       ],
       normalizedConfig: {
@@ -152,7 +152,7 @@ describe("exe.dev sandbox provider plugin", () => {
     })).resolves.toEqual({
       ok: false,
       warnings: [
-        "The Paperclip host must have SSH access to the created exe.dev VM, and its SSH key must be registered with exe.dev. The API token only covers provisioning.",
+        "The ThinkingMach host must have SSH access to the created exe.dev VM, and its SSH key must be registered with exe.dev. The API token only covers provisioning.",
       ],
       errors: [
         "apiUrl must be a valid URL.",
@@ -454,7 +454,7 @@ describe("exe.dev sandbox provider plugin", () => {
         timeoutMs: 300000,
       },
     })).rejects.toThrow(
-      "the Paperclip host SSH key is not registered with exe.dev",
+      "the ThinkingMach host SSH key is not registered with exe.dev",
     );
 
     expect(String(fetchMock.mock.calls[1]?.[1]?.body ?? "")).toBe("rm --json 'paperclip-env-run'");
@@ -622,7 +622,7 @@ describe("exe.dev sandbox provider plugin", () => {
     });
 
     expect(result?.exitCode).toBe(1);
-    expect(String(result?.stderr ?? "")).toContain("the Paperclip host SSH key is not registered with exe.dev");
+    expect(String(result?.stderr ?? "")).toContain("the ThinkingMach host SSH key is not registered with exe.dev");
     expect(String(result?.stderr ?? "")).toContain("ssh exe.dev");
   });
 
@@ -718,7 +718,7 @@ describe("exe.dev sandbox provider plugin", () => {
       ok: false,
       summary: "exe.dev environment probe failed.",
     });
-    expect(String(result?.metadata?.error ?? "")).toContain("the Paperclip host SSH key is not registered with exe.dev");
+    expect(String(result?.metadata?.error ?? "")).toContain("the ThinkingMach host SSH key is not registered with exe.dev");
     expect(String(fetchMock.mock.calls[1]?.[1]?.body ?? "")).toBe("rm --json 'paperclip-probe'");
   });
 

@@ -167,7 +167,7 @@ function sortRunsChronologically(runs: readonly RunRecord[]): RunRecord[] {
   );
 }
 
-async function restartIsolatedPaperclipServer(input: {
+async function restartIsolatedThinkingMachServer(input: {
   api: RunnerApi;
   requestId: string;
   deadlineAt: number;
@@ -218,7 +218,7 @@ async function restartIsolatedPaperclipServer(input: {
 }
 
 const executionIds = (() => {
-  const encoded = process.env.PAPERCLIP_RUNNER_E2E_EXECUTION_IDS;
+  const encoded = process.env.THINKINGMACH_RUNNER_E2E_EXECUTION_IDS;
   if (encoded) {
     const parsed = JSON.parse(encoded) as unknown;
     if (
@@ -227,21 +227,21 @@ const executionIds = (() => {
       parsed.some((value) => typeof value !== "string")
     ) {
       throw new Error(
-        "PAPERCLIP_RUNNER_E2E_EXECUTION_IDS must be a non-empty JSON string array",
+        "THINKINGMACH_RUNNER_E2E_EXECUTION_IDS must be a non-empty JSON string array",
       );
     }
     return parsed;
   }
-  const single = process.env.PAPERCLIP_RUNNER_E2E_EXECUTION_ID;
+  const single = process.env.THINKINGMACH_RUNNER_E2E_EXECUTION_ID;
   if (!single)
-    throw new Error("PAPERCLIP_RUNNER_E2E_EXECUTION_IDS is required");
+    throw new Error("THINKINGMACH_RUNNER_E2E_EXECUTION_IDS is required");
   return [single];
 })();
 const executions = executionIds.map(runnerExecutionById);
-const attempt = Number(process.env.PAPERCLIP_RUNNER_E2E_ATTEMPT ?? "1");
-const temporaryRoot = process.env.PAPERCLIP_RUNNER_E2E_TEMP_ROOT;
-const privateRoot = process.env.PAPERCLIP_RUNNER_E2E_PRIVATE_DIR;
-const workspacePath = process.env.PAPERCLIP_RUNNER_E2E_WORKSPACE;
+const attempt = Number(process.env.THINKINGMACH_RUNNER_E2E_ATTEMPT ?? "1");
+const temporaryRoot = process.env.THINKINGMACH_RUNNER_E2E_TEMP_ROOT;
+const privateRoot = process.env.THINKINGMACH_RUNNER_E2E_PRIVATE_DIR;
+const workspacePath = process.env.THINKINGMACH_RUNNER_E2E_WORKSPACE;
 if (!temporaryRoot || !privateRoot || !workspacePath)
   throw new Error("Runner E2E temporary/private/workspace paths are required");
 
@@ -685,7 +685,7 @@ for (const execution of executions) {
         executionNonce: nonce,
         workspacePath,
         credentials,
-        daytonaImage: process.env.PAPERCLIP_E2E_DAYTONA_IMAGE,
+        daytonaImage: process.env.THINKINGMACH_E2E_DAYTONA_IMAGE,
       });
 
       await writeSanitizedJson(
@@ -1019,7 +1019,7 @@ for (const execution of executions) {
         );
         if (execution.task.restartServerBeforeQuestionAnswer) {
           const restartRequestId = `question-wait-${nonce}`;
-          await restartIsolatedPaperclipServer({
+          await restartIsolatedThinkingMachServer({
             api,
             requestId: restartRequestId,
             deadlineAt,

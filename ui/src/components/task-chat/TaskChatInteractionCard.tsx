@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import type { IssueDocument } from "@paperclipai/shared";
+import type { IssueDocument } from "@thinkingmach/shared";
 import type { MentionOption } from "@/components/MarkdownEditor";
 import { IssueThreadInteractionCard } from "@/components/IssueThreadInteractionCard";
 import { shouldHideInteractionCard } from "@/lib/issue-thread-interactions";

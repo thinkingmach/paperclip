@@ -1,6 +1,6 @@
-# Standalone Thin Paperclip Adapter Boundary
+# Standalone Thin ThinkingMach Adapter Boundary
 
-> **Scope correction — 2026-08-09:** The board superseded real Paperclip
+> **Scope correction — 2026-08-09:** The board superseded real ThinkingMach
 > installation and live-instance execution for the current checkpoint. Active
 > Standalone work is limited to the standalone demo runner and demo page under
 > `packages/paperclip-runner/`. Product/server/database sections below are
@@ -8,12 +8,12 @@
 
 Status: design approved; remediation 8 documentation reconciliation complete; final CTO gate pending
 Date: 2026-08-09
-Decision scope: the first feature-flagged Paperclip native run, including the
+Decision scope: the first feature-flagged ThinkingMach native run, including the
 normative native finalizer and server-owned Section 18 status arbitration
 
 ## Decision
 
-Paperclip will integrate the native runner through two public package ports:
+ThinkingMach will integrate the native runner through two public package ports:
 
 - `NativeSessionBackend` owns a normalized native session and hides the
   package's concrete `HarnessDriver` and Codex implementation.
@@ -21,25 +21,25 @@ Paperclip will integrate the native runner through two public package ports:
   package and exposes durable acknowledgement and replay cursors.
 
 The two ports are complementary, not two core implementations. The runner
-package supplies the `NativeSessionBackend` implementation; Paperclip supplies
+package supplies the `NativeSessionBackend` implementation; ThinkingMach supplies
 the server-bound `ControlPlanePort` implementation. The core adapter only
 composes those public contracts and translates the final result into existing
-Paperclip types. It does not implement a native backend or contain runner
+ThinkingMach types. It does not implement a native backend or contain runner
 behavior.
 
 The dependency direction is one way:
 
 ```text
 server heartbeat orchestration
-  -> PaperclipNativeRuntimeAdapter (core seam)
-      -> @paperclipai/paperclip-runner public contracts
+  -> ThinkingMachNativeRuntimeAdapter (core seam)
+      -> @thinkingmach/paperclip-runner public contracts
           -> NativeSessionBackend -> package-owned driver/runner logic
-          -> ControlPlanePort      -> server-bound Paperclip implementation
+          -> ControlPlanePort      -> server-bound ThinkingMach implementation
 ```
 
 `packages/paperclip-runner/` never imports `server/`, `packages/db/`,
-`packages/shared/`, or a Paperclip service. The server may import the public
-package. The core seam may translate company-scoped Paperclip records into the
+`packages/shared/`, or a ThinkingMach service. The server may import the public
+package. The core seam may translate company-scoped ThinkingMach records into the
 public input types, persist protocol records, and convert one terminal native
 result into the existing `AdapterExecutionResult`. It must not contain driver,
 provider, reducer, outbox, reconnect, or process-supervision logic.
@@ -56,7 +56,7 @@ The original `ControlPlanePort` and `NativeRunEvent` sketch proves the Conforman
 lifecycle, while the accepted Replay-5 path uses `PrpEvent`,
 `PrpStructuredRunResult`, durable source sequences, and replay. Before the real
 adapter is added, the package contract must be reconciled without importing
-Paperclip types:
+ThinkingMach types:
 
 ```ts
 interface ControlPlanePort {
@@ -87,7 +87,7 @@ inside the package; no production adapter may invent a second event type.
 
 `NativeSessionBackend` remains the control-plane-facing session contract. A
 package-local backend adapts `HarnessDriver`/`HarnessSession` into it, including
-the accepted semantic result stored in the harness snapshot. Paperclip core
+the accepted semantic result stored in the harness snapshot. ThinkingMach core
 must not construct `CodexAppServerDriver` or inspect provider notifications.
 
 ## Core branch point
@@ -107,7 +107,7 @@ const adapterResult = mode.kind === "native"
   : await adapter.execute(existingLegacyExecutionContext);
 ```
 
-Everything before the branch remains Paperclip-owned preparation. Shared
+Everything before the branch remains ThinkingMach-owned preparation. Shared
 cleanup after either branch still owns usage/cost accounting, session and agent
 state, audit/live events, environment lease release, runtime service release,
 and scratch cleanup. Native mode replaces only the legacy terminal heuristic:
@@ -312,11 +312,11 @@ arbitrary `env` in either schema.
 
 The runner, package driver, and model/harness never receive:
 
-- the local agent JWT, `PAPERCLIP_API_KEY`, a board session, or a board API key;
+- the local agent JWT, `THINKINGMACH_API_KEY`, a board session, or a board API key;
 - managed MCP gateway credentials, runner-lease/bootstrap credentials, or
   credential-broker secret material;
-- `PAPERCLIP_WAKE_PAYLOAD_JSON`, rendered Paperclip wake text, Paperclip skill
-  instructions, the Paperclip API manual, or run-scoped skill material;
+- `THINKINGMACH_WAKE_PAYLOAD_JSON`, rendered ThinkingMach wake text, ThinkingMach skill
+  instructions, the ThinkingMach API manual, or run-scoped skill material;
 - raw `process.env`, agent/project/routine env maps, `runtimeConfig.env`, or the
   legacy adapter's generic execution context;
 - authority to choose a company, issue, agent, policy, approval, or status;
@@ -389,7 +389,7 @@ superseding assessment instead of overwriting organizational authority.
 
 ## Existing lifecycle mapping
 
-| Paperclip concern | Standalone mapping | Owner |
+| ThinkingMach concern | Standalone mapping | Owner |
 |---|---|---|
 | Checkout and issue execution lock | Unchanged; resolved before native selection | Existing issue/heartbeat services |
 | Budget and pause gate | Unchanged pre-dispatch check | Existing budget/invokability services |
@@ -500,7 +500,7 @@ The package exports one table-driven `ControlPlanePort` conformance suite. It
 runs unchanged against:
 
 1. `MockControlPlaneAdapter`, with deterministic in-memory storage; and
-2. `PaperclipControlPlanePort`, with a real test database, heartbeat run, issue,
+2. `ThinkingMachControlPlanePort`, with a real test database, heartbeat run, issue,
    agent, and company binding.
 
 Both adapters produce a normalized snapshot containing canonical PRP events,
@@ -530,7 +530,7 @@ Required shared cases:
 
 ## Test matrix
 
-| ID | Concern | Mock | Real Paperclip | Legacy assertion |
+| ID | Concern | Mock | Real ThinkingMach | Legacy assertion |
 |---|---|---:|---:|---|
 | P6-01 | Default flag off | — | yes | `adapter.execute` called exactly once; no native rows |
 | P6-02 | Per-agent opt-in absent | — | yes | Same as current path |
@@ -578,7 +578,7 @@ Required shared cases:
 4. Replace every heartbeat event writer with the shared per-run transactional
    allocator, backfill `next_event_seq`, add unique `(run_id, seq)`, and prove
    concurrent lifecycle/cancel/native/log appends.
-5. Implement the server-bound `PaperclipControlPlanePort` with constructor
+5. Implement the server-bound `ThinkingMachControlPlanePort` with constructor
    binding, canonical-byte deduplication, commit-before-ACK replay, and terminal
    result idempotency.
 6. Add the default-off instance flag, parse the per-agent profile, materialize
@@ -630,7 +630,7 @@ packages/paperclip-runner/docs/architecture.md
 packages/paperclip-runner/.paperclip-local/log.md
 ```
 
-### Paperclip storage, adapter, finalizer, and read seam
+### ThinkingMach storage, adapter, finalizer, and read seam
 
 ```text
 server/package.json
@@ -873,7 +873,7 @@ Accepted native attention now enters through the runtime finalization call
 graph, not through a corpus-owned call to `routeNativeAttention`:
 
 ```text
-PaperclipControlPlanePort.completeRun
+ThinkingMachControlPlanePort.completeRun
   -> native_run_results (accepted immutable package result)
   -> finalizeNativeRun
   -> routePersistedNativeResultAttention
@@ -891,7 +891,7 @@ into an immutable decision, recovery action, failed native finalization, and
 activity receipt. The corpus mutates the accepted result row and calls
 `finalizeNativeRun`, which owns the persisted-result ingress. The database
 integration test starts one layer earlier at
-`PaperclipControlPlanePort.completeRun` and then calls the same production
+`ThinkingMachControlPlanePort.completeRun` and then calls the same production
 finalizer. `routePersistedNativeResultAttention` and `routeNativeAttention`
 remain internal helpers and are no longer accepted as the operational proof.
 
@@ -1037,33 +1037,33 @@ Deterministic package/mock proof:
 ```sh
 pnpm check:runner-sdk-spec
 
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/conformance/control-plane-port.test.ts \
   src/backends/harness-driver-backend.test.ts
 
-pnpm --filter @paperclipai/paperclip-runner trace:standalone -- \
+pnpm --filter @thinkingmach/paperclip-runner trace:standalone -- \
   --target mock --scenario happy-path
 ```
 
-First real Paperclip tracer and inspection (against an isolated local dev
-instance with the five `PAPERCLIP_*` identifiers/auth variables already set):
+First real ThinkingMach tracer and inspection (against an isolated local dev
+instance with the five `THINKINGMACH_*` identifiers/auth variables already set):
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:standalone -- \
+pnpm --filter @thinkingmach/paperclip-runner trace:standalone -- \
   --target paperclip --scenario happy-path
 
-PAPERCLIP_API_BASE="${PAPERCLIP_API_URL%/}"
-PAPERCLIP_API_BASE="${PAPERCLIP_API_BASE%/api}"
+THINKINGMACH_API_BASE="${THINKINGMACH_API_URL%/}"
+THINKINGMACH_API_BASE="${THINKINGMACH_API_BASE%/api}"
 curl -fsS \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
-  "$PAPERCLIP_API_BASE/api/heartbeat-runs/$PAPERCLIP_RUN_ID/events?after=0&limit=200" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
+  "$THINKINGMACH_API_BASE/api/heartbeat-runs/$THINKINGMACH_RUN_ID/events?after=0&limit=200" \
   | jq '[.[] | select(.sourceEventId != null)] | {count: length, events: map({sourceSeq, sourceEventId, eventType})}'
 ```
 
 Targeted real integration proof:
 
 ```sh
-pnpm --filter @paperclipai/server exec vitest run \
+pnpm --filter @thinkingmach/server exec vitest run \
   src/__tests__/native-runner-standalone.integration.test.ts \
   src/__tests__/heartbeat-native-runner-selection.test.ts \
   src/__tests__/heartbeat-native-runner-cancellation.test.ts \
@@ -1075,11 +1075,11 @@ pnpm --filter @paperclipai/server exec vitest run \
   src/__tests__/native-finalization-migration.test.ts \
   src/__tests__/legacy-finalization-regression.test.ts
 
-pnpm --filter @paperclipai/server exec vitest run \
+pnpm --filter @thinkingmach/server exec vitest run \
   src/__tests__/heartbeat-run-event-sequencing.test.ts \
   -t "serializes concurrent lifecycle cancel native and log writers"
 
-pnpm --filter @paperclipai/server exec vitest run \
+pnpm --filter @thinkingmach/server exec vitest run \
   src/__tests__/native-status-arbiter-corpus.test.ts \
   -t "executes all 52 fixtures in their production consumers"
 ```
@@ -1087,10 +1087,10 @@ pnpm --filter @paperclipai/server exec vitest run \
 Legacy fallback proof after disabling the flag:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:standalone -- \
+pnpm --filter @thinkingmach/paperclip-runner trace:standalone -- \
   --target paperclip --scenario legacy-fallback
 
-pnpm --filter @paperclipai/server exec vitest run \
+pnpm --filter @thinkingmach/server exec vitest run \
   src/__tests__/native-runner-standalone.integration.test.ts \
   -t "uses the unchanged legacy path when the kill switch is off"
 ```

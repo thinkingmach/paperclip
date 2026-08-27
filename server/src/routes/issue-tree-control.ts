@@ -1,12 +1,12 @@
 import { Router } from "express";
 import type { Request } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   createIssueTreeHoldSchema,
   isUuidLike,
   previewIssueTreeControlSchema,
   releaseIssueTreeHoldSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { validate } from "../middleware/validate.js";
 import { heartbeatService, issueService, issueTreeControlService, logActivity } from "../services/index.js";
 import { assertBoard, getAccessibleResource, getActorInfo } from "./authz.js";

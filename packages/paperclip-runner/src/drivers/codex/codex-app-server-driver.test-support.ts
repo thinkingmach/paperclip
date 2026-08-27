@@ -308,7 +308,7 @@ export function makeDriver(
       HOME: "/isolated/home",
       CODEX_HOME: "/isolated/codex",
       LANG: "C.UTF-8",
-      PAPERCLIP_API_KEY: "must-not-pass",
+      THINKINGMACH_API_KEY: "must-not-pass",
       RANDOM_SKILL_PATH: "/skills/unrelated",
     },
     now: () => new Date("2026-08-08T12:00:00.000Z"),

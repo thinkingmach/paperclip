@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   activityLog,
   agents,
@@ -13,8 +13,8 @@ import {
   issues,
   issueWorkProducts,
   workspaceOperations,
-} from "@paperclipai/db";
-import { ISSUE_CONTINUATION_SUMMARY_DOCUMENT_KEY } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { ISSUE_CONTINUATION_SUMMARY_DOCUMENT_KEY } from "@thinkingmach/shared";
 import { logger } from "../middleware/logger.js";
 import { visibleIssueCondition } from "./issue-visibility.js";
 import { classifyRunLiveness } from "./run-liveness.js";

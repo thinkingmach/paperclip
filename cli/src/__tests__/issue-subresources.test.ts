@@ -37,8 +37,8 @@ async function run(args: string[]): Promise<void> {
 describe("issue subresource commands", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    delete process.env.PAPERCLIP_API_KEY;
-    delete process.env.PAPERCLIP_API_URL;
+    delete process.env.THINKINGMACH_API_KEY;
+    delete process.env.THINKINGMACH_API_URL;
     vi.spyOn(console, "log").mockImplementation(() => {});
   });
 
@@ -224,7 +224,7 @@ describe("issue subresource commands", () => {
 
   it("forwards the agent run-id header and inferred content-type on attachment:upload", async () => {
     // Regression: the multipart upload uses a hand-rolled fetch (not the JSON
-    // client), so it must forward X-Paperclip-Run-Id itself — otherwise an
+    // client), so it must forward X-ThinkingMach-Run-Id itself — otherwise an
     // agent-authenticated upload is rejected with "401 Agent run id required".
     const RUN_ID = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
     const tmp = await mkdtemp(join(tmpdir(), "paperclip-cli-test-"));

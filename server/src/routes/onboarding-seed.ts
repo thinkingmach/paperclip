@@ -1,12 +1,12 @@
 import { Router } from "express";
-import type { Db } from "@paperclipai/db";
-import { applyOnboardingSeedSchema } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { applyOnboardingSeedSchema } from "@thinkingmach/shared";
 import { validate } from "../middleware/index.js";
 import { onboardingSeedService } from "../services/onboarding-seed.js";
 import { assertCompanyAccess, getActorInfo } from "./authz.js";
 
 /**
- * Receiver for the onboarding seed Paperclip Cloud collects at signup and
+ * Receiver for the onboarding seed ThinkingMach Cloud collects at signup and
  * pushes into the stack at activation.
  *
  * Authentication is the trusted Cloud envelope, resolved exactly as it is for

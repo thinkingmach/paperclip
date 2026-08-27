@@ -1,4 +1,4 @@
-import type { ToolCatalogEntry } from "@paperclipai/shared";
+import type { ToolCatalogEntry } from "@thinkingmach/shared";
 
 export type ActionPermissionSummary = {
   allowedCount: number;

@@ -8,7 +8,7 @@ export const PROPOSED_TELEMETRY_SCHEMA_VERSION = "proposed-telemetry-extractor.v
 
 const DEFAULT_EVENTS_FILE = "packages/shared/src/telemetry/events.ts";
 const EVENT_NAME_PATTERN = /^[a-z0-9][a-z0-9._:-]{1,63}$/;
-const ISSUE_PATTERN = /^(PAP-\d+|https:\/\/github\.com\/paperclipai\/paperclip\/issues\/\d+)$/;
+const ISSUE_PATTERN = /^(PAP-\d+|https:\/\/github\.com\/thinkingmach\/paperclip\/issues\/\d+)$/;
 
 export function assertRepoRelativePath(value) {
   if (typeof value !== "string" || value.length === 0) {
@@ -55,7 +55,7 @@ export function parseProposedTelemetryDirective(commentText) {
 
   if (issue && !ISSUE_PATTERN.test(issue)) {
     throw new Error(
-      `proposed telemetry rationale issue must be PAP-<digits> or a paperclipai/paperclip GitHub issue URL: ${issue}`,
+      `proposed telemetry rationale issue must be PAP-<digits> or a thinkingmach/paperclip GitHub issue URL: ${issue}`,
     );
   }
 
@@ -156,8 +156,8 @@ export function extractProposedEvents(options = {}) {
 
 function buildSource(options) {
   const source = {
-    repo: options.repo ?? "paperclipai/paperclip",
-    ref: options.ref ?? process.env.GITHUB_SHA ?? process.env.PAPERCLIP_WORKSPACE_REPO_REF ?? "unknown",
+    repo: options.repo ?? "thinkingmach/paperclip",
+    ref: options.ref ?? process.env.GITHUB_SHA ?? process.env.THINKINGMACH_WORKSPACE_REPO_REF ?? "unknown",
   };
   const baseRef = options.baseRef ?? process.env.GITHUB_BASE_REF;
   if (baseRef) source.baseRef = baseRef;
@@ -340,7 +340,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  process.stdout.write(`Usage: node scripts/extract-proposed-events.mjs [options]\n\nOptions:\n  --repo-root <path>    Repository root. Defaults to cwd.\n  --events-file <path>  events.ts path, absolute or repo-relative.\n  --repo <slug>         Source repository slug. Defaults to paperclipai/paperclip.\n  --ref <ref>           Source ref/SHA for the extractor envelope.\n  --base-ref <ref>      Optional base ref for diff-oriented inventory jobs.\n`);
+  process.stdout.write(`Usage: node scripts/extract-proposed-events.mjs [options]\n\nOptions:\n  --repo-root <path>    Repository root. Defaults to cwd.\n  --events-file <path>  events.ts path, absolute or repo-relative.\n  --repo <slug>         Source repository slug. Defaults to thinkingmach/paperclip.\n  --ref <ref>           Source ref/SHA for the extractor envelope.\n  --base-ref <ref>      Optional base ref for diff-oriented inventory jobs.\n`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

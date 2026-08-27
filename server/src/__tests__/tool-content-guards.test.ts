@@ -51,13 +51,13 @@ describe("tool content guards", () => {
   it("requires a dedicated tool action signing secret", () => {
     expect(() =>
       resolveToolActionSigningSecret({
-        PAPERCLIP_AGENT_JWT_SECRET: "agent-jwt-secret",
+        THINKINGMACH_AGENT_JWT_SECRET: "agent-jwt-secret",
         BETTER_AUTH_SECRET: "auth-secret",
       }),
     ).toThrow(ToolActionSigningSecretMissingError);
     expect(() =>
       resolveToolActionSigningSecret({}),
-    ).toThrow("PAPERCLIP_TOOL_ACTION_SIGNING_SECRET");
+    ).toThrow("THINKINGMACH_TOOL_ACTION_SIGNING_SECRET");
   });
 
   it("redacts sensitive argument values before summarizing them", () => {

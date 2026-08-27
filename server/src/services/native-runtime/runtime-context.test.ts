@@ -1,11 +1,11 @@
 import { mkdtemp, mkdir, readFile, readdir, chmod, lstat, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
-  PAPERCLIP_OPERATIONAL_SKILL_KEY,
-  type PaperclipSkillEntry,
-} from "@paperclipai/adapter-utils/server-utils";
+  THINKINGMACH_OPERATIONAL_SKILL_KEY,
+  type ThinkingMachSkillEntry,
+} from "@thinkingmach/adapter-utils/server-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const serviceMocks = vi.hoisted(() => ({
@@ -26,7 +26,7 @@ vi.mock("../tool-access.js", () => ({
 import { buildNativeRuntimeContext } from "./runtime-context.js";
 
 const temporaryRoots: string[] = [];
-let previousPaperclipHome: string | undefined;
+let previousThinkingMachHome: string | undefined;
 let previousInstanceId: string | undefined;
 
 async function makeTreeWritable(target: string): Promise<void> {
@@ -44,12 +44,12 @@ async function makeTreeWritable(target: string): Promise<void> {
 
 beforeEach(async () => {
   vi.clearAllMocks();
-  previousPaperclipHome = process.env.PAPERCLIP_HOME;
-  previousInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
+  previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+  previousInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
   const root = await mkdtemp(path.join(tmpdir(), "paperclip-native-context-"));
   temporaryRoots.push(root);
-  process.env.PAPERCLIP_HOME = root;
-  process.env.PAPERCLIP_INSTANCE_ID = "runtime_context_test";
+  process.env.THINKINGMACH_HOME = root;
+  process.env.THINKINGMACH_INSTANCE_ID = "runtime_context_test";
   serviceMocks.getEffectiveProfilesForAgent.mockResolvedValue({
     agentId: "agent-1",
     profiles: [],
@@ -68,10 +68,10 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-  else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-  if (previousInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-  else process.env.PAPERCLIP_INSTANCE_ID = previousInstanceId;
+  if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+  else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+  if (previousInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+  else process.env.THINKINGMACH_INSTANCE_ID = previousInstanceId;
   // A rejected Promise.all does not cancel the other materializers. Let their
   // bounded local writes settle before removing the read-only asset tree.
   await new Promise((resolve) => setTimeout(resolve, 25));
@@ -196,7 +196,7 @@ describe("buildNativeRuntimeContext", () => {
     await writeFile(path.join(selectedRoot, "SKILL.md"), "# Reviewer\nUse the checklist.\n");
     await writeFile(path.join(selectedRoot, "references", "checklist.md"), "- Verify tests\n");
     await writeFile(path.join(unselectedRoot, "SKILL.md"), "# Not selected\n");
-    const entries: PaperclipSkillEntry[] = [
+    const entries: ThinkingMachSkillEntry[] = [
       { key: "company-1/reviewer", runtimeName: "reviewer", source: selectedRoot, versionId: "version-1" },
       { key: "company-1/unused", runtimeName: "unused", source: unselectedRoot, versionId: "version-2" },
     ];
@@ -278,12 +278,12 @@ describe("buildNativeRuntimeContext", () => {
       ...base,
       runtimeConfig: {
         paperclipSkillSync: {
-          desiredSkills: [PAPERCLIP_OPERATIONAL_SKILL_KEY, "company-1/supported"],
+          desiredSkills: [THINKINGMACH_OPERATIONAL_SKILL_KEY, "company-1/supported"],
         },
       },
       runtimeSkillEntries: [
         {
-          key: PAPERCLIP_OPERATIONAL_SKILL_KEY,
+          key: THINKINGMACH_OPERATIONAL_SKILL_KEY,
           runtimeName: "paperclip",
           source: "/unused",
         },

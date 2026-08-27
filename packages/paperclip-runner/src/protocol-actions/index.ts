@@ -41,7 +41,7 @@ import { upsertCaseAction } from "./upsert-case.js";
 import { writeDocumentAction } from "./write-document.js";
 import { deepFreezeProtocolAction } from "./freeze.js";
 
-export const PAPERCLIP_PROTOCOL_ACTIONS = deepFreezeProtocolAction([
+export const THINKINGMACH_PROTOCOL_ACTIONS = deepFreezeProtocolAction([
   administerCompanyAction,
   answerStatusQuestionAction,
   blockTaskAction,
@@ -86,5 +86,5 @@ export const PAPERCLIP_PROTOCOL_ACTIONS = deepFreezeProtocolAction([
 ] as const);
 
 export function paperclipProtocolAction(operationId: string) {
-  return PAPERCLIP_PROTOCOL_ACTIONS.find((action) => action.id === operationId);
+  return THINKINGMACH_PROTOCOL_ACTIONS.find((action) => action.id === operationId);
 }

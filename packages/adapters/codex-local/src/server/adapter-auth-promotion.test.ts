@@ -47,8 +47,8 @@ describe("device-login credential promotion", () => {
 
   function envFor(instanceHome: string, extra: Record<string, string> = {}): NodeJS.ProcessEnv {
     return {
-      PAPERCLIP_HOME: instanceHome,
-      PAPERCLIP_INSTANCE_ID: "default",
+      THINKINGMACH_HOME: instanceHome,
+      THINKINGMACH_INSTANCE_ID: "default",
       // A fixed shared host home, so a test can assert the helper never writes it.
       CODEX_HOME: path.join(instanceHome, "shared-codex"),
       ...extra,

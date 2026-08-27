@@ -4,7 +4,7 @@ import { humanizeSystemNotice } from "./system-notice-humanizer";
 describe("humanizeSystemNotice", () => {
   it("uses presentation title and tone when present", () => {
     const result = humanizeSystemNotice({
-      body: "Paperclip automatically retried dispatch but it still has no live execution path.",
+      body: "ThinkingMach automatically retried dispatch but it still has no live execution path.",
       presentation: {
         kind: "system_notice",
         tone: "danger",
@@ -18,7 +18,7 @@ describe("humanizeSystemNotice", () => {
   it("classifies claude_auth_required retry failures", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip automatically retried continuation for this assigned `in_progress` issue during terminal run " +
+        "ThinkingMach automatically retried continuation for this assigned `in_progress` issue during terminal run " +
         "recovery, but it still has no live execution path. Latest retry failure: `claude_auth_required` - adapter " +
         "handshake failed. Moving it to `blocked` so it is visible for intervention.",
     });
@@ -29,7 +29,7 @@ describe("humanizeSystemNotice", () => {
   it("classifies configuration_incomplete failures", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip stopped before dispatching the adapter because required secret/env bindings are missing. " +
+        "ThinkingMach stopped before dispatching the adapter because required secret/env bindings are missing. " +
         "Latest retry failure: `configuration_incomplete`. Moving it to `blocked` with a source-scoped recovery action.",
     });
     expect(result.title).toBe("Task paused — a secret/config binding is missing");
@@ -39,7 +39,7 @@ describe("humanizeSystemNotice", () => {
   it("classifies missing secret bindings even without a failure code", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip stopped before dispatching the adapter because required secret/env bindings are missing. " +
+        "ThinkingMach stopped before dispatching the adapter because required secret/env bindings are missing. " +
         "Moving it to `blocked` so an operator can bind the missing secret(s).",
     });
     expect(result.title).toBe("Task paused — a secret/config binding is missing");
@@ -48,7 +48,7 @@ describe("humanizeSystemNotice", () => {
   it("classifies workspace validation failures", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip stopped before launching the local adapter because the issue workspace failed validation. " +
+        "ThinkingMach stopped before launching the local adapter because the issue workspace failed validation. " +
         "This prevents git-sensitive adapters from running in an unrelated fallback cwd.",
     });
     expect(result.title).toBe("Task paused — workspace problem");
@@ -58,7 +58,7 @@ describe("humanizeSystemNotice", () => {
   it("names the recovery owner from the markdown link for generic no-live-execution-path notices", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip automatically retried dispatch for this assigned `todo` issue during terminal run recovery, " +
+        "ThinkingMach automatically retried dispatch for this assigned `todo` issue during terminal run recovery, " +
         "but it still has no live execution path. Moving it to `blocked` so it is visible for intervention.\n\n" +
         "- Recovery action: `ra-123`\n" +
         "- Recovery owner: [Dana the Manager](/PAP/agents/agent-9)\n" +
@@ -71,7 +71,7 @@ describe("humanizeSystemNotice", () => {
   it("still humanizes no-live-execution-path notices without an owner link", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip automatically retried dispatch, but it still has no live execution path. " +
+        "ThinkingMach automatically retried dispatch, but it still has no live execution path. " +
         "Moving it to `blocked` so it is visible for intervention.",
     });
     expect(result.title).toBe("Task paused — waiting on a recovery owner");

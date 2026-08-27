@@ -7,7 +7,7 @@ import {
   vercelGrantReference,
   vercelTokenRequest,
 } from "./vercel-connect.js";
-import type { VercelConnectCredentialReference } from "@paperclipai/shared";
+import type { VercelConnectCredentialReference } from "@thinkingmach/shared";
 
 const credential: VercelConnectCredentialReference = {
   provider: "vercel_connect",
@@ -24,7 +24,7 @@ const credential: VercelConnectCredentialReference = {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("Vercel Connect credential adapter", () => {
-  it("canonicalizes Paperclip's loopback callback to Vercel's accepted localhost form", () => {
+  it("canonicalizes ThinkingMach's loopback callback to Vercel's accepted localhost form", () => {
     expect(vercelConnectCallbackUrl(
       "http://127.0.0.1:3200/api/tools/oauth/callback?stale=1#fragment",
       "one-time-state",
@@ -37,17 +37,17 @@ describe("Vercel Connect credential adapter", () => {
 
   it("gates new setup separately from runtime credential availability", () => {
     expect(vercelConnectIntegrationStatus({
-      PAPERCLIP_VERCEL_CONNECT_ENABLED: "false",
-      PAPERCLIP_VERCEL_CONNECT_ACCESS_TOKEN: "bootstrap-token",
+      THINKINGMACH_VERCEL_CONNECT_ENABLED: "false",
+      THINKINGMACH_VERCEL_CONNECT_ACCESS_TOKEN: "bootstrap-token",
     } as NodeJS.ProcessEnv)).toMatchObject({
       enabled: false,
       configured: true,
       authentication: "access_token",
     });
     expect(vercelConnectIntegrationStatus({
-      PAPERCLIP_VERCEL_CONNECT_ENABLED: "true",
+      THINKINGMACH_VERCEL_CONNECT_ENABLED: "true",
       VERCEL_OIDC_TOKEN: "workload-token",
-      PAPERCLIP_VERCEL_CONNECT_ACCESS_TOKEN: "fallback-token",
+      THINKINGMACH_VERCEL_CONNECT_ACCESS_TOKEN: "fallback-token",
     } as NodeJS.ProcessEnv)).toMatchObject({
       enabled: true,
       configured: true,
@@ -58,10 +58,10 @@ describe("Vercel Connect credential adapter", () => {
   it("prefers workload OIDC over the access-token fallback", () => {
     expect(vercelConnectSdkOptions({
       VERCEL_OIDC_TOKEN: "workload-token",
-      PAPERCLIP_VERCEL_CONNECT_ACCESS_TOKEN: "stale-fallback-token",
+      THINKINGMACH_VERCEL_CONNECT_ACCESS_TOKEN: "stale-fallback-token",
     } as NodeJS.ProcessEnv)).toEqual({});
     expect(vercelConnectSdkOptions({
-      PAPERCLIP_VERCEL_CONNECT_ACCESS_TOKEN: "fallback-token",
+      THINKINGMACH_VERCEL_CONNECT_ACCESS_TOKEN: "fallback-token",
     } as NodeJS.ProcessEnv, true)).toEqual({
       vercelToken: "fallback-token",
       forceRefresh: true,
@@ -69,7 +69,7 @@ describe("Vercel Connect credential adapter", () => {
   });
 
   it("derives stable company- and user-bound subjects without browser input", () => {
-    vi.stubEnv("PAPERCLIP_INSTANCE_ID", "instance-one");
+    vi.stubEnv("THINKINGMACH_INSTANCE_ID", "instance-one");
     const base = {
       credential,
       connectionId: "connection-one",

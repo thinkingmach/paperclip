@@ -9,21 +9,21 @@ import {
   type SDKAgent,
   type SDKMessage,
 } from "@cursor/sdk";
-import type { AdapterExecutionContext, AdapterExecutionResult, AdapterInvocationMeta } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext, AdapterExecutionResult, AdapterInvocationMeta } from "@thinkingmach/adapter-utils";
 import {
-  DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+  DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   asBoolean,
   asString,
-  buildPaperclipEnv,
+  buildThinkingMachEnv,
   buildRuntimeToolsEnv,
   joinPromptSections,
   parseObject,
-  readPaperclipIssueWorkModeFromContext,
-  renderPaperclipWakePrompt,
-  isPaperclipRecoveryWakePayload,
+  readThinkingMachIssueWorkModeFromContext,
+  renderThinkingMachWakePrompt,
+  isThinkingMachRecoveryWakePayload,
   renderTemplate,
-  stringifyPaperclipWakePayload,
-} from "@paperclipai/adapter-utils/server-utils";
+  stringifyThinkingMachWakePayload,
+} from "@thinkingmach/adapter-utils/server-utils";
 
 type CursorCloudSession = {
   cursorAgentId: string;
@@ -106,13 +106,13 @@ function buildWakeEnv(ctx: AdapterExecutionContext, configEnv: Record<string, st
   const { runId, agent, context, authToken } = ctx;
   const env: Record<string, string> = {
     ...configEnv,
-    ...buildPaperclipEnv(agent),
+    ...buildThinkingMachEnv(agent),
     ...buildRuntimeToolsEnv(ctx.runtimeTools),
-    PAPERCLIP_RUN_ID: runId,
+    THINKINGMACH_RUN_ID: runId,
   };
-  // PAPERCLIP_API_KEY is never accepted from config — the harness-minted run
-  // token is the only source of Paperclip API identity.
-  delete env.PAPERCLIP_API_KEY;
+  // THINKINGMACH_API_KEY is never accepted from config — the harness-minted run
+  // token is the only source of ThinkingMach API identity.
+  delete env.THINKINGMACH_API_KEY;
 
   const wakeTaskId = trimNullable(context.taskId) ?? trimNullable(context.issueId);
   const wakeReason = trimNullable(context.wakeReason);
@@ -122,44 +122,44 @@ function buildWakeEnv(ctx: AdapterExecutionContext, configEnv: Record<string, st
   const linkedIssueIds = Array.isArray(context.issueIds)
     ? context.issueIds.filter((value): value is string => typeof value === "string" && value.trim().length > 0)
     : [];
-  const wakePayloadJson = stringifyPaperclipWakePayload(context.paperclipWake);
-  const issueWorkMode = readPaperclipIssueWorkModeFromContext(context);
+  const wakePayloadJson = stringifyThinkingMachWakePayload(context.thinkingmachWake);
+  const issueWorkMode = readThinkingMachIssueWorkModeFromContext(context);
 
-  if (wakeTaskId) env.PAPERCLIP_TASK_ID = wakeTaskId;
-  if (wakeReason) env.PAPERCLIP_WAKE_REASON = wakeReason;
-  if (wakeCommentId) env.PAPERCLIP_WAKE_COMMENT_ID = wakeCommentId;
-  if (approvalId) env.PAPERCLIP_APPROVAL_ID = approvalId;
-  if (approvalStatus) env.PAPERCLIP_APPROVAL_STATUS = approvalStatus;
-  if (linkedIssueIds.length > 0) env.PAPERCLIP_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
-  if (wakePayloadJson) env.PAPERCLIP_WAKE_PAYLOAD_JSON = wakePayloadJson;
-  if (issueWorkMode) env.PAPERCLIP_ISSUE_WORK_MODE = issueWorkMode;
+  if (wakeTaskId) env.THINKINGMACH_TASK_ID = wakeTaskId;
+  if (wakeReason) env.THINKINGMACH_WAKE_REASON = wakeReason;
+  if (wakeCommentId) env.THINKINGMACH_WAKE_COMMENT_ID = wakeCommentId;
+  if (approvalId) env.THINKINGMACH_APPROVAL_ID = approvalId;
+  if (approvalStatus) env.THINKINGMACH_APPROVAL_STATUS = approvalStatus;
+  if (linkedIssueIds.length > 0) env.THINKINGMACH_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
+  if (wakePayloadJson) env.THINKINGMACH_WAKE_PAYLOAD_JSON = wakePayloadJson;
+  if (issueWorkMode) env.THINKINGMACH_ISSUE_WORK_MODE = issueWorkMode;
   if (authToken) {
-    env.PAPERCLIP_API_KEY = authToken;
+    env.THINKINGMACH_API_KEY = authToken;
   }
 
   // cursor_cloud runs remotely in Cursor's cloud and is intentionally not
-  // issued a Paperclip run JWT (registry: supportsLocalAgentJwt=false).
-  // buildPaperclipEnv always sets PAPERCLIP_API_URL, defaulting to the local
+  // issued a ThinkingMach run JWT (registry: supportsLocalAgentJwt=false).
+  // buildThinkingMachEnv always sets THINKINGMACH_API_URL, defaulting to the local
   // runtime host — which a remote worker can neither reach nor authenticate
-  // against, so any agent-initiated Paperclip API call would fail with a 401
+  // against, so any agent-initiated ThinkingMach API call would fail with a 401
   // (or be unreachable) and add noise. When there is no usable key, drop the
-  // callback wiring so cloud-side Paperclip tools degrade to a clean no-op.
+  // callback wiring so cloud-side ThinkingMach tools degrade to a clean no-op.
   // Run results are delivered server-side via the Cursor Agent SDK (getRun /
   // wait), not through this callback, so nothing is lost.
-  if (!trimNullable(env.PAPERCLIP_API_KEY)) {
-    delete env.PAPERCLIP_API_URL;
-    delete env.PAPERCLIP_API_BRIDGE_MODE;
+  if (!trimNullable(env.THINKINGMACH_API_KEY)) {
+    delete env.THINKINGMACH_API_URL;
+    delete env.THINKINGMACH_API_BRIDGE_MODE;
   }
 
   const workspace = parseObject(context.paperclipWorkspace);
   const workspaceMappings: Array<[string, unknown]> = [
-    ["PAPERCLIP_WORKSPACE_CWD", workspace.cwd],
-    ["PAPERCLIP_WORKSPACE_SOURCE", workspace.source],
-    ["PAPERCLIP_WORKSPACE_ID", workspace.workspaceId],
-    ["PAPERCLIP_WORKSPACE_REPO_URL", workspace.repoUrl],
-    ["PAPERCLIP_WORKSPACE_REPO_REF", workspace.repoRef],
-    ["PAPERCLIP_WORKSPACE_BRANCH", workspace.branch],
-    ["PAPERCLIP_WORKSPACE_WORKTREE_PATH", workspace.worktreePath],
+    ["THINKINGMACH_WORKSPACE_CWD", workspace.cwd],
+    ["THINKINGMACH_WORKSPACE_SOURCE", workspace.source],
+    ["THINKINGMACH_WORKSPACE_ID", workspace.workspaceId],
+    ["THINKINGMACH_WORKSPACE_REPO_URL", workspace.repoUrl],
+    ["THINKINGMACH_WORKSPACE_REPO_REF", workspace.repoRef],
+    ["THINKINGMACH_WORKSPACE_BRANCH", workspace.branch],
+    ["THINKINGMACH_WORKSPACE_WORKTREE_PATH", workspace.worktreePath],
     ["AGENT_HOME", workspace.agentHome],
   ];
   for (const [key, value] of workspaceMappings) {
@@ -208,14 +208,14 @@ async function buildInstructionsPrefix(
   }
 }
 
-function renderPaperclipEnvNote(env: Record<string, string>): string {
+function renderThinkingMachEnvNote(env: Record<string, string>): string {
   const keys = Object.keys(env)
-    .filter((key) => key.startsWith("PAPERCLIP_"))
+    .filter((key) => key.startsWith("THINKINGMACH_"))
     .sort();
   if (keys.length === 0) return "";
   return [
-    "Paperclip runtime note:",
-    `The following PAPERCLIP_* environment variables are available in the cloud agent shell: ${keys.join(", ")}`,
+    "ThinkingMach runtime note:",
+    `The following THINKINGMACH_* environment variables are available in the cloud agent shell: ${keys.join(", ")}`,
     "Use them directly instead of assuming they are absent.",
   ].join("\n");
 }
@@ -397,7 +397,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       }
     : null);
   const canReuseSession = sessionMatches(session, envType, envName, repos);
-  const promptTemplate = asString(config.promptTemplate, DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE);
+  const promptTemplate = asString(config.promptTemplate, DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE);
   const bootstrapPromptTemplate = asString(config.bootstrapPromptTemplate, "");
   const templateData = {
     agentId: agent.id,
@@ -409,21 +409,21 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     context,
   };
   const instructions = await buildInstructionsPrefix(config, onLog);
-  const wakePrompt = renderPaperclipWakePrompt(context.paperclipWake, { resumedSession: canReuseSession });
+  const wakePrompt = renderThinkingMachWakePrompt(context.thinkingmachWake, { resumedSession: canReuseSession });
   const renderedBootstrapPrompt =
     !canReuseSession && bootstrapPromptTemplate.trim().length > 0
       ? renderTemplate(bootstrapPromptTemplate, templateData).trim()
       : "";
   const renderedPrompt =
-    (canReuseSession && wakePrompt.length > 0) || isPaperclipRecoveryWakePayload(context.paperclipWake)
+    (canReuseSession && wakePrompt.length > 0) || isThinkingMachRecoveryWakePayload(context.thinkingmachWake)
       ? ""
       : renderTemplate(promptTemplate, templateData).trim();
-  const paperclipEnvNote = renderPaperclipEnvNote(remoteEnv);
+  const thinkingmachEnvNote = renderThinkingMachEnvNote(remoteEnv);
   const prompt = joinPromptSections([
     instructions.prefix,
     renderedBootstrapPrompt,
     wakePrompt,
-    paperclipEnvNote,
+    thinkingmachEnvNote,
     renderedPrompt,
   ]);
   const sessionHandoffNote = asString(context.paperclipSessionHandoffMarkdown, "").trim();
@@ -431,7 +431,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
 
   const agentOptions = buildAgentOptions({
     apiKey,
-    name: `Paperclip ${agent.name}`,
+    name: `ThinkingMach ${agent.name}`,
     model,
     envType,
     envName,

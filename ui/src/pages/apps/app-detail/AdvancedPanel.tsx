@@ -6,8 +6,8 @@ import type {
   ConnectionGrant,
   ToolConnection,
   ToolConnectionCredentialPolicy,
-} from "@paperclipai/shared";
-import { credentialConfigPath, getAvailableConnectionMethod, humanizeConnectionDisplayName } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { credentialConfigPath, getAvailableConnectionMethod, humanizeConnectionDisplayName } from "@thinkingmach/shared";
 import { toolsApi } from "@/api/tools";
 import { Button } from "@/components/ui/button";
 import {

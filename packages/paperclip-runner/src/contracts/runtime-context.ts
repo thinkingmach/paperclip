@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 
 export const NATIVE_RUNTIME_ASSET_SCHEMA = "paperclip.runtime-asset.v1" as const;
-export const PAPERCLIP_EXECUTION_PROMPT_REVISION = "paperclip-execution.v1" as const;
-export const PAPERCLIP_EXECUTION_PROMPT = "You are running as a Paperclip agent. Complete the assigned task in the provided execution environment. Follow the attached agent instructions and use assigned skills and tools when relevant. Use Paperclip tools for coordination. Finish exactly once with `paperclip_finish` or `paperclip_block`." as const;
+export const THINKINGMACH_EXECUTION_PROMPT_REVISION = "paperclip-execution.v1" as const;
+export const THINKINGMACH_EXECUTION_PROMPT = "You are running as a ThinkingMach agent. Complete the assigned task in the provided execution environment. Follow the attached agent instructions and use assigned skills and tools when relevant. Use ThinkingMach tools for coordination. Finish exactly once with `paperclip_finish` or `paperclip_block`." as const;
 
 export interface NativeRuntimeAssetReference {
   schema: typeof NATIVE_RUNTIME_ASSET_SCHEMA;
@@ -14,7 +14,7 @@ export interface NativeRuntimeAssetReference {
 }
 
 export interface NativeRuntimeContextSnapshot {
-  prompt: { revision: typeof PAPERCLIP_EXECUTION_PROMPT_REVISION; text: typeof PAPERCLIP_EXECUTION_PROMPT; digest: string };
+  prompt: { revision: typeof THINKINGMACH_EXECUTION_PROMPT_REVISION; text: typeof THINKINGMACH_EXECUTION_PROMPT; digest: string };
   instructions: { entryPath: string; bundle: NativeRuntimeAssetReference };
   skills: Array<{ key: string; runtimeName: string; versionId: string | null; bundle: NativeRuntimeAssetReference }>;
   mcp: { assignmentSetId: string; digest: string; bindingId: string | null };
@@ -89,15 +89,15 @@ export function canonicalNativeRuntimeContextDigest(value: Omit<NativeRuntimeCon
   return sha256(JSON.stringify(aggregatePayload(value)));
 }
 
-export function nativeRuntimePromptDigest(): string { return sha256(PAPERCLIP_EXECUTION_PROMPT); }
+export function nativeRuntimePromptDigest(): string { return sha256(THINKINGMACH_EXECUTION_PROMPT); }
 
 export function parseNativeRuntimeContext(value: unknown): NativeRuntimeContextSnapshot {
   const context = object(value, "input.runtimeContext");
   exact(context, ["prompt", "instructions", "skills", "mcp", "aggregateDigest"], "input.runtimeContext");
   const prompt = object(context.prompt, "input.runtimeContext.prompt");
   exact(prompt, ["revision", "text", "digest"], "input.runtimeContext.prompt");
-  if (prompt.revision !== PAPERCLIP_EXECUTION_PROMPT_REVISION || prompt.text !== PAPERCLIP_EXECUTION_PROMPT) {
-    throw new NativeRuntimeContextError("input.runtimeContext.prompt must match the fixed Paperclip prompt revision");
+  if (prompt.revision !== THINKINGMACH_EXECUTION_PROMPT_REVISION || prompt.text !== THINKINGMACH_EXECUTION_PROMPT) {
+    throw new NativeRuntimeContextError("input.runtimeContext.prompt must match the fixed ThinkingMach prompt revision");
   }
   if (digest(prompt.digest, "input.runtimeContext.prompt.digest") !== nativeRuntimePromptDigest()) {
     throw new NativeRuntimeContextError("input.runtimeContext.prompt.digest does not match prompt text");
@@ -121,7 +121,7 @@ export function parseNativeRuntimeContext(value: unknown): NativeRuntimeContextS
   const mcp = object(context.mcp, "input.runtimeContext.mcp");
   exact(mcp, ["assignmentSetId", "digest", "bindingId"], "input.runtimeContext.mcp");
   const parsed = {
-    prompt: { revision: PAPERCLIP_EXECUTION_PROMPT_REVISION, text: PAPERCLIP_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() },
+    prompt: { revision: THINKINGMACH_EXECUTION_PROMPT_REVISION, text: THINKINGMACH_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() },
     instructions: { entryPath: safeRelativePath(instructions.entryPath, "input.runtimeContext.instructions.entryPath"), bundle: parseAsset(instructions.bundle, "input.runtimeContext.instructions.bundle") },
     skills,
     mcp: {

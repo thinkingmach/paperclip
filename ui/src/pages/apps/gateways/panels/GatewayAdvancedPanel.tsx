@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Copy } from "lucide-react";
-import type { ToolMcpGatewayWithTokens } from "@paperclipai/shared";
+import type { ToolMcpGatewayWithTokens } from "@thinkingmach/shared";
 import { useNavigate } from "@/lib/router";
 import { toolsApi } from "@/api/tools";
 import { Button } from "@/components/ui/button";

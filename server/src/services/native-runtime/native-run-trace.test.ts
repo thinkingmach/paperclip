@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { AdapterRuntimeEvent } from "../../adapters/index.js";
-import { getActiveStepContext } from "@paperclipai/adapter-utils/acpx-engine/startup-timing";
+import { getActiveStepContext } from "@thinkingmach/adapter-utils/acpx-engine/startup-timing";
 import type { StartupTraceContextHandle } from "../../instrumentation.js";
 import {
   createNativeRunTrace,

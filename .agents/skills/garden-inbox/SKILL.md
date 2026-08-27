@@ -1,6 +1,6 @@
 ---
 name: garden-inbox
-description: Scan a Paperclip user's Mine inbox, classify reversible archive candidates, request checkbox confirmation, and archive only accepted selections. Use when asked to garden, clean up, prune, or tidy a Paperclip inbox without changing issues, branches, or workspaces.
+description: Scan a ThinkingMach user's Mine inbox, classify reversible archive candidates, request checkbox confirmation, and archive only accepted selections. Use when asked to garden, clean up, prune, or tidy a ThinkingMach inbox without changing issues, branches, or workspaces.
 ---
 
 # Garden Inbox
@@ -17,12 +17,12 @@ Use the bundled script for every stage. Keep the workflow strictly ordered: `sca
 
 ## Inputs
 
-Require `PAPERCLIP_API_URL` and `PAPERCLIP_API_KEY`. The script strips a trailing `/api` from the URL. It resolves the target user from the run JWT payload's `responsible_user_id`; use `--user-id <uuid>` only for an explicit target override.
+Require `THINKINGMACH_API_URL` and `THINKINGMACH_API_KEY`. The script strips a trailing `/api` from the URL. It resolves the target user from the run JWT payload's `responsible_user_id`; use `--user-id <uuid>` only for an explicit target override.
 
 Use a run-owned output directory when available:
 
 ```bash
-RUN_DIR="${PAPERCLIP_RUN_SCRATCH_DIR:-${PAPERCLIP_TASK_SCRATCH_DIR:-.}}/garden-inbox"
+RUN_DIR="${THINKINGMACH_RUN_SCRATCH_DIR:-${THINKINGMACH_TASK_SCRATCH_DIR:-.}}/garden-inbox"
 mkdir -p "$RUN_DIR"
 ```
 
@@ -51,11 +51,11 @@ Post checkbox interactions on the driving issue:
 
 ```bash
 node .agents/skills/garden-inbox/scripts/garden-inbox.mjs confirm \
-  --issue-id "$PAPERCLIP_TASK_ID" \
+  --issue-id "$THINKINGMACH_TASK_ID" \
   --candidates "$RUN_DIR/candidates.json"
 ```
 
-The script posts sequential cards when a scan has more than 200 candidates. Re-running `confirm` with the same scan file is idempotent. Leave the driving issue in the waiting posture required by the surrounding Paperclip heartbeat workflow.
+The script posts sequential cards when a scan has more than 200 candidates. Re-running `confirm` with the same scan file is idempotent. Leave the driving issue in the waiting posture required by the surrounding ThinkingMach heartbeat workflow.
 
 When a candidate was declined by the user in an earlier pass, pass `--unselect <issueId>` (repeatable) so it starts unchecked and its description notes the earlier decline. Never re-offer previously declined items as default-checked.
 
@@ -63,7 +63,7 @@ For development or payload review, suppress the POST:
 
 ```bash
 node .agents/skills/garden-inbox/scripts/garden-inbox.mjs confirm \
-  --issue-id "$PAPERCLIP_TASK_ID" \
+  --issue-id "$THINKINGMACH_TASK_ID" \
   --candidates "$RUN_DIR/candidates.json" \
   --dry-run
 ```
@@ -74,7 +74,7 @@ After an interaction-resolution wake, take the resolved interaction ID from the 
 
 ```bash
 node .agents/skills/garden-inbox/scripts/garden-inbox.mjs apply \
-  --issue-id "$PAPERCLIP_TASK_ID" \
+  --issue-id "$THINKINGMACH_TASK_ID" \
   --interaction-id "$INTERACTION_ID" \
   --candidates "$RUN_DIR/candidates.json"
 ```
@@ -85,7 +85,7 @@ Test `apply` without API writes by supplying a saved interaction response:
 
 ```bash
 node .agents/skills/garden-inbox/scripts/garden-inbox.mjs apply \
-  --issue-id "$PAPERCLIP_TASK_ID" \
+  --issue-id "$THINKINGMACH_TASK_ID" \
   --interaction-file resolved-interaction.json \
   --candidates "$RUN_DIR/candidates.json" \
   --dry-run

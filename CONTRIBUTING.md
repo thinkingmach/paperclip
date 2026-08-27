@@ -54,9 +54,9 @@ Every pull request **must** follow the PR template at [`.github/PULL_REQUEST_TEM
 
 We do not gate PRs on a pre-existing issue. Two acceptable paths:
 
-1. **Issue exists** — search the [Issues database](https://github.com/paperclipai/paperclip/issues) for anything this PR addresses and tag each one with `Fixes: #123` / `Closes #123` / `Refs #123` so GitHub auto-links them. If there are **duplicate or closely related issues**, link all of them, not just the one you picked. If there are **related PRs** (prior attempts, dependent work, follow-ups, abandoned predecessors), link those too.
+1. **Issue exists** — search the [Issues database](https://github.com/thinkingmach/paperclip/issues) for anything this PR addresses and tag each one with `Fixes: #123` / `Closes #123` / `Refs #123` so GitHub auto-links them. If there are **duplicate or closely related issues**, link all of them, not just the one you picked. If there are **related PRs** (prior attempts, dependent work, follow-ups, abandoned predecessors), link those too.
 2. **No issue exists** — describe the problem directly in your PR body, following one of our [issue templates](.github/ISSUE_TEMPLATE/) so a reviewer has the same fields they'd get from a filed issue:
-   - **Bug fix:** what happened, expected behavior, steps to reproduce, Paperclip version/commit, deployment mode. See [`bug_report.yml`](.github/ISSUE_TEMPLATE/bug_report.yml).
+   - **Bug fix:** what happened, expected behavior, steps to reproduce, ThinkingMach version/commit, deployment mode. See [`bug_report.yml`](.github/ISSUE_TEMPLATE/bug_report.yml).
    - **Feature:** problem/motivation, proposed solution, alternatives considered, roadmap alignment. See [`feature_request.yml`](.github/ISSUE_TEMPLATE/feature_request.yml).
    - **New adapter:** agent or provider, why it's useful, how it's invoked. See [`adapter_request.yml`](.github/ISSUE_TEMPLATE/adapter_request.yml).
 
@@ -64,11 +64,11 @@ Either way, a reviewer should be able to understand the underlying issue without
 
 ### No Internal Issue References
 
-Many contributors run their own Paperclip instance to manage their work. Issue ids and links from *your* instance are private — reviewers and other contributors cannot open them, so they show up as clutter or broken links.
+Many contributors run their own ThinkingMach instance to manage their work. Issue ids and links from *your* instance are private — reviewers and other contributors cannot open them, so they show up as clutter or broken links.
 
-In your PR title, description, commits, and comments, **only reference public GitHub issues and PRs** — `#123`, `Fixes #123` / `Closes #123` / `Refs #123`, or full `https://github.com/paperclipai/paperclip/...` URLs.
+In your PR title, description, commits, and comments, **only reference public GitHub issues and PRs** — `#123`, `Fixes #123` / `Closes #123` / `Refs #123`, or full `https://github.com/thinkingmach/paperclip/...` URLs.
 
-Do **not** include references to internal/instance-local Paperclip work, such as:
+Do **not** include references to internal/instance-local ThinkingMach work, such as:
 
 - Internal ticket ids like `PAPA-123`, `PAP-224`, or any `{PREFIX}-{NUMBER}` identifier that isn't a public GitHub issue number.
 - Instance UI links such as `/PAP/issues/...`, `/PAP/agents/...`, `agent://...`, or document deep links.
@@ -78,12 +78,12 @@ If an internal issue captured useful context, restate that context in plain Engl
 
 ### Branch Naming
 
-Tooling (including Paperclip) often names a working branch after an internal issue and task — e.g. `PAPA-42-why-did-this-break`. That name leaks instance-local context, isn't meaningful to reviewers, and ends up as the public branch on your PR.
+Tooling (including ThinkingMach) often names a working branch after an internal issue and task — e.g. `PAPA-42-why-did-this-break`. That name leaks instance-local context, isn't meaningful to reviewers, and ends up as the public branch on your PR.
 
 Before you push, **rename the branch to something descriptive of the change itself**, not of your instance:
 
 - Use short, kebab-case names scoped to the change, optionally with a conventional prefix: `docs/no-internal-issue-references`, `fix/sandbox-secret-resolution`, `feat/adapter-retry-backoff`.
-- Do **not** include internal Paperclip ticket ids (`PAPA-123`, `PAP-224`), instance task slugs, or other instance-derived details in the branch name.
+- Do **not** include internal ThinkingMach ticket ids (`PAPA-123`, `PAP-224`), instance task slugs, or other instance-derived details in the branch name.
 
 To rename and push under the new name:
 
@@ -108,9 +108,9 @@ This repo has three separate data paths: Telemetry, Observability, and the run l
 
 If your change adds, removes, or modifies emitted telemetry events, update the [Telemetry Data Contract](packages/shared/src/telemetry/README.md) in the same PR. Keep clients emitting raw dimension values and avoid documenting or relying on private delivery details. If your change adds, removes, or modifies an OpenTelemetry span or span attribute, keep the change inside the closed span-attribute allowlist in `packages/adapter-utils/src/acpx-engine/startup-timing.ts`. If your change adds or modifies a run-log event, update `doc/run-log-events.md` in the same PR.
 
-### Paperclip Gates Must Pass
+### ThinkingMach Gates Must Pass
 
-All Paperclip CI gates (lint, typecheck, tests, build, and any other required checks) must be satisfied before a PR can be merged. Don't ask for a merge while gates are red — fix them first.
+All ThinkingMach CI gates (lint, typecheck, tests, build, and any other required checks) must be satisfied before a PR can be merged. Don't ask for a merge while gates are red — fix them first.
 
 ### Greptile Review
 
@@ -136,7 +136,7 @@ A culture where contributors help each other ship is worth more than any single 
 
 ## Feature Contributions
 
-We actively manage the core Paperclip feature roadmap.
+We actively manage the core ThinkingMach feature roadmap.
 
 Uncoordinated feature PRs against the core product may be closed, even when the implementation is thoughtful and high quality. That is about roadmap ownership, product coherence, and long-term maintenance commitment, not a judgment about the effort.
 
@@ -165,16 +165,16 @@ Your PR description must follow the [PR template](.github/PULL_REQUEST_TEMPLATE.
 
 ### Thinking Path Example 1:
 
-> - Paperclip is the open source app people use to manage AI agents for work
+> - ThinkingMach is the open source app people use to manage AI agents for work
 > - There are many types of adapters for each LLM model provider
 > - But LLM's have a context limit and not all agents can automatically compact their context
 > - So we need to have an adapter-specific configuration for which adapters can and cannot automatically compact their context
 > - This pull request adds per-adapter configuration of compaction, either auto or paperclip managed
-> - That way we can get optimal performance from any adapter/provider in Paperclip
+> - That way we can get optimal performance from any adapter/provider in ThinkingMach
 
 ### Thinking Path Example 2:
 
-> - Paperclip is the open source app people use to manage AI agents for work
+> - ThinkingMach is the open source app people use to manage AI agents for work
 > - But humans want to watch the agents and oversee their work
 > - Human users also operate in teams and so they need their own logins, profiles, views etc.
 > - So we have a multi-user system for humans

@@ -6,21 +6,21 @@ import {
   type ExternalStoreAdapter,
 } from "@assistant-ui/react";
 
-export interface PaperclipIssueRuntimeReassignment {
+export interface ThinkingMachIssueRuntimeReassignment {
   assigneeAgentId: string | null;
   assigneeUserId: string | null;
 }
 
-export interface PaperclipIssueRuntimeSendOptions {
+export interface ThinkingMachIssueRuntimeSendOptions {
   body: string;
   reopen?: boolean;
-  reassignment?: PaperclipIssueRuntimeReassignment;
+  reassignment?: ThinkingMachIssueRuntimeReassignment;
 }
 
-interface UsePaperclipIssueRuntimeOptions {
+interface UseThinkingMachIssueRuntimeOptions {
   messages: readonly ThreadMessage[];
   isRunning: boolean;
-  onSend: (options: PaperclipIssueRuntimeSendOptions) => Promise<void>;
+  onSend: (options: ThinkingMachIssueRuntimeSendOptions) => Promise<void>;
   onCancel?: (() => Promise<void>) | undefined;
 }
 
@@ -37,12 +37,12 @@ function readTextContent(message: AppendMessage) {
     .trim();
 }
 
-export function usePaperclipIssueRuntime({
+export function useThinkingMachIssueRuntime({
   messages,
   isRunning,
   onSend,
   onCancel,
-}: UsePaperclipIssueRuntimeOptions) {
+}: UseThinkingMachIssueRuntimeOptions) {
   const onSendRef = useRef(onSend);
   const onCancelRef = useRef(onCancel);
 

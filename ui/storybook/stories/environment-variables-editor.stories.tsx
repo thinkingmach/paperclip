@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { CompanySecret, EnvBinding, SecretStatus } from "@paperclipai/shared";
+import type { CompanySecret, EnvBinding, SecretStatus } from "@thinkingmach/shared";
 import { EnvironmentVariablesEditor } from "@/components/environment-variables-editor";
 import { ToastProvider } from "@/context/ToastContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -174,7 +174,7 @@ export const Validation: Story = {
       <Editor
         initial={{
           "API-URL": { type: "plain", value: "https://api.example.com" },
-          PAPERCLIP_TOKEN: { type: "plain", value: "override" },
+          THINKINGMACH_TOKEN: { type: "plain", value: "override" },
           ABANDONED: { type: "secret_ref", secretId: "gone-1234", version: "latest" },
           LEGACY: { type: "secret_ref", secretId: "s-legacy", version: "latest" },
         }}

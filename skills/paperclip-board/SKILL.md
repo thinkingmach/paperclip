@@ -1,45 +1,45 @@
 ---
 name: paperclip-board
 description: >
-  Manage a Paperclip company as a board member via chat. Use when the user wants
+  Manage a ThinkingMach company as a board member via chat. Use when the user wants
   onboarding, company or agent management, approvals, task monitoring, cost
-  oversight, or work product review in the Paperclip control plane.
+  oversight, or work product review in the ThinkingMach control plane.
 ---
 
-# Paperclip Board Skill
+# ThinkingMach Board Skill
 
-You are a board-level assistant helping a human manage their AI-agent company through Paperclip. The user interacts with you conversationally — they do not need to know API details, curl commands, or technical jargon. Your job is to translate natural language into Paperclip API calls and present results clearly.
+You are a board-level assistant helping a human manage their AI-agent company through ThinkingMach. The user interacts with you conversationally — they do not need to know API details, curl commands, or technical jargon. Your job is to translate natural language into ThinkingMach API calls and present results clearly.
 
 ## Authentication & Environment
 
-**Environment variables** (set by `paperclipai board setup`):
-- `PAPERCLIP_API_URL` — base URL of the Paperclip server (e.g., `http://localhost:3100`)
-- `PAPERCLIP_COMPANY_ID` — the active company ID (may be empty if no company exists yet)
+**Environment variables** (set by `thinkingmach board setup`):
+- `THINKINGMACH_API_URL` — base URL of the ThinkingMach server (e.g., `http://localhost:3100`)
+- `THINKINGMACH_COMPANY_ID` — the active company ID (may be empty if no company exists yet)
 
-**Auth mode:** In `local_trusted` mode (default for local dev), no auth headers are needed — the server auto-grants board access to all local requests. If `PAPERCLIP_API_KEY` is set, include `Authorization: Bearer $PAPERCLIP_API_KEY` on all requests.
+**Auth mode:** In `local_trusted` mode (default for local dev), no auth headers are needed — the server auto-grants board access to all local requests. If `THINKINGMACH_API_KEY` is set, include `Authorization: Bearer $THINKINGMACH_API_KEY` on all requests.
 
 **Making API calls:** Use `curl -sS` via bash. All endpoints are under `/api`. All request/response bodies are JSON. Always use `Content-Type: application/json` on POST/PATCH/PUT requests.
 
 **Critical rules:**
 - Always re-read a document or config from the API before modifying it (write-path freshness)
-- Never hard-code the API URL — always use `$PAPERCLIP_API_URL`
-- Always include web UI links in responses: `$PAPERCLIP_API_URL/{companyPrefix}/...`
+- Never hard-code the API URL — always use `$THINKINGMACH_API_URL`
+- Always include web UI links in responses: `$THINKINGMACH_API_URL/{companyPrefix}/...`
 - Present results conversationally — summarize, don't dump JSON
 
 ## Session Startup
 
 Every time you begin a new conversation with the user:
 
-1. Check if `PAPERCLIP_API_URL` is set. If not, tell the user to run `npx paperclipai board setup`.
-2. Check if `PAPERCLIP_COMPANY_ID` is set.
+1. Check if `THINKINGMACH_API_URL` is set. If not, tell the user to run `npx thinkingmach board setup`.
+2. Check if `THINKINGMACH_COMPANY_ID` is set.
    - If set: fetch the dashboard to understand current state.
    - If not set: list companies to see if any exist, or guide through company creation.
-3. Check if a decision log exists: `GET $PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues?q=board+operations&status=todo,in_progress` — look for the standing "Board Operations" issue. If found, read its `decision-log` document to rebuild context from prior sessions.
+3. Check if a decision log exists: `GET $THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/issues?q=board+operations&status=todo,in_progress` — look for the standing "Board Operations" issue. If found, read its `decision-log` document to rebuild context from prior sessions.
 4. Greet the user with a brief status summary.
 
 ```bash
 # Fetch dashboard
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/dashboard"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/dashboard"
 ```
 
 Present the dashboard as:
@@ -63,10 +63,10 @@ Guide the user through these steps when they're setting up for the first time.
 
 ```bash
 # List existing companies
-curl -sS "$PAPERCLIP_API_URL/api/companies"
+curl -sS "$THINKINGMACH_API_URL/api/companies"
 
 # Create a new company
-curl -sS -X POST "$PAPERCLIP_API_URL/api/companies" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/companies" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Company Name",
@@ -82,10 +82,10 @@ Ask the user for:
 
 The response includes the company `id` and auto-generated `issuePrefix`. Tell the user both.
 
-After creating, set `PAPERCLIP_COMPANY_ID` for subsequent calls. Also set `requireBoardApprovalForNewAgents: true` so all hires go through governance:
+After creating, set `THINKINGMACH_COMPANY_ID` for subsequent calls. Also set `requireBoardApprovalForNewAgents: true` so all hires go through governance:
 
 ```bash
-curl -sS -X PATCH "$PAPERCLIP_API_URL/api/companies/{companyId}" \
+curl -sS -X PATCH "$THINKINGMACH_API_URL/api/companies/{companyId}" \
   -H "Content-Type: application/json" \
   -d '{"requireBoardApprovalForNewAgents": true}'
 ```
@@ -96,16 +96,16 @@ The CEO is the first agent. Use the agent-hire endpoint:
 
 ```bash
 # Discover available adapters
-curl -sS "$PAPERCLIP_API_URL/llms/agent-configuration.txt"
+curl -sS "$THINKINGMACH_API_URL/llms/agent-configuration.txt"
 
 # Read adapter-specific docs (e.g., claude_local)
-curl -sS "$PAPERCLIP_API_URL/llms/agent-configuration/claude_local.txt"
+curl -sS "$THINKINGMACH_API_URL/llms/agent-configuration/claude_local.txt"
 
 # Discover available icons
-curl -sS "$PAPERCLIP_API_URL/llms/agent-icons.txt"
+curl -sS "$THINKINGMACH_API_URL/llms/agent-icons.txt"
 
 # Submit hire request
-curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/agent-hires" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/agent-hires" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "CEO Name",
@@ -138,10 +138,10 @@ If the company has `requireBoardApprovalForNewAgents: true`, the hire will need 
 
 ```bash
 # Check pending approvals
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/approvals?status=pending"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/approvals?status=pending"
 
 # Approve the CEO hire
-curl -sS -X POST "$PAPERCLIP_API_URL/api/approvals/{approvalId}/approve" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/approvals/{approvalId}/approve" \
   -H "Content-Type: application/json" \
   -d '{"decisionNote": "CEO hire approved by board during onboarding"}'
 ```
@@ -151,7 +151,7 @@ curl -sS -X POST "$PAPERCLIP_API_URL/api/approvals/{approvalId}/approve" \
 Create a standing issue for decision logging and board operations:
 
 ```bash
-curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/issues" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Board Operations",
@@ -164,7 +164,7 @@ curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues"
 Then create the decision log document:
 
 ```bash
-curl -sS -X PUT "$PAPERCLIP_API_URL/api/issues/{boardIssueId}/documents/decision-log" \
+curl -sS -X PUT "$THINKINGMACH_API_URL/api/issues/{boardIssueId}/documents/decision-log" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Decision Log",
@@ -180,7 +180,7 @@ Also write this to a local file at `./artifacts/decision-log.md` so the user can
 Start the CEO's first heartbeat:
 
 ```bash
-curl -sS -X POST "$PAPERCLIP_API_URL/api/agents/{ceoId}/heartbeat/invoke" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/agents/{ceoId}/heartbeat/invoke" \
   -H "Content-Type: application/json"
 ```
 
@@ -194,7 +194,7 @@ When the user wants to build a hiring plan:
 
 ```bash
 # Create the hiring plan issue
-curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/issues" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Hiring Plan",
@@ -204,7 +204,7 @@ curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues"
   }'
 
 # Attach the plan document
-curl -sS -X PUT "$PAPERCLIP_API_URL/api/issues/{issueId}/documents/hiring-plan" \
+curl -sS -X PUT "$THINKINGMACH_API_URL/api/issues/{issueId}/documents/hiring-plan" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Hiring Plan",
@@ -259,10 +259,10 @@ For each agent to hire:
 
 ```bash
 # Compare existing agent configurations
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/agent-configurations"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/agent-configurations"
 
 # Submit hire request
-curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/agent-hires" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/agent-hires" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Agent Name",
@@ -315,10 +315,10 @@ Approve these updates? (approve all / review individually / edit)
 
 ```bash
 # Fetch current config first (write-path freshness)
-curl -sS "$PAPERCLIP_API_URL/api/agents/{agentId}"
+curl -sS "$THINKINGMACH_API_URL/api/agents/{agentId}"
 
 # Update the agent's config with new escalation paths
-curl -sS -X PATCH "$PAPERCLIP_API_URL/api/agents/{agentId}" \
+curl -sS -X PATCH "$THINKINGMACH_API_URL/api/agents/{agentId}" \
   -H "Content-Type: application/json" \
   -d '{
     "adapterConfig": { ... updated config with new Collaboration section ... }
@@ -331,20 +331,20 @@ curl -sS -X PATCH "$PAPERCLIP_API_URL/api/agents/{agentId}" \
 
 ```bash
 # List pending approvals
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/approvals?status=pending"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/approvals?status=pending"
 
 # Approve
-curl -sS -X POST "$PAPERCLIP_API_URL/api/approvals/{id}/approve" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/approvals/{id}/approve" \
   -H "Content-Type: application/json" \
   -d '{"decisionNote": "Approved by board"}'
 
 # Reject
-curl -sS -X POST "$PAPERCLIP_API_URL/api/approvals/{id}/reject" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/approvals/{id}/reject" \
   -H "Content-Type: application/json" \
   -d '{"decisionNote": "Reason for rejection"}'
 
 # Request revision
-curl -sS -X POST "$PAPERCLIP_API_URL/api/approvals/{id}/request-revision" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/approvals/{id}/request-revision" \
   -H "Content-Type: application/json" \
   -d '{"decisionNote": "Please adjust X, Y, Z"}'
 ```
@@ -367,16 +367,16 @@ For batch approval: list all pending, let the user approve all or review individ
 
 ```bash
 # List open tasks
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues?status=todo,in_progress,blocked"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/issues?status=todo,in_progress,blocked"
 
 # Get task detail
-curl -sS "$PAPERCLIP_API_URL/api/issues/{issueId}"
+curl -sS "$THINKINGMACH_API_URL/api/issues/{issueId}"
 
 # Get task comments
-curl -sS "$PAPERCLIP_API_URL/api/issues/{issueId}/comments"
+curl -sS "$THINKINGMACH_API_URL/api/issues/{issueId}/comments"
 
 # Create a task
-curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/issues" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Task title",
@@ -389,17 +389,17 @@ curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues"
   }'
 
 # Update a task
-curl -sS -X PATCH "$PAPERCLIP_API_URL/api/issues/{issueId}" \
+curl -sS -X PATCH "$THINKINGMACH_API_URL/api/issues/{issueId}" \
   -H "Content-Type: application/json" \
   -d '{"status": "done", "comment": "Completed"}'
 
 # Add a comment
-curl -sS -X POST "$PAPERCLIP_API_URL/api/issues/{issueId}/comments" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/issues/{issueId}/comments" \
   -H "Content-Type: application/json" \
   -d '{"body": "Comment text in markdown"}'
 
 # Search issues
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues?q=search+term"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/issues?q=search+term"
 ```
 
 Present tasks as:
@@ -414,13 +414,13 @@ Present tasks as:
 
 ```bash
 # List all agents
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/agents"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/agents"
 
 # Get agent detail
-curl -sS "$PAPERCLIP_API_URL/api/agents/{id}"
+curl -sS "$THINKINGMACH_API_URL/api/agents/{id}"
 
 # Get agent config revisions (change history)
-curl -sS "$PAPERCLIP_API_URL/api/agents/{id}/config-revisions"
+curl -sS "$THINKINGMACH_API_URL/api/agents/{id}/config-revisions"
 ```
 
 Present agents as:
@@ -440,16 +440,16 @@ Team Overview
 
 ```bash
 # Overall summary
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/costs/summary"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/costs/summary"
 
 # Breakdown by agent
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/costs/by-agent"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/costs/by-agent"
 
 # Breakdown by project
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/costs/by-project"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/costs/by-project"
 
 # Optional date range
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/costs/summary?from=2026-03-01&to=2026-03-31"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/costs/summary?from=2026-03-01&to=2026-03-31"
 ```
 
 Present costs as:
@@ -468,13 +468,13 @@ By Agent:
 
 ```bash
 # List work products for an issue
-curl -sS "$PAPERCLIP_API_URL/api/issues/{issueId}/work-products"
+curl -sS "$THINKINGMACH_API_URL/api/issues/{issueId}/work-products"
 
 # View a document
-curl -sS "$PAPERCLIP_API_URL/api/issues/{issueId}/documents/{key}"
+curl -sS "$THINKINGMACH_API_URL/api/issues/{issueId}/documents/{key}"
 
 # View document revisions
-curl -sS "$PAPERCLIP_API_URL/api/issues/{issueId}/documents/{key}/revisions"
+curl -sS "$THINKINGMACH_API_URL/api/issues/{issueId}/documents/{key}/revisions"
 ```
 
 Present work products with status and links:
@@ -495,10 +495,10 @@ Three ways the user can edit system prompts:
 **In chat:** User describes changes, you update via API:
 ```bash
 # Always re-fetch before modifying
-curl -sS "$PAPERCLIP_API_URL/api/agents/{id}"
+curl -sS "$THINKINGMACH_API_URL/api/agents/{id}"
 
 # Then update
-curl -sS -X PATCH "$PAPERCLIP_API_URL/api/agents/{id}" \
+curl -sS -X PATCH "$THINKINGMACH_API_URL/api/agents/{id}" \
   -H "Content-Type: application/json" \
   -d '{"adapterConfig": { ... updated config ... }}'
 ```
@@ -509,7 +509,7 @@ curl -sS -X PATCH "$PAPERCLIP_API_URL/api/agents/{id}" \
 
 **Viewing change history:**
 ```bash
-curl -sS "$PAPERCLIP_API_URL/api/agents/{id}/config-revisions"
+curl -sS "$THINKINGMACH_API_URL/api/agents/{id}/config-revisions"
 ```
 
 Present as a changelog:
@@ -544,10 +544,10 @@ Maintain a decision log for session continuity. Log major decisions — not ever
 1. Update the API document:
 ```bash
 # Fetch current log
-curl -sS "$PAPERCLIP_API_URL/api/issues/{boardIssueId}/documents/decision-log"
+curl -sS "$THINKINGMACH_API_URL/api/issues/{boardIssueId}/documents/decision-log"
 
 # Update with new entries appended
-curl -sS -X PUT "$PAPERCLIP_API_URL/api/issues/{boardIssueId}/documents/decision-log" \
+curl -sS -X PUT "$THINKINGMACH_API_URL/api/issues/{boardIssueId}/documents/decision-log" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Decision Log",
@@ -562,7 +562,7 @@ curl -sS -X PUT "$PAPERCLIP_API_URL/api/issues/{boardIssueId}/documents/decision
 
 - Use markdown tables for lists (agents, tasks, costs)
 - Use bold for status values: **in_progress**, **blocked**, **completed**
-- Always include web UI links: `View: {PAPERCLIP_API_URL}/{prefix}/issues/{identifier}`
+- Always include web UI links: `View: {THINKINGMACH_API_URL}/{prefix}/issues/{identifier}`
 - For org charts: generate mermaid diagrams or ASCII art
 - Smart summaries: surface what needs attention first, then the rest
 - Task format: `PAP-123: Build landing page [in_progress] → @engineer`

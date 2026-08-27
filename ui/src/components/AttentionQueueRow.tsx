@@ -1,17 +1,7 @@
 import { memo, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  AlarmClock,
-  CalendarClock,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  Loader2,
-  MoreHorizontal,
-  RotateCcw,
-  X,
-} from "lucide-react";
-import type { Agent, AttentionDetailImage, AttentionItem } from "@paperclipai/shared";
+import { AlarmClock, CalendarClock, ChevronDown, ChevronUp, ExternalLink, Loader2, MoreHorizontal, RotateCcw, X,  } from "lucide-react";
+import type { Agent, AttentionDetailImage, AttentionItem } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { accessApi } from "../api/access";
 import { approvalsApi } from "../api/approvals";

@@ -6,14 +6,14 @@ This tutorial runs the Live console server layer. It has no browser UI yet. You 
 use `curl` to act like the browser.
 
 The server starts Codex. Codex login data stays on the server. The JSON replies
-must not contain a Paperclip key, an OpenAI key, or a bearer value.
+must not contain a ThinkingMach key, an OpenAI key, or a bearer value.
 
 ## Step 1: Run deterministic checks
 
 From the repository root, run:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/drivers/codex/codex-app-server-driver.test.ts \
   src/mock-core/live-console-demo-server.test.ts
 ```
@@ -27,7 +27,7 @@ Use an empty directory outside your Codex home:
 
 ```sh
 liveConsole_workspace="$(mktemp -d)"
-pnpm --filter @paperclipai/paperclip-runner demo:live-console -- \
+pnpm --filter @thinkingmach/paperclip-runner demo:live-console -- \
   --host 127.0.0.1 \
   --port 4174 \
   --working-directory "$liveConsole_workspace"

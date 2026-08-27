@@ -217,7 +217,7 @@ export type AdapterAuthPanelMode = (typeof ADAPTER_AUTH_PANEL_MODES)[number];
 
 // The transport advisory for a setup-token confidential response. The product
 // owner set a non-negotiable requirement: do not force TLS. Many users run
-// Paperclip over plain HTTP on a home server or a Tailscale tailnet. So the
+// ThinkingMach over plain HTTP on a home server or a Tailscale tailnet. So the
 // setup-token routes do not block a non-confidential transport. They attach this
 // advisory to the confidential response instead. The client shows a visible,
 // non-blocking disclaimer and the login still proceeds. A confidential transport

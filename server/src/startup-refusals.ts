@@ -7,7 +7,7 @@
  * public deployments. The server logs the refusal and exits nonzero so
  * whatever supervises the deployment can act.
  *
- * In supervised managed-cloud deployments (`PAPERCLIP_CLOUD_API_ORIGIN`
+ * In supervised managed-cloud deployments (`THINKINGMACH_CLOUD_API_ORIGIN`
  * set), two of these refusals are a routine provisioning phase rather
  * than an incident: a freshly created stack's app container boots
  * before the harness has migrated the empty database or finished
@@ -68,6 +68,6 @@ export function shouldReportStartupFailure(
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
   if (!(error instanceof StartupRefusalError)) return true;
-  const cloudOrigin = env.PAPERCLIP_CLOUD_API_ORIGIN?.trim();
+  const cloudOrigin = env.THINKINGMACH_CLOUD_API_ORIGIN?.trim();
   return !cloudOrigin;
 }

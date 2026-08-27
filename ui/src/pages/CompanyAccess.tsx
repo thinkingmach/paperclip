@@ -4,7 +4,7 @@ import {
   HUMAN_COMPANY_MEMBERSHIP_ROLE_LABELS,
   hidesCompanyPage,
   type Agent,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Shield, ShieldCheck, Trash2 } from "lucide-react";
 import { accessApi, type CompanyMember } from "@/api/access";
 import { agentsApi } from "@/api/agents";
@@ -611,7 +611,7 @@ export function CompanyAccessLegacyRoute() {
         <div className="space-y-2">
           <h2 className="text-sm font-semibold">Advanced permissions unavailable</h2>
           <p className="text-sm text-muted-foreground">
-            Core Paperclip keeps enforcing organization boundaries and any existing restrictive policy data, but editing advanced permissions requires an installed extension.
+            Core ThinkingMach keeps enforcing organization boundaries and any existing restrictive policy data, but editing advanced permissions requires an installed extension.
           </p>
           {errorMessage ? (
             <p className="text-sm text-destructive">Plugin extensions unavailable: {errorMessage}</p>

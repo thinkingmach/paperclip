@@ -6,7 +6,7 @@ import {
   readRuntimeInfo,
   removeRuntimeInfoForPid,
   writeRuntimeInfo,
-  type PaperclipRuntimeInfo,
+  type ThinkingMachRuntimeInfo,
 } from "../runtime-info.js";
 
 const roots: string[] = [];
@@ -15,7 +15,7 @@ afterEach(() => {
   for (const root of roots.splice(0)) fs.rmSync(root, { recursive: true, force: true });
 });
 
-function fixture(): { filePath: string; info: PaperclipRuntimeInfo } {
+function fixture(): { filePath: string; info: ThinkingMachRuntimeInfo } {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-runtime-info-"));
   roots.push(root);
   return {

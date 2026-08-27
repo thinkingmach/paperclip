@@ -1,20 +1,20 @@
-import type { PaperclipSemanticActionDescriptor } from "../catalog/semantic-action-types.js";
+import type { ThinkingMachSemanticActionDescriptor } from "../catalog/semantic-action-types.js";
 import type {
-  PaperclipSemanticAuthorizationDecision,
-  PaperclipSemanticAuthorizationPhase,
-  PaperclipSemanticDenialCode,
-  PaperclipSemanticRunContext,
+  ThinkingMachSemanticAuthorizationDecision,
+  ThinkingMachSemanticAuthorizationPhase,
+  ThinkingMachSemanticDenialCode,
+  ThinkingMachSemanticRunContext,
 } from "./types.js";
 
 const TERMINAL_TASK_STATES = new Set(["done", "cancelled", "canceled"]);
 
-export function decidePaperclipSemanticAuthorization(
-  descriptor: PaperclipSemanticActionDescriptor,
-  context: PaperclipSemanticRunContext,
-  phase: PaperclipSemanticAuthorizationPhase,
+export function decideThinkingMachSemanticAuthorization(
+  descriptor: ThinkingMachSemanticActionDescriptor,
+  context: ThinkingMachSemanticRunContext,
+  phase: ThinkingMachSemanticAuthorizationPhase,
   requestedRunId: string,
   input?: unknown,
-): PaperclipSemanticAuthorizationDecision {
+): ThinkingMachSemanticAuthorizationDecision {
   if (!validAuthorityContext(context, requestedRunId)) {
     return {
       allowed: false,
@@ -35,9 +35,9 @@ export function decidePaperclipSemanticAuthorization(
     effectiveClaims,
   } as const;
   const deny = (
-    code: PaperclipSemanticDenialCode,
+    code: ThinkingMachSemanticDenialCode,
     reason: string,
-  ): PaperclipSemanticAuthorizationDecision => ({
+  ): ThinkingMachSemanticAuthorizationDecision => ({
     ...base,
     allowed: false,
     code,
@@ -138,7 +138,7 @@ export function decidePaperclipSemanticAuthorization(
 function validAuthorityContext(
   context: unknown,
   requestedRunId: string,
-): context is PaperclipSemanticRunContext {
+): context is ThinkingMachSemanticRunContext {
   if (
     !isRecord(context) ||
     !isRecord(context.actor) ||

@@ -76,7 +76,7 @@ changes which identity a side uses. It never seeds an empty host store (rows 3,
 
 ## Off-switch
 
-The cache is on by default. Set the environment flag `PAPERCLIP_CODEX_AUTH_CACHE`
+The cache is on by default. Set the environment flag `THINKINGMACH_CODEX_AUTH_CACHE`
 to an explicit falsy value (`0`, `false`, `no`, or `off`) to turn it off. When
 off, the teardown cache write and the provision vend become no-ops. The host
 default overwrite is unchanged in both states.

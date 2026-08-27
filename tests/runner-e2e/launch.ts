@@ -23,8 +23,8 @@ import { classifyFailure, shouldRetryFailure } from "./failure-classifier.js";
 import { buildRunnerCampaign } from "./history.js";
 import {
   buildRunnerE2EProcessEnvironment,
-  resolvePaperclipRemoteRunnerBinaryForHarness,
-  resolvePaperclipRunnerBinaryForHarness,
+  resolveThinkingMachRemoteRunnerBinaryForHarness,
+  resolveThinkingMachRunnerBinaryForHarness,
 } from "./harness-env.js";
 import { assertEmbeddedDatabaseIsolation } from "./instance-isolation.js";
 import {
@@ -117,7 +117,7 @@ async function terminateProcessGroup(pid: number) {
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
   return processGroupIsAlive(pid)
-    ? `Paperclip/Playwright process group ${pid} survived SIGKILL`
+    ? `ThinkingMach/Playwright process group ${pid} survived SIGKILL`
     : null;
 }
 
@@ -391,30 +391,30 @@ async function runAttempt(input: {
       betterAuthSecret,
     ]);
     attemptSecrets = credentials;
-    const runnerBinary = resolvePaperclipRunnerBinaryForHarness(
+    const runnerBinary = resolveThinkingMachRunnerBinaryForHarness(
       executions,
       repositoryRoot,
     );
     const childEnv: NodeJS.ProcessEnv = {
       ...buildRunnerE2EProcessEnvironment(process.env, executions),
       PATH: providerPath,
-      PAPERCLIP_RUNNER_E2E_EXECUTION_IDS: JSON.stringify(
+      THINKINGMACH_RUNNER_E2E_EXECUTION_IDS: JSON.stringify(
         executions.map((candidate) => candidate.id),
       ),
-      PAPERCLIP_RUNNER_E2E_ATTEMPT: String(attempt),
-      PAPERCLIP_RUNNER_E2E_PORT: String(port),
-      PAPERCLIP_RUNNER_E2E_TEMP_ROOT: temporaryRoot,
-      PAPERCLIP_RUNNER_E2E_PRIVATE_DIR: privateDir,
-      PAPERCLIP_RUNNER_E2E_WORKSPACE: workspace,
-      PAPERCLIP_RUNNER_E2E_SERVER_LOG: path.join(privateDir, "server.log"),
-      PAPERCLIP_RUNNER_BINARY: runnerBinary,
-      PAPERCLIP_RUNNER_REMOTE_BINARY_PATH:
-        resolvePaperclipRemoteRunnerBinaryForHarness(executions, runnerBinary),
+      THINKINGMACH_RUNNER_E2E_ATTEMPT: String(attempt),
+      THINKINGMACH_RUNNER_E2E_PORT: String(port),
+      THINKINGMACH_RUNNER_E2E_TEMP_ROOT: temporaryRoot,
+      THINKINGMACH_RUNNER_E2E_PRIVATE_DIR: privateDir,
+      THINKINGMACH_RUNNER_E2E_WORKSPACE: workspace,
+      THINKINGMACH_RUNNER_E2E_SERVER_LOG: path.join(privateDir, "server.log"),
+      THINKINGMACH_RUNNER_BINARY: runnerBinary,
+      THINKINGMACH_RUNNER_REMOTE_BINARY_PATH:
+        resolveThinkingMachRemoteRunnerBinaryForHarness(executions, runnerBinary),
       // Vite's optimized dependency cache embeds revision query strings. A
       // private per-attempt cache prevents an earlier cell or local rebuild
       // from producing `504 Outdated Optimize Dep` during browser bootstrap.
-      PAPERCLIP_VITE_CACHE_DIR: path.join(temporaryRoot, "vite-cache"),
-      PAPERCLIP_RUNNER_E2E_TEST_TIMEOUT_MS: String(
+      THINKINGMACH_VITE_CACHE_DIR: path.join(temporaryRoot, "vite-cache"),
+      THINKINGMACH_RUNNER_E2E_TEST_TIMEOUT_MS: String(
         Math.max(
           ...executions.map(
             (candidate) =>
@@ -422,12 +422,12 @@ async function runAttempt(input: {
           ),
         ) + 90_000,
       ),
-      PAPERCLIP_HOME: paperclipHome,
-      PAPERCLIP_INSTANCE_ID: instanceId,
-      PAPERCLIP_CONFIG: configPath,
-      PAPERCLIP_AGENT_JWT_SECRET: agentJwtSecret,
-      PAPERCLIP_DECISION_SIGNING_SECRET: decisionSigningSecret,
-      PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: toolActionSigningSecret,
+      THINKINGMACH_HOME: paperclipHome,
+      THINKINGMACH_INSTANCE_ID: instanceId,
+      THINKINGMACH_CONFIG: configPath,
+      THINKINGMACH_AGENT_JWT_SECRET: agentJwtSecret,
+      THINKINGMACH_DECISION_SIGNING_SECRET: decisionSigningSecret,
+      THINKINGMACH_TOOL_ACTION_SIGNING_SECRET: toolActionSigningSecret,
       BETTER_AUTH_SECRET: betterAuthSecret,
     };
     // The database URLs are stripped here and again at the Playwright web-server
@@ -514,7 +514,7 @@ async function runAttempt(input: {
     try {
       const expectedEphemeralCredentials = new Set<string>();
       for (const [label, directory] of [
-        ["Paperclip home", paperclipHome],
+        ["ThinkingMach home", paperclipHome],
         ["workspace", workspace],
       ] as const) {
         while (true) {
@@ -526,7 +526,7 @@ async function runAttempt(input: {
           });
           if (!leak) break;
           const isManagedCodexRuntimeAuth =
-            label === "Paperclip home" &&
+            label === "ThinkingMach home" &&
             isEphemeralCodexRuntimeAuthFile(paperclipHome, leak.file);
           if (isManagedCodexRuntimeAuth) {
             const metadata = await lstat(leak.file);
@@ -829,15 +829,15 @@ async function main() {
   }
   if (
     executions.some((execution) => execution.environment.id === "daytona") &&
-    !isImmutableDaytonaImage(process.env.PAPERCLIP_E2E_DAYTONA_IMAGE)
+    !isImmutableDaytonaImage(process.env.THINKINGMACH_E2E_DAYTONA_IMAGE)
   ) {
     throw new Error(
-      "PAPERCLIP_E2E_DAYTONA_IMAGE must be an immutable image@sha256 digest for Daytona cells",
+      "THINKINGMACH_E2E_DAYTONA_IMAGE must be an immutable image@sha256 digest for Daytona cells",
     );
   }
 
   const campaignId = cleanId(
-    process.env.PAPERCLIP_E2E_CAMPAIGN_ID ??
+    process.env.THINKINGMACH_E2E_CAMPAIGN_ID ??
       `local-${new Date().toISOString().replace(/[:.]/g, "-")}`,
   );
   const requestedParallelism =

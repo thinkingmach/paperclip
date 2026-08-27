@@ -1,17 +1,17 @@
 # Gmail connection
 
-Paperclip connects to Google's hosted Gmail MCP server at
+ThinkingMach connects to Google's hosted Gmail MCP server at
 `https://gmailmcp.googleapis.com/mcp/v1`. Gmail authorization is separate from
 Google sign-in:
 
-- Google sign-in identifies a Paperclip ID user and requests only
+- Google sign-in identifies a ThinkingMach ID user and requests only
   `openid email profile`.
 - Gmail authorization lets that user's agents search and read mail and create
   drafts. It requests only `gmail.readonly` and `gmail.compose`.
 
-Do not add Gmail scopes to the Google sign-in client. The existing Paperclip
+Do not add Gmail scopes to the Google sign-in client. The existing ThinkingMach
 Cloud application at `my.paperclip.app` hosts the public Gmail OAuth callback;
-Paperclip ID remains identity-only. The originating Paperclip instance remains
+ThinkingMach ID remains identity-only. The originating ThinkingMach instance remains
 the durable owner of the encrypted access and refresh tokens.
 
 > Google Workspace MCP is a Developer Preview. Enroll the required Workspace
@@ -24,17 +24,17 @@ Use a separate Google Cloud project and OAuth web client for each environment:
 
 | Environment | Suggested project id | OAuth client name | Authorized redirect URI |
 | --- | --- | --- | --- |
-| Development | `paperclip-gmail-dev` | `Paperclip Gmail Connection Dev` | Local Paperclip Cloud origin + `/v1/connector/oauth/google/callback` |
-| Staging | `paperclip-gmail-staging` | `Paperclip Gmail Connection Staging` | `https://my-staging.paperclip.app/v1/connector/oauth/google/callback` |
-| Production | `paperclip-gmail-prod` | `Paperclip Gmail Connection Production` | `https://my.paperclip.app/v1/connector/oauth/google/callback` |
+| Development | `paperclip-gmail-dev` | `ThinkingMach Gmail Connection Dev` | Local ThinkingMach Cloud origin + `/v1/connector/oauth/google/callback` |
+| Staging | `paperclip-gmail-staging` | `ThinkingMach Gmail Connection Staging` | `https://my-staging.paperclip.app/v1/connector/oauth/google/callback` |
+| Production | `paperclip-gmail-prod` | `ThinkingMach Gmail Connection Production` | `https://my.paperclip.app/v1/connector/oauth/google/callback` |
 
-Replace the development port if the local Paperclip Cloud application uses another
-port. Do not register Tailscale, customer, or other self-hosted Paperclip
-instance URLs with Google. The browser always returns to Paperclip Cloud first;
+Replace the development port if the local ThinkingMach Cloud application uses another
+port. Do not register Tailscale, customer, or other self-hosted ThinkingMach
+instance URLs with Google. The browser always returns to ThinkingMach Cloud first;
 Cloud then sends an opaque, one-time claim identifier to the exact
 originating instance URL that was enrolled before the flow began.
 
-Keeping projects separate is a Paperclip release policy. It prevents a
+Keeping projects separate is a ThinkingMach release policy. It prevents a
 development credential or consent-screen change from affecting production and
 keeps restricted-scope Gmail verification independent of Google sign-in.
 
@@ -42,12 +42,12 @@ keeps restricted-scope Gmail verification independent of Google sign-in.
 
 Repeat this procedure in development, staging, and production. Complete and
 test development first, then staging. Do not enable production authorization
-until Google verification and Paperclip Security review are complete.
+until Google verification and ThinkingMach Security review are complete.
 
 ### 1. Create the project
 
 1. Open [Google Cloud project creation](https://console.cloud.google.com/projectcreate).
-2. Select the Paperclip Cloud organization and billing account.
+2. Select the ThinkingMach Cloud organization and billing account.
 3. Create the environment-specific project from the table above.
 4. Limit Owner and Editor access to the smallest operator group.
 5. Add a monitored engineering or security contact.
@@ -77,18 +77,18 @@ release.
 
 Open **Google Auth Platform → Branding**. Set:
 
-- App name: `Paperclip`
+- App name: `ThinkingMach`
 - User support email: a monitored support address
-- Logo: the approved Paperclip logo
-- Homepage: the public Paperclip product page
+- Logo: the approved ThinkingMach logo
+- Homepage: the public ThinkingMach product page
 - Privacy policy: the public policy that describes Gmail data handling
-- Terms of service: the public Paperclip terms
+- Terms of service: the public ThinkingMach terms
 - Authorized domain: `paperclip.app`
 - Developer contact: a monitored security or engineering group
 
 The homepage, privacy policy, and terms must be live on the verified domain
 before production verification. The privacy policy must explain that the
-originating Paperclip instance stores Gmail credentials and that Paperclip Cloud
+originating ThinkingMach instance stores Gmail credentials and that ThinkingMach Cloud
 performs bounded OAuth exchange, refresh, and provider-supported revocation
 without durable plaintext token storage.
 
@@ -138,11 +138,11 @@ Never paste either credential into an issue, document, chat, screenshot,
 committed `.env`, build log, or browser-visible configuration. Step 7 lists the
 deployment variables that receive them.
 
-### 7. Configure the Paperclip Cloud broker deployment
+### 7. Configure the ThinkingMach Cloud broker deployment
 
-Set these on the existing Paperclip Cloud application that owns the redirect URI above. This is
-the broker half of the configuration; the originating Paperclip instance is
-configured separately under [Configure each originating Paperclip
+Set these on the existing ThinkingMach Cloud application that owns the redirect URI above. This is
+the broker half of the configuration; the originating ThinkingMach instance is
+configured separately under [Configure each originating ThinkingMach
 instance](#configure-each-originating-paperclip-instance).
 
 | Variable | Development | Staging | Production |
@@ -154,7 +154,7 @@ instance](#configure-each-originating-paperclip-instance).
 | `CLOUD_HARNESS_CONNECTOR_ENVIRONMENT` | `development` | `staging` | `production` |
 
 The client id and secret reference must both be present before a profile can be
-used. The callback is derived from Paperclip Cloud's configured customer origin
+used. The callback is derived from ThinkingMach Cloud's configured customer origin
 and the provider's fixed in-code path; it is not accepted from a request or an
 environment override. `CLOUD_HARNESS_CONNECTOR_GOOGLE_ENABLED_PROFILES` is the
 profile kill switch. An omitted profile is advertised as disabled and every
@@ -165,9 +165,9 @@ connector request declares its own environment, and the broker accepts the
 request only when that value matches both this deployment's environment and the
 environment recorded on the enrolled instance. That three-way match is what
 makes a leaked staging instance key inert against production, so it must equal
-the instance's `PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT`.
+the instance's `THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT`.
 
-Paperclip Cloud derives a safe development, staging, or production fallback
+ThinkingMach Cloud derives a safe development, staging, or production fallback
 from its own customer origin, but the explicit value makes environment
 isolation reviewable and avoids a custom hostname being treated as development.
 The value is never derived from `NODE_ENV`.
@@ -177,7 +177,7 @@ The value is never derived from `NODE_ENV`.
 The Gmail authorization request must use:
 
 - the Gmail connector client, not the Google sign-in client;
-- `/v1/connector/oauth/google/callback` on Paperclip Cloud;
+- `/v1/connector/oauth/google/callback` on ThinkingMach Cloud;
 - `response_type=code`;
 - the two exact Gmail scopes above;
 - `access_type=offline`;
@@ -190,7 +190,7 @@ scope set with the two required scopes. If either is missing, leave that
 personal connection grant inactive and let the user retry deliberately.
 
 No access token, refresh token, Google authorization code, client secret, or
-token fragment may appear in a browser URL. The browser return from Paperclip
+token fragment may appear in a browser URL. The browser return from ThinkingMach
 Cloud to the originating instance contains only an opaque one-time claim id and
 the instance's local state.
 
@@ -201,8 +201,8 @@ The expected flow is:
 ```mermaid
 sequenceDiagram
     actor U as User browser
-    participant P as Originating Paperclip instance
-    participant C as Paperclip Cloud connector
+    participant P as Originating ThinkingMach instance
+    participant C as ThinkingMach Cloud connector
     participant G as Google OAuth
     participant V as Instance encrypted vault
 
@@ -224,13 +224,13 @@ Before an instance can create a session:
 
 1. The instance generates an Ed25519 signing key and a separate X25519 seal
    key. Both private keys stay local; Ed25519 authenticates requests and
-   X25519 lets Paperclip Cloud encrypt token responses that only the instance can
+   X25519 lets ThinkingMach Cloud encrypt token responses that only the instance can
    open.
-2. An instance administrator signs in to Paperclip Cloud through its existing
-   Paperclip ID OIDC login and enrolls the instance. Enrollment is
+2. An instance administrator signs in to ThinkingMach Cloud through its existing
+   ThinkingMach ID OIDC login and enrolls the instance. Enrollment is
    instance-global: ordinary company membership cannot start it, and the
    initiating administrator must complete the return callback.
-3. Paperclip Cloud binds the account, opaque instance id, both public keys,
+3. ThinkingMach Cloud binds the account, opaque instance id, both public keys,
    deployment environment, and exact allowed browser return origins.
 4. On authenticated private instances, the setup request supplies its verified
    same-origin HTTPS address and enrollment binds it automatically. This makes a
@@ -240,24 +240,24 @@ Before an instance can create a session:
 5. Create, claim, refresh, and supported revoke requests are signed, audience-bound,
    timestamped, and protected by a one-time `jti` replay cache.
 
-Paperclip Cloud may retain instance-encrypted initial-token ciphertext for at most
+ThinkingMach Cloud may retain instance-encrypted initial-token ciphertext for at most
 five minutes. It binds the first claim to a stable local redemption id and only
 returns the same ciphertext to that redemption id during the retry window. It
 deletes the ciphertext on expiry and excludes it from long-term backups. Refresh
 and supported revoke operations handle plaintext only in memory for one bounded
 request.
 
-Removing one managed Google profile revokes only the local Paperclip grant.
-Paperclip does not call Google's token revocation endpoint for that action.
+Removing one managed Google profile revokes only the local ThinkingMach grant.
+ThinkingMach does not call Google's token revocation endpoint for that action.
 Google treats revocation as client-wide for the user, so a provider-side revoke
 could also invalidate the user's other managed Gmail, Drive, and Calendar
 profiles. A future provider-level disconnect must present that all-profiles
 effect explicitly.
 
-### Configure each originating Paperclip instance
+### Configure each originating ThinkingMach instance
 
 Generate the two long-lived instance keys once. PEM-encoded PKCS#8 keys work
-directly with Paperclip:
+directly with ThinkingMach:
 
 ```sh
 openssl genpkey -algorithm ED25519 -out paperclip-cloud-signing.pem
@@ -267,21 +267,21 @@ openssl pkey -in paperclip-cloud-sealing.pem -pubout -out paperclip-cloud-sealin
 ```
 
 Keep both private files in the instance secret manager. Enroll only the public
-files with Paperclip Cloud, together with the instance id, the matching environment,
-and every exact browser return origin. Then configure the originating Paperclip
+files with ThinkingMach Cloud, together with the instance id, the matching environment,
+and every exact browser return origin. Then configure the originating ThinkingMach
 deployment:
 
 | Variable | Development | Staging | Production |
 | --- | --- | --- | --- |
-| `PAPERCLIP_CLOUD_CONNECTOR_BASE_URL` | Local Paperclip Cloud URL | `https://my-staging.paperclip.app` | `https://my.paperclip.app` |
-| `PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT` | `development` | `staging` | `production` |
-| `PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID` | Enrolled development instance id | Enrolled staging instance id | Enrolled production instance id |
-| `PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY` | Development Ed25519 private key | Staging Ed25519 private key | Production Ed25519 private key |
-| `PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY` | Development X25519 private key | Staging X25519 private key | Production X25519 private key |
+| `THINKINGMACH_CLOUD_CONNECTOR_BASE_URL` | Local ThinkingMach Cloud URL | `https://my-staging.paperclip.app` | `https://my.paperclip.app` |
+| `THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT` | `development` | `staging` | `production` |
+| `THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID` | Enrolled development instance id | Enrolled staging instance id | Enrolled production instance id |
+| `THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY` | Development Ed25519 private key | Staging Ed25519 private key | Production Ed25519 private key |
+| `THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY` | Development X25519 private key | Staging X25519 private key | Production X25519 private key |
 
 Use separate keypairs and instance enrollments across environments. The
 connector is unavailable unless all four identity/key variables are present.
-HTTP is accepted only for a loopback Paperclip Cloud URL; staging and production
+HTTP is accepted only for a loopback ThinkingMach Cloud URL; staging and production
 must use HTTPS.
 
 Cloud-hosted stacks receive these values automatically through the existing
@@ -290,14 +290,14 @@ the Apps enrollment action instead of running the OpenSSL commands manually;
 it generates the keys and writes them to the ignored instance secret directory
 with owner-only permissions.
 
-`PAPERCLIP_ID_CONNECTOR_*` values are not aliases for this protocol. Paperclip
+`THINKINGMACH_ID_CONNECTOR_*` values are not aliases for this protocol. ThinkingMach
 ID used different endpoints, signing metadata, envelope purposes, and Google
 client credentials. An instance with only those legacy values fails with
-`CONNECTOR_MIGRATION_REQUIRED`. Enroll it with Paperclip Cloud and reconnect
+`CONNECTOR_MIGRATION_REQUIRED`. Enroll it with ThinkingMach Cloud and reconnect
 each legacy Google grant. Cloud-hosted fleets must deliver the new enrollment
 keys before they deploy a binary that enables the Cloud connector.
 
-## Paperclip access defaults
+## ThinkingMach access defaults
 
 Gmail uses the same credential ownership choice as the rest of the Apps setup:
 
@@ -321,7 +321,7 @@ Gmail uses the same credential ownership choice as the rest of the Apps setup:
 
 1. Enable the connector only in development.
 2. Confirm the broker's `CLOUD_HARNESS_CONNECTOR_ENVIRONMENT` and the instance's
-   `PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT` both read `development`. A mismatch
+   `THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT` both read `development`. A mismatch
    fails every signed request with an environment error before Google is ever
    contacted, which looks nothing like a Google misconfiguration.
 3. Use an isolated Gmail test mailbox.
@@ -348,7 +348,7 @@ seven-day testing-token expiry.
 ### Production
 
 1. Complete Developer Preview enrollment, restricted-scope verification, any
-   required security assessment, and Paperclip Security review.
+   required security assessment, and ThinkingMach Security review.
 2. Configure only the production project credentials in production secrets.
 3. Start with an internal allowlist and read tools.
 4. Enable Ask-first draft and label tools only after production telemetry is
@@ -366,8 +366,8 @@ seven-day testing-token expiry.
 | Test user cannot consent | The account is listed under the environment project's Audience test users and is enrolled in Workspace Developer Preview. |
 | Refresh fails after seven days | The external app is still in Testing. Reauthorize the test user; do not treat this as token-rotation failure. |
 | One required capability is missing | Inspect the returned granted scope set. Keep the grant inactive if either exact required scope is absent. |
-| Local or Tailscale return is rejected | Enroll the exact origin on Paperclip Cloud. Only loopback HTTP is allowed; Tailscale must use HTTPS. |
-| Every signed request fails on environment | `CLOUD_HARNESS_CONNECTOR_ENVIRONMENT`, the enrollment record, and `PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT` must agree. |
+| Local or Tailscale return is rejected | Enroll the exact origin on ThinkingMach Cloud. Only loopback HTTP is allowed; Tailscale must use HTTPS. |
+| Every signed request fails on environment | `CLOUD_HARNESS_CONNECTOR_ENVIRONMENT`, the enrollment record, and `THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT` must agree. |
 | The managed method is unavailable | Confirm the exact profile is in `CLOUD_HARNESS_CONNECTOR_GOOGLE_ENABLED_PROFILES` and its client id and secret reference are configured. |
 | Login starts asking for Gmail | Stop the rollout. The login and Gmail clients or route namespaces have been mixed. |
 | Connector is unavailable | Keep the grant in `needs_reauthorization` or an actionable unavailable state. Never use a login token or another environment's client. |

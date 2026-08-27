@@ -1,4 +1,4 @@
-import type { StatusCardRefreshPolicy, StatusCardUpdate } from "@paperclipai/shared";
+import type { StatusCardRefreshPolicy, StatusCardUpdate } from "@thinkingmach/shared";
 
 /** "1.1k tok" / "940 tok" — compact token count for footers and chips. */
 export function formatTokens(tokens: number | null | undefined): string | null {

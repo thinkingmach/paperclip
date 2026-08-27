@@ -15,7 +15,7 @@ export interface SanitizedAcpxSpawnInput {
 /**
  * Build the only host-environment input that may cross an ACPX child-process
  * launch boundary. Agent-specific homes are added by the later runtime sandbox;
- * Paperclip transport and native MCP credentials are never inherited from the
+ * ThinkingMach transport and native MCP credentials are never inherited from the
  * host process.
  */
 export function createSanitizedAcpxSpawnInput(
@@ -53,8 +53,8 @@ export function createSanitizedAcpxSpawnInput(
     "no_proxy",
     "all_proxy",
     "RUST_BACKTRACE",
-    "PAPERCLIP_NATIVE_MCP_NAME",
-    "PAPERCLIP_NATIVE_MCP_URL",
+    "THINKINGMACH_NATIVE_MCP_NAME",
+    "THINKINGMACH_NATIVE_MCP_URL",
     ...credentialNames,
   ]);
   let retainedBytes = 0;

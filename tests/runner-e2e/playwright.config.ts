@@ -8,42 +8,42 @@ function required(name: string) {
   return value;
 }
 
-const port = Number(required("PAPERCLIP_RUNNER_E2E_PORT"));
-const temporaryRoot = required("PAPERCLIP_RUNNER_E2E_TEMP_ROOT");
-const privateDir = required("PAPERCLIP_RUNNER_E2E_PRIVATE_DIR");
-const paperclipHome = required("PAPERCLIP_HOME");
-const configPath = required("PAPERCLIP_CONFIG");
+const port = Number(required("THINKINGMACH_RUNNER_E2E_PORT"));
+const temporaryRoot = required("THINKINGMACH_RUNNER_E2E_TEMP_ROOT");
+const privateDir = required("THINKINGMACH_RUNNER_E2E_PRIVATE_DIR");
+const paperclipHome = required("THINKINGMACH_HOME");
+const configPath = required("THINKINGMACH_CONFIG");
 const baseURL = `http://127.0.0.1:${port}`;
-const playwrightChannel = process.env.PAPERCLIP_PLAYWRIGHT_CHANNEL?.trim();
+const playwrightChannel = process.env.THINKINGMACH_PLAYWRIGHT_CHANNEL?.trim();
 const chromiumExecutable =
-  process.env.PAPERCLIP_RUNNER_E2E_CHROMIUM_EXECUTABLE?.trim();
+  process.env.THINKINGMACH_RUNNER_E2E_CHROMIUM_EXECUTABLE?.trim();
 if (playwrightChannel && chromiumExecutable) {
   throw new Error(
-    "PAPERCLIP_PLAYWRIGHT_CHANNEL and PAPERCLIP_RUNNER_E2E_CHROMIUM_EXECUTABLE are mutually exclusive",
+    "THINKINGMACH_PLAYWRIGHT_CHANNEL and THINKINGMACH_RUNNER_E2E_CHROMIUM_EXECUTABLE are mutually exclusive",
   );
 }
 if (chromiumExecutable && !path.isAbsolute(chromiumExecutable)) {
   throw new Error(
-    "PAPERCLIP_RUNNER_E2E_CHROMIUM_EXECUTABLE must be an absolute path",
+    "THINKINGMACH_RUNNER_E2E_CHROMIUM_EXECUTABLE must be an absolute path",
   );
 }
-required("PAPERCLIP_INSTANCE_ID");
-required("PAPERCLIP_AGENT_JWT_SECRET");
-required("PAPERCLIP_DECISION_SIGNING_SECRET");
-required("PAPERCLIP_TOOL_ACTION_SIGNING_SECRET");
+required("THINKINGMACH_INSTANCE_ID");
+required("THINKINGMACH_AGENT_JWT_SECRET");
+required("THINKINGMACH_DECISION_SIGNING_SECRET");
+required("THINKINGMACH_TOOL_ACTION_SIGNING_SECRET");
 required("BETTER_AUTH_SECRET");
 if (
   !paperclipHome.startsWith(`${temporaryRoot}${path.sep}`) ||
   !configPath.startsWith(`${temporaryRoot}${path.sep}`)
 ) {
-  throw new Error("Paperclip server paths escape the isolated temporary root");
+  throw new Error("ThinkingMach server paths escape the isolated temporary root");
 }
 const repositoryRoot = path.resolve(import.meta.dirname, "../..");
 
 export default defineConfig({
   testDir: ".",
   testMatch: "runner.spec.ts",
-  timeout: Number(process.env.PAPERCLIP_RUNNER_E2E_TEST_TIMEOUT_MS ?? 600_000),
+  timeout: Number(process.env.THINKINGMACH_RUNNER_E2E_TEST_TIMEOUT_MS ?? 600_000),
   expect: { timeout: 30_000 },
   fullyParallel: false,
   workers: 1,
@@ -67,7 +67,7 @@ export default defineConfig({
   webServer: {
     // Do not put an env object here: Playwright serializes webServer config in
     // blob reports. The wrapper inherits the test process and strips provider
-    // keys before spawning the real Paperclip process.
+    // keys before spawning the real ThinkingMach process.
     command: runnerE2EWebServerCommand(repositoryRoot),
     url: `${baseURL}/api/health`,
     reuseExistingServer: false,

@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Camera, LoaderCircle, Save, Trash2, UserRoundPen } from "lucide-react";
-import type { AuthSession, CurrentUserProfile, UpdateCurrentUserProfile } from "@paperclipai/shared";
+import type { AuthSession, CurrentUserProfile, UpdateCurrentUserProfile } from "@thinkingmach/shared";
 import { authApi } from "@/api/auth";
 import { assetsApi } from "@/api/assets";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
@@ -136,8 +136,8 @@ export function ProfileSettings() {
   const initials = deriveInitials(currentName);
   const isSavingProfile = updateMutation.isPending || uploadAvatarMutation.isPending || removeAvatarMutation.isPending;
   const uploadHint = selectedCompany
-    ? `Stored in Paperclip file storage for ${selectedCompany.name}.`
-    : "Select an organization to upload an avatar into Paperclip storage.";
+    ? `Stored in ThinkingMach file storage for ${selectedCompany.name}.`
+    : "Select an organization to upload an avatar into ThinkingMach storage.";
 
   return (
     <div className="max-w-6xl space-y-6">

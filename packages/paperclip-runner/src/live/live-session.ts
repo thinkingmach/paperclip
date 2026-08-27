@@ -43,22 +43,22 @@ import {
   type CapabilityRunnerdProcessEvidence,
 } from "./runnerd-codex-transport.js";
 import {
-  capturePaperclipWorkspace,
-  diffPaperclipWorkspace,
-  type PaperclipWorkspaceDiff,
-  type PaperclipWorkspaceSnapshot,
+  captureThinkingMachWorkspace,
+  diffThinkingMachWorkspace,
+  type ThinkingMachWorkspaceDiff,
+  type ThinkingMachWorkspaceSnapshot,
 } from "./workspace-diff.js";
 import {
-  discoverPaperclipWorkspaceFileReferences,
-  type PaperclipWorkspaceFileReference,
+  discoverThinkingMachWorkspaceFileReferences,
+  type ThinkingMachWorkspaceFileReference,
 } from "./workspace-file-reference.js";
 
 const LIVE_SESSION_SCHEMA = "paperclip.capability.live-session.v1" as const;
 const LIVE_BASE_INSTRUCTIONS = [
-  "You are operating one mock Paperclip issue through typed semantic tools.",
-  "Use only the tools exposed in this thread; never call a Paperclip REST API.",
+  "You are operating one mock ThinkingMach issue through typed semantic tools.",
+  "Use only the tools exposed in this thread; never call a ThinkingMach REST API.",
   "Treat every tool result as authoritative mock state and use it in your next response.",
-  "The user conversation and provider are real, but all Paperclip records are mock records.",
+  "The user conversation and provider are real, but all ThinkingMach records are mock records.",
   "Do not discover skills, credentials, endpoints, or hidden control-plane capabilities.",
 ].join(" ");
 const CODEX_PERMISSION_PROFILE = "paperclip-runner-workspace-only";
@@ -206,13 +206,13 @@ export interface CapabilityLiveStateRevision {
 export interface CapabilityLiveWorkspaceDiffEntry {
   turnId: string;
   at: string;
-  diff: PaperclipWorkspaceDiff;
+  diff: ThinkingMachWorkspaceDiff;
 }
 
 export interface CapabilityLiveWorkspaceFileReferenceEntry {
   turnId: string;
   at: string;
-  reference: PaperclipWorkspaceFileReference;
+  reference: ThinkingMachWorkspaceFileReference;
 }
 
 export interface RecordCapabilityLiveUsageInput {
@@ -252,8 +252,8 @@ export interface CapabilityLiveSessionSnapshot {
   authorizationRecords: CapabilitySemanticAuthorizationRecord[];
   process: CapabilityRunnerdProcessEvidence | null;
   networkEvidence: {
-    realPaperclipRequests: 0;
-    childPaperclipEnvironmentKeys: string[];
+    realThinkingMachRequests: 0;
+    childThinkingMachEnvironmentKeys: string[];
   };
   /** Governed worker attempts. A resumed worker is a new attempt, never a rewrite. */
   attempts?: CapabilityLiveAttemptSnapshot[];
@@ -433,12 +433,12 @@ const CAPABILITY_ADMISSION_SHUTDOWN_DEADLINE_MS = 1_000;
 
 async function captureWorkspaceBaselineBeforeAdmission(
   workingDirectory: string,
-): Promise<PaperclipWorkspaceSnapshot | null> {
+): Promise<ThinkingMachWorkspaceSnapshot | null> {
   const controller = new AbortController();
   let timeout: ReturnType<typeof setTimeout> | null = null;
   try {
     return await Promise.race([
-      capturePaperclipWorkspace(workingDirectory, { signal: controller.signal }),
+      captureThinkingMachWorkspace(workingDirectory, { signal: controller.signal }),
       new Promise<null>((resolveTimeout) => {
         timeout = setTimeout(() => {
           resolveTimeout(null);
@@ -1376,8 +1376,8 @@ export class CapabilityLiveSession {
       authorizationRecords: structuredClone(records),
       process: this.#processEvidence === null ? null : structuredClone(this.#processEvidence),
       networkEvidence: {
-        realPaperclipRequests: 0,
-        childPaperclipEnvironmentKeys: childKeys.filter((key) => key.startsWith("PAPERCLIP_")),
+        realThinkingMachRequests: 0,
+        childThinkingMachEnvironmentKeys: childKeys.filter((key) => key.startsWith("THINKINGMACH_")),
       },
       attempts: structuredClone(this.#attempts),
       currentAttemptId: this.#currentAttemptId,
@@ -1509,7 +1509,7 @@ export class CapabilityLiveSession {
       // turns inside this capability session's existing governed run. This is
       // distinct from reusing the provider under a different PRP authority.
     }
-    let workspaceBefore: PaperclipWorkspaceSnapshot | null = null;
+    let workspaceBefore: ThinkingMachWorkspaceSnapshot | null = null;
     try {
       workspaceBefore = await workspaceBeforePromise;
     } catch (error) {
@@ -1619,7 +1619,7 @@ export class CapabilityLiveSession {
       this.#releaseTurnAdmission(admission);
       result = await terminal;
     }
-    const workspaceFileReferences = await discoverPaperclipWorkspaceFileReferences(
+    const workspaceFileReferences = await discoverThinkingMachWorkspaceFileReferences(
       this.#config.workingDirectory,
       result.assistantText,
       result.turnId,
@@ -1636,9 +1636,9 @@ export class CapabilityLiveSession {
     }
     const workspaceDiff = workspaceBefore === null
       ? null
-      : diffPaperclipWorkspace(
+      : diffThinkingMachWorkspace(
           workspaceBefore,
-          await capturePaperclipWorkspace(this.#config.workingDirectory),
+          await captureThinkingMachWorkspace(this.#config.workingDirectory),
           `${this.id}:${result.turnId}:workspace`,
         );
     if (workspaceDiff !== null) {
@@ -2318,7 +2318,7 @@ export class CapabilityLiveSession {
     const initialized = await this.#transport.request("initialize", {
       clientInfo: {
         name: "paperclip-runner",
-        title: "Paperclip Runner Capability",
+        title: "ThinkingMach Runner Capability",
         version: "capability-v1",
       },
       capabilities: { experimentalApi: true, requestAttestation: false },

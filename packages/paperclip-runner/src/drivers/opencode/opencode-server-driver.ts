@@ -32,17 +32,17 @@ import type {
   HarnessRuntimeRequest,
   HarnessRuntimeRequestHandoff,
   HarnessRuntimeRequestResolution,
-  PaperclipQuestion,
-  PaperclipQuestionResponse,
-  PaperclipQuestionSet,
+  ThinkingMachQuestion,
+  ThinkingMachQuestionResponse,
+  ThinkingMachQuestionSet,
 } from "../../contracts/harness-driver.js";
 import {
-  PAPERCLIP_QUESTION_SET_SCHEMA,
-  PAPERCLIP_RUNTIME_REQUEST_SCHEMA_V2,
+  THINKINGMACH_QUESTION_SET_SCHEMA,
+  THINKINGMACH_RUNTIME_REQUEST_SCHEMA_V2,
   harnessRuntimeInputExpiredOutcome,
   harnessRuntimeRequestOutcome,
   parseHarnessRuntimeRequestResolution,
-  parsePaperclipQuestionSet,
+  parseThinkingMachQuestionSet,
 } from "../../contracts/harness-driver.js";
 import type {
   NativeSessionCapabilities,
@@ -280,10 +280,10 @@ export class OpenCodeServerDriver implements HarnessDriver {
     await mkdir(root, { recursive: true, mode: 0o700 });
     await writeFile(join(root, "workspace"), `${cwd}\n`, { mode: 0o600 });
     const trace = await createProviderTraceFileSink({
-      path: this.#options.environment?.PAPERCLIP_PROVIDER_TRACE_PATH,
+      path: this.#options.environment?.THINKINGMACH_PROVIDER_TRACE_PATH,
       provider: "opencode",
       channel: "typescript_opencode_native",
-      maxBytes: this.#options.environment?.PAPERCLIP_PROVIDER_TRACE_MAX_BYTES,
+      maxBytes: this.#options.environment?.THINKINGMACH_PROVIDER_TRACE_MAX_BYTES,
     });
     let lastError: unknown = null;
     for (let attempt = 1; attempt <= 3; attempt += 1) {
@@ -315,7 +315,7 @@ export class OpenCodeServerDriver implements HarnessDriver {
         } else {
           const created = await api(fetcher, runtime, "/session", {
             method: "POST",
-            body: JSON.stringify({ title: `Paperclip ${input.runId}` }),
+            body: JSON.stringify({ title: `ThinkingMach ${input.runId}` }),
           });
           providerSessionId = text(record(created).id);
           if (!providerSessionId)
@@ -405,7 +405,7 @@ class OpenCodeHarnessSession implements HarnessSession {
     {
       request: HarnessRuntimeRequest;
       nativeQuestions: Record<string, unknown>[];
-      submittedResponse?: PaperclipQuestionResponse;
+      submittedResponse?: ThinkingMachQuestionResponse;
       submittedAction?: "accept" | "accept_for_session" | "decline" | "cancel";
       settling?: boolean;
     }
@@ -555,7 +555,7 @@ class OpenCodeHarnessSession implements HarnessSession {
     const modelID = modelParts.join("/");
     // A resumed OpenCode provider session already retains the original system
     // instructions and task envelope in its conversation. Repeating both on
-    // every Paperclip continuation can overflow smaller context windows and
+    // every ThinkingMach continuation can overflow smaller context windows and
     // OpenCode then completes with `finish: unknown` and zero tokens. The
     // native model envelope still carries the authoritative wake delta,
     // interaction responses, completion contract, and current issue context.
@@ -576,7 +576,7 @@ class OpenCodeHarnessSession implements HarnessSession {
           // top level.  Older examples used a nested `model` object; 1.18
           // silently ignores that shape and falls back to the configured model,
           // which can turn `openrouter/deepseek/...` into a duplicated provider
-          // lookup. Keep Paperclip's persisted provider/model form, but adapt it
+          // lookup. Keep ThinkingMach's persisted provider/model form, but adapt it
           // at this HTTP boundary.
           providerID,
           modelID,
@@ -936,7 +936,7 @@ class OpenCodeHarnessSession implements HarnessSession {
       return { accepted: true };
     }
     if (!this.#dynamicToolHandler)
-      throw new Error("Unsupported Paperclip operation");
+      throw new Error("Unsupported ThinkingMach operation");
     try {
       const result = await this.#dynamicToolHandler({
         tool,
@@ -1037,7 +1037,7 @@ class OpenCodeHarnessSession implements HarnessSession {
       return;
     }
     if (this.#pendingRuntimeRequests.has(requestId)) return;
-    let input: PaperclipQuestionSet;
+    let input: ThinkingMachQuestionSet;
     try {
       input = normalizeOpenCodeQuestionSet(nativeQuestions, properties);
     } catch {
@@ -1073,7 +1073,7 @@ class OpenCodeHarnessSession implements HarnessSession {
       "runtime_request.created",
       {
         request: {
-          schema: PAPERCLIP_RUNTIME_REQUEST_SCHEMA_V2,
+          schema: THINKINGMACH_RUNTIME_REQUEST_SCHEMA_V2,
           requestKind: "runtime",
           requestId,
           type: "input",
@@ -1128,7 +1128,7 @@ class OpenCodeHarnessSession implements HarnessSession {
       "runtime_request.created",
       {
         request: {
-          schema: PAPERCLIP_RUNTIME_REQUEST_SCHEMA_V2,
+          schema: THINKINGMACH_RUNTIME_REQUEST_SCHEMA_V2,
           requestKind: "runtime",
           requestId,
           type: "permission",
@@ -1473,7 +1473,7 @@ class OpenCodeHarnessSession implements HarnessSession {
           "Aborted"
       ) {
         // OpenCode reports its normal /abort control path as session.error. That
-        // endpoint is also how Paperclip parks a provider turn after a durable
+        // endpoint is also how ThinkingMach parks a provider turn after a durable
         // governed interaction is created, so presenting it as a provider
         // failure produces a false red error immediately above a healthy wait
         // card. Preserve the provider fact as a cancelled terminal event; the
@@ -2073,9 +2073,9 @@ async function startRuntime(input: {
 export function normalizeOpenCodeQuestionSet(
   nativeQuestions: Record<string, unknown>[],
   metadata: Record<string, unknown> = {},
-): PaperclipQuestionSet {
+): ThinkingMachQuestionSet {
   const questions = nativeQuestions.map(
-    (question, index): PaperclipQuestion => {
+    (question, index): ThinkingMachQuestion => {
       const options = (Array.isArray(question.options) ? question.options : [])
         .map(record)
         .slice(0, 128)
@@ -2121,8 +2121,8 @@ export function normalizeOpenCodeQuestionSet(
       };
     },
   );
-  return parsePaperclipQuestionSet({
-    schema: PAPERCLIP_QUESTION_SET_SCHEMA,
+  return parseThinkingMachQuestionSet({
+    schema: THINKINGMACH_QUESTION_SET_SCHEMA,
     title: text(metadata.title, "OpenCode needs your input").slice(0, 1_000),
     ...(text(metadata.description)
       ? { description: text(metadata.description).slice(0, 4_000) }
@@ -2137,7 +2137,7 @@ function openCodeAnswers(
     request: HarnessRuntimeRequest;
     nativeQuestions: Record<string, unknown>[];
   },
-  response: PaperclipQuestionResponse,
+  response: ThinkingMachQuestionResponse,
 ): string[][] {
   return pending.nativeQuestions.map((nativeQuestion, index) => {
     const questionId = openCodeQuestionId(nativeQuestion, index);

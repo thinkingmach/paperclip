@@ -1,20 +1,20 @@
-export type PaperclipRunnerProvider =
+export type ThinkingMachRunnerProvider =
   "codex" | "opencode" | "claude_managed" | "aws_agentcore" | "acpx";
 
 export type CodexPermissionMode = "never" | "on-request" | "untrusted";
 export type OpenCodePermissionMode = "allow" | "ask" | "deny";
 export type AcpxPermissionMode = "approve-all" | "approve-reads" | "deny-all";
 
-export type PaperclipRunnerPermissionMode =
+export type ThinkingMachRunnerPermissionMode =
   CodexPermissionMode | OpenCodePermissionMode | AcpxPermissionMode;
 
-export const PAPERCLIP_RUNNER_IDLE_TIMEOUT_DEFAULT_MS = 300_000;
-export const PAPERCLIP_RUNNER_IDLE_TIMEOUT_MAX_MS = 86_400_000;
-export const PAPERCLIP_RUNNER_DEFAULT_MODELS = {
+export const THINKINGMACH_RUNNER_IDLE_TIMEOUT_DEFAULT_MS = 300_000;
+export const THINKINGMACH_RUNNER_IDLE_TIMEOUT_MAX_MS = 86_400_000;
+export const THINKINGMACH_RUNNER_DEFAULT_MODELS = {
   codex: "gpt-5.6-sol",
 } as const;
 
-export interface PaperclipRunnerPermissionOption<
+export interface ThinkingMachRunnerPermissionOption<
   TMode extends string = string,
 > {
   value: TMode;
@@ -22,13 +22,13 @@ export interface PaperclipRunnerPermissionOption<
   description: string;
 }
 
-export type PaperclipRunnerPermissionCapability =
+export type ThinkingMachRunnerPermissionCapability =
   | {
       configurable: true;
       configKey:
         "codexPermissionMode" | "opencodePermissionMode" | "acpxPermissionMode";
-      defaultMode: PaperclipRunnerPermissionMode;
-      options: readonly PaperclipRunnerPermissionOption<PaperclipRunnerPermissionMode>[];
+      defaultMode: ThinkingMachRunnerPermissionMode;
+      options: readonly ThinkingMachRunnerPermissionOption<ThinkingMachRunnerPermissionMode>[];
       description: string;
     }
   | {
@@ -39,11 +39,11 @@ export type PaperclipRunnerPermissionCapability =
     };
 
 /**
- * Control-plane catalog for Paperclip Runner permission UX and validation.
+ * Control-plane catalog for ThinkingMach Runner permission UX and validation.
  * Runtime contracts validate the same native values again at the process
  * boundary; this catalog must remain browser-safe.
  */
-export const PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES = {
+export const THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES = {
   codex: {
     configurable: true,
     configKey: "codexPermissionMode",
@@ -53,13 +53,13 @@ export const PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES = {
     // only through the root-denied, workspace-scoped, network-disabled, and
     // environment-allowlisted profile assembled by codex-security-config.ts.
     description:
-      "Codex runs automatically inside a root-denied, workspace-scoped, network-disabled Paperclip environment.",
+      "Codex runs automatically inside a root-denied, workspace-scoped, network-disabled ThinkingMach environment.",
     options: [
       {
         value: "never",
         label: "Automatic (isolated)",
         description:
-          "Run without Codex approval pauses while Paperclip keeps its independent workspace, network, and environment restrictions.",
+          "Run without Codex approval pauses while ThinkingMach keeps its independent workspace, network, and environment restrictions.",
       },
     ],
   },
@@ -68,7 +68,7 @@ export const PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES = {
     configKey: "opencodePermissionMode",
     defaultMode: "ask",
     description:
-      "Controls OpenCode tool permissions inside the assigned Paperclip environment.",
+      "Controls OpenCode tool permissions inside the assigned ThinkingMach environment.",
     options: [
       {
         value: "allow",
@@ -92,21 +92,21 @@ export const PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES = {
     defaultMode: "provider-managed",
     options: [],
     description:
-      "Claude Managed runs non-interactively under its qualified provider profile and Paperclip policy.",
+      "Claude Managed runs non-interactively under its qualified provider profile and ThinkingMach policy.",
   },
   aws_agentcore: {
     configurable: false,
     defaultMode: "provider-managed",
     options: [],
     description:
-      "AWS AgentCore runs non-interactively under its qualified harness profile and Paperclip policy.",
+      "AWS AgentCore runs non-interactively under its qualified harness profile and ThinkingMach policy.",
   },
   acpx: {
     configurable: true,
     configKey: "acpxPermissionMode",
     defaultMode: "approve-reads",
     description:
-      "Controls ACPX agent operations inside the assigned Paperclip environment.",
+      "Controls ACPX agent operations inside the assigned ThinkingMach environment.",
     options: [
       {
         value: "approve-all",
@@ -127,13 +127,13 @@ export const PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES = {
     ],
   },
 } as const satisfies Record<
-  PaperclipRunnerProvider,
-  PaperclipRunnerPermissionCapability
+  ThinkingMachRunnerProvider,
+  ThinkingMachRunnerPermissionCapability
 >;
 
-export function isPaperclipRunnerProvider(
+export function isThinkingMachRunnerProvider(
   value: unknown,
-): value is PaperclipRunnerProvider {
+): value is ThinkingMachRunnerProvider {
   return (
     value === "codex" ||
     value === "opencode" ||
@@ -143,31 +143,31 @@ export function isPaperclipRunnerProvider(
   );
 }
 
-export function resolvePaperclipRunnerPermissionMode(
-  provider: PaperclipRunnerProvider,
+export function resolveThinkingMachRunnerPermissionMode(
+  provider: ThinkingMachRunnerProvider,
   value: unknown,
-): PaperclipRunnerPermissionMode | "provider-managed" {
-  const capability = PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES[provider];
+): ThinkingMachRunnerPermissionMode | "provider-managed" {
+  const capability = THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES[provider];
   if (!capability.configurable) return capability.defaultMode;
   return capability.options.some((option) => option.value === value)
-    ? (value as PaperclipRunnerPermissionMode)
+    ? (value as ThinkingMachRunnerPermissionMode)
     : capability.defaultMode;
 }
 
-export function resolvePaperclipRunnerModel(
-  provider: keyof typeof PAPERCLIP_RUNNER_DEFAULT_MODELS,
+export function resolveThinkingMachRunnerModel(
+  provider: keyof typeof THINKINGMACH_RUNNER_DEFAULT_MODELS,
   value: unknown,
 ): string {
   return typeof value === "string" && value.trim().length > 0
     ? value.trim()
-    : PAPERCLIP_RUNNER_DEFAULT_MODELS[provider];
+    : THINKINGMACH_RUNNER_DEFAULT_MODELS[provider];
 }
 
-export function resolvePaperclipRunnerIdleTimeoutMs(value: unknown): number {
+export function resolveThinkingMachRunnerIdleTimeoutMs(value: unknown): number {
   return typeof value === "number" &&
     Number.isSafeInteger(value) &&
     value > 0 &&
-    value <= PAPERCLIP_RUNNER_IDLE_TIMEOUT_MAX_MS
+    value <= THINKINGMACH_RUNNER_IDLE_TIMEOUT_MAX_MS
     ? value
-    : PAPERCLIP_RUNNER_IDLE_TIMEOUT_DEFAULT_MS;
+    : THINKINGMACH_RUNNER_IDLE_TIMEOUT_DEFAULT_MS;
 }

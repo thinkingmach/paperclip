@@ -51,7 +51,7 @@ import {
   projects,
   projectWorkspaces,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -87,10 +87,10 @@ vi.mock("../services/local-service-supervisor.js", async () => {
   };
 });
 
-vi.mock("@paperclipai/shared/telemetry", async () => {
+vi.mock("@thinkingmach/shared/telemetry", async () => {
   const actual = await vi.importActual<
-    typeof import("@paperclipai/shared/telemetry")
-  >("@paperclipai/shared/telemetry");
+    typeof import("@thinkingmach/shared/telemetry")
+  >("@thinkingmach/shared/telemetry");
   return {
     ...actual,
     trackAgentFirstHeartbeat: mockTrackAgentFirstHeartbeat,
@@ -135,7 +135,7 @@ import { collectDispositionRepairSourceState } from "../services/recovery/dispos
 import {
   UNMANAGED_BACKGROUND_TASK_LIVENESS_REASON,
   UNMANAGED_BACKGROUND_TASK_STOP_REASON,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
 const describeEmbeddedPostgres = embeddedPostgresSupport.supported
   ? describe
@@ -540,7 +540,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -769,7 +769,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -911,7 +911,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -1004,7 +1004,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -1045,7 +1045,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
     });
@@ -1198,7 +1198,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -1754,19 +1754,19 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
     expect(retries).toHaveLength(0);
   });
 
-  async function withTempPaperclipHome<T>(
+  async function withTempThinkingMachHome<T>(
     fn: (home: string) => Promise<T>,
   ): Promise<T> {
     const home = await fs.mkdtemp(
       path.join(os.tmpdir(), "paperclip-hot-restart-"),
     );
-    const previousHome = process.env.PAPERCLIP_HOME;
-    process.env.PAPERCLIP_HOME = home;
+    const previousHome = process.env.THINKINGMACH_HOME;
+    process.env.THINKINGMACH_HOME = home;
     try {
       return await fn(home);
     } finally {
-      if (previousHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousHome;
+      if (previousHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousHome;
       await fs.rm(home, { recursive: true, force: true });
     }
   }
@@ -1785,7 +1785,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       },
     });
 
-    await withTempPaperclipHome(async () => {
+    await withTempThinkingMachHome(async () => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "old-version",
@@ -1849,7 +1849,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       },
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "old-acp-version",
@@ -1941,7 +1941,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       },
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "old-acp-persistence-failure-version",
@@ -2013,7 +2013,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       },
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "old-mixed-version",
@@ -2097,7 +2097,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       processGroupId: null,
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "old-home-root-version",
@@ -2165,7 +2165,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       processGroupId: null,
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "missing-snapshot-version",
@@ -2202,7 +2202,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       processGroupId: null,
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "preflight-race-version",
@@ -2328,7 +2328,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       processStartedAt: new Date(observedProcessStartedAt!),
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       await writeHotRestartIntent({
         previousServerPid: process.pid,
         previousServerVersion: "old-version",
@@ -2391,7 +2391,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
       },
     });
 
-    await withTempPaperclipHome(async (home) => {
+    await withTempThinkingMachHome(async (home) => {
       const heartbeat = heartbeatService(db);
       await writeHotRestartIntent({
         previousServerPid: process.pid,
@@ -2465,7 +2465,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
         },
       });
 
-      await withTempPaperclipHome(async () => {
+      await withTempThinkingMachHome(async () => {
         const heartbeat = heartbeatService(db);
         await writeHotRestartIntent({
           previousServerPid: process.pid,
@@ -2576,7 +2576,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
     expect(issue?.executionRunId).toBe(retryRun?.id);
   });
 
-  it("suspends native Paperclip Runner ownership on graceful restart without cancelling or creating a retry run", async () => {
+  it("suspends native ThinkingMach Runner ownership on graceful restart without cancelling or creating a retry run", async () => {
     const { agentId, runId, issueId, wakeupRequestId } =
       await seedRunFixture({
         adapterType: "paperclip_runner",
@@ -3426,7 +3426,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.kubernetes-sandbox-provider",
-      packageName: "@paperclipai/kubernetes-sandbox-provider",
+      packageName: "@thinkingmach/kubernetes-sandbox-provider",
       version: "1.0.0",
       apiVersion: 1,
       categories: ["automation"],
@@ -3437,7 +3437,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
         displayName: "Kubernetes Sandbox Provider",
         description:
           "Test Kubernetes sandbox provider whose worker is mid-restart",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: ["environment.drivers.register"],
         entrypoints: { worker: "dist/worker.js" },
@@ -4035,7 +4035,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
     await db.insert(projects).values({
       id: projectId,
       companyId,
-      name: "Paperclip App",
+      name: "ThinkingMach App",
       status: "in_progress",
     });
     await db.insert(projectWorkspaces).values({
@@ -7011,7 +7011,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -7096,7 +7096,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -7270,7 +7270,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -7413,7 +7413,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -7502,7 +7502,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -7602,7 +7602,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -8015,7 +8015,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
     const issuePrefix = `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,
@@ -8158,7 +8158,7 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
     const issuePrefix = `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: false,

@@ -13,7 +13,7 @@ import {
   decideStaleExposureReclaim,
 } from "./workspace-runtime.js";
 
-/** A persisted, running, pre-feature Paperclip App dev runtime. */
+/** A persisted, running, pre-feature ThinkingMach App dev runtime. */
 function httpOnlyRunningRow(overrides: Partial<Parameters<typeof decideManagedRuntimeExposureBackfill>[0]> = {}) {
   return {
     mode: "auto" as const,

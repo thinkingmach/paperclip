@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ArrowUpDown, CheckCircle2, Inbox, Layers, ListFilter } from "lucide-react";
-import type { AttentionItem, AttentionSourceKind, AttentionSeverity, InboxDismissalKind } from "@paperclipai/shared";
+import type { AttentionItem, AttentionSourceKind, AttentionSeverity, InboxDismissalKind } from "@thinkingmach/shared";
 import { AttentionQueueRow } from "@/components/AttentionQueueRow";
 import { IssueGroupHeader } from "@/components/IssueGroupHeader";
 import { ToastProvider, useToastActions } from "@/context/ToastContext";

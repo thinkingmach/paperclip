@@ -1,19 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  BookOpen,
-  Check,
-  CircleSlash,
-  FlaskConical,
-  Loader2,
-  Minus,
-  Play,
-  Power,
-  RotateCcw,
-  ServerCog,
-  X,
-} from "lucide-react";
-import type { SmokeRun, SmokeRunStep } from "@paperclipai/shared";
+import { BookOpen, Check, CircleSlash, FlaskConical, Loader2, Minus, Play, Power, RotateCcw, ServerCog, X,  } from "lucide-react";
+import type { SmokeRun, SmokeRunStep } from "@thinkingmach/shared";
 import { smokeLabApi } from "@/api/smokeLab";
 import { queryKeys } from "@/lib/queryKeys";
 import { useToast } from "@/context/ToastContext";
@@ -200,7 +188,7 @@ export function SmokeLabTab({ companyId }: { companyId: string }) {
           <h1 className="text-xl font-bold text-foreground">Smoke Lab</h1>
           <Badge variant="outline">Experimental</Badge>
           <a
-            href="https://github.com/paperclipai/paperclip/blob/master/doc/connections/SMOKE-LAB-TUTORIAL.md"
+            href="https://github.com/thinkingmach/paperclip/blob/master/doc/connections/SMOKE-LAB-TUTORIAL.md"
             target="_blank"
             rel="noreferrer"
             className="ml-auto inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
@@ -214,7 +202,7 @@ export function SmokeLabTab({ companyId }: { companyId: string }) {
           real credential. Start the services, install the fixture apps, then drive the governed
           lifecycle from a browser smoke run. New here? Follow the{" "}
           <a
-            href="https://github.com/paperclipai/paperclip/blob/master/doc/connections/SMOKE-LAB-TUTORIAL.md"
+            href="https://github.com/thinkingmach/paperclip/blob/master/doc/connections/SMOKE-LAB-TUTORIAL.md"
             target="_blank"
             rel="noreferrer"
             className="font-medium text-primary hover:underline"

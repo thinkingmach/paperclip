@@ -32,7 +32,7 @@ import {
   validatePrpEvent,
   type PrpEvent,
 } from "../protocol/replay-contract.js";
-import { digestPaperclipSemanticContent } from "../semantic-tools/receipts.js";
+import { digestThinkingMachSemanticContent } from "../semantic-tools/receipts.js";
 import {
   type DurableRecoveryCommittedEvent,
   type DurableRecoveryCoreCommand,
@@ -1177,7 +1177,7 @@ export class DurablePrpControlPlane {
     wire.acceptInitialData(head);
   }
 
-  /** Attach either an accepted inbound WebSocket or a Paperclip-opened peer. */
+  /** Attach either an accepted inbound WebSocket or a ThinkingMach-opened peer. */
   attachWireConnection(wire: PrpWireConnection): PrpWireAttachment {
     let connection!: AuthorityConnection;
     let processing = Promise.resolve();
@@ -1757,7 +1757,7 @@ export class DurablePrpControlPlane {
         typeof semantic.content !== "object" ||
         semantic.content === null ||
         (semantic.content as Record<string, unknown>).digest !==
-          digestPaperclipSemanticContent(semantic.input) ||
+          digestThinkingMachSemanticContent(semantic.input) ||
         semanticCorrelation?.runId !== this.#identity.runId ||
         semanticCorrelation.normalizedSessionId !==
           this.#identity.normalizedSessionId ||
@@ -1912,7 +1912,7 @@ const runnerExplicitProviderEnvironmentKeys = [
   "CLAUDE_CODE_OAUTH_TOKEN",
   "OPENAI_API_KEY",
   "CODEX_API_KEY",
-  "PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET",
+  "THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET",
   "AWS_REGION",
   "AWS_DEFAULT_REGION",
   "AWS_WEB_IDENTITY_TOKEN_FILE",
@@ -1921,20 +1921,20 @@ const runnerExplicitProviderEnvironmentKeys = [
   "AWS_CONTAINER_CREDENTIALS_FULL_URI",
   "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI",
   "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
-  "PAPERCLIP_OPENCODE_PERMISSION_MODE",
-  "PAPERCLIP_OPENCODE_RUNTIME_DIR",
-  "PAPERCLIP_RUNNER_INSTANCE_ID",
-  "PAPERCLIP_RUN_ID",
-  "PAPERCLIP_NORMALIZED_SESSION_ID",
-  "PAPERCLIP_NATIVE_MCP_NAME",
-  "PAPERCLIP_NATIVE_MCP_URL",
-  "PAPERCLIP_NATIVE_MCP_TOKEN",
-  "PAPERCLIP_NATIVE_RUNTIME_CONTEXT_PATH",
-  "PAPERCLIP_ACPX_PROVIDER_PACKAGE_ROOT",
-  "PAPERCLIP_ACPX_PROVIDER_PACKAGE_MANIFEST",
-  "PAPERCLIP_ACPX_PROVIDER_RECOVERY_POLICY",
-  "PAPERCLIP_PROVIDER_TRACE_PATH",
-  "PAPERCLIP_PROVIDER_TRACE_MAX_BYTES",
+  "THINKINGMACH_OPENCODE_PERMISSION_MODE",
+  "THINKINGMACH_OPENCODE_RUNTIME_DIR",
+  "THINKINGMACH_RUNNER_INSTANCE_ID",
+  "THINKINGMACH_RUN_ID",
+  "THINKINGMACH_NORMALIZED_SESSION_ID",
+  "THINKINGMACH_NATIVE_MCP_NAME",
+  "THINKINGMACH_NATIVE_MCP_URL",
+  "THINKINGMACH_NATIVE_MCP_TOKEN",
+  "THINKINGMACH_NATIVE_RUNTIME_CONTEXT_PATH",
+  "THINKINGMACH_ACPX_PROVIDER_PACKAGE_ROOT",
+  "THINKINGMACH_ACPX_PROVIDER_PACKAGE_MANIFEST",
+  "THINKINGMACH_ACPX_PROVIDER_RECOVERY_POLICY",
+  "THINKINGMACH_PROVIDER_TRACE_PATH",
+  "THINKINGMACH_PROVIDER_TRACE_MAX_BYTES",
 ] as const;
 
 function runnerEnvironment(
@@ -1943,7 +1943,7 @@ function runnerEnvironment(
 ): NodeJS.ProcessEnv {
   const platformSource = explicitSource ?? process.env;
   const environment: NodeJS.ProcessEnv = {
-    PAPERCLIP_RUNNER_BOOTSTRAP_TICKET: ticket,
+    THINKINGMACH_RUNNER_BOOTSTRAP_TICKET: ticket,
   };
   for (const key of runnerPlatformEnvironmentKeys) {
     const value = platformSource[key];

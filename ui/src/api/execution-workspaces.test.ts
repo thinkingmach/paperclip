@@ -37,7 +37,7 @@ describe("executionWorkspacesApi.listSummaries", () => {
           workspaceId: "workspace-1",
           workspaceName: "Workspace 1",
           projectId: "project-1",
-          projectName: "Paperclip App",
+          projectName: "ThinkingMach App",
           mode: "isolated_workspace",
           strategyType: "git_worktree",
           cwd: "/tmp/workspace-1",

@@ -5,7 +5,7 @@
 Codex implements a direct Codex app-server v2 driver behind the package's
 existing `HarnessDriver` contract. The driver, mock core, example CLI, tests,
 and evidence stay inside `packages/paperclip-runner/`. They do not import or
-change Paperclip server, UI, database, or production control-plane behavior.
+change ThinkingMach server, UI, database, or production control-plane behavior.
 
 The app-server process is local to the execution environment and uses newline
 delimited JSON-RPC over stdio. It is not exposed as a network service.
@@ -78,7 +78,7 @@ permission profile requesting read-only minimal runtime files, no host-home or
 Codex-home access, and write access to the assigned workspace. The driver
 refuses filesystem-root workspaces, workspaces containing host `HOME`, and any
 workspace overlapping host `CODEX_HOME`. A workspace below host `HOME` is
-valid, but when `PAPERCLIP_WORKSPACE_CWD` is present its canonical path must be
+valid, but when `THINKINGMACH_WORKSPACE_CWD` is present its canonical path must be
 equal to or below that assigned workspace so sibling and symlink escapes fail
 before provider startup.
 
@@ -91,7 +91,7 @@ requires each readable `auth.json`/`config.toml` file and an unrelated host
 secret to remain unreadable and unwritable, while recording any injected root
 in `context.sandbox.legacyPolicy`.
 
-Paperclip bearer values, `OPENAI_API_KEY`, arbitrary skill paths, and other
+ThinkingMach bearer values, `OPENAI_API_KEY`, arbitrary skill paths, and other
 inherited variables are not passed. Diagnostics redact bearer/basic
 credentials, credentialed proxy URLs, secret query parameters, sensitive JSON
 keys, and common key assignments.

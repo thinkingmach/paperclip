@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Feature work on core Paperclip is coordinated against `ROADMAP.md` and Discord `#dev`. Please skim those before filing — see [CONTRIBUTING.md](https://github.com/paperclipai/paperclip/blob/master/CONTRIBUTING.md) for the full guidance.
+        Feature work on core ThinkingMach is coordinated against `ROADMAP.md` and Discord `#dev`. Please skim those before filing — see [CONTRIBUTING.md](https://github.com/thinkingmach/paperclip/blob/master/CONTRIBUTING.md) for the full guidance.
   - type: dropdown
     id: subsystem
     attributes:

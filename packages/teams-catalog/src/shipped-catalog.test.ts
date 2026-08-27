@@ -7,13 +7,13 @@ import { asBoolean, asString, parseFrontmatterMarkdown } from "./frontmatter.js"
 import type { CatalogTeam } from "./types.js";
 
 const EXPECTED_BUNDLED_KEYS = [
-  "paperclipai/bundled/company-defaults/core-exec-team",
-  "paperclipai/bundled/product/product-design",
-  "paperclipai/bundled/software-development/product-engineering",
+  "thinkingmach/bundled/company-defaults/core-exec-team",
+  "thinkingmach/bundled/product/product-design",
+  "thinkingmach/bundled/software-development/product-engineering",
 ];
 
 const EXPECTED_OPTIONAL_KEYS = [
-  "paperclipai/optional/content/content-machine",
+  "thinkingmach/optional/content/content-machine",
 ];
 
 const PACKAGE_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -62,11 +62,11 @@ describe("shipped teams catalog", () => {
     expect(issues).toEqual([]);
   });
 
-  it("uses canonical paperclipai keys derived from kind/category/slug", () => {
+  it("uses canonical thinkingmach keys derived from kind/category/slug", () => {
     const violations: string[] = [];
     for (const team of catalogTeams) {
-      const expectedKey = `paperclipai/${team.kind}/${team.category}/${team.slug}`;
-      const expectedId = `paperclipai:${team.kind}:${team.category}:${team.slug}`;
+      const expectedKey = `thinkingmach/${team.kind}/${team.category}/${team.slug}`;
+      const expectedId = `thinkingmach:${team.kind}:${team.category}:${team.slug}`;
       if (team.key !== expectedKey) violations.push(`${team.key} should be ${expectedKey}`);
       if (team.id !== expectedId) violations.push(`${team.id} should be ${expectedId}`);
     }
@@ -75,12 +75,12 @@ describe("shipped teams catalog", () => {
 
   it("exposes a stable manifest header for downstream consumers", () => {
     expect(catalogManifest.schemaVersion).toBe(1);
-    expect(catalogManifest.packageName).toBe("@paperclipai/teams-catalog");
+    expect(catalogManifest.packageName).toBe("@thinkingmach/teams-catalog");
     expect(catalogTeams.length).toBe(EXPECTED_BUNDLED_KEYS.length + EXPECTED_OPTIONAL_KEYS.length);
   });
 
   it("resolves shipped teams by id, key, and unique slug", () => {
-    const sample = catalogTeams.find((team) => team.key === "paperclipai/bundled/company-defaults/core-exec-team");
+    const sample = catalogTeams.find((team) => team.key === "thinkingmach/bundled/company-defaults/core-exec-team");
     expect(sample, "expected core-exec-team to ship in the bundled catalog").toBeDefined();
     if (!sample) return;
 

@@ -74,7 +74,7 @@ test.describe("Capability issue thread", () => {
         monoStatuses: statuses(monoFamily),
         symbolStatuses: statuses(symbolFamily),
         sansWeightsLoaded: [400, 500, 600, 700].every((weight) =>
-          document.fonts.check(`${weight} 16px "${sansFamily}"`, "Paperclip"),
+          document.fonts.check(`${weight} 16px "${sansFamily}"`, "ThinkingMach"),
         ),
         monoWeightsLoaded: [400, 700].every((weight) =>
           document.fonts.check(`${weight} 16px "${monoFamily}"`, "TASK-17003"),
@@ -84,9 +84,9 @@ test.describe("Capability issue thread", () => {
     });
 
     expect(probe).toEqual({
-      sansFamily: "Paperclip Issue Thread Inter",
-      monoFamily: "Paperclip Issue Thread DejaVu Sans Mono",
-      symbolFamily: "Paperclip Issue Thread Symbols",
+      sansFamily: "ThinkingMach Issue Thread Inter",
+      monoFamily: "ThinkingMach Issue Thread DejaVu Sans Mono",
+      symbolFamily: "ThinkingMach Issue Thread Symbols",
       sansStatuses: ["loaded"],
       monoStatuses: ["loaded", "loaded"],
       symbolStatuses: ["loaded", "loaded"],
@@ -103,7 +103,7 @@ test.describe("Capability issue thread", () => {
     const chips = page.getByTestId("identity-chips");
     await expect(chips.getByTestId("agent-chip")).toHaveText("Fake agent");
     await expect(chips.getByTestId("runner-chip")).toContainText("In-process runner");
-    await expect(chips.getByTestId("control-plane-chip")).toHaveText("Mock Paperclip");
+    await expect(chips.getByTestId("control-plane-chip")).toHaveText("Mock ThinkingMach");
 
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator('[data-turn-id]')).toHaveCount(3);
@@ -501,7 +501,7 @@ const DEVTOOLS_API = "**/api/capability/ui/devtools?*";
 
 function devtoolsPayload() {
   const state = {
-    company: { id: "company-1", name: "Mock Paperclip" },
+    company: { id: "company-1", name: "Mock ThinkingMach" },
     actors: [], tasks: [], comments: [], interactions: [], approvals: [], artifacts: [],
     workProducts: [], blockers: [], workspaceServices: [], budgets: [], runs: [], wakes: [],
     audit: [], decisions: [], idempotency: [], faults: [],
@@ -526,7 +526,7 @@ function cleanRoomView(identifier: string, withTurn: boolean) {
     turnId: "turn-0",
     category: "session",
     outcome: "no_real_paperclip_request",
-    reason: "Real Paperclip API requests: 0. Child PAPERCLIP_* environment keys: none.",
+    reason: "Real ThinkingMach API requests: 0. Child THINKINGMACH_* environment keys: none.",
     stateRevision: 3,
     threadAnchorId: null,
   };
@@ -538,8 +538,8 @@ function cleanRoomView(identifier: string, withTurn: boolean) {
       agentLabel: "Real Codex",
       runnerLabel: "Real runnerd",
       runnerAttached: true,
-      controlPlaneLabel: "Mock Paperclip",
-      controlPlaneTooltip: "All issue records are mock. No real Paperclip API is reachable.",
+      controlPlaneLabel: "Mock ThinkingMach",
+      controlPlaneTooltip: "All issue records are mock. No real ThinkingMach API is reachable.",
       replaySource: null,
     },
     issue: {
@@ -688,7 +688,7 @@ test.describe("Capability clean-room chat", () => {
   test("a new chat opens a blank live thread with no scenario controls", async ({ page }) => {
     await openCleanRoom(page);
 
-    await expect(page).toHaveTitle("🫧 Mock Paperclip · Issue thread");
+    await expect(page).toHaveTitle("🫧 Mock ThinkingMach · Issue thread");
     await expect(page.locator('[data-surface="chat"]')).toBeVisible();
     await expect(page.getByTestId("clean-room-empty")).toBeVisible();
     await expect(page.locator("[data-turn-id]")).toHaveCount(0);
@@ -699,7 +699,7 @@ test.describe("Capability clean-room chat", () => {
     const chips = page.getByTestId("identity-chips");
     await expect(chips.getByTestId("agent-chip")).toHaveText("Real Codex");
     await expect(chips.getByTestId("runner-chip")).toContainText("Real runnerd");
-    await expect(chips.getByTestId("control-plane-chip")).toHaveText("Mock Paperclip");
+    await expect(chips.getByTestId("control-plane-chip")).toHaveText("Mock ThinkingMach");
     await expect(page.locator('[data-composer-state="ready"]')).toHaveCount(1);
   });
 
@@ -712,7 +712,7 @@ test.describe("Capability clean-room chat", () => {
     await page.getByTestId("evidence-toggle").click();
     await expect(page.locator(".pit-panel")).toBeVisible();
     await page.getByRole("button", { name: /Control plane/ }).click();
-    await expect(page.getByText("Real Paperclip API requests: 0")).toBeVisible();
+    await expect(page.getByText("Real ThinkingMach API requests: 0")).toBeVisible();
   });
 
   test("documents written to company state are readable in DevTools", async ({ page }) => {

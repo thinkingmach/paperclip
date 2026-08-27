@@ -298,7 +298,7 @@ describeLive("Daytona duplex channel (live)", () => {
       // on this same pseudo-terminal channel, right after the READY line.
       // This package ships standalone (see the file header), so it cannot
       // import the host readiness gate or the preface scan from
-      // `@paperclipai/adapter-utils`; this test reimplements the minimal,
+      // `@thinkingmach/adapter-utils`; this test reimplements the minimal,
       // self-contained version of both, using only `node:http2`, so the
       // proof runs against a real Daytona PTY end to end.
       const live = sandbox!;

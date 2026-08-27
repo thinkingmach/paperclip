@@ -13,16 +13,16 @@ Source issues:
 
 ## Context
 
-Paperclip needs governed MCP/tool access for agents. The product should not become a raw `mcp.json` editor or an adapter prompt convention. The control plane must own which tools an agent can discover, which calls can run, which credentials are available, which calls need review, and how every decision is audited.
+ThinkingMach needs governed MCP/tool access for agents. The product should not become a raw `mcp.json` editor or an adapter prompt convention. The control plane must own which tools an agent can discover, which calls can run, which credentials are available, which calls need review, and how every decision is audited.
 
-Paperclip already has useful primitives:
+ThinkingMach already has useful primitives:
 
 - Company-scoped records and company-boundary checks.
 - Agent API keys and heartbeat run identity.
 - Issues, comments, issue documents, interactions, approvals, and work products.
 - Secret-backed environment bindings and secret access events.
 - Plugin tool discovery/execution routes that accept board and agent actors.
-- A Paperclip MCP server package that exposes Paperclip REST operations outward as MCP tools.
+- A ThinkingMach MCP server package that exposes ThinkingMach REST operations outward as MCP tools.
 - Execution workspaces and runtime service concepts.
 
 The gap is the governed access layer between agents and external tool/application capabilities. Current plugin/MCP surfaces are useful, but they do not provide a single default-deny policy engine, durable invocation ledger, runtime-slot supervisor, redacted audit model, or approval-safe tool execution path.
@@ -33,15 +33,15 @@ Build the MVP as **Agent Access**, exposed in the product as **Tools & Access**.
 
 The CTO accepts the default-deny gateway architecture from PAP-10341 with these MVP decisions:
 
-1. MVP clients are Paperclip agents only. External human AI clients are out of scope.
+1. MVP clients are ThinkingMach agents only. External human AI clients are out of scope.
 2. MVP connections are managed company connections only. Personal/user-owned OAuth connections are deferred.
 3. External tools are default deny. No profile or explicit allow means no discovery and no execution.
-4. Paperclip is the enforcement gateway. Agents connect to Paperclip, not directly to upstream MCP credentials or ungoverned upstream configs.
-5. The gateway governs Paperclip plugin tools, Paperclip self-MCP tools, and upstream MCP tools through one policy/audit/invocation model.
+4. ThinkingMach is the enforcement gateway. Agents connect to ThinkingMach, not directly to upstream MCP credentials or ungoverned upstream configs.
+5. The gateway governs ThinkingMach plugin tools, ThinkingMach self-MCP tools, and upstream MCP tools through one policy/audit/invocation model.
 6. Remote HTTP MCP is preferred for MVP examples and customer-facing usage.
 7. Local stdio MCP is allowed only from board/admin-created command templates, through supervised runtime slots with pooling, idle TTL, per-company/per-host caps, and no agent-supplied command strings.
 8. Ordinary write/destructive tool calls use issue-thread action cards with stored reviewed arguments. Broad trust or policy changes use formal approvals.
-9. First examples are synthetic fixtures, then Paperclip self-read, GitHub triage, and approval-gated outbox/social examples.
+9. First examples are synthetic fixtures, then ThinkingMach self-read, GitHub triage, and approval-gated outbox/social examples.
 10. The UI home is Company Settings > Tools & Access, with effective tools visible on agent details and runtime slots visible in settings.
 
 ## Product Concepts
@@ -64,11 +64,11 @@ A reusable bundle assigned to company defaults, agents, projects, routines, or i
 
 `Policy`
 
-Server-evaluated rule that can allow, block, require approval, redact, rate-limit, or defer because runtime capacity is unavailable. Policies are evaluated from authoritative Paperclip state, not model-provided context.
+Server-evaluated rule that can allow, block, require approval, redact, rate-limit, or defer because runtime capacity is unavailable. Policies are evaluated from authoritative ThinkingMach state, not model-provided context.
 
 `Gateway Session`
 
-A short-lived per-run session minted by Paperclip. It exposes only allowed tools for that run and prevents upstream credentials from reaching the agent process.
+A short-lived per-run session minted by ThinkingMach. It exposes only allowed tools for that run and prevents upstream credentials from reaching the agent process.
 
 `Invocation`
 
@@ -112,13 +112,13 @@ All foreign keys must enforce company boundaries. Raw secrets must not be copied
 
 ## Gateway and Session Model
 
-At heartbeat invocation time, Paperclip resolves the authoritative agent, issue, project, routine, workspace, adapter, and run records. It then creates a gateway session tied to that run.
+At heartbeat invocation time, ThinkingMach resolves the authoritative agent, issue, project, routine, workspace, adapter, and run records. It then creates a gateway session tied to that run.
 
-The adapter receives only Paperclip gateway configuration:
+The adapter receives only ThinkingMach gateway configuration:
 
 - gateway base URL;
 - short-lived session token;
-- optional generated MCP config pointing at Paperclip;
+- optional generated MCP config pointing at ThinkingMach;
 - no upstream MCP server credentials;
 - no unfiltered upstream tool config.
 
@@ -207,7 +207,7 @@ Audit reads require `tools:view_audit` or board/admin access. Agent-facing trans
 
 The runtime-slot strategy is explicit:
 
-- Remote HTTP MCP is preferred. It uses no local process. Paperclip proxies requests with timeouts, retries where safe, auth, and audit.
+- Remote HTTP MCP is preferred. It uses no local process. ThinkingMach proxies requests with timeouts, retries where safe, auth, and audit.
 - Local stdio MCP runs only from board/admin-created command templates stored in managed connections.
 - Agents never provide raw commands, args, cwd, env, or secret refs for stdio runtime creation.
 - Default slot identity is `(companyId, connectionId, workspaceScope, credentialScope, trustScope)`.
@@ -235,8 +235,8 @@ Phase 1 fixtures should be isolated from production behavior but contract-aligne
 - Synthetic todo/KV: safe stateful reads/writes and idempotency tests.
 - Outbox email: draft/preview/send-to-outbox with approval-gated send.
 - Mock social/blog: preview/publish/unpublish with approval-gated publish.
-- Paperclip self-read: list issues, get issue context, read plan document, list recent runs.
-- Paperclip self-governed write: add comment draft, create child issue draft, update plan draft.
+- ThinkingMach self-read: list issues, get issue context, read plan document, list recent runs.
+- ThinkingMach self-governed write: add comment draft, create child issue draft, update plan draft.
 - Filesystem sandbox: scoped list/read/write/propose patch inside a temp root.
 - Hostile MCP: malicious metadata/results, false annotations, oversized outputs, schema changes, secret-looking values.
 - Slow/crashing/stateful stdio: sleep, crash, restart, increment, large result.
@@ -272,7 +272,7 @@ Use board/admin endpoints under `/api/companies/:companyId/tools/...`:
 
 Use gateway endpoints under `/api/tool-gateway/...`:
 
-- mint/read run-bound gateway session where invoked by Paperclip runtime;
+- mint/read run-bound gateway session where invoked by ThinkingMach runtime;
 - list allowed tool descriptors for the session;
 - execute tool through policy, invocation, audit, and runtime supervision;
 - read pending invocation/action result.
@@ -394,7 +394,7 @@ This ADR was checked against:
 - PAP-10383 deliverables and acceptance criteria.
 - PAP-10341 plan revision 2.
 - `doc/GOAL.md`, `doc/PRODUCT.md`, `doc/SPEC-implementation.md`, `doc/DEVELOPING.md`, and `doc/DATABASE.md`.
-- `packages/mcp-server/README.md` for the current Paperclip MCP server boundary.
+- `packages/mcp-server/README.md` for the current ThinkingMach MCP server boundary.
 - `server/src/routes/plugins.ts` for the current plugin tool access gap.
 
 No code, schema, or runtime behavior changed in this ADR.

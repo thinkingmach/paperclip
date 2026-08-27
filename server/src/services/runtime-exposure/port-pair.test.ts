@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   RUNTIME_EXPOSURE_APP_PORT_MIN,
   RUNTIME_EXPOSURE_HMR_PORT_OFFSET,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 import { allocateExposurePortPair } from "./port-pair.js";
 
@@ -55,7 +55,7 @@ describe("allocateExposurePortPair", () => {
     });
 
     it("ignores a legacy pinned port outside the dedicated range", async () => {
-      // 45439 is the pre-feature Paperclip App port; the broker can never
+      // 45439 is the pre-feature ThinkingMach App port; the broker can never
       // publish it, so the allocator must relocate rather than fail.
       const pair = await allocateExposurePortPair({
         isPortAvailable: async () => true,

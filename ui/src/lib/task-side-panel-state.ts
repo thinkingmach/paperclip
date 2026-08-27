@@ -1,4 +1,4 @@
-import type { WorkspaceFileSelector } from "@paperclipai/shared";
+import type { WorkspaceFileSelector } from "@thinkingmach/shared";
 import type { SidePanelTabRecord, SidePanelTabsState } from "@/components/side-panel";
 
 const STORAGE_VERSION = 1;

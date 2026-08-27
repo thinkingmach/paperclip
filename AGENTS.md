@@ -4,7 +4,7 @@ Guidance for human and AI contributors working in this repository.
 
 ## 1. Purpose
 
-Paperclip is a control plane for AI-agent companies.
+ThinkingMach is a control plane for AI-agent companies.
 The current implementation target is V1 and is defined in `doc/SPEC-implementation.md`.
 
 ## 2. Read This First
@@ -35,10 +35,10 @@ submission.
 - `packages/adapters/`: agent adapter implementations (Claude, Codex, Cursor, etc.)
 - `packages/adapter-utils/`: shared adapter utilities
 - `packages/plugins/`: plugin system packages
-- `packages/skills-catalog/`: app-shipped skills catalog (`@paperclipai/skills-catalog`)
-- `packages/teams-catalog/`: app-shipped teams catalog (`@paperclipai/teams-catalog`)
-- `cli/`: `paperclipai` CLI package (published bin, agent-facing commands)
-- `skills/`: Paperclip runtime/operational skills (not part of the app catalog)
+- `packages/skills-catalog/`: app-shipped skills catalog (`@thinkingmach/skills-catalog`)
+- `packages/teams-catalog/`: app-shipped teams catalog (`@thinkingmach/teams-catalog`)
+- `cli/`: `thinkingmach` CLI package (published bin, agent-facing commands)
+- `skills/`: ThinkingMach runtime/operational skills (not part of the app catalog)
 - `doc/`: operational and product docs
 
 ## 4. Dev Setup (Auto DB)
@@ -92,15 +92,15 @@ If you change schema/API behavior, update all impacted layers:
 Prefer additive updates. Keep `doc/SPEC.md` and `doc/SPEC-implementation.md` aligned.
 
 5. Keep repo plan docs dated and centralized.
-When you are creating a plan file in the repository itself, new plan documents belong in `doc/plans/` and should use `YYYY-MM-DD-slug.md` filenames. This does not replace Paperclip issue planning: if a Paperclip issue asks for a plan, update the issue `plan` document per the `paperclip` skill instead of creating a repo markdown file.
+When you are creating a plan file in the repository itself, new plan documents belong in `doc/plans/` and should use `YYYY-MM-DD-slug.md` filenames. This does not replace ThinkingMach issue planning: if a ThinkingMach issue asks for a plan, update the issue `plan` document per the `paperclip` skill instead of creating a repo markdown file.
 
 6. Attach inspectable generated artifacts.
-When your task produces a user-inspectable deliverable file, follow the Paperclip skill's "Generated Artifacts and Work Products" workflow before final disposition. In this repo, prefer the self-contained skill helper at `skills/paperclip/scripts/paperclip-upload-artifact.sh` so the file is available through the Paperclip API, create/update an artifact work product when the file is the deliverable, link the uploaded artifact in the final issue comment, and then set status. Do not rely on local filesystem paths as the only access path. If an important file intentionally remains workspace-only, create/update a work product with `metadata.resourceRef.kind: "workspace_file"` and a workspace-relative path, then name that work product and path in the final comment. Treat browse/search as a fallback for recovering workspace files, not the preferred deliverable path. See `doc/AGENT-ARTIFACTS.md` for details and `.mp4`/`.webm` examples.
+When your task produces a user-inspectable deliverable file, follow the ThinkingMach skill's "Generated Artifacts and Work Products" workflow before final disposition. In this repo, prefer the self-contained skill helper at `skills/paperclip/scripts/paperclip-upload-artifact.sh` so the file is available through the ThinkingMach API, create/update an artifact work product when the file is the deliverable, link the uploaded artifact in the final issue comment, and then set status. Do not rely on local filesystem paths as the only access path. If an important file intentionally remains workspace-only, create/update a work product with `metadata.resourceRef.kind: "workspace_file"` and a workspace-relative path, then name that work product and path in the final comment. Treat browse/search as a fallback for recovering workspace files, not the preferred deliverable path. See `doc/AGENT-ARTIFACTS.md` for details and `.mp4`/`.webm` examples.
 
 7. Name the three data paths correctly.
 This repo has three separate data paths. Do not confuse them. Match a change to a path by its file path, not by the word "observability" or "telemetry" alone.
 
-- **Telemetry** is the Paperclip first-party event system. It is opt-out and it sends data to a Paperclip endpoint by default. Its paths are:
+- **Telemetry** is the ThinkingMach first-party event system. It is opt-out and it sends data to a ThinkingMach endpoint by default. Its paths are:
   - `packages/shared/src/telemetry/`
   - the generated contract `packages/shared/src/telemetry/generated/paperclip-telemetry.ts`
   - each caller of `packages/shared/src/telemetry/events.ts` or `packages/shared/src/telemetry/client.ts`
@@ -117,7 +117,7 @@ This repo has three separate data paths. Do not confuse them. Match a change to 
 
 Apply a review level that matches the path:
 
-- **Telemetry change (strict review).** The author updates the generated contract first. The author updates `packages/shared/src/telemetry/README.md` in the same pull request. The author requests a privacy review. Reason: a Telemetry event goes to a Paperclip endpoint by default, so a mistake sends data immediately.
+- **Telemetry change (strict review).** The author updates the generated contract first. The author updates `packages/shared/src/telemetry/README.md` in the same pull request. The author requests a privacy review. Reason: a Telemetry event goes to a ThinkingMach endpoint by default, so a mistake sends data immediately.
 - **Observability change (lighter review).** The operator endpoint gate stays in place. The no-operation behaviour stays when no endpoint is set. A privacy review is not necessary while the change stays inside the closed span-attribute allowlist.
 - **Run-log change (no extra review).** A run-log change needs neither review level above, because the data stays in the instance database.
 

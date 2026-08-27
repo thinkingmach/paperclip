@@ -11,7 +11,7 @@ import {
   instanceUserRoles,
   issues,
   principalPermissionGrants,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -51,7 +51,7 @@ function legacyProvisionedPrefix(stackId: string) {
 }
 
 function legacyProvisionedDescription(stackId: string) {
-  return `Provisioned by Paperclip Cloud for stack ${stackId}.`;
+  return `Provisioned by ThinkingMach Cloud for stack ${stackId}.`;
 }
 
 describeEmbeddedPostgres("cloud tenant company provisioning", () => {
@@ -64,11 +64,11 @@ describeEmbeddedPostgres("cloud tenant company provisioning", () => {
   }, 20_000);
 
   beforeEach(() => {
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = SERVER_TOKEN;
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = SERVER_TOKEN;
   });
 
   afterEach(async () => {
-    delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
+    delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
     await db.delete(activityLog);
     await db.delete(principalPermissionGrants);
     await db.delete(companyMemberships);

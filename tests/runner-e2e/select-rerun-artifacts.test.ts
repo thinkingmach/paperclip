@@ -9,7 +9,7 @@ const RUN_ID = "33843305626";
 const SOURCE_SHA = "0123456789abcdef0123456789abcdef01234567";
 const SOURCE_REF = "refs/heads/fix/runner-paid-matrix-integrity-v2";
 const WORKFLOW_RUN_URL =
-  "https://github.com/paperclipai/paperclip/actions/runs/33843305626";
+  "https://github.com/thinkingmach/paperclip/actions/runs/33843305626";
 const RETAINED = "core-compatibility.legacy-codex.local.message-marker";
 const RERUN = "core-compatibility.runner-codex.local.plan-revise-accept";
 const cleanupDirectories: string[] = [];

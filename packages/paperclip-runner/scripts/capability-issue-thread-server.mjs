@@ -150,11 +150,11 @@ export async function loadCapabilityIssueThreadRunner(importModule = importDistR
 }
 
 function scratchRoot() {
-  return process.env.PAPERCLIP_RUN_SCRATCH_DIR ?? process.env.PAPERCLIP_SCRATCH_DIR ?? tmpdir();
+  return process.env.THINKINGMACH_RUN_SCRATCH_DIR ?? process.env.THINKINGMACH_SCRATCH_DIR ?? tmpdir();
 }
 
 async function createWorkingDirectory(root, prefix = "capability-issue-thread-") {
-  // Managed previews can outlive the heartbeat that launched them. Paperclip
+  // Managed previews can outlive the heartbeat that launched them. ThinkingMach
   // removes that heartbeat's scratch directory when the run ends, so ensure
   // the inherited parent still exists before every later session is minted.
   await mkdir(root, { recursive: true });
@@ -165,7 +165,7 @@ async function createWorkingDirectory(root, prefix = "capability-issue-thread-")
 function issueThreadSeed(runner, scenario) {
   return runner.createCapabilityFixtureState({
     epochMs: Date.UTC(2026, 7, 9, 9, 0, 0),
-    company: { id: "company-1", name: "Mock Paperclip Company", issuePrefix: "MCK" },
+    company: { id: "company-1", name: "Mock ThinkingMach Company", issuePrefix: "MCK" },
     actors: [
       {
         id: "actor-1",
@@ -235,7 +235,7 @@ function harnessConfiguration(source, fallbackModel) {
   const requestedManagedProfileId = source.managedProfileId === undefined || source.managedProfileId === null
     ? "default"
     : String(source.managedProfileId).trim();
-  const configuredManagedProfileId = process.env.PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID?.trim();
+  const configuredManagedProfileId = process.env.THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID?.trim();
   const managedProfileId = provider === "claude_managed" && requestedManagedProfileId === "default" && configuredManagedProfileId
     ? configuredManagedProfileId
     : requestedManagedProfileId;
@@ -251,7 +251,7 @@ function harnessConfiguration(source, fallbackModel) {
   const requestedAgentCoreProfileId = source.agentCoreProfileId === undefined || source.agentCoreProfileId === null
     ? "default"
     : String(source.agentCoreProfileId).trim();
-  const configuredAgentCoreProfileId = process.env.PAPERCLIP_AWS_AGENTCORE_PROFILE_ID?.trim();
+  const configuredAgentCoreProfileId = process.env.THINKINGMACH_AWS_AGENTCORE_PROFILE_ID?.trim();
   const agentCoreProfileId = provider === "aws_agentcore" && requestedAgentCoreProfileId === "default" && configuredAgentCoreProfileId
     ? configuredAgentCoreProfileId
     : requestedAgentCoreProfileId;
@@ -297,7 +297,7 @@ function harnessConfiguration(source, fallbackModel) {
 }
 
 function resolveManagedProfile(configuration) {
-  const profileId = process.env.PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID?.trim() || configuration.managedProfileId;
+  const profileId = process.env.THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID?.trim() || configuration.managedProfileId;
   if (profileId !== configuration.managedProfileId) {
     throw new RouteError(400, "managed_profile_not_found", "The selected Claude Managed profile is not configured on this Runner Lab server.");
   }
@@ -330,26 +330,26 @@ function resolveAgentCoreProfile(configuration) {
     if (!value) throw new RouteError(503, "agentcore_profile_unavailable", `AWS AgentCore profile is missing ${name}. Run aws-agentcore:provision and aws-agentcore:lab.`);
     return value;
   };
-  const profileId = required("PAPERCLIP_AWS_AGENTCORE_PROFILE_ID");
+  const profileId = required("THINKINGMACH_AWS_AGENTCORE_PROFILE_ID");
   if (profileId !== configuration.agentCoreProfileId) {
     throw new RouteError(400, "agentcore_profile_not_found", "The selected AWS AgentCore profile is not configured on this Runner Lab server.");
   }
   return {
     profileId,
     region: required("AWS_REGION"),
-    accountId: required("PAPERCLIP_AWS_AGENTCORE_ACCOUNT_ID"),
-    harnessArn: required("PAPERCLIP_AWS_AGENTCORE_HARNESS_ARN"),
-    harnessVersion: required("PAPERCLIP_AWS_AGENTCORE_HARNESS_VERSION"),
-    endpointArn: required("PAPERCLIP_AWS_AGENTCORE_ENDPOINT_ARN"),
-    endpointQualifier: required("PAPERCLIP_AWS_AGENTCORE_ENDPOINT_QUALIFIER"),
-    agentRuntimeArn: required("PAPERCLIP_AWS_AGENTCORE_RUNTIME_ARN"),
-    memoryArn: required("PAPERCLIP_AWS_AGENTCORE_MEMORY_ARN"),
-    memoryId: required("PAPERCLIP_AWS_AGENTCORE_MEMORY_ID"),
-    invocationRoleArn: required("PAPERCLIP_AWS_AGENTCORE_INVOCATION_ROLE_ARN"),
-    contextBucket: required("PAPERCLIP_AWS_AGENTCORE_CONTEXT_BUCKET"),
-    contextPrefix: required("PAPERCLIP_AWS_AGENTCORE_CONTEXT_PREFIX"),
-    contextKmsKeyArn: required("PAPERCLIP_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN"),
-    qualificationRevision: required("PAPERCLIP_AWS_AGENTCORE_QUALIFICATION_REVISION"),
+    accountId: required("THINKINGMACH_AWS_AGENTCORE_ACCOUNT_ID"),
+    harnessArn: required("THINKINGMACH_AWS_AGENTCORE_HARNESS_ARN"),
+    harnessVersion: required("THINKINGMACH_AWS_AGENTCORE_HARNESS_VERSION"),
+    endpointArn: required("THINKINGMACH_AWS_AGENTCORE_ENDPOINT_ARN"),
+    endpointQualifier: required("THINKINGMACH_AWS_AGENTCORE_ENDPOINT_QUALIFIER"),
+    agentRuntimeArn: required("THINKINGMACH_AWS_AGENTCORE_RUNTIME_ARN"),
+    memoryArn: required("THINKINGMACH_AWS_AGENTCORE_MEMORY_ARN"),
+    memoryId: required("THINKINGMACH_AWS_AGENTCORE_MEMORY_ID"),
+    invocationRoleArn: required("THINKINGMACH_AWS_AGENTCORE_INVOCATION_ROLE_ARN"),
+    contextBucket: required("THINKINGMACH_AWS_AGENTCORE_CONTEXT_BUCKET"),
+    contextPrefix: required("THINKINGMACH_AWS_AGENTCORE_CONTEXT_PREFIX"),
+    contextKmsKeyArn: required("THINKINGMACH_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN"),
+    qualificationRevision: required("THINKINGMACH_AWS_AGENTCORE_QUALIFICATION_REVISION"),
     eventExpiryDays: 90,
     maxEstimatedSessionCostUsd: configuration.maxEstimatedSessionCostUsd,
     maxIterations: 8,

@@ -1,6 +1,6 @@
 // The descriptor-bound credential read helper. The server runs it in the sandbox
 // as `node -e <this file> <sessionHome> <maxBytes> [<expectedUid>]`. The sandbox
-// already runs node for the Paperclip bridge, so the helper needs no extra
+// already runs node for the ThinkingMach bridge, so the helper needs no extra
 // runtime.
 //
 // The helper closes the time-of-check-to-time-of-use (TOCTOU) window. It opens

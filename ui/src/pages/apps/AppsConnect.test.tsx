@@ -3,7 +3,7 @@
 import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { CONNECTABLE_APP_DEFINITIONS } from "@paperclipai/shared";
+import { CONNECTABLE_APP_DEFINITIONS } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/api/client";
 import { queryKeys } from "@/lib/queryKeys";
@@ -72,7 +72,7 @@ vi.mock("@/lib/router", () => ({
 vi.mock("@/context/CompanyContext", () => ({
   useCompany: () => ({
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach" },
   }),
 }));
 
@@ -536,7 +536,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
   });
 
   it("shows Gmail's instance configuration notice instead of a dead connect path", async () => {
-    const reason = "Configure Paperclip ID before connecting Gmail.";
+    const reason = "Configure ThinkingMach ID before connecting Gmail.";
     listGalleryMock.mockResolvedValue({
       apps: [{ ...GMAIL, availability: { available: false, reason } }],
     });
@@ -557,7 +557,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     expect(container.textContent).toContain("Your OAuth app");
     expect(container.textContent).toContain("Open Asana app settings");
     expect(container.textContent).not.toContain("Create an Asana MCP OAuth app");
-    expect(container.textContent).toContain("Paperclip callback URL");
+    expect(container.textContent).toContain("ThinkingMach callback URL");
     expect(container.textContent).toContain(
       "http://localhost:3000/api/tools/oauth/callback",
     );
@@ -694,18 +694,18 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     await render();
     await passAccessStep();
 
-    expect(container.textContent).toContain("Connect with Paperclip");
+    expect(container.textContent).toContain("Connect with ThinkingMach");
     expect(container.textContent).not.toContain("Required once for managed Google sign-in.");
     expect(container.textContent).not.toContain("Your OAuth app");
 
     await act(async () => {
-      buttonByText("Connect with Paperclip")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      buttonByText("Connect with ThinkingMach")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     await flushReact();
 
     expect(startCloudConnectorEnrollmentMock).toHaveBeenCalledWith(
       "company-1",
-      "Paperclip",
+      "ThinkingMach",
       "/apps/connect?source=gmail&stage=setup",
     );
     expect(navigateTopLevelMock).toHaveBeenCalledWith(
@@ -720,7 +720,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     await render();
 
     expect(container.textContent).not.toContain("Google Developer Preview access required");
-    expect(container.textContent).not.toContain("does not enable unrelated Paperclip customers");
+    expect(container.textContent).not.toContain("does not enable unrelated ThinkingMach customers");
     expect(container.textContent).not.toContain("final project-registration email");
     expect(container.textContent).not.toContain("Apply or verify Developer Preview enrollment");
     expect(radioContaining("Just me")).toBeTruthy();
@@ -745,7 +745,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
       (heading) => heading.textContent?.trim() === "Connect Google Calendar",
     );
     expect(duplicateHeadings).toHaveLength(1);
-    expect(container.textContent).toContain("What should Paperclip be able to do?");
+    expect(container.textContent).toContain("What should ThinkingMach be able to do?");
     expect(container.textContent).toContain("Review requirements");
     expect(container.textContent).not.toContain("Connect Google Calendar to read and manage events.");
     expect(container.textContent).not.toContain("All event mutations require approval.");
@@ -756,7 +756,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     expect(container.querySelector('input[placeholder="My app"]')).toBeNull();
 
     const capabilityQuestion = Array.from(container.querySelectorAll("label")).find(
-      (label) => label.textContent === "What should Paperclip be able to do?",
+      (label) => label.textContent === "What should ThinkingMach be able to do?",
     );
     expect(capabilityQuestion?.closest(".max-w-xl")?.classList.contains("bg-card")).toBe(false);
   });
@@ -991,7 +991,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
 
     expect(container.textContent).toContain("Use your own OAuth app");
     expect(container.querySelector("#curated-oauth-client-id")).toBeTruthy();
-    expect(container.textContent).toContain("Paperclip callback URL");
+    expect(container.textContent).toContain("ThinkingMach callback URL");
   });
 
   it("shows unavailable Vercel configuration only inside the isolated Vercel entry point", async () => {
@@ -1186,7 +1186,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     );
   });
 
-  it("shows an in-flight state while Paperclip prepares Notion sign-in", async () => {
+  it("shows an in-flight state while ThinkingMach prepares Notion sign-in", async () => {
     mockSearch.value = "source=notion";
     listGalleryMock.mockResolvedValueOnce({ apps: [NOTION] });
     connectAppMock.mockReturnValueOnce(new Promise(() => {}));
@@ -1550,7 +1550,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
       expect(listConnectionsMock).toHaveBeenCalledTimes(2);
       expect(listApplicationsMock).toHaveBeenCalledTimes(2);
       expect(container.textContent).not.toContain("Couldn’t load connection setup");
-      expect(container.textContent).toContain("Connect Notion to Paperclip");
+      expect(container.textContent).toContain("Connect Notion to ThinkingMach");
     },
   );
 
@@ -2526,7 +2526,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await gotoLinkFrame(container, "https://mcp.zapier.com/api/v1/connect?token=t");
 
     // Both routes are present: the branded shortcut and the generic form itself.
-    expect(container.textContent).toContain("Paperclip has a guided setup for Zapier.");
+    expect(container.textContent).toContain("ThinkingMach has a guided setup for Zapier.");
     expect(container.textContent).toContain("Connect your own MCP server");
     expect(buttonByText("Check link")).toBeTruthy();
   });
@@ -2565,7 +2565,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     connectAppMock.mockRejectedValue(apiError(
       422,
       "oauth_redirect_origin_unsupported",
-      "OAuth connections require PAPERCLIP_PUBLIC_URL or an auth public base URL",
+      "OAuth connections require THINKINGMACH_PUBLIC_URL or an auth public base URL",
     ));
     await render();
     await gotoLinkFrame(container, "https://mcp.example.test/mcp");
@@ -2575,8 +2575,8 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await flushReact();
     await flushReact();
 
-    expect(container.textContent).toContain("This Paperclip needs a public HTTPS address first");
-    expect(container.textContent).not.toContain("PAPERCLIP_PUBLIC_URL");
+    expect(container.textContent).toContain("This ThinkingMach needs a public HTTPS address first");
+    expect(container.textContent).not.toContain("THINKINGMACH_PUBLIC_URL");
   });
 
   it("does not ask the operator to resolve an internal name conflict", async () => {
@@ -2593,7 +2593,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await flushReact();
     await flushReact();
 
-    expect(container.textContent).toContain("Paperclip couldn’t name this connection");
+    expect(container.textContent).toContain("ThinkingMach couldn’t name this connection");
     expect(container.textContent).not.toContain("Choose a different name");
     expect(container.querySelector("#generic-mcp-name")).toBeNull();
   });
@@ -2806,7 +2806,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     });
   });
 
-  it("blocks a header Paperclip refuses to send before making a request", async () => {
+  it("blocks a header ThinkingMach refuses to send before making a request", async () => {
     await render();
     await gotoLinkFrame(container, "https://mcp.example.test/mcp");
     await openAdvanced();
@@ -2824,7 +2824,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await act(async () => setInputValue(valueInput, "evil.example"));
     await flushReact();
 
-    expect(container.textContent).toContain('Paperclip manages the "Host" header');
+    expect(container.textContent).toContain('ThinkingMach manages the "Host" header');
     expect(buttonByText("Check link")?.disabled).toBe(true);
     expect(connectAppMock).not.toHaveBeenCalled();
   });

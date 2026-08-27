@@ -4,13 +4,13 @@ import { accessSync, chmodSync, constants, mkdirSync, readFileSync } from "node:
 import { dirname, isAbsolute, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AdapterExecutionResult } from "@paperclipai/adapter-utils";
-import type { Db } from "@paperclipai/db";
+import type { AdapterExecutionResult } from "@thinkingmach/adapter-utils";
+import type { Db } from "@thinkingmach/db";
 
-import { resolvePaperclipInstanceRoot } from "../../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../../home-paths.js";
 import {
-  createPaperclipRunnerAuthorizedToolSet,
-  type PaperclipSemanticToolDefinition,
+  createThinkingMachRunnerAuthorizedToolSet,
+  type ThinkingMachSemanticToolDefinition,
 } from "../../vendor/paperclip-runner/index.js";
 import { runnerPrpCoordinator } from "./runner-prp-coordinator.js";
 
@@ -28,7 +28,7 @@ interface NativeRunnerPrepareInput {
   readonly model: string | null;
   readonly resumeProviderSessionId: string | null;
   readonly completionContract: { revision: string; criterionIds: string[] };
-  readonly semanticTools: readonly PaperclipSemanticToolDefinition[];
+  readonly semanticTools: readonly ThinkingMachSemanticToolDefinition[];
   readonly providerLaunch?: NativeRunnerProviderLaunch;
 }
 
@@ -52,7 +52,7 @@ export function buildNativeRunnerPreparePayload(
       approvalPolicy: "never",
     },
     completionContract: input.completionContract,
-    authorizedTools: createPaperclipRunnerAuthorizedToolSet(input.semanticTools),
+    authorizedTools: createThinkingMachRunnerAuthorizedToolSet(input.semanticTools),
   };
 }
 
@@ -60,8 +60,8 @@ function executableName(): string {
   return process.platform === "win32" ? "paperclip-runnerd.exe" : "paperclip-runnerd";
 }
 
-export function resolvePaperclipRunnerBinary(
-  configuredPath = process.env.PAPERCLIP_RUNNER_BINARY,
+export function resolveThinkingMachRunnerBinary(
+  configuredPath = process.env.THINKINGMACH_RUNNER_BINARY,
 ): string {
   const candidates = [
     configuredPath,
@@ -74,7 +74,7 @@ export function resolvePaperclipRunnerBinary(
     ),
   ].filter((candidate): candidate is string => Boolean(candidate));
   if (configuredPath && !isAbsolute(configuredPath)) {
-    throw new Error("PAPERCLIP_RUNNER_BINARY must be an absolute path");
+    throw new Error("THINKINGMACH_RUNNER_BINARY must be an absolute path");
   }
   for (const candidate of candidates) {
     try {
@@ -85,7 +85,7 @@ export function resolvePaperclipRunnerBinary(
     }
   }
   throw new Error(
-    "paperclip_runner_binary_missing: build @paperclipai/paperclip-runner or set PAPERCLIP_RUNNER_BINARY",
+    "paperclip_runner_binary_missing: build @thinkingmach/paperclip-runner or set THINKINGMACH_RUNNER_BINARY",
   );
 }
 
@@ -203,11 +203,11 @@ export async function executeNativeCodexRunner(input: {
     startedAt: string;
   }) => Promise<void>;
 }): Promise<AdapterExecutionResult> {
-  const binary = input.runnerBinary ?? resolvePaperclipRunnerBinary();
+  const binary = input.runnerBinary ?? resolveThinkingMachRunnerBinary();
   const runnerDigest = `sha256:${createHash("sha256").update(readFileSync(binary)).digest("hex")}`;
   const runtimeRoot = input.runtimeRoot
     ? resolve(input.runtimeRoot)
-    : resolve(resolvePaperclipInstanceRoot(), "runtime", "paperclip-runner");
+    : resolve(resolveThinkingMachInstanceRoot(), "runtime", "paperclip-runner");
   const runnerStateDirectory = resolve(runtimeRoot, "runner", input.runId);
   privateDirectory(runtimeRoot);
   privateDirectory(resolve(runtimeRoot, "control-plane"));
@@ -258,7 +258,7 @@ export async function executeNativeCodexRunner(input: {
     env: {
       ...process.env,
       ...input.environment,
-      PAPERCLIP_RUNNER_BOOTSTRAP_TICKET: prepared.bootstrapTicket,
+      THINKINGMACH_RUNNER_BOOTSTRAP_TICKET: prepared.bootstrapTicket,
     },
     stdio: ["ignore", "pipe", "pipe"],
   });

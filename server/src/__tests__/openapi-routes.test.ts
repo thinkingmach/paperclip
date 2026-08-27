@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import request from "supertest";
 import { describe, expect, it } from "vitest";
-import { COMPANY_IMPORT_TRANSFERS_ROUTE_PATH } from "@paperclipai/shared/company-import-transfer";
+import { COMPANY_IMPORT_TRANSFERS_ROUTE_PATH } from "@thinkingmach/shared/company-import-transfer";
 import { errorHandler } from "../middleware/index.js";
 import { buildOpenApiSpec, openApiRoutes } from "../routes/openapi.js";
 
@@ -182,7 +182,7 @@ describe("openapi routes", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.openapi).toBe("3.0.0");
-    expect(res.body.info.title).toBe("Paperclip API");
+    expect(res.body.info.title).toBe("ThinkingMach API");
     expect(res.body.paths["/api/openapi.json"].get.summary).toBe("Get the generated OpenAPI document");
     expect(res.body.paths["/api/companies/{companyId}/agents"].get.summary).toBe("List agents in a company");
     expect(res.body.paths["/api/agents/{id}/keys"].post.summary).toBe("Create an agent API key");

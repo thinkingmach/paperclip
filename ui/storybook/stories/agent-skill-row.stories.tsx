@@ -87,7 +87,7 @@ export const DisabledUnsupported: Story = {
     data: AVAILABLE,
     checked: false,
     disabled: true,
-    disabledReason: "Paperclip cannot manage skills for this adapter yet.",
+    disabledReason: "ThinkingMach cannot manage skills for this adapter yet.",
   },
 };
 

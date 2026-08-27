@@ -97,7 +97,7 @@ describe("OpenCode runnerd proxy executable", () => {
 
   it("fails closed instead of accepting an ambient command fallback", () => {
     expect(() => trustedOpenCodeLaunchBinding([]))
-      .toThrow("refusing ambient PATH or PAPERCLIP_OPENCODE_COMMAND fallback");
+      .toThrow("refusing ambient PATH or THINKINGMACH_OPENCODE_COMMAND fallback");
     expect(() => trustedOpenCodeLaunchBinding([
       TRUSTED_OPENCODE_EXECUTABLE_ARG,
       "/tmp/unqualified-opencode",
@@ -112,13 +112,13 @@ describe("OpenCode runnerd proxy executable", () => {
   it("removes the ambient override from the launched provider environment", () => {
     const original = {
       OPENROUTER_API_KEY: "secret",
-      PAPERCLIP_OPENCODE_COMMAND: "/tmp/unqualified-opencode",
+      THINKINGMACH_OPENCODE_COMMAND: "/tmp/unqualified-opencode",
     };
 
     expect(withoutAmbientOpenCodeCommand(original)).toEqual({
       OPENROUTER_API_KEY: "secret",
     });
-    expect(original.PAPERCLIP_OPENCODE_COMMAND).toBe("/tmp/unqualified-opencode");
+    expect(original.THINKINGMACH_OPENCODE_COMMAND).toBe("/tmp/unqualified-opencode");
   });
 });
 

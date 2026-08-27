@@ -408,8 +408,8 @@ export async function prepareAcpxRuntimeSandbox(input: {
     XDG_CONFIG_HOME: configDirectory,
     XDG_DATA_HOME: dataDirectory,
     XDG_CACHE_HOME: cacheDirectory,
-    PAPERCLIP_ACPX_PROFILE: input.agent,
-    PAPERCLIP_ACPX_ISOLATED_CONTEXT: "1",
+    THINKINGMACH_ACPX_PROFILE: input.agent,
+    THINKINGMACH_ACPX_ISOLATED_CONTEXT: "1",
     ...(input.agent === "pi"
       ? {
           PI_CODING_AGENT_DIR: agentHomeDirectory,
@@ -575,7 +575,7 @@ function isPersistableEnvironmentName(name: string): boolean {
       name,
     ) ||
     /^(?:HOME|XDG_CONFIG_HOME|XDG_DATA_HOME|XDG_CACHE_HOME)$/.test(name) ||
-    /^(?:PAPERCLIP_ACPX_PROFILE|PAPERCLIP_ACPX_ISOLATED_CONTEXT)$/.test(name) ||
+    /^(?:THINKINGMACH_ACPX_PROFILE|THINKINGMACH_ACPX_ISOLATED_CONTEXT)$/.test(name) ||
     /^(?:PI_CODING_AGENT_DIR|PI_SKIP_VERSION_CHECK|PI_TELEMETRY)$/.test(name) ||
     /^(?:CLAUDE_CONFIG_DIR|CODEX_HOME|NO_BROWSER|DEFAULT_AUTH_REQUEST)$/.test(
       name,

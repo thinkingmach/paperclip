@@ -396,8 +396,8 @@ describe("SidebarCompanyMenu", () => {
 
   it("hides the production-shell invite shortcut when the operator hides the invites surface", async () => {
     // The production shell (streamlined UI disabled) must honor
-    // PAPERCLIP_HIDDEN_SETTINGS like the streamlined menu — this is the knob
-    // Paperclip Cloud uses to drop the shortcut on its managed stacks.
+    // THINKINGMACH_HIDDEN_SETTINGS like the streamlined menu — this is the knob
+    // ThinkingMach Cloud uses to drop the shortcut on its managed stacks.
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     queryClient.setQueryData(queryKeys.health, { status: "ok", hiddenSettings: ["company.invites"] });
     const root = createRoot(container);
@@ -625,7 +625,7 @@ describe("SidebarCompanyMenu", () => {
     });
   });
 
-  describe("in Paperclip Cloud", () => {
+  describe("in ThinkingMach Cloud", () => {
     it("closes the menu and enters the Cloud logout flow without local sign-out", async () => {
       const { root } = renderMenu({ cloud: true });
       await flushReact();

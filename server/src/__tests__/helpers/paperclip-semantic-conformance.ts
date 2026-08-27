@@ -14,7 +14,7 @@ import {
   issueRelations,
   issues,
   issueThreadInteractions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   CapabilitySemanticDispatcher,
   createCapabilityFixtureState,
@@ -35,7 +35,7 @@ import { issueRoutes } from "../../routes/issues.js";
 
 type Db = ReturnType<typeof createDb>;
 
-export interface PaperclipSemanticConformanceIds {
+export interface ThinkingMachSemanticConformanceIds {
   readonly companyId: string;
   readonly actorId: string;
   readonly foreignCompanyId: string;
@@ -50,7 +50,7 @@ interface IdempotencyRecord {
 }
 
 interface ProductionWorld {
-  readonly port: PaperclipRouteSemanticPort;
+  readonly port: ThinkingMachRouteSemanticPort;
   readonly dispatcher: CapabilitySemanticDispatcher;
   readonly taskId: string;
   readonly runId: string;
@@ -61,17 +61,17 @@ interface ProductionWorld {
  * issueRoutes, so authorization, service transactions, audit logging, document
  * revisions, interactions, and terminal arbitration remain production-owned.
  */
-export class PaperclipProductionSemanticConformanceAdapter implements SemanticConformanceAdapter {
+export class ThinkingMachProductionSemanticConformanceAdapter implements SemanticConformanceAdapter {
   readonly id = "paperclip-production-services";
   readonly kind = "production_binding" as const;
 
   private constructor(readonly worlds: ReadonlyMap<string, ProductionWorld>) {}
 
-  static async create(db: Db, ids: PaperclipSemanticConformanceIds): Promise<PaperclipProductionSemanticConformanceAdapter> {
+  static async create(db: Db, ids: ThinkingMachSemanticConformanceIds): Promise<ThinkingMachProductionSemanticConformanceAdapter> {
     const app = createProductionAuthorityApp(db, ids);
     const worlds = new Map<string, ProductionWorld>();
     for (const [id, binding] of Object.entries(ids.worlds)) {
-      const port = new PaperclipRouteSemanticPort(db, app, ids, binding);
+      const port = new ThinkingMachRouteSemanticPort(db, app, ids, binding);
       await port.refresh();
       worlds.set(id, {
         port,
@@ -80,7 +80,7 @@ export class PaperclipProductionSemanticConformanceAdapter implements SemanticCo
         runId: binding.runId,
       });
     }
-    return new PaperclipProductionSemanticConformanceAdapter(worlds);
+    return new ThinkingMachProductionSemanticConformanceAdapter(worlds);
   }
 
   async execute(vector: SemanticConformanceVector): Promise<SemanticConformanceObservation> {
@@ -105,9 +105,9 @@ export class PaperclipProductionSemanticConformanceAdapter implements SemanticCo
   }
 }
 
-export async function seedPaperclipSemanticConformance(
+export async function seedThinkingMachSemanticConformance(
   db: Db,
-  ids: PaperclipSemanticConformanceIds,
+  ids: ThinkingMachSemanticConformanceIds,
 ): Promise<void> {
   await db.insert(companies).values([
     { id: ids.companyId, name: "Semantic Conformance", issuePrefix: "SCF" },
@@ -179,14 +179,14 @@ export async function seedPaperclipSemanticConformance(
   });
 }
 
-class PaperclipRouteSemanticPort {
+class ThinkingMachRouteSemanticPort {
   readonly #idempotency = new Map<string, IdempotencyRecord>();
   #state: CapabilityFixtureState;
 
   constructor(
     readonly db: Db,
     readonly app: Application,
-    readonly ids: PaperclipSemanticConformanceIds,
+    readonly ids: ThinkingMachSemanticConformanceIds,
     readonly binding: { taskId: string; runId: string; capabilities: readonly string[] },
   ) {
     this.#state = createCapabilityFixtureState();
@@ -502,15 +502,15 @@ class PaperclipRouteSemanticPort {
   }
 
   private post(path: string, body: unknown) {
-    return request(this.app).post(path).set("X-Paperclip-Run-Id", this.binding.runId).send(body);
+    return request(this.app).post(path).set("X-ThinkingMach-Run-Id", this.binding.runId).send(body);
   }
 
   private put(path: string, body: unknown) {
-    return request(this.app).put(path).set("X-Paperclip-Run-Id", this.binding.runId).send(body);
+    return request(this.app).put(path).set("X-ThinkingMach-Run-Id", this.binding.runId).send(body);
   }
 
   private patch(path: string, body: unknown) {
-    return request(this.app).patch(path).set("X-Paperclip-Run-Id", this.binding.runId).send(body);
+    return request(this.app).patch(path).set("X-ThinkingMach-Run-Id", this.binding.runId).send(body);
   }
 }
 
@@ -526,7 +526,7 @@ function toFixtureRunStatus(status: string): CapabilityFixtureState["runs"][numb
   }
 }
 
-function createProductionAuthorityApp(db: Db, ids: PaperclipSemanticConformanceIds): Application {
+function createProductionAuthorityApp(db: Db, ids: ThinkingMachSemanticConformanceIds): Application {
   const app = express();
   app.use(express.json());
   app.use((req, _res, next) => {
@@ -534,7 +534,7 @@ function createProductionAuthorityApp(db: Db, ids: PaperclipSemanticConformanceI
       type: "agent",
       agentId: ids.actorId,
       companyId: ids.companyId,
-      runId: req.header("X-Paperclip-Run-Id") ?? undefined,
+      runId: req.header("X-ThinkingMach-Run-Id") ?? undefined,
       source: "agent_jwt",
     };
     next();

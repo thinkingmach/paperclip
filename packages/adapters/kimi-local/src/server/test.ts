@@ -5,14 +5,14 @@ import type {
   AdapterEnvironmentCheck,
   AdapterEnvironmentTestContext,
   AdapterEnvironmentTestResult,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   asNumber,
   asString,
   asStringArray,
   ensurePathInEnv,
   parseObject,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 import {
   ensureAdapterExecutionTargetCommandResolvable,
   maybeRunSandboxInstallCommand,
@@ -20,7 +20,7 @@ import {
   runAdapterExecutionTargetProcess,
   describeAdapterExecutionTarget,
   resolveAdapterExecutionTargetCwd,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import { SANDBOX_INSTALL_COMMAND } from "../index.js";
 import { resolveKimiExecutionEngineForRun, testKimiAcpEnvironment } from "./acp.js";
 import { detectKimiAuthRequired, parseKimiJsonl } from "./parse.js";

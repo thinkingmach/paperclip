@@ -13,7 +13,7 @@ function baseContext(overrides: Record<string, unknown> = {}) {
     config: {},
     context: {
       issueId: "issue-1",
-      paperclipWake: {
+      thinkingmachWake: {
         reason: "issue_assigned",
         issue: {
           id: "issue-1",
@@ -29,7 +29,7 @@ function baseContext(overrides: Record<string, unknown> = {}) {
         fallbackFetchNeeded: false,
       },
       paperclipTaskMarkdown: [
-        "Paperclip task context:",
+        "ThinkingMach task context:",
         '- Issue: "PAP-3404"',
         '- Title: "Plan the Hermes prompt update"',
         "",
@@ -48,7 +48,7 @@ function baseContext(overrides: Record<string, unknown> = {}) {
 
 test("renders standard assignment wake with task authority and no backlog discovery guidance", () => {
   const prompt = buildPrompt(baseContext({
-    paperclipWake: {
+    thinkingmachWake: {
       reason: "issue_assigned",
       issue: {
         id: "issue-1",
@@ -64,7 +64,7 @@ test("renders standard assignment wake with task authority and no backlog discov
       fallbackFetchNeeded: false,
     },
     paperclipTaskMarkdown: [
-      "Paperclip task context:",
+      "ThinkingMach task context:",
       '- Issue: "PAP-11750"',
       '- Title: "Add Hermes prompt rendering regression tests"',
       "",
@@ -75,11 +75,11 @@ test("renders standard assignment wake with task authority and no backlog discov
     ].join("\n"),
   }), {});
 
-  expect(prompt).toContain("## Paperclip Wake Payload");
+  expect(prompt).toContain("## ThinkingMach Wake Payload");
   expect(prompt).toContain("- reason: issue_assigned");
   expect(prompt).toContain("- issue: PAP-11750 Add Hermes prompt rendering regression tests");
   expect(prompt).toContain("- issue work mode: standard");
-  expect(prompt).toContain("Paperclip task context:");
+  expect(prompt).toContain("ThinkingMach task context:");
   expect(prompt).toContain("Add focused unit tests for assignment wake and custom prompt rendering.");
   expect(prompt).toContain("The harness already checked out this issue for the current run.");
   expect(prompt).toContain("clear final disposition");
@@ -92,7 +92,7 @@ test("renders scoped planning wake authority before the Hermes default workflow"
     paperclipApiUrl: "http://127.0.0.1:3101/api",
   });
 
-  expect(prompt).toContain("## Paperclip Wake Payload");
+  expect(prompt).toContain("## ThinkingMach Wake Payload");
   expect(prompt).toContain("- issue: PAP-3404 Plan the Hermes prompt update");
   expect(prompt).toContain("- planning directive: Make the plan only. Do not write code or perform implementation work.");
   expect(prompt).toContain("- checkout: already claimed by the harness for this run");
@@ -106,7 +106,7 @@ test("renders scoped planning wake authority before the Hermes default workflow"
 
 test("renders resume deltas instead of full scoped-wake boilerplate when continuing a session", () => {
   const prompt = buildPrompt(baseContext({
-    paperclipWake: {
+    thinkingmachWake: {
       reason: "issue_commented",
       issue: {
         id: "issue-1",
@@ -123,8 +123,8 @@ test("renders resume deltas instead of full scoped-wake boilerplate when continu
     },
   }), {}, { resumedSession: true });
 
-  expect(prompt).toContain("## Paperclip Resume Delta");
-  expect(prompt).toContain("You are resuming an existing Paperclip session.");
+  expect(prompt).toContain("## ThinkingMach Resume Delta");
+  expect(prompt).toContain("You are resuming an existing ThinkingMach session.");
   expect(prompt).toContain("Focus on the new wake delta below");
   expect(prompt).toContain("Please add the resume-delta case.");
   expect(prompt).toContain("- fallback fetch needed: no");
@@ -134,7 +134,7 @@ test("renders resume deltas instead of full scoped-wake boilerplate when continu
 test("renders comment wake batch guidance without defaulting to a full-thread refetch", () => {
   const prompt = buildPrompt(baseContext({
     wakeCommentId: "comment-1",
-    paperclipWake: {
+    thinkingmachWake: {
       reason: "issue_commented",
       issue: {
         id: "issue-1",
@@ -160,7 +160,7 @@ test("renders comment wake batch guidance without defaulting to a full-thread re
 
 test("renders accepted-plan continuation without authorizing implementation on the planning issue", () => {
   const prompt = buildPrompt(baseContext({
-    paperclipWake: {
+    thinkingmachWake: {
       reason: "issue_commented",
       issue: {
         id: "issue-1",
@@ -188,7 +188,7 @@ test("renders accepted-plan continuation without authorizing implementation on t
 test("keeps authoritative parent and ancestor context from task markdown", () => {
   const prompt = buildPrompt(baseContext({
     paperclipTaskMarkdown: [
-      "Paperclip task context:",
+      "ThinkingMach task context:",
       '- Issue: "PAP-3404"',
       "",
       "Authoritative parent / ancestor context:",
@@ -202,15 +202,15 @@ test("keeps authoritative parent and ancestor context from task markdown", () =>
   expect(prompt).not.toContain("check the issue body or comments for references");
 });
 
-test("renders safe Paperclip API examples from environment variables with multiline update preservation", () => {
+test("renders safe ThinkingMach API examples from environment variables with multiline update preservation", () => {
   const prompt = buildPrompt(baseContext(), {
     paperclipApiUrl: "http://paperclip.local/api",
   });
 
-  expect(prompt).toContain("Use `$PAPERCLIP_API_URL`, `$PAPERCLIP_API_KEY`, and `$PAPERCLIP_RUN_ID`");
+  expect(prompt).toContain("Use `$THINKINGMACH_API_URL`, `$THINKINGMACH_API_KEY`, and `$THINKINGMACH_RUN_ID`");
   expect(prompt).toContain("Displayed command logs may redact secrets");
-  expect(prompt).toContain('-H "Authorization: Bearer $PAPERCLIP_API_KEY"');
-  expect(prompt).toContain('-H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID"');
+  expect(prompt).toContain('-H "Authorization: Bearer $THINKINGMACH_API_KEY"');
+  expect(prompt).toContain('-H "X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID"');
   expect(prompt).toContain("body=$(cat <<'MD'");
   expect(prompt).toContain("jq -n --arg status done --arg comment \"$body\"");
   expect(prompt).toContain("--data-binary @-");
@@ -226,9 +226,9 @@ test("preserves custom prompt templates while exposing runtime and wake variable
       "api={{paperclipApiUrl}}",
       "keyEnv={{paperclipApiKeyEnv}}",
       "runEnv={{paperclipRunIdEnv}}",
-      "wakePrompt={{paperclipWakePrompt}}",
+      "wakePrompt={{thinkingmachWakePrompt}}",
       "task={{paperclipTaskMarkdown}}",
-      "wakeJson={{paperclipWakeJson}}",
+      "wakeJson={{thinkingmachWakeJson}}",
       "wake={{wakePayloadJson}}",
     ].join("\n"),
   });
@@ -236,13 +236,13 @@ test("preserves custom prompt templates while exposing runtime and wake variable
   expect(prompt).toContain("CUSTOM TEMPLATE");
   expect(prompt).toContain("agent=Hermes Engineer");
   expect(prompt).toContain("api=http://paperclip.local/api");
-  expect(prompt).toContain("keyEnv=PAPERCLIP_API_KEY");
-  expect(prompt).toContain("runEnv=PAPERCLIP_RUN_ID");
-  expect(prompt).toContain("wakePrompt=## Paperclip Wake Payload");
-  expect(prompt).toContain("task=Paperclip task context:");
+  expect(prompt).toContain("keyEnv=THINKINGMACH_API_KEY");
+  expect(prompt).toContain("runEnv=THINKINGMACH_RUN_ID");
+  expect(prompt).toContain("wakePrompt=## ThinkingMach Wake Payload");
+  expect(prompt).toContain("task=ThinkingMach task context:");
   expect(prompt).toContain("wakeJson={\"reason\":\"issue_assigned\"");
   expect(prompt).toContain('"reason":"issue_assigned"');
-  expect(prompt).toContain("## Paperclip Wake Payload");
+  expect(prompt).toContain("## ThinkingMach Wake Payload");
   expect(prompt).toContain("Issue description:\n```text\nUse the wake payload as runtime authority.\n```");
-  expect(prompt).not.toContain("Paperclip runtime identity:");
+  expect(prompt).not.toContain("ThinkingMach runtime identity:");
 });

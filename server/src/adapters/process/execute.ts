@@ -4,10 +4,10 @@ import {
   asNumber,
   asStringArray,
   parseObject,
-  buildPaperclipEnv,
+  buildThinkingMachEnv,
   buildRuntimeToolsEnv,
   isForbiddenConfigEnvKey,
-  isPaperclipRuntimeEnvKey,
+  isThinkingMachRuntimeEnvKey,
   buildInvocationEnvForLogs,
   ensurePathInEnv,
   resolveCommandForLogs,
@@ -23,23 +23,23 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   const cwd = asString(config.cwd, process.cwd());
   const envConfig = parseObject(config.env);
   const env: Record<string, string> = {
-    ...buildPaperclipEnv(agent),
+    ...buildThinkingMachEnv(agent),
     ...buildRuntimeToolsEnv(ctx.runtimeTools),
   };
   for (const [k, v] of Object.entries(envConfig)) {
     if (typeof v !== "string") continue;
-    // Runtime PAPERCLIP_* always wins over config, and PAPERCLIP_API_KEY is
+    // Runtime THINKINGMACH_* always wins over config, and THINKINGMACH_API_KEY is
     // never accepted from config — the harness-minted run token is the only
-    // source. Other PAPERCLIP_* keys Paperclip did not assign flow through.
+    // source. Other THINKINGMACH_* keys ThinkingMach did not assign flow through.
     if (isForbiddenConfigEnvKey(k)) continue;
-    if (isPaperclipRuntimeEnvKey(k) && k in env) continue;
+    if (isThinkingMachRuntimeEnvKey(k) && k in env) continue;
     env[k] = v;
   }
-  env.PAPERCLIP_RUN_ID = runId;
-  if (authToken) env.PAPERCLIP_API_KEY = authToken;
+  env.THINKINGMACH_RUN_ID = runId;
+  if (authToken) env.THINKINGMACH_API_KEY = authToken;
   // runtimeEnv is only used to resolve the command path and log HOME below;
   // the child env is built inside runChildProcess from
-  // sanitizeInheritedPaperclipEnv(process.env) + env, so a PAPERCLIP_API_KEY
+  // sanitizeInheritedThinkingMachEnv(process.env) + env, so a THINKINGMACH_API_KEY
   // on the server process never reaches the child.
   const runtimeEnv = ensurePathInEnv({ ...process.env, ...env });
   const resolvedCommand = await resolveCommandForLogs(command, cwd, runtimeEnv);

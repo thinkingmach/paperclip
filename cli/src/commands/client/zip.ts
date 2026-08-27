@@ -1,4 +1,4 @@
-// The node-side portability zip reader lives in @paperclipai/shared so the
+// The node-side portability zip reader lives in @thinkingmach/shared so the
 // server can consume the same codec (a raw uploaded zip is unzipped into the
 // exact `{ rootPath, files }` bundle the inline import source carries). This
 // module re-exports it to keep the CLI's existing import paths stable.
@@ -7,7 +7,7 @@ export {
   bytesToPortableFileEntry,
   isBlobStorePath,
   readZipArchive,
-} from "@paperclipai/shared/portability-zip";
+} from "@thinkingmach/shared/portability-zip";
 
 // STORE-only zip writer used to package a local folder in memory for the
 // chunked import transfer path. STORE keeps the writer dependency-free; the

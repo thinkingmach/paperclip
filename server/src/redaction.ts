@@ -1,4 +1,4 @@
-import { redactCommandText } from "@paperclipai/adapter-utils";
+import { redactCommandText } from "@thinkingmach/adapter-utils";
 
 const SECRET_FIELD_NAME_PATTERN = String.raw`[A-Za-z0-9_-]*(?:api[-_]?key|access[-_]?token|auth(?:_?token)?|token|authorization|bearer|secret|passwd|password|credential|jwt|private[-_]?key|cookie|connectionstring|browser[-_]?code|login[-_]?url)[A-Za-z0-9_-]*`;
 
@@ -41,16 +41,16 @@ function isAuditCountField(key: string, value: unknown): boolean {
   );
 }
 const COMMAND_PAYLOAD_KEY_RE =
-  /(^command$|^cmd$|command[-_]?line|resolved[-_]?command|PAPERCLIP_RESOLVED_COMMAND)/i;
+  /(^command$|^cmd$|command[-_]?line|resolved[-_]?command|THINKINGMACH_RESOLVED_COMMAND)/i;
 const COMMAND_ARGS_PAYLOAD_KEY_RE = /^(commandArgs|command_?args|argv)$/i;
 const JWT_VALUE_RE =
   /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)?$/;
 // Durable protocol schema identifiers share JWT's broad dotted shape but are
-// public discriminators, not credentials. Exempt the Paperclip schema
+// public discriminators, not credentials. Exempt the ThinkingMach schema
 // namespace only in fields that actually declare a schema; the same value in
 // arbitrary provider data remains subject to the fail-closed JWT guard.
-const PAPERCLIP_SCHEMA_FIELDS = new Set(["schema", "runtimeSchema"]);
-export const PAPERCLIP_PUBLIC_SCHEMA_IDS = new Set([
+const THINKINGMACH_SCHEMA_FIELDS = new Set(["schema", "runtimeSchema"]);
+export const THINKINGMACH_PUBLIC_SCHEMA_IDS = new Set([
   "paperclip.artifact.generated.v1",
   "paperclip.artifact.viewed.v1",
   "paperclip.capability-discovery.v1",
@@ -331,6 +331,7 @@ const NATIVE_RUN_SPAN_NAMES = new Set([
   "task.run",
   "task.run.measured",
   "task.settle",
+  "thinkingmach.run-performance-span.v1",
 ]);
 const CLI_SECRET_FLAG_RE = new RegExp(
   String.raw`^-{1,2}${SECRET_FIELD_NAME_PATTERN}$`,
@@ -848,14 +849,14 @@ function isKnownPrpEventDiscriminator(
   );
 }
 
-function isPaperclipSchemaDiscriminator(
+function isThinkingMachSchemaDiscriminator(
   key: string,
   value: unknown,
 ): value is string {
   return (
-    PAPERCLIP_SCHEMA_FIELDS.has(key) &&
+    THINKINGMACH_SCHEMA_FIELDS.has(key) &&
     typeof value === "string" &&
-    PAPERCLIP_PUBLIC_SCHEMA_IDS.has(value)
+    THINKINGMACH_PUBLIC_SCHEMA_IDS.has(value)
   );
 }
 
@@ -899,7 +900,7 @@ export function sanitizeRecord(
       redacted[key] = value;
       continue;
     }
-    if (isPaperclipSchemaDiscriminator(key, value)) {
+    if (isThinkingMachSchemaDiscriminator(key, value)) {
       redacted[key] = value;
       continue;
     }
@@ -910,7 +911,7 @@ export function sanitizeRecord(
     if (
       typeof value === "string" &&
       JWT_VALUE_RE.test(value) &&
-      !isPaperclipSchemaDiscriminator(key, value)
+      !isThinkingMachSchemaDiscriminator(key, value)
     ) {
       redacted[key] = REDACTED_EVENT_VALUE;
       continue;

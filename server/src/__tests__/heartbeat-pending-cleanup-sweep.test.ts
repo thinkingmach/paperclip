@@ -7,7 +7,7 @@ import {
   createDb,
   environmentLeases,
   environments,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -82,7 +82,7 @@ describeEmbeddedPostgres("heartbeat sweepPendingCleanupLeases", () => {
     const environmentId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });

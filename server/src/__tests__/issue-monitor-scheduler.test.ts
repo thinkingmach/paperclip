@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { PROVIDER_QUOTA_MONITOR_SERVICE_NAME } from "@paperclipai/shared";
+import { PROVIDER_QUOTA_MONITOR_SERVICE_NAME } from "@thinkingmach/shared";
 import {
   activityLog,
   agentRuntimeState,
@@ -19,7 +19,7 @@ import {
   issueDocuments,
   issues,
   workspaceRuntimeServices,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -158,7 +158,7 @@ describeEmbeddedPostgres("issue monitor scheduler", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",

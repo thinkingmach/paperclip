@@ -27,8 +27,8 @@ describe("HTTP body limits", () => {
     expect(PORTABLE_ZIP_UPLOAD_LIMIT_BYTES).toBe(1024 * 1024 * 1024);
   });
 
-  it("lets operators override the zip upload cap via PAPERCLIP_IMPORT_ZIP_MAX_BYTES", async () => {
-    vi.stubEnv("PAPERCLIP_IMPORT_ZIP_MAX_BYTES", String(2 * 1024 * 1024 * 1024));
+  it("lets operators override the zip upload cap via THINKINGMACH_IMPORT_ZIP_MAX_BYTES", async () => {
+    vi.stubEnv("THINKINGMACH_IMPORT_ZIP_MAX_BYTES", String(2 * 1024 * 1024 * 1024));
     vi.resetModules();
     const reloaded = await import("../http/body-limits.js");
     expect(reloaded.PORTABLE_ZIP_UPLOAD_LIMIT_BYTES).toBe(2 * 1024 * 1024 * 1024);
@@ -36,7 +36,7 @@ describe("HTTP body limits", () => {
 
   it("falls back to the default when the env override is not a usable number", async () => {
     for (const raw of ["unlimited", "0", "-5", "0.5"]) {
-      vi.stubEnv("PAPERCLIP_IMPORT_ZIP_MAX_BYTES", raw);
+      vi.stubEnv("THINKINGMACH_IMPORT_ZIP_MAX_BYTES", raw);
       vi.resetModules();
       const reloaded = await import("../http/body-limits.js");
       expect(reloaded.PORTABLE_ZIP_UPLOAD_LIMIT_BYTES, `override ${JSON.stringify(raw)}`).toBe(
@@ -46,7 +46,7 @@ describe("HTTP body limits", () => {
   });
 
   it("clamps an oversized override so derived guard math cannot overflow", async () => {
-    vi.stubEnv("PAPERCLIP_IMPORT_ZIP_MAX_BYTES", String(Number.MAX_VALUE));
+    vi.stubEnv("THINKINGMACH_IMPORT_ZIP_MAX_BYTES", String(Number.MAX_VALUE));
     vi.resetModules();
     const reloaded = await import("../http/body-limits.js");
     expect(reloaded.PORTABLE_ZIP_UPLOAD_LIMIT_BYTES).toBe(64 * 1024 * 1024 * 1024);

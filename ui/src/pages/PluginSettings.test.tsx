@@ -31,7 +31,7 @@ vi.mock("@/context/BreadcrumbContext", () => ({
 
 vi.mock("@/context/CompanyContext", () => ({
   useCompany: () => ({
-    selectedCompany: { id: "company-1", name: "Paperclip", issuePrefix: "PAP" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach", issuePrefix: "PAP" },
     selectedCompanyId: "company-1",
   }),
 }));
@@ -65,15 +65,15 @@ function basePlugin(overrides: Record<string, unknown> = {}) {
   return {
     id: "plugin-1",
     pluginKey: "paperclip.e2b-sandbox-provider",
-    packageName: "@paperclipai/plugin-e2b",
+    packageName: "@thinkingmach/plugin-e2b",
     version: "0.1.0",
     status: "error",
     categories: ["automation"],
     manifestJson: {
       displayName: "E2B Sandbox Provider",
       version: "0.1.0",
-      description: "E2B environments for Paperclip.",
-      author: "Paperclip",
+      description: "E2B environments for ThinkingMach.",
+      author: "ThinkingMach",
       capabilities: ["environment.drivers.register"],
       environmentDrivers: [
         {
@@ -185,14 +185,14 @@ describe("PluginSettings", () => {
   it("renders unconfigured manifest local folders with required paths", async () => {
     const declaration = wikiFolderDeclaration();
     mockPluginsApi.get.mockResolvedValue(basePlugin({
-      pluginKey: "paperclipai.plugin-llm-wiki",
-      packageName: "@paperclipai/plugin-llm-wiki",
+      pluginKey: "thinkingmach.plugin-llm-wiki",
+      packageName: "@thinkingmach/plugin-llm-wiki",
       status: "ready",
       manifestJson: {
         displayName: "LLM Wiki",
         version: "0.1.0",
         description: "Local-file LLM Wiki plugin.",
-        author: "Paperclip",
+        author: "ThinkingMach",
         capabilities: ["local.folders"],
         localFolders: [declaration],
       },
@@ -221,14 +221,14 @@ describe("PluginSettings", () => {
   it("hides local folders when the instance runs agents only in the platform-managed environment", async () => {
     const declaration = wikiFolderDeclaration();
     mockPluginsApi.get.mockResolvedValue(basePlugin({
-      pluginKey: "paperclipai.plugin-llm-wiki",
-      packageName: "@paperclipai/plugin-llm-wiki",
+      pluginKey: "thinkingmach.plugin-llm-wiki",
+      packageName: "@thinkingmach/plugin-llm-wiki",
       status: "ready",
       manifestJson: {
         displayName: "LLM Wiki",
         version: "0.1.0",
         description: "Local-file LLM Wiki plugin.",
-        author: "Paperclip",
+        author: "ThinkingMach",
         capabilities: ["local.folders"],
         localFolders: [declaration],
       },
@@ -258,7 +258,7 @@ describe("PluginSettings", () => {
         displayName: "LLM Wiki",
         version: "0.1.0",
         description: "Local-file LLM Wiki plugin.",
-        author: "Paperclip",
+        author: "ThinkingMach",
         capabilities: ["local.folders"],
         localFolders: [declaration],
       },
@@ -300,7 +300,7 @@ describe("PluginSettings", () => {
         displayName: "LLM Wiki",
         version: "0.1.0",
         description: "Local-file LLM Wiki plugin.",
-        author: "Paperclip",
+        author: "ThinkingMach",
         capabilities: ["local.folders"],
         localFolders: [declaration],
       },
@@ -339,7 +339,7 @@ describe("PluginSettings", () => {
         displayName: "LLM Wiki",
         version: "0.1.0",
         description: "Local-file LLM Wiki plugin.",
-        author: "Paperclip",
+        author: "ThinkingMach",
         capabilities: ["local.folders"],
         localFolders: [declaration],
       },

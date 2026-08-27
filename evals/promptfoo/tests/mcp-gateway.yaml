@@ -201,7 +201,7 @@
     wakeReason: assignment
     approvalId: ""
     scenario: |
-      The agent has a cached X-Paperclip-Tool-Gateway-Token for run
+      The agent has a cached X-ThinkingMach-Tool-Gateway-Token for run
       run-eval-001. The next tool call returns HTTP 401, reasonCode
       session_revoked. The heartbeat run is still active and the task remains
       issue-scoped, so the agent may request a fresh gateway session through

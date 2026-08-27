@@ -2,7 +2,7 @@
 
 Run-log events write to the `heartbeat_run_events` table
 (`packages/db/src/schema/heartbeat_run_events.ts:6-20`). They are not
-Paperclip Telemetry events, and they are not OpenTelemetry exports. A run-log
+ThinkingMach Telemetry events, and they are not OpenTelemetry exports. A run-log
 event needs no operator endpoint.
 
 ## Native PRP Run-Log Events
@@ -21,14 +21,14 @@ tickets, reconnect leases, authentication proofs, encryption keys, and raw
 credential material are never written to the run log.
 
 These records remain run-log events. They do not create an OpenTelemetry or
-Paperclip Telemetry export, and legacy adapters do not use this writer.
+ThinkingMach Telemetry export, and legacy adapters do not use this writer.
 
 ## Native Restart Recovery Run-Log Event
 
-Paperclip writes a `native.recovery.transition` event for every native restart
+ThinkingMach writes a `native.recovery.transition` event for every native restart
 classification and for graceful restart suspension. This immutable run-log
 record lets operators reconstruct recovery decisions without exporting data to
-Paperclip Telemetry or OpenTelemetry.
+ThinkingMach Telemetry or OpenTelemetry.
 
 The payload contains the restart kind, recovery request id when one exists,
 runner disposition, and the controller generation and provider attempt for a
@@ -44,7 +44,7 @@ remain in the bounded `native_run_finalizations.recovery_history` ledger.
 
 ## Sandbox Startup Run-Log Event
 
-Paperclip writes one `run.startup.step` event to the run log for each bring-up
+ThinkingMach writes one `run.startup.step` event to the run log for each bring-up
 step. This event is a run-log record, not a first-party telemetry event. The
 generated telemetry contract does not cover it, so this section is its canonical
 contract.
@@ -70,7 +70,7 @@ endpoint. A run with no endpoint keeps only the three run-log fields above.
 
 ## Run Phase Timing Run-Log Event
 
-Paperclip writes one `run.phase.timing` event to the run log for each
+ThinkingMach writes one `run.phase.timing` event to the run log for each
 run-lifecycle phase. This event is a run-log record, not a first-party telemetry
 event. The generated telemetry contract does not cover it, so this section is its
 canonical contract. The producer is `emitRunPhaseTiming` in

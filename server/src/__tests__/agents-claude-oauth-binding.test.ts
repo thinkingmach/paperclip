@@ -17,7 +17,7 @@ import {
   environments,
   userSecretDeclarations,
   userSecretDefinitions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -207,12 +207,12 @@ describeEmbeddedPostgres("agent service Claude OAuth binding claim", () => {
   let stopDb: (() => Promise<void>) | null = null;
   let connectionString!: string;
   let db!: ReturnType<typeof createDb>;
-  const previousKeyFile = process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+  const previousKeyFile = process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
   const secretsTmpDir = path.join(os.tmpdir(), `paperclip-claude-oauth-binding-${randomUUID()}`);
 
   beforeAll(async () => {
     mkdirSync(secretsTmpDir, { recursive: true });
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
     const started = await startEmbeddedPostgresTestDatabase("claude-oauth-binding");
     stopDb = started.cleanup;
     connectionString = started.connectionString;
@@ -236,9 +236,9 @@ describeEmbeddedPostgres("agent service Claude OAuth binding claim", () => {
   afterAll(async () => {
     await stopDb?.();
     if (previousKeyFile === undefined) {
-      delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+      delete process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
     } else {
-      process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = previousKeyFile;
+      process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = previousKeyFile;
     }
     rmSync(secretsTmpDir, { recursive: true, force: true });
   });
@@ -254,7 +254,7 @@ describeEmbeddedPostgres("agent service Claude OAuth binding claim", () => {
     const environmentId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });

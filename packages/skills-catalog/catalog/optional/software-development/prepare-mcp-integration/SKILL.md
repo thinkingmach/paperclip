@@ -2,10 +2,10 @@
 name: prepare-mcp-integration
 description: >
   Prepare MCP/vendor integrations through cited research, a content PR,
-  exact-revision human approval, and one governed Paperclip connector PR per
+  exact-revision human approval, and one governed ThinkingMach connector PR per
   approved connection. Use for new integration research and delivery; not for
   ad hoc connector coding that bypasses the playbooks.
-key: paperclipai/optional/software-development/prepare-mcp-integration
+key: thinkingmach/optional/software-development/prepare-mcp-integration
 recommendedForRoles:
   - engineer
   - product-manager
@@ -26,7 +26,7 @@ requires:
 # Prepare MCP Integration
 
 Take an input link or vendor brief through two separate phases: a reviewable
-research PR in `paperclip-content`, then connector implementation in Paperclip
+research PR in `paperclip-content`, then connector implementation in ThinkingMach
 App only after a human accepts the exact research revision and connection set.
 
 ## Preserve These Boundaries
@@ -42,7 +42,7 @@ App only after a human accepts the exact research revision and connection set.
   branch, task, or code change before the research gate is accepted.
 - Bind acceptance to one research PR head SHA and an explicit connection set.
   Acceptance does not cover later commits or additional connections.
-- Create one Paperclip App PR per approved connection. Shared prerequisite
+- Create one ThinkingMach App PR per approved connection. Shared prerequisite
   infrastructure or broad playbook corrections may use separate prerequisite
   PRs; never combine distinct connections into one connector PR.
 - Keep vendor credentials in approved secret storage. Never put secrets in
@@ -54,7 +54,7 @@ App only after a human accepts the exact research revision and connection set.
 - Request the broadest vendor permissions and scopes the connection can
   support by default. Operators should not have to predict every future tool
   they may need during setup. Enforce safe use after connection through
-  Paperclip's action catalog, resource boundaries, ask-first policies,
+  ThinkingMach's action catalog, resource boundaries, ask-first policies,
   quarantine, and audit controls.
 - Keep the default wizard limited to the minimum information needed to create
   a working connection: connection identity, authentication, and any
@@ -65,17 +65,17 @@ App only after a human accepts the exact research revision and connection set.
   setup without opening them. When a provider truly requires an explicit
   advanced choice, document the exception and explain it in plain language
   instead of exposing protocol details by default.
-- Treat vendor permission breadth and Paperclip execution governance as
+- Treat vendor permission breadth and ThinkingMach execution governance as
   separate layers. Do not reduce requested vendor permissions merely to stand
   in for missing action review, approval, quarantine, or audit policy.
 
 ## Preflight
 
-1. Load the current Paperclip skill for checkout, comments, interactions,
+1. Load the current ThinkingMach skill for checkout, comments, interactions,
    durable state, and final disposition. Load the standard PR-preparation skill
-   (`prepare-paperclip-pr` for Paperclip agents) before opening any PR.
+   (`prepare-paperclip-pr` for ThinkingMach agents) before opening any PR.
 2. Resolve the input URL(s), vendor/platform, intended MCP endpoint or API,
-   target repositories and branches, and the Paperclip issue that owns the
+   target repositories and branches, and the ThinkingMach issue that owns the
    work. Ask only when these cannot be determined safely from the brief.
 3. Fetch both repositories and record the target commit hashes. Read the
    canonical files from those target commits, not from a possibly stale working
@@ -88,7 +88,7 @@ App only after a human accepts the exact research revision and connection set.
    boundary, and independently reviewable action catalog. Record the proposed
    split early and refine it as evidence arrives.
 6. Prefer official vendor documentation, protocol/RFC sources, safe live
-   probes, and current Paperclip code. Use third-party sources only to find or
+   probes, and current ThinkingMach code. Use third-party sources only to find or
    qualify primary evidence. Record every factual claim with URL and access
    date; mark unresolved facts explicitly instead of guessing.
 
@@ -100,7 +100,7 @@ necessary.
 
 ## Keep The Run Resumable
 
-Maintain one concise checkpoint in the Paperclip issue or an issue document:
+Maintain one concise checkpoint in the ThinkingMach issue or an issue document:
 
 - current phase and owning next action;
 - input links and target repository commits;
@@ -133,14 +133,14 @@ open a second PR for the same connection accidentally.
    - token lifetime, rotation, refresh, revocation, and re-auth behavior;
    - tool inventory, action risk, resource filters, account/tier/pricing
      constraints, administrator setup, and validation needs;
-   - exact service involvement and system boundaries in Paperclip.
-4. Ground every Paperclip-surface claim in the maintained surface map and
+   - exact service involvement and system boundaries in ThinkingMach.
+4. Ground every ThinkingMach-surface claim in the maintained surface map and
    current App code. Reconcile before creating, update required indexes/logs,
    and preserve lineage, timestamps, immutable slugs, and absorbing phases as
    required by the research contract.
 5. Open one research-only PR to `paperclip-content`. Include the full planning
    package and any tightly coupled content-playbook correction, but no
-   Paperclip App implementation.
+   ThinkingMach App implementation.
 6. Run focused validation and the required PR workflow. Do not present the gate
    until checks are green, Greptile is 5/5, all actionable review comments are
    resolved, and the recorded PR head still matches the reviewed head.
@@ -152,7 +152,7 @@ open a second PR for the same connection accidentally.
    - the content and App source commits used for research;
    - the proposed connection set and why each item is independent;
    - known limitations, prerequisites, and deferred questions.
-2. Create a Paperclip `request_confirmation` interaction targeted at that issue
+2. Create a ThinkingMach `request_confirmation` interaction targeted at that issue
    document's latest revision. Use a revision-specific idempotency key and a
    `wake_assignee` continuation policy so either acceptance or rejection wakes
    the assignee. Ask the reviewer to include revision notes when rejecting.
@@ -165,7 +165,7 @@ open a second PR for the same connection accidentally.
 5. On acceptance, verify that the response still targets the latest gate
    revision and recorded PR head. Implement only the accepted connections.
 
-## Phase B: Implement In Paperclip App
+## Phase B: Implement In ThinkingMach App
 
 Refresh the App target branch, reread the current Connector Playbook, and record
 its commit before writing code. For each accepted connection:

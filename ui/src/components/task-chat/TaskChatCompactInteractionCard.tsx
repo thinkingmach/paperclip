@@ -5,27 +5,12 @@ import {
   type ComponentProps,
   type ReactNode,
 } from "react";
-import {
-  Check,
-  CheckCircle2,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Circle,
-  CircleHelp,
-  GitBranch,
-  ListChecks,
-  Loader2,
-  MessageSquareQuote,
-  Plug,
-  Search,
-  X,
-} from "lucide-react";
-import type { IssueDocument } from "@paperclipai/shared";
+import { Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, Circle, CircleHelp, GitBranch, ListChecks, Loader2, MessageSquareQuote, Plug, Search, X,  } from "lucide-react";
+import type { IssueDocument } from "@thinkingmach/shared";
 import type {
-  PaperclipQuestionResponse,
-  PaperclipQuestionSet,
-} from "@paperclipai/adapter-utils";
+  ThinkingMachQuestionResponse,
+  ThinkingMachQuestionSet,
+} from "@thinkingmach/adapter-utils";
 import { IssueThreadInteractionCard } from "@/components/IssueThreadInteractionCard";
 import { ConnectionIntentInteractionBody } from "@/features/connections/ConnectionIntentInteractionBody";
 import { MarkdownBody } from "@/components/MarkdownBody";
@@ -649,7 +634,7 @@ function ReceiptDisclosure({
 
 function questionSetForInteraction(
   interaction: AskUserQuestionsInteraction,
-): PaperclipQuestionSet {
+): ThinkingMachQuestionSet {
   if (interaction.payload.questionSet) return interaction.payload.questionSet;
   return {
     schema: "paperclip.question_set.v1",
@@ -695,8 +680,8 @@ function questionSetForInteraction(
 
 function questionResponseForInteraction(
   interaction: AskUserQuestionsInteraction,
-  questionSet: PaperclipQuestionSet,
-): PaperclipQuestionResponse | null {
+  questionSet: ThinkingMachQuestionSet,
+): ThinkingMachQuestionResponse | null {
   if (!interaction.result?.answers) return null;
   return {
     schema: "paperclip.question_response.v1",

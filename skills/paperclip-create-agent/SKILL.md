@@ -1,12 +1,12 @@
 ---
 name: paperclip-create-agent
 description: >
-  Create new agents in Paperclip with governance-aware hiring. Use when you need
+  Create new agents in ThinkingMach with governance-aware hiring. Use when you need
   to inspect adapter configuration options, compare existing agent configs,
   draft a new agent prompt/config, and submit a hire request.
 ---
 
-# Paperclip Create Agent Skill
+# ThinkingMach Create Agent Skill
 
 Use this skill when you are asked to hire/create an agent.
 
@@ -24,26 +24,26 @@ If you do not have this permission, escalate to your CEO or board.
 ### 1. Confirm identity and company context
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/api/agents/me" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/agents/me" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
-### 2. Discover adapter configuration for this Paperclip instance
+### 2. Discover adapter configuration for this ThinkingMach instance
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/llms/agent-configuration.txt" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/llms/agent-configuration.txt" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 
 # Then the specific adapter you plan to use, e.g. claude_local:
-curl -sS "$PAPERCLIP_API_URL/llms/agent-configuration/claude_local.txt" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/llms/agent-configuration/claude_local.txt" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
 ### 3. Compare existing agent configurations
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/agent-configurations" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/agent-configurations" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
 Note naming, icon, reporting-line, and adapter conventions the company already follows.
@@ -67,8 +67,8 @@ State which path you took in your hire-request comment so the board can see the 
 ### 5. Discover allowed agent icons
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/llms/agent-icons.txt" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/llms/agent-icons.txt" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
 ### 6. Draft the new hire config
@@ -84,7 +84,7 @@ curl -sS "$PAPERCLIP_API_URL/llms/agent-icons.txt" \
 - if the role may handle private advisories or sensitive disclosures, confirm a confidential workflow exists first (dedicated skill or documented manual process)
 - capabilities
 - managed instructions bundle (`AGENTS.md`) for adapters that support it; avoid durable `promptTemplate` config
-- for coding or execution agents, include the Paperclip execution contract: start actionable work in the same heartbeat; do not stop at a plan unless planning was requested; leave durable progress with a clear next action; use child issues for long or parallel delegated work instead of polling; mark blocked work with owner/action; respect budget, pause/cancel, approval gates, and company boundaries
+- for coding or execution agents, include the ThinkingMach execution contract: start actionable work in the same heartbeat; do not stop at a plan unless planning was requested; leave durable progress with a clear next action; use child issues for long or parallel delegated work instead of polling; mark blocked work with owner/action; respect budget, pause/cancel, approval gates, and company boundaries
 - instruction text such as `AGENTS.md` built from step 4; for local managed-bundle adapters, send this as top-level `instructionsBundle.files["AGENTS.md"]`. Do not set `adapterConfig.promptTemplate` or `bootstrapPromptTemplate` for new agents.
 - source issue linkage (`sourceIssueId` or `sourceIssueIds`) when this hire came from an issue
 
@@ -96,8 +96,8 @@ Before submitting, walk the draft-review checklist end-to-end and fix any item t
 ### 8. Submit hire request
 
 ```sh
-curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/agent-hires" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/agent-hires" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "CTO",
@@ -119,14 +119,14 @@ curl -sS -X POST "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/agent-h
 
 - if the response has `approval`, the hire is `pending_approval`
 - monitor and discuss on the approval thread
-- when the board approves, you will be woken with `PAPERCLIP_APPROVAL_ID`; read linked issues and close/comment follow-up
+- when the board approves, you will be woken with `THINKINGMACH_APPROVAL_ID`; read linked issues and close/comment follow-up
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/api/approvals/<approval-id>" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/approvals/<approval-id>" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 
-curl -sS -X POST "$PAPERCLIP_API_URL/api/approvals/<approval-id>/comments" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/approvals/<approval-id>/comments" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"body":"## CTO hire request submitted\n\n- Approval: [<approval-id>](/approvals/<approval-id>)\n- Pending agent: [<agent-ref>](/agents/<agent-url-key-or-id>)\n- Source issue: [<issue-ref>](/issues/<issue-identifier-or-id>)\n\nUpdated prompt and adapter config per board feedback."}'
 ```
@@ -134,8 +134,8 @@ curl -sS -X POST "$PAPERCLIP_API_URL/api/approvals/<approval-id>/comments" \
 If the approval already exists and needs manual linking to the issue:
 
 ```sh
-curl -sS -X POST "$PAPERCLIP_API_URL/api/issues/<issue-id>/approvals" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
+curl -sS -X POST "$THINKINGMACH_API_URL/api/issues/<issue-id>/approvals" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"approvalId":"<approval-id>"}'
 ```
@@ -143,11 +143,11 @@ curl -sS -X POST "$PAPERCLIP_API_URL/api/issues/<issue-id>/approvals" \
 After approval is granted, run this follow-up loop:
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/api/approvals/$PAPERCLIP_APPROVAL_ID" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/approvals/$THINKINGMACH_APPROVAL_ID" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 
-curl -sS "$PAPERCLIP_API_URL/api/approvals/$PAPERCLIP_APPROVAL_ID/issues" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/approvals/$THINKINGMACH_APPROVAL_ID/issues" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
 For each linked issue, either:

@@ -3,7 +3,7 @@ import { AlertTriangle, MessageSquarePlus } from "lucide-react";
 import type {
   DocumentAnnotationAnchorState,
   DocumentAnnotationThreadStatus,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -19,7 +19,7 @@ import {
   recordMarkdownMutations,
   recordSelectionChange,
 } from "@/lib/document-annotation-debug";
-import type { DocumentAnnotationAnchorSelector } from "@paperclipai/shared";
+import type { DocumentAnnotationAnchorSelector } from "@thinkingmach/shared";
 
 export interface AnnotationOverlayThread {
   id: string;

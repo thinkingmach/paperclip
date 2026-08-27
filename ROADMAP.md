@@ -2,23 +2,23 @@
 
 This document expands the roadmap preview in `README.md`.
 
-Paperclip is still moving quickly. The list below is directional, not promised, and priorities may shift as we learn from users and from operating real AI companies with the product.
+ThinkingMach is still moving quickly. The list below is directional, not promised, and priorities may shift as we learn from users and from operating real AI companies with the product.
 
 We value community involvement and want to make sure contributor energy goes toward areas where it can land.
 
 We may accept contributions in the areas below, but if you want to work on roadmap-level core features, please coordinate with us first in Discord (`#dev`) before writing code. Bugs, docs, polish, and tightly scoped improvements are still the easiest contributions to merge.
 
-If you want to extend Paperclip today, the best path is often the [plugin system](doc/plugins/PLUGIN_SPEC.md). Community reference implementations are also useful feedback even when they are not merged directly into core.
+If you want to extend ThinkingMach today, the best path is often the [plugin system](doc/plugins/PLUGIN_SPEC.md). Community reference implementations are also useful feedback even when they are not merged directly into core.
 
 ## Milestones
 
 ### ✅ Plugin system
 
-Paperclip should keep a thin core and rich edges. Plugins are the path for optional capabilities like knowledge bases, custom tracing, queues, doc editors, and other product-specific surfaces that do not need to live in the control plane itself.
+ThinkingMach should keep a thin core and rich edges. Plugins are the path for optional capabilities like knowledge bases, custom tracing, queues, doc editors, and other product-specific surfaces that do not need to live in the control plane itself.
 
 ### ✅ Get OpenClaw / claw-style agent employees
 
-Paperclip should be able to hire and manage real claw-style agent workers, not just a narrow built-in runtime. This is part of the larger "bring your own agent" story and keeps the control plane useful across different agent ecosystems.
+ThinkingMach should be able to hire and manage real claw-style agent workers, not just a narrow built-in runtime. This is part of the larger "bring your own agent" story and keeps the control plane useful across different agent ecosystems.
 
 ### ✅ companies.sh - import and export entire organizations
 
@@ -42,19 +42,19 @@ Budgets are a core control-plane feature, not an afterthought. Better budgeting 
 
 ### ✅ Agent Reviews and Approvals
 
-Paperclip should support explicit review and approval stages as first-class workflow steps, not just ad hoc comments. That means reviewer routing, approval gates, change requests, and durable audit trails that fit the same task model as the rest of the control plane.
+ThinkingMach should support explicit review and approval stages as first-class workflow steps, not just ad hoc comments. That means reviewer routing, approval gates, change requests, and durable audit trails that fit the same task model as the rest of the control plane.
 
 ### ✅ Multiple Human Users
 
-Paperclip needs a clearer path from solo operator to real human teams. That means shared board access, safer collaboration, and a better model for several humans supervising the same autonomous company.
+ThinkingMach needs a clearer path from solo operator to real human teams. That means shared board access, safer collaboration, and a better model for several humans supervising the same autonomous company.
 
 ### ✅ Cloud / Sandbox agents (e2b, Cloudflare, Daytona, Modal, Novita, self-hosted Kubernetes)
 
-We want agents to run in more remote and sandboxed environments while preserving the same Paperclip control-plane model. This makes the system safer, more flexible, and more useful outside a single trusted local machine.
+We want agents to run in more remote and sandboxed environments while preserving the same ThinkingMach control-plane model. This makes the system safer, more flexible, and more useful outside a single trusted local machine.
 
 ### ✅ Artifacts & Work Products
 
-Paperclip should make outputs first-class. That means generated artifacts, previews, deployable outputs, and the handoff from "agent did work" to "here is the result" should become more visible and easier to operate.
+ThinkingMach should make outputs first-class. That means generated artifacts, previews, deployable outputs, and the handoff from "agent did work" to "here is the result" should become more visible and easier to operate.
 
 ### ✅ Deep Planning (planning mode, revisioned plans, plan approvals)
 
@@ -62,11 +62,11 @@ Some work needs more than a task description before execution starts. Deeper pla
 
 ### ✅ Enforced Outcomes (watchdogs, recovery actions, review gates)
 
-Paperclip should get stricter about what counts as finished work. Watchdogs, recovery actions, and review gates keep execution moving toward clear outcomes like merged code, published artifacts, shipped docs, or explicit decisions instead of vague status updates.
+ThinkingMach should get stricter about what counts as finished work. Watchdogs, recovery actions, and review gates keep execution moving toward clear outcomes like merged code, published artifacts, shipped docs, or explicit decisions instead of vague status updates.
 
 ### ✅ MCP Tool Gateway & Apps (governed tool access)
 
-MCP tools and apps should be available through a governed gateway instead of unmanaged direct access. Paperclip can apply company boundaries, approval gates, and activity attribution while giving agents the tools they need.
+MCP tools and apps should be available through a governed gateway instead of unmanaged direct access. ThinkingMach can apply company boundaries, approval gates, and activity attribution while giving agents the tools they need.
 
 ### ✅ Secrets Manager with per-agent access
 
@@ -86,7 +86,7 @@ Agent performance should be measurable over time, not judged only from anecdotes
 
 ### ⚪ Memory / Knowledge
 
-We want a stronger memory and knowledge surface for companies, agents, and projects. That includes durable memory, better recall of prior decisions and context, and a clearer path for knowledge-style capabilities without turning Paperclip into a generic chat app.
+We want a stronger memory and knowledge surface for companies, agents, and projects. That includes durable memory, better recall of prior decisions and context, and a clearer path for knowledge-style capabilities without turning ThinkingMach into a generic chat app.
 
 ### ⚪ MAXIMIZER MODE
 
@@ -94,7 +94,7 @@ This is the direction for higher-autonomy execution: more aggressive delegation,
 
 ### ⚪ Work Queues
 
-Paperclip should support queue-style work streams for repeatable inputs like support, triage, review, and backlog intake. That would make it easier to route work continuously without turning every system into a one-off workflow.
+ThinkingMach should support queue-style work streams for repeatable inputs like support, triage, review, and backlog intake. That would make it easier to route work continuously without turning every system into a one-off workflow.
 
 ### ⚪ Self-Organization
 
@@ -102,7 +102,7 @@ As companies grow, agents should be able to propose useful structural changes su
 
 ### ⚪ Automatic Organizational Learning
 
-Paperclip should get better at turning completed work into reusable organizational knowledge. That includes capturing playbooks, recurring fixes, and decision patterns so future work starts from what the company has already learned.
+ThinkingMach should get better at turning completed work into reusable organizational knowledge. That includes capturing playbooks, recurring fixes, and decision patterns so future work starts from what the company has already learned.
 
 ### ⚪ CEO Chat
 
@@ -110,17 +110,17 @@ We want a lighter-weight way to talk to leadership agents, but those conversatio
 
 ### 🟡 Cloud deployments (multi-tenant isolation & company Import/Export shipped)
 
-Local-first remains important, but Paperclip also needs a cleaner shared deployment story. Teams should be able to run the same product in hosted or semi-hosted environments without changing the mental model.
+Local-first remains important, but ThinkingMach also needs a cleaner shared deployment story. Teams should be able to run the same product in hosted or semi-hosted environments without changing the mental model.
 
 Shipped so far: multi-tenant isolation with per-company JWT keys and company-scoped cloud tenants, portable company Import/Export (zip bundles that move a company between instances, local or cloud), and cloud-managed instance bootstrap. Next: a blob-store relay so large instances can move without a hand-carried bundle.
 
 ### ⚪ Desktop App
 
-A desktop app can make Paperclip feel more accessible and persistent for day-to-day operators. The goal is easier access, better local ergonomics, and a smoother default experience for users who want the control plane always close at hand.
+A desktop app can make ThinkingMach feel more accessible and persistent for day-to-day operators. The goal is easier access, better local ergonomics, and a smoother default experience for users who want the control plane always close at hand.
 
 ### ⚪ Bring-your-own-ticket-system (Asana / Linear / Jira as on-ramps)
 
-Existing ticket systems should be able to feed work into Paperclip without becoming the agent control plane themselves. Asana, Linear, and Jira can act as familiar on-ramps while Paperclip owns execution, governance, and outcomes.
+Existing ticket systems should be able to feed work into ThinkingMach without becoming the agent control plane themselves. Asana, Linear, and Jira can act as familiar on-ramps while ThinkingMach owns execution, governance, and outcomes.
 
 ### ⚪ Connected Apps (one-click integrations, e.g. Vercel)
 

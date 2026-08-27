@@ -57,8 +57,8 @@ function skill(overrides: Record<string, unknown> = {}) {
 
 function catalogSkill(overrides: Record<string, unknown> = {}) {
   return {
-    id: "paperclipai:bundled:software-development:github-pr-workflow",
-    key: "paperclipai/bundled/software-development/github-pr-workflow",
+    id: "thinkingmach:bundled:software-development:github-pr-workflow",
+    key: "thinkingmach/bundled/software-development/github-pr-workflow",
     kind: "bundled",
     category: "software-development",
     slug: "github-pr-workflow",
@@ -127,9 +127,9 @@ describe("skills CLI commands", () => {
 
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    delete process.env.PAPERCLIP_API_URL;
-    delete process.env.PAPERCLIP_API_KEY;
-    delete process.env.PAPERCLIP_COMPANY_ID;
+    delete process.env.THINKINGMACH_API_URL;
+    delete process.env.THINKINGMACH_API_KEY;
+    delete process.env.THINKINGMACH_COMPANY_ID;
     fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
     logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
@@ -250,7 +250,7 @@ describe("skills CLI commands", () => {
     );
     const rendered = logSpy.mock.calls.map((call: unknown[]) => String(call[0])).join("\n");
     expect(rendered).toContain("id");
-    expect(rendered).toContain("paperclipai:bundled:software-development:github-pr-workflow");
+    expect(rendered).toContain("thinkingmach:bundled:software-development:github-pr-workflow");
     expect(rendered).toContain("roles");
   });
 
@@ -285,7 +285,7 @@ describe("skills CLI commands", () => {
     await runCommand([
       "skills",
       "inspect",
-      "paperclipai/bundled/software-development/github-pr-workflow",
+      "thinkingmach/bundled/software-development/github-pr-workflow",
       "--api-base",
       "http://paperclip.test",
       "--api-key",
@@ -294,7 +294,7 @@ describe("skills CLI commands", () => {
     ]);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://paperclip.test/api/skills/catalog/ref?ref=paperclipai%2Fbundled%2Fsoftware-development%2Fgithub-pr-workflow",
+      "http://paperclip.test/api/skills/catalog/ref?ref=thinkingmach%2Fbundled%2Fsoftware-development%2Fgithub-pr-workflow",
       expect.objectContaining({ method: "GET" }),
     );
     expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toEqual(detail);
@@ -304,7 +304,7 @@ describe("skills CLI commands", () => {
     const result = {
       action: "created",
       skill: skill({
-        key: "paperclipai/bundled/software-development/github-pr-workflow",
+        key: "thinkingmach/bundled/software-development/github-pr-workflow",
         slug: "pr-flow",
         sourceType: "catalog",
       }),

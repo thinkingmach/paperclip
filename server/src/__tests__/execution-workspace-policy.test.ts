@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   issueExecutionWorkspaceSettingsSchema,
   projectExecutionWorkspacePolicySchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   buildExecutionWorkspaceAdapterConfig,
   defaultIssueExecutionWorkspaceSettingsForProject,

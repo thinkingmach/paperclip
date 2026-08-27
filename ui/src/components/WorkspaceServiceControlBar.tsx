@@ -1,15 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Check,
-  ChevronDown,
-  Copy,
-  ExternalLink,
-  Loader2,
-  Play,
-  RotateCcw,
-  Square,
-  TriangleAlert,
-} from "lucide-react";
+import { Check, ChevronDown, Copy, ExternalLink, Loader2, Play, RotateCcw, Square, TriangleAlert,  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";

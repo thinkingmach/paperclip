@@ -5,27 +5,27 @@ import { defineConfig } from "@playwright/test";
 
 // Use a dedicated port so e2e tests always start their own server in local_trusted mode,
 // even when the dev server is running on :3100 in authenticated mode.
-const PORT = Number(process.env.PAPERCLIP_E2E_PORT ?? 3199);
+const PORT = Number(process.env.THINKINGMACH_E2E_PORT ?? 3199);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
-const PAPERCLIP_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-e2e-home-"));
-const PAPERCLIP_INSTANCE_ID = "playwright-e2e";
-const PAPERCLIP_CONFIG = path.join(PAPERCLIP_HOME, "instances", PAPERCLIP_INSTANCE_ID, "config.json");
-const PAPERCLIP_AGENT_JWT_SECRET = process.env.PAPERCLIP_AGENT_JWT_SECRET ?? "playwright-e2e-agent-jwt-secret";
-const PAPERCLIP_DECISION_SIGNING_SECRET =
-  process.env.PAPERCLIP_DECISION_SIGNING_SECRET ?? "playwright-e2e-decision-signing-secret";
-const PAPERCLIP_TOOL_ACTION_SIGNING_SECRET =
-  process.env.PAPERCLIP_TOOL_ACTION_SIGNING_SECRET ?? "playwright-e2e-tool-action-signing-secret";
-const PLAYWRIGHT_CHANNEL = process.env.PAPERCLIP_PLAYWRIGHT_CHANNEL;
+const THINKINGMACH_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-e2e-home-"));
+const THINKINGMACH_INSTANCE_ID = "playwright-e2e";
+const THINKINGMACH_CONFIG = path.join(THINKINGMACH_HOME, "instances", THINKINGMACH_INSTANCE_ID, "config.json");
+const THINKINGMACH_AGENT_JWT_SECRET = process.env.THINKINGMACH_AGENT_JWT_SECRET ?? "playwright-e2e-agent-jwt-secret";
+const THINKINGMACH_DECISION_SIGNING_SECRET =
+  process.env.THINKINGMACH_DECISION_SIGNING_SECRET ?? "playwright-e2e-decision-signing-secret";
+const THINKINGMACH_TOOL_ACTION_SIGNING_SECRET =
+  process.env.THINKINGMACH_TOOL_ACTION_SIGNING_SECRET ?? "playwright-e2e-tool-action-signing-secret";
+const PLAYWRIGHT_CHANNEL = process.env.THINKINGMACH_PLAYWRIGHT_CHANNEL;
 
-process.env.PAPERCLIP_HOME = PAPERCLIP_HOME;
-process.env.PAPERCLIP_CONFIG = PAPERCLIP_CONFIG;
+process.env.THINKINGMACH_HOME = THINKINGMACH_HOME;
+process.env.THINKINGMACH_CONFIG = THINKINGMACH_CONFIG;
 // Specs that mint agent JWTs in-process (via createLocalAgentJwt) must derive
 // the same per-instance signing key as the webServer, or verification fails
 // with a 401 instead of authenticating as the agent.
-process.env.PAPERCLIP_INSTANCE_ID = PAPERCLIP_INSTANCE_ID;
-process.env.PAPERCLIP_AGENT_JWT_SECRET = PAPERCLIP_AGENT_JWT_SECRET;
-process.env.PAPERCLIP_DECISION_SIGNING_SECRET = PAPERCLIP_DECISION_SIGNING_SECRET;
-process.env.PAPERCLIP_TOOL_ACTION_SIGNING_SECRET = PAPERCLIP_TOOL_ACTION_SIGNING_SECRET;
+process.env.THINKINGMACH_INSTANCE_ID = THINKINGMACH_INSTANCE_ID;
+process.env.THINKINGMACH_AGENT_JWT_SECRET = THINKINGMACH_AGENT_JWT_SECRET;
+process.env.THINKINGMACH_DECISION_SIGNING_SECRET = THINKINGMACH_DECISION_SIGNING_SECRET;
+process.env.THINKINGMACH_TOOL_ACTION_SIGNING_SECRET = THINKINGMACH_TOOL_ACTION_SIGNING_SECRET;
 
 export default defineConfig({
   testDir: ".",
@@ -56,12 +56,12 @@ export default defineConfig({
     },
   ],
   // The webServer directive bootstraps a throwaway instance and then starts it.
-  // `onboard --yes --run` works in a non-interactive temp PAPERCLIP_HOME.
+  // `onboard --yes --run` works in a non-interactive temp THINKINGMACH_HOME.
   webServer: {
-    command: `pnpm paperclipai onboard --yes --run`,
+    command: `pnpm thinkingmach onboard --yes --run`,
     url: `${BASE_URL}/api/health`,
     // Always boot a dedicated throwaway instance for e2e so browser tests
-    // never attach to the developer's active Paperclip home/server.
+    // never attach to the developer's active ThinkingMach home/server.
     reuseExistingServer: false,
     timeout: 120_000,
     stdout: "pipe",
@@ -70,17 +70,17 @@ export default defineConfig({
       ...process.env,
       NODE_ENV: "test",
       PORT: String(PORT),
-      PAPERCLIP_OPEN_ON_LISTEN: "false",
-      PAPERCLIP_API_URL: BASE_URL,
-      PAPERCLIP_HOME,
-      PAPERCLIP_INSTANCE_ID,
-      PAPERCLIP_CONFIG,
-      PAPERCLIP_AGENT_JWT_SECRET,
-      PAPERCLIP_DECISION_SIGNING_SECRET,
-      PAPERCLIP_TOOL_ACTION_SIGNING_SECRET,
-      PAPERCLIP_BIND: "loopback",
-      PAPERCLIP_DEPLOYMENT_MODE: "local_trusted",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private",
+      THINKINGMACH_OPEN_ON_LISTEN: "false",
+      THINKINGMACH_API_URL: BASE_URL,
+      THINKINGMACH_HOME,
+      THINKINGMACH_INSTANCE_ID,
+      THINKINGMACH_CONFIG,
+      THINKINGMACH_AGENT_JWT_SECRET,
+      THINKINGMACH_DECISION_SIGNING_SECRET,
+      THINKINGMACH_TOOL_ACTION_SIGNING_SECRET,
+      THINKINGMACH_BIND: "loopback",
+      THINKINGMACH_DEPLOYMENT_MODE: "local_trusted",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "private",
     },
   },
   outputDir: "./test-results",

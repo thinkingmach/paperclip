@@ -2,15 +2,15 @@
 
 **Time to first success: about 5 minutes.** Two commands take you from a clean
 checkout to 106 passing conformance cases and a browser you can click through.
-The whole tutorial runs from the repository root. It starts no Paperclip
-service, contacts no Paperclip control plane, clones no external eval
+The whole tutorial runs from the repository root. It starts no ThinkingMach
+service, contacts no ThinkingMach control plane, clones no external eval
 repository, and holds no provider credential. Everything it needs is checked in
 under `packages/paperclip-runner/`.
 
-Capability does not integrate the runner into Paperclip. It builds a package-local
-model of what a native Paperclip run *would* do — a deterministic mock control
+Capability does not integrate the runner into ThinkingMach. It builds a package-local
+model of what a native ThinkingMach run *would* do — a deterministic mock control
 plane, a transport-neutral semantic tool catalog, an authorization engine, a
-106-case conformance suite derived from the Paperclip Evals corpus, and a
+106-case conformance suite derived from the ThinkingMach Evals corpus, and a
 read-only browser explorer over all of it. Real integration is future upload integration and
 requires separate approval. See
 [the future binding boundary reference](../capability-future-binding-boundary.md).
@@ -26,13 +26,13 @@ requires separate approval. See
 Install the package workspace from the repository root:
 
 ```sh
-pnpm install --filter @paperclipai/paperclip-runner --lockfile=false --offline --ignore-scripts --dev
+pnpm install --filter @thinkingmach/paperclip-runner --lockfile=false --offline --ignore-scripts --dev
 ```
 
 ## 1. Prove the 106-case conformance suite (about 1 minute)
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner test:capability-evals
+pnpm --filter @thinkingmach/paperclip-runner test:capability-evals
 ```
 
 This runs the eval-derived conformance suite entirely in-process against the
@@ -48,7 +48,7 @@ per-group counts, assertion classes, the fake-agent operation matrix, and the
 bounded Codex binding sample, generate the parity report:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner report:capability-evals
+pnpm --filter @thinkingmach/paperclip-runner report:capability-evals
 ```
 
 Expected final line:
@@ -60,7 +60,7 @@ Capability eval conformance passed: 106 cases across 16 groups.
 The report is written to
 `.paperclip-local/evidence/capability/eval-parity-report.{json,md}`. It is a
 generated-on-demand artifact, not a committed file; a clean checkout does not
-contain it. Delete it before you run `pnpm --filter @paperclipai/paperclip-runner docs:validate`
+contain it. Delete it before you run `pnpm --filter @thinkingmach/paperclip-runner docs:validate`
 (the report carries no OKF frontmatter and would otherwise fail the knowledge
 bundle check — see [Known gaps](#known-gaps-and-boundaries)).
 
@@ -76,7 +76,7 @@ The 16 groups and case counts are fixed by the capability contract:
 ## 2. Open the scenario explorer (about 2 minutes)
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner demo:scenarios
+pnpm --filter @thinkingmach/paperclip-runner demo:scenarios
 ```
 
 Open `http://127.0.0.1:4183/scenario-explorer/`. The explorer is read-only. It
@@ -128,33 +128,33 @@ each one with its purpose and expected result.
 
 ```sh
 # Capability contract: completeness, uniqueness, one-to-one MCP folds, no drift.
-pnpm --filter @paperclipai/paperclip-runner check:capability-inventory
-pnpm --filter @paperclipai/paperclip-runner test:capability-inventory
+pnpm --filter @thinkingmach/paperclip-runner check:capability-inventory
+pnpm --filter @thinkingmach/paperclip-runner test:capability-inventory
 
 # Mock control plane adapter and shared ControlPlanePort conformance.
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/conformance/control-plane-port.test.ts \
   src/mock-core/capability-mock-control-plane-adapter.test.ts
 
 # Semantic tool catalog and authorization/redaction engine.
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/tools/capability-semantic-tools.test.ts
 
 # 106-case conformance and the parity/fake-agent/bounded-Codex report.
-pnpm --filter @paperclipai/paperclip-runner test:capability-evals
-pnpm --filter @paperclipai/paperclip-runner report:capability-evals
+pnpm --filter @thinkingmach/paperclip-runner test:capability-evals
+pnpm --filter @thinkingmach/paperclip-runner report:capability-evals
 
 # Scenario runtime, explorer components, and route determinism (49 tests).
-pnpm --filter @paperclipai/paperclip-runner test:scenarios
+pnpm --filter @thinkingmach/paperclip-runner test:scenarios
 
 # Browser information architecture, accessibility, determinism, and boundary.
-pnpm --filter @paperclipai/paperclip-runner test:browser:scenarios
+pnpm --filter @thinkingmach/paperclip-runner test:browser:scenarios
 
 # Deterministic 24-image screenshot acceptance set.
 # Recorded evidence generation is deferred from this release.
 
 # Documentation links.
-pnpm --filter @paperclipai/paperclip-runner docs:validate
+pnpm --filter @thinkingmach/paperclip-runner docs:validate
 ```
 
 ## Known gaps and boundaries
@@ -164,7 +164,7 @@ pnpm --filter @paperclipai/paperclip-runner docs:validate
 - **Codex mode is disabled.** The explorer offers a bounded real-Codex binding
   sample only through `report:capability-evals`; the browser holds no credential
   and the in-page Codex mode is inert with a stated reason.
-- **No Paperclip integration.** Nothing here touches a real control plane,
+- **No ThinkingMach integration.** Nothing here touches a real control plane,
   database, or provider. future upload integration (ACPX) binds the real adapter behind the same
   seam and requires separate CTO approval.
 

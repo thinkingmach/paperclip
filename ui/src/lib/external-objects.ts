@@ -1,20 +1,4 @@
-import {
-  AlertCircle,
-  AlertOctagon,
-  Archive,
-  CheckCircle2,
-  Circle,
-  CircleDashed,
-  CircleDot,
-  Clock,
-  CloudOff,
-  GitMerge,
-  GitPullRequest,
-  KeyRound,
-  Loader2,
-  XCircle,
-  type LucideIcon,
-} from "lucide-react";
+import { AlertCircle, AlertOctagon, Archive, CheckCircle2, Circle, CircleDashed, CircleDot, Clock, CloudOff, GitMerge, GitPullRequest, KeyRound, Loader2, XCircle, type LucideIcon,  } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github-icon";
 import type {
   ExternalObjectLivenessState,
@@ -22,7 +6,7 @@ import type {
   ExternalObjectStatusTone,
   ExternalObjectSummary,
   ExternalObjectSummaryItem,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 /**
  * Lucide icon for each status category. The mapping is host-owned per the

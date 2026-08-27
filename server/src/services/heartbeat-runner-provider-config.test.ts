@@ -3,13 +3,13 @@ import { describe, expect, it } from "vitest";
 import {
   assertAgentCoreProfileRecoveryBinding,
   assertManagedProfileRecoveryBinding,
-  resolvePaperclipRunnerNativeProviderInput,
+  resolveThinkingMachRunnerNativeProviderInput,
 } from "./native-runtime/provider-profile.js";
 
-describe("Paperclip Runner native provider configuration", () => {
+describe("ThinkingMach Runner native provider configuration", () => {
   it("qualifies native Codex only in never-ask mode", () => {
     expect(
-      resolvePaperclipRunnerNativeProviderInput({
+      resolveThinkingMachRunnerNativeProviderInput({
         backend: "codex_app_server",
         adapterConfig: { provider: "codex", model: "gpt-5.6-sol" },
       }),
@@ -19,7 +19,7 @@ describe("Paperclip Runner native provider configuration", () => {
       codexApprovalPolicy: "never",
     });
     expect(() =>
-      resolvePaperclipRunnerNativeProviderInput({
+      resolveThinkingMachRunnerNativeProviderInput({
         backend: "codex_app_server",
         adapterConfig: {
           provider: "codex",
@@ -112,7 +112,7 @@ describe("Paperclip Runner native provider configuration", () => {
 
   it("projects OpenCode identity, model, and permissions from adapter config", () => {
     expect(
-      resolvePaperclipRunnerNativeProviderInput({
+      resolveThinkingMachRunnerNativeProviderInput({
         backend: "opencode_server",
         adapterConfig: {
           provider: "opencode",
@@ -134,7 +134,7 @@ describe("Paperclip Runner native provider configuration", () => {
     "projects the qualified ACPX %s descriptor from adapter config",
     (acpxAgent, model, acpxPermissionMode) => {
       expect(
-        resolvePaperclipRunnerNativeProviderInput({
+        resolveThinkingMachRunnerNativeProviderInput({
           backend: "acpx_runtime",
           adapterConfig: { provider: "acpx", acpxAgent, model, acpxPermissionMode },
         }),
@@ -149,7 +149,7 @@ describe("Paperclip Runner native provider configuration", () => {
 
   it("applies the safe provider permission default from adapter config", () => {
     expect(
-      resolvePaperclipRunnerNativeProviderInput({
+      resolveThinkingMachRunnerNativeProviderInput({
         backend: "opencode_server",
         adapterConfig: {
           provider: "opencode",
@@ -164,7 +164,7 @@ describe("Paperclip Runner native provider configuration", () => {
   });
 
   it("materializes a qualified Claude Managed profile without trusting editable resource IDs", () => {
-    expect(resolvePaperclipRunnerNativeProviderInput({
+    expect(resolveThinkingMachRunnerNativeProviderInput({
       backend: "claude_managed_agents_api",
       adapterConfig: {
         provider: "claude_managed",
@@ -197,7 +197,7 @@ describe("Paperclip Runner native provider configuration", () => {
   });
 
   it("materializes a qualified AgentCore profile with bounded invocation limits", () => {
-    expect(resolvePaperclipRunnerNativeProviderInput({
+    expect(resolveThinkingMachRunnerNativeProviderInput({
       backend: "aws_agentcore_harness_api",
       adapterConfig: {
         provider: "aws_agentcore",
@@ -253,7 +253,7 @@ describe("Paperclip Runner native provider configuration", () => {
     ["maxOutputTokens", 4_097],
     ["timeoutSeconds", 301],
   ])("rejects an unsafe AgentCore %s override", (field, value) => {
-    expect(() => resolvePaperclipRunnerNativeProviderInput({
+    expect(() => resolveThinkingMachRunnerNativeProviderInput({
       backend: "aws_agentcore_harness_api",
       adapterConfig: {
         provider: "aws_agentcore",
@@ -288,7 +288,7 @@ describe("Paperclip Runner native provider configuration", () => {
   });
 
   it("rejects managed providers without retention acknowledgement or a matching stored profile", () => {
-    expect(() => resolvePaperclipRunnerNativeProviderInput({
+    expect(() => resolveThinkingMachRunnerNativeProviderInput({
       backend: "claude_managed_agents_api",
       adapterConfig: {
         provider: "claude_managed",
@@ -296,7 +296,7 @@ describe("Paperclip Runner native provider configuration", () => {
       },
     })).toThrow("requires acknowledgement");
 
-    expect(() => resolvePaperclipRunnerNativeProviderInput({
+    expect(() => resolveThinkingMachRunnerNativeProviderInput({
       backend: "aws_agentcore_harness_api",
       adapterConfig: {
         provider: "aws_agentcore",
@@ -307,7 +307,7 @@ describe("Paperclip Runner native provider configuration", () => {
   });
 
   it("rejects managed provider model overrides outside the runner allowlist", () => {
-    expect(() => resolvePaperclipRunnerNativeProviderInput({
+    expect(() => resolveThinkingMachRunnerNativeProviderInput({
       backend: "claude_managed_agents_api",
       adapterConfig: {
         provider: "claude_managed",
@@ -327,7 +327,7 @@ describe("Paperclip Runner native provider configuration", () => {
       },
     })).toThrow("requires exact model claude-sonnet-5");
 
-    expect(() => resolvePaperclipRunnerNativeProviderInput({
+    expect(() => resolveThinkingMachRunnerNativeProviderInput({
       backend: "aws_agentcore_harness_api",
       adapterConfig: {
         provider: "aws_agentcore",
@@ -363,7 +363,7 @@ describe("Paperclip Runner native provider configuration", () => {
 
   it("fails closed when the persisted backend and current provider disagree", () => {
     expect(() =>
-      resolvePaperclipRunnerNativeProviderInput({
+      resolveThinkingMachRunnerNativeProviderInput({
         backend: "opencode_server",
         adapterConfig: { provider: "codex" },
       }),
@@ -372,7 +372,7 @@ describe("Paperclip Runner native provider configuration", () => {
 
   it("rejects Pi before a native descriptor is persisted", () => {
     expect(() =>
-      resolvePaperclipRunnerNativeProviderInput({
+      resolveThinkingMachRunnerNativeProviderInput({
         backend: "acpx_runtime",
         adapterConfig: { provider: "acpx", acpxAgent: "pi", model: "pi-model" },
       }),

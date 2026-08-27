@@ -8,7 +8,7 @@ import {
   createDb,
   instanceUserRoles,
   principalPermissionGrants,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   claimBoardOwnership,
   getBoardClaimWarningUrl,

@@ -20,7 +20,7 @@ describe("release-content Cases contract", () => {
       "\"parentCaseId\"",
       "PUT /api/cases/:caseId/documents/body",
       "paperclip-release:vYYYY.MDD.P",
-      "X-Paperclip-Run-Id",
+      "X-ThinkingMach-Run-Id",
     ]) {
       expect(combined).toContain(required);
     }

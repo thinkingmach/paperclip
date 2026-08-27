@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import type { ToolMcpGatewayWithTokens, ToolRedactedValueSummary } from "@paperclipai/shared";
+import type { ToolMcpGatewayWithTokens, ToolRedactedValueSummary } from "@thinkingmach/shared";
 import { toolsApi, type ToolAuditOutcome, type ToolGatewayActivityEvent } from "@/api/tools";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";

@@ -1,4 +1,4 @@
-export type PaperclipSemanticActionId =
+export type ThinkingMachSemanticActionId =
   | "get_task_context"
   | "get_task_history"
   | "list_documents"
@@ -27,31 +27,31 @@ export type PaperclipSemanticActionId =
   | "comment_on_approval"
   | "schedule_wake";
 
-export type PaperclipSemanticActionPlacement = "always" | "optional";
-export type PaperclipSemanticActionMode =
+export type ThinkingMachSemanticActionPlacement = "always" | "optional";
+export type ThinkingMachSemanticActionMode =
   "standard" | "ask" | "planning" | "skill_test";
-export type PaperclipSemanticActionEffect = "read" | "write" | "governance";
+export type ThinkingMachSemanticActionEffect = "read" | "write" | "governance";
 
-export type PaperclipJsonValue =
+export type ThinkingMachJsonValue =
   | null
   | boolean
   | number
   | string
-  | readonly PaperclipJsonValue[]
-  | { readonly [key: string]: PaperclipJsonValue };
+  | readonly ThinkingMachJsonValue[]
+  | { readonly [key: string]: ThinkingMachJsonValue };
 
 /** The JSON Schema subset used by the v1 semantic action catalog. */
-export interface PaperclipJsonSchema {
+export interface ThinkingMachJsonSchema {
   readonly type?: string | readonly string[];
   readonly title?: string;
   readonly description?: string;
-  readonly properties?: Readonly<Record<string, PaperclipJsonSchema>>;
+  readonly properties?: Readonly<Record<string, ThinkingMachJsonSchema>>;
   readonly required?: readonly string[];
-  readonly additionalProperties?: boolean | PaperclipJsonSchema;
-  readonly items?: PaperclipJsonSchema;
-  readonly enum?: readonly PaperclipJsonValue[];
-  readonly oneOf?: readonly PaperclipJsonSchema[];
-  readonly anyOf?: readonly PaperclipJsonSchema[];
+  readonly additionalProperties?: boolean | ThinkingMachJsonSchema;
+  readonly items?: ThinkingMachJsonSchema;
+  readonly enum?: readonly ThinkingMachJsonValue[];
+  readonly oneOf?: readonly ThinkingMachJsonSchema[];
+  readonly anyOf?: readonly ThinkingMachJsonSchema[];
   readonly minimum?: number;
   readonly maximum?: number;
   readonly minLength?: number;
@@ -61,24 +61,24 @@ export interface PaperclipJsonSchema {
   readonly uniqueItems?: boolean;
   readonly pattern?: string;
   readonly format?: string;
-  readonly default?: PaperclipJsonValue;
+  readonly default?: ThinkingMachJsonValue;
 }
 
 /**
  * A transport-neutral declaration. Catalog membership never grants discovery
  * or invocation authority; a run-scoped authorization layer must do that.
  */
-export interface PaperclipSemanticActionDescriptor {
+export interface ThinkingMachSemanticActionDescriptor {
   readonly schema: "paperclip.semantic-action.v1";
-  readonly operationId: PaperclipSemanticActionId;
+  readonly operationId: ThinkingMachSemanticActionId;
   readonly version: 1;
   readonly title: string;
   readonly description: string;
-  readonly placement: PaperclipSemanticActionPlacement;
-  readonly effect: PaperclipSemanticActionEffect;
+  readonly placement: ThinkingMachSemanticActionPlacement;
+  readonly effect: ThinkingMachSemanticActionEffect;
   readonly requiredClaims: readonly string[];
-  readonly allowedModes: readonly PaperclipSemanticActionMode[];
+  readonly allowedModes: readonly ThinkingMachSemanticActionMode[];
   readonly allowedRoles?: readonly string[];
-  readonly inputSchema: PaperclipJsonSchema;
-  readonly outputSchema: PaperclipJsonSchema;
+  readonly inputSchema: ThinkingMachJsonSchema;
+  readonly outputSchema: ThinkingMachJsonSchema;
 }

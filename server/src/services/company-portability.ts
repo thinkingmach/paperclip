@@ -9,7 +9,7 @@ import {
   issueRelations,
   principalPermissionGrants,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   CompanyPortabilityAgentManifestEntry,
   CompanyPortabilityBlobManifestEntry,
@@ -43,7 +43,7 @@ import type {
   AgentEnvConfig,
   PermissionKey,
   RoutineVariable,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   AGENT_DEFAULT_MAX_CONCURRENT_RUNS,
   ISSUE_PRIORITIES,
@@ -62,13 +62,13 @@ import {
   issueCommentPresentationSchema,
   normalizeAgentUrlKey,
   PERMISSION_KEYS,
-} from "@paperclipai/shared";
-import { sha256HexOfBytes } from "@paperclipai/shared/portability-hash";
+} from "@thinkingmach/shared";
+import { sha256HexOfBytes } from "@thinkingmach/shared/portability-hash";
 import {
-  readPaperclipSkillSyncPreference,
-  writePaperclipSkillSyncPreference,
-} from "@paperclipai/adapter-utils/server-utils";
-import { requireOpenCodeModelId } from "@paperclipai/adapter-opencode-local/server";
+  readThinkingMachSkillSyncPreference,
+  writeThinkingMachSkillSyncPreference,
+} from "@thinkingmach/adapter-utils/server-utils";
+import { requireOpenCodeModelId } from "@thinkingmach/adapter-opencode-local/server";
 import { findServerAdapter } from "../adapters/index.js";
 import { formatAttachmentSize, MAX_ATTACHMENT_BYTES } from "../attachment-types.js";
 import { forbidden, notFound, unprocessable } from "../errors.js";
@@ -106,8 +106,8 @@ import type {
   ImportIssueAttachmentRow,
 } from "./import-write-types.js";
 import {
-  PaperclipRunnerProviderProfileError,
-  resolvePaperclipRunnerProviderProfile,
+  ThinkingMachRunnerProviderProfileError,
+  resolveThinkingMachRunnerProviderProfile,
 } from "./native-runtime/provider-profile.js";
 import { managedAgentProfileService } from "./managed-agent-profiles.js";
 import { remoteAgentProfileService } from "./remote-agent-profiles.js";
@@ -355,7 +355,7 @@ function deriveManifestSkillKey(
     return `${owner}/${repo}/${slug}`;
   }
   if (sourceKind === "paperclip_bundled") {
-    return `paperclipai/paperclip/${slug}`;
+    return `thinkingmach/paperclip/${slug}`;
   }
   if (sourceType === "url" || sourceKind === "url") {
     try {
@@ -685,7 +685,7 @@ type CompanyPackageIncludeEntry = {
   path: string;
 };
 
-type PaperclipExtensionDoc = {
+type ThinkingMachExtensionDoc = {
   schema?: string;
   company?: Record<string, unknown> | null;
   agents?: Record<string, Record<string, unknown>> | null;
@@ -1671,7 +1671,7 @@ function buildLegacyRoutineTriggerFromRecurrence(
   }
 
   if (issue.legacyRecurrence.until != null || issue.legacyRecurrence.count != null) {
-    warnings.push(`Recurring task ${issue.slug} uses legacy recurrence end bounds; Paperclip will import the routine trigger without those limits.`);
+    warnings.push(`Recurring task ${issue.slug} uses legacy recurrence end bounds; ThinkingMach will import the routine trigger without those limits.`);
   }
 
   let cronExpression: string | null = null;
@@ -2236,7 +2236,7 @@ function filterExportFiles(
   return filtered;
 }
 
-function findPaperclipExtensionPath(files: Record<string, CompanyPortabilityFileEntry>) {
+function findThinkingMachExtensionPath(files: Record<string, CompanyPortabilityFileEntry>) {
   if (typeof files[".paperclip.yaml"] === "string") return ".paperclip.yaml";
   if (typeof files[".paperclip.yml"] === "string") return ".paperclip.yml";
   return Object.keys(files).find((entry) => entry.endsWith("/.paperclip.yaml") || entry.endsWith("/.paperclip.yml")) ?? null;
@@ -2641,11 +2641,11 @@ async function buildSkillSourceEntry(skill: CompanySkill) {
     const commit = await resolveBundledSkillsCommit();
     return {
       kind: "github-dir",
-      repo: "paperclipai/paperclip",
+      repo: "thinkingmach/paperclip",
       path: `skills/${skill.slug}`,
       commit,
       trackingRef: "master",
-      url: `https://github.com/paperclipai/paperclip/tree/master/skills/${skill.slug}`,
+      url: `https://github.com/thinkingmach/paperclip/tree/master/skills/${skill.slug}`,
     };
   }
 
@@ -2676,7 +2676,7 @@ async function buildSkillSourceEntry(skill: CompanySkill) {
 
 function shouldReferenceSkillOnExport(skill: CompanySkill, expandReferencedSkills: boolean) {
   const metadata = isPlainRecord(skill.metadata) ? skill.metadata : null;
-  // Bundled Paperclip skills ship with every build and may contain executable
+  // Bundled ThinkingMach skills ship with every build and may contain executable
   // scripts that import policy rejects when expanded; the target re-resolves
   // them from its own catalog via the pinned reference stub instead.
   if (asString(metadata?.sourceKind) === "paperclip_bundled") return true;
@@ -3101,7 +3101,7 @@ function buildManifestFromPackageFiles(
   }
   const companyDoc = parseFrontmatterMarkdown(companyMarkdown);
   const companyFrontmatter = companyDoc.frontmatter;
-  const paperclipExtensionPath = findPaperclipExtensionPath(normalizedFiles);
+  const paperclipExtensionPath = findThinkingMachExtensionPath(normalizedFiles);
   const paperclipExtension = paperclipExtensionPath
     ? parseYamlFile(readPortableTextFile(normalizedFiles, paperclipExtensionPath) ?? "")
     : {};
@@ -3110,7 +3110,7 @@ function buildManifestFromPackageFiles(
     ? declaredSchemaVersion
     : UNSTAMPED_BUNDLE_SCHEMA_VERSION;
   if (bundleSchemaVersion > BUNDLE_SCHEMA_VERSION) {
-    throw unprocessable(`Company package declares schemaVersion ${bundleSchemaVersion}, which was produced by a newer Paperclip; this board reads up to schemaVersion ${BUNDLE_SCHEMA_VERSION}.`);
+    throw unprocessable(`Company package declares schemaVersion ${bundleSchemaVersion}, which was produced by a newer ThinkingMach; this board reads up to schemaVersion ${BUNDLE_SCHEMA_VERSION}.`);
   }
   const paperclipCompany = isPlainRecord(paperclipExtension.company) ? paperclipExtension.company : {};
   const paperclipSidebar = normalizePortableSidebarOrder(paperclipExtension.sidebar);
@@ -3305,9 +3305,9 @@ function buildManifestFromPackageFiles(
       const sourceHostname = asString(primarySource?.hostname) || "github.com";
       const [owner, repoName] = (repo ?? "").split("/");
       const canonicalKey = readSkillKey(frontmatter);
-      const normalizedSourceKind = owner === "paperclipai"
+      const normalizedSourceKind = owner === "thinkingmach"
         && repoName === "paperclip"
-        && canonicalKey?.startsWith("paperclipai/paperclip/")
+        && canonicalKey?.startsWith("thinkingmach/paperclip/")
         ? "paperclip_bundled"
         : "github";
       sourceType = "github";
@@ -3554,7 +3554,7 @@ export function companyPortabilityService(db: Db, storage?: StorageService) {
   const secrets = secretService(db);
   const documentsSvc = documentService(db);
   const workProductsSvc = workProductService(db);
-  const strictSecretsMode = process.env.PAPERCLIP_SECRETS_STRICT_MODE === "true";
+  const strictSecretsMode = process.env.THINKINGMACH_SECRETS_STRICT_MODE === "true";
   const defaultSecretProvider = getConfiguredSecretProvider();
 
   async function applyImportedAgentPermissionGrants(
@@ -3597,9 +3597,9 @@ export function companyPortabilityService(db: Db, storage?: StorageService) {
     if (adapterType === "paperclip_runner") {
       let profile;
       try {
-        profile = resolvePaperclipRunnerProviderProfile(adapterConfig);
+        profile = resolveThinkingMachRunnerProviderProfile(adapterConfig);
       } catch (error) {
-        if (error instanceof PaperclipRunnerProviderProfileError) {
+        if (error instanceof ThinkingMachRunnerProviderProfileError) {
           throw unprocessable(error.message, { code: error.code });
         }
         throw error;
@@ -3638,7 +3638,7 @@ export function companyPortabilityService(db: Db, storage?: StorageService) {
     if (mode === "agent_safe" && IMPORT_FORBIDDEN_ADAPTER_TYPES.has(effectiveAdapterType)) {
       throw forbidden(`Adapter type "${effectiveAdapterType}" is not allowed in safe imports`);
     }
-    const nextAdapterConfig = writePaperclipSkillSyncPreference(
+    const nextAdapterConfig = writeThinkingMachSkillSyncPreference(
       applyImportAdapterRunDefaults(effectiveAdapterType, adapterConfig),
       desiredSkills,
     );
@@ -4225,7 +4225,7 @@ export function companyPortabilityService(db: Db, storage?: StorageService) {
             .filter((inputValue) => inputValue.agentSlug === slug),
         );
         const reportsToSlug = agent.reportsTo ? (idToSlug.get(agent.reportsTo) ?? null) : null;
-        const desiredSkills = readPaperclipSkillSyncPreference(
+        const desiredSkills = readThinkingMachSkillSyncPreference(
           (agent.adapterConfig as Record<string, unknown>) ?? {},
         ).desiredSkills;
 
@@ -5254,7 +5254,7 @@ export function companyPortabilityService(db: Db, storage?: StorageService) {
         && (await instanceSettingsService(db).getExperimental()).enableNativeRunner !== true
       ) {
         throw unprocessable(
-          "Paperclip Runner is experimental and disabled on this instance.",
+          "ThinkingMach Runner is experimental and disabled on this instance.",
           { code: "paperclip_runner_rollout_disabled" },
         );
       }

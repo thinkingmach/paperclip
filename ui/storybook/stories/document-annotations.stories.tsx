@@ -6,7 +6,7 @@ import type {
   DocumentAnnotationThreadWithComments,
   Issue,
   IssueDocument,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { DocumentAnnotationPanel } from "@/components/DocumentAnnotationPanel";
 import { DocumentAnnotationLayer, type PendingAnchor } from "@/components/DocumentAnnotationLayer";
 import {

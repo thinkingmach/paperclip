@@ -1,7 +1,7 @@
 import { isDeepStrictEqual } from "node:util";
 import { and, eq } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { assets, documentRevisions, documents, issueAttachments, issueDocuments } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { assets, documentRevisions, documents, issueAttachments, issueDocuments } from "@thinkingmach/db";
 import {
   MARKDOWN_REVIEW_DOCUMENT_MAX_BYTES,
   artifactReviewDocumentKey,
@@ -9,7 +9,7 @@ import {
   isMarkdownAttachmentContent,
   type AttachmentArtifactWorkProductMetadata,
   type IssueWorkProduct,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   HttpError,
   conflict,
@@ -163,7 +163,7 @@ export function artifactReviewDocumentService(db: Db, storage: StorageService) {
       }
       const metadata = getAttachmentArtifactWorkProductMetadata(workProduct);
       if (!metadata) {
-        throw unprocessable("Work product is not an attachment-backed Paperclip artifact", {
+        throw unprocessable("Work product is not an attachment-backed ThinkingMach artifact", {
           code: "not_attachment_backed_artifact",
           workProductId: workProduct.id,
         });

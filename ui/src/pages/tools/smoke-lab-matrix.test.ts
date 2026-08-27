@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { SmokeRun, SmokeRunStep } from "@paperclipai/shared";
+import type { SmokeRun, SmokeRunStep } from "@thinkingmach/shared";
 import {
   buildSmokeMatrix,
   cellKey,

@@ -1,4 +1,4 @@
-import { runPaperclipEvalMatrix, type PaperclipEvalCandidate } from "@paperclipai/paperclip-eval-kernel";
+import { runThinkingMachEvalMatrix, type ThinkingMachEvalCandidate } from "@thinkingmach/paperclip-eval-kernel";
 
 import acpxFixture from "./fixtures/acpx-sanitized-provider.json" with { type: "json" };
 import codexFixture from "./fixtures/codex-sanitized-provider.json" with { type: "json" };
@@ -28,7 +28,7 @@ export interface DeterministicRunnerWorkflowCandidate {
   fixtureRevision: "stress-sanitized-v1";
 }
 
-export const DETERMINISTIC_RUNNER_WORKFLOW_CANDIDATES: readonly PaperclipEvalCandidate<DeterministicRunnerWorkflowCandidate>[] = Object.freeze([
+export const DETERMINISTIC_RUNNER_WORKFLOW_CANDIDATES: readonly ThinkingMachEvalCandidate<DeterministicRunnerWorkflowCandidate>[] = Object.freeze([
   { id: "fixture-codex", config: { provider: "codex", transport: "codex-app-server", fixtureRevision: "stress-sanitized-v1" } },
   { id: "fixture-opencode", config: { provider: "opencode", transport: "opencode-server", fixtureRevision: "stress-sanitized-v1" } },
   { id: "fixture-acpx", config: { provider: "acpx", transport: "acp-json-rpc", fixtureRevision: "stress-sanitized-v1" } },
@@ -236,7 +236,7 @@ export async function runDeterministicRunnerWorkflowMatrix(
   scoring: RunnerWorkflowScoringOptions = { bundleId: "runner-workflows-deterministic-v1" },
 ): Promise<readonly RunnerWorkflowMatrixEntry[]> {
   assertRunnerWorkflowCatalog();
-  const results = await runPaperclipEvalMatrix({
+  const results = await runThinkingMachEvalMatrix({
     scenarios: RUNNER_WORKFLOW_CATALOG.map((entry) => ({ id: entry.id, input: entry })),
     candidates: DETERMINISTIC_RUNNER_WORKFLOW_CANDIDATES,
     execute: async ({ scenario, candidate }) => deterministicObservation(

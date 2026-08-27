@@ -130,7 +130,7 @@ describe("SidebarAccountMenu", () => {
     const feedbackButton = container.querySelector<HTMLAnchorElement>(
       'a[aria-label="Share feedback"]',
     );
-    expect(feedbackButton?.getAttribute("href")).toBe("https://paperclip.ing/feedback");
+    expect(feedbackButton?.getAttribute("href")).toBe("https://thinkingmach.com/feedback");
     expect(feedbackButton?.getAttribute("target")).toBe("_blank");
     expect(feedbackButton?.classList).toContain("hover:bg-background");
     expect(feedbackButton?.querySelector("svg")?.classList).toContain("lucide-flag");
@@ -164,7 +164,7 @@ describe("SidebarAccountMenu", () => {
     const feedbackButton = container.querySelector<HTMLAnchorElement>(
       'a[aria-label="Share feedback"]',
     );
-    expect(feedbackButton?.getAttribute("href")).toBe("https://paperclip.ing/feedback");
+    expect(feedbackButton?.getAttribute("href")).toBe("https://thinkingmach.com/feedback");
     expect(feedbackButton?.getAttribute("target")).toBe("_blank");
     expect(feedbackButton?.classList).toContain("hover:bg-accent/50");
     expect(feedbackButton?.querySelector("svg")?.classList).toContain("lucide-flag");
@@ -177,7 +177,7 @@ describe("SidebarAccountMenu", () => {
 
     const popover = document.body.querySelector('[data-slot="popover-content"]');
     expect(popover?.textContent).not.toContain("Feedback");
-    expect(popover?.querySelector('a[href="https://paperclip.ing/feedback"]')).toBeNull();
+    expect(popover?.querySelector('a[href="https://thinkingmach.com/feedback"]')).toBeNull();
 
     await act(async () => root.unmount());
   });
@@ -222,7 +222,7 @@ describe("SidebarAccountMenu", () => {
 
     const popover = document.body.querySelector('[data-slot="popover-content"]');
     expect(popover?.textContent).not.toContain("Feedback");
-    expect(popover?.querySelector('a[href="https://paperclip.ing/feedback"]')).toBeNull();
+    expect(popover?.querySelector('a[href="https://thinkingmach.com/feedback"]')).toBeNull();
 
     // Documentation still appears before the theme toggle.
     const menuText = popover?.textContent ?? "";
@@ -232,7 +232,7 @@ describe("SidebarAccountMenu", () => {
 
     // The popover header stays down to name + email: no "Account" badge, no version line.
     expect(popover?.textContent).not.toContain("Account");
-    expect(popover?.textContent).not.toContain("Paperclip v");
+    expect(popover?.textContent).not.toContain("ThinkingMach v");
     expect(document.body.textContent).toContain("jane@example.com");
     expect(document.body.querySelector('[data-slot="popover-content"]')?.className)
       .toContain("w-(--sz-277px)");

@@ -5,7 +5,7 @@ import type {
   CompanySecret,
   McpConnectionCredentialRef,
   ToolConnection,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { queryKeys } from "@/lib/queryKeys";
 import { toolsApi, type CreateToolConnectionInput } from "@/api/tools";
 import { secretsApi } from "@/api/secrets";
@@ -474,7 +474,7 @@ export function AddConnectionDialog({
                       </p>
                     ) : null}
                     <p className="text-xs text-muted-foreground">
-                      Free-text secrets are not accepted — pick a vault entry; Paperclip stores only the
+                      Free-text secrets are not accepted — pick a vault entry; ThinkingMach stores only the
                       <span className="font-mono"> vault://</span> reference and resolves it at gateway use time.
                     </p>
                   </>

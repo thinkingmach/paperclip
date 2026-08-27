@@ -1,4 +1,4 @@
-import type { Environment } from "@paperclipai/shared";
+import type { Environment } from "@thinkingmach/shared";
 
 /**
  * The managed-sandbox-only policy hides the local environment and runs every
@@ -28,7 +28,7 @@ export class ManagedSandboxUnavailableForTestError extends Error {
  * instance local-default environment. The server always resolves a run to one
  * of these three tiers, so the Test must probe the same target. Without the
  * local-default tier the Test would send no environment id and probe the
- * Paperclip host, even though a real run resolves to the local-default
+ * ThinkingMach host, even though a real run resolves to the local-default
  * environment. The two paths must match, so a Test result reflects a real run.
  *
  * The managed-sandbox-only policy (`enableManagedSandboxOnly`) redirects a
@@ -85,7 +85,7 @@ export function resolveAdapterTestEnvironmentId(input: {
 /**
  * Find the active managed sandbox environment id in an environment list. The
  * platform provisioner stamps the managed environment with
- * `metadata.managedByPaperclip` (see `isPlatformManagedEnvironment`). The
+ * `metadata.managedByThinkingMach` (see `isPlatformManagedEnvironment`). The
  * local-default environment also carries that stamp, so this function excludes
  * the `local` driver and returns the non-local managed environment. The function
  * selects only an `active` environment, never an `archived` one, so the Test
@@ -103,7 +103,7 @@ export function resolveManagedSandboxEnvironmentId(
     (environment) =>
       environment.driver !== "local" &&
       environment.status === "active" &&
-      environment.metadata?.managedByPaperclip === true,
+      environment.metadata?.managedByThinkingMach === true,
   );
   return managed?.id ?? null;
 }

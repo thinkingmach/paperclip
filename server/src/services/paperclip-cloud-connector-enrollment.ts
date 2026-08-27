@@ -10,7 +10,7 @@ import {
 import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-import { resolvePaperclipInstanceRoot } from "../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../home-paths.js";
 import { runtimePublicOrigin } from "./cloud-runtime-identity.js";
 
 const IDENTITY_VERSION = 1;
@@ -29,7 +29,7 @@ type PendingEnrollment = {
   returnTo?: string;
 };
 
-export type PaperclipCloudConnectorIdentity = {
+export type ThinkingMachCloudConnectorIdentity = {
   version: 1;
   instanceId: string;
   environment: LocalConnectorEnvironment;
@@ -44,9 +44,9 @@ export type PaperclipCloudConnectorIdentity = {
   enrolledAt?: string;
 };
 
-export type PaperclipCloudConnectorEnrollmentStatus = {
+export type ThinkingMachCloudConnectorEnrollmentStatus = {
   configured: boolean;
-  status: PaperclipCloudConnectorIdentity["status"] | "not_configured" | "suspended" | "unverified";
+  status: ThinkingMachCloudConnectorIdentity["status"] | "not_configured" | "suspended" | "unverified";
   brokerBaseUrl: string;
   instanceId: string | null;
   environment: LocalConnectorEnvironment;
@@ -56,10 +56,10 @@ export type PaperclipCloudConnectorEnrollmentStatus = {
 };
 
 export function paperclipCloudConnectorIdentityPath(): string {
-  return path.join(resolvePaperclipInstanceRoot(), "secrets", ENROLLMENT_FILE);
+  return path.join(resolveThinkingMachInstanceRoot(), "secrets", ENROLLMENT_FILE);
 }
 
-export function loadPaperclipCloudConnectorIdentity(): PaperclipCloudConnectorIdentity | null {
+export function loadThinkingMachCloudConnectorIdentity(): ThinkingMachCloudConnectorIdentity | null {
   const filePath = paperclipCloudConnectorIdentityPath();
   if (!existsSync(filePath)) return null;
   try {
@@ -72,12 +72,12 @@ export function loadPaperclipCloudConnectorIdentity(): PaperclipCloudConnectorId
 
 export function paperclipCloudConnectorEnrollmentStatus(
   env: NodeJS.ProcessEnv = process.env,
-): PaperclipCloudConnectorEnrollmentStatus {
-  const identity = loadPaperclipCloudConnectorIdentity();
-  const managedInstanceId = env.PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID?.trim();
-  const managedSignPrivateKey = env.PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY?.trim();
-  const managedSealPrivateKey = env.PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY?.trim();
-  const managedEnvironment = env.PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT?.trim();
+): ThinkingMachCloudConnectorEnrollmentStatus {
+  const identity = loadThinkingMachCloudConnectorIdentity();
+  const managedInstanceId = env.THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID?.trim();
+  const managedSignPrivateKey = env.THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY?.trim();
+  const managedSealPrivateKey = env.THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY?.trim();
+  const managedEnvironment = env.THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT?.trim();
   const hasManagedIdentityOverride = hasManagedConnectorIdentityOverride(env);
   if (hasManagedIdentityOverride) {
     const { brokerBaseUrl, environment } = connectorTarget(env);
@@ -130,7 +130,7 @@ export function paperclipCloudConnectorEnrollmentStatus(
   };
 }
 
-export async function startPaperclipCloudConnectorEnrollment(input: {
+export async function startThinkingMachCloudConnectorEnrollment(input: {
   origin: string;
   label?: string;
   companyId?: string;
@@ -138,11 +138,11 @@ export async function startPaperclipCloudConnectorEnrollment(input: {
   returnTo?: string;
   env?: NodeJS.ProcessEnv;
   request?: typeof fetch;
-}): Promise<PaperclipCloudConnectorEnrollmentStatus> {
-  return withEnrollmentMutationLock(() => startPaperclipCloudConnectorEnrollmentUnlocked(input));
+}): Promise<ThinkingMachCloudConnectorEnrollmentStatus> {
+  return withEnrollmentMutationLock(() => startThinkingMachCloudConnectorEnrollmentUnlocked(input));
 }
 
-async function startPaperclipCloudConnectorEnrollmentUnlocked(input: {
+async function startThinkingMachCloudConnectorEnrollmentUnlocked(input: {
   origin: string;
   label?: string;
   companyId?: string;
@@ -150,21 +150,21 @@ async function startPaperclipCloudConnectorEnrollmentUnlocked(input: {
   returnTo?: string;
   env?: NodeJS.ProcessEnv;
   request?: typeof fetch;
-}): Promise<PaperclipCloudConnectorEnrollmentStatus> {
+}): Promise<ThinkingMachCloudConnectorEnrollmentStatus> {
   const env = input.env ?? process.env;
   const request = input.request ?? fetch;
   if (hasManagedConnectorIdentityOverride(env)) {
-    throw new Error("Paperclip Cloud self-host enrollment is unavailable with managed identity configuration");
+    throw new Error("ThinkingMach Cloud self-host enrollment is unavailable with managed identity configuration");
   }
   const origin = normalizeInstanceOrigin(input.origin);
-  const existingIdentity = loadPaperclipCloudConnectorIdentity();
+  const existingIdentity = loadThinkingMachCloudConnectorIdentity();
   const target = connectorTarget(env, existingIdentity);
-  let identity: PaperclipCloudConnectorIdentity;
+  let identity: ThinkingMachCloudConnectorIdentity;
   if (!existingIdentity) {
     identity = createIdentity(env);
   } else if (!identityMatchesTarget(existingIdentity, target)) {
     if (existingIdentity.status === "active") {
-      throw new Error("Paperclip Cloud connector is enrolled with another target");
+      throw new Error("ThinkingMach Cloud connector is enrolled with another target");
     }
     identity = createIdentity(env);
   } else {
@@ -172,13 +172,13 @@ async function startPaperclipCloudConnectorEnrollmentUnlocked(input: {
   }
   if (identity.status === "pending" && identity.pending && Date.parse(identity.pending.expiresAt) > Date.now()) {
     if (identity.pending.origin !== origin) {
-      throw new Error("Paperclip Cloud enrollment is already pending for another origin");
+      throw new Error("ThinkingMach Cloud enrollment is already pending for another origin");
     }
     if (identity.pending.companyId !== input.companyId) {
-      throw new Error("Paperclip Cloud enrollment is already pending for another company");
+      throw new Error("ThinkingMach Cloud enrollment is already pending for another company");
     }
     if (input.initiatedBy && identity.pending.initiatedBy && identity.pending.initiatedBy !== input.initiatedBy) {
-      throw new Error("Paperclip Cloud enrollment is already pending for another administrator");
+      throw new Error("ThinkingMach Cloud enrollment is already pending for another administrator");
     }
     return paperclipCloudConnectorEnrollmentStatus(env);
   }
@@ -193,16 +193,16 @@ async function startPaperclipCloudConnectorEnrollmentUnlocked(input: {
       origin,
       returnUri,
       returnState,
-      label: input.label?.trim() || process.env.PAPERCLIP_INSTANCE_ID?.trim() || "Self-hosted Paperclip",
+      label: input.label?.trim() || process.env.THINKINGMACH_INSTANCE_ID?.trim() || "Self-hosted ThinkingMach",
       signPublicKey: identity.signPublicKey,
       sealPublicKey: identity.sealPublicKey,
     }),
     signal: AbortSignal.timeout(15_000),
   }).catch(() => null);
-  if (!response?.ok) throw new Error("Paperclip Cloud enrollment is unavailable");
+  if (!response?.ok) throw new Error("ThinkingMach Cloud enrollment is unavailable");
   const body = await response.json().catch(() => null) as Record<string, unknown> | null;
   if (!body || typeof body.enrollmentId !== "string" || typeof body.verificationUrl !== "string" || typeof body.expiresAt !== "string") {
-    throw new Error("Paperclip Cloud returned an invalid enrollment response");
+    throw new Error("ThinkingMach Cloud returned an invalid enrollment response");
   }
   const verificationUrl = new URL(body.verificationUrl);
   if (verificationUrl.origin !== identity.brokerBaseUrl
@@ -210,7 +210,7 @@ async function startPaperclipCloudConnectorEnrollmentUnlocked(input: {
     || verificationUrl.pathname !== "/connections/enroll"
     || verificationUrl.searchParams.size !== 1
     || verificationUrl.searchParams.get("id") !== body.enrollmentId) {
-    throw new Error("Paperclip Cloud returned an invalid enrollment destination");
+    throw new Error("ThinkingMach Cloud returned an invalid enrollment destination");
   }
   identity = {
     ...identity,
@@ -233,31 +233,31 @@ async function startPaperclipCloudConnectorEnrollmentUnlocked(input: {
   };
 }
 
-export async function completePaperclipCloudConnectorEnrollment(input: {
+export async function completeThinkingMachCloudConnectorEnrollment(input: {
   enrollmentId: string;
   approvalCode: string;
   state: string;
   env?: NodeJS.ProcessEnv;
   request?: typeof fetch;
-}): Promise<PaperclipCloudConnectorEnrollmentStatus> {
-  return withEnrollmentMutationLock(() => completePaperclipCloudConnectorEnrollmentUnlocked(input));
+}): Promise<ThinkingMachCloudConnectorEnrollmentStatus> {
+  return withEnrollmentMutationLock(() => completeThinkingMachCloudConnectorEnrollmentUnlocked(input));
 }
 
-async function completePaperclipCloudConnectorEnrollmentUnlocked(input: {
+async function completeThinkingMachCloudConnectorEnrollmentUnlocked(input: {
   enrollmentId: string;
   approvalCode: string;
   state: string;
   env?: NodeJS.ProcessEnv;
   request?: typeof fetch;
-}): Promise<PaperclipCloudConnectorEnrollmentStatus> {
-  const identity = loadPaperclipCloudConnectorIdentity();
+}): Promise<ThinkingMachCloudConnectorEnrollmentStatus> {
+  const identity = loadThinkingMachCloudConnectorIdentity();
   const pending = identity?.pending;
   if (hasManagedConnectorIdentityOverride(input.env ?? process.env)
     || !identity || !pending || identity.status !== "pending"
     || pending.enrollmentId !== input.enrollmentId || pending.returnState !== input.state
     || Date.parse(pending.expiresAt) <= Date.now()
     || !identityMatchesTarget(identity, connectorTarget(input.env ?? process.env, identity))) {
-    throw new Error("Invalid or expired Paperclip Cloud enrollment state");
+    throw new Error("Invalid or expired ThinkingMach Cloud enrollment state");
   }
   const audience = `${identity.brokerBaseUrl}/v1/connector/enrollment-claims`;
   const now = Math.floor(Date.now() / 1_000);
@@ -279,11 +279,11 @@ async function completePaperclipCloudConnectorEnrollmentUnlocked(input: {
     body: JSON.stringify({ request: requestToken, enrollmentId: input.enrollmentId, approvalCode: input.approvalCode }),
     signal: AbortSignal.timeout(15_000),
   }).catch(() => null);
-  if (!response?.ok) throw new Error("Paperclip Cloud enrollment could not be completed");
+  if (!response?.ok) throw new Error("ThinkingMach Cloud enrollment could not be completed");
   const body = await response.json().catch(() => null) as Record<string, unknown> | null;
   if (!body || body.id !== identity.instanceId || body.environment !== identity.environment
     || !Array.isArray(body.origins) || !body.origins.includes(pending.origin)) {
-    throw new Error("Paperclip Cloud returned an invalid enrollment binding");
+    throw new Error("ThinkingMach Cloud returned an invalid enrollment binding");
   }
   saveIdentity({
     ...identity,
@@ -295,11 +295,11 @@ async function completePaperclipCloudConnectorEnrollmentUnlocked(input: {
   return paperclipCloudConnectorEnrollmentStatus(input.env ?? process.env);
 }
 
-function createIdentity(env: NodeJS.ProcessEnv): PaperclipCloudConnectorIdentity {
+function createIdentity(env: NodeJS.ProcessEnv): ThinkingMachCloudConnectorIdentity {
   const signing = generateKeyPairSync("ed25519");
   const sealing = generateKeyPairSync("x25519");
   const { brokerBaseUrl, environment } = connectorTarget(env);
-  const identity: PaperclipCloudConnectorIdentity = {
+  const identity: ThinkingMachCloudConnectorIdentity = {
     version: IDENTITY_VERSION,
     instanceId: `inst_${randomUUID()}`,
     environment,
@@ -315,7 +315,7 @@ function createIdentity(env: NodeJS.ProcessEnv): PaperclipCloudConnectorIdentity
   return identity;
 }
 
-function saveIdentity(identity: PaperclipCloudConnectorIdentity): void {
+function saveIdentity(identity: ThinkingMachCloudConnectorIdentity): void {
   const filePath = paperclipCloudConnectorIdentityPath();
   const directory = path.dirname(filePath);
   mkdirSync(directory, { recursive: true, mode: 0o700 });
@@ -327,7 +327,7 @@ function saveIdentity(identity: PaperclipCloudConnectorIdentity): void {
   chmodSync(filePath, 0o600);
 }
 
-function parseIdentity(value: unknown): PaperclipCloudConnectorIdentity {
+function parseIdentity(value: unknown): ThinkingMachCloudConnectorIdentity {
   if (!isRecord(value) || value.version !== IDENTITY_VERSION
     || typeof value.instanceId !== "string" || !value.instanceId.startsWith("inst_")
     || !isEnvironment(value.environment) || typeof value.brokerBaseUrl !== "string"
@@ -335,9 +335,9 @@ function parseIdentity(value: unknown): PaperclipCloudConnectorIdentity {
     || typeof value.sealPrivateKey !== "string" || typeof value.sealPublicKey !== "string"
     || (value.status !== "unenrolled" && value.status !== "pending" && value.status !== "active")
     || !Array.isArray(value.origins) || !value.origins.every((origin) => typeof origin === "string")) {
-    throw new Error("Invalid Paperclip Cloud connector identity");
+    throw new Error("Invalid ThinkingMach Cloud connector identity");
   }
-  return value as PaperclipCloudConnectorIdentity;
+  return value as ThinkingMachCloudConnectorIdentity;
 }
 
 function connectorEnvironment(
@@ -351,20 +351,20 @@ function connectorEnvironment(
     : host === "my-staging.paperclip.app"
       ? "staging"
       : "development";
-  const value = env.PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT?.trim() || fallback || inferred;
-  if (!isEnvironment(value)) throw new Error("Paperclip Cloud connector environment is invalid");
+  const value = env.THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT?.trim() || fallback || inferred;
+  if (!isEnvironment(value)) throw new Error("ThinkingMach Cloud connector environment is invalid");
   if ((host === "my.paperclip.app" && value !== "production")
     || (host === "my-staging.paperclip.app" && value !== "staging")) {
-    throw new Error("Paperclip Cloud connector broker and environment do not match");
+    throw new Error("ThinkingMach Cloud connector broker and environment do not match");
   }
   return value;
 }
 
 function connectorTarget(
   env: NodeJS.ProcessEnv,
-  identity?: PaperclipCloudConnectorIdentity | null,
-): Pick<PaperclipCloudConnectorIdentity, "brokerBaseUrl" | "environment"> {
-  const brokerOverride = env.PAPERCLIP_CLOUD_CONNECTOR_BASE_URL?.trim() || undefined;
+  identity?: ThinkingMachCloudConnectorIdentity | null,
+): Pick<ThinkingMachCloudConnectorIdentity, "brokerBaseUrl" | "environment"> {
+  const brokerOverride = env.THINKINGMACH_CLOUD_CONNECTOR_BASE_URL?.trim() || undefined;
   const brokerBaseUrl = normalizeBrokerOrigin(
     brokerOverride ?? identity?.brokerBaseUrl ?? "https://my.paperclip.app",
   );
@@ -375,17 +375,17 @@ function connectorTarget(
 }
 
 function identityMatchesTarget(
-  identity: PaperclipCloudConnectorIdentity,
-  target: Pick<PaperclipCloudConnectorIdentity, "brokerBaseUrl" | "environment">,
+  identity: ThinkingMachCloudConnectorIdentity,
+  target: Pick<ThinkingMachCloudConnectorIdentity, "brokerBaseUrl" | "environment">,
 ): boolean {
   return identity.brokerBaseUrl === target.brokerBaseUrl && identity.environment === target.environment;
 }
 
 function hasManagedConnectorIdentityOverride(env: NodeJS.ProcessEnv): boolean {
   return [
-    env.PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID,
-    env.PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY,
-    env.PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY,
+    env.THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID,
+    env.THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY,
+    env.THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY,
   ].some((value) => Boolean(value?.trim()));
 }
 
@@ -396,10 +396,10 @@ function isEnvironment(value: unknown): value is LocalConnectorEnvironment {
 function normalizeBrokerOrigin(value: string): string {
   const url = new URL(value.trim());
   if (url.protocol !== "https:" && !(url.protocol === "http:" && loopback(url.hostname))) {
-    throw new Error("Paperclip Cloud connector URL must use HTTPS");
+    throw new Error("ThinkingMach Cloud connector URL must use HTTPS");
   }
   if (url.username || url.password || url.search || url.hash || (url.pathname !== "/" && url.pathname !== "")) {
-    throw new Error("Paperclip Cloud connector URL must be an origin");
+    throw new Error("ThinkingMach Cloud connector URL must be an origin");
   }
   return url.origin;
 }
@@ -407,10 +407,10 @@ function normalizeBrokerOrigin(value: string): string {
 function normalizeInstanceOrigin(value: string): string {
   const url = new URL(value.trim());
   if (url.protocol !== "https:" && !(url.protocol === "http:" && loopback(url.hostname))) {
-    throw new Error("Paperclip Cloud enrollment requires HTTPS except on loopback");
+    throw new Error("ThinkingMach Cloud enrollment requires HTTPS except on loopback");
   }
   if (url.username || url.password || url.search || url.hash || (url.pathname !== "/" && url.pathname !== "")) {
-    throw new Error("Paperclip Cloud enrollment requires an exact origin");
+    throw new Error("ThinkingMach Cloud enrollment requires an exact origin");
   }
   return url.origin;
 }

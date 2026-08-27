@@ -20,13 +20,13 @@ describe("public repository paid workflow security", () => {
     );
     const trustedWorkflowCalls = [
       ...ordinaryPrWorkflow.matchAll(
-        /^\s+uses:\s+(paperclipai\/paperclip\/\.github\/workflows\/pr-trusted\.yml)@([0-9a-f]{40})$/gmu,
+        /^\s+uses:\s+(thinkingmach\/paperclip\/\.github\/workflows\/pr-trusted\.yml)@([0-9a-f]{40})$/gmu,
       ),
     ];
 
     expect(trustedWorkflowCalls).toHaveLength(1);
     expect(trustedWorkflowCalls[0]?.[1]).toBe(
-      "paperclipai/paperclip/.github/workflows/pr-trusted.yml",
+      "thinkingmach/paperclip/.github/workflows/pr-trusted.yml",
     );
     expect(trustedWorkflowCalls[0]?.[2]).toBe(
       ordinaryPrTrustedWorkflowRevision,
@@ -255,7 +255,7 @@ describe("public repository paid workflow security", () => {
       "if: needs.authorize.outputs.playwright_channel != 'chrome'",
     );
     expect(paidJob).toContain(
-      "PAPERCLIP_PLAYWRIGHT_CHANNEL: ${{ needs.authorize.outputs.playwright_channel }}",
+      "THINKINGMACH_PLAYWRIGHT_CHANNEL: ${{ needs.authorize.outputs.playwright_channel }}",
     );
     expect(paidJob).not.toContain(
       "pnpm exec playwright install --with-deps chromium",
@@ -308,11 +308,11 @@ describe("public repository paid workflow security", () => {
       "node scripts/link-plugin-dev-sdk.mjs",
     );
     expect(preparedBeforeProviderAccess).toContain(
-      '"@paperclipai/plugin-daytona"',
+      '"@thinkingmach/plugin-daytona"',
     );
-    expect(preparedBeforeProviderAccess).toContain('"@paperclipai/plugin-sdk"');
+    expect(preparedBeforeProviderAccess).toContain('"@thinkingmach/plugin-sdk"');
     expect(preparedBeforeProviderAccess).toContain(
-      'realpath "$daytona_root/node_modules/@paperclipai/plugin-sdk"',
+      'realpath "$daytona_root/node_modules/@thinkingmach/plugin-sdk"',
     );
     expect(preparedBeforeProviderAccess).toContain(
       'pnpm --dir "$daytona_root" build',
@@ -412,7 +412,7 @@ describe("public repository paid workflow security", () => {
     expect(fullStack.match(/persist-credentials: false/g)).toHaveLength(8);
     expect(fullStack).not.toContain("ref: ${{ inputs.target_branch }}");
     expect(fullStack).toContain(
-      "PAPERCLIP_RUNNER_SOURCE_REVISION=${TARGET_SHA}",
+      "THINKINGMACH_RUNNER_SOURCE_REVISION=${TARGET_SHA}",
     );
     const reportJob = fullStack.slice(
       fullStack.indexOf("  report:"),
@@ -434,10 +434,10 @@ describe("public repository paid workflow security", () => {
     );
     for (const targetProvenanceJob of [paidJob, reportJob]) {
       expect(targetProvenanceJob).toContain(
-        "PAPERCLIP_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}",
+        "THINKINGMACH_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}",
       );
       expect(targetProvenanceJob).toContain(
-        "PAPERCLIP_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}",
+        "THINKINGMACH_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}",
       );
     }
     for (const [secret, condition] of Object.entries({
@@ -519,10 +519,10 @@ describe("public repository paid workflow security", () => {
       buildJob.match(/pnpm install --frozen-lockfile --ignore-scripts/g),
     ).toHaveLength(2);
     expect(buildJob).toContain(
-      "pnpm --filter @paperclipai/paperclip-runner build:typescript",
+      "pnpm --filter @thinkingmach/paperclip-runner build:typescript",
     );
     expect(buildJob).toContain(
-      "pnpm --filter @paperclipai/paperclip-runner build:runner-binaries",
+      "pnpm --filter @thinkingmach/paperclip-runner build:runner-binaries",
     );
     expect(buildJob).toContain(
       "node packages/paperclip-runner/scripts/build-provider-pack.mjs",
@@ -599,14 +599,14 @@ describe("public repository paid workflow security", () => {
     );
 
     expect(config).toContain(
-      "process.env.PAPERCLIP_PLAYWRIGHT_CHANNEL?.trim()",
+      "process.env.THINKINGMACH_PLAYWRIGHT_CHANNEL?.trim()",
     );
     expect(config).toContain("{ channel: playwrightChannel }");
     expect(config).toContain(
-      "process.env.PAPERCLIP_RUNNER_E2E_CHROMIUM_EXECUTABLE?.trim()",
+      "process.env.THINKINGMACH_RUNNER_E2E_CHROMIUM_EXECUTABLE?.trim()",
     );
     expect(config).toContain(
-      "PAPERCLIP_PLAYWRIGHT_CHANNEL and PAPERCLIP_RUNNER_E2E_CHROMIUM_EXECUTABLE are mutually exclusive",
+      "THINKINGMACH_PLAYWRIGHT_CHANNEL and THINKINGMACH_RUNNER_E2E_CHROMIUM_EXECUTABLE are mutually exclusive",
     );
   });
 
@@ -637,7 +637,7 @@ describe("public repository paid workflow security", () => {
     expect(report).toContain("Select latest workflow attempt per cell");
     expect(report).toContain("tests/runner-e2e/select-rerun-artifacts.ts");
     expect(report).toContain(
-      "PAPERCLIP_RUNNER_E2E_REPORT_ROOT: ${{ github.workspace }}/selected-runner-e2e",
+      "THINKINGMACH_RUNNER_E2E_REPORT_ROOT: ${{ github.workspace }}/selected-runner-e2e",
     );
     expect(
       report.indexOf("Select latest workflow attempt per cell"),

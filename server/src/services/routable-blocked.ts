@@ -1,4 +1,4 @@
-import type { IssueUnblockDescriptor } from "@paperclipai/shared";
+import type { IssueUnblockDescriptor } from "@thinkingmach/shared";
 
 export const ROUTABLE_BLOCKED_ROLLOUT_AT = new Date("2026-07-23T18:13:03.000Z");
 

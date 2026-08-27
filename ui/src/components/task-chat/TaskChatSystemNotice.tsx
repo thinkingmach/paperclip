@@ -1,12 +1,5 @@
 import { useId, useState } from "react";
-import {
-  ChevronDown,
-  CircleCheck,
-  Info,
-  OctagonAlert,
-  TriangleAlert,
-  type LucideIcon,
-} from "lucide-react";
+import { ChevronDown, CircleCheck, Info, OctagonAlert, TriangleAlert, type LucideIcon,  } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStreamlinedTaskChatPresentation } from "./presentation-mode";
 import { MarkdownBody } from "@/components/MarkdownBody";

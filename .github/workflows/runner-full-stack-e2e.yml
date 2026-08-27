@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       target_branch:
-        description: "Branch in paperclipai/paperclip to test; the trusted workflow still runs from master"
+        description: "Branch in thinkingmach/paperclip to test; the trusted workflow still runs from master"
         type: string
         required: false
       all:
@@ -408,7 +408,7 @@ jobs:
         env:
           NEEDS_DAYTONA: ${{ needs.catalog.outputs.needs_daytona }}
           IMAGE_CONTENT_ID: ${{ needs.catalog.outputs.daytona_image_content_id }}
-          IMAGE_TAG: ghcr.io/paperclipai/paperclip-daytona-runner:e2e-content-${{ needs.catalog.outputs.daytona_image_content_id }}
+          IMAGE_TAG: ghcr.io/thinkingmach/paperclip-daytona-runner:e2e-content-${{ needs.catalog.outputs.daytona_image_content_id }}
           TARGET_SHA: ${{ needs.authorize.outputs.target_sha }}
         run: |
           set -euo pipefail
@@ -427,8 +427,8 @@ jobs:
           else
             docker buildx build \
               --platform linux/amd64 \
-              --build-arg "PAPERCLIP_RUNNER_CONTENT_ID=${IMAGE_CONTENT_ID}" \
-              --build-arg "PAPERCLIP_RUNNER_SOURCE_REVISION=${TARGET_SHA}" \
+              --build-arg "THINKINGMACH_RUNNER_CONTENT_ID=${IMAGE_CONTENT_ID}" \
+              --build-arg "THINKINGMACH_RUNNER_SOURCE_REVISION=${TARGET_SHA}" \
               --file docker/daytona-runner/Dockerfile \
               --tag "$IMAGE_TAG" \
               --push \
@@ -459,7 +459,7 @@ jobs:
             '.architecture == "amd64" and
              .os == "linux" and
              .config.User == "daytona" and
-             (.config.Env | any(startswith("PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT=")))' \
+             (.config.Env | any(startswith("THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT=")))' \
             <<< "$image_config" >/dev/null
           {
             echo "image=$immutable"
@@ -533,12 +533,12 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$NEEDS_RUNNER_TYPESCRIPT" = true ]; then
-            pnpm --filter @paperclipai/paperclip-runner build:typescript
+            pnpm --filter @thinkingmach/paperclip-runner build:typescript
           else
-            pnpm --filter @paperclipai/paperclip-eval-kernel build
+            pnpm --filter @thinkingmach/paperclip-eval-kernel build
           fi
           if [ "$NEEDS_NATIVE_BINARIES" = true ]; then
-            pnpm --filter @paperclipai/paperclip-runner build:runner-binaries
+            pnpm --filter @thinkingmach/paperclip-runner build:runner-binaries
           fi
 
       - name: Package immutable campaign outputs
@@ -688,7 +688,7 @@ jobs:
           # A reused image can have an older source revision with the same
           # content ID. Matching that revision lets remote execution reuse the
           # verified pack already installed in the immutable image.
-          PAPERCLIP_RUNNER_SOURCE_REVISION: ${{ needs.daytona_image.outputs.source_revision }}
+          THINKINGMACH_RUNNER_SOURCE_REVISION: ${{ needs.daytona_image.outputs.source_revision }}
         run: node packages/paperclip-runner/scripts/build-provider-pack.mjs packages/paperclip-runner/provider-pack
 
       - name: Package verified remote provider pack
@@ -826,14 +826,14 @@ jobs:
           test ! -L "$daytona_root"
           test ! -L "$sdk_root"
           test -f "$daytona_root/pnpm-lock.yaml"
-          test "$(jq -r .name "$daytona_root/package.json")" = "@paperclipai/plugin-daytona"
-          test "$(jq -r .name "$sdk_root/package.json")" = "@paperclipai/plugin-sdk"
+          test "$(jq -r .name "$daytona_root/package.json")" = "@thinkingmach/plugin-daytona"
+          test "$(jq -r .name "$sdk_root/package.json")" = "@thinkingmach/plugin-sdk"
           (
             cd "$daytona_root"
             pnpm install --ignore-workspace --frozen-lockfile --ignore-scripts
           )
           node scripts/link-plugin-dev-sdk.mjs
-          test "$(realpath "$daytona_root/node_modules/@paperclipai/plugin-sdk")" = "$(realpath "$sdk_root")"
+          test "$(realpath "$daytona_root/node_modules/@thinkingmach/plugin-sdk")" = "$(realpath "$sdk_root")"
           pnpm --dir "$daytona_root" build
           test -f "$daytona_root/dist/manifest.js"
           test -f "$daytona_root/dist/worker.js"
@@ -959,12 +959,12 @@ jobs:
           ANTHROPIC_API_KEY: ${{ matrix.credentialName == 'ANTHROPIC_API_KEY' && secrets.ANTHROPIC_API_KEY || '' }}
           OPENROUTER_API_KEY: ${{ matrix.credentialName == 'OPENROUTER_API_KEY' && secrets.OPENROUTER_API_KEY || '' }}
           DAYTONA_API_KEY: ${{ matrix.environmentId == 'daytona' && secrets.DAYTONA_API_KEY || '' }}
-          PAPERCLIP_E2E_DAYTONA_IMAGE: ${{ needs.daytona_image.outputs.image }}
-          PAPERCLIP_RUNNER_REMOTE_PROVIDER_PACK_PATH: ${{ github.workspace }}/packages/paperclip-runner/provider-pack
-          PAPERCLIP_E2E_CAMPAIGN_ID: gha-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.executionId }}
-          PAPERCLIP_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
-          PAPERCLIP_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
-          PAPERCLIP_PLAYWRIGHT_CHANNEL: ${{ needs.authorize.outputs.playwright_channel }}
+          THINKINGMACH_E2E_DAYTONA_IMAGE: ${{ needs.daytona_image.outputs.image }}
+          THINKINGMACH_RUNNER_REMOTE_PROVIDER_PACK_PATH: ${{ github.workspace }}/packages/paperclip-runner/provider-pack
+          THINKINGMACH_E2E_CAMPAIGN_ID: gha-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.executionId }}
+          THINKINGMACH_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
+          THINKINGMACH_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
+          THINKINGMACH_PLAYWRIGHT_CHANNEL: ${{ needs.authorize.outputs.playwright_channel }}
         run: pnpm test:e2e:runner -- --id "${{ matrix.executionId }}"
 
       - name: Upload access-controlled packaged cell evidence
@@ -1052,12 +1052,12 @@ jobs:
       - name: Select latest workflow attempt per cell
         if: always()
         env:
-          PAPERCLIP_RUNNER_E2E_ARTIFACT_ROOT: ${{ github.workspace }}/downloaded-runner-e2e
-          PAPERCLIP_RUNNER_E2E_SELECTED_ROOT: ${{ github.workspace }}/selected-runner-e2e
-          PAPERCLIP_RUNNER_E2E_JOBS_JSON: ${{ github.workspace }}/runner-e2e-jobs.json
-          PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: ${{ needs.catalog.outputs.execution_ids }}
-          PAPERCLIP_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
-          PAPERCLIP_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
+          THINKINGMACH_RUNNER_E2E_ARTIFACT_ROOT: ${{ github.workspace }}/downloaded-runner-e2e
+          THINKINGMACH_RUNNER_E2E_SELECTED_ROOT: ${{ github.workspace }}/selected-runner-e2e
+          THINKINGMACH_RUNNER_E2E_JOBS_JSON: ${{ github.workspace }}/runner-e2e-jobs.json
+          THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: ${{ needs.catalog.outputs.execution_ids }}
+          THINKINGMACH_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
+          THINKINGMACH_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
         run: node cli/node_modules/tsx/dist/cli.mjs tests/runner-e2e/select-rerun-artifacts.ts
 
       - name: Collect blob reports
@@ -1075,18 +1075,18 @@ jobs:
       - name: Merge Playwright HTML and JUnit
         if: always()
         env:
-          PAPERCLIP_RUNNER_E2E_MERGED_REPORT_DIR: ${{ github.workspace }}/runner-e2e-merged-report
+          THINKINGMACH_RUNNER_E2E_MERGED_REPORT_DIR: ${{ github.workspace }}/runner-e2e-merged-report
         run: pnpm exec playwright merge-reports --config tests/runner-e2e/merge.config.ts merged-blob-reports
 
       - name: Aggregate normalized campaign results
         if: always()
         env:
-          PAPERCLIP_RUNNER_E2E_REPORT_ROOT: ${{ github.workspace }}/selected-runner-e2e
-          PAPERCLIP_RUNNER_E2E_REPORT_OUT: ${{ github.workspace }}/runner-e2e-merged-report/normalized
-          PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: ${{ needs.catalog.outputs.execution_ids }}
-          PAPERCLIP_E2E_CAMPAIGN_ID: gha-${{ github.run_id }}-${{ github.run_attempt }}
-          PAPERCLIP_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
-          PAPERCLIP_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
+          THINKINGMACH_RUNNER_E2E_REPORT_ROOT: ${{ github.workspace }}/selected-runner-e2e
+          THINKINGMACH_RUNNER_E2E_REPORT_OUT: ${{ github.workspace }}/runner-e2e-merged-report/normalized
+          THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: ${{ needs.catalog.outputs.execution_ids }}
+          THINKINGMACH_E2E_CAMPAIGN_ID: gha-${{ github.run_id }}-${{ github.run_attempt }}
+          THINKINGMACH_RUNNER_E2E_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
+          THINKINGMACH_RUNNER_E2E_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
         run: |
           set +e
           pnpm test:e2e:runner:report
@@ -1168,7 +1168,7 @@ jobs:
 
       - name: Prune private evidence and publish immutable campaign history
         env:
-          PAPERCLIP_RUNNER_E2E_REPORT_DIR: ${{ github.workspace }}/runner-e2e-merged-report/normalized
+          THINKINGMACH_RUNNER_E2E_REPORT_DIR: ${{ github.workspace }}/runner-e2e-merged-report/normalized
           RUNNER_E2E_HISTORY_S3_BUCKET: ${{ vars.RUNNER_E2E_HISTORY_S3_BUCKET }}
           RUNNER_E2E_HISTORY_PREFIX: ${{ vars.RUNNER_E2E_HISTORY_PREFIX || 'runner-e2e' }}
           RUNNER_E2E_HISTORY_PUBLIC_BASE_URL: ${{ vars.RUNNER_E2E_HISTORY_PUBLIC_BASE_URL }}

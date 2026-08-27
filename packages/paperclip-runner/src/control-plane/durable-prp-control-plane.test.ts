@@ -18,7 +18,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { validatePrpEvent } from "../protocol/replay-contract.js";
-import { digestPaperclipSemanticContent } from "../semantic-tools/receipts.js";
+import { digestThinkingMachSemanticContent } from "../semantic-tools/receipts.js";
 import {
   DurablePrpControlPlane,
   spawnRunner,
@@ -205,10 +205,10 @@ it("preserves an explicit OpenCode permission mode at the runner spawn boundary"
     environment: {
       PATH: "/bin",
       OPENROUTER_API_KEY: "provider-key",
-      PAPERCLIP_OPENCODE_PERMISSION_MODE: "deny",
-      PAPERCLIP_OPENCODE_RUNTIME_DIR: "/runner/opencode",
+      THINKINGMACH_OPENCODE_PERMISSION_MODE: "deny",
+      THINKINGMACH_OPENCODE_RUNTIME_DIR: "/runner/opencode",
       DATABASE_URL: "must-not-reach-runnerd",
-      PAPERCLIP_API_KEY: "must-not-reach-runnerd",
+      THINKINGMACH_API_KEY: "must-not-reach-runnerd",
       NODE_OPTIONS: "--require=/untrusted/bootstrap.cjs",
     },
     processLauncher: (spec) => {
@@ -234,13 +234,13 @@ it("preserves an explicit OpenCode permission mode at the runner spawn boundary"
   expect(launches[0]!.environment).toMatchObject({
     PATH: "/bin",
     OPENROUTER_API_KEY: "provider-key",
-    PAPERCLIP_OPENCODE_PERMISSION_MODE: "deny",
-    PAPERCLIP_OPENCODE_RUNTIME_DIR: "/runner/opencode",
+    THINKINGMACH_OPENCODE_PERMISSION_MODE: "deny",
+    THINKINGMACH_OPENCODE_RUNTIME_DIR: "/runner/opencode",
   });
   expect(launches[0]!.environment.DATABASE_URL).toBeUndefined();
-  expect(launches[0]!.environment.PAPERCLIP_API_KEY).toBeUndefined();
+  expect(launches[0]!.environment.THINKINGMACH_API_KEY).toBeUndefined();
   expect(launches[0]!.environment.NODE_OPTIONS).toBeUndefined();
-  expect(launches[0]!.environment.PAPERCLIP_OPENCODE_COMMAND).toBeUndefined();
+  expect(launches[0]!.environment.THINKINGMACH_OPENCODE_COMMAND).toBeUndefined();
 });
 
 it("preserves the controller-selected ACPX provider package root", () => {
@@ -256,8 +256,8 @@ it("preserves the controller-selected ACPX provider package root", () => {
     runnerDigest: expectedRunnerDigest,
     environment: {
       PATH: "/bin",
-      PAPERCLIP_ACPX_PROVIDER_PACKAGE_ROOT: "/verified/provider-pack",
-      PAPERCLIP_ACPX_PROVIDER_PACKAGE_MANIFEST:
+      THINKINGMACH_ACPX_PROVIDER_PACKAGE_ROOT: "/verified/provider-pack",
+      THINKINGMACH_ACPX_PROVIDER_PACKAGE_MANIFEST:
         "/verified/provider-pack/package.json",
       NODE_PATH: "/untrusted/modules",
     },
@@ -281,11 +281,11 @@ it("preserves the controller-selected ACPX provider package root", () => {
   });
 
   expect(launches).toHaveLength(1);
-  expect(launches[0]!.environment.PAPERCLIP_ACPX_PROVIDER_PACKAGE_ROOT).toBe(
+  expect(launches[0]!.environment.THINKINGMACH_ACPX_PROVIDER_PACKAGE_ROOT).toBe(
     "/verified/provider-pack",
   );
   expect(
-    launches[0]!.environment.PAPERCLIP_ACPX_PROVIDER_PACKAGE_MANIFEST,
+    launches[0]!.environment.THINKINGMACH_ACPX_PROVIDER_PACKAGE_MANIFEST,
   ).toBe("/verified/provider-pack/package.json");
   expect(launches[0]!.environment.NODE_PATH).toBeUndefined();
 });
@@ -722,7 +722,7 @@ function semanticInputEvent(sourceSeq = 1): Record<string, unknown> {
           },
           idempotencyKey: null,
           content: {
-            digest: digestPaperclipSemanticContent({}),
+            digest: digestThinkingMachSemanticContent({}),
             redactionDisposition: "digest_only",
             references: [],
           },

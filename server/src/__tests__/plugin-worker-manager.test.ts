@@ -1,14 +1,14 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import {
   createHostClientHandlers,
   JsonRpcCallError,
   PLUGIN_RPC_ERROR_CODES,
   type HostServices,
   type HostToWorkerMethods,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 
 // Mock the shared logger, so a test reads the exact calls the manager makes
 // when it logs a route event. The child logger returns the same mock object,
@@ -43,13 +43,13 @@ const INVOCATION_SCOPE_WORKER_ENTRYPOINT = path.join(
 const TERMINATED_WORKER_ENTRYPOINT = path.join(FIXTURES_DIR, "plugin-worker-terminated.cjs");
 const EXECUTE_LOG_WORKER_ENTRYPOINT = path.join(FIXTURES_DIR, "plugin-worker-execute-log.cjs");
 
-const TEST_MANIFEST: PaperclipPluginManifestV1 = {
+const TEST_MANIFEST: ThinkingMachPluginManifestV1 = {
   id: "test.plugin",
   apiVersion: 1,
   version: "1.0.0",
   displayName: "Test plugin",
   description: "Test plugin",
-  author: "Paperclip",
+  author: "ThinkingMach",
   categories: ["automation"],
   capabilities: [],
   entrypoints: { worker: "dist/worker.js" },

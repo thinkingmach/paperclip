@@ -78,7 +78,7 @@ describe("TelemetryClient periodic flush", () => {
 
   it("falls back to the api gateway ingest url when the default hostname fails", async () => {
     vi.mocked(fetch)
-      .mockRejectedValueOnce(new TypeError("getaddrinfo ENOTFOUND telemetry.paperclip.ing"))
+      .mockRejectedValueOnce(new TypeError("getaddrinfo ENOTFOUND telemetry.thinkingmach.com"))
       .mockResolvedValueOnce({ ok: true });
 
     const client = makeClient({ endpoint: undefined });
@@ -87,7 +87,7 @@ describe("TelemetryClient periodic flush", () => {
     await client.flush();
 
     expect(fetch).toHaveBeenCalledTimes(2);
-    expect(vi.mocked(fetch).mock.calls[0]?.[0]).toBe("https://telemetry.paperclip.ing/ingest");
+    expect(vi.mocked(fetch).mock.calls[0]?.[0]).toBe("https://telemetry.thinkingmach.com/ingest");
     expect(vi.mocked(fetch).mock.calls[1]?.[0]).toBe("https://rusqrrg391.execute-api.us-east-1.amazonaws.com/ingest");
   });
 

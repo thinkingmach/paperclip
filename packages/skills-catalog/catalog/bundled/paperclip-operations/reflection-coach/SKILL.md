@@ -1,7 +1,7 @@
 ---
 name: reflection-coach
 description: Reflect on another agent's recent execution record and propose the smallest durable instruction, skill, or tool-description change. Use for evidence-backed coaching proposals, never hot-swaps.
-key: paperclipai/bundled/paperclip-operations/reflection-coach
+key: thinkingmach/bundled/paperclip-operations/reflection-coach
 recommendedForRoles:
   - manager
   - general
@@ -54,34 +54,34 @@ Every proposal must satisfy all of these:
 - **Trajectory-backed or drop it.** Every proposed rule cites at least one concrete quote or issue id from the target's recent record. No evidence, no rule.
 - **Not your code.** Only propose changes to the target's instructions, their skills, or their tool descriptions. Never to code they do not own or to shared infra.
 - **Benchmark-gated.** Name the replay cases the proposal must still resolve. If a rule would have broken a past success, drop it.
-- **No reflection on yourself.** If `targetAgentId == PAPERCLIP_AGENT_ID`, refuse and ask for another coach.
+- **No reflection on yourself.** If `targetAgentId == THINKINGMACH_AGENT_ID`, refuse and ask for another coach.
 
 ## Procedure
 
 ### 1) Confirm target and scope
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/api/agents/<targetAgentId>" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/agents/<targetAgentId>" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
-Record `name`, `role`, `reportsTo`, `adapterType`, `adapterConfig.instructionsFilePath` (where `AGENTS.md` lives), and current assigned skills via `GET /api/agents/<targetAgentId>/skills`. Refuse and exit if `targetAgentId == $PAPERCLIP_AGENT_ID`.
+Record `name`, `role`, `reportsTo`, `adapterType`, `adapterConfig.instructionsFilePath` (where `AGENTS.md` lives), and current assigned skills via `GET /api/agents/<targetAgentId>/skills`. Refuse and exit if `targetAgentId == $THINKINGMACH_AGENT_ID`.
 
 ### 2) Pull the recent record
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/api/companies/$PAPERCLIP_COMPANY_ID/issues?assigneeAgentId=<targetAgentId>&status=done,in_review,blocked&limit=25" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/companies/$THINKINGMACH_COMPANY_ID/issues?assigneeAgentId=<targetAgentId>&status=done,in_review,blocked&limit=25" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
 For each issue, pull the trajectory substrate — the issue body and its comments:
 
 ```sh
-curl -sS "$PAPERCLIP_API_URL/api/issues/<issueId>" -H "Authorization: Bearer $PAPERCLIP_API_KEY"
-curl -sS "$PAPERCLIP_API_URL/api/issues/<issueId>/comments" -H "Authorization: Bearer $PAPERCLIP_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/issues/<issueId>" -H "Authorization: Bearer $THINKINGMACH_API_KEY"
+curl -sS "$THINKINGMACH_API_URL/api/issues/<issueId>/comments" -H "Authorization: Bearer $THINKINGMACH_API_KEY"
 ```
 
-Keep status transitions, blocker reasons, reviewer comments, approval outcomes, human corrections, and PR-link comments. Comments are the closest thing Paperclip has to an execution trace — treat them as first-class evidence.
+Keep status transitions, blocker reasons, reviewer comments, approval outcomes, human corrections, and PR-link comments. Comments are the closest thing ThinkingMach has to an execution trace — treat them as first-class evidence.
 
 ### 3) Read the target's current guardrails
 
@@ -192,7 +192,7 @@ The server rejects Reflection Coach mutations unless the accepted `request_confi
 
 ## Verification (self-check before publishing)
 
-- [ ] `targetAgentId != $PAPERCLIP_AGENT_ID`
+- [ ] `targetAgentId != $THINKINGMACH_AGENT_ID`
 - [ ] Each cluster has ≥2 evidence tuples with a linked issue + verbatim quote
 - [ ] Each proposal names the target surface explicitly and includes the diff (not just prose)
 - [ ] `AGENTS.md` growth ≤ 20%, skills ≤ 15KB, tool descriptions ≤ 500 chars

@@ -12,8 +12,8 @@ import {
   pluginDatabaseNamespaces,
   pluginMigrations,
   plugins,
-} from "@paperclipai/db";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -30,7 +30,7 @@ import { buildPluginWorkerEnv, pluginLoader } from "../services/plugin-loader.js
 const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
 const describeEmbeddedPostgres = embeddedPostgresSupport.supported ? describe : describe.skip;
 const multiMigrationPluginKey = "paperclip.dbfixture";
-const llmWikiPluginKey = "paperclipai.plugin-llm-wiki";
+const llmWikiPluginKey = "thinkingmach.plugin-llm-wiki";
 
 if (!embeddedPostgresSupport.supported) {
   console.warn(
@@ -161,8 +161,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
       ANTHROPIC_API_KEY: "anthropic-token",
       OPENAI_API_KEY: "openai-token",
     });
@@ -181,8 +181,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
       KUBERNETES_SERVICE_HOST: "10.0.0.1",
       KUBERNETES_SERVICE_PORT: "443",
     });
@@ -198,8 +198,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
     });
   });
 
@@ -209,7 +209,7 @@ describe("buildPluginWorkerEnv", () => {
         capabilities: ["environment.drivers.register"],
         environmentDrivers: [{ driverKey: "daytona" }],
       },
-      packageName: "@paperclipai/plugin-daytona",
+      packageName: "@thinkingmach/plugin-daytona",
       packagePath: null,
       instanceInfo,
       processEnv: {
@@ -220,8 +220,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
       DAYTONA_API_KEY: "daytona-token",
     });
   });
@@ -232,7 +232,7 @@ describe("buildPluginWorkerEnv", () => {
         capabilities: ["environment.drivers.register"],
         environmentDrivers: [{ driverKey: "daytona" }],
       },
-      packageName: "@paperclipai/plugin-daytona",
+      packageName: "@thinkingmach/plugin-daytona",
       packagePath: "/app/packages/plugins/sandbox-providers/daytona",
       trustedLocalPluginRoots: ["/app/packages/plugins"],
       instanceInfo,
@@ -242,8 +242,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
       DAYTONA_API_KEY: "daytona-token",
     });
   });
@@ -254,7 +254,7 @@ describe("buildPluginWorkerEnv", () => {
         capabilities: ["environment.drivers.register"],
         environmentDrivers: [{ driverKey: "daytona" }],
       },
-      packageName: "@paperclipai/plugin-daytona",
+      packageName: "@thinkingmach/plugin-daytona",
       packagePath: "/home/operator/.paperclip/plugins/fake-daytona",
       trustedLocalPluginRoots: ["/app/packages/plugins"],
       instanceInfo,
@@ -264,8 +264,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
     });
   });
 
@@ -283,8 +283,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
     });
   });
 
@@ -294,7 +294,7 @@ describe("buildPluginWorkerEnv", () => {
         capabilities: ["environment.drivers.register"],
         environmentDrivers: [{ driverKey: "kubernetes" }],
       },
-      packageName: "@paperclipai/plugin-daytona",
+      packageName: "@thinkingmach/plugin-daytona",
       instanceInfo,
       processEnv: {
         DAYTONA_API_KEY: "daytona-token",
@@ -302,8 +302,8 @@ describe("buildPluginWorkerEnv", () => {
     });
 
     expect(env).toEqual({
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
     });
   });
 });
@@ -338,7 +338,7 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
     await tempDb?.cleanup();
   });
 
-  async function createPluginPackage(manifest: PaperclipPluginManifestV1, migrationSql: string) {
+  async function createPluginPackage(manifest: ThinkingMachPluginManifestV1, migrationSql: string) {
     const packageRoot = await mkdtemp(path.join(os.tmpdir(), "paperclip-plugin-package-"));
     packageRoots.push(packageRoot);
     const migrationsDir = path.join(packageRoot, manifest.database!.migrationsDir);
@@ -347,14 +347,14 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
     return packageRoot;
   }
 
-  function llmWikiManifest(): PaperclipPluginManifestV1 {
+  function llmWikiManifest(): ThinkingMachPluginManifestV1 {
     return {
       id: llmWikiPluginKey,
       apiVersion: 1,
       version: "0.1.0",
       displayName: "LLM Wiki",
       description: "Local-file LLM Wiki plugin.",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation", "ui"],
       capabilities: [
         "database.namespace.migrate",
@@ -371,7 +371,7 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
   }
 
   async function createInstallablePluginPackage(
-    pluginManifest: PaperclipPluginManifestV1,
+    pluginManifest: ThinkingMachPluginManifestV1,
     migrationSql: string,
   ) {
     const packageRoot = await createPluginPackage(pluginManifest, migrationSql);
@@ -395,7 +395,7 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
     return packageRoot;
   }
 
-  async function installPluginRecord(manifest: PaperclipPluginManifestV1) {
+  async function installPluginRecord(manifest: ThinkingMachPluginManifestV1) {
     const pluginId = randomUUID();
     await db.insert(plugins).values({
       id: pluginId,
@@ -411,14 +411,14 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
     return pluginId;
   }
 
-  function manifest(pluginKey = "paperclip.dbtest"): PaperclipPluginManifestV1 {
+  function manifest(pluginKey = "paperclip.dbtest"): ThinkingMachPluginManifestV1 {
     return {
       id: pluginKey,
       apiVersion: 1,
       version: "1.0.0",
       displayName: "DB Test",
       description: "Exercises restricted plugin database access.",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: [
         "database.namespace.migrate",
@@ -531,7 +531,7 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
     const issueId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "TST",
       requireBoardApprovalForNewAgents: false,
     });
@@ -642,7 +642,7 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
 
   it("refreshes persisted manifests from disk before activation", async () => {
     const staleManifest = manifest("paperclip.refresh");
-    const refreshedManifest: PaperclipPluginManifestV1 = {
+    const refreshedManifest: ThinkingMachPluginManifestV1 = {
       ...staleManifest,
       capabilities: [...staleManifest.capabilities, "agent.tools.register"],
       database: {
@@ -721,8 +721,8 @@ describeEmbeddedPostgres("plugin database namespaces", () => {
       expect.objectContaining({
         databaseNamespace: namespace,
         env: {
-          PAPERCLIP_DEPLOYMENT_MODE: "authenticated",
-          PAPERCLIP_DEPLOYMENT_EXPOSURE: "public",
+          THINKINGMACH_DEPLOYMENT_MODE: "authenticated",
+          THINKINGMACH_DEPLOYMENT_EXPOSURE: "public",
         },
         manifest: expect.objectContaining({
           database: expect.objectContaining({ coreReadTables: ["companies"] }),

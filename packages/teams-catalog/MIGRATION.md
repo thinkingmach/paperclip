@@ -1,6 +1,6 @@
 # Teams Catalog Migration Notes
 
-This document records the migration state of the initial bundled and optional teams shipped in `@paperclipai/teams-catalog`. It exists so future contributors know what was intentionally deferred, what is safe to delete from legacy sources, and which compatibility tests must land before the legacy onboarding assets can be removed.
+This document records the migration state of the initial bundled and optional teams shipped in `@thinkingmach/teams-catalog`. It exists so future contributors know what was intentionally deferred, what is safe to delete from legacy sources, and which compatibility tests must land before the legacy onboarding assets can be removed.
 
 The approved plan for this package lives at [PAP-10206 plan document](/PAP/issues/PAP-10206#document-plan).
 
@@ -17,13 +17,13 @@ The approved plan for this package lives at [PAP-10206 plan document](/PAP/issue
 
 ## Bundled entries shipped in Phase H
 
-- `paperclipai/bundled/company-defaults/core-exec-team` — defaults: CEO, CTO, QA, starter project, recurring CEO heartbeat task. `defaultInstall: true`. This is the smallest team that mirrors the historical CEO onboarding flow while staying inside catalog rules.
-- `paperclipai/bundled/software-development/product-engineering` — optional engineering pod: CTO, Senior Coder, QA, weekly engineering sync routine.
-- `paperclipai/bundled/product/product-design` — single-designer product design team with `wireframe`, `design-critique`, and weekly design review routine.
+- `thinkingmach/bundled/company-defaults/core-exec-team` — defaults: CEO, CTO, QA, starter project, recurring CEO heartbeat task. `defaultInstall: true`. This is the smallest team that mirrors the historical CEO onboarding flow while staying inside catalog rules.
+- `thinkingmach/bundled/software-development/product-engineering` — optional engineering pod: CTO, Senior Coder, QA, weekly engineering sync routine.
+- `thinkingmach/bundled/product/product-design` — single-designer product design team with `wireframe`, `design-critique`, and weekly design review routine.
 
 ## Optional entries shipped in Phase H
 
-- `paperclipai/optional/content/content-machine` — vendored local `content-calendar` skill, single content lead, recurring weekly content review. Kept from Phase B as the canonical fixture for local-skill resolution.
+- `thinkingmach/optional/content/content-machine` — vendored local `content-calendar` skill, single content lead, recurring weekly content review. Kept from Phase B as the canonical fixture for local-skill resolution.
 
 ## Intentionally deferred
 
@@ -40,14 +40,14 @@ The plan in [PAP-10206](/PAP/issues/PAP-10206#document-plan) lists additional re
 
 Before removing `server/src/onboarding-assets/ceo/` or the `skills/paperclip-create-agent/references/agents/*.md` templates, the following tests should be in place. None are written yet — they are tracked here so a future remove-legacy issue does not skip them:
 
-1. **Onboarding parity test** — a server-level integration test that runs the current onboarding flow on a fresh company and verifies the resulting agent/project/task tree is byte-equivalent (modulo timestamps and ids) to a `paperclipai/bundled/company-defaults/core-exec-team` install via the catalog service.
+1. **Onboarding parity test** — a server-level integration test that runs the current onboarding flow on a fresh company and verifies the resulting agent/project/task tree is byte-equivalent (modulo timestamps and ids) to a `thinkingmach/bundled/company-defaults/core-exec-team` install via the catalog service.
 2. **Slug stability test** — covers that the agent slugs `ceo`, `cto`, `qa` keep stable values when reparenting under an existing target manager, so downstream UI links don't churn.
-3. **Skill resolution drift test** — fails if a bundled team's `requiredSkills` references a catalog skill key that no longer exists in the latest `@paperclipai/skills-catalog` manifest.
+3. **Skill resolution drift test** — fails if a bundled team's `requiredSkills` references a catalog skill key that no longer exists in the latest `@thinkingmach/skills-catalog` manifest.
 4. **Adapter default fallback test** — confirms that imported agents with no explicit `adapterType` pick up the same adapter the legacy onboarding path used.
 5. **Routine import compatibility test** — recurring `TASK.md` entries (`first-heartbeat`, `weekly-engineering-sync`, `weekly-design-review`, `weekly-content-review`) must still be imported with timer heartbeats disabled, matching current portability behavior.
 
 ## Coordination
 
 - Packaging-level changes (adding new manifest fields, changing the validation rules, or extending the import service) belong to the coding owner of [PAP-10236](/PAP/issues/PAP-10236) and the integration service in [PAP-10238](/PAP/issues/PAP-10238).
-- Content-only updates (new bundled or optional teams, copy edits, skill requirement tweaks) can land directly in this package after `pnpm --filter @paperclipai/teams-catalog validate` and `pnpm --filter @paperclipai/teams-catalog test` both pass.
+- Content-only updates (new bundled or optional teams, copy edits, skill requirement tweaks) can land directly in this package after `pnpm --filter @thinkingmach/teams-catalog validate` and `pnpm --filter @thinkingmach/teams-catalog test` both pass.
 - Removing any file under `server/src/onboarding-assets/` requires the compatibility tests above to land first and is gated by the onboarding-service switchover task tracked under the same parent goal.

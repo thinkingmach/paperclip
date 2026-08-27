@@ -51,7 +51,7 @@ When `instructionsFilePath` points at a managed instruction bundle, the entry fi
 
 ## Thinking Effort
 
-The `effort` field applies to the **headless CLI lane only** (`engine: cli`, or the automatic fallback when ACP prerequisites fail). On the default ACP engine lane it is currently **not forwarded**: Kimi's ACP interface exposes a separate `thinking` config option that Paperclip does not wire yet, so an effort configured on an ACP-lane agent leaves Kimi's own default behavior in place. Pin `engine: cli` when thinking-effort control matters. On the CLI lane, `effort` is forwarded as the `KIMI_MODEL_THINKING_EFFORT` operational override, which applies to Kimi providers including managed OAuth models. Kimi has no per-invocation effort flag and no `medium` tier, so `medium` is mapped to `high`; `low`, `high`, and `max` pass through. Effort is only sent for models that advertise `support_efforts` (currently `kimi-code/k3`) to avoid provider rejections; extend `EFFORT_CAPABLE_MODELS` in the adapter as more models gain support.
+The `effort` field applies to the **headless CLI lane only** (`engine: cli`, or the automatic fallback when ACP prerequisites fail). On the default ACP engine lane it is currently **not forwarded**: Kimi's ACP interface exposes a separate `thinking` config option that ThinkingMach does not wire yet, so an effort configured on an ACP-lane agent leaves Kimi's own default behavior in place. Pin `engine: cli` when thinking-effort control matters. On the CLI lane, `effort` is forwarded as the `KIMI_MODEL_THINKING_EFFORT` operational override, which applies to Kimi providers including managed OAuth models. Kimi has no per-invocation effort flag and no `medium` tier, so `medium` is mapped to `high`; `low`, `high`, and `max` pass through. Effort is only sent for models that advertise `support_efforts` (currently `kimi-code/k3`) to avoid provider rejections; extend `EFFORT_CAPABLE_MODELS` in the adapter as more models gain support.
 
 ## Session Persistence
 
@@ -63,11 +63,11 @@ If resume fails with an unknown/unrecoverable session error, the adapter automat
 
 ## Skills Delivery
 
-Desired Paperclip skills are delivered from a dedicated per-run directory passed via `--skills-dir`, so skills load reliably and in isolation without writing into the shared `~/.kimi-code/skills` home. On remote runs the skills snapshot is synced to the target and `--skills-dir` points at that isolated copy — Paperclip never overwrites `$KIMI_CODE_HOME/skills`, so skills installed by the operator or other agents are left intact. `--skills-dir` is only passed when at least one skill is desired, so unconfigured agents keep Kimi's default skill discovery.
+Desired ThinkingMach skills are delivered from a dedicated per-run directory passed via `--skills-dir`, so skills load reliably and in isolation without writing into the shared `~/.kimi-code/skills` home. On remote runs the skills snapshot is synced to the target and `--skills-dir` points at that isolated copy — ThinkingMach never overwrites `$KIMI_CODE_HOME/skills`, so skills installed by the operator or other agents are left intact. `--skills-dir` is only passed when at least one skill is desired, so unconfigured agents keep Kimi's default skill discovery.
 
 ### Control-plane skill
 
-`paperclipai agent local-cli <agentRef> -C <companyId>` installs the Paperclip control-plane skills into `~/.kimi-code/skills` (honoring `KIMI_CODE_HOME`), alongside the existing `~/.codex/skills` and `~/.claude/skills` targets. Kimi auto-discovers this home on every run, so the agent has the control-plane API reference (issue/comment/interaction routes) from turn one rather than rediscovering endpoints by trial and error. Pass `--no-install-skills` to skip. This is independent of the per-run `--skills-dir` delivery above, which only applies when an agent has explicitly configured skills.
+`thinkingmach agent local-cli <agentRef> -C <companyId>` installs the ThinkingMach control-plane skills into `~/.kimi-code/skills` (honoring `KIMI_CODE_HOME`), alongside the existing `~/.codex/skills` and `~/.claude/skills` targets. Kimi auto-discovers this home on every run, so the agent has the control-plane API reference (issue/comment/interaction routes) from turn one rather than rediscovering endpoints by trial and error. Pass `--no-install-skills` to skip. This is independent of the per-run `--skills-dir` delivery above, which only applies when an agent has explicitly configured skills.
 
 ## Environment Test
 

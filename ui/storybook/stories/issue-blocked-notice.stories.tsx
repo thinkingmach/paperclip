@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { IssueRelationIssueSummary } from "@paperclipai/shared";
+import type { IssueRelationIssueSummary } from "@thinkingmach/shared";
 import { IssueBlockedNotice } from "@/components/IssueBlockedNotice";
 import {
   resolveTaskChatLiveWork,

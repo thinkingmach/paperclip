@@ -9,7 +9,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import type { EnvironmentCustomImageTemplateStatus } from "@paperclipai/shared";
+import type { EnvironmentCustomImageTemplateStatus } from "@thinkingmach/shared";
 import { agents } from "./agents.js";
 import { environments } from "./environments.js";
 

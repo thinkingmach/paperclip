@@ -42,11 +42,11 @@ export const WORKSPACE_HANDOFF_EXCHANGE_PATH = "/workspace-handoff/exchange";
 /** Query parameter carrying the ticket. Redacted from request logs by name. */
 export const WORKSPACE_HANDOFF_TICKET_QUERY_PARAM = "ticket";
 
-const HANDOFF_KEY_ENV = "PAPERCLIP_WORKSPACE_HANDOFF_KEY";
-const HANDOFF_ROOT_SECRET_ENV = "PAPERCLIP_WORKSPACE_HANDOFF_SECRET";
-const READINESS_TOKEN_ENV = "PAPERCLIP_WORKSPACE_READINESS_TOKEN";
-const EXECUTION_WORKSPACE_ID_ENV = "PAPERCLIP_EXECUTION_WORKSPACE_ID";
-const EXECUTION_WORKSPACE_COMPANY_ID_ENV = "PAPERCLIP_EXECUTION_WORKSPACE_COMPANY_ID";
+const HANDOFF_KEY_ENV = "THINKINGMACH_WORKSPACE_HANDOFF_KEY";
+const HANDOFF_ROOT_SECRET_ENV = "THINKINGMACH_WORKSPACE_HANDOFF_SECRET";
+const READINESS_TOKEN_ENV = "THINKINGMACH_WORKSPACE_READINESS_TOKEN";
+const EXECUTION_WORKSPACE_ID_ENV = "THINKINGMACH_EXECUTION_WORKSPACE_ID";
+const EXECUTION_WORKSPACE_COMPANY_ID_ENV = "THINKINGMACH_EXECUTION_WORKSPACE_COMPANY_ID";
 
 export const WORKSPACE_HANDOFF_KEY_ENV_KEY = HANDOFF_KEY_ENV;
 export const WORKSPACE_READINESS_TOKEN_ENV_KEY = READINESS_TOKEN_ENV;
@@ -201,7 +201,7 @@ export function deriveWorkspaceReadinessToken(input: {
 /**
  * Root secret for handoff key derivation, on the control-plane side only.
  *
- * A dedicated `PAPERCLIP_WORKSPACE_HANDOFF_SECRET` is preferred. When it is
+ * A dedicated `THINKINGMACH_WORKSPACE_HANDOFF_SECRET` is preferred. When it is
  * absent we derive dedicated key material from the instance's existing signing
  * secret rather than disabling the feature: the alternative is that every
  * already-deployed instance silently falls back to "remember the cloned
@@ -215,7 +215,7 @@ export function resolveWorkspaceHandoffRootSecret(
   const dedicated = env[HANDOFF_ROOT_SECRET_ENV]?.trim();
   if (dedicated) return { secret: dedicated, source: "dedicated" };
 
-  const fallback = env.BETTER_AUTH_SECRET?.trim() || env.PAPERCLIP_AGENT_JWT_SECRET?.trim();
+  const fallback = env.BETTER_AUTH_SECRET?.trim() || env.THINKINGMACH_AGENT_JWT_SECRET?.trim();
   if (!fallback) return null;
   return {
     secret: createHmac("sha256", fallback)

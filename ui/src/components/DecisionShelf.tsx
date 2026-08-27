@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Sun } from "lucide-react";
-import type { Agent, AttentionItem } from "@paperclipai/shared";
+import type { Agent, AttentionItem } from "@thinkingmach/shared";
 import { decisionQueuesApi } from "../api/decisionQueues";
 import { useToastActions } from "../context/ToastContext";
 import { queryKeys } from "../lib/queryKeys";

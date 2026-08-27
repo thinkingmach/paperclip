@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { and, asc, eq, inArray, isNull, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { companies, documents, externalObjectMentions, externalObjects, issueComments, issueDocuments, issues, plugins } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { companies, documents, externalObjectMentions, externalObjects, issueComments, issueDocuments, issues, plugins } from "@thinkingmach/db";
 import {
   formatExternalObjectMentionSourceLabel,
   type ExternalObjectCanonicalUrl,
@@ -10,10 +10,10 @@ import {
   type ExternalObjectMentionSourceKind,
   type ExternalObjectStatusCategory,
   type ExternalObjectStatusTone,
-  type PaperclipPluginManifestV1,
-} from "@paperclipai/shared";
-import { extractExternalObjectCanonicalUrls } from "@paperclipai/shared/external-objects-server";
-import type { PluginExternalObjectRecordSnapshot, PluginExternalObjectResolveResult } from "@paperclipai/plugin-sdk";
+  type ThinkingMachPluginManifestV1,
+} from "@thinkingmach/shared";
+import { extractExternalObjectCanonicalUrls } from "@thinkingmach/shared/external-objects-server";
+import type { PluginExternalObjectRecordSnapshot, PluginExternalObjectResolveResult } from "@thinkingmach/plugin-sdk";
 import { notFound } from "../errors.js";
 import { logger } from "../middleware/logger.js";
 import { logActivity, type LogActivityInput } from "./activity-log.js";
@@ -207,7 +207,7 @@ export function createExternalObjectResolverRegistry(resolvers: ExternalObjectRe
 }
 
 function manifestProvidesObject(
-  manifest: PaperclipPluginManifestV1,
+  manifest: ThinkingMachPluginManifestV1,
   object: Pick<ExternalObjectRecord, "providerKey" | "objectType">,
 ) {
   return (manifest.objectReferences ?? []).some(

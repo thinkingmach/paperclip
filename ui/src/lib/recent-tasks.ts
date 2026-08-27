@@ -1,4 +1,4 @@
-import type { Issue, IssueStatus } from "@paperclipai/shared";
+import type { Issue, IssueStatus } from "@thinkingmach/shared";
 
 export const RECENT_TASKS_LIMIT = 5;
 export const RECENT_TASKS_UPDATED_EVENT = "paperclip:recent-tasks-updated";

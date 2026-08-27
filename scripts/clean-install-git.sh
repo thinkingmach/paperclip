@@ -22,25 +22,25 @@ echo "PC_HOME: $PC_HOME"
 
 env \
   HOME="$PC_HOME" \
-  PAPERCLIP_HOME="$PC_HOME/.paperclip" \
+  THINKINGMACH_HOME="$PC_HOME/.paperclip" \
   npm_config_cache="$PC_CACHE" \
   npm_config_userconfig="$PC_HOME/.npmrc" \
   PATH="$PC_HOME/.local/bin:$PATH" \
-  pnpm --dir "$REPO_ROOT" paperclipai install --yes
+  pnpm --dir "$REPO_ROOT" thinkingmach install --yes
 
-test -x "$PC_HOME/.local/bin/paperclipai"
+test -x "$PC_HOME/.local/bin/thinkingmach"
 test -L "$PC_HOME/.paperclip/cli/current"
 test -f "$PC_HOME/.paperclip/cli/install.json"
 
-env HOME="$PC_HOME" PAPERCLIP_HOME="$PC_HOME/.paperclip" PATH="$PC_HOME/.local/bin:$PATH" paperclipai --version
-env HOME="$PC_HOME" PAPERCLIP_HOME="$PC_HOME/.paperclip" PATH="$PC_HOME/.local/bin:$PATH" paperclipai doctor \
+env HOME="$PC_HOME" THINKINGMACH_HOME="$PC_HOME/.paperclip" PATH="$PC_HOME/.local/bin:$PATH" thinkingmach --version
+env HOME="$PC_HOME" THINKINGMACH_HOME="$PC_HOME/.paperclip" PATH="$PC_HOME/.local/bin:$PATH" thinkingmach doctor \
   --config "$PC_TEST_ROOT/missing-config.json" >/dev/null || true
 
 env \
   HOME="$PC_HOME" \
-  PAPERCLIP_HOME="$PC_HOME/.paperclip" \
+  THINKINGMACH_HOME="$PC_HOME/.paperclip" \
   PATH="$PC_HOME/.local/bin:$PATH" \
-  pnpm --dir "$REPO_ROOT" paperclipai uninstall
+  pnpm --dir "$REPO_ROOT" thinkingmach uninstall
 
 test ! -e "$PC_HOME/.paperclip/cli"
-test ! -e "$PC_HOME/.local/bin/paperclipai"
+test ! -e "$PC_HOME/.local/bin/thinkingmach"

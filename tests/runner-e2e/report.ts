@@ -130,26 +130,26 @@ async function stageDashboardBrandAssets(output: string) {
 
 async function main() {
   const root = path.resolve(
-    process.env.PAPERCLIP_RUNNER_E2E_REPORT_ROOT ?? "tests/runner-e2e/results",
+    process.env.THINKINGMACH_RUNNER_E2E_REPORT_ROOT ?? "tests/runner-e2e/results",
   );
   const output = path.resolve(
-    process.env.PAPERCLIP_RUNNER_E2E_REPORT_OUT ?? path.join(root, "merged"),
+    process.env.THINKINGMACH_RUNNER_E2E_REPORT_OUT ?? path.join(root, "merged"),
   );
   const expectedInput = JSON.parse(
-    process.env.PAPERCLIP_RUNNER_E2E_EXPECTED_IDS ?? "[]",
+    process.env.THINKINGMACH_RUNNER_E2E_EXPECTED_IDS ?? "[]",
   ) as string[];
   if (
     !Array.isArray(expectedInput) ||
     expectedInput.some((value) => typeof value !== "string")
   ) {
     throw new Error(
-      "PAPERCLIP_RUNNER_E2E_EXPECTED_IDS must be a JSON string array",
+      "THINKINGMACH_RUNNER_E2E_EXPECTED_IDS must be a JSON string array",
     );
   }
   const expected = expectedInput.map(canonicalExecutionId);
   if (expected.length === 0 || new Set(expected).size !== expected.length) {
     throw new Error(
-      "PAPERCLIP_RUNNER_E2E_EXPECTED_IDS must contain unique selected executions",
+      "THINKINGMACH_RUNNER_E2E_EXPECTED_IDS must contain unique selected executions",
     );
   }
   const resultFiles = (await walk(root)).filter(
@@ -256,7 +256,7 @@ async function main() {
   const generatedAt = new Date().toISOString();
   const campaign = buildRunnerCampaign({
     campaignId:
-      process.env.PAPERCLIP_E2E_CAMPAIGN_ID ??
+      process.env.THINKINGMACH_E2E_CAMPAIGN_ID ??
       (process.env.GITHUB_RUN_ID
         ? `gha-${process.env.GITHUB_RUN_ID}-${process.env.GITHUB_RUN_ATTEMPT ?? "1"}`
         : `report-${generatedAt.replace(/[:.]/g, "-")}`),

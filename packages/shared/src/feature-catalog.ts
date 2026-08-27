@@ -14,7 +14,7 @@ import { instanceExperimentalSettingsSchema } from "./validators/instance.js";
  * - `preference`: tenant-controllable taste setting; the cloud harness does
  *   not manage it.
  * - `managed`: the cloud harness may set this per fleet/stack via
- *   `PAPERCLIP_MANAGED_CONFIG`.
+ *   `THINKINGMACH_MANAGED_CONFIG`.
  * - `floor`: pinned by code on managed instances; no flag value may widen it.
  */
 export const FEATURE_TIERS = ["preference", "managed", "floor"] as const;
@@ -51,9 +51,9 @@ export const INSTANCE_FEATURE_CATALOG: Record<InstanceFeatureKey, FeatureCatalog
     selfHostedDefault: false,
   },
   enableNativeRunner: {
-    title: "Paperclip Runner",
+    title: "ThinkingMach Runner",
     description:
-      "Allow explicitly configured local Codex, OpenCode, and qualified ACPX agents to use the experimental Rust Paperclip Runner, including authenticated sandbox ingress when required. Onboarding remains on legacy adapters.",
+      "Allow explicitly configured local Codex, OpenCode, and qualified ACPX agents to use the experimental Rust ThinkingMach Runner, including authenticated sandbox ingress when required. Onboarding remains on legacy adapters.",
     tier: "managed",
     cloudDefault: false,
     selfHostedDefault: false,
@@ -170,14 +170,14 @@ export const INSTANCE_FEATURE_CATALOG: Record<InstanceFeatureKey, FeatureCatalog
   enableBuiltInAgents: {
     title: "Built-in Agents",
     description:
-      "Show Paperclip-managed built-in agent surfaces, including roster badges, the Built-in agents tab, and setup controls.",
+      "Show ThinkingMach-managed built-in agent surfaces, including roster badges, the Built-in agents tab, and setup controls.",
     tier: "managed",
     cloudDefault: false,
     selfHostedDefault: false,
   },
   enableBetaSkills: {
     title: "Beta skills",
-    description: "Allow agents to pin beta releases of the Paperclip core skill.",
+    description: "Allow agents to pin beta releases of the ThinkingMach core skill.",
     tier: "preference",
     cloudDefault: false,
     selfHostedDefault: false,
@@ -221,10 +221,10 @@ export const INSTANCE_FEATURE_CATALOG: Record<InstanceFeatureKey, FeatureCatalog
     cloudDefault: false,
     selfHostedDefault: false,
   },
-  enablePaperclipDeveloperMode: {
-    title: "Paperclip Developer Mode",
+  enableThinkingMachDeveloperMode: {
+    title: "ThinkingMach Developer Mode",
     description:
-      "Show internal Paperclip maintainer tools and observability links, including Honeycomb trace queries on run pages.",
+      "Show internal ThinkingMach maintainer tools and observability links, including Honeycomb trace queries on run pages.",
     tier: "preference",
     cloudDefault: false,
     selfHostedDefault: false,
@@ -272,7 +272,7 @@ export const INSTANCE_FEATURE_CATALOG: Record<InstanceFeatureKey, FeatureCatalog
   enableRunnerPreviewIngress: {
     title: "Runner Preview Ingress (Deprecated)",
     description:
-      "Compatibility-only key retained for older managed configs. Runner ingress follows the Paperclip Runner setting.",
+      "Compatibility-only key retained for older managed configs. Runner ingress follows the ThinkingMach Runner setting.",
     tier: "managed",
     cloudDefault: false,
     selfHostedDefault: false,

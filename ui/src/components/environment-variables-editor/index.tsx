@@ -10,7 +10,7 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import { AlertCircle, KeyRound, Plus, RotateCcw, Save, UserRound } from "lucide-react";
-import type { CompanySecret, EnvBinding, UserSecretDefinition } from "@paperclipai/shared";
+import type { CompanySecret, EnvBinding, UserSecretDefinition } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useOptionalToastActions } from "@/context/ToastContext";
@@ -29,10 +29,10 @@ import {
 } from "./model";
 import type { EnvironmentVariableDirtyFields } from "./Row";
 
-const DEFAULT_RESERVED_PREFIXES = ["PAPERCLIP_"];
+const DEFAULT_RESERVED_PREFIXES = ["THINKINGMACH_"];
 
 const DEFAULT_HINT =
-  "Set the KEY to the env var name the process expects, for example GH_TOKEN. Choose a secret to resolve a stored value at run start. PAPERCLIP_* variables are injected automatically.";
+  "Set the KEY to the env var name the process expects, for example GH_TOKEN. Choose a secret to resolve a stored value at run start. THINKINGMACH_* variables are injected automatically.";
 
 // Canonical entries for dirty comparison. Must mirror the emit semantics of
 // valueFromRows (trimmed names, incomplete refs dropped, last-writer-wins on
@@ -129,7 +129,7 @@ export interface EnvironmentVariablesEditorProps {
   recentlyUsedSecrets?: readonly CompanySecret[];
   /** Read-only rendering. */
   disabled?: boolean;
-  /** Prefixes flagged as reserved/auto-provided. Default `["PAPERCLIP_"]`. */
+  /** Prefixes flagged as reserved/auto-provided. Default `["THINKINGMACH_"]`. */
   reservedPrefixes?: readonly string[];
   /** Context-specific hint line. `null` hides the default copy; omit for default. */
   footerHint?: ReactNode | null;

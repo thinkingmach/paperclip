@@ -2,25 +2,9 @@ import { Link } from "@/lib/router";
 import { AgentIcon } from "./AgentIconPicker";
 import { timeAgo } from "../lib/timeAgo";
 import { cn } from "../lib/utils";
-import { deriveProjectUrlKey, type ActivityEvent, type Agent } from "@paperclipai/shared";
+import { deriveProjectUrlKey, type ActivityEvent, type Agent } from "@thinkingmach/shared";
 import { issueStatusIcon, issueStatusIconDefault } from "../lib/status-colors";
-import {
-  FileText,
-  UserPlus,
-  Loader2,
-  Package,
-  User,
-  Settings,
-  CircleAlert,
-  CircleCheck,
-  CircleSlash,
-  PencilLine,
-  PauseCircle,
-  PlayCircle,
-  MessageCircle,
-  LogIn,
-  Target,
-} from "lucide-react";
+import { FileText, UserPlus, Loader2, Package, User, Settings, CircleAlert, CircleCheck, CircleSlash, PencilLine, PauseCircle, PlayCircle, MessageCircle, LogIn, Target,  } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 

@@ -1,11 +1,11 @@
-# Paperclip External Task Protocol Specification
+# ThinkingMach External Task Protocol Specification
 
 Status: Draft v1 (provider-agnostic)
 
-Purpose: Define the protocol by which Paperclip interoperates with external task managers (Linear,
-Jira, Asana, Notion, Trello, GitHub Issues, and others) so that external tasks can drive Paperclip
-agent work and Paperclip work is visible in the external tool, without requiring an external user
-account for every Paperclip agent.
+Purpose: Define the protocol by which ThinkingMach interoperates with external task managers (Linear,
+Jira, Asana, Notion, Trello, GitHub Issues, and others) so that external tasks can drive ThinkingMach
+agent work and ThinkingMach work is visible in the external tool, without requiring an external user
+account for every ThinkingMach agent.
 
 ## Normative Language
 
@@ -20,30 +20,30 @@ Terminology in this document:
 
 - `Provider` — an external task manager product (Linear, Jira, Asana, Notion, Trello, GitHub
   Issues, ...).
-- `Connector` — an implementation of this protocol for one provider, hosted in the Paperclip
+- `Connector` — an implementation of this protocol for one provider, hosted in the ThinkingMach
   plugin runtime.
 - `External task` — a task record that lives in the provider.
-- `Paperclip issue` — the native Paperclip task record.
-- `Host` — the Paperclip control plane: companies, agents, issues, checkout, heartbeat runs,
+- `ThinkingMach issue` — the native ThinkingMach task record.
+- `Host` — the ThinkingMach control plane: companies, agents, issues, checkout, heartbeat runs,
   execution workspaces, budgets, approvals, blockers, issue documents, and work products.
 
 ## 1. Problem Statement
 
-Teams already run their work in external task managers. Paperclip runs companies of agents. Today
+Teams already run their work in external task managers. ThinkingMach runs companies of agents. Today
 these worlds only meet through manual copy/paste: a human reads a Linear issue, rewrites it as a
-Paperclip issue, and later rewrites the outcome back into Linear.
+ThinkingMach issue, and later rewrites the outcome back into Linear.
 
 This protocol defines the contract that lets an external task manager act as a **task source and
-collaboration surface** for a Paperclip company, while Paperclip remains the **execution and
+collaboration surface** for a ThinkingMach company, while ThinkingMach remains the **execution and
 governance control plane**.
 
 The protocol solves four interoperability problems:
 
 - It defines one normalized task model so each connector translates provider payloads once, at the
   edge, instead of leaking provider-specific shapes into agent prompts and core logic.
-- It defines how an external task becomes (or links to) exactly one Paperclip issue, with
+- It defines how an external task becomes (or links to) exactly one ThinkingMach issue, with
   idempotent sync state that survives retries, webhook replays, and restarts.
-- It defines how external assignment routes to Paperclip agents without creating a provider user
+- It defines how external assignment routes to ThinkingMach agents without creating a provider user
   per agent.
 - It defines which writes flow back to the provider, under what policy, and with what provenance,
   so sync is predictable rather than chatty or destructive.
@@ -61,11 +61,11 @@ Important boundary (inherited from OpenAI Symphony, see Section 3.3):
 ### 2.1 Goals
 
 - Let an external task manager act as a task source: active external tasks create or wake
-  Paperclip issues under configured policy.
+  ThinkingMach issues under configured policy.
 - Keep one normalized external-task model across all providers, with provider-specific data
   carried in an envelope, not in the core model.
-- Route external assignment intent to Paperclip agents through deterministic, configurable rules.
-- Reuse Paperclip's existing execution semantics — checkout as claim, heartbeat runs, execution
+- Route external assignment intent to ThinkingMach agents through deterministic, configurable rules.
+- Reuse ThinkingMach's existing execution semantics — checkout as claim, heartbeat runs, execution
   workspaces, retries and recovery — as a Symphony-compatible orchestration profile.
 - Make outbound writes explicit, policy-bound, idempotent, and attributable.
 - Detect conflicts instead of silently overwriting either side.
@@ -74,13 +74,13 @@ Important boundary (inherited from OpenAI Symphony, see Section 3.3):
 
 ### 2.2 Non-Goals
 
-- Replacing the Paperclip board with a clone of any provider's UI.
-- Real-time field-level collaborative editing between Paperclip and a provider.
+- Replacing the ThinkingMach board with a clone of any provider's UI.
+- Real-time field-level collaborative editing between ThinkingMach and a provider.
 - A generic workflow engine or a universal schema covering every provider feature. Provider
   features beyond the normalized model stay in the provider envelope.
-- Creating a provider user account per Paperclip agent (supported as an OPTIONAL mapping, never
+- Creating a provider user account per ThinkingMach agent (supported as an OPTIONAL mapping, never
   required).
-- Letting external systems bypass Paperclip governance: checkout, budgets, approvals, blockers,
+- Letting external systems bypass ThinkingMach governance: checkout, budgets, approvals, blockers,
   execution policies, and company boundaries remain host-owned.
 - Migrating data: this is a sync protocol, not an importer/exporter for full historical fidelity.
 
@@ -95,18 +95,18 @@ Important boundary (inherited from OpenAI Symphony, see Section 3.3):
    - Performs provider writes when policy allows.
 
 2. `Task Link Store`
-   - Persists the 1:1 association between an external task and a Paperclip issue.
+   - Persists the 1:1 association between an external task and a ThinkingMach issue.
    - Owns sync state: snapshots, fingerprints, cursors, status.
    - MUST be stored in plugin state/entities first; MAY be promoted to core schema once at least
      two connectors prove the model (see Section 16.4).
 
 3. `Inbound Sync Engine`
    - Consumes webhooks and poll results.
-   - Creates/updates Paperclip issues and imports comments with provenance.
+   - Creates/updates ThinkingMach issues and imports comments with provenance.
    - Runs scheduled reconciliation to repair drift.
 
 4. `Routing Engine`
-   - Resolves external assignment intent into a Paperclip assignee using the ordered rule
+   - Resolves external assignment intent into a ThinkingMach assignee using the ordered rule
      pipeline in Section 8.
 
 5. `Execution Bridge`
@@ -132,10 +132,10 @@ The protocol is layered. A connector MAY implement lower layers without higher o
    - Normalized read access to provider tasks. Sufficient for browse/import UX.
 
 2. `Layer 2 — Task Link` (REQUIRED)
-   - Durable external-task ↔ Paperclip-issue association with sync state.
+   - Durable external-task ↔ ThinkingMach-issue association with sync state.
 
 3. `Layer 3 — Execution Orchestration, Symphony Profile` (RECOMMENDED)
-   - Active external states drive Paperclip issue creation/wake; Paperclip checkout/run/retry
+   - Active external states drive ThinkingMach issue creation/wake; ThinkingMach checkout/run/retry
      semantics are projected back as claim state.
 
 4. `Layer 4 — Write and Sync Policy` (RECOMMENDED)
@@ -158,7 +158,7 @@ problem, and maps them onto existing host primitives:
 | --- | --- |
 | Tracker client + normalized issue | Task Source Adapter + `ExternalTask` (Section 5) |
 | Active / terminal states | Connector state mapping (Section 7.2) |
-| Claim | Paperclip issue checkout + execution lock (Section 9.2) |
+| Claim | ThinkingMach issue checkout + execution lock (Section 9.2) |
 | Running map / live session | Heartbeat runs + issue liveness state (Section 9.3) |
 | Retry queued | Host retry/recovery + scheduled wakes (Section 9.3) |
 | Released | Issue terminal/review/blocked, or external task no longer active (Section 9.3) |
@@ -191,14 +191,14 @@ Connectors MUST own:
 - All provider writes (comments, transitions, fields, links).
 - Provider-specific setup, settings, and issue-detail UI.
 
-A connector MUST perform all Paperclip issue/comment/status mutations through the capability-gated
+A connector MUST perform all ThinkingMach issue/comment/status mutations through the capability-gated
 plugin host clients (for example, `ctx.issues`) with plugin attribution. It MUST use `ctx.entities`
 or `ctx.state` for connector-owned link and cursor data, and secret references for provider
 credentials. A connector MUST NOT write host tables directly.
 
 ## 4. Core Domain Model
 
-Field names use camelCase, matching Paperclip API conventions. (Symphony uses snake_case; the
+Field names use camelCase, matching ThinkingMach API conventions. (Symphony uses snake_case; the
 crosswalk in Appendix B maps equivalent fields.)
 
 ### 4.1 Entities
@@ -252,7 +252,7 @@ Representative envelope content per provider is listed in Appendix A.
 
 #### 4.1.3 TaskLink
 
-The durable 1:1 association between one external task and one Paperclip issue.
+The durable 1:1 association between one external task and one ThinkingMach issue.
 
 Fields:
 
@@ -261,9 +261,9 @@ Fields:
 - `connectorInstanceId` (string)
   - One installed connector configuration (a provider MAY be installed multiple times per
     company, e.g. two Jira sites).
-- `companyId`, `projectId`, `goalId`, `issueId` (strings; `issueId` is the linked Paperclip issue)
+- `companyId`, `projectId`, `goalId`, `issueId` (strings; `issueId` is the linked ThinkingMach issue)
 - `handoffHistory` (list of `{issueId, endedAt, cause}`; empty for a link that has never moved)
-  - Prior Paperclip issue associations retained when reopened work is handed to a follow-up.
+  - Prior ThinkingMach issue associations retained when reopened work is handed to a follow-up.
 - `externalWorkspaceId`, `externalProjectId` (strings or null)
   - Provider container coordinates (team/project/board/database).
 - `externalTaskId`, `externalKey`, `externalUrl`
@@ -275,8 +275,8 @@ Fields:
 - `baseSnapshot` (object)
   - Last agreed projected state of both sides; the three-way merge base for conflict detection.
 - `lastExternalRevision` (string or null)
-- `lastPaperclipFingerprint` (string or null)
-  - Hash of the last Paperclip-side state this connector projected outbound.
+- `lastThinkingMachFingerprint` (string or null)
+  - Hash of the last ThinkingMach-side state this connector projected outbound.
 - `lastInboundAt`, `lastOutboundAt`, `lastReconcileAt` (timestamps or null)
 - `status` (enum, Section 4.2.3)
 - `statusDetail` (string or null)
@@ -331,8 +331,8 @@ Fields:
 - `providerKey`
 - `externalUserId` (string)
 - `displayName` (string)
-- `mappedUserId` (string or null) — Paperclip user, if mapped.
-- `mappedAgentId` (string or null) — Paperclip agent, if explicitly mapped (OPTIONAL feature).
+- `mappedUserId` (string or null) — ThinkingMach user, if mapped.
+- `mappedAgentId` (string or null) — ThinkingMach agent, if explicitly mapped (OPTIONAL feature).
 - `isConnectorServiceAccount` (boolean)
   - True when the actor is the connector's own provider identity. REQUIRED for echo suppression
     (Section 10.4).
@@ -370,8 +370,8 @@ Fields:
 
 Per-link data flow direction:
 
-- `import_only` — external → Paperclip only.
-- `export_only` — Paperclip → external only.
+- `import_only` — external → ThinkingMach only.
+- `export_only` — ThinkingMach → external only.
 - `bidirectional` — both directions under `fieldPolicy`.
 - `observer` — read and display external state; mutate neither side.
 - `disabled` — link retained, no sync.
@@ -380,9 +380,9 @@ Per-link data flow direction:
 
 Per-link execution posture:
 
-- `paperclip_controlled` — Paperclip governance decides when agents run; external state changes
+- `paperclip_controlled` — ThinkingMach governance decides when agents run; external state changes
   inform but do not command execution.
-- `symphony_compatible` — active external states create/wake Paperclip work automatically per
+- `symphony_compatible` — active external states create/wake ThinkingMach work automatically per
   Section 9; the external tracker effectively drives dispatch.
 - `external_observer` — no execution coupling; link exists for visibility only.
 
@@ -404,7 +404,7 @@ Per-link execution posture:
   the provider supplies event IDs, else a content hash of the normalized change. Replayed webhooks
   MUST NOT duplicate issues or comments.
 - `Idempotency key` for outbound effects — `(linkId, effectKind, paperclipSourceId)` (e.g. the
-  Paperclip comment ID being mirrored). Retried jobs MUST NOT double-post.
+  ThinkingMach comment ID being mirrored). Retried jobs MUST NOT double-post.
 - State names compare after trim + lowercase.
 - Labels normalize to trimmed, lowercased strings.
 - Timestamps normalize to ISO-8601 UTC.
@@ -459,7 +459,7 @@ gaps) based on declared capabilities.
 - Rich text MUST convert to Markdown best-effort; the envelope SHOULD retain the source format
   reference for lossless round-trips where the connector supports them.
 - Person references in body text SHOULD be converted to plain display names; raw provider mention
-  syntax MUST NOT leak into Paperclip issue bodies where it could be misparsed as Paperclip
+  syntax MUST NOT leak into ThinkingMach issue bodies where it could be misparsed as ThinkingMach
   mentions.
 
 ### 5.4 Error Handling Contract
@@ -505,16 +505,16 @@ Transitions MUST be recorded with timestamps and causes in the link record or it
 
 1. `Import` (`originSide=external`)
    - An external task is selected (manually, or automatically under `runMode=symphony_compatible`
-     state mapping) and a Paperclip issue is created from its projection.
+     state mapping) and a ThinkingMach issue is created from its projection.
    - The created issue MUST carry: source attribution (provider, external key, URL), the
      normalized description, and routing-resolved assignee (Section 8).
 
 2. `Export` (`originSide=paperclip`)
-   - A Paperclip issue is projected into the provider via `createTask`.
+   - A ThinkingMach issue is projected into the provider via `createTask`.
    - REQUIRED only for connectors declaring write capability.
 
 3. `Manual link` (`originSide=manual_link`)
-   - Operator pairs an existing external task with an existing Paperclip issue.
+   - Operator pairs an existing external task with an existing ThinkingMach issue.
    - The connector MUST compute an initial `baseSnapshot` from both sides and surface immediate
      divergence as conflicts rather than picking a winner.
 
@@ -523,23 +523,23 @@ Transitions MUST be recorded with timestamps and causes in the link record or it
 Before creating an issue or external task, the connector MUST check, in order:
 
 1. Active link with the same `(connectorInstanceId, externalTaskId)`.
-2. Paperclip backlink already present on the external task (custom field/comment marker).
-3. External URL/key reference already present on a Paperclip issue in the same company.
+2. ThinkingMach backlink already present on the external task (custom field/comment marker).
+3. External URL/key reference already present on a ThinkingMach issue in the same company.
 
 Title-similarity matching MAY be used to *warn* in import UX; it MUST NOT silently merge.
 
 ### 6.4 Unlink and External Deletion Semantics
 
 - Unlink severs sync but MUST NOT delete either side's record.
-- When an external task is deleted/archived: the connector MUST NOT delete or cancel the Paperclip
+- When an external task is deleted/archived: the connector MUST NOT delete or cancel the ThinkingMach
   issue. Default behavior: mark the link `conflict` (`statusDetail: external task deleted`),
-  comment on the Paperclip issue, and let the assignee/operator decide. `import_only` links with
-  no Paperclip-side activity MAY auto-unlink.
-- When a Paperclip issue is cancelled/deleted: outbound policy decides whether to comment and/or
+  comment on the ThinkingMach issue, and let the assignee/operator decide. `import_only` links with
+  no ThinkingMach-side activity MAY auto-unlink.
+- When a ThinkingMach issue is cancelled/deleted: outbound policy decides whether to comment and/or
   transition the external task; the connector MUST NOT delete the external task unless an
   operator explicitly invokes a delete capability.
 
-## 7. Inbound Synchronization (External → Paperclip)
+## 7. Inbound Synchronization (External → ThinkingMach)
 
 ### 7.1 Event Channels
 
@@ -586,14 +586,14 @@ Mapping rules:
 - Imported comments MUST carry `ExternalActor` provenance and a deep link to the external comment
   where the provider supports it.
 - Imported comment content is **untrusted input**: it MUST be clearly attributed in the issue
-  thread, MUST NOT be interpreted as Paperclip system/agent instructions, and mention-like syntax
-  MUST NOT trigger Paperclip mention semantics except via the strict command path (Section 8.2).
+  thread, MUST NOT be interpreted as ThinkingMach system/agent instructions, and mention-like syntax
+  MUST NOT trigger ThinkingMach mention semantics except via the strict command path (Section 8.2).
 - Whether an imported comment wakes the issue assignee is link policy (`wakeOnExternalComment`,
   default true for `symphony_compatible`, false for `observer`).
 - Comments authored by the connector's own service account MUST be suppressed on import
   (Section 10.4).
 
-### 7.4 External State Transitions Against Paperclip Work
+### 7.4 External State Transitions Against ThinkingMach Work
 
 When the external task changes category:
 
@@ -603,14 +603,14 @@ When the external task changes category:
   MUST request stop of a tracker-driven run only when the plugin host declares an issue-scoped
   run-stop capability (Section 9.3). Without that capability, it records a health warning and lets
   the active run finish. It MUST NOT pause the whole agent because that could stop unrelated work.
-  Paperclip-native obligations (approvals in flight, blockers) are unaffected.
-- `* -> terminal` while the Paperclip issue is active (checked out, running, in review, or carrying
+  ThinkingMach-native obligations (approvals in flight, blockers) are unaffected.
+- `* -> terminal` while the ThinkingMach issue is active (checked out, running, in review, or carrying
   unresolved blockers/approvals): default is a **conflict**, not silent closure. The issue gets a
   comment naming the external actor and transition; the link enters `conflict` until an agent or
   operator resolves it. Auto-close MAY be enabled per link policy only when no active run, no
   pending review/approval, and no blockers exist.
 - `terminal -> active` (reopen): if the linked issue is terminal, policy chooses between creating a
-  follow-up Paperclip issue linked to the same external task (RECOMMENDED default) or reopening,
+  follow-up ThinkingMach issue linked to the same external task (RECOMMENDED default) or reopening,
   subject to host rules for resuming closed issues. The connector MUST create or find the follow-up
   with a stable idempotency key while the existing link remains active. After the follow-up is
   durably identified, it retargets that same `TaskLink` record to the follow-up and appends the old
@@ -622,21 +622,21 @@ When the external task changes category:
   requiring a multi-record transaction, while `handoffHistory` retains the original association
   for audit.
 
-External transitions MUST NOT directly set Paperclip issue status; they translate into host-level
+External transitions MUST NOT directly set ThinkingMach issue status; they translate into host-level
 requests that respect checkout, approvals, blockers, budget stops, and execution policy.
 
 ## 8. Agent Routing (Assignment Without External Agent Users)
 
-External assignment intent resolves to a Paperclip assignee through an ordered pipeline. The first
+External assignment intent resolves to a ThinkingMach assignee through an ordered pipeline. The first
 matching enabled rule wins. Routing runs at import, and again whenever external assignment intent
 changes (assignee change, label/field change, lane move, command comment).
 
 ### 8.1 Routing Pipeline
 
 1. `comment_command` — strict slash command in an external comment (Section 8.2).
-2. `custom_field` — provider custom field naming an agent (example: `Paperclip Agent = CodexCoder`).
+2. `custom_field` — provider custom field naming an agent (example: `ThinkingMach Agent = CodexCoder`).
 3. `label` — namespaced label (example: `pc:agent/codexcoder`, `pc:route/qa`).
-4. `state_lane` — provider state/lane mapped to a route (example: Trello list `Paperclip: QA`).
+4. `state_lane` — provider state/lane mapped to a route (example: Trello list `ThinkingMach: QA`).
 5. `user_mapping` — explicit external-user → agent mapping table (OPTIONAL; for teams that choose
    to create provider users for agents).
 6. `default_route` — connector/project default (example: all imported tasks go to a triage agent
@@ -661,17 +661,17 @@ Comment commands give external users explicit control without new UI in the prov
   `status`, `pause`, `resume`. Connectors MAY add verbs; all verbs MUST be listed in capability
   metadata.
 - Parsing MUST be deterministic connector code. An LLM MUST NOT infer intent from free text.
-- The connector MUST reply (externally, if writes allowed; on the Paperclip issue otherwise) with
+- The connector MUST reply (externally, if writes allowed; on the ThinkingMach issue otherwise) with
   the command outcome, including rejections (unknown agent, not permitted).
 - Command authorization is implementation-defined but MUST be documented (e.g. any provider
   member vs. mapped users only).
 
 ### 8.3 Identity Model
 
-- Paperclip agents MUST NOT be required to exist as provider users.
+- ThinkingMach agents MUST NOT be required to exist as provider users.
 - Outbound writes use one connector service account per connector instance (Section 10.4), with
-  agent attribution carried in message content ("CodexCoder via Paperclip").
-- `user_mapping` rules MAY map specific provider users to Paperclip users (for `assign it back to
+  agent attribution carried in message content ("CodexCoder via ThinkingMach").
+- `user_mapping` rules MAY map specific provider users to ThinkingMach users (for `assign it back to
   me` flows) and to agents, but every such mapping is explicit configuration.
 
 ## 9. Execution Orchestration: Symphony Profile
@@ -681,7 +681,7 @@ with `runMode=symphony_compatible`; `paperclip_controlled` links use only Sectio
 
 ### 9.1 Dispatch Model
 
-Symphony's poll-tick loop becomes, in Paperclip:
+Symphony's poll-tick loop becomes, in ThinkingMach:
 
 1. Inbound sync (webhook/poll/reconcile) maintains link + normalized state.
 2. For each link whose external category is `active`, the connector first moves a linked `backlog`
@@ -699,7 +699,7 @@ agent."
 
 ### 9.2 Claim Semantics
 
-- Paperclip issue checkout is the claim. One agent owns an issue at a time; checkout conflicts
+- ThinkingMach issue checkout is the claim. One agent owns an issue at a time; checkout conflicts
   (409) mean the issue is already claimed.
 - The connector MUST treat checkout state as authoritative and MUST NOT maintain a parallel claim
   registry for linked issues.
@@ -741,7 +741,7 @@ follow-up issues that must share a checkout use host workspace-inheritance
 Symphony's repository-owned `WORKFLOW.md` maps to a layered policy lookup for rendering the task
 packet (Section 9.5.1) and run guidance:
 
-1. Paperclip project workflow document (RECOMMENDED MVP form).
+1. ThinkingMach project workflow document (RECOMMENDED MVP form).
 2. Repository `WORKFLOW.md` discovered in the project workspace (OPTIONAL, code projects).
 3. Connector instance defaults.
 
@@ -779,7 +779,7 @@ A connector MAY claim "Symphony-compatible task source" when:
 - Workflow policy lookup is implemented for at least one source (Section 9.5).
 - Claim/run/retry/release state is observable per link (Section 12).
 
-## 10. Outbound Synchronization and Write Policy (Paperclip → External)
+## 10. Outbound Synchronization and Write Policy (ThinkingMach → External)
 
 ### 10.1 Write Boundary
 
@@ -800,10 +800,10 @@ Per link (with connector-instance defaults):
 
 | Toggle | Default | Meaning |
 | --- | --- | --- |
-| `postBacklink` | on | Paperclip URL on the external task (field or pinned comment). |
+| `postBacklink` | on | ThinkingMach URL on the external task (field or pinned comment). |
 | `postProgressComments` | on | Concise milestone comments: claimed, plan ready, PR opened, review requested, done. |
 | `postArtifactLinks` | on | PR/work-product/document links when produced. |
-| `mirrorAgentComments` | off | Full Paperclip comment thread mirrored externally. |
+| `mirrorAgentComments` | off | Full ThinkingMach comment thread mirrored externally. |
 | `postTranscripts` | off | Run logs/transcripts externally. SHOULD remain off; transcripts may contain sensitive context. |
 | `projectStatus` | on | Status projection per Section 10.3. |
 | `mirrorExternalComments` | on (import side) | External comments imported per Section 7.3. |
@@ -814,15 +814,15 @@ for claim/done/review milestones).
 
 ### 10.3 Status Projection
 
-Paperclip issue status projects to provider states through the same mapping table as Section 7.2,
+ThinkingMach issue status projects to provider states through the same mapping table as Section 7.2,
 inverted, with these rules:
 
-- Projection only moves the external task between states the operator mapped; unmapped Paperclip
+- Projection only moves the external task between states the operator mapped; unmapped ThinkingMach
   statuses project as comments, not transitions.
 - `in_review` projects to the mapped `review` state where one exists — the Symphony handoff
   pattern — otherwise stays in `active` with a review-requested comment.
 - `done` projects to the mapped terminal state only when `fieldPolicy.state` permits
-  Paperclip-side closure; otherwise it posts a completion comment and leaves the transition to
+  ThinkingMach-side closure; otherwise it posts a completion comment and leaves the transition to
   external users.
 - Claim/run state (claimed by which agent, running, retrying, released) SHOULD be projected into a
   custom field or status comment where the provider allows, so external users see liveness.
@@ -830,7 +830,7 @@ inverted, with these rules:
 ### 10.4 Attribution and Echo Suppression
 
 - Outbound writes use the connector instance's service account. Message bodies MUST carry agent
-  attribution and the Paperclip issue link.
+  attribution and the ThinkingMach issue link.
 - Inbound processing MUST drop events authored by the connector's own service account
   (`isConnectorServiceAccount`) **and** events matching a recently-issued outbound idempotency
   key, preventing echo loops with providers that obscure authorship.
@@ -843,7 +843,7 @@ inverted, with these rules:
 ### 11.1 Detection
 
 Three-way comparison per synced field: `baseSnapshot` vs current external value vs current
-Paperclip value.
+ThinkingMach value.
 
 - Changed on one side only → propagate per `fieldPolicy` (or queue conflict if the changed side
   is not the owner).
@@ -861,7 +861,7 @@ where known), `status` (`open`, `resolved`, `dismissed`), `resolution`.
 
 Exposed in the conflict queue UI and as agent-invocable connector tools:
 
-- `keep_paperclip` (push Paperclip value outbound)
+- `keep_paperclip` (push ThinkingMach value outbound)
 - `keep_external` (apply external value inbound)
 - `merge_manual` (operator/agent supplies the merged value)
 - `unlink`
@@ -898,7 +898,7 @@ actions (open external, resync now, pause/resume, unlink, resolve conflict).
 
 ### 12.4 External-Side Surface (RECOMMENDED)
 
-On the provider side, a linked task SHOULD show: the Paperclip backlink, current Paperclip
+On the provider side, a linked task SHOULD show: the ThinkingMach backlink, current ThinkingMach
 owner/status (field or comment), and concise progress per Section 10.2.
 
 ## 13. Failure Model and Recovery
@@ -970,7 +970,7 @@ No connector path may bypass:
 - company boundaries.
 
 External signals translate into host-level requests subject to all of the above (Section 7.4).
-Destructive cascade is prohibited: external deletion/archival never deletes Paperclip work
+Destructive cascade is prohibited: external deletion/archival never deletes ThinkingMach work
 (Section 6.4).
 
 ### 14.5 Audit
@@ -1152,7 +1152,7 @@ constraints. Profiles are informative; the normative contract is Sections 4–14
 
 - Containers: board, list. Envelope: list id, checklists, members, power-up metadata, card
   position.
-- State mapping: lists are lanes; map lists→categories (`Paperclip: QA` style lanes also drive
+- State mapping: lists are lanes; map lists→categories (`ThinkingMach: QA` style lanes also drive
   `state_lane` routing).
 - Webhooks: available with callback verification; signatures via content digest.
 - Notes: no native blockers/priority; both normalize to null/empty with envelope passthrough.

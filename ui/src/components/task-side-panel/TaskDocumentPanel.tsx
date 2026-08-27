@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { IssueDocument } from "@paperclipai/shared";
+import type { IssueDocument } from "@thinkingmach/shared";
 import { FileQuestion, Loader2 } from "lucide-react";
 import { ApiError } from "@/api/client";
 import { issuesApi } from "@/api/issues";

@@ -3,23 +3,7 @@
  * and canonical provider activity. Exact semantic tools get purpose-specific
  * copy; ACP kinds and normalized name prefixes cover future adapters.
  */
-import {
-  BookOpen,
-  Brain,
-  ChevronsLeftRightEllipsis,
-  CircleHelp,
-  Clock3,
-  FilePenLine,
-  Image,
-  ListChecks,
-  MessageSquareReply,
-  Network,
-  Search,
-  SearchCode,
-  ShieldCheck,
-  Terminal,
-  Wrench,
-} from "lucide-react";
+import { BookOpen, Brain, ChevronsLeftRightEllipsis, CircleHelp, Clock3, FilePenLine, Image, ListChecks, MessageSquareReply, Network, Search, SearchCode, ShieldCheck, Terminal, Wrench,  } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { McpIcon } from "./McpIcon";
 
@@ -225,7 +209,7 @@ const EXACT_ACTIONS: Record<string, ExactAction> = {
   decide_approval: { action: "update", running: "Deciding an approval", completed: "Decided an approval" },
   comment_on_approval: { action: "post", running: "Commenting on an approval", completed: "Commented on an approval" },
   schedule_wake: { action: "create", running: "Scheduling a wake-up", completed: "Scheduled a wake-up", family: "wait" },
-  generic_api_request: { action: "request", running: "Calling the Paperclip API", completed: "Called the Paperclip API" },
+  generic_api_request: { action: "request", running: "Calling the ThinkingMach API", completed: "Called the ThinkingMach API" },
 };
 
 const ACTION_PREFIXES: Record<Action, readonly string[]> = {
@@ -350,7 +334,7 @@ function defaultSummaryGroup(action: Action): ToolSummaryGroup {
 }
 
 function paperclipSummaryGroup(action: Action): ToolSummaryGroup {
-  if (action === "read" || action === "list") return group("paperclip_read", "Paperclip read", "Paperclip reads");
+  if (action === "read" || action === "list") return group("paperclip_read", "ThinkingMach read", "ThinkingMach reads");
   return group("task_operation", "task operation", "task operations");
 }
 

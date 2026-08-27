@@ -5,7 +5,7 @@
 import type { SshRemoteExecutionSpec } from "./ssh.js";
 import type { AdapterExecutionTarget } from "./execution-target.js";
 import type { RuntimeStatusSink } from "./runtime-progress.js";
-import type { NativeFinalizationResult } from "@paperclipai/shared";
+import type { NativeFinalizationResult } from "@thinkingmach/shared";
 
 export interface AdapterAgent {
   id: string;
@@ -307,7 +307,7 @@ export interface AdapterEnvironmentTestContext {
   /**
    * Optional execution target the adapter should run probes against.
    *
-   * If omitted (or `kind === "local"`), the adapter tests on the Paperclip
+   * If omitted (or `kind === "local"`), the adapter tests on the ThinkingMach
    * host. For SSH/sandbox targets the adapter should run command/auth probes
    * inside the remote environment so the result reflects what an agent run
    * would actually see at execution time.
@@ -410,7 +410,7 @@ export interface AdapterConfigSchema {
 
 export interface AdapterRuntimeCommandSpec {
   /**
-   * The command Paperclip should execute for this adapter in the current config.
+   * The command ThinkingMach should execute for this adapter in the current config.
    */
   command: string;
   /**
@@ -444,7 +444,7 @@ export interface ServerAdapterModule {
   sessionCodec?: AdapterSessionCodec;
   sessionManagement?: import("./session-compaction.js").AdapterSessionManagement;
   supportsLocalAgentJwt?: boolean;
-  /** How this adapter receives Paperclip's run-scoped control tools. */
+  /** How this adapter receives ThinkingMach's run-scoped control tools. */
   runtimeToolDelivery?: AdapterRuntimeToolDelivery;
   models?: AdapterModel[];
   listModels?: () => Promise<AdapterModel[]>;
@@ -452,7 +452,7 @@ export interface ServerAdapterModule {
    * Optional explicit refresh hook for model discovery.
    * Use this when the adapter caches discovered models and needs a bypass path
    * so the UI can fetch newly released models without waiting for cache expiry
-   * or a Paperclip code update.
+   * or a ThinkingMach code update.
    */
   refreshModels?: () => Promise<AdapterModel[]>;
   agentConfigurationDoc?: string;
@@ -510,7 +510,7 @@ export interface ServerAdapterModule {
   /**
    * Adapter needs runtime skill entries materialized (written to disk)
    * before being passed via config. Used by adapters that scan a directory
-   * rather than reading config.paperclipRuntimeSkills.
+   * rather than reading config.thinkingmachRuntimeSkills.
    */
   requiresMaterializedRuntimeSkills?: boolean;
   /**
@@ -578,21 +578,21 @@ export interface TranscriptRunArtifact {
   title?: string;
 }
 
-export interface PaperclipQuestionOption {
+export interface ThinkingMachQuestionOption {
   id: string;
   label: string;
   description?: string;
   recommended?: boolean;
 }
 
-export interface PaperclipQuestion {
+export interface ThinkingMachQuestion {
   id: string;
   header?: string;
   prompt: string;
   helpText?: string;
   required: boolean;
   answerMode: "single_select" | "multi_select" | "text";
-  options?: PaperclipQuestionOption[];
+  options?: ThinkingMachQuestionOption[];
   customAnswer?: { enabled: true; label?: string; placeholder?: string };
   textValidation?: {
     minLength?: number;
@@ -604,15 +604,15 @@ export interface PaperclipQuestion {
   };
 }
 
-export interface PaperclipQuestionSet {
+export interface ThinkingMachQuestionSet {
   schema: "paperclip.question_set.v1";
   title?: string;
   description?: string;
   submitLabel?: string;
-  questions: PaperclipQuestion[];
+  questions: ThinkingMachQuestion[];
 }
 
-export interface PaperclipQuestionResponse {
+export interface ThinkingMachQuestionResponse {
   schema: "paperclip.question_response.v1";
   answers: Record<string, { selectedOptionIds?: string[]; text?: string; customText?: string }>;
 }
@@ -632,7 +632,7 @@ export type TranscriptEntry =
   | { kind: "provider_activity"; ts: string; family: ProviderActivityFamily; eventType: string; status: ProviderActivityStatus; title: string; summary: string; payload: Record<string, unknown> }
   | { kind: "workspace_change"; ts: string; changeSetId: string; revision: number; source: "harness_reported" | "runner_verified"; complete: boolean; files: TranscriptWorkspaceChangeFile[]; totals: { files: number; additions: number | null; deletions: number | null }; patchArtifactRef: string | null }
   | { kind: "workspace_file_reference"; ts: string; referenceId: string; source: "harness_reported" | "runner_verified"; path: string; displayName: string; mediaType: string | null; presentation: "document" | "code" | "image" | "generic"; line: number | null; preview: string | null; previewTruncated: boolean; contentDigest: string | null }
-  | { kind: "runtime_request"; ts: string; requestId: string; requestKind: "runtime" | "command_approval" | "file_approval" | "permission_approval" | "user_input" | "elicitation" | null; turnId: string | null; requestType: "permission" | "input"; status: "pending" | "resolved" | "expired" | "cancelled"; prompt: string; choices: Array<{ key: string; label: string }>; fields: Array<{ name: string; label: string; placeholder: string | null }>; questionSet?: PaperclipQuestionSet | null; resolvedAction?: string | null; response?: PaperclipQuestionResponse | null }
+  | { kind: "runtime_request"; ts: string; requestId: string; requestKind: "runtime" | "command_approval" | "file_approval" | "permission_approval" | "user_input" | "elicitation" | null; turnId: string | null; requestType: "permission" | "input"; status: "pending" | "resolved" | "expired" | "cancelled"; prompt: string; choices: Array<{ key: string; label: string }>; fields: Array<{ name: string; label: string; placeholder: string | null }>; questionSet?: ThinkingMachQuestionSet | null; resolvedAction?: string | null; response?: ThinkingMachQuestionResponse | null }
   | { kind: "run_result"; ts: string; disposition: "done" | "blocked" | "needs_review" | "yielded"; summary: string; objectiveSatisfied: boolean | null; verification: TranscriptRunVerification[]; remainingWork: Array<{ description: string; blocksCompletion: boolean }>; blocker: { reasonCode: string; unblockAction: string; scope: "current_track" | "task_wide" } | null; artifacts: TranscriptRunArtifact[] }
   | { kind: "run_terminal"; ts: string; turnState: "completed" | "failed" | "interrupted" | "cancelled"; runState: "succeeded" | "failed" | "cancelled"; disposition: "done" | "blocked" | "needs_review" | "yielded"; stopReason?: string };
 

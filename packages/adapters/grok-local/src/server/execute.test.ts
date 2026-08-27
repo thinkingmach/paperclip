@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionContext } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext } from "@thinkingmach/adapter-utils";
 
 // Bundles the remote-lane mock state and every mocked execution-target
 // function behind one hoisted object, so the `vi.mock` factory below (which
@@ -47,7 +47,7 @@ const {
   prepareRuntimeMock,
 } = mocks;
 
-vi.mock("@paperclipai/adapter-utils/execution-target", () => ({
+vi.mock("@thinkingmach/adapter-utils/execution-target", () => ({
   adapterExecutionTargetIsRemote: () => mocks.state.isRemote,
   adapterExecutionTargetRemoteCwd: (_target: unknown, cwd: string) =>
     mocks.state.isRemote ? "/remote/workspace" : cwd,
@@ -227,7 +227,7 @@ describe("grok_local execute", () => {
       config: {
         cwd: root,
         instructionsFilePath: instructionsPath,
-        paperclipRuntimeSkills: [{
+        thinkingmachRuntimeSkills: [{
           key: "paperclip",
           runtimeName: "paperclip",
           source: skillSource,
@@ -388,7 +388,7 @@ describe("grok_local execute", () => {
       config: {
         cwd: root,
         instructionsFilePath: instructionsPath,
-        paperclipRuntimeSkills: [{
+        thinkingmachRuntimeSkills: [{
           key: "paperclip",
           runtimeName: "paperclip",
           source: skillSource,
@@ -409,16 +409,16 @@ describe("grok_local execute", () => {
 
   describe("remote lane credential staging", () => {
     let previousApiKey: string | undefined;
-    let previousPaperclipHome: string | undefined;
-    let paperclipHomeRoot: string;
+    let previousThinkingMachHome: string | undefined;
+    let thinkingmachHomeRoot: string;
 
     beforeEach(async () => {
       previousApiKey = process.env.XAI_API_KEY;
-      previousPaperclipHome = process.env.PAPERCLIP_HOME;
+      previousThinkingMachHome = process.env.THINKINGMACH_HOME;
       // Point the managed Grok home at a private tmp root, so staging never
       // touches a real developer or CI-host `~/.paperclip` tree.
-      paperclipHomeRoot = await makeTempRoot();
-      process.env.PAPERCLIP_HOME = paperclipHomeRoot;
+      thinkingmachHomeRoot = await makeTempRoot();
+      process.env.THINKINGMACH_HOME = thinkingmachHomeRoot;
       sandboxAuthFixture.bytes = null;
       sandboxAuthFixture.error = null;
     });
@@ -426,8 +426,8 @@ describe("grok_local execute", () => {
     afterEach(() => {
       if (previousApiKey === undefined) delete process.env.XAI_API_KEY;
       else process.env.XAI_API_KEY = previousApiKey;
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
     });
 
     async function seedHostGrokAuth(contents: string): Promise<string> {

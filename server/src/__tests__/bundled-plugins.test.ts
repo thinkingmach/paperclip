@@ -85,7 +85,7 @@ describe("resolveBundledPluginInstalls", () => {
     expect(() =>
       resolveBundledPluginInstalls(["kubernetes"], {
         catalogRoot: CATALOG_ROOT,
-        env: { PAPERCLIP_KUBERNETES_PLUGIN_PATH: "/srv/evil/plugin" },
+        env: { THINKINGMACH_KUBERNETES_PLUGIN_PATH: "/srv/evil/plugin" },
         enforceCatalogRoot: true,
       }),
     ).toThrow(/outside the bundled catalog root.*refusing to start/);
@@ -96,7 +96,7 @@ describe("resolveBundledPluginInstalls", () => {
       resolveBundledPluginInstalls(["kubernetes"], {
         catalogRoot: CATALOG_ROOT,
         env: {
-          PAPERCLIP_KUBERNETES_PLUGIN_PATH: path.join(
+          THINKINGMACH_KUBERNETES_PLUGIN_PATH: path.join(
             CATALOG_ROOT,
             "sandbox-providers/../../../../etc/kubernetes",
           ),
@@ -123,7 +123,7 @@ describe("resolveBundledPluginInstalls", () => {
   it("honors the legacy kubernetes path override without enforcement (self-hosted)", () => {
     const resolved = resolveBundledPluginInstalls(["kubernetes"], {
       catalogRoot: CATALOG_ROOT,
-      env: { PAPERCLIP_KUBERNETES_PLUGIN_PATH: "/somewhere/else/kubernetes" },
+      env: { THINKINGMACH_KUBERNETES_PLUGIN_PATH: "/somewhere/else/kubernetes" },
       enforceCatalogRoot: false,
     });
     expect(resolved).toEqual([
@@ -139,7 +139,7 @@ describe("resolveBundledPluginInstalls", () => {
     const inside = path.join(CATALOG_ROOT, "sandbox-providers", "kubernetes");
     const resolved = resolveBundledPluginInstalls(["kubernetes"], {
       catalogRoot: CATALOG_ROOT,
-      env: { PAPERCLIP_KUBERNETES_PLUGIN_PATH: inside },
+      env: { THINKINGMACH_KUBERNETES_PLUGIN_PATH: inside },
       enforceCatalogRoot: true,
     });
     expect(resolved[0]!.localPath).toBe(inside);
@@ -185,8 +185,8 @@ describe("resolveBundledCatalogRoot", () => {
     expect(resolveBundledCatalogRoot({})).toBe(DEFAULT_BUNDLED_CATALOG_ROOT);
   });
 
-  it("honors PAPERCLIP_BUNDLED_PLUGIN_ROOT", () => {
-    expect(resolveBundledCatalogRoot({ PAPERCLIP_BUNDLED_PLUGIN_ROOT: "/custom/root" })).toBe(
+  it("honors THINKINGMACH_BUNDLED_PLUGIN_ROOT", () => {
+    expect(resolveBundledCatalogRoot({ THINKINGMACH_BUNDLED_PLUGIN_ROOT: "/custom/root" })).toBe(
       "/custom/root",
     );
   });
@@ -207,7 +207,7 @@ type LooseRow = {
 // Build a minimal manifest for a persisted row or a shipped bundle. The reconcile
 // step compares the bundle version with the persisted version.
 function makeManifest(pluginKey: string, version: string) {
-  return { id: pluginKey, apiVersion: 1, version } as unknown as import("@paperclipai/shared").PaperclipPluginManifestV1;
+  return { id: pluginKey, apiVersion: 1, version } as unknown as import("@thinkingmach/shared").ThinkingMachPluginManifestV1;
 }
 
 function makeDeps(overrides?: {

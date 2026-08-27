@@ -43,7 +43,7 @@ import {
   buildProjectMentionHref,
   buildRoutineMentionHref,
   buildUserMentionHref,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Boxes, CalendarClock, Hash, User, X } from "lucide-react";
 import { AgentIcon } from "./AgentIconPicker";
 import { applyMentionChipDecoration, clearMentionChipDecoration, parseMentionChipHref } from "../lib/mention-chips";

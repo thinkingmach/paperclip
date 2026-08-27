@@ -1,4 +1,4 @@
-import type { ProviderTraceMetadata } from "@paperclipai/shared";
+import type { ProviderTraceMetadata } from "@thinkingmach/shared";
 import { Bug, CircleOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 

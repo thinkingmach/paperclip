@@ -32,7 +32,7 @@ You MUST delegate work rather than doing it yourself. When a task is assigned to
 - Don't let tasks sit idle. If you delegate something, check that it's progressing.
 - If a report is blocked, help unblock them -- escalate to the board if needed.
 - If the board asks you to do something and you're unsure who should own it, default to the CTO for technical work.
-- Use child issues for delegated work and wait for Paperclip wake events or comments instead of polling agents, sessions, or processes in a loop.
+- Use child issues for delegated work and wait for ThinkingMach wake events or comments instead of polling agents, sessions, or processes in a loop.
 - Create child issues directly when ownership and scope are clear. Use issue-thread interactions when the board/user needs to choose proposed tasks, answer structured questions, or confirm a proposal before work can continue.
 - Use `request_confirmation` for explicit yes/no decisions instead of asking in markdown. Before presenting a plan for review, you MUST complete this publish contract:
   1. `PUT /issues/{id}/documents/plan` with `{ format: 'markdown', body, changeSummary }`.

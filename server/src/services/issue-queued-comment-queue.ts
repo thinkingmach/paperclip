@@ -1,4 +1,4 @@
-const QUEUE_CONTEXT_KEY = "_paperclipWakeContext";
+const QUEUE_CONTEXT_KEY = "_thinkingmachWakeContext";
 const QUEUE_IDS_KEY = "wakeCommentIds";
 
 function record(value: unknown): Record<string, unknown> {
@@ -67,8 +67,8 @@ export function withQueuedCommentIdsInRunContext(
 
   // These projections are generated immediately before dispatch. Any queue
   // mutation must force them to be rebuilt from the canonical comment ids.
-  delete context.paperclipWake;
-  delete context.paperclipWakeComment;
+  delete context.thinkingmachWake;
+  delete context.thinkingmachWakeComment;
   delete context.paperclipTaskMarkdown;
   delete context.paperclipTaskMarkdownCompact;
   return context;

@@ -1,12 +1,12 @@
 # Telemetry Workflow
 
-Paperclip first-party telemetry is schema-led for stable events and proposal-led for new product instrumentation.
+ThinkingMach first-party telemetry is schema-led for stable events and proposal-led for new product instrumentation.
 
 Stable events must be present in `packages/shared/src/telemetry/generated/paperclip-telemetry.ts` before normal client code emits them. Proposed events may be added ahead of schema registration only with an `@ts-expect-error` proposal marker on the `client.track()` event-name argument.
 
 ## Proposed Events
 
-A proposed event is a normal `client.track()` call whose event name is not yet in `PaperclipEventName`. The runtime client swallows unregistered first-party event names before queueing, state initialization, or network flush, so proposed events do not leave the process until the generated telemetry schema adopts the event name.
+A proposed event is a normal `client.track()` call whose event name is not yet in `ThinkingMachEventName`. The runtime client swallows unregistered first-party event names before queueing, state initialization, or network flush, so proposed events do not leave the process until the generated telemetry schema adopts the event name.
 
 Use this marker shape when possible:
 
@@ -21,7 +21,7 @@ export function trackYourFeatureActionPerformed(
   },
 ): void {
   client.track(
-    // @ts-expect-error -- proposed-telemetry(https://github.com/paperclipai/paperclip/issues/123): measure feature action completion
+    // @ts-expect-error -- proposed-telemetry(https://github.com/thinkingmach/paperclip/issues/123): measure feature action completion
     "your_feature.action_performed",
     dims,
   );
@@ -36,7 +36,7 @@ The suffix format is:
 -- proposed-telemetry(<issue>): <rationale>
 ```
 
-`<issue>` should be a public `https://github.com/paperclipai/paperclip/issues/123` URL. The rationale should be a short product reason for collecting the event. Missing issue or rationale text is tolerated at the call site and flagged by `scripts/extract-proposed-events.mjs`; it is not an OSS CI failure.
+`<issue>` should be a public `https://github.com/thinkingmach/paperclip/issues/123` URL. The rationale should be a short product reason for collecting the event. Missing issue or rationale text is tolerated at the call site and flagged by `scripts/extract-proposed-events.mjs`; it is not an OSS CI failure.
 
 These formatting conventions are documentation-only. Do not add repo-wide bans for `@ts-expect-error`, casts, or single-line calls as part of this workflow.
 
@@ -54,6 +54,6 @@ Extractor provenance is deliberately repo-relative. Absolute paths, `..` segment
 
 ## Adoption
 
-When a proposed event is approved and registered in the telemetry backend, sync the regenerated telemetry artifact into the OSS repo. The event name is then part of `PaperclipEventName`, so the proposal marker should fail with TS2578. Remove the marker and keep the wrapper payload aligned with the registered dimensions in the same change.
+When a proposed event is approved and registered in the telemetry backend, sync the regenerated telemetry artifact into the OSS repo. The event name is then part of `ThinkingMachEventName`, so the proposal marker should fail with TS2578. Remove the marker and keep the wrapper payload aligned with the registered dimensions in the same change.
 
 Old clients that do not yet have the synced schema continue to swallow the proposed event. Clients with the synced schema emit it through the normal stable telemetry path.

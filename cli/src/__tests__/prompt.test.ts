@@ -27,7 +27,7 @@ function agent(overrides: Record<string, unknown> = {}) {
 describe("prompt handoff", () => {
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    delete process.env.PAPERCLIP_API_KEY;
+    delete process.env.THINKINGMACH_API_KEY;
     vi.restoreAllMocks();
   });
 

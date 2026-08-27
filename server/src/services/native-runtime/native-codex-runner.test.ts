@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { PaperclipSemanticToolDefinition } from "../../vendor/paperclip-runner/index.js";
+import type { ThinkingMachSemanticToolDefinition } from "../../vendor/paperclip-runner/index.js";
 import {
   buildNativeRunnerArguments,
   buildNativeRunnerPreparePayload,
@@ -26,7 +26,7 @@ describe("buildNativeRunnerArguments", () => {
   });
 });
 
-const tool: PaperclipSemanticToolDefinition = {
+const tool: ThinkingMachSemanticToolDefinition = {
   name: "get_task_context",
   description: "Read the active task context.",
   inputSchema: { type: "object" },

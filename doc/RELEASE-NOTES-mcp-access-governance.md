@@ -6,11 +6,11 @@ Status: ready for CTO review. Final voice/copy pass pending sign-off.
 
 ## TL;DR
 
-Paperclip now governs every MCP tool call an agent makes. Operators install managed connections, define profiles and policies, approve high-risk actions, and read an append-only audit log. Default-deny on unknown tools; quarantine on schema drift; approval required by default for writes; trust rules to lift human-in-the-loop on safe repeats.
+ThinkingMach now governs every MCP tool call an agent makes. Operators install managed connections, define profiles and policies, approve high-risk actions, and read an append-only audit log. Default-deny on unknown tools; quarantine on schema drift; approval required by default for writes; trust rules to lift human-in-the-loop on safe repeats.
 
 ## Why this exists
 
-Agents that can call arbitrary MCP tools can also leak data, modify accounts, or run destructive operations the operator never approved. Previous Paperclip releases relied on the agent's runtime trusting whatever MCP server it was pointed at. That is the wrong default for production. MCP Access Governance moves the trust boundary to Paperclip itself: every call is selected, evaluated, audited, and (when needed) gated on a human.
+Agents that can call arbitrary MCP tools can also leak data, modify accounts, or run destructive operations the operator never approved. Previous ThinkingMach releases relied on the agent's runtime trusting whatever MCP server it was pointed at. That is the wrong default for production. MCP Access Governance moves the trust boundary to ThinkingMach itself: every call is selected, evaluated, audited, and (when needed) gated on a human.
 
 ## What's new for operators
 
@@ -27,7 +27,7 @@ Agents that can call arbitrary MCP tools can also leak data, modify accounts, or
 
 ## What's new for agents
 
-- Agents speak MCP only to the Paperclip gateway. The gateway returns the agent's effective tool list, validates each call against profile + policies, and records the result.
+- Agents speak MCP only to the ThinkingMach gateway. The gateway returns the agent's effective tool list, validates each call against profile + policies, and records the result.
 - When a call resolves to `require_approval`, the agent's call blocks until a human decides. The agent does not see *why* a call was denied — that detail is in the audit log for the operator. This is deliberate: agents must not learn to route around denials.
 - Tool call arguments and results are subject to a redaction plan recorded on each call event.
 
@@ -37,7 +37,7 @@ Agents that can call arbitrary MCP tools can also leak data, modify accounts, or
 - **Catalog drift** (new write or destructive tool seen on a refresh): quarantine.
 - **Write tool, no policy match, no trust rule**: requires approval if the profile's default-action allows writes; otherwise denied.
 - **Destructive tool**: denied until an operator explicitly un-quarantines it.
-- **Local stdio in `authenticated/public`**: fails closed unless `PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST` is set on a designated trusted worker.
+- **Local stdio in `authenticated/public`**: fails closed unless `THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST` is set on a designated trusted worker.
 - **Agent-supplied stdio commands**: rejected. Always.
 
 ## Upgrade and migration
@@ -46,11 +46,11 @@ This release introduces new tables (`tool_applications`, `tool_connections`, `to
 
 Upgrade steps for existing deployments:
 
-1. Apply DB migrations as usual (`pnpm paperclipai migrate`).
+1. Apply DB migrations as usual (`pnpm thinkingmach migrate`).
 2. Confirm the Tools & Access tab appears in the UI for board users.
 3. From **Examples**, install `safe-read-only-todo-kv` and run the bundled smoke. Expect `ok: true` across all three checks (`allow_read_tool`, `deny_write_tool`, `audit_written`).
 4. For each existing agent runtime that previously called MCP servers directly: replace direct MCP wiring with a managed connection. Until you do, those agents have no governed tool access on this release.
-5. If you run `authenticated/public`, decide whether you want a trusted runtime worker for local stdio. If yes, set `PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST` on that worker and only that worker. If no, leave it unset — `remote_http` connections continue to work.
+5. If you run `authenticated/public`, decide whether you want a trusted runtime worker for local stdio. If yes, set `THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST` on that worker and only that worker. If no, leave it unset — `remote_http` connections continue to work.
 
 There is no downgrade path that preserves audit history. If you must roll back, archive any installed connections first so future audits do not surface orphan IDs.
 
@@ -64,7 +64,7 @@ There is no downgrade path that preserves audit history. If you must roll back, 
 - Trust rules match exact argument shapes only. Pattern-based trust rules are post-v1.
 - Rate limits are per-policy, not cross-policy aggregates.
 - Action request expiry is fixed by policy; approvers cannot extend from the UI.
-- Endpoint mode (Paperclip's own `/mcp` surface) is not subject to the profile/policy stack.
+- Endpoint mode (ThinkingMach's own `/mcp` surface) is not subject to the profile/policy stack.
 - Local stdio runtime slots do not migrate across workers; capacity is per-worker, not per-cluster.
 
 ## Verification commands
@@ -74,15 +74,15 @@ After upgrading, run these to confirm the stack is healthy:
 ```sh
 # Sanity-check runtime health
 curl -fsS -H "Authorization: Bearer $BOARD_API_KEY" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/runtime-health" | jq '{status, alerts}'
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/runtime-health" | jq '{status, alerts}'
 
 # Install the bundled example + run the smoke
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/install" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/install" \
   -d '{}' | jq .
 
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/smoke" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/smoke" \
   -d '{}' | jq '{ok, checks: [.checks[] | {name, ok, decision, reasonCode}]}'
 ```
 

@@ -50,10 +50,10 @@ function normalizeApiBase(raw: string | undefined) {
 }
 
 async function readPreviousServerInfo() {
-  const apiBase = normalizeApiBase(process.env.PAPERCLIP_API_URL);
+  const apiBase = normalizeApiBase(process.env.THINKINGMACH_API_URL);
   if (!apiBase) return { version: null, identity: null };
   try {
-    const apiKey = process.env.PAPERCLIP_API_KEY?.trim();
+    const apiKey = process.env.THINKINGMACH_API_KEY?.trim();
     const response = await fetch(`${apiBase}/api/health`, {
       headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : undefined,
       signal: AbortSignal.timeout(2_000),
@@ -104,7 +104,7 @@ const intent = await writeHotRestartIntent({
   previousServerIdentity: previousServerInfo.identity,
   previousServerVersion: previousServerInfo.version,
   drainRequired,
-  requestedByRunId: process.env.PAPERCLIP_RUN_ID?.trim() || null,
+  requestedByRunId: process.env.THINKINGMACH_RUN_ID?.trim() || null,
   preflightActiveRunIds,
 });
 

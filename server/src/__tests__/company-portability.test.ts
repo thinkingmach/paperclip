@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CompanyPortabilityFileEntry } from "@paperclipai/shared";
+import type { CompanyPortabilityFileEntry } from "@thinkingmach/shared";
 
 const companySvc = {
   getById: vi.fn(),
@@ -194,7 +194,7 @@ function asTextFile(entry: CompanyPortabilityFileEntry | undefined) {
 }
 
 describe("company portability", () => {
-  const paperclipKey = "paperclipai/paperclip/paperclip";
+  const paperclipKey = "thinkingmach/paperclip/paperclip";
   const companyPlaybookKey = "company/company-1/company-playbook";
 
   beforeEach(() => {
@@ -230,7 +230,7 @@ describe("company portability", () => {
     companySvc.list.mockResolvedValue([]);
     companySvc.getById.mockResolvedValue({
       id: "company-1",
-      name: "Paperclip",
+      name: "ThinkingMach",
       description: null,
       issuePrefix: "PAP",
       logoAssetId: null,
@@ -239,7 +239,7 @@ describe("company portability", () => {
     });
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
       requireBoardApprovalForNewAgents: false,
     });
     agentSvc.list.mockResolvedValue([
@@ -393,10 +393,10 @@ describe("company portability", () => {
         key: paperclipKey,
         slug: "paperclip",
         name: "paperclip",
-        description: "Paperclip coordination skill",
-        markdown: "---\nname: paperclip\ndescription: Paperclip coordination skill\n---\n\n# Paperclip\n",
+        description: "ThinkingMach coordination skill",
+        markdown: "---\nname: paperclip\ndescription: ThinkingMach coordination skill\n---\n\n# ThinkingMach\n",
         sourceType: "github",
-        sourceLocator: "https://github.com/paperclipai/paperclip/tree/master/skills/paperclip",
+        sourceLocator: "https://github.com/thinkingmach/paperclip/tree/master/skills/paperclip",
         sourceRef: "0123456789abcdef0123456789abcdef01234567",
         trustLevel: "markdown_only",
         compatibility: "compatible",
@@ -406,7 +406,7 @@ describe("company portability", () => {
         ],
         metadata: {
           sourceKind: "github",
-          owner: "paperclipai",
+          owner: "thinkingmach",
           repo: "paperclip",
           ref: "0123456789abcdef0123456789abcdef01234567",
           trackingRef: "master",
@@ -457,7 +457,7 @@ describe("company portability", () => {
         path: relativePath,
         kind: relativePath === "SKILL.md" ? "skill" : "reference",
         content: relativePath === "SKILL.md"
-          ? "---\nname: paperclip\ndescription: Paperclip coordination skill\n---\n\n# Paperclip\n"
+          ? "---\nname: paperclip\ndescription: ThinkingMach coordination skill\n---\n\n# ThinkingMach\n"
           : "# API\n",
         language: "markdown",
         markdown: true,
@@ -525,10 +525,10 @@ describe("company portability", () => {
 
   it("parses canonical GitHub import URLs with explicit ref and package path", () => {
     expect(
-      parseGitHubSourceUrl("https://github.com/paperclipai/companies?ref=feature%2Fdemo&path=gstack"),
+      parseGitHubSourceUrl("https://github.com/thinkingmach/companies?ref=feature%2Fdemo&path=gstack"),
     ).toEqual({
       hostname: "github.com",
-      owner: "paperclipai",
+      owner: "thinkingmach",
       repo: "companies",
       ref: "feature/demo",
       basePath: "gstack",
@@ -539,11 +539,11 @@ describe("company portability", () => {
   it("parses canonical GitHub import URLs with explicit companyPath", () => {
     expect(
       parseGitHubSourceUrl(
-        "https://github.com/paperclipai/companies?ref=abc123&companyPath=gstack%2FCOMPANY.md",
+        "https://github.com/thinkingmach/companies?ref=abc123&companyPath=gstack%2FCOMPANY.md",
       ),
     ).toEqual({
       hostname: "github.com",
-      owner: "paperclipai",
+      owner: "thinkingmach",
       repo: "companies",
       ref: "abc123",
       basePath: "gstack",
@@ -551,7 +551,7 @@ describe("company portability", () => {
     });
   });
 
-  it("exports referenced skills as stubs by default with sanitized Paperclip extension data", async () => {
+  it("exports referenced skills as stubs by default with sanitized ThinkingMach extension data", async () => {
     const portability = companyPortabilityService({} as any);
 
     const exported = await portability.exportBundle("company-1", {
@@ -564,15 +564,15 @@ describe("company portability", () => {
       },
     });
 
-    expect(asTextFile(exported.files["COMPANY.md"])).toContain('name: "Paperclip"');
+    expect(asTextFile(exported.files["COMPANY.md"])).toContain('name: "ThinkingMach"');
     expect(asTextFile(exported.files["COMPANY.md"])).toContain('schema: "agentcompanies/v1"');
     expect(asTextFile(exported.files["agents/claudecoder/AGENTS.md"])).toContain("You are ClaudeCoder.");
     expect(asTextFile(exported.files["agents/claudecoder/AGENTS.md"])).toContain("skills:");
     expect(asTextFile(exported.files["agents/claudecoder/AGENTS.md"])).toContain(`- "${paperclipKey}"`);
     expect(asTextFile(exported.files["agents/cmo/AGENTS.md"])).not.toContain("skills:");
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"])).toContain("metadata:");
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"])).toContain('kind: "github-dir"');
-    expect(exported.files["skills/paperclipai/paperclip/paperclip/references/api.md"]).toBeUndefined();
+    expect(asTextFile(exported.files["skills/thinkingmach/paperclip/paperclip/SKILL.md"])).toContain("metadata:");
+    expect(asTextFile(exported.files["skills/thinkingmach/paperclip/paperclip/SKILL.md"])).toContain('kind: "github-dir"');
+    expect(exported.files["skills/thinkingmach/paperclip/paperclip/references/api.md"]).toBeUndefined();
     expect(asTextFile(exported.files["skills/company/PAP/company-playbook/SKILL.md"])).toContain("# Company Playbook");
     expect(asTextFile(exported.files["skills/company/PAP/company-playbook/references/checklist.md"])).toContain("# Checklist");
 
@@ -659,7 +659,7 @@ describe("company portability", () => {
     expect(agentInstructionsSvc.exportFiles).toHaveBeenCalledTimes(1);
   });
 
-  it("exports agent permission grants through the Paperclip extension and manifest", async () => {
+  it("exports agent permission grants through the ThinkingMach extension and manifest", async () => {
     const db = {
       select: vi.fn((selection: Record<string, unknown>) => ({
         from: vi.fn(() => ({
@@ -713,7 +713,7 @@ describe("company portability", () => {
 
     companySvc.getById.mockResolvedValueOnce({
       id: "company-1",
-      name: "Paperclip",
+      name: "ThinkingMach",
       description: null,
       issuePrefix: "PAP",
       logoAssetId: null,
@@ -826,7 +826,7 @@ describe("company portability", () => {
     });
   });
 
-  it("exports default sidebar order into the Paperclip extension and manifest", async () => {
+  it("exports default sidebar order into the ThinkingMach extension and manifest", async () => {
     const portability = companyPortabilityService({} as any);
 
     projectSvc.list.mockResolvedValue([
@@ -898,14 +898,14 @@ describe("company portability", () => {
       expandReferencedSkills: true,
     });
 
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"])).toContain("# Paperclip");
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"])).toContain("metadata:");
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/references/api.md"])).toContain("# API");
+    expect(asTextFile(exported.files["skills/thinkingmach/paperclip/paperclip/SKILL.md"])).toContain("# ThinkingMach");
+    expect(asTextFile(exported.files["skills/thinkingmach/paperclip/paperclip/SKILL.md"])).toContain("metadata:");
+    expect(asTextFile(exported.files["skills/thinkingmach/paperclip/paperclip/references/api.md"])).toContain("# API");
   });
 
-  it("exports catalog skill provenance in portable Paperclip frontmatter", async () => {
+  it("exports catalog skill provenance in portable ThinkingMach frontmatter", async () => {
     const portability = companyPortabilityService({} as any);
-    const catalogKey = "paperclipai/bundled/software-development/review";
+    const catalogKey = "thinkingmach/bundled/software-development/review";
     const originHash = "sha256:catalog-origin";
     const catalogSkill = {
       id: "skill-catalog",
@@ -927,15 +927,15 @@ describe("company portability", () => {
       metadata: {
         sourceKind: "catalog",
         skillKey: catalogKey,
-        catalogId: "paperclipai:bundled:software-development:review",
+        catalogId: "thinkingmach:bundled:software-development:review",
         catalogKey,
         catalogKind: "bundled",
         catalogCategory: "software-development",
         catalogPath: "catalog/bundled/software-development/review",
-        packageName: "@paperclipai/skills-catalog",
-        packageVersion: "0.3.1",
+        packageName: "@thinkingmach/skills-catalog",
+        packageVersion: "0.3.3",
         originHash,
-        originVersion: "0.3.1",
+        originVersion: "0.3.3",
         originSnapshotLocator: "/tmp/local-only-origin",
         installedHash: "sha256:installed",
         userModifiedAt: "2026-05-01T00:00:00.000Z",
@@ -970,16 +970,16 @@ describe("company portability", () => {
       expandReferencedSkills: true,
     });
 
-    const skillMarkdown = asTextFile(exported.files["skills/paperclipai/bundled/software-development/review/SKILL.md"]);
+    const skillMarkdown = asTextFile(exported.files["skills/thinkingmach/bundled/software-development/review/SKILL.md"]);
     expect(skillMarkdown).toContain("paperclip:");
     expect(skillMarkdown).toContain("catalog:");
     expect(skillMarkdown).toContain(`sourceRef: "${originHash}"`);
-    expect(skillMarkdown).toContain('catalogId: "paperclipai:bundled:software-development:review"');
+    expect(skillMarkdown).toContain('catalogId: "thinkingmach:bundled:software-development:review"');
     expect(skillMarkdown).toContain(`catalogKey: "${catalogKey}"`);
     expect(skillMarkdown).toContain('catalogKind: "bundled"');
     expect(skillMarkdown).toContain('catalogPath: "catalog/bundled/software-development/review"');
-    expect(skillMarkdown).toContain('packageName: "@paperclipai/skills-catalog"');
-    expect(skillMarkdown).toContain('packageVersion: "0.3.1"');
+    expect(skillMarkdown).toContain('packageName: "@thinkingmach/skills-catalog"');
+    expect(skillMarkdown).toContain('packageVersion: "0.3.3"');
     expect(skillMarkdown).toContain('installedHash: "sha256:installed"');
     expect(skillMarkdown).toContain('auditVerdict: "warning"');
     expect(skillMarkdown).not.toContain("originSnapshotLocator");
@@ -991,12 +991,12 @@ describe("company portability", () => {
         sourceKind: "catalog",
         skillKey: catalogKey,
         originHash,
-        catalogId: "paperclipai:bundled:software-development:review",
+        catalogId: "thinkingmach:bundled:software-development:review",
         catalogKey,
         catalogKind: "bundled",
         catalogPath: "catalog/bundled/software-development/review",
-        packageName: "@paperclipai/skills-catalog",
-        packageVersion: "0.3.1",
+        packageName: "@thinkingmach/skills-catalog",
+        packageVersion: "0.3.3",
         installedHash: "sha256:installed",
         auditCodes: ["local_modifications"],
       }),
@@ -1018,7 +1018,7 @@ describe("company portability", () => {
 
     expect(exported.files["skills/company/PAP/company-playbook/SKILL.md"]).toBeDefined();
     expect(asTextFile(exported.files["skills/company/PAP/company-playbook/SKILL.md"])).toContain("# Company Playbook");
-    expect(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"]).toBeUndefined();
+    expect(exported.files["skills/thinkingmach/paperclip/paperclip/SKILL.md"]).toBeUndefined();
   });
 
   it("warns and exports all skills when skills filter matches nothing", async () => {
@@ -1036,7 +1036,7 @@ describe("company portability", () => {
 
     expect(exported.warnings).toContainEqual(expect.stringContaining("nonexistent-skill"));
     expect(exported.files["skills/company/PAP/company-playbook/SKILL.md"]).toBeDefined();
-    expect(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"]).toBeDefined();
+    expect(exported.files["skills/thinkingmach/paperclip/paperclip/SKILL.md"]).toBeDefined();
   });
 
   it("exports the company logo into images/ and references it from .paperclip.yaml", async () => {
@@ -1047,7 +1047,7 @@ describe("company portability", () => {
     };
     companySvc.getById.mockResolvedValue({
       id: "company-1",
-      name: "Paperclip",
+      name: "ThinkingMach",
       description: null,
       issuePrefix: "PAP",
       logoAssetId: "logo-1",
@@ -1131,20 +1131,20 @@ describe("company portability", () => {
       {
         id: "skill-paperclip",
         companyId: "company-1",
-        key: "paperclipai/paperclip/release-changelog",
+        key: "thinkingmach/paperclip/release-changelog",
         slug: "release-changelog",
         name: "release-changelog",
         description: "Bundled release changelog skill",
         markdown: "---\nname: release-changelog\n---\n\n# Bundled Release Changelog\n",
         sourceType: "github",
-        sourceLocator: "https://github.com/paperclipai/paperclip/tree/master/skills/release-changelog",
+        sourceLocator: "https://github.com/thinkingmach/paperclip/tree/master/skills/release-changelog",
         sourceRef: "0123456789abcdef0123456789abcdef01234567",
         trustLevel: "markdown_only",
         compatibility: "compatible",
         fileInventory: [{ path: "SKILL.md", kind: "skill" }],
         metadata: {
           sourceKind: "paperclip_bundled",
-          owner: "paperclipai",
+          owner: "thinkingmach",
           repo: "paperclip",
           ref: "0123456789abcdef0123456789abcdef01234567",
           trackingRef: "master",
@@ -1164,8 +1164,8 @@ describe("company portability", () => {
     });
 
     expect(asTextFile(exported.files["skills/local/release-changelog/SKILL.md"])).toContain("# Local Release Changelog");
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/release-changelog/SKILL.md"])).toContain("metadata:");
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/release-changelog/SKILL.md"])).toContain("paperclipai/paperclip/release-changelog");
+    expect(asTextFile(exported.files["skills/thinkingmach/paperclip/release-changelog/SKILL.md"])).toContain("metadata:");
+    expect(asTextFile(exported.files["skills/thinkingmach/paperclip/release-changelog/SKILL.md"])).toContain("thinkingmach/paperclip/release-changelog");
   });
 
   it("builds export previews without tasks by default", async () => {
@@ -1317,7 +1317,7 @@ describe("company portability", () => {
             name: "Main Repo",
             sourceType: "git_repo",
             cwd: "/Users/dotta/paperclip",
-            repoUrl: "https://github.com/paperclipai/paperclip.git",
+            repoUrl: "https://github.com/thinkingmach/paperclip.git",
             repoRef: "main",
             defaultRef: "main",
             visibility: "default",
@@ -1391,7 +1391,7 @@ describe("company portability", () => {
     expect(extension).toContain('icon: "rocket"');
     expect(extension).toContain("workspaces:");
     expect(extension).toContain("main-repo:");
-    expect(extension).toContain('repoUrl: "https://github.com/paperclipai/paperclip.git"');
+    expect(extension).toContain('repoUrl: "https://github.com/thinkingmach/paperclip.git"');
     expect(extension).toContain('defaultProjectWorkspaceKey: "main-repo"');
     expect(extension).toContain('projectWorkspaceKey: "main-repo"');
     expect(extension).not.toContain("/Users/dotta/paperclip");
@@ -1400,7 +1400,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.list.mockResolvedValue([]);
@@ -1456,7 +1456,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       collisionStrategy: "rename",
     }, "user-1");
@@ -1464,7 +1464,7 @@ describe("company portability", () => {
     expect(projectSvc.createWorkspace).toHaveBeenCalledWith("project-imported", expect.objectContaining({
       name: "Main Repo",
       sourceType: "git_repo",
-      repoUrl: "https://github.com/paperclipai/paperclip.git",
+      repoUrl: "https://github.com/thinkingmach/paperclip.git",
       repoRef: "main",
       defaultRef: "main",
       visibility: "default",
@@ -1493,7 +1493,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.list.mockResolvedValue([]);
@@ -1508,7 +1508,7 @@ describe("company portability", () => {
       "COMPANY.md": [
         "---",
         'schema: "agentcompanies/v1"',
-        'name: "Imported Paperclip"',
+        'name: "Imported ThinkingMach"',
         "---",
         "",
       ].join("\n"),
@@ -1530,7 +1530,7 @@ describe("company portability", () => {
     await portability.importBundle({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: false, projects: true, issues: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       collisionStrategy: "rename",
     }, "user-1");
 
@@ -1544,7 +1544,7 @@ describe("company portability", () => {
     const repoDir = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-portability-git-"));
     execFileSync("git", ["init"], { cwd: repoDir, stdio: "ignore" });
     execFileSync("git", ["checkout", "-b", "main"], { cwd: repoDir, stdio: "ignore" });
-    execFileSync("git", ["remote", "add", "origin", "https://github.com/paperclipai/paperclip.git"], {
+    execFileSync("git", ["remote", "add", "origin", "https://github.com/thinkingmach/paperclip.git"], {
       cwd: repoDir,
       stdio: "ignore",
     });
@@ -1552,7 +1552,7 @@ describe("company portability", () => {
     projectSvc.list.mockResolvedValue([
       {
         id: "project-1",
-        name: "Paperclip App",
+        name: "ThinkingMach App",
         urlKey: "paperclip-app",
         description: "Ship it",
         leadAgentId: null,
@@ -1618,7 +1618,7 @@ describe("company portability", () => {
     });
 
     const extension = asTextFile(exported.files[".paperclip.yaml"]);
-    expect(extension).toContain('repoUrl: "https://github.com/paperclipai/paperclip.git"');
+    expect(extension).toContain('repoUrl: "https://github.com/thinkingmach/paperclip.git"');
     expect(extension).toContain('projectWorkspaceKey: "paperclip"');
     expect(exported.warnings).not.toContainEqual(expect.stringContaining("does not have a portable repoUrl"));
     expect(exported.warnings).not.toContainEqual(expect.stringContaining("reference workspace workspace-1"));
@@ -1753,7 +1753,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
@@ -2176,7 +2176,7 @@ describe("company portability", () => {
           "COMPANY.md": [
             "---",
             'schema: "agentcompanies/v1"',
-            'name: "Imported Paperclip"',
+            'name: "Imported ThinkingMach"',
             "includes:",
             "  - agents/cto/AGENTS.md",
             "  - agents/qa/AGENTS.md",
@@ -2331,7 +2331,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
@@ -2350,7 +2350,7 @@ describe("company portability", () => {
     });
   });
 
-  it("exports routines as recurring task packages with Paperclip routine extensions", async () => {
+  it("exports routines as recurring task packages with ThinkingMach routine extensions", async () => {
     const portability = companyPortabilityService({} as any);
 
     projectSvc.list.mockResolvedValue([
@@ -2602,7 +2602,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -2621,7 +2621,7 @@ describe("company portability", () => {
       "COMPANY.md": [
         "---",
         'schema: "agentcompanies/v1"',
-        'name: "Imported Paperclip"',
+        'name: "Imported ThinkingMach"',
         "---",
         "",
       ].join("\n"),
@@ -2673,7 +2673,7 @@ describe("company portability", () => {
     const preview = await portability.previewImport({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: true, projects: true, issues: true, skills: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       agents: "all",
       collisionStrategy: "rename",
     });
@@ -2689,7 +2689,7 @@ describe("company portability", () => {
     const result = await portability.importBundle({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: true, projects: true, issues: true, skills: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       agents: "all",
       collisionStrategy: "rename",
     }, "user-1");
@@ -2728,18 +2728,18 @@ describe("company portability", () => {
     const portability = companyPortabilityService({} as any);
 
     companySvc.list.mockResolvedValue([
-      { name: "Imported Paperclip" },
+      { name: "Imported ThinkingMach" },
       // Case-insensitive: an existing "(2)" in any casing blocks that suffix.
-      { name: "imported paperclip (2)" },
+      { name: "imported thinkingmach (2)" },
     ]);
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip (3)",
+      name: "Imported ThinkingMach (3)",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
 
     const files = {
-      "COMPANY.md": ["---", 'schema: "agentcompanies/v1"', 'name: "Imported Paperclip"', "---", ""].join("\n"),
+      "COMPANY.md": ["---", 'schema: "agentcompanies/v1"', 'name: "Imported ThinkingMach"', "---", ""].join("\n"),
     };
 
     await portability.importBundle({
@@ -2751,23 +2751,23 @@ describe("company portability", () => {
     }, "user-1");
 
     expect(companySvc.create).toHaveBeenCalledWith(expect.objectContaining({
-      name: "Imported Paperclip (3)",
+      name: "Imported ThinkingMach (3)",
     }));
   });
 
   it("skips name de-duplication for agent-safe imports so collisions stay unobservable", async () => {
     const portability = companyPortabilityService({} as any);
 
-    companySvc.list.mockResolvedValue([{ name: "Imported Paperclip" }]);
+    companySvc.list.mockResolvedValue([{ name: "Imported ThinkingMach" }]);
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.listActiveUserMemberships.mockResolvedValue([{ userId: "user-1" }]);
     accessSvc.copyActiveUserMemberships.mockResolvedValue([]);
 
     const files = {
-      "COMPANY.md": ["---", 'schema: "agentcompanies/v1"', 'name: "Imported Paperclip"', "---", ""].join("\n"),
+      "COMPANY.md": ["---", 'schema: "agentcompanies/v1"', 'name: "Imported ThinkingMach"', "---", ""].join("\n"),
     };
 
     await portability.importBundle({
@@ -2781,33 +2781,33 @@ describe("company portability", () => {
     // company-scoped agent, and no suffix may reflect a collision back.
     expect(companySvc.list).not.toHaveBeenCalled();
     expect(companySvc.create).toHaveBeenCalledWith(expect.objectContaining({
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     }));
   });
 
   it("honors an explicitly typed company name even when it collides", async () => {
     const portability = companyPortabilityService({} as any);
 
-    companySvc.list.mockResolvedValue([{ name: "Imported Paperclip" }]);
+    companySvc.list.mockResolvedValue([{ name: "Imported ThinkingMach" }]);
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
 
     const files = {
-      "COMPANY.md": ["---", 'schema: "agentcompanies/v1"', 'name: "Imported Paperclip"', "---", ""].join("\n"),
+      "COMPANY.md": ["---", 'schema: "agentcompanies/v1"', 'name: "Imported ThinkingMach"', "---", ""].join("\n"),
     };
 
     await portability.importBundle({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: false, projects: false, issues: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       collisionStrategy: "rename",
     }, "user-1");
 
     expect(companySvc.create).toHaveBeenCalledWith(expect.objectContaining({
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     }));
   });
 
@@ -2816,7 +2816,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -2833,7 +2833,7 @@ describe("company portability", () => {
     projectSvc.list.mockResolvedValue([]);
 
     const files = {
-      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported Paperclip"', "---", ""].join("\n"),
+      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported ThinkingMach"', "---", ""].join("\n"),
       "agents/claudecoder/AGENTS.md": ['---', 'name: "ClaudeCoder"', "---", "", "You write code.", ""].join("\n"),
       "projects/launch/PROJECT.md": ['---', 'name: "Launch"', "---", ""].join("\n"),
       "tasks/monday-review/TASK.md": [
@@ -2862,7 +2862,7 @@ describe("company portability", () => {
     const result = await portability.importBundle({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: true, projects: true, issues: true, skills: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       agents: "all",
       collisionStrategy: "rename",
     }, "user-1", { pauseAutomations: true });
@@ -2888,7 +2888,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -2904,7 +2904,7 @@ describe("company portability", () => {
     projectSvc.list.mockResolvedValue([]);
 
     const files = {
-      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported Paperclip"', "---", ""].join("\n"),
+      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported ThinkingMach"', "---", ""].join("\n"),
       "agents/claudecoder/AGENTS.md": ['---', 'name: "ClaudeCoder"', "---", "", "You write code.", ""].join("\n"),
       "projects/launch/PROJECT.md": ['---', 'name: "Launch"', "---", ""].join("\n"),
       "tasks/monday-review/TASK.md": [
@@ -2933,7 +2933,7 @@ describe("company portability", () => {
     const result = await portability.importBundle({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: true, projects: true, issues: true, skills: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       agents: "all",
       collisionStrategy: "rename",
     }, "user-1");
@@ -2957,7 +2957,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -2973,7 +2973,7 @@ describe("company portability", () => {
     projectSvc.list.mockResolvedValue([]);
 
     const files = {
-      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported Paperclip"', "---", ""].join("\n"),
+      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported ThinkingMach"', "---", ""].join("\n"),
       "agents/claudecoder/AGENTS.md": ['---', 'name: "ClaudeCoder"', "---", "", "You write code.", ""].join("\n"),
       "projects/launch/PROJECT.md": ['---', 'name: "Launch"', "---", ""].join("\n"),
       "tasks/monday-review/TASK.md": [
@@ -2999,7 +2999,7 @@ describe("company portability", () => {
     const preview = await portability.previewImport({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: true, projects: true, issues: true, skills: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       agents: "all",
       collisionStrategy: "rename",
     });
@@ -3013,7 +3013,7 @@ describe("company portability", () => {
     await portability.importBundle({
       source: { type: "inline", rootPath: "paperclip-demo", files },
       include: { company: true, agents: true, projects: true, issues: true, skills: false },
-      target: { mode: "new_company", newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company", newCompanyName: "Imported ThinkingMach" },
       agents: "all",
       collisionStrategy: "rename",
     }, "user-1");
@@ -3031,14 +3031,14 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.list.mockResolvedValue([]);
     projectSvc.list.mockResolvedValue([]);
 
     const files = {
-      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported Paperclip"', "---", ""].join("\n"),
+      "COMPANY.md": ['---', 'schema: "agentcompanies/v1"', 'name: "Imported ThinkingMach"', "---", ""].join("\n"),
       "tasks/monday-review/TASK.md": [
         "---",
         'name: "Monday Review"',
@@ -3052,7 +3052,7 @@ describe("company portability", () => {
     const request = {
       source: { type: "inline" as const, rootPath: "paperclip-demo", files },
       include: { company: true, agents: false, projects: false, issues: true, skills: false },
-      target: { mode: "new_company" as const, newCompanyName: "Imported Paperclip" },
+      target: { mode: "new_company" as const, newCompanyName: "Imported ThinkingMach" },
       collisionStrategy: "rename" as const,
     };
 
@@ -3078,7 +3078,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -3094,11 +3094,11 @@ describe("company portability", () => {
           "COMPANY.md": [
             "---",
             'schema: "agentcompanies/v1"',
-            'name: "Imported Paperclip"',
+            'name: "Imported ThinkingMach"',
             'description: "Portable company package"',
             "---",
             "",
-            "# Imported Paperclip",
+            "# Imported ThinkingMach",
             "",
           ].join("\n"),
           "agents/claudecoder/AGENTS.md": [
@@ -3122,14 +3122,14 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
     });
 
     expect(preview.errors).toEqual([]);
-    expect(preview.manifest.company?.name).toBe("Imported Paperclip");
+    expect(preview.manifest.company?.name).toBe("Imported ThinkingMach");
     expect(preview.manifest.agents).toEqual([
       expect.objectContaining({
         slug: "claudecoder",
@@ -3147,11 +3147,11 @@ describe("company portability", () => {
           "COMPANY.md": [
             "---",
             'schema: "agentcompanies/v1"',
-            'name: "Imported Paperclip"',
+            'name: "Imported ThinkingMach"',
             'description: "Portable company package"',
             "---",
             "",
-            "# Imported Paperclip",
+            "# Imported ThinkingMach",
             "",
           ].join("\n"),
           "agents/claudecoder/AGENTS.md": [
@@ -3175,14 +3175,14 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
     }, "user-1");
 
     expect(companySvc.create).toHaveBeenCalledWith(expect.objectContaining({
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
       description: "Portable company package",
     }));
     expect(agentSvc.create).toHaveBeenCalledWith("company-imported", expect.objectContaining({
@@ -3297,7 +3297,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -3342,7 +3342,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
@@ -3383,12 +3383,12 @@ describe("company portability", () => {
     };
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
       logoAssetId: null,
     });
     companySvc.update.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
       logoAssetId: "asset-created",
     });
     agentSvc.create.mockResolvedValue({
@@ -3435,7 +3435,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
@@ -3463,7 +3463,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     agentSvc.create.mockResolvedValue({
       id: "agent-created",
@@ -3495,7 +3495,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
@@ -3518,7 +3518,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     agentSvc.create.mockImplementation(async (_companyId: string, input: Record<string, unknown>) => ({
       id: `agent-${String(input.name).toLowerCase()}`,
@@ -3562,7 +3562,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
@@ -3602,7 +3602,7 @@ describe("company portability", () => {
     projectSvc.list.mockResolvedValue([]);
     companySvc.getById.mockResolvedValue({
       id: "company-1",
-      name: "Paperclip",
+      name: "ThinkingMach",
       description: "Existing company",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3679,7 +3679,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -3712,7 +3712,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: "all",
       collisionStrategy: "rename",
@@ -3759,7 +3759,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockImplementation(async (_companyId: string, input: Record<string, unknown>) => ({
@@ -3794,7 +3794,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: ["claudecoder"],
       collisionStrategy: "rename",
@@ -3819,7 +3819,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: ["claudecoder"],
       collisionStrategy: "rename",
@@ -4824,8 +4824,8 @@ describe("company portability", () => {
   it("skips oversized and missing-blob attachments with warnings instead of failing", async () => {
     // The deployment-level cap is read once when the service module loads, so
     // this test re-imports the module under a 10-byte cap to reach the skip.
-    const previousCap = process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES;
-    process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES = "10";
+    const previousCap = process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES;
+    process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES = "10";
     vi.resetModules();
     try {
       const { companyPortabilityService: cappedPortabilityService } =
@@ -4879,9 +4879,9 @@ describe("company portability", () => {
       );
     } finally {
       if (previousCap === undefined) {
-        delete process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES;
+        delete process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES;
       } else {
-        process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES = previousCap;
+        process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES = previousCap;
       }
       vi.resetModules();
     }
@@ -5243,7 +5243,7 @@ describe("company portability", () => {
     );
   });
 
-  it("rejects packages produced by a newer Paperclip", async () => {
+  it("rejects packages produced by a newer ThinkingMach", async () => {
     const portability = companyPortabilityService({} as any);
 
     await expect(portability.importBundle({
@@ -5252,7 +5252,7 @@ describe("company portability", () => {
       target: { mode: "new_company", newCompanyName: "Future Import" },
       agents: "all",
       collisionStrategy: "rename",
-    }, "user-1")).rejects.toThrow(/newer Paperclip/);
+    }, "user-1")).rejects.toThrow(/newer ThinkingMach/);
     expect(issueSvc.importIssues).not.toHaveBeenCalled();
   });
 
@@ -5291,7 +5291,7 @@ describe("company portability", () => {
         authorType: "system",
         authorAgentId: null,
         authorUserId: null,
-        body: "Paperclip needs a disposition before this issue can continue.",
+        body: "ThinkingMach needs a disposition before this issue can continue.",
         presentation,
         metadata,
         createdAt: new Date("2026-05-04T12:00:00.000Z"),
@@ -5324,7 +5324,7 @@ describe("company portability", () => {
 
     expect(issueSvc.addImportedComments).toHaveBeenCalledWith(expect.arrayContaining([
       expect.objectContaining({
-        body: "Paperclip needs a disposition before this issue can continue.",
+        body: "ThinkingMach needs a disposition before this issue can continue.",
         authorType: "system",
         authorAgentId: null,
         authorUserId: null,
@@ -5459,7 +5459,7 @@ describe("company portability", () => {
 
     companySvc.create.mockResolvedValue({
       id: "company-imported",
-      name: "Imported Paperclip",
+      name: "Imported ThinkingMach",
     });
     accessSvc.ensureMembership.mockResolvedValue(undefined);
     agentSvc.create.mockResolvedValue({
@@ -5499,7 +5499,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: ["claudecoder"],
       collisionStrategy: "rename",
@@ -5588,7 +5588,7 @@ describe("company portability", () => {
             "    workspaces:",
             "      default:",
             "        name: App",
-            "        repoUrl: https://github.com/paperclipai/paperclip",
+            "        repoUrl: https://github.com/thinkingmach/paperclip",
             "        setupCommand: pnpm install",
             "",
           ].join("\n"),
@@ -5752,7 +5752,7 @@ describe("company portability", () => {
       },
       target: {
         mode: "new_company",
-        newCompanyName: "Imported Paperclip",
+        newCompanyName: "Imported ThinkingMach",
       },
       agents: ["claudecoder"],
       collisionStrategy: "rename",
@@ -6118,17 +6118,17 @@ describe("company portability", () => {
 
 describe("dedupeImportedCompanyName", () => {
   it("returns the base name when nothing collides", () => {
-    expect(dedupeImportedCompanyName("Paperclip", ["Other Co"])).toBe("Paperclip");
-    expect(dedupeImportedCompanyName("Paperclip", [])).toBe("Paperclip");
+    expect(dedupeImportedCompanyName("ThinkingMach", ["Other Co"])).toBe("ThinkingMach");
+    expect(dedupeImportedCompanyName("ThinkingMach", [])).toBe("ThinkingMach");
   });
 
   it("suffixes past every taken candidate, case-insensitively", () => {
-    expect(dedupeImportedCompanyName("Paperclip", ["paperclip"])).toBe("Paperclip (2)");
-    expect(dedupeImportedCompanyName("Paperclip", ["Paperclip", "Paperclip (2)"])).toBe("Paperclip (3)");
-    expect(dedupeImportedCompanyName("Paperclip", ["PAPERCLIP", "paperclip (2)"])).toBe("Paperclip (3)");
+    expect(dedupeImportedCompanyName("ThinkingMach", ["thinkingmach"])).toBe("ThinkingMach (2)");
+    expect(dedupeImportedCompanyName("ThinkingMach", ["ThinkingMach", "ThinkingMach (2)"])).toBe("ThinkingMach (3)");
+    expect(dedupeImportedCompanyName("ThinkingMach", ["THINKINGMACH", "thinkingmach (2)"])).toBe("ThinkingMach (3)");
   });
 
   it("ignores surrounding whitespace in existing names", () => {
-    expect(dedupeImportedCompanyName("Paperclip", ["  Paperclip  "])).toBe("Paperclip (2)");
+    expect(dedupeImportedCompanyName("ThinkingMach", ["  ThinkingMach  "])).toBe("ThinkingMach (2)");
   });
 });

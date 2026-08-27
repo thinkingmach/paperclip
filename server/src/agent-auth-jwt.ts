@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { normalizeAgentApiKeyScope, type AgentApiKeyScope } from "@paperclipai/shared";
-import { resolvePaperclipInstanceId } from "./home-paths.js";
+import { normalizeAgentApiKeyScope, type AgentApiKeyScope } from "@thinkingmach/shared";
+import { resolveThinkingMachInstanceId } from "./home-paths.js";
 
 interface JwtHeader {
   alg: string;
@@ -37,7 +37,7 @@ function parseBooleanEnv(value: string | undefined): boolean {
 }
 
 function jwtConfig() {
-  const secret = process.env.PAPERCLIP_AGENT_JWT_SECRET?.trim() || process.env.BETTER_AUTH_SECRET?.trim();
+  const secret = process.env.THINKINGMACH_AGENT_JWT_SECRET?.trim() || process.env.BETTER_AUTH_SECRET?.trim();
   if (!secret) return null;
 
   return {
@@ -48,16 +48,16 @@ function jwtConfig() {
     // including host-suspension gaps: heartbeats scheduled while a laptop lid is
     // closed fire during ~2s dark wakes, and the spawned session can then sit
     // frozen for over an hour before it first executes.
-    ttlSeconds: parseNumber(process.env.PAPERCLIP_AGENT_JWT_TTL_SECONDS, 60 * 60 * 48),
-    issuer: process.env.PAPERCLIP_AGENT_JWT_ISSUER ?? "paperclip",
-    audience: process.env.PAPERCLIP_AGENT_JWT_AUDIENCE ?? "paperclip-api",
+    ttlSeconds: parseNumber(process.env.THINKINGMACH_AGENT_JWT_TTL_SECONDS, 60 * 60 * 48),
+    issuer: process.env.THINKINGMACH_AGENT_JWT_ISSUER ?? "paperclip",
+    audience: process.env.THINKINGMACH_AGENT_JWT_AUDIENCE ?? "paperclip-api",
     // The control-plane instance this process belongs to. The live plane runs as
     // "default"; every worktree/fork instance gets a distinct id (its worktree
-    // name) even though it deliberately shares PAPERCLIP_AGENT_JWT_SECRET with
+    // name) even though it deliberately shares THINKINGMACH_AGENT_JWT_SECRET with
     // the source instance. Folding this into the signing-key derivation is what
     // prevents a fork-minted token from authenticating against the live plane.
-    instanceId: resolvePaperclipInstanceId(),
-    disableLegacyFallback: parseBooleanEnv(process.env.PAPERCLIP_AGENT_JWT_DISABLE_LEGACY_FALLBACK),
+    instanceId: resolveThinkingMachInstanceId(),
+    disableLegacyFallback: parseBooleanEnv(process.env.THINKINGMACH_AGENT_JWT_DISABLE_LEGACY_FALLBACK),
   };
 }
 
@@ -80,7 +80,7 @@ function jwtConfig() {
  * change continue to validate. NOTE: that legacy fallback is instance-agnostic
  * (it signs with the raw shared secret), so complete cryptographic instance
  * isolation additionally requires disabling it once outstanding legacy tokens
- * have expired (set PAPERCLIP_AGENT_JWT_DISABLE_LEGACY_FALLBACK=true). Normal
+ * have expired (set THINKINGMACH_AGENT_JWT_DISABLE_LEGACY_FALLBACK=true). Normal
  * fork-minted run tokens are already rejected without that step because they
  * are signed with the derived key, not the raw master secret.
  *
@@ -188,8 +188,8 @@ export function verifyLocalAgentJwt(token: string): LocalAgentJwtClaims | null {
   // this preserves backward compatibility for any outstanding tokens (TTL
   // bounds the legacy window naturally).
   //
-  // Operators should set `PAPERCLIP_AGENT_JWT_DISABLE_LEGACY_FALLBACK=true`
-  // approximately one JWT TTL (~48h by default, see PAPERCLIP_AGENT_JWT_TTL_SECONDS)
+  // Operators should set `THINKINGMACH_AGENT_JWT_DISABLE_LEGACY_FALLBACK=true`
+  // approximately one JWT TTL (~48h by default, see THINKINGMACH_AGENT_JWT_TTL_SECONDS)
   // after deploying per-company signing. Once set, the master-secret fallback
   // is disabled and only tokens validating under the per-instance/per-company
   // derived key are accepted — closing the window in which a leaked master

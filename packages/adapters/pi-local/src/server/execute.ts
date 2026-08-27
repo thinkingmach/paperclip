@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { inferOpenAiCompatibleBiller, type AdapterExecutionContext, type AdapterExecutionResult } from "@paperclipai/adapter-utils";
+import { inferOpenAiCompatibleBiller, type AdapterExecutionContext, type AdapterExecutionResult } from "@thinkingmach/adapter-utils";
 import {
   adapterExecutionTargetIsRemote,
   adapterExecutionTargetRemoteCwd,
@@ -10,7 +10,7 @@ import {
   adapterExecutionTargetSessionIdentity,
   adapterExecutionTargetSessionMatches,
   adapterExecutionTargetUsesManagedHome,
-  adapterExecutionTargetUsesPaperclipBridge,
+  adapterExecutionTargetUsesThinkingMachBridge,
   describeAdapterExecutionTarget,
   ensureAdapterExecutionTargetCommandResolvable,
   ensureAdapterExecutionTargetFile,
@@ -23,34 +23,34 @@ import {
   resolveAdapterExecutionTargetCommandForLogs,
   runAdapterExecutionTargetProcess,
   runAdapterExecutionTargetShellCommand,
-  startAdapterExecutionTargetPaperclipBridge,
-} from "@paperclipai/adapter-utils/execution-target";
+  startAdapterExecutionTargetThinkingMachBridge,
+} from "@thinkingmach/adapter-utils/execution-target";
 import {
   asString,
   asNumber,
   asStringArray,
   parseObject,
-  buildPaperclipEnv,
+  buildThinkingMachEnv,
   buildRuntimeToolsEnv,
   joinPromptSections,
   buildInvocationEnvForLogs,
   ensureAbsoluteDirectory,
-  ensurePaperclipSkillSymlink,
+  ensureThinkingMachSkillSymlink,
   ensurePathInEnv,
-  refreshPaperclipWorkspaceEnvForExecution,
-  isPaperclipSkillSourceMissing,
-  readPaperclipRuntimeSkillEntries,
-  readPaperclipIssueWorkModeFromContext,
-  resolveLegacyPaperclipDesiredSkillNames,
+  refreshThinkingMachWorkspaceEnvForExecution,
+  isThinkingMachSkillSourceMissing,
+  readThinkingMachRuntimeSkillEntries,
+  readThinkingMachIssueWorkModeFromContext,
+  resolveLegacyThinkingMachDesiredSkillNames,
   removeMaintainerOnlySkillSymlinks,
   renderTemplate,
-  renderPaperclipWakePrompt,
-  isPaperclipRecoveryWakePayload,
-  stringifyPaperclipWakePayload,
-  DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+  renderThinkingMachWakePrompt,
+  isThinkingMachRecoveryWakePayload,
+  stringifyThinkingMachWakePayload,
+  DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   runChildProcess,
-} from "@paperclipai/adapter-utils/server-utils";
-import { shellQuote } from "@paperclipai/adapter-utils/ssh";
+} from "@thinkingmach/adapter-utils/server-utils";
+import { shellQuote } from "@thinkingmach/adapter-utils/ssh";
 import { isPiUnknownSessionError, parsePiJsonl } from "./parse.js";
 import { ensurePiModelConfiguredAndAvailable } from "./models.js";
 import { preparePiRuntimeConfig } from "./runtime-config.js";
@@ -58,7 +58,7 @@ import { SANDBOX_INSTALL_COMMAND } from "../index.js";
 
 const __moduleDir = path.dirname(fileURLToPath(import.meta.url));
 
-const PAPERCLIP_SESSIONS_DIR = path.join(os.homedir(), ".pi", "paperclips");
+const THINKINGMACH_SESSIONS_DIR = path.join(os.homedir(), ".pi", "paperclips");
 const PI_AGENT_SKILLS_DIR = path.join(os.homedir(), ".pi", "agent", "skills");
 
 function firstNonEmptyLine(text: string): string {
@@ -108,7 +108,7 @@ async function ensurePiSkillsInjected(
     const target = path.join(PI_AGENT_SKILLS_DIR, entry.runtimeName);
 
     try {
-      const result = await ensurePaperclipSkillSymlink(entry.source, target);
+      const result = await ensureThinkingMachSkillSymlink(entry.source, target);
       if (result === "skipped") continue;
       await onLog(
         "stderr",
@@ -127,11 +127,11 @@ async function buildPiSkillsDir(config: Record<string, unknown>): Promise<string
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-pi-skills-"));
   const target = path.join(tmp, "skills");
   await fs.mkdir(target, { recursive: true });
-  const availableEntries = await readPaperclipRuntimeSkillEntries(config, __moduleDir);
-  const desiredNames = new Set(resolveLegacyPaperclipDesiredSkillNames(config, availableEntries));
+  const availableEntries = await readThinkingMachRuntimeSkillEntries(config, __moduleDir);
+  const desiredNames = new Set(resolveLegacyThinkingMachDesiredSkillNames(config, availableEntries));
   for (const entry of availableEntries) {
     if (!desiredNames.has(entry.key)) continue;
-    if (isPaperclipSkillSourceMissing(entry)) continue;
+    if (isThinkingMachSkillSourceMissing(entry)) continue;
     await fs.symlink(entry.source, path.join(target, entry.runtimeName));
   }
   return target;
@@ -142,13 +142,13 @@ function resolvePiBiller(env: Record<string, string>, provider: string | null): 
 }
 
 async function ensureSessionsDir(): Promise<string> {
-  await fs.mkdir(PAPERCLIP_SESSIONS_DIR, { recursive: true });
-  return PAPERCLIP_SESSIONS_DIR;
+  await fs.mkdir(THINKINGMACH_SESSIONS_DIR, { recursive: true });
+  return THINKINGMACH_SESSIONS_DIR;
 }
 
 function buildSessionPath(agentId: string, timestamp: string): string {
   const safeTimestamp = timestamp.replace(/[:.]/g, "-");
-  return path.join(PAPERCLIP_SESSIONS_DIR, `${safeTimestamp}-${agentId}.jsonl`);
+  return path.join(THINKINGMACH_SESSIONS_DIR, `${safeTimestamp}-${agentId}.jsonl`);
 }
 
 function buildRemoteSessionPath(runtimeRootDir: string, agentId: string, timestamp: string): string {
@@ -228,7 +228,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
 
   const promptTemplate = asString(
     config.promptTemplate,
-    DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+    DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   );
   const command = asString(config.command, "pi");
   const model = asString(config.model, "").trim();
@@ -261,8 +261,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     await ensureSessionsDir();
   }
 
-  const piSkillEntries = await readPaperclipRuntimeSkillEntries(config, __moduleDir);
-  const desiredPiSkillNames = resolveLegacyPaperclipDesiredSkillNames(config, piSkillEntries);
+  const piSkillEntries = await readThinkingMachRuntimeSkillEntries(config, __moduleDir);
+  const desiredPiSkillNames = resolveLegacyThinkingMachDesiredSkillNames(config, piSkillEntries);
   if (!executionTargetIsRemote) {
     await ensurePiSkillsInjected(onLog, piSkillEntries, desiredPiSkillNames);
   }
@@ -270,10 +270,10 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   // Build environment
   const envConfig = parseObject(config.env);
   const env: Record<string, string> = {
-    ...buildPaperclipEnv(agent),
+    ...buildThinkingMachEnv(agent),
     ...buildRuntimeToolsEnv(ctx.runtimeTools),
   };
-  env.PAPERCLIP_RUN_ID = runId;
+  env.THINKINGMACH_RUN_ID = runId;
 
   const wakeTaskId =
     (typeof context.taskId === "string" && context.taskId.trim().length > 0 && context.taskId.trim()) ||
@@ -298,18 +298,18 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   const linkedIssueIds = Array.isArray(context.issueIds)
     ? context.issueIds.filter((value): value is string => typeof value === "string" && value.trim().length > 0)
     : [];
-  const wakePayloadJson = stringifyPaperclipWakePayload(context.paperclipWake);
-  const issueWorkMode = readPaperclipIssueWorkModeFromContext(context);
+  const wakePayloadJson = stringifyThinkingMachWakePayload(context.thinkingmachWake);
+  const issueWorkMode = readThinkingMachIssueWorkModeFromContext(context);
     
-  if (wakeTaskId) env.PAPERCLIP_TASK_ID = wakeTaskId;
-  if (issueWorkMode) env.PAPERCLIP_ISSUE_WORK_MODE = issueWorkMode;
-  if (wakeReason) env.PAPERCLIP_WAKE_REASON = wakeReason;
-  if (wakeCommentId) env.PAPERCLIP_WAKE_COMMENT_ID = wakeCommentId;
-  if (approvalId) env.PAPERCLIP_APPROVAL_ID = approvalId;
-  if (approvalStatus) env.PAPERCLIP_APPROVAL_STATUS = approvalStatus;
-  if (linkedIssueIds.length > 0) env.PAPERCLIP_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
-  if (wakePayloadJson) env.PAPERCLIP_WAKE_PAYLOAD_JSON = wakePayloadJson;
-  refreshPaperclipWorkspaceEnvForExecution({
+  if (wakeTaskId) env.THINKINGMACH_TASK_ID = wakeTaskId;
+  if (issueWorkMode) env.THINKINGMACH_ISSUE_WORK_MODE = issueWorkMode;
+  if (wakeReason) env.THINKINGMACH_WAKE_REASON = wakeReason;
+  if (wakeCommentId) env.THINKINGMACH_WAKE_COMMENT_ID = wakeCommentId;
+  if (approvalId) env.THINKINGMACH_APPROVAL_ID = approvalId;
+  if (approvalStatus) env.THINKINGMACH_APPROVAL_STATUS = approvalStatus;
+  if (linkedIssueIds.length > 0) env.THINKINGMACH_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
+  if (wakePayloadJson) env.THINKINGMACH_WAKE_PAYLOAD_JSON = wakePayloadJson;
+  refreshThinkingMachWorkspaceEnvForExecution({
     env,
     envConfig,
     workspaceCwd: effectiveWorkspaceCwd,
@@ -323,9 +323,9 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     executionCwd: effectiveExecutionCwd,
   });
   if (authToken) {
-    env.PAPERCLIP_API_KEY = authToken;
+    env.THINKINGMACH_API_KEY = authToken;
   }
-  // Materialize custom Pi providers (PAPERCLIP_PI_PROVIDERS) into a managed
+  // Materialize custom Pi providers (THINKINGMACH_PI_PROVIDERS) into a managed
   // PI_CODING_AGENT_DIR before runtimeEnv is computed, so both local validation
   // and the spawned Pi process resolve models against the managed models.json.
   const preparedRuntimeConfig = await preparePiRuntimeConfig({ env });
@@ -407,7 +407,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     let remoteRuntimeRootDir: string | null = null;
     let localSkillsDir: string | null = null;
     let remoteSkillsDir: string | null = null;
-    let paperclipBridge: Awaited<ReturnType<typeof startAdapterExecutionTargetPaperclipBridge>> = null;
+    let thinkingmachBridge: Awaited<ReturnType<typeof startAdapterExecutionTargetThinkingMachBridge>> = null;
 
     if (executionTargetIsRemote) {
       try {
@@ -443,7 +443,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         restoreRemoteWorkspace = () =>
           preparedRemoteRuntime.restoreWorkspace((line) => onLog("stdout", line));
         effectiveExecutionCwd = preparedRemoteRuntime.workspaceRemoteDir ?? effectiveExecutionCwd;
-        refreshPaperclipWorkspaceEnvForExecution({
+        refreshThinkingMachWorkspaceEnvForExecution({
           env,
           envConfig,
           workspaceCwd: effectiveWorkspaceCwd,
@@ -473,8 +473,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       }
     }
     const runtimeExecutionTarget = overrideAdapterExecutionTargetRemoteCwd(executionTarget, effectiveExecutionCwd);
-    if (executionTargetIsRemote && adapterExecutionTargetUsesPaperclipBridge(runtimeExecutionTarget)) {
-      paperclipBridge = await startAdapterExecutionTargetPaperclipBridge({
+    if (executionTargetIsRemote && adapterExecutionTargetUsesThinkingMachBridge(runtimeExecutionTarget)) {
+      thinkingmachBridge = await startAdapterExecutionTargetThinkingMachBridge({
         runId,
         target: runtimeExecutionTarget,
         enableSandboxDuplexBridge: adapterExecutionTargetEnablesSandboxDuplexBridge(runtimeExecutionTarget),
@@ -482,11 +482,11 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         runtimeRootDir: remoteRuntimeRootDir,
         adapterKey: "pi",
         timeoutSec,
-        hostApiToken: env.PAPERCLIP_API_KEY,
+        hostApiToken: env.THINKINGMACH_API_KEY,
         onLog,
       });
-      if (paperclipBridge) {
-        Object.assign(env, paperclipBridge.env);
+      if (thinkingmachBridge) {
+        Object.assign(env, thinkingmachBridge.env);
         loggedEnv = buildInvocationEnvForLogs(env, {
           runtimeEnv: Object.fromEntries(
             Object.entries(ensurePathInEnv({ ...process.env, ...env })).filter(
@@ -537,7 +537,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     if (runtimeSessionId && !canResumeSession) {
       const staleSessionCwdNote =
         savedSessionCwd !== null && !sessionHeaderCwdMatches
-          ? ` Pi stored cwd "${savedSessionCwd}" in the session header, so Paperclip will start a fresh session for "${effectiveExecutionCwd}".`
+          ? ` Pi stored cwd "${savedSessionCwd}" in the session header, so ThinkingMach will start a fresh session for "${effectiveExecutionCwd}".`
           : "";
       await onLog(
         "stdout",
@@ -583,7 +583,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
           `${instructionsContents}\n\n` +
           `The above agent instructions were loaded from ${resolvedInstructionsFilePath}. ` +
           `Resolve any relative file references from ${instructionsFileDir}.\n\n` +
-          DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE;
+          DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE;
       } catch (err) {
         instructionsReadFailed = true;
         const reason = err instanceof Error ? err.message : String(err);
@@ -613,9 +613,9 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       !canResumeSession && bootstrapPromptTemplate.trim().length > 0
         ? renderTemplate(bootstrapPromptTemplate, templateData).trim()
         : "";
-    const wakePrompt = renderPaperclipWakePrompt(context.paperclipWake, { resumedSession: canResumeSession });
+    const wakePrompt = renderThinkingMachWakePrompt(context.thinkingmachWake, { resumedSession: canResumeSession });
     const shouldUseResumeDeltaPrompt = canResumeSession && wakePrompt.length > 0;
-    const renderedHeartbeatPrompt = shouldUseResumeDeltaPrompt || isPaperclipRecoveryWakePayload(context.paperclipWake)
+    const renderedHeartbeatPrompt = shouldUseResumeDeltaPrompt || isThinkingMachRecoveryWakePayload(context.thinkingmachWake)
       ? ""
       : renderTemplate(promptTemplate, templateData);
     const sessionHandoffNote = asString(context.paperclipSessionHandoffMarkdown, "").trim();
@@ -723,8 +723,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         onSpawn,
         onRuntimeProgress: ctx.onRuntimeProgress,
         onLog: bufferedOnLog,
-        runLogTail: paperclipBridge?.runLogTail,
-        settleRunDisposition: paperclipBridge?.settleRunDisposition,
+        runLogTail: thinkingmachBridge?.runLogTail,
+        settleRunDisposition: thinkingmachBridge?.settleRunDisposition,
       });
 
       // Flush any remaining buffer content
@@ -851,7 +851,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       return toResult(initial);
     } finally {
       await Promise.all([
-        paperclipBridge?.stop(),
+        thinkingmachBridge?.stop(),
         restoreRemoteWorkspace?.(),
         localSkillsDir ? fs.rm(path.dirname(localSkillsDir), { recursive: true, force: true }).catch(() => undefined) : Promise.resolve(),
       ]);

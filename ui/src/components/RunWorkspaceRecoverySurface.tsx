@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { HeartbeatRun } from "@paperclipai/shared";
+import type { HeartbeatRun } from "@thinkingmach/shared";
 import { useNavigate } from "@/lib/router";
 import { issuesApi } from "../api/issues";
 import { executionWorkspacesApi } from "../api/execution-workspaces";
@@ -17,7 +17,7 @@ import {
   readRecoveryReconcileWorkspaceId,
 } from "../lib/recovery-reconcile";
 
-/** The run errorCode Paperclip stamps when it declines a run over a git workspace it can't validate. */
+/** The run errorCode ThinkingMach stamps when it declines a run over a git workspace it can't validate. */
 export const WORKSPACE_VALIDATION_RUN_ERROR_CODE = "workspace_validation_failed";
 
 function asRecord(value: unknown): Record<string, unknown> | null {

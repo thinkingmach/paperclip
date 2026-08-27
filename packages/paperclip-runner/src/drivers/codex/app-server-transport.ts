@@ -238,7 +238,7 @@ export function redactCodexDiagnostic(message: string): string {
       try {
         // Only redact an actual RFC 7617 credential. Treating every word after
         // “Basic” as base64 corrupted ordinary question copy such as
-        // “Basic API” before it entered the Paperclip protocol.
+        // “Basic API” before it entered the ThinkingMach protocol.
         const decoded = Buffer.from(encoded, "base64").toString("utf8");
         return decoded.includes(":") ? "Basic [REDACTED]" : match;
       } catch {
@@ -259,7 +259,7 @@ export function redactCodexDiagnostic(message: string): string {
       "$1=[REDACTED]",
     )
     .replace(
-      /(PAPERCLIP_API_KEY|OPENAI_API_KEY|OPENROUTER_API_KEY)=[^\s]+/g,
+      /(THINKINGMACH_API_KEY|OPENAI_API_KEY|OPENROUTER_API_KEY)=[^\s]+/g,
       "$1=[REDACTED]",
     );
 }

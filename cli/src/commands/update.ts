@@ -8,7 +8,7 @@ import pc from "picocolors";
 import { buildNextManifest, flipCurrentAtomic, isManagedExecutable, pruneInstallPayloads, readInstallManifest, resolveInstallStorePaths, withInstallStoreLock, writeInstallManifestAtomic, type InstallChannel, type InstallManifest, type InstallRecord, type InstallStorePaths } from "../install-store.js";
 import { dbBackupCommand } from "./db-backup.js";
 import { installGitPayload, installNpmPayload, PUBLIC_NPM_REGISTRY, resolveGitHubRef, resolvePublishedVersion, type CommandRunner } from "./install.js";
-import { resolvePaperclipInstanceId, resolvePaperclipInstanceRoot } from "../config/home.js";
+import { resolveThinkingMachInstanceId, resolveThinkingMachInstanceRoot } from "../config/home.js";
 import { resolveConfigPath } from "../config/store.js";
 import { detectServiceManager } from "../services/service-manager.js";
 import { restartManagedService } from "./service.js";
@@ -21,10 +21,10 @@ type Dependencies = { executablePath: string; runCommand: CommandRunner; backup:
 
 const DATABASE_UNREACHABLE_CODES = new Set(["ECONNREFUSED", "EHOSTUNREACH", "ENETUNREACH", "ETIMEDOUT"]);
 
-function hasPaperclipInstanceData(): boolean {
+function hasThinkingMachInstanceData(): boolean {
   return Boolean(process.env.DATABASE_URL?.trim())
     || fs.existsSync(resolveConfigPath())
-    || fs.existsSync(resolvePaperclipInstanceRoot());
+    || fs.existsSync(resolveThinkingMachInstanceRoot());
 }
 
 function isDatabaseUnreachableError(error: unknown): boolean {
@@ -48,9 +48,9 @@ function isDatabaseUnreachableError(error: unknown): boolean {
   return false;
 }
 
-async function runPreUpdateBackup(options: UpdateOptions, backup: () => Promise<void>, hasInstanceData = hasPaperclipInstanceData): Promise<void> {
+async function runPreUpdateBackup(options: UpdateOptions, backup: () => Promise<void>, hasInstanceData = hasThinkingMachInstanceData): Promise<void> {
   if (!hasInstanceData()) {
-    const message = "Skipping the pre-update backup because this Paperclip instance has not been onboarded and has no data to back up.";
+    const message = "Skipping the pre-update backup because this ThinkingMach instance has not been onboarded and has no data to back up.";
     if (options.json) console.error(message); else console.log(pc.yellow(message));
     return;
   }
@@ -59,7 +59,7 @@ async function runPreUpdateBackup(options: UpdateOptions, backup: () => Promise<
   } catch (error) {
     if (isDatabaseUnreachableError(error)) {
       throw new Error(
-        "The Paperclip database is not running or reachable, so the pre-update backup cannot be taken. Start the service with `paperclipai service start` and retry, or skip the backup with `paperclipai update --no-backup`.",
+        "The ThinkingMach database is not running or reachable, so the pre-update backup cannot be taken. Start the service with `thinkingmach service start` and retry, or skip the backup with `thinkingmach update --no-backup`.",
         { cause: error },
       );
     }
@@ -68,7 +68,7 @@ async function runPreUpdateBackup(options: UpdateOptions, backup: () => Promise<
 }
 
 async function restartActiveManagedService(expectedVersion: string): Promise<boolean> {
-  const instanceId = resolvePaperclipInstanceId();
+  const instanceId = resolveThinkingMachInstanceId();
   const detection = await detectServiceManager({ instanceId });
   if (!detection.supported || !(await detection.manager.status()).active) return false;
   await restartManagedService({ instanceId, expectedVersion });
@@ -81,7 +81,7 @@ export function detectInstallMode(executablePath = process.argv[1] ?? "", paths 
   if (manifest && isManagedExecutable(resolved, manifest, paths)) return "managed";
   const normalized = resolved.split(path.sep).join("/");
   if (normalized.includes("/.npm/_npx/") || normalized.includes("/node_modules/.cache/npx/")) return "npx";
-  if (normalized.includes("/node_modules/paperclipai/")) return "global-npm";
+  if (normalized.includes("/node_modules/thinkingmach/")) return "global-npm";
   let cursor = path.dirname(resolved);
   while (cursor !== path.dirname(cursor)) {
     if (fs.existsSync(path.join(cursor, ".git"))) return "source";
@@ -175,11 +175,11 @@ export async function updateCommand(options: UpdateOptions, overrides: Partial<D
     if (options.dryRun) { emit(options, { mode, action: "rollback", dryRun: true, target: manifest?.previous[0]?.version ?? null }, `Would roll back to ${manifest?.previous[0]?.version ?? "the previous payload"}.`); return; }
     const next = await withInstallStoreLock(async () => rollbackManagedInstall(paths), paths);
     const restarted = await (overrides.restartActiveService ?? restartActiveManagedService)(next.version);
-    emit(options, { mode, action: "rollback", version: next.version, restarted }, pc.green(`Rolled back to paperclipai ${next.version}${restarted ? " and restarted the active service" : ""}. Database migrations are not reversed; restore the pre-update backup if needed.`));
+    emit(options, { mode, action: "rollback", version: next.version, restarted }, pc.green(`Rolled back to thinkingmach ${next.version}${restarted ? " and restarted the active service" : ""}. Database migrations are not reversed; restore the pre-update backup if needed.`));
     return;
   }
-  if (mode === "npx") { emit(options, { mode, action: "install" }, "This is an ephemeral npx install. Run `paperclipai install`, then use `paperclipai update` from the managed shim."); return; }
-  if (mode === "source" || mode === "unknown") { emit(options, { mode, action: "manual" }, "This appears to be a source checkout. Update it with `git pull` followed by `pnpm install`; Paperclip will not mutate the repository."); return; }
+  if (mode === "npx") { emit(options, { mode, action: "install" }, "This is an ephemeral npx install. Run `thinkingmach install`, then use `thinkingmach update` from the managed shim."); return; }
+  if (mode === "source" || mode === "unknown") { emit(options, { mode, action: "manual" }, "This appears to be a source checkout. Update it with `git pull` followed by `pnpm install`; ThinkingMach will not mutate the repository."); return; }
   const request = resolveUpdateRequest(mode === "managed" ? manifest : null, options);
   if (mode === "managed" && manifest?.source === "git") {
     if (!manifest.repo || !manifest.ref || !manifest.sha) throw new Error("Managed git install metadata is incomplete.");
@@ -216,15 +216,15 @@ export async function updateCommand(options: UpdateOptions, overrides: Partial<D
   const targetVersion = await resolvePublishedVersion(request.spec, runCommand);
   const currentVersion = manifest?.version ?? (mode === "global-npm" ? packageVersion : undefined);
   const comparison = currentVersion ? compareVersions(targetVersion, currentVersion) : 1;
-  if (options.check) { emit(options, { mode, currentVersion: currentVersion ?? null, targetVersion, updateAvailable: comparison > 0, downgrade: comparison < 0, channel: request.channel }, comparison > 0 ? `Update available: ${targetVersion}` : comparison < 0 ? `Target ${targetVersion} is older than ${currentVersion}.` : `paperclipai ${targetVersion} is current.`); if (comparison > 0) process.exitCode = 10; return; }
+  if (options.check) { emit(options, { mode, currentVersion: currentVersion ?? null, targetVersion, updateAvailable: comparison > 0, downgrade: comparison < 0, channel: request.channel }, comparison > 0 ? `Update available: ${targetVersion}` : comparison < 0 ? `Target ${targetVersion} is older than ${currentVersion}.` : `thinkingmach ${targetVersion} is current.`); if (comparison > 0) process.exitCode = 10; return; }
   if (mode === "global-npm") {
-    if (comparison < 0 && options.yes !== true) { const confirmed = await (overrides.confirm ?? defaultConfirm)(`Downgrade paperclipai from ${currentVersion} to ${targetVersion}?`); if (!confirmed) throw new Error("Downgrade cancelled. Re-run with --yes to confirm explicitly."); }
-    const args = ["install", "-g", `paperclipai@${targetVersion}`, `--registry=${PUBLIC_NPM_REGISTRY}`, `--@paperclipai:registry=${PUBLIC_NPM_REGISTRY}`]; console.log(`Running: npm ${args.join(" ")}`);
+    if (comparison < 0 && options.yes !== true) { const confirmed = await (overrides.confirm ?? defaultConfirm)(`Downgrade thinkingmach from ${currentVersion} to ${targetVersion}?`); if (!confirmed) throw new Error("Downgrade cancelled. Re-run with --yes to confirm explicitly."); }
+    const args = ["install", "-g", `thinkingmach@${targetVersion}`, `--registry=${PUBLIC_NPM_REGISTRY}`, `--@thinkingmach:registry=${PUBLIC_NPM_REGISTRY}`]; console.log(`Running: npm ${args.join(" ")}`);
     if (!options.dryRun) {
       const npmConfigDir = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-npm-"));
       const npmUserConfigPath = path.join(npmConfigDir, "npmrc");
       try {
-        fs.writeFileSync(npmUserConfigPath, `registry=${PUBLIC_NPM_REGISTRY}\n@paperclipai:registry=${PUBLIC_NPM_REGISTRY}\n`, { mode: 0o600 });
+        fs.writeFileSync(npmUserConfigPath, `registry=${PUBLIC_NPM_REGISTRY}\n@thinkingmach:registry=${PUBLIC_NPM_REGISTRY}\n`, { mode: 0o600 });
         await runCommand("npm", args, {
           env: {
             ...process.env,
@@ -242,9 +242,9 @@ export async function updateCommand(options: UpdateOptions, overrides: Partial<D
     emit(options, { mode, action: "update", targetVersion, dryRun: Boolean(options.dryRun), command: ["npm", ...args] }, options.dryRun ? "Dry run complete." : pc.green(`Updated global npm install to ${targetVersion}.`)); return;
   }
   if (!manifest) throw new Error("Managed install metadata is missing.");
-  if (comparison === 0) { emit(options, { mode, currentVersion, targetVersion, changed: false }, `paperclipai ${targetVersion} is already active.`); return; }
-  if (comparison < 0 && options.yes !== true) { const confirmed = await (overrides.confirm ?? defaultConfirm)(`Downgrade paperclipai from ${currentVersion} to ${targetVersion}?`); if (!confirmed) throw new Error("Downgrade cancelled. Re-run with --yes to confirm explicitly."); }
-  if (options.dryRun) { emit(options, { mode, currentVersion, targetVersion, action: comparison < 0 ? "downgrade" : "update", backup: options.backup !== false, dryRun: true }, `Would ${comparison < 0 ? "downgrade" : "update"} paperclipai ${currentVersion} → ${targetVersion}${options.backup === false ? " without a backup" : " after a database backup"}.`); return; }
+  if (comparison === 0) { emit(options, { mode, currentVersion, targetVersion, changed: false }, `thinkingmach ${targetVersion} is already active.`); return; }
+  if (comparison < 0 && options.yes !== true) { const confirmed = await (overrides.confirm ?? defaultConfirm)(`Downgrade thinkingmach from ${currentVersion} to ${targetVersion}?`); if (!confirmed) throw new Error("Downgrade cancelled. Re-run with --yes to confirm explicitly."); }
+  if (options.dryRun) { emit(options, { mode, currentVersion, targetVersion, action: comparison < 0 ? "downgrade" : "update", backup: options.backup !== false, dryRun: true }, `Would ${comparison < 0 ? "downgrade" : "update"} thinkingmach ${currentVersion} → ${targetVersion}${options.backup === false ? " without a backup" : " after a database backup"}.`); return; }
   if (options.backup !== false) await runPreUpdateBackup(options, overrides.backup ?? (() => dbBackupCommand({})), overrides.hasInstanceData);
   const installed = await withInstallStoreLock(async () => {
     const payload = await installNpmPayload(targetVersion, runCommand, paths);
@@ -264,5 +264,5 @@ export async function updateCommand(options: UpdateOptions, overrides: Partial<D
       "Updated payload",
     );
   }
-  emit(options, { mode, currentVersion, targetVersion, changed: true, reused: installed.reused, restarted }, pc.green(`Updated paperclipai ${currentVersion} → ${targetVersion}${restarted ? " and restarted the active service" : ""}. Run \`paperclipai update --rollback\` for an instant payload rollback.`));
+  emit(options, { mode, currentVersion, targetVersion, changed: true, reused: installed.reused, restarted }, pc.green(`Updated thinkingmach ${currentVersion} → ${targetVersion}${restarted ? " and restarted the active service" : ""}. Run \`thinkingmach update --rollback\` for an instant payload rollback.`));
 }

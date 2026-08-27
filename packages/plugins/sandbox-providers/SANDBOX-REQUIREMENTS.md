@@ -1,21 +1,21 @@
 # Sandbox Runtime Requirements
 
 This document states the sandbox environment as a contract. The sandbox owner
-must meet this contract. The Paperclip runtime does not build the environment at
+must meet this contract. The ThinkingMach runtime does not build the environment at
 exec time. The environment is a requirement, not a build step.
 
 This document states requirements. It does not state build steps.
 
 ## Security boundary
 
-Paperclip runs agent work inside a sandbox. Paperclip protects the host from
+ThinkingMach runs agent work inside a sandbox. ThinkingMach protects the host from
 the code in that sandbox. This section states the rule for that protection. It
 does not state the implementation.
 
-A sandbox is an untrusted execution environment. Paperclip assumes that a
+A sandbox is an untrusted execution environment. ThinkingMach assumes that a
 sandbox process can read or change all accessible data.
 
-Paperclip does not protect sandbox files, processes, credentials, or code from
+ThinkingMach does not protect sandbox files, processes, credentials, or code from
 other code in the same sandbox.
 
 This section covers sandbox providers. It does not cover a local run on the
@@ -23,16 +23,16 @@ host. A local run has a different boundary.
 
 ### What the boundary protects
 
-Paperclip protects two authorities across the boundary:
+ThinkingMach protects two authorities across the boundary:
 
 - The authority to write host files
-- The authority to call the Paperclip API
+- The authority to call the ThinkingMach API
 
 Sandbox code holds each authority through one surface only:
 
-1. **Outbound workspace synchronization.** Paperclip copies sandbox files to
-   host paths that the Paperclip orchestrator selects.
-2. **The Paperclip HTTP bridge.** Sandbox code calls the Paperclip API through
+1. **Outbound workspace synchronization.** ThinkingMach copies sandbox files to
+   host paths that the ThinkingMach orchestrator selects.
+2. **The ThinkingMach HTTP bridge.** Sandbox code calls the ThinkingMach API through
    the bridge.
 
 A boundary control limits one of these two authorities. A control that only
@@ -64,11 +64,11 @@ A transfer and sandbox code must have the same read authority over sandbox
 files. More transfer authority can turn a sandbox symbolic link into a way to
 read a protected file.
 
-This repository does not enforce these provider rules today, and Paperclip
+This repository does not enforce these provider rules today, and ThinkingMach
 cannot verify them for an externally supplied sandbox.
 
 The provider and the operator set the policy for general internet access.
-Paperclip does not enforce this policy inside the sandbox.
+ThinkingMach does not enforce this policy inside the sandbox.
 
 ### How to apply this rule
 
@@ -99,14 +99,14 @@ A change creates a new boundary surface in either of these conditions:
 
 - The change lets sandbox code write host files outside workspace
   synchronization.
-- The change lets sandbox code call the Paperclip API outside the HTTP bridge.
+- The change lets sandbox code call the ThinkingMach API outside the HTTP bridge.
 
 The developer must update this contract before the change is released. A
 reviewer must examine the change against this contract.
 
 ### Where a boundary control must run
 
-Paperclip or the provider must enforce each boundary control outside the
+ThinkingMach or the provider must enforce each boundary control outside the
 sandbox. Sandbox code can change a control that runs inside the sandbox. A
 control inside the sandbox can give an early error message, but it gives no
 protection at the boundary.
@@ -148,9 +148,9 @@ boundary controls:
 - Use atomic replacement for each single-file mapping.
 - Move file data with bounded memory.
 
-### Surface 2: Paperclip HTTP bridge
+### Surface 2: ThinkingMach HTTP bridge
 
-Sandbox code must call the Paperclip API only through the HTTP bridge.
+Sandbox code must call the ThinkingMach API only through the HTTP bridge.
 
 These boundary controls limit the API authority of sandbox code. The bridge
 must:
@@ -173,9 +173,9 @@ All other HTTP bridge requirements apply to both transports.
 
 ### What is not a boundary surface
 
-Paperclip sends commands from the host to the sandbox. Command execution can
+ThinkingMach sends commands from the host to the sandbox. Command execution can
 return output to the host. This output does not give sandbox code authority to
-write host files or call the Paperclip API.
+write host files or call the ThinkingMach API.
 
 The host records this output as run logs and reads it as agent protocol
 messages. Neither use gives sandbox code one of the two authorities above.
@@ -211,14 +211,14 @@ agent CLIs. The owner must also supply these:
 
 ## Detection contract
 
-Paperclip probes each CLI before launch. Paperclip uses the same detection
+ThinkingMach probes each CLI before launch. ThinkingMach uses the same detection
 pattern that the runtime Dockerfiles use:
 
 ```bash
 command -v <cmd> || exit 1
 ```
 
-Paperclip probes each CLI with `command -v <cmd>`. Paperclip fails loudly when
+ThinkingMach probes each CLI with `command -v <cmd>`. ThinkingMach fails loudly when
 the CLI is absent and no install command is configured for the CLI.
 
 ## Optional CLI installation
@@ -240,9 +240,9 @@ install the CLI. The owner must supply the CLI on the PATH.
 
 ## Firm rule
 
-- The Paperclip runtime never modifies the login profile. The runtime never
+- The ThinkingMach runtime never modifies the login profile. The runtime never
   writes a profile file. The runtime never writes an rc file.
-- The Paperclip runtime never sources `nvm` on the exec path.
+- The ThinkingMach runtime never sources `nvm` on the exec path.
 - The sandbox owner supplies a ready PATH. The PATH must resolve `node` and each
   used agent CLI without any action from the runtime, except for a configured
   install command.

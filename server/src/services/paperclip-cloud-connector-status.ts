@@ -1,22 +1,22 @@
 import {
   paperclipCloudConnectorEnrollmentStatus,
-  type PaperclipCloudConnectorEnrollmentStatus,
+  type ThinkingMachCloudConnectorEnrollmentStatus,
 } from "./paperclip-cloud-connector-enrollment.js";
 import {
-  createPaperclipCloudConnector,
+  createThinkingMachCloudConnector,
   paperclipCloudConnectorConfigFromEnv,
 } from "./paperclip-cloud-connector.js";
 
-export async function reconcilePaperclipCloudConnectorEnrollmentStatus(
+export async function reconcileThinkingMachCloudConnectorEnrollmentStatus(
   env: NodeJS.ProcessEnv = process.env,
   request: typeof fetch = fetch,
-): Promise<PaperclipCloudConnectorEnrollmentStatus> {
+): Promise<ThinkingMachCloudConnectorEnrollmentStatus> {
   const local = paperclipCloudConnectorEnrollmentStatus(env);
   if (!local.configured) return local;
   const config = paperclipCloudConnectorConfigFromEnv(env);
   if (!config) return { ...local, configured: false, status: "not_configured" };
   try {
-    const status = await createPaperclipCloudConnector({ config, request }).getInstanceStatus();
+    const status = await createThinkingMachCloudConnector({ config, request }).getInstanceStatus();
     if (status === "active") return { ...local, configured: true, status: "active" };
     if (status === "suspended") return { ...local, configured: false, status: "suspended" };
     return { ...local, configured: false, status: "not_configured" };

@@ -1,4 +1,4 @@
-import { ISSUE_CONTINUATION_SUMMARY_DOCUMENT_KEY } from "@paperclipai/shared";
+import { ISSUE_CONTINUATION_SUMMARY_DOCUMENT_KEY } from "@thinkingmach/shared";
 import { parseDocumentAnnotationHash } from "./document-annotation-hash";
 
 export type IssueDocumentDeepLinkRoute =

@@ -42,7 +42,7 @@ import {
   secretAccessEvents,
   userSecretDeclarations,
   userSecretDefinitions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { PluginToolDispatcher } from "../services/plugin-tool-dispatcher.js";
 import { mcpGatewayProtocolRoutes, toolGatewayRoutes } from "../routes/tool-gateway.js";
 import { toolAccessService } from "../services/tool-access.js";
@@ -2477,7 +2477,7 @@ rl.on("line", (line) => {
     }
   });
 
-  it("drops auth-bearing and Paperclip session headers from passthrough allowlists", async () => {
+  it("drops auth-bearing and ThinkingMach session headers from passthrough allowlists", async () => {
     const company = await createCompany(db);
     const agent = await createAgent(db, company.id);
     const { run } = await createIssueAndRun(db, company.id, agent.id);

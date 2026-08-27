@@ -13,9 +13,9 @@ import {
   GOOGLE_WORKSPACE_CONNECTOR_PROFILES,
   isGoogleWorkspaceConnectorProfileId,
   type GoogleWorkspaceConnectorProfileId,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
-  loadPaperclipCloudConnectorIdentity,
+  loadThinkingMachCloudConnectorIdentity,
   paperclipCloudConnectorEnrollmentStatus,
 } from "./paperclip-cloud-connector-enrollment.js";
 
@@ -26,13 +26,13 @@ export const GMAIL_CONNECTOR_SCOPES = [
 ] as const;
 export { GOOGLE_WORKSPACE_CONNECTOR_PROFILES };
 
-export type PaperclipCloudConnectorEnvironment = "development" | "staging" | "production";
-export type PaperclipCloudConnectorOperation = "status" | "session" | "claim" | "refresh" | "revoke";
+export type ThinkingMachCloudConnectorEnvironment = "development" | "staging" | "production";
+export type ThinkingMachCloudConnectorOperation = "status" | "session" | "claim" | "refresh" | "revoke";
 
-export type PaperclipCloudConnectorConfig = {
+export type ThinkingMachCloudConnectorConfig = {
   baseUrl: string;
   instanceId: string;
-  environment: PaperclipCloudConnectorEnvironment;
+  environment: ThinkingMachCloudConnectorEnvironment;
   signPrivateKey: string;
   sealPrivateKey: string;
 };
@@ -47,7 +47,7 @@ export type SealedGmailCredentials = {
   subject: string;
   companyId: string;
   instanceId: string;
-  environment: PaperclipCloudConnectorEnvironment;
+  environment: ThinkingMachCloudConnectorEnvironment;
   provider: "google";
   profile: string;
 };
@@ -79,7 +79,7 @@ type ConnectorResponse = {
   status?: unknown;
 };
 
-const ENDPOINTS: Record<PaperclipCloudConnectorOperation, string> = {
+const ENDPOINTS: Record<ThinkingMachCloudConnectorOperation, string> = {
   status: "/v1/connector/instance-status",
   session: "/v1/connector/sessions",
   claim: "/v1/connector/claims",
@@ -95,39 +95,39 @@ const X25519_PKCS8_PREFIX = Buffer.from("302e020100300506032b656e04220420", "hex
 const X25519_SPKI_PREFIX = Buffer.from("302a300506032b656e032100", "hex");
 
 /** A stable, intentionally detail-free error for all remote broker failures. */
-export class PaperclipCloudConnectorError extends Error {
+export class ThinkingMachCloudConnectorError extends Error {
   constructor(
     message: string,
     readonly code: string,
     readonly status?: number,
   ) {
     super(message);
-    this.name = "PaperclipCloudConnectorError";
+    this.name = "ThinkingMachCloudConnectorError";
   }
 }
 
 export function paperclipCloudConnectorConfigFromEnv(
   env: NodeJS.ProcessEnv = process.env,
-): PaperclipCloudConnectorConfig | null {
-  const localIdentity = loadPaperclipCloudConnectorIdentity();
+): ThinkingMachCloudConnectorConfig | null {
+  const localIdentity = loadThinkingMachCloudConnectorIdentity();
   const legacyConfigured = [
-    env.PAPERCLIP_ID_CONNECTOR_INSTANCE_ID,
-    env.PAPERCLIP_ID_CONNECTOR_SIGN_PRIVATE_KEY,
-    env.PAPERCLIP_ID_CONNECTOR_SEAL_PRIVATE_KEY,
-    env.PAPERCLIP_ID_CONNECTOR_ENVIRONMENT,
-    env.PAPERCLIP_ID_CONNECTOR_BASE_URL,
+    env.THINKINGMACH_ID_CONNECTOR_INSTANCE_ID,
+    env.THINKINGMACH_ID_CONNECTOR_SIGN_PRIVATE_KEY,
+    env.THINKINGMACH_ID_CONNECTOR_SEAL_PRIVATE_KEY,
+    env.THINKINGMACH_ID_CONNECTOR_ENVIRONMENT,
+    env.THINKINGMACH_ID_CONNECTOR_BASE_URL,
   ].some((value) => Boolean(value?.trim()));
-  const managedInstanceId = env.PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID?.trim();
-  const managedSignPrivateKey = env.PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY?.trim();
-  const managedSealPrivateKey = env.PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY?.trim();
-  const managedEnvironment = env.PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT?.trim();
+  const managedInstanceId = env.THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID?.trim();
+  const managedSignPrivateKey = env.THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY?.trim();
+  const managedSealPrivateKey = env.THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY?.trim();
+  const managedEnvironment = env.THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT?.trim();
   const hasManagedIdentityOverride = [managedInstanceId, managedSignPrivateKey, managedSealPrivateKey]
     .some(Boolean);
   const localStatus = hasManagedIdentityOverride ? null : paperclipCloudConnectorEnrollmentStatus(env);
   const hasActiveLocalIdentity = localIdentity?.status === "active" && localStatus?.configured === true;
   if (!hasManagedIdentityOverride && !hasActiveLocalIdentity && legacyConfigured) {
-    throw new PaperclipCloudConnectorError(
-      "Paperclip ID connector settings use an incompatible legacy protocol; enroll this instance with Paperclip Cloud",
+    throw new ThinkingMachCloudConnectorError(
+      "ThinkingMach ID connector settings use an incompatible legacy protocol; enroll this instance with ThinkingMach Cloud",
       "CONNECTOR_MIGRATION_REQUIRED",
     );
   }
@@ -137,28 +137,28 @@ export function paperclipCloudConnectorConfigFromEnv(
   const signPrivateKey = hasManagedIdentityOverride ? managedSignPrivateKey : localIdentity!.signPrivateKey;
   const sealPrivateKey = hasManagedIdentityOverride ? managedSealPrivateKey : localIdentity!.sealPrivateKey;
   const environment = hasManagedIdentityOverride ? managedEnvironment : localIdentity!.environment;
-  const baseUrl = env.PAPERCLIP_CLOUD_CONNECTOR_BASE_URL?.trim()
+  const baseUrl = env.THINKINGMACH_CLOUD_CONNECTOR_BASE_URL?.trim()
     || (hasActiveLocalIdentity ? localIdentity!.brokerBaseUrl : undefined)
     || "https://my.paperclip.app";
   const values = [instanceId, signPrivateKey, sealPrivateKey, environment];
   if (values.some((value) => !value)) {
-    throw new PaperclipCloudConnectorError("Paperclip Cloud connector configuration is incomplete", "CONNECTOR_CONFIG_INCOMPLETE");
+    throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector configuration is incomplete", "CONNECTOR_CONFIG_INCOMPLETE");
   }
   if (environment !== "development" && environment !== "staging" && environment !== "production") {
-    throw new PaperclipCloudConnectorError("Paperclip Cloud connector environment is invalid", "CONNECTOR_CONFIG_INVALID");
+    throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector environment is invalid", "CONNECTOR_CONFIG_INVALID");
   }
   const parsedBaseUrl = new URL(baseUrl);
   if (parsedBaseUrl.protocol !== "https:" && !(parsedBaseUrl.protocol === "http:" && isLoopback(parsedBaseUrl.hostname))) {
-    throw new PaperclipCloudConnectorError("Paperclip Cloud connector URL must use HTTPS", "CONNECTOR_CONFIG_INVALID");
+    throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector URL must use HTTPS", "CONNECTOR_CONFIG_INVALID");
   }
   if (parsedBaseUrl.username || parsedBaseUrl.password || parsedBaseUrl.search || parsedBaseUrl.hash) {
-    throw new PaperclipCloudConnectorError("Paperclip Cloud connector URL is invalid", "CONNECTOR_CONFIG_INVALID");
+    throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector URL is invalid", "CONNECTOR_CONFIG_INVALID");
   }
   const brokerHost = parsedBaseUrl.hostname.toLowerCase();
   if ((brokerHost === "my.paperclip.app" && environment !== "production")
     || (brokerHost === "my-staging.paperclip.app" && environment !== "staging")) {
-    throw new PaperclipCloudConnectorError(
-      "Paperclip Cloud connector broker and environment do not match",
+    throw new ThinkingMachCloudConnectorError(
+      "ThinkingMach Cloud connector broker and environment do not match",
       "CONNECTOR_CONFIG_INVALID",
     );
   }
@@ -172,8 +172,8 @@ export function paperclipCloudConnectorConfigFromEnv(
   };
 }
 
-export function createPaperclipCloudConnector(input: {
-  config: PaperclipCloudConnectorConfig;
+export function createThinkingMachCloudConnector(input: {
+  config: ThinkingMachCloudConnectorConfig;
   request?: typeof fetch;
   now?: () => number;
 }) {
@@ -184,7 +184,7 @@ export function createPaperclipCloudConnector(input: {
   const sealKey = privateKey(config.sealPrivateKey, "x25519");
 
   async function call(
-    operation: PaperclipCloudConnectorOperation,
+    operation: ThinkingMachCloudConnectorOperation,
     claims: { subject: string; companyId: string; profile?: GoogleWorkspaceConnectorProfileId; returnUri?: string; returnState?: string; claimId?: string; redemptionId?: string },
     secret?: { field: "refreshToken" | "token"; value: string },
   ): Promise<ConnectorResponse> {
@@ -224,12 +224,12 @@ export function createPaperclipCloudConnector(input: {
         signal: AbortSignal.timeout(15_000),
       });
     } catch {
-      throw new PaperclipCloudConnectorError("Paperclip Cloud connector is unavailable", "CONNECTOR_UNAVAILABLE");
+      throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector is unavailable", "CONNECTOR_UNAVAILABLE");
     }
     if (operation === "revoke" && response.status === 204) return {};
     if (!response.ok) {
-      throw new PaperclipCloudConnectorError(
-        "Paperclip Cloud connector rejected the request",
+      throw new ThinkingMachCloudConnectorError(
+        "ThinkingMach Cloud connector rejected the request",
         response.status === 409 ? "REAUTHORIZATION_REQUIRED" : "CONNECTOR_REQUEST_FAILED",
         response.status,
       );
@@ -237,7 +237,7 @@ export function createPaperclipCloudConnector(input: {
     try {
       return await response.json() as ConnectorResponse;
     } catch {
-      throw new PaperclipCloudConnectorError("Paperclip Cloud connector returned an invalid response", "CONNECTOR_BAD_RESPONSE");
+      throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector returned an invalid response", "CONNECTOR_BAD_RESPONSE");
     }
   }
 
@@ -265,13 +265,13 @@ export function createPaperclipCloudConnector(input: {
       || credentials.companyId !== companyId
       || credentials.provider !== "google"
     ) {
-      throw new PaperclipCloudConnectorError("Paperclip Cloud Gmail credential binding did not match", "CONNECTOR_BINDING_MISMATCH");
+      throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud Gmail credential binding did not match", "CONNECTOR_BINDING_MISMATCH");
     }
     if (credentials.profile !== profile) {
-      throw new PaperclipCloudConnectorError("Paperclip Cloud connector profile binding did not match", "CONNECTOR_BINDING_MISMATCH");
+      throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector profile binding did not match", "CONNECTOR_BINDING_MISMATCH");
     }
     if (!sameStringSet(credentials.scopes, GOOGLE_WORKSPACE_CONNECTOR_PROFILES[profile].scopes)) {
-      throw new PaperclipCloudConnectorError("Paperclip Cloud Gmail scope grant did not match", "REAUTHORIZATION_REQUIRED");
+      throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud Gmail scope grant did not match", "REAUTHORIZATION_REQUIRED");
     }
     return credentials;
   }
@@ -285,13 +285,13 @@ export function createPaperclipCloudConnector(input: {
           companyId: "instance-status",
         });
       } catch (error) {
-        if (error instanceof PaperclipCloudConnectorError && error.status === 401) return "removed";
+        if (error instanceof ThinkingMachCloudConnectorError && error.status === 401) return "removed";
         throw error;
       }
       if (response.status === "active" && response.active === true) return "active";
       if (response.status === "suspended" && response.active === false) return "suspended";
       if (response.status === "removed" && response.active === false) return "removed";
-      throw new PaperclipCloudConnectorError("Paperclip Cloud connector returned an invalid instance status", "CONNECTOR_BAD_RESPONSE");
+      throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector returned an invalid instance status", "CONNECTOR_BAD_RESPONSE");
     },
     async getCapabilities(): Promise<GoogleWorkspaceConnectorProfileId[]> {
       let response: ConnectorResponse;
@@ -312,12 +312,12 @@ export function createPaperclipCloudConnector(input: {
       const profile = values.profile ?? "gmail.draft";
       const response = await call("session", { ...values, profile });
       if (typeof response.confirmationUrl !== "string" || typeof response.expiresAt !== "string") {
-        throw new PaperclipCloudConnectorError("Paperclip Cloud connector returned an invalid session", "CONNECTOR_BAD_RESPONSE");
+        throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector returned an invalid session", "CONNECTOR_BAD_RESPONSE");
       }
       const confirmationUrl = new URL(response.confirmationUrl);
       const expectedBroker = new URL(config.baseUrl);
       if (confirmationUrl.origin !== expectedBroker.origin || confirmationUrl.pathname !== "/connections/confirm") {
-        throw new PaperclipCloudConnectorError("Paperclip Cloud connector returned an invalid confirmation URL", "CONNECTOR_BAD_RESPONSE");
+        throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector returned an invalid confirmation URL", "CONNECTOR_BAD_RESPONSE");
       }
       const handoff = parseCloudHandoff(response.handoff);
       return {
@@ -349,7 +349,7 @@ export function createPaperclipCloudConnector(input: {
 function parseCloudHandoff(value: unknown): { kind: "paperclip_cloud"; session: string } | undefined {
   if (value === undefined) return undefined;
   if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new PaperclipCloudConnectorError("Paperclip Cloud connector returned an invalid handoff", "CONNECTOR_BAD_RESPONSE");
+    throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector returned an invalid handoff", "CONNECTOR_BAD_RESPONSE");
   }
   const record = value as Record<string, unknown>;
   const session = record.session;
@@ -360,16 +360,16 @@ function parseCloudHandoff(value: unknown): { kind: "paperclip_cloud"; session: 
     || session.length > 512
     || !/^[A-Za-z0-9_-]+$/.test(session)
   ) {
-    throw new PaperclipCloudConnectorError("Paperclip Cloud connector returned an invalid handoff", "CONNECTOR_BAD_RESPONSE");
+    throw new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector returned an invalid handoff", "CONNECTOR_BAD_RESPONSE");
   }
   return { kind: "paperclip_cloud", session };
 }
 
-export type PaperclipCloudConnector = ReturnType<typeof createPaperclipCloudConnector>;
-export type PaperclipCloudGoogleWorkspaceConnector = PaperclipCloudConnector;
+export type ThinkingMachCloudConnector = ReturnType<typeof createThinkingMachCloudConnector>;
+export type ThinkingMachCloudGoogleWorkspaceConnector = ThinkingMachCloudConnector;
 
-/** Accept persisted Paperclip ID-era records while all new records use the Cloud strategy. */
-export function isPaperclipCloudConnectorStrategy(value: unknown): boolean {
+/** Accept persisted ThinkingMach ID-era records while all new records use the Cloud strategy. */
+export function isThinkingMachCloudConnectorStrategy(value: unknown): boolean {
   return value === "paperclip_cloud_connector" || value === "paperclip_id_connector";
 }
 
@@ -378,7 +378,7 @@ let capabilityCache: { key: string; expiresAt: number; profiles: GoogleWorkspace
 export async function paperclipCloudConnectorCapabilitiesFromEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<GoogleWorkspaceConnectorProfileId[]> {
-  let config: PaperclipCloudConnectorConfig | null;
+  let config: ThinkingMachCloudConnectorConfig | null;
   try {
     config = paperclipCloudConnectorConfigFromEnv(env);
   } catch (error) {
@@ -386,13 +386,13 @@ export async function paperclipCloudConnectorCapabilitiesFromEnv(
     // local connector settings are incomplete. Treat every connector-config
     // error as "no managed profiles" here; enrollment/status surfaces still
     // report the actionable configuration problem.
-    if (error instanceof PaperclipCloudConnectorError) return [];
+    if (error instanceof ThinkingMachCloudConnectorError) return [];
     throw error;
   }
   if (!config) return [];
   const key = `${config.baseUrl}|${config.instanceId}|${config.environment}`;
   if (capabilityCache?.key === key && capabilityCache.expiresAt > Date.now()) return capabilityCache.profiles;
-  const connector = createPaperclipCloudConnector({ config });
+  const connector = createThinkingMachCloudConnector({ config });
   const profiles = await connector.getCapabilities();
   capabilityCache = { key, expiresAt: Date.now() + 60_000, profiles };
   return profiles;
@@ -422,7 +422,7 @@ function privateKey(value: string, curve: "ed25519" | "x25519"): KeyObject {
     if (parsed.asymmetricKeyType !== curve) throw new Error("wrong key type");
     return parsed;
   } catch {
-    throw new PaperclipCloudConnectorError(`Paperclip Cloud ${curve} private key is invalid`, "CONNECTOR_CONFIG_INVALID");
+    throw new ThinkingMachCloudConnectorError(`ThinkingMach Cloud ${curve} private key is invalid`, "CONNECTOR_CONFIG_INVALID");
   }
 }
 
@@ -497,13 +497,13 @@ function unseal(
     }
     return parsed as SealedGmailCredentials;
   } catch (error) {
-    if (error instanceof PaperclipCloudConnectorError) throw error;
+    if (error instanceof ThinkingMachCloudConnectorError) throw error;
     throw badEnvelope();
   }
 }
 
 function badEnvelope() {
-  return new PaperclipCloudConnectorError("Paperclip Cloud connector returned an invalid sealed credential", "CONNECTOR_BAD_RESPONSE");
+  return new ThinkingMachCloudConnectorError("ThinkingMach Cloud connector returned an invalid sealed credential", "CONNECTOR_BAD_RESPONSE");
 }
 
 function sealPurpose(

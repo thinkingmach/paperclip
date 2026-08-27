@@ -1,6 +1,6 @@
 import { useMemo, type MouseEvent } from "react";
 import { Link } from "react-router-dom";
-import type { SummarySlotIssueRef } from "@paperclipai/shared";
+import type { SummarySlotIssueRef } from "@thinkingmach/shared";
 import { AlertTriangle, ExternalLink, Loader2, MoreHorizontal, PauseCircle, RefreshCw, Wand2 } from "lucide-react";
 
 import { MarkdownBody } from "@/components/MarkdownBody";

@@ -30,7 +30,7 @@ const CREDENTIAL_PATTERNS = [
   // as an `sk-` provider key. A real key is preceded by a delimiter.
   /(?<![A-Za-z0-9])sk-[a-z0-9]{8,}/i,
   /"api[_-]?key"\s*:/i,
-  /PAPERCLIP_API_KEY/,
+  /THINKINGMACH_API_KEY/,
   /OPENAI_API_KEY/,
 ];
 
@@ -122,7 +122,7 @@ async function main() {
       opened.view.mode === "live" &&
       opened.view.identity.agentLabel === "Real Codex" &&
       opened.view.identity.runnerLabel === "Real runnerd" &&
-      opened.view.identity.controlPlaneLabel === "Mock Paperclip";
+      opened.view.identity.controlPlaneLabel === "Mock ThinkingMach";
     assertions.freshMockTenant =
       typeof opened.identity?.token === "string" &&
       opened.view.issue.identifier === opened.identity.identifier &&

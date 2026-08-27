@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 // The onboarding wizard's decorative right-hand panel (which renders the
 // ASCII paperclip illustration) must follow the active shadcn theme instead of
 // hardcoding a dark surface. Otherwise a light/cream deployer theme (set via
-// the PAPERCLIP_DEFAULT_THEME bootstrap) renders a jarring cream form next to a
+// the THINKINGMACH_DEFAULT_THEME bootstrap) renders a jarring cream form next to a
 // solid dark panel. The illustration glyphs already use `text-muted-foreground`,
 // so the panel must sit on the paired `bg-muted` surface to read as an
 // intentional ink-on-surface texture in every theme.

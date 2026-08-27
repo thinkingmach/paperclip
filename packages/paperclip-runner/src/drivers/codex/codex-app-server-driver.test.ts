@@ -308,7 +308,7 @@ function makeDriver(
       HOME: "/isolated/home",
       CODEX_HOME: "/isolated/codex",
       LANG: "C.UTF-8",
-      PAPERCLIP_API_KEY: "must-not-pass",
+      THINKINGMACH_API_KEY: "must-not-pass",
       RANDOM_SKILL_PATH: "/skills/unrelated",
     },
     now: () => new Date("2026-08-08T12:00:00.000Z"),
@@ -562,10 +562,10 @@ describe("Codex app-server Codex driver", () => {
     });
   });
 
-  it("places Paperclip runtime instructions in Codex's system channel and enables only selected skill instructions", async () => {
+  it("places ThinkingMach runtime instructions in Codex's system channel and enables only selected skill instructions", async () => {
     const transport = new FakeCodexTransport();
     const baseInstructions = [
-      "You are running as a Paperclip agent.",
+      "You are running as a ThinkingMach agent.",
       "Follow the attached AGENTS.md instructions.",
       "Read-only instruction sibling root: /paperclip/context/instructions",
     ].join("\n\n");

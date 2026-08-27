@@ -134,7 +134,7 @@ describe("AppDefinition catalog",()=>{
   for(const slug of googleWorkspaceMcpSlugs){
    const prerequisite=APP_DEFINITIONS.find((app)=>app.slug===slug)?.setupPrerequisite;
    expect(prerequisite?.actionUrl,slug).toBe("https://developers.google.com/workspace/preview");
-   expect(prerequisite?.description,slug).toContain("does not enable unrelated Paperclip customers");
+   expect(prerequisite?.description,slug).toContain("does not enable unrelated ThinkingMach customers");
    expect(prerequisite?.steps?.join(" "),slug).toContain("final project-registration email");
   }
  });

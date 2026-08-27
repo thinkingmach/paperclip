@@ -3,7 +3,7 @@ import {
   CONNECTION_REQUEST_TOOL_DESCRIPTION,
   CONNECTION_RUNTIME_TOOL_NAMES,
   CONNECTIONS_SEARCH_TOOL_DESCRIPTION,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   RUNTIME_CONNECTION_TOOL_DEFINITIONS,
   wakeConnectionIntentAfterResolution,

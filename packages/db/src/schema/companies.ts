@@ -1,4 +1,4 @@
-import type { InteractionResolverGovernance } from "@paperclipai/shared";
+import type { InteractionResolverGovernance } from "@thinkingmach/shared";
 import { pgTable, uuid, text, integer, timestamp, boolean, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const companies = pgTable(

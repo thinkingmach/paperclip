@@ -4,7 +4,7 @@
 // browser install a new worker, which — via skipWaiting + controllerchange —
 // reloads parked tabs onto the fresh bundle. Left as the literal placeholder in
 // dev, where HMR (not the worker) drives refreshes.
-const BUILD_ID = "__PAPERCLIP_BUILD_ID__";
+const BUILD_ID = "__THINKINGMACH_BUILD_ID__";
 const CACHE_NAME = `paperclip-${BUILD_ID}`;
 
 self.addEventListener("install", () => {

@@ -10,7 +10,7 @@ import {
 import { useQuery, useQueryClient, type InfiniteData, type QueryClient } from "@tanstack/react-query";
 import { createCoalescingQueryClient, createInvalidationBatcher } from "../lib/query-invalidation-batcher";
 import { patchRunStatusInList, removeRunFromList } from "../lib/live-runs-cache";
-import type { Agent, HeartbeatRun, Issue, IssueComment, LiveEvent } from "@paperclipai/shared";
+import type { Agent, HeartbeatRun, Issue, IssueComment, LiveEvent } from "@thinkingmach/shared";
 import type { RunForIssue } from "../api/activity";
 import type { ActiveRunForIssue, LiveRunForIssue } from "../api/heartbeats";
 import type { CompanyUserDirectoryResponse } from "../api/access";

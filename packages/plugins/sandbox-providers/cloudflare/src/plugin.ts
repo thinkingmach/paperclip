@@ -1,4 +1,4 @@
-import { definePlugin } from "@paperclipai/plugin-sdk";
+import { definePlugin } from "@thinkingmach/plugin-sdk";
 import type {
   PluginLogger,
   PluginEnvironmentAcquireLeaseParams,
@@ -14,14 +14,14 @@ import type {
   PluginEnvironmentResumeLeaseParams,
   PluginEnvironmentValidateConfigParams,
   PluginEnvironmentValidationResult,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import { CloudflareBridgeError, createCloudflareBridgeClient } from "./bridge-client.js";
 import {
   parseCloudflareDriverConfig,
   validateCloudflareDriverConfig,
 } from "./config.js";
 
-const SANDBOX_EXEC_CHANNEL_ENV = "PAPERCLIP_SANDBOX_EXEC_CHANNEL";
+const SANDBOX_EXEC_CHANNEL_ENV = "THINKINGMACH_SANDBOX_EXEC_CHANNEL";
 const SANDBOX_EXEC_CHANNEL_BRIDGE = "bridge";
 const CLOUDFLARE_EXEC_STDOUT_PREFIX = "[cloudflare exec stdout]";
 const CLOUDFLARE_EXEC_STDERR_PREFIX = "[cloudflare exec stderr]";

@@ -9,10 +9,10 @@ import {
 } from "drizzle-orm/pg-core";
 import { companies } from "./companies.js";
 import { plugins } from "./plugins.js";
-import type { PluginStateScopeKind } from "@paperclipai/shared";
+import type { PluginStateScopeKind } from "@thinkingmach/shared";
 
 /**
- * `plugin_entities` table — persistent high-level mapping between Paperclip
+ * `plugin_entities` table — persistent high-level mapping between ThinkingMach
  * objects and external plugin-defined entities.
  *
  * This table is used by plugins (e.g. `linear`, `github`) to store pointers

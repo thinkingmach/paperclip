@@ -17,7 +17,7 @@ import {
   issueDocuments,
   issueWorkProducts,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -74,7 +74,7 @@ describeEmbeddedPostgres("companySkillService skill test runs", () => {
     await fs.writeFile(path.join(skillDir, "SKILL.md"), "# Review Skill\n", "utf8");
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -477,7 +477,7 @@ describeEmbeddedPostgres("companySkillService skill test runs", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });

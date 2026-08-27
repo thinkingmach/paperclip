@@ -17,8 +17,8 @@ import type {
   InstalledCatalogTeam,
   CompanyPortabilityAdapterOverride,
   CompanyPortabilityCollisionStrategy,
-} from "@paperclipai/shared";
-import { AGENT_ADAPTER_TYPES } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { AGENT_ADAPTER_TYPES } from "@thinkingmach/shared";
 import { teamCatalogApi } from "../api/teamCatalog";
 import { agentsApi } from "../api/agents";
 import { getAdapterLabel } from "../adapters/adapter-display-registry";
@@ -79,38 +79,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertTriangle,
-  ArrowRight,
-  Boxes,
-  Check,
-  CheckCircle2,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Cpu,
-  Crown,
-  Download,
-  Eye,
-  EyeOff,
-  FileText,
-  Filter,
-  Folder,
-  FolderKanban,
-  FolderOpen,
-  KeyRound,
-  Link2,
-  Loader2,
-  Package,
-  Repeat,
-  RotateCcw,
-  Search,
-  ShieldCheck,
-  Users2,
-  XCircle,
-  XOctagon,
-} from "lucide-react";
+import { AlertTriangle, ArrowRight, Boxes, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Cpu, Crown, Download, Eye, EyeOff, FileText, Filter, Folder, FolderKanban, FolderOpen, KeyRound, Link2, Loader2, Package, Repeat, RotateCcw, Search, ShieldCheck, Users2, XCircle, XOctagon,  } from "lucide-react";
 import { GithubIcon } from "../components/icons/github-icon";
 
 // Matches design §11 breakpoints. Module-level so stories and the page agree.

@@ -1,19 +1,19 @@
 import { Router, urlencoded, type Request } from "express";
-import type { Db } from "@paperclipai/db";
-import type { DeploymentExposure, DeploymentMode } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import type { DeploymentExposure, DeploymentMode } from "@thinkingmach/shared";
 import {
   createSmokeRunSchema,
   recordSmokeRunStepSchema,
   updateSmokeRunSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { validate } from "../middleware/validate.js";
 import { assertBoard, assertBoardOrAgent, assertCompanyAccess, getActorInfo } from "./authz.js";
 import { logActivity, smokeLabService } from "../services/index.js";
 
 function configuredPublicBaseUrl() {
   const raw = (
-    process.env.PAPERCLIP_PUBLIC_URL?.trim()
-    || process.env.PAPERCLIP_AUTH_PUBLIC_BASE_URL?.trim()
+    process.env.THINKINGMACH_PUBLIC_URL?.trim()
+    || process.env.THINKINGMACH_AUTH_PUBLIC_BASE_URL?.trim()
     || process.env.BETTER_AUTH_URL?.trim()
     || process.env.BETTER_AUTH_BASE_URL?.trim()
   );

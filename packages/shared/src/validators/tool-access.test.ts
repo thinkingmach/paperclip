@@ -118,7 +118,7 @@ describe("tool access validators", () => {
     }).success).toBe(true);
   });
 
-  it("rejects header credentials Paperclip refuses to send", () => {
+  it("rejects header credentials ThinkingMach refuses to send", () => {
     for (const configPath of ["headers.Host", "headers.Cookie", "headers.Transfer-Encoding", "headers.Sec-Fetch-Mode"]) {
       const parsed = connectToolAppSchema.safeParse({
         link: "https://mcp.example.test/mcp",

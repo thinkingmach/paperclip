@@ -7,7 +7,7 @@ import type {
   CompanyPortabilityPreviewResult,
   CompanyPortabilitySource,
   CompanyPortabilityAdapterOverride,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useCompany } from "../context/CompanyContext";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { useToastActions } from "../context/ToastContext";
@@ -25,21 +25,13 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "../components/EmptyState";
 import { AgentConfigForm } from "../components/AgentConfigForm";
 import { cn } from "../lib/utils";
-import {
-  ArrowRight,
-  Check,
-  ChevronRight,
-  Download,
-  Loader2,
-  Package,
-  Upload,
-} from "lucide-react";
+import { ArrowRight, Check, ChevronRight, Download, Loader2, Package, Upload,  } from "lucide-react";
 import { GithubIcon } from "../components/icons/github-icon";
 import { Field, adapterLabels } from "../components/agent-config-primitives";
 import { getAdapterLabel } from "../adapters/adapter-display-registry";
 import { defaultCreateValues } from "../components/agent-config-defaults";
 import { getUIAdapter, listUIAdapters } from "../adapters";
-import type { CreateConfigValues } from "@paperclipai/adapter-utils";
+import type { CreateConfigValues } from "@thinkingmach/adapter-utils";
 import {
   type FileTreeNode,
   type FrontmatterData,
@@ -52,7 +44,7 @@ import {
 } from "../components/FileTree";
 import { readZipArchive } from "../lib/zip";
 import { formatMegabytes } from "../lib/import-preflight";
-import { buildAlreadyImportedMessage, type CompanyImportTransferDeclaration } from "@paperclipai/shared/company-import-transfer";
+import { buildAlreadyImportedMessage, type CompanyImportTransferDeclaration } from "@thinkingmach/shared/company-import-transfer";
 import {
   CHUNKED_IMPORT_THRESHOLD_BYTES,
   IMPORT_TRANSFER_PART_ATTEMPTS,
@@ -1030,7 +1022,7 @@ export function CompanyImport() {
   }, [installedAdapters]);
   // Native runner is the one adapter that fails closed in the importer. Other
   // adapter choices preserve the importer's existing fail-open behavior when
-  // availability cannot be read, but Paperclip Runner only appears after the
+  // availability cannot be read, but ThinkingMach Runner only appears after the
   // server explicitly reports that its experimental flag is enabled.
   const nativeRunnerAvailable =
     availableAdapterTypes?.has("paperclip_runner") === true;
@@ -1042,7 +1034,7 @@ export function CompanyImport() {
   );
 
   const localZipHelpText =
-    "Upload a .zip exported directly from Paperclip. Re-zipped archives created by Finder, Explorer, or other zip tools may not import correctly.";
+    "Upload a .zip exported directly from ThinkingMach. Re-zipped archives created by Finder, Explorer, or other zip tools may not import correctly.";
 
   useEffect(() => {
     setBreadcrumbs([
@@ -1847,7 +1839,7 @@ export function CompanyImport() {
         <div>
           <h2 className="text-base font-semibold">Import source</h2>
           <p className="text-xs text-muted-foreground mt-1">
-            Choose a GitHub repo or upload a local Paperclip zip package.
+            Choose a GitHub repo or upload a local ThinkingMach zip package.
           </p>
         </div>
 

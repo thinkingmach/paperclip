@@ -1,6 +1,6 @@
 ---
 name: wiki-ingest
-description: Use when an operation issue asks to ingest a captured `raw/` source into the LLM Wiki, or the user says "ingest <slug>". Create durable source, entity, concept, synthesis, index, and log pages; use paperclip-distill for Paperclip bundles.
+description: Use when an operation issue asks to ingest a captured `raw/` source into the LLM Wiki, or the user says "ingest <slug>". Create durable source, entity, concept, synthesis, index, and log pages; use paperclip-distill for ThinkingMach bundles.
 ---
 
 # Wiki Ingest

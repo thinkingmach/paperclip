@@ -11,7 +11,7 @@ import {
   nativeRunFinalizations,
   nativeRunResults,
   workAssessments,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -33,7 +33,7 @@ function agentTaskRunCalls(fromIndex: number) {
     .filter((call) => call[0] === "agent.task_run");
 }
 
-import { PaperclipControlPlanePort } from "./paperclip-control-plane-port.js";
+import { ThinkingMachControlPlanePort } from "./paperclip-control-plane-port.js";
 import { finalizeNativeRun, recordNativeFinalizationFailure } from "./native-run-finalizer.js";
 import { commitNativeStatusDecision } from "./status-decision-committer.js";
 import { NATIVE_STATUS_ARBITER_POLICY_VERSION, type NativeStatusDecision } from "./status-arbiter.js";
@@ -125,7 +125,7 @@ describeEmbeddedPostgres("native run finalizer / status decision committer — a
   }
 
   function newPort(fixture: Awaited<ReturnType<typeof seedNativeRun>>) {
-    return new PaperclipControlPlanePort(db, {
+    return new ThinkingMachControlPlanePort(db, {
       companyId,
       issueId: fixture.issueId,
       runId: fixture.runId,

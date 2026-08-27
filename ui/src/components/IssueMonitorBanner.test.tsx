@@ -2,7 +2,7 @@
 
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {

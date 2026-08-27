@@ -20,7 +20,7 @@ import {
   toolProfileBindings,
   toolProfiles,
   userSecretDefinitions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { RuntimeToolsTokenClaims } from "../runtime-tools-token.js";
 import { wakeConnectionIntentAfterResolution } from "../routes/connection-intents.js";
 import { connectionIntentService } from "../services/connection-intents.js";

@@ -12,7 +12,7 @@ import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { pathToFileURL } from "node:url";
 import type { Request as ExpressRequest, RequestHandler } from "express";
-import { warnIfUnsupportedNodeVersion } from "@paperclipai/shared/node-version";
+import { warnIfUnsupportedNodeVersion } from "@thinkingmach/shared/node-version";
 import { and, eq } from "drizzle-orm";
 import {
   createDb,
@@ -30,7 +30,7 @@ import {
   companies,
   companyMemberships,
   instanceUserRoles,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import detectPort from "detect-port";
 import { createApp } from "./app.js";
 import { loadConfig } from "./config.js";
@@ -169,14 +169,14 @@ export async function startServer(): Promise<StartedServer> {
   ensureDecisionSigningSecret();
   let config = loadConfig();
   initTelemetry({ enabled: config.telemetryEnabled });
-  if (process.env.PAPERCLIP_SECRETS_PROVIDER === undefined) {
-    process.env.PAPERCLIP_SECRETS_PROVIDER = config.secretsProvider;
+  if (process.env.THINKINGMACH_SECRETS_PROVIDER === undefined) {
+    process.env.THINKINGMACH_SECRETS_PROVIDER = config.secretsProvider;
   }
-  if (process.env.PAPERCLIP_SECRETS_STRICT_MODE === undefined) {
-    process.env.PAPERCLIP_SECRETS_STRICT_MODE = config.secretsStrictMode ? "true" : "false";
+  if (process.env.THINKINGMACH_SECRETS_STRICT_MODE === undefined) {
+    process.env.THINKINGMACH_SECRETS_STRICT_MODE = config.secretsStrictMode ? "true" : "false";
   }
-  if (process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE === undefined) {
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = config.secretsMasterKeyFilePath;
+  if (process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE === undefined) {
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = config.secretsMasterKeyFilePath;
   }
   
   type MigrationSummary =
@@ -193,8 +193,8 @@ export async function startServer(): Promise<StartedServer> {
   }
   
   async function promptApplyMigrations(migrations: string[]): Promise<boolean> {
-    if (process.env.PAPERCLIP_MIGRATION_AUTO_APPLY === "true") return true;
-    if (process.env.PAPERCLIP_MIGRATION_PROMPT === "never") return false;
+    if (process.env.THINKINGMACH_MIGRATION_AUTO_APPLY === "true") return true;
+    if (process.env.THINKINGMACH_MIGRATION_PROMPT === "never") return false;
     if (!stdin.isTTY || !stdout.isTTY) return true;
   
     const prompt = createInterface({ input: stdin, output: stdout });
@@ -240,7 +240,7 @@ export async function startServer(): Promise<StartedServer> {
       if (!apply) {
         throw new Error(
           `${label} has pending migrations (${formatPendingMigrationSummary(state.pendingMigrations)}). ` +
-            "Refusing to start against a stale schema. Run pnpm db:migrate or set PAPERCLIP_MIGRATION_AUTO_APPLY=true.",
+            "Refusing to start against a stale schema. Run pnpm db:migrate or set THINKINGMACH_MIGRATION_AUTO_APPLY=true.",
         );
       }
   
@@ -261,7 +261,7 @@ export async function startServer(): Promise<StartedServer> {
       throw migrationRefusalError(
         state,
         `${label} has pending migrations (${formatPendingMigrationSummary(state.pendingMigrations)}). ` +
-          "Refusing to start against a stale schema. Run pnpm db:migrate or set PAPERCLIP_MIGRATION_AUTO_APPLY=true.",
+          "Refusing to start against a stale schema. Run pnpm db:migrate or set THINKINGMACH_MIGRATION_AUTO_APPLY=true.",
       );
     }
 
@@ -388,7 +388,7 @@ export async function startServer(): Promise<StartedServer> {
     try {
       // embedded-postgres registers async-exit-hook handlers as an import side
       // effect. Those handlers stop PostgreSQL immediately on SIGINT/SIGTERM,
-      // racing Paperclip's later heartbeat snapshot query. Paperclip explicitly
+      // racing ThinkingMach's later heartbeat snapshot query. ThinkingMach explicitly
       // stops the managed cluster in its own ordered shutdown path instead.
       const mod = await loadWithoutCoordinatedShutdownSignalHooks(
         () => import(moduleName),
@@ -405,7 +405,7 @@ export async function startServer(): Promise<StartedServer> {
     const configuredPort = config.embeddedPostgresPort;
     let port = configuredPort;
     const logBuffer = createEmbeddedPostgresLogBuffer(120);
-    const verboseEmbeddedPostgresLogs = process.env.PAPERCLIP_EMBEDDED_POSTGRES_VERBOSE === "true";
+    const verboseEmbeddedPostgresLogs = process.env.THINKINGMACH_EMBEDDED_POSTGRES_VERBOSE === "true";
     const appendEmbeddedPostgresLog = (message: unknown) => {
       logBuffer.append(message);
       if (!verboseEmbeddedPostgresLogs) {
@@ -690,7 +690,7 @@ export async function startServer(): Promise<StartedServer> {
     serverPort: listenPort,
     databasePort: resolvedEmbeddedPostgresPort,
   });
-  // Cloud managed-config contract (harness → app). Parse PAPERCLIP_MANAGED_CONFIG
+  // Cloud managed-config contract (harness → app). Parse THINKINGMACH_MANAGED_CONFIG
   // once so a malformed document (blank value, bad JSON, unknown feature key,
   // unsupported v, missing section) refuses startup with a precise error instead
   // of silently running without the feature overlay. Absent env = self-hosted:
@@ -712,11 +712,11 @@ export async function startServer(): Promise<StartedServer> {
       );
     }
   } catch (err) {
-    logger.error({ err }, "invalid PAPERCLIP_MANAGED_CONFIG; refusing to start (fail closed)");
+    logger.error({ err }, "invalid THINKINGMACH_MANAGED_CONFIG; refusing to start (fail closed)");
     throw err;
   }
 
-  // Operator setting defaults (PAPERCLIP_SETTING_DEFAULTS). Same fail-closed
+  // Operator setting defaults (THINKINGMACH_SETTING_DEFAULTS). Same fail-closed
   // posture as the managed-config parse above: malformed JSON or an invalid
   // value for a known field refuses startup; unknown field names only warn.
   try {
@@ -728,7 +728,7 @@ export async function startServer(): Promise<StartedServer> {
       );
     }
   } catch (err) {
-    logger.error({ err }, "invalid PAPERCLIP_SETTING_DEFAULTS; refusing to start (fail closed)");
+    logger.error({ err }, "invalid THINKINGMACH_SETTING_DEFAULTS; refusing to start (fail closed)");
     throw err;
   }
 
@@ -740,11 +740,11 @@ export async function startServer(): Promise<StartedServer> {
   const backupSettingsSvc = instanceSettingsService(db);
   const databaseBackupMaxAgeHours = Math.max(
     1,
-    Number(process.env.PAPERCLIP_DB_BACKUP_MAX_AGE_HOURS) ||
+    Number(process.env.THINKINGMACH_DB_BACKUP_MAX_AGE_HOURS) ||
       Math.max(26, Math.ceil((config.databaseBackupIntervalMinutes / 60) * 2)),
   );
   const databaseBackupAlertFile =
-    process.env.PAPERCLIP_DB_BACKUP_ALERT_FILE ||
+    process.env.THINKINGMACH_DB_BACKUP_ALERT_FILE ||
     resolve(config.databaseBackupDir, "..", "health", "db-backup-to-s3.failure");
   const databaseBackupAlertFiles = [
     databaseBackupAlertFile,
@@ -877,7 +877,7 @@ export async function startServer(): Promise<StartedServer> {
     bindHost: runtimeListenHost,
     port: listenPort,
   });
-  const configuredApiUrl = process.env.PAPERCLIP_API_URL?.trim() || runtimeApiUrl;
+  const configuredApiUrl = process.env.THINKINGMACH_API_URL?.trim() || runtimeApiUrl;
   const runtimeApiCandidates = buildRuntimeApiCandidateUrls({
     preferredApiUrl: configuredApiUrl,
     authPublicBaseUrl: config.authPublicBaseUrl ?? null,
@@ -885,11 +885,11 @@ export async function startServer(): Promise<StartedServer> {
     bindHost: runtimeListenHost,
     port: listenPort,
   });
-  process.env.PAPERCLIP_LISTEN_HOST = runtimeListenHost;
-  process.env.PAPERCLIP_LISTEN_PORT = String(listenPort);
-  process.env.PAPERCLIP_RUNTIME_API_URL = runtimeApiUrl;
-  process.env.PAPERCLIP_RUNTIME_API_CANDIDATES_JSON = JSON.stringify(runtimeApiCandidates);
-  process.env.PAPERCLIP_API_URL = configuredApiUrl;
+  process.env.THINKINGMACH_LISTEN_HOST = runtimeListenHost;
+  process.env.THINKINGMACH_LISTEN_PORT = String(listenPort);
+  process.env.THINKINGMACH_RUNTIME_API_URL = runtimeApiUrl;
+  process.env.THINKINGMACH_RUNTIME_API_CANDIDATES_JSON = JSON.stringify(runtimeApiCandidates);
+  process.env.THINKINGMACH_API_URL = configuredApiUrl;
 
   let startupListenerBound = false;
   try {
@@ -903,7 +903,7 @@ export async function startServer(): Promise<StartedServer> {
     // Cloud-proxied browsers carry trusted x-paperclip-cloud-* headers instead
     // of a local Better Auth session; without this lane every live-events
     // upgrade behind the Cloud front door 403s forever. The resolver is
-    // self-gating: it returns null unless PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN
+    // self-gating: it returns null unless THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN
     // is configured and the request presents the matching trust token, so
     // self-hosted deployments never take this path.
     resolveCloudActor: async (req) => {
@@ -1020,9 +1020,9 @@ export async function startServer(): Promise<StartedServer> {
     });
 
   // Force the instance onto the Kubernetes sandbox provider when configured via
-  // env (PAPERCLIP_EXECUTION_MODE=kubernetes). Runs BEFORE the heartbeat resumes
+  // env (THINKINGMACH_EXECUTION_MODE=kubernetes). Runs BEFORE the heartbeat resumes
   // queued runs so the policy + managed k8s environments are in place. A bad
-  // PAPERCLIP_EXECUTION_MODE / PAPERCLIP_K8S_* value throws and fails startup
+  // THINKINGMACH_EXECUTION_MODE / THINKINGMACH_K8S_* value throws and fails startup
   // (fail-loud) rather than silently allowing local execution.
   try {
     const policyResult = await bootstrapExecutionPolicyFromEnv(db as any);
@@ -1044,7 +1044,7 @@ export async function startServer(): Promise<StartedServer> {
   // (`environments` section) before the heartbeat resumes queued runs. The
   // document already parsed fail-closed above; the ensure step itself is
   // fail-safe per entry (a degraded boot beats a fleet-wide crash loop), but
-  // a contradictory deployment that also forces PAPERCLIP_EXECUTION_MODE
+  // a contradictory deployment that also forces THINKINGMACH_EXECUTION_MODE
   // throws here and fails startup. `pluginsReady` sequences the ensure after
   // the bundled-plugin install/load pass so a declared environment never
   // activates before its provider driver is registered; the worker manager
@@ -1295,8 +1295,8 @@ export async function startServer(): Promise<StartedServer> {
     const tools = toolAccessService(db as any, {
       deploymentMode: config.deploymentMode,
       deploymentExposure: config.deploymentExposure,
-      trustedLocalStdioRuntimeHost: process.env.PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST
-        ?? process.env.PAPERCLIP_TOOL_RUNTIME_TRUSTED_HOST
+      trustedLocalStdioRuntimeHost: process.env.THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST
+        ?? process.env.THINKINGMACH_TOOL_RUNTIME_TRUSTED_HOST
         ?? null,
     });
     const worktreeRunExecutionActivation = await resolveWorktreeRunExecutionActivationState({
@@ -1713,23 +1713,23 @@ export async function startServer(): Promise<StartedServer> {
   await waitForExternalAdapters();
 
   // Reconcile the agent-creation picker to the declaratively-configured adapter
-  // set (PAPERCLIP_ADAPTERS). Must run after external adapters are loaded so the
+  // set (THINKINGMACH_ADAPTERS). Must run after external adapters are loaded so the
   // known-adapter list is complete. Fail loud on misconfig (a declared adapter
   // with no implementation), consistent with the execution-policy bootstrap:
   // log the structured error, then rethrow to fail startup.
   try {
     reconcileAdapterAvailability(parseAdapterRegistryEnv());
   } catch (err) {
-    logger.error({ err }, "failed to reconcile adapter availability from PAPERCLIP_ADAPTERS");
+    logger.error({ err }, "failed to reconcile adapter availability from THINKINGMACH_ADAPTERS");
     throw err;
   }
 
   setStartupRecoveryPhase("ready");
   logger.info(`Server startup recovery complete on ${config.host}:${listenPort}`);
   void systemdNotify(["--ready", `--status=Listening on ${config.host}:${listenPort}`]).then((notified) => {
-    if (notified) logger.info("Notified systemd that Paperclip is ready");
+    if (notified) logger.info("Notified systemd that ThinkingMach is ready");
   });
-  if (process.env.PAPERCLIP_OPEN_ON_LISTEN === "true") {
+  if (process.env.THINKINGMACH_OPEN_ON_LISTEN === "true") {
     const openHost = config.host === "0.0.0.0" || config.host === "::" ? "127.0.0.1" : config.host;
     const url = `http://${openHost}:${listenPort}`;
     void import("open")
@@ -1915,7 +1915,7 @@ function isMainModule(metaUrl: string): boolean {
 
 if (isMainModule(import.meta.url)) {
   void startServer().catch(async (err) => {
-    logger.error({ err }, "Paperclip server failed to start");
+    logger.error({ err }, "ThinkingMach server failed to start");
     // Supervised-transient refusals in managed-cloud deployments are an
     // expected provisioning phase (see startup-refusals.ts) — they log
     // and exit nonzero but do not page Sentry.

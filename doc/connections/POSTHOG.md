@@ -1,18 +1,18 @@
 # PostHog connection
 
-Paperclip connects to PostHog's hosted MCP service at
+ThinkingMach connects to PostHog's hosted MCP service at
 `https://mcp.posthog.com/mcp`. The connection supports two explicit methods:
 
 - browser OAuth, which is recommended for hosted PostHog accounts; or
-- a PostHog personal API key stored as a Paperclip secret and sent as an
+- a PostHog personal API key stored as a ThinkingMach secret and sent as an
   `Authorization: Bearer ...` header.
 
 The retained [Vercel Connect](./VERCEL-CONNECT.md) implementation can reference
 a connector managed in Vercel without storing a PostHog bearer. That preview's
 new-connection UI is currently withheld; the supported product path remains
-PostHog OAuth or an API key managed directly by Paperclip.
+PostHog OAuth or an API key managed directly by ThinkingMach.
 
-Paperclip does not silently fall back from OAuth to an API key. The selected
+ThinkingMach does not silently fall back from OAuth to an API key. The selected
 method is saved on the connection and reused for reconnects.
 
 This curated connection is the polished route and is what most users should use:
@@ -21,20 +21,20 @@ field validation, and tailored guidance. None of it is *required* to reach
 PostHog's MCP server. Since [PAP-17087](/PAP/issues/PAP-17087), PostHog can also
 be connected generically from **Connect your own MCP server** by pasting
 `https://mcp.posthog.com/mcp` — with a personal API key, with explicit headers, or
-through browser sign-in — with no Paperclip-specific code involved. See
+through browser sign-in — with no ThinkingMach-specific code involved. See
 [Connecting any remote MCP server](./GENERIC-REMOTE-MCP.md).
 
 ## Service involvement
 
-PostHog hosts both the MCP resource and OAuth authorization service. Paperclip
+PostHog hosts both the MCP resource and OAuth authorization service. ThinkingMach
 discovers the OAuth endpoints, dynamically registers the client when needed,
 stores returned credentials as secret references, and handles the callback at
-`/api/tools/oauth/callback`. No Paperclip-operated vendor relay is involved.
+`/api/tools/oauth/callback`. No ThinkingMach-operated vendor relay is involved.
 
 ```mermaid
 sequenceDiagram
     actor A as Administrator
-    participant P as Paperclip
+    participant P as ThinkingMach
     participant M as mcp.posthog.com
     participant O as oauth.posthog.com
 
@@ -63,10 +63,10 @@ The current hosted endpoints are:
 | Token | `https://oauth.posthog.com/oauth/token/` |
 | Dynamic client registration | `https://oauth.posthog.com/oauth/register/` |
 | Revoke | `https://oauth.posthog.com/oauth/revoke/` |
-| Paperclip callback | `/api/tools/oauth/callback` |
+| ThinkingMach callback | `/api/tools/oauth/callback` |
 
 Redirect-URI constraints and token lifetimes remain provider-controlled and
-must be rechecked during credentialed QA; Paperclip does not encode guessed
+must be rechecked during credentialed QA; ThinkingMach does not encode guessed
 values for either.
 
 ## Administrator setup
@@ -77,21 +77,21 @@ values for either.
 4. Open **Advanced** only when you need to pin the connection to a numeric
    project ID, force **Read-only mode**, use a customer-owned OAuth app, or
    narrow the catalog with **Feature groups** or **Individual tools**.
-5. The default setup requests all feature groups and tools. Paperclip fixes
+5. The default setup requests all feature groups and tools. ThinkingMach fixes
    the advanced response mode to individual tools so each
    action can be governed; CLI mode is unavailable until nested execution is
    governed.
 6. For OAuth, continue through browser consent. For API-key setup, create a
    personal API key using PostHog's **MCP Server** preset and paste it into
-   Paperclip. Never put the key in connection configuration or a URL.
+   ThinkingMach. Never put the key in connection configuration or a URL.
 7. Review discovered actions. Every discovered action starts **Allowed**,
    including writes and destructive actions. Unknown PostHog tools are still
    classified as write risk so operators can identify and narrow them when needed.
 
-When configured, Paperclip sends the optional project pin as the
+When configured, ThinkingMach sends the optional project pin as the
 `x-posthog-project-id` managed header. Without it, PostHog keeps an active
 project and exposes its project-switching tool. Pinning removes that switching
-capability. Paperclip sends configured `readonly`, `features`, `tools`, and
+capability. ThinkingMach sends configured `readonly`, `features`, `tools`, and
 internally managed `mode` values as query parameters. Leaving the optional
 feature and tool filters blank exposes the
 full catalog. The managed header is identical during catalog discovery and tool

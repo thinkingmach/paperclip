@@ -78,7 +78,7 @@ export class DeterministicHarnessDriver implements HarnessDriver {
   async descriptor(): Promise<HarnessDriverDescriptor> {
     return {
       kind: "paperclip-deterministic",
-      displayName: "Paperclip deterministic harness driver",
+      displayName: "ThinkingMach deterministic harness driver",
       version: "1.0.0",
       protocolVersion: "prp.v1",
       capabilities: {

@@ -2,7 +2,7 @@ import { useMemo, useState, useRef, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useVisibilityRefetchInterval } from "@/lib/polling";
 import { usePublishSharedQueryData, useSharedPollingQuery } from "../hooks/useSharedPolling";
-import type { ActivityEvent, Agent } from "@paperclipai/shared";
+import type { ActivityEvent, Agent } from "@thinkingmach/shared";
 import { activityApi } from "../api/activity";
 import { agentsApi } from "../api/agents";
 import { issuesApi } from "../api/issues";

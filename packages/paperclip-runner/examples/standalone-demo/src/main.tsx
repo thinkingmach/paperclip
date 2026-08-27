@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import {
   runStandaloneStandaloneDemo,
   type StandaloneStandaloneDemoResult,
-} from "@paperclipai/paperclip-runner/standalone";
+} from "@thinkingmach/paperclip-runner/standalone";
 
 import "./styles.css";
 
@@ -30,7 +30,7 @@ function App() {
       <header>
         <p className="eyebrow">Package-local tracer</p>
         <h1>Standalone standalone adapter demo</h1>
-        <p>No Paperclip instance, database, agent profile, or experimental setting is contacted or changed.</p>
+        <p>No ThinkingMach instance, database, agent profile, or experimental setting is contacted or changed.</p>
       </header>
 
       <section className="controls" aria-label="Adapter controls">

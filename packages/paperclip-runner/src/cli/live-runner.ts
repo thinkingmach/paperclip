@@ -81,9 +81,9 @@ async function main(): Promise<void> {
         revision !== null && first.assistantText.includes(String(revision)),
       resumedResponseUsesTypedResult:
         revision !== null && second.assistantText.includes(String(revision)),
-      noRealPaperclipRequest: beforeShutdown.networkEvidence.realPaperclipRequests === 0,
-      noPaperclipAuthorityInChild:
-        beforeShutdown.networkEvidence.childPaperclipEnvironmentKeys.length === 0,
+      noRealThinkingMachRequest: beforeShutdown.networkEvidence.realThinkingMachRequests === 0,
+      noThinkingMachAuthorityInChild:
+        beforeShutdown.networkEvidence.childThinkingMachEnvironmentKeys.length === 0,
       authorityCleared: afterShutdown.authority.active === false,
       runnerExited: afterShutdown.process?.runnerExited === true,
     };

@@ -2,7 +2,7 @@
 
 Durable recovery adds a real outbound WebSocket path to the standalone package. The
 Rust `paperclip-runnerd` process is the client. The TypeScript mock core is the
-remote peer. Neither side imports Paperclip server, UI, database, or shared
+remote peer. Neither side imports ThinkingMach server, UI, database, or shared
 control-plane code.
 
 This is a local reliability and authenticated-transport proof. The mock keeps
@@ -18,7 +18,7 @@ The connection starts in this order:
 
 1. The mock core creates a random bootstrap ticket with a five-second lifetime.
 2. The ticket is passed to the runner through
-   `PAPERCLIP_RUNNER_BOOTSTRAP_TICKET`. It is not a command-line argument.
+   `THINKINGMACH_RUNNER_BOOTSTRAP_TICKET`. It is not a command-line argument.
 3. The runner opens an unauthenticated WebSocket upgrade with no bearer header,
    then sends only a public credential locator, a fresh client nonce, complete
    runner/run/session identity, approved runner version and digest, negotiated

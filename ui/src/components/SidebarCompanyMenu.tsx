@@ -1,14 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Check,
-  ChevronsUpDown,
-  GripVertical,
-  LogOut,
-  Plus,
-  RefreshCw,
-  UserPlus,
-} from "lucide-react";
+import { Check, ChevronsUpDown, GripVertical, LogOut, Plus, RefreshCw, UserPlus,  } from "lucide-react";
 import {
   DndContext,
   MouseSensor,
@@ -20,7 +12,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { hidesCompanyPage, type Company } from "@paperclipai/shared";
+import { hidesCompanyPage, type Company } from "@thinkingmach/shared";
 import { Link, useLocation, useNavigate } from "@/lib/router";
 import { authApi } from "@/api/auth";
 import { cloudApi, type CloudStackSummary } from "@/api/cloud";
@@ -230,7 +222,7 @@ export function SidebarCompanyMenu({ open: controlledOpen, onOpenChange }: Sideb
     userId: currentUserId,
   });
 
-  // In Paperclip Cloud the switcher lists the signed-in user's stacks
+  // In ThinkingMach Cloud the switcher lists the signed-in user's stacks
   // (organizations) instead of the instance's companies: a cloud instance holds
   // exactly one company, and switching means leaving this tenant host entirely.
   const cloud = useCloudInstance();

@@ -12,7 +12,7 @@ import {
   inboxDismissals,
   invites,
   joinRequests,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -67,7 +67,7 @@ describeEmbeddedPostgres("inbox dismissals", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -90,7 +90,7 @@ describeEmbeddedPostgres("inbox dismissals", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -150,7 +150,7 @@ describeEmbeddedPostgres("inbox dismissals", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });

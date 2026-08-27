@@ -37,10 +37,10 @@ const PENDING_POLL_MS = 3_000;
  * customer's Composio project. So this tab is a list of *services*, each with its
  * own state, rather than the single-credential Setup tab every other app gets.
  *
- * Connecting a toolkit deliberately leaves Paperclip: the server mints a
+ * Connecting a toolkit deliberately leaves ThinkingMach: the server mints a
  * Composio-hosted Connect Link and the browser opens it in a new tab, so the
  * third-party consent screen and any API key the toolkit needs are entered in
- * Composio and never transit Paperclip. Because that happens out of band, the
+ * Composio and never transit ThinkingMach. Because that happens out of band, the
  * only way to learn the result is to re-read it — hence the poll below, which is
  * what lets a row go pending→connected without a page reload.
  */
@@ -195,7 +195,7 @@ function ServicesIntro({ appName, connectedCount }: { appName: string; connected
     <div className="max-w-2xl space-y-1">
       <h2 className="text-lg font-semibold">Services</h2>
       <p className="text-sm leading-6 text-muted-foreground">
-        {appName} brokers these services. Connect one and it becomes its own app in Paperclip, which
+        {appName} brokers these services. Connect one and it becomes its own app in ThinkingMach, which
         you then give to agents on its Permissions tab.
         {connectedCount > 0 && (
           <>
@@ -215,7 +215,7 @@ function ServicesEmptyState() {
     <div className="rounded-xl border border-border bg-card p-6">
       <p className="text-sm font-medium">No services available yet</p>
       <p className="mt-1 max-w-xl text-sm text-muted-foreground">
-        This Composio project has no toolkits Paperclip can offer. Add a toolkit and an auth
+        This Composio project has no toolkits ThinkingMach can offer. Add a toolkit and an auth
         configuration in Composio, then check back.
       </p>
     </div>
@@ -413,7 +413,7 @@ function DisconnectDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Disconnect {row.name}?</AlertDialogTitle>
           <AlertDialogDescription>
-            This removes {row.name} from Paperclip and deletes its credentials in Composio. Agents
+            This removes {row.name} from ThinkingMach and deletes its credentials in Composio. Agents
             using its actions lose them immediately. Connecting it again needs a new sign-in.
           </AlertDialogDescription>
         </AlertDialogHeader>

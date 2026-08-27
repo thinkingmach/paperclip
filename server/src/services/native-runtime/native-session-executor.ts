@@ -24,14 +24,14 @@ import type {
   AdapterExecutionResult,
   AdapterRuntimeEvent,
 } from "../../adapters/index.js";
-import type { NativeFinalizationResult } from "@paperclipai/shared";
+import type { NativeFinalizationResult } from "@thinkingmach/shared";
 import type {
   HarnessRuntimeRequestResolution,
   NativeExecutionInput,
   NativeRuntimeContextSnapshot,
   NativeSession,
   NativeSessionBackend,
-  PaperclipQuestionSet,
+  ThinkingMachQuestionSet,
   PersistedNativeSession,
   PrpEvent,
   PrpStructuredRunResult,
@@ -42,19 +42,19 @@ import {
   defaultCapabilityRunnerdBinary,
   executeNativeSession,
   parseNativeExecutionInput,
-  parsePaperclipQuestionSet,
+  parseThinkingMachQuestionSet,
   resolveSourceCodexHome,
   type RunnerProcessHandle,
   type RunnerProcessLaunchSpec,
 } from "../../vendor/paperclip-runner/index.js";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
-import { createSshCommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/ssh";
-import type { CommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/command-managed-runtime";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
+import { createSshCommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/ssh";
+import type { CommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/command-managed-runtime";
 import {
-  resolvePaperclipRunnerTransport,
-  type PaperclipRunnerTransport,
-} from "@paperclipai/adapter-utils/runner-connectivity";
-import type { Db } from "@paperclipai/db";
+  resolveThinkingMachRunnerTransport,
+  type ThinkingMachRunnerTransport,
+} from "@thinkingmach/adapter-utils/runner-connectivity";
+import type { Db } from "@thinkingmach/db";
 import { and, desc, eq, gt, inArray, or, sql } from "drizzle-orm";
 import {
   documentRevisions,
@@ -65,15 +65,15 @@ import {
   issueThreadInteractions,
   issues,
   nativeRunFinalizations,
-} from "@paperclipai/db";
-import { PaperclipControlPlanePort } from "./paperclip-control-plane-port.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+} from "@thinkingmach/db";
+import { ThinkingMachControlPlanePort } from "./paperclip-control-plane-port.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 import { registerRunnerPrpAuthority } from "../../realtime/runner-prp-ws.js";
 import { connectRunnerPrpIngress } from "../../realtime/runner-prp-outbound.js";
 import { issueRecoveryActionService } from "../issue-recovery-actions.js";
 import { persistActivity, publishActivity } from "../activity-log.js";
 import { commitNativeStatusDecision } from "./status-decision-committer.js";
-import { resolvePaperclipInstanceRoot } from "../../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../../home-paths.js";
 import { documentService } from "../documents.js";
 import { issueThreadInteractionService } from "../issue-thread-interactions.js";
 import { issueService } from "../issues.js";
@@ -84,7 +84,7 @@ import {
 } from "./status-arbiter.js";
 import { HttpError } from "../../errors.js";
 import { redactSensitiveText } from "../../redaction.js";
-import { resolvePaperclipRunnerBinary } from "./native-codex-runner.js";
+import { resolveThinkingMachRunnerBinary } from "./native-codex-runner.js";
 import {
   createNativeRunTrace,
   type NativeRunHistoricalSpan,
@@ -325,7 +325,7 @@ export function buildNativeProviderEnvironment(
   );
   const environment = { ...inherited, ...configured };
   if (assignedWorkspaceCwd?.trim()) {
-    environment.PAPERCLIP_WORKSPACE_CWD = assignedWorkspaceCwd;
+    environment.THINKINGMACH_WORKSPACE_CWD = assignedWorkspaceCwd;
   }
   return environment;
 }
@@ -360,7 +360,7 @@ type RuntimeQuestionFallback = {
     submitLabel?: string;
     supersedeOnUserComment: false;
     runtimeRequestId: string;
-    questionSet: PaperclipQuestionSet;
+    questionSet: ThinkingMachQuestionSet;
     questions: Array<{
       id: string;
       prompt: string;
@@ -403,9 +403,9 @@ export function runtimeQuestionFallbackFromEvent(
     typeof request.itemId !== "string"
   )
     return null;
-  let questionSet: PaperclipQuestionSet;
+  let questionSet: ThinkingMachQuestionSet;
   try {
-    questionSet = parsePaperclipQuestionSet(request.input);
+    questionSet = parseThinkingMachQuestionSet(request.input);
   } catch {
     return null;
   }
@@ -978,7 +978,7 @@ export async function synchronizeCompletedProviderPlan(input: {
         idempotencyKey: `runner-plan-approval:v1:${input.execution.binding.runId}:${planId}:${providerRevision}:${digest}`,
         sourceRunId: input.execution.binding.runId,
         title: `Review plan revision ${revision.revisionNumber}`,
-        summary: "Review the synchronized Paperclip plan.",
+        summary: "Review the synchronized ThinkingMach plan.",
         continuationPolicy: "wake_assignee",
         payload: {
           version: 1,
@@ -1071,10 +1071,10 @@ export async function synchronizeCompletedProviderPlan(input: {
 
 class SessionToolAuthorityEpoch {
   readonly runId: string;
-  #authority: PaperclipRunnerToolAuthority;
+  #authority: ThinkingMachRunnerToolAuthority;
   #revoked = false;
 
-  constructor(runId: string, authority: PaperclipRunnerToolAuthority) {
+  constructor(runId: string, authority: ThinkingMachRunnerToolAuthority) {
     this.runId = runId;
     this.#authority = authority;
   }
@@ -1094,7 +1094,7 @@ class SessionToolAuthorityEpoch {
     return this.#authority.definitions();
   }
 
-  async execute(call: Parameters<PaperclipRunnerToolAuthority["execute"]>[0]) {
+  async execute(call: Parameters<ThinkingMachRunnerToolAuthority["execute"]>[0]) {
     this.#assertCurrent();
     return await this.#authority.execute(call);
   }
@@ -1185,9 +1185,9 @@ function legacyCompanyNativeSessionScopeKey(
 
 function runnerdStateBase(): string {
   return (
-    process.env.PAPERCLIP_RUNNER_STATE_DIR ??
+    process.env.THINKINGMACH_RUNNER_STATE_DIR ??
     resolve(
-      resolvePaperclipInstanceRoot(),
+      resolveThinkingMachInstanceRoot(),
       "runtime",
       "paperclip-runner",
       "durable-sessions",
@@ -2056,7 +2056,7 @@ export function verifyNativeHarnessBackup(input: {
 
 function nativeSessionCheckpointDirectory(): string {
   const directory = resolve(
-    resolvePaperclipInstanceRoot(),
+    resolveThinkingMachInstanceRoot(),
     "runtime",
     "paperclip-runner",
     "sessions",
@@ -3250,7 +3250,7 @@ function startNativeSessionExecutionLeaseRenewal(input: {
   };
 }
 
-export async function executePaperclipNativeSession(input: {
+export async function executeThinkingMachNativeSession(input: {
   db: Db;
   execution: NativeExecutionInput;
   runnerInstanceId: string;
@@ -3293,7 +3293,7 @@ export async function executePaperclipNativeSession(input: {
   ) => Promise<unknown>;
 }): Promise<AdapterExecutionResult> {
   if (!input.useRunnerd) {
-    return executePaperclipNativeSessionWithinScope(input);
+    return executeThinkingMachNativeSessionWithinScope(input);
   }
   const sessionScopeId = nativeSessionScopeKey(input.execution);
   if (executingRunnerdSessionScopes.has(sessionScopeId)) {
@@ -3304,7 +3304,7 @@ export async function executePaperclipNativeSession(input: {
     input.execution.binding.runId,
   );
   try {
-    return await executePaperclipNativeSessionWithinScope(input);
+    return await executeThinkingMachNativeSessionWithinScope(input);
   } finally {
     if (
       executingRunnerdSessionScopes.get(sessionScopeId) ===
@@ -3315,8 +3315,8 @@ export async function executePaperclipNativeSession(input: {
   }
 }
 
-async function executePaperclipNativeSessionWithinScope(
-  input: Parameters<typeof executePaperclipNativeSession>[0],
+async function executeThinkingMachNativeSessionWithinScope(
+  input: Parameters<typeof executeThinkingMachNativeSession>[0],
 ): Promise<AdapterExecutionResult> {
   if (
     input.execution.provider.kind !== "codex" &&
@@ -3641,7 +3641,7 @@ async function executePaperclipNativeSessionWithinScope(
   const governedWaitObservation = createGovernedWaitEventObservation(
     resolvePendingGovernedWait,
   );
-  const controlPlane = new PaperclipControlPlanePort(
+  const controlPlane = new ThinkingMachControlPlanePort(
     input.db,
     {
       companyId: input.execution.binding.companyId,
@@ -4026,13 +4026,13 @@ async function executePaperclipNativeSessionWithinScope(
                 opencodeEnvironment: input.runnerEnvironment ?? process.env,
                 acpxEnvironment: input.runnerEnvironment ?? process.env,
                 opencodeRuntimeDirectory: resolve(
-                  resolvePaperclipInstanceRoot(),
+                  resolveThinkingMachInstanceRoot(),
                   "runtime",
                   "paperclip-runner",
                   "opencode",
                 ),
                 acpxRuntimeDirectory: resolve(
-                  resolvePaperclipInstanceRoot(),
+                  resolveThinkingMachInstanceRoot(),
                   "runtime",
                   "paperclip-runner",
                   "acpx",
@@ -4831,7 +4831,7 @@ export function assertRemoteRunnerBuildMetadata(
   if (
     metadata.schema !== RUNNERD_BUILD_METADATA_SCHEMA ||
     metadata.binaryName !== "paperclip-runnerd" ||
-    metadata.packageName !== "@paperclipai/paperclip-runner" ||
+    metadata.packageName !== "@thinkingmach/paperclip-runner" ||
     metadata.binaryContractVersion !== RUNNERD_BINARY_CONTRACT_VERSION
   ) {
     throw new Error("runner_remote_artifact_contract_incompatible");
@@ -5425,7 +5425,7 @@ async function createRunnerdBackendWithinSessionClaim(
   sessionScopeId: string,
 ): Promise<NativeSessionBackend> {
   const target = input.runnerExecutionTarget ?? { kind: "local" as const };
-  const authority = new PaperclipRunnerToolAuthority(input.db, {
+  const authority = new ThinkingMachRunnerToolAuthority(input.db, {
     companyId: input.execution.binding.companyId,
     issueId: input.execution.binding.issueId,
     runId: input.execution.binding.runId,
@@ -5497,7 +5497,7 @@ async function createRunnerdBackendWithinSessionClaim(
       !lstatSync(configuredProviderPackRoot).isDirectory()
     ) {
       throw new Error(
-        "runner_remote_provider_artifact_incompatible: configure PAPERCLIP_RUNNER_REMOTE_PROVIDER_PACK_PATH with the build-owned provider pack",
+        "runner_remote_provider_artifact_incompatible: configure THINKINGMACH_RUNNER_REMOTE_PROVIDER_PACK_PATH with the build-owned provider pack",
       );
     }
     expectedProviderPackManifest = readRemoteProviderPackManifest(
@@ -5517,8 +5517,8 @@ async function createRunnerdBackendWithinSessionClaim(
   // When an explicit remote artifact is configured, prepareRemoteRunner stages
   // these exact bytes at remoteBinary before launch.
   const controllerRunnerBinary = remoteTarget
-    ? input.runnerRemoteBinaryPath?.trim() || resolvePaperclipRunnerBinary()
-    : resolvePaperclipRunnerBinary();
+    ? input.runnerRemoteBinaryPath?.trim() || resolveThinkingMachRunnerBinary()
+    : resolveThinkingMachRunnerBinary();
   const explicitRemoteCodex = input.runnerRemoteCodexPath?.trim() || null;
   const remoteCodexNpmSpec = input.runnerRemoteCodexNpmSpec?.trim() || null;
   if (explicitRemoteCodex && remoteCodexNpmSpec) {
@@ -5860,7 +5860,7 @@ async function createRunnerdBackendWithinSessionClaim(
           !archMatches
         ) {
           throw new Error(
-            "runner_remote_artifact_platform_mismatch: configure PAPERCLIP_RUNNER_REMOTE_BINARY_PATH for the remote OS and architecture",
+            "runner_remote_artifact_platform_mismatch: configure THINKINGMACH_RUNNER_REMOTE_BINARY_PATH for the remote OS and architecture",
           );
         }
       }
@@ -5955,7 +5955,7 @@ async function createRunnerdBackendWithinSessionClaim(
       );
       if (!preinstalledCodex) {
         throw new Error(
-          "runner_remote_codex_artifact_unavailable: install codex in the sandbox image or configure PAPERCLIP_RUNNER_REMOTE_CODEX_NPM_SPEC",
+          "runner_remote_codex_artifact_unavailable: install codex in the sandbox image or configure THINKINGMACH_RUNNER_REMOTE_CODEX_NPM_SPEC",
         );
       }
       await measureNativeRunnerSpan(
@@ -6706,11 +6706,11 @@ async function createRunnerdBackendWithinSessionClaim(
         ...(input.runnerEnvironment ?? process.env),
         HOME: remoteTarget!.remoteCwd,
         CODEX_HOME: posix.join(remoteTarget!.remoteCwd, ".codex"),
-        PAPERCLIP_WORKSPACE_CWD: remoteTarget!.remoteCwd,
+        THINKINGMACH_WORKSPACE_CWD: remoteTarget!.remoteCwd,
       }
     : {
         ...(input.runnerEnvironment ?? process.env),
-        PAPERCLIP_WORKSPACE_CWD: input.execution.workspace.cwd,
+        THINKINGMACH_WORKSPACE_CWD: input.execution.workspace.cwd,
       };
   const archiveContinuityState = async () => {
     const archiveToken = `${Date.now()}-${randomUUID()}`;
@@ -6761,13 +6761,13 @@ async function createRunnerdBackendWithinSessionClaim(
     dynamicToolHandler: (call) => authorityEpoch.execute(call),
     acpxDynamicToolHandler: (call) => authorityEpoch.execute(call),
     opencodeRuntimeDirectory: resolve(
-      resolvePaperclipInstanceRoot(),
+      resolveThinkingMachInstanceRoot(),
       "runtime",
       "paperclip-runner",
       "opencode",
     ),
     acpxRuntimeDirectory: resolve(
-      resolvePaperclipInstanceRoot(),
+      resolveThinkingMachInstanceRoot(),
       "runtime",
       "paperclip-runner",
       "acpx",
@@ -6796,7 +6796,7 @@ async function createRunnerdBackendWithinSessionClaim(
               acpxRuntimeDirectory: remoteRunnerFilesystemRoot
                 ? posix.join(remoteRunnerFilesystemRoot, "acpx")
                 : resolve(
-                    resolvePaperclipInstanceRoot(),
+                    resolveThinkingMachInstanceRoot(),
                     "runtime",
                     "paperclip-runner",
                     "acpx",
@@ -6970,14 +6970,14 @@ async function createRunnerdBackendWithinSessionClaim(
                 target,
                 runnerIngressAuthorized: input.runnerIngressAuthorized === true,
               });
-              let transport: PaperclipRunnerTransport;
+              let transport: ThinkingMachRunnerTransport;
               if (requiredMode === "dial_wss") {
                 // Validate eligibility before staging any artifact.
                 transport = await measureNativeRunnerSpan(
                   input.trace,
                   "runner.transport.resolve",
                   () =>
-                    resolvePaperclipRunnerTransport({
+                    resolveThinkingMachRunnerTransport({
                       target,
                       runId: input.execution.binding.runId,
                       localConnectUrl: "ws://127.0.0.1/unused",
@@ -7013,7 +7013,7 @@ async function createRunnerdBackendWithinSessionClaim(
                   input.trace,
                   "runner.ingress.acquire",
                   () =>
-                    resolvePaperclipRunnerTransport({
+                    resolveThinkingMachRunnerTransport({
                       target,
                       runId: input.execution.binding.runId,
                       localConnectUrl: "ws://127.0.0.1/unused",

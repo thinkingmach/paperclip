@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash, randomUUID } from "node:crypto";
 import { and, eq, gt, inArray, isNull, lte, ne, or } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { providerTraceRecords } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { providerTraceRecords } from "@thinkingmach/db";
 import type {
   ProviderTraceFrame,
   ProviderTraceMetadata,
-} from "@paperclipai/shared";
-import { resolvePaperclipInstanceRoot } from "../home-paths.js";
+} from "@thinkingmach/shared";
+import { resolveThinkingMachInstanceRoot } from "../home-paths.js";
 import { logActivity } from "./activity-log.js";
 
 export const PROVIDER_TRACE_MAX_BYTES = 64 * 1024 * 1024;
@@ -26,7 +26,7 @@ type TraceRow = typeof providerTraceRecords.$inferSelect;
 function traceRoot() {
   return (
     process.env.PROVIDER_TRACE_BASE_PATH ??
-    path.resolve(resolvePaperclipInstanceRoot(), "data", "provider-traces")
+    path.resolve(resolveThinkingMachInstanceRoot(), "data", "provider-traces")
   );
 }
 

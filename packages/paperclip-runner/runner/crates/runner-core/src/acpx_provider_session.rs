@@ -571,7 +571,7 @@ impl AcpxProviderSession {
             json!({
                 "callId":result.call_id,
                 "turnId":turn_id,
-                "error":{"message":"Paperclip semantic operation failed"},
+                "error":{"message":"ThinkingMach semantic operation failed"},
             })
         } else {
             json!({
@@ -698,7 +698,7 @@ impl AcpxProviderSession {
     /// Reaps an active provider generation at a controller-owned suspension
     /// boundary without waiting for the provider's graceful close protocol.
     ///
-    /// A governed Paperclip result can settle the run while the model is still
+    /// A governed ThinkingMach result can settle the run while the model is still
     /// waiting for its semantic-tool callback to unwind. In that state the
     /// ordinary sidecar close path may wait for the callback longer than the
     /// server process that owns this runner. Process-group termination closes
@@ -878,19 +878,19 @@ fn reserved_terminal_tool_set() -> Result<AuthorizedToolSet, LocalRunnerError> {
     let result_schema: Value = serde_json::from_str(include_str!(
         "../../../../protocol/schemas/result.schema.json"
     ))
-    .map_err(|_| LocalRunnerError::invalid("embedded Paperclip result schema is invalid"))?;
+    .map_err(|_| LocalRunnerError::invalid("embedded ThinkingMach result schema is invalid"))?;
     let operations = vec![
         AuthorizedTool {
             operation_id: PRP_COMPLETION_TOOL_NAME.to_owned(),
             version: 1,
-            description: "Return the authoritative Paperclip completion result.".to_owned(),
+            description: "Return the authoritative ThinkingMach completion result.".to_owned(),
             input_schema: result_schema.clone(),
             response_schema: result_schema.clone(),
         },
         AuthorizedTool {
             operation_id: PRP_BLOCK_TOOL_NAME.to_owned(),
             version: 1,
-            description: "Return the authoritative Paperclip blocked result.".to_owned(),
+            description: "Return the authoritative ThinkingMach blocked result.".to_owned(),
             input_schema: result_schema.clone(),
             response_schema: result_schema,
         },
@@ -931,13 +931,13 @@ fn validate_prp_run_result(value: &Value) -> Result<(), LocalRunnerError> {
     let schema: Value = serde_json::from_str(include_str!(
         "../../../../protocol/schemas/result.schema.json"
     ))
-    .map_err(|_| LocalRunnerError::invalid("embedded Paperclip result schema is invalid"))?;
+    .map_err(|_| LocalRunnerError::invalid("embedded ThinkingMach result schema is invalid"))?;
     let validator = jsonschema::validator_for(&schema).map_err(|_| {
-        LocalRunnerError::invalid("embedded Paperclip result schema cannot compile")
+        LocalRunnerError::invalid("embedded ThinkingMach result schema cannot compile")
     })?;
     if !validator.is_valid(value) {
         return Err(LocalRunnerError::invalid(
-            "ACPX reserved semantic result failed the Paperclip result schema",
+            "ACPX reserved semantic result failed the ThinkingMach result schema",
         ));
     }
     Ok(())

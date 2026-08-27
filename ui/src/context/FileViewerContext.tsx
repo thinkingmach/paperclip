@@ -1,6 +1,6 @@
 import { createContext, useContext, useCallback, useMemo, type ReactNode } from "react";
 import { useLocation, useNavigate, type NavigateOptions } from "@/lib/router";
-import type { WorkspaceFileSelector } from "@paperclipai/shared";
+import type { WorkspaceFileSelector } from "@thinkingmach/shared";
 import type { ParsedWorkspaceFileRef } from "@/lib/workspace-file-parser";
 import {
   useWorkspaceFileAvailability,

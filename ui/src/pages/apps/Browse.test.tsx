@@ -41,7 +41,7 @@ vi.mock("@/lib/router", () => ({
 vi.mock("@/context/CompanyContext", () => ({
   useCompany: () => ({
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach" },
   }),
 }));
 
@@ -136,7 +136,7 @@ describe("Connectors landing page", () => {
           tagline: "Search and draft email.",
           availability: {
             available: false,
-            reason: "Gmail is not available on this Paperclip instance yet.",
+            reason: "Gmail is not available on this ThinkingMach instance yet.",
           },
         }),
       ],

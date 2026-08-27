@@ -13,8 +13,8 @@ import {
   principalPermissionGrants,
   projects,
   userInboxAgentPolicies,
-} from "@paperclipai/db";
-import { LOW_TRUST_REVIEW_PRESET, type PermissionKey } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { LOW_TRUST_REVIEW_PRESET, type PermissionKey } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

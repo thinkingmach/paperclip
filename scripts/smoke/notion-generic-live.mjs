@@ -80,7 +80,7 @@ function assertNoCredentialMaterial(value, credentials, checkpoint) {
 
 function issueMutationHeaders(config, method, pathname) {
   if (method === "GET" || !pathname.startsWith("/api/issues/")) return {};
-  return { "X-Paperclip-Run-Id": config.runId };
+  return { "X-ThinkingMach-Run-Id": config.runId };
 }
 
 async function apiJson(request, config, method, pathname, data, checkpoint, expectedStatuses = [200]) {
@@ -145,7 +145,7 @@ async function gotoWithVisibleMarker(
         return;
       }
     } catch {
-      // A credential-free Paperclip navigation is safe to repeat once. Do not
+      // A credential-free ThinkingMach navigation is safe to repeat once. Do not
       // retry provider pages or any mutation from this helper.
     }
     if (attempt < attempts) await page.waitForTimeout(500);
@@ -153,7 +153,7 @@ async function gotoWithVisibleMarker(
   fail(checkpoint, code);
 }
 
-async function loginPaperclipBoard(page, context, config) {
+async function loginThinkingMachBoard(page, context, config) {
   const loginUrl = new URL("/auth?next=/", config.baseUrl).toString();
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     await gotoWithVisibleMarker(
@@ -548,7 +548,7 @@ async function runSmoke({ config, chromium }) {
   const connectionName = `Notion generic self-test ${startedAt.toISOString()}`;
   const outputDirectory = process.env.NOTION_EVIDENCE_DIR
     ? path.resolve(process.env.NOTION_EVIDENCE_DIR)
-    : path.join(process.env.PAPERCLIP_RUN_SCRATCH_DIR || process.cwd(), `notion-generic-live-${runKey}`);
+    : path.join(process.env.THINKINGMACH_RUN_SCRATCH_DIR || process.cwd(), `notion-generic-live-${runKey}`);
   await mkdir(outputDirectory, { recursive: true });
 
   const summary = {
@@ -588,7 +588,7 @@ async function runSmoke({ config, chromium }) {
     });
     const page = await context.newPage();
 
-    await loginPaperclipBoard(page, context, config);
+    await loginThinkingMachBoard(page, context, config);
 
     activeCheckpoint = "A.company-selection";
     const companies = await apiJson(context.request, config, "GET", "/api/companies", undefined, "A.company-selection");
@@ -621,7 +621,7 @@ async function runSmoke({ config, chromium }) {
       fail("A.connection-isolation", "connection_name_collision");
     }
 
-    // Fetch only after URL, health, Paperclip login, company, agent, and binding
+    // Fetch only after URL, health, ThinkingMach login, company, agent, and binding
     // metadata have all passed. The value remains in this process and is never
     // written to browser artifacts or command arguments.
     activeCheckpoint = "A.secret-binding";
@@ -984,7 +984,7 @@ async function runSmoke({ config, chromium }) {
         "Invoke exactly one installed action: the read-only `notion-get-self` tool with an empty `{}` input.",
         "Make no Notion mutation and do not invoke any other Notion action.",
         `Require workspace ID ${boardIdentity.workspaceId} and workspace name ${boardIdentity.workspaceName}.`,
-        "Post exactly one JSON object with keys `workspaceId`, `workspaceName`, and `invocationId` (the Paperclip invocation ID), then mark this issue done.",
+        "Post exactly one JSON object with keys `workspaceId`, `workspaceName`, and `invocationId` (the ThinkingMach invocation ID), then mark this issue done.",
         "Do not report tokens, cookies, headers, authorization data, raw payloads, or any other fields.",
       ].join("\n\n"),
       status: "todo",
@@ -993,7 +993,7 @@ async function runSmoke({ config, chromium }) {
       assigneeAgentId: agent.id,
       acceptanceCriteria: [
         "The installed notion-get-self action succeeds with empty input.",
-        "Only sanitized workspace ID/name and Paperclip invocation ID are reported.",
+        "Only sanitized workspace ID/name and ThinkingMach invocation ID are reported.",
         "No Notion mutation is attempted.",
       ],
     }, "E.fresh-agent");

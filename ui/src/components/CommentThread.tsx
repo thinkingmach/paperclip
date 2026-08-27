@@ -7,10 +7,10 @@ import type {
   FeedbackVote,
   FeedbackVoteValue,
   IssueComment,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Check, Copy, Paperclip } from "lucide-react";
+import { ArrowRight, Check, Copy, ThinkingMach } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Identity } from "./Identity";
 import { InlineEntitySelector, type InlineEntityOption } from "./InlineEntitySelector";
@@ -1039,7 +1039,7 @@ export function CommentThread({
                   disabled={attaching}
                   title="Attach image"
                 >
-                  <Paperclip className="h-4 w-4" />
+                  <ThinkingMach className="h-4 w-4" />
                 </Button>
               </div>
             )}

@@ -10,7 +10,7 @@ import {
   startSshEnvLabFixture,
   stopSshEnvLabFixture,
   type SshEnvironmentConfig,
-} from "@paperclipai/adapter-utils/ssh";
+} from "@thinkingmach/adapter-utils/ssh";
 import {
   agents,
   companies,
@@ -20,8 +20,8 @@ import {
   environmentLeases,
   environments,
   heartbeatRuns,
-} from "@paperclipai/db";
-import type { Environment } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { Environment } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

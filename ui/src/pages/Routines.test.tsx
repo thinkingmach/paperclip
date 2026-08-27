@@ -4,7 +4,7 @@ import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { FolderListResult, Issue, RoutineListItem } from "@paperclipai/shared";
+import type { FolderListResult, Issue, RoutineListItem } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Routines, buildRoutineGroups, buildRoutineSections, sortRoutines } from "./Routines";
 

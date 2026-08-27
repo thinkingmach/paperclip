@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Agent, AgentSkillSnapshot, CompanySkillListItem } from "@paperclipai/shared";
+import type { Agent, AgentSkillSnapshot, CompanySkillListItem } from "@thinkingmach/shared";
 import { AgentSkillsTab } from "@/pages/agent-skills/AgentSkillsTab";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -61,8 +61,8 @@ function libSkill(key: string, name: string, description: string): CompanySkillL
 }
 
 const library: CompanySkillListItem[] = [
-  libSkill("paperclip", "Paperclip", "Coordination skill: heartbeats, checkout, comments, and routine API patterns."),
-  libSkill("design-guide", "Design guide", "Paperclip UI design system reference: tokens, typography, status colors."),
+  libSkill("paperclip", "ThinkingMach", "Coordination skill: heartbeats, checkout, comments, and routine API patterns."),
+  libSkill("design-guide", "Design guide", "ThinkingMach UI design system reference: tokens, typography, status colors."),
 ];
 
 function buildAgent(agentId: string, desiredSkills: string[]): Agent {
@@ -113,7 +113,7 @@ function staleSnapshot(): AgentSkillSnapshot {
         managed: true,
         state: "configured",
         origin: "company_managed",
-        originLabel: "Managed by Paperclip",
+        originLabel: "Managed by ThinkingMach",
         readOnly: false,
         sourcePath: "skills/paperclip",
         targetPath: null,
@@ -140,7 +140,7 @@ function detectedSnapshot(): AgentSkillSnapshot {
         managed: true,
         state: "configured",
         origin: "company_managed",
-        originLabel: "Managed by Paperclip",
+        originLabel: "Managed by ThinkingMach",
         readOnly: false,
         sourcePath: "skills/paperclip",
         targetPath: null,
@@ -158,7 +158,7 @@ function detectedSnapshot(): AgentSkillSnapshot {
         readOnly: true,
         sourcePath: null,
         targetPath: null,
-        detail: "Detected in the adapter's skills directory; managed outside Paperclip.",
+        detail: "Detected in the adapter's skills directory; managed outside ThinkingMach.",
       },
     ] as AgentSkillSnapshot["entries"],
   };
@@ -214,7 +214,7 @@ export const DetectedAdapter: StoryObj = {
   render: () => (
     <StoryFrame
       title="Detected on adapter (read-only)"
-      subtitle="A user-installed skill outside Paperclip's management shows in a collapsed, read-only section with a lock icon."
+      subtitle="A user-installed skill outside ThinkingMach's management shows in a collapsed, read-only section with a lock icon."
     >
       <EdgeState agent={buildAgent("agent-detected", ["paperclip"])} snapshot={detectedSnapshot()} />
     </StoryFrame>

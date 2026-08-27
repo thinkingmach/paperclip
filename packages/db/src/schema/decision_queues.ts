@@ -14,7 +14,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import type { DecisionQueueSeedRule } from "@paperclipai/shared";
+import type { DecisionQueueSeedRule } from "@thinkingmach/shared";
 import { agentApiKeys } from "./agent_api_keys.js";
 import { agents } from "./agents.js";
 import { companies } from "./companies.js";

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# End-to-end proof that `paperclipai update` works ACROSS VERSIONS, including
+# End-to-end proof that `thinkingmach update` works ACROSS VERSIONS, including
 # database migrations, against a real managed install with a live service.
 #
 # Journey (real GitHub, real embedded Postgres, real systemd/launchd service):
@@ -17,7 +17,7 @@
 # to mutate refs on GitHub while the test runs.
 #
 # Env knobs:
-#   E2E_REPO                  GitHub repo (default: paperclipai/paperclip)
+#   E2E_REPO                  GitHub repo (default: thinkingmach/paperclip)
 #   E2E_UPDATE_BASE_REF       ref to install first (required; e.g. test/e2e-update-base)
 #   E2E_UPDATE_NEXT_REF       ref to update to (required; BASE + one probe migration)
 #   E2E_BOOTSTRAP_CLI         path to an already-built bootstrap CLI entry point
@@ -25,22 +25,22 @@
 #   E2E_SERVICE_TIMEOUT_SECS  service active/health wait (default 300)
 set -uo pipefail
 
-E2E_REPO="${E2E_REPO:-paperclipai/paperclip}"
+E2E_REPO="${E2E_REPO:-thinkingmach/paperclip}"
 BASE_REF="${E2E_UPDATE_BASE_REF:?E2E_UPDATE_BASE_REF is required}"
 NEXT_REF="${E2E_UPDATE_NEXT_REF:?E2E_UPDATE_NEXT_REF is required}"
 E2E_SERVICE_TIMEOUT_SECS="${E2E_SERVICE_TIMEOUT_SECS:-300}"
 
-# Clean environment, then isolate ALL Paperclip state (managed store, config,
+# Clean environment, then isolate ALL ThinkingMach state (managed store, config,
 # embedded Postgres, backups) under a dedicated home for this test.
-for var in $(env | grep -o '^PAPERCLIP_[A-Z_]*' || true); do unset "$var"; done
+for var in $(env | grep -o '^THINKINGMACH_[A-Z_]*' || true); do unset "$var"; done
 unset NODE_ENV npm_config_prefix 2>/dev/null || true
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI="${CI:-1}"
-export PAPERCLIP_HOME="$HOME/.paperclip-e2e-update"
+export THINKINGMACH_HOME="$HOME/.paperclip-e2e-update"
 
-SHIM="$HOME/.local/bin/paperclipai"
-STORE="$PAPERCLIP_HOME/cli"
-BACKUP_DIR="$PAPERCLIP_HOME/instances/default/data/backups"
+SHIM="$HOME/.local/bin/thinkingmach"
+STORE="$THINKINGMACH_HOME/cli"
+BACKUP_DIR="$THINKINGMACH_HOME/instances/default/data/backups"
 RESULTS=()
 FAILED=0
 
@@ -79,11 +79,11 @@ uname -a
 node --version && npm --version
 command -v corepack >/dev/null || npm install -g corepack
 [ -e "$SHIM" ] && { echo "shim already exists at $SHIM — refusing to run"; exit 2; }
-[ -d "$PAPERCLIP_HOME" ] && { echo "$PAPERCLIP_HOME already exists — refusing to run"; exit 2; }
+[ -d "$THINKINGMACH_HOME" ] && { echo "$THINKINGMACH_HOME already exists — refusing to run"; exit 2; }
 if [ "$(uname -s)" = "Linux" ] && [ ! -S "/run/user/$(id -u)/bus" ]; then
   echo "no systemd user bus at /run/user/$(id -u)/bus — this test needs a real service"; exit 2
 fi
-echo "repo=$E2E_REPO base=$BASE_REF next=$NEXT_REF paperclip_home=$PAPERCLIP_HOME"
+echo "repo=$E2E_REPO base=$BASE_REF next=$NEXT_REF paperclip_home=$THINKINGMACH_HOME"
 
 if [ -n "${E2E_BOOTSTRAP_CLI:-}" ] && [ -f "$E2E_BOOTSTRAP_CLI" ]; then
   BOOTSTRAP_CLI="$E2E_BOOTSTRAP_CLI"
@@ -103,7 +103,7 @@ else
   mkdir -p "$HOME/e2e-upd-bootstrap-cli"
   ( cd "$HOME/e2e-upd-bootstrap-cli" && npm install --no-fund --no-audit "$BOOT/cli/$TARBALL" > "$HOME/e2e-upd-bootstrap-npm.log" 2>&1 ) \
     || { tail -40 "$HOME/e2e-upd-bootstrap-npm.log"; fail_ "1c bootstrap npm install"; exit 1; }
-  BOOTSTRAP_CLI="$HOME/e2e-upd-bootstrap-cli/node_modules/paperclipai/dist/index.js"
+  BOOTSTRAP_CLI="$HOME/e2e-upd-bootstrap-cli/node_modules/thinkingmach/dist/index.js"
 fi
 node "$BOOTSTRAP_CLI" --version >/dev/null || { fail_ "1d bootstrap CLI smoke"; exit 1; }
 pass "1 bootstrap CLI ready"
@@ -132,7 +132,7 @@ else
   fail_ "3b service active on base version"; exit 1
 fi
 FIRST_RUN_BEFORE="$(first_run_count)"
-PG_VERSION_FILE="$(find "$PAPERCLIP_HOME" -name PG_VERSION 2>/dev/null | head -1)"
+PG_VERSION_FILE="$(find "$THINKINGMACH_HOME" -name PG_VERSION 2>/dev/null | head -1)"
 PG_INODE_BEFORE="$([ -n "$PG_VERSION_FILE" ] && ls -i "$PG_VERSION_FILE" | awk '{print $1}')"
 [ -n "$PG_VERSION_FILE" ] && pass "3c embedded Postgres cluster initialized" || fail_ "3c embedded Postgres cluster found"
 

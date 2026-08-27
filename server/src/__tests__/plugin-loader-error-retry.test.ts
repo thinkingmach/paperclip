@@ -11,7 +11,7 @@
  * any ready plugin. A retry that fails re-records the error through markError.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 
 const mockRegistry = vi.hoisted(() => ({
   getById: vi.fn(),

@@ -1,6 +1,6 @@
 import type {
   EventDimensionsMap,
-  PaperclipEventName,
+  ThinkingMachEventName,
 } from "./generated/paperclip-telemetry.js";
 
 export interface TelemetryState {
@@ -67,7 +67,7 @@ export interface TelemetryEventEnvelope {
 }
 
 export type RegisteredPluginEventName = never;
-export type TelemetryEventName = PaperclipEventName | RegisteredPluginEventName;
+export type TelemetryEventName = ThinkingMachEventName | RegisteredPluginEventName;
 
 export type TelemetryEventDimensions<K extends TelemetryEventName> =
   K extends keyof EventDimensionsMap ? EventDimensionsMap[K] : never;

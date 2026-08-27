@@ -2,9 +2,9 @@
 
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { parseAcpxStdoutLine } from "@paperclipai/adapter-utils/acpx-engine/ui";
+import { parseAcpxStdoutLine } from "@thinkingmach/adapter-utils/acpx-engine/ui";
 import { buildTranscript, type RunLogChunk, type TranscriptEntry } from "../../adapters";
-import type { ToolRunDecision } from "@paperclipai/shared";
+import type { ToolRunDecision } from "@thinkingmach/shared";
 import { ThemeProvider } from "../../context/ThemeContext";
 import { RunTranscriptView, keyTranscriptBlocks, normalizeTranscript } from "./RunTranscriptView";
 

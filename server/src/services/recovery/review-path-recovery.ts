@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { IssueReviewAttention } from "@paperclipai/shared";
+import type { IssueReviewAttention } from "@thinkingmach/shared";
 import { withRecoveryContext } from "./status-only-context.js";
 
 export const ISSUE_REVIEW_PATH_LOST_WAKE_REASON = "issue_review_path_lost";

@@ -1,4 +1,4 @@
-import type { ExecutionWorkspaceMode, ProjectExecutionWorkspaceDefaultMode } from "@paperclipai/shared";
+import type { ExecutionWorkspaceMode, ProjectExecutionWorkspaceDefaultMode } from "@thinkingmach/shared";
 
 type ProjectWorkspaceDefaultSource = {
   workspaces?: Array<{ id: string; isPrimary: boolean }>;

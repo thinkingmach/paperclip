@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AdapterExecutionContext, AdapterExecutionResult } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext, AdapterExecutionResult } from "@thinkingmach/adapter-utils";
 import {
   adapterExecutionTargetIsRemote,
   adapterExecutionTargetRemoteCwd,
@@ -16,30 +16,30 @@ import {
   resolveAdapterExecutionTargetCommandForLogs,
   resolveAdapterExecutionTargetTimeoutSec,
   runAdapterExecutionTargetProcess,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import {
   asBoolean,
   asNumber,
   asString,
   asStringArray,
   buildInvocationEnvForLogs,
-  buildPaperclipEnv,
+  buildThinkingMachEnv,
   buildRuntimeToolsEnv,
   ensureAbsoluteDirectory,
   ensurePathInEnv,
   joinPromptSections,
-  materializePaperclipSkillCopy,
+  materializeThinkingMachSkillCopy,
   parseObject,
-  readPaperclipIssueWorkModeFromContext,
-  readPaperclipRuntimeSkillEntries,
+  readThinkingMachIssueWorkModeFromContext,
+  readThinkingMachRuntimeSkillEntries,
   renderTemplate,
-  renderPaperclipWakePrompt,
-  isPaperclipRecoveryWakePayload,
-  resolveLegacyPaperclipDesiredSkillNames,
-  stringifyPaperclipWakePayload,
-  refreshPaperclipWorkspaceEnvForExecution,
-  DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
-} from "@paperclipai/adapter-utils/server-utils";
+  renderThinkingMachWakePrompt,
+  isThinkingMachRecoveryWakePayload,
+  resolveLegacyThinkingMachDesiredSkillNames,
+  stringifyThinkingMachWakePayload,
+  refreshThinkingMachWorkspaceEnvForExecution,
+  DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
+} from "@thinkingmach/adapter-utils/server-utils";
 import { DEFAULT_GROK_LOCAL_MODEL } from "../index.js";
 import { copyBackGrokAuth } from "./grok-auth-copyback.js";
 import { resolveManagedGrokHomeDir, stageGrokHomeForSync } from "./grok-home.js";
@@ -61,14 +61,14 @@ function hasNonEmptyEnvValue(env: Record<string, string>, key: string): boolean 
   return typeof raw === "string" && raw.trim().length > 0;
 }
 
-function renderPaperclipEnvNote(env: Record<string, string>): string {
-  const paperclipKeys = Object.keys(env)
-    .filter((key) => key.startsWith("PAPERCLIP_"))
+function renderThinkingMachEnvNote(env: Record<string, string>): string {
+  const thinkingmachKeys = Object.keys(env)
+    .filter((key) => key.startsWith("THINKINGMACH_"))
     .sort();
-  if (paperclipKeys.length === 0) return "";
+  if (thinkingmachKeys.length === 0) return "";
   return [
-    "Paperclip runtime note:",
-    `The following PAPERCLIP_* environment variables are available in this run: ${paperclipKeys.join(", ")}`,
+    "ThinkingMach runtime note:",
+    `The following THINKINGMACH_* environment variables are available in this run: ${thinkingmachKeys.join(", ")}`,
     "Do not assume these variables are missing without checking your shell environment.",
     "",
     "",
@@ -76,11 +76,11 @@ function renderPaperclipEnvNote(env: Record<string, string>): string {
 }
 
 function renderApiAccessNote(env: Record<string, string>): string {
-  if (!hasNonEmptyEnvValue(env, "PAPERCLIP_API_URL") || !hasNonEmptyEnvValue(env, "PAPERCLIP_API_KEY")) return "";
+  if (!hasNonEmptyEnvValue(env, "THINKINGMACH_API_URL") || !hasNonEmptyEnvValue(env, "THINKINGMACH_API_KEY")) return "";
   return [
-    "Paperclip API access note:",
-    "Use shell commands with curl to make Paperclip API requests when needed.",
-    "Include X-Paperclip-Run-Id on mutating requests.",
+    "ThinkingMach API access note:",
+    "Use shell commands with curl to make ThinkingMach API requests when needed.",
+    "Include X-ThinkingMach-Run-Id on mutating requests.",
     "",
     "",
   ].join("\n");
@@ -166,7 +166,7 @@ async function stageGrokProjectAssets(input: {
         );
         continue;
       }
-      await materializePaperclipSkillCopy(skill.source, target);
+      await materializeThinkingMachSkillCopy(skill.source, target);
       ensureCleanupDir(target);
       stagedSkillsCount += 1;
     }
@@ -202,7 +202,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
 
   const promptTemplate = asString(
     config.promptTemplate,
-    DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+    DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   );
   const command = asString(config.command, "grok");
   const model = asString(config.model, DEFAULT_GROK_LOCAL_MODEL).trim();
@@ -235,8 +235,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   let effectiveExecutionCwd = adapterExecutionTargetRemoteCwd(executionTarget, cwd);
   await ensureAbsoluteDirectory(cwd, { createIfMissing: true });
 
-  const grokSkillEntries = await readPaperclipRuntimeSkillEntries(config, __moduleDir);
-  const desiredGrokSkillNames = resolveLegacyPaperclipDesiredSkillNames(config, grokSkillEntries);
+  const grokSkillEntries = await readThinkingMachRuntimeSkillEntries(config, __moduleDir);
+  const desiredGrokSkillNames = resolveLegacyThinkingMachDesiredSkillNames(config, grokSkillEntries);
   const instructionsFilePath = asString(config.instructionsFilePath, "").trim();
   const stagedAssets = await stageGrokProjectAssets({
     cwd,
@@ -254,10 +254,10 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   try {
     const envConfig = parseObject(config.env);
     const env: Record<string, string> = {
-      ...buildPaperclipEnv(agent),
+      ...buildThinkingMachEnv(agent),
       ...buildRuntimeToolsEnv(ctx.runtimeTools),
     };
-    env.PAPERCLIP_RUN_ID = runId;
+    env.THINKINGMACH_RUN_ID = runId;
     const wakeTaskId =
       (typeof context.taskId === "string" && context.taskId.trim().length > 0 && context.taskId.trim()) ||
       (typeof context.issueId === "string" && context.issueId.trim().length > 0 && context.issueId.trim()) ||
@@ -281,17 +281,17 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     const linkedIssueIds = Array.isArray(context.issueIds)
       ? context.issueIds.filter((value: unknown): value is string => typeof value === "string" && value.trim().length > 0)
       : [];
-    const wakePayloadJson = stringifyPaperclipWakePayload(context.paperclipWake);
-    const issueWorkMode = readPaperclipIssueWorkModeFromContext(context);
-    if (wakeTaskId) env.PAPERCLIP_TASK_ID = wakeTaskId;
-    if (issueWorkMode) env.PAPERCLIP_ISSUE_WORK_MODE = issueWorkMode;
-    if (wakeReason) env.PAPERCLIP_WAKE_REASON = wakeReason;
-    if (wakeCommentId) env.PAPERCLIP_WAKE_COMMENT_ID = wakeCommentId;
-    if (approvalId) env.PAPERCLIP_APPROVAL_ID = approvalId;
-    if (approvalStatus) env.PAPERCLIP_APPROVAL_STATUS = approvalStatus;
-    if (linkedIssueIds.length > 0) env.PAPERCLIP_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
-    if (wakePayloadJson) env.PAPERCLIP_WAKE_PAYLOAD_JSON = wakePayloadJson;
-    refreshPaperclipWorkspaceEnvForExecution({
+    const wakePayloadJson = stringifyThinkingMachWakePayload(context.thinkingmachWake);
+    const issueWorkMode = readThinkingMachIssueWorkModeFromContext(context);
+    if (wakeTaskId) env.THINKINGMACH_TASK_ID = wakeTaskId;
+    if (issueWorkMode) env.THINKINGMACH_ISSUE_WORK_MODE = issueWorkMode;
+    if (wakeReason) env.THINKINGMACH_WAKE_REASON = wakeReason;
+    if (wakeCommentId) env.THINKINGMACH_WAKE_COMMENT_ID = wakeCommentId;
+    if (approvalId) env.THINKINGMACH_APPROVAL_ID = approvalId;
+    if (approvalStatus) env.THINKINGMACH_APPROVAL_STATUS = approvalStatus;
+    if (linkedIssueIds.length > 0) env.THINKINGMACH_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
+    if (wakePayloadJson) env.THINKINGMACH_WAKE_PAYLOAD_JSON = wakePayloadJson;
+    refreshThinkingMachWorkspaceEnvForExecution({
       env,
       envConfig,
       workspaceCwd: effectiveWorkspaceCwd,
@@ -305,7 +305,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       executionCwd: effectiveExecutionCwd,
     });
     if (authToken) {
-      env.PAPERCLIP_API_KEY = authToken;
+      env.THINKINGMACH_API_KEY = authToken;
     }
     // Held before the remote block below, so the remote lane can stage this
     // same host home into the sandbox without re-resolving it.
@@ -387,7 +387,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       restoreRemoteWorkspace = () =>
         preparedExecutionTargetRuntime.restoreWorkspace((line) => onLog("stdout", line));
       effectiveExecutionCwd = preparedExecutionTargetRuntime.workspaceRemoteDir ?? effectiveExecutionCwd;
-      refreshPaperclipWorkspaceEnvForExecution({
+      refreshThinkingMachWorkspaceEnvForExecution({
         env,
         envConfig,
         workspaceCwd: effectiveWorkspaceCwd,
@@ -460,7 +460,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         notes.push(`Applied fallback instructions via --rules @${stagedAssets.rulesFilePath}.`);
       }
       if (stagedAssets.stagedSkillsCount > 0) {
-        notes.push(`Staged ${stagedAssets.stagedSkillsCount} Paperclip skill(s) into .claude/skills for native Grok discovery.`);
+        notes.push(`Staged ${stagedAssets.stagedSkillsCount} ThinkingMach skill(s) into .claude/skills for native Grok discovery.`);
       }
       return notes;
     })();
@@ -474,18 +474,18 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       run: { id: runId, source: "on_demand" },
       context,
     };
-    const wakePrompt = renderPaperclipWakePrompt(context.paperclipWake, { resumedSession: Boolean(sessionId) });
+    const wakePrompt = renderThinkingMachWakePrompt(context.thinkingmachWake, { resumedSession: Boolean(sessionId) });
     const shouldUseResumeDeltaPrompt = Boolean(sessionId) && wakePrompt.length > 0;
-    const renderedPrompt = shouldUseResumeDeltaPrompt || isPaperclipRecoveryWakePayload(context.paperclipWake)
+    const renderedPrompt = shouldUseResumeDeltaPrompt || isThinkingMachRecoveryWakePayload(context.thinkingmachWake)
       ? ""
       : renderTemplate(promptTemplate, templateData);
     const sessionHandoffNote = asString(context.paperclipSessionHandoffMarkdown, "").trim();
-    const paperclipEnvNote = renderPaperclipEnvNote(env);
+    const thinkingmachEnvNote = renderThinkingMachEnvNote(env);
     const apiAccessNote = renderApiAccessNote(env);
     const prompt = joinPromptSections([
       wakePrompt,
       sessionHandoffNote,
-      paperclipEnvNote,
+      thinkingmachEnvNote,
       apiAccessNote,
       renderedPrompt,
     ]);
@@ -493,7 +493,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       promptChars: prompt.length,
       wakePromptChars: wakePrompt.length,
       sessionHandoffChars: sessionHandoffNote.length,
-      runtimeNoteChars: paperclipEnvNote.length + apiAccessNote.length,
+      runtimeNoteChars: thinkingmachEnvNote.length + apiAccessNote.length,
       heartbeatPromptChars: renderedPrompt.length,
     };
 

@@ -4,7 +4,7 @@ import type {
   IssueRelationIssueSummary,
   IssueScheduledRetry,
   SuccessfulRunHandoffState,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type { ReactNode } from "react";
 import { AlertTriangle, CheckCircle2, Circle, Flag, Loader2, RotateCcw } from "lucide-react";
 import { Link } from "@/lib/router";
@@ -94,7 +94,7 @@ function SuccessfulRunRetryNowControl({
     <div className="mt-2 rounded-md border border-amber-300/70 bg-background/80 p-2 dark:border-amber-500/40 dark:bg-background/40">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 text-xs leading-5 text-amber-900 dark:text-amber-100">
-          Paperclip will ask the assignee to choose the next step {scheduleLabel}. Retry now starts that follow-up immediately.
+          ThinkingMach will ask the assignee to choose the next step {scheduleLabel}. Retry now starts that follow-up immediately.
         </div>
         <Button
           type="button"
@@ -609,7 +609,7 @@ export function IssueBlockedNotice({
             <>
               <p className="font-medium leading-5">This task still needs a next step.</p>
               <p className="leading-5">
-                A run finished successfully, but the task is still open. Paperclip needs someone to choose
+                A run finished successfully, but the task is still open. ThinkingMach needs someone to choose
                 what happens next.
               </p>
               <ul className="list-disc space-y-1 pl-5 text-xs leading-5 text-amber-900 dark:text-amber-100">

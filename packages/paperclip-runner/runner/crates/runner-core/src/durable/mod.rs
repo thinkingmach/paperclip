@@ -24,7 +24,7 @@ pub(crate) use transport::current_unix_ms;
 
 pub const PROTOCOL: &str = "paperclip.runner";
 pub const PROTOCOL_VERSION: u64 = 1;
-pub const BOOTSTRAP_TICKET_ENV: &str = "PAPERCLIP_RUNNER_BOOTSTRAP_TICKET";
+pub const BOOTSTRAP_TICKET_ENV: &str = "THINKINGMACH_RUNNER_BOOTSTRAP_TICKET";
 const MAX_OUTBOX_BYTES: usize = 512 * 1024 * 1024;
 const MAX_FRAME_BYTES: usize = 16 * 1024 * 1024;
 

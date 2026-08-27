@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
-import type { DocumentRevision } from "@paperclipai/shared";
+import type { DocumentRevision } from "@thinkingmach/shared";
 import { issuesApi } from "../api/issues";
 import { queryKeys } from "../lib/queryKeys";
 import { buildLineDiff, type DiffRow } from "../lib/line-diff";

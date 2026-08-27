@@ -1,14 +1,14 @@
 {
-  "name": "@paperclipai/mcp-server",
+  "name": "@thinkingmach/mcp-server",
   "version": "0.1.0",
   "license": "MIT",
-  "homepage": "https://github.com/paperclipai/paperclip",
+  "homepage": "https://github.com/thinkingmach/paperclip",
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/mcp-server"
   },
   "type": "module",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "@paperclipai/shared": "workspace:*",
+    "@thinkingmach/shared": "workspace:*",
     "zod": "^4.4.3"
   },
   "devDependencies": {

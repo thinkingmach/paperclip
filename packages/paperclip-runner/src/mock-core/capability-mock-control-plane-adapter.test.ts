@@ -1589,7 +1589,7 @@ describe("CapabilityMockControlPlaneAdapter", () => {
     });
   });
 
-  it("performs complete mock operations without any Paperclip network request", async () => {
+  it("performs complete mock operations without any ThinkingMach network request", async () => {
     const fetch = vi.spyOn(globalThis, "fetch").mockRejectedValue(
       new Error("network access is forbidden in the mock control plane"),
     );

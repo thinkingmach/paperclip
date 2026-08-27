@@ -1,11 +1,11 @@
 import {
   buildAdapterEnvConfig,
-  isPaperclipRunnerProvider,
-  resolvePaperclipRunnerModel,
-  resolvePaperclipRunnerIdleTimeoutMs,
-  resolvePaperclipRunnerPermissionMode,
+  isThinkingMachRunnerProvider,
+  resolveThinkingMachRunnerModel,
+  resolveThinkingMachRunnerIdleTimeoutMs,
+  resolveThinkingMachRunnerPermissionMode,
   type CreateConfigValues,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import { DEFAULT_CODEX_LOCAL_BYPASS_APPROVALS_AND_SANDBOX } from "../index.js";
 
 function parseCommaArgs(value: string): string[] {
@@ -69,7 +69,7 @@ export function buildCodexLocalConfig(v: CreateConfigValues): Record<string, unk
 }
 
 /** Build a provider profile accepted by the experimental Rust runner. */
-export function buildPaperclipRunnerConfig(v: CreateConfigValues): Record<string, unknown> {
+export function buildThinkingMachRunnerConfig(v: CreateConfigValues): Record<string, unknown> {
   const config = buildCodexLocalConfig(v);
   const schemaValues = { ...(v.adapterSchemaValues ?? {}) };
   for (const unsupportedKey of [
@@ -92,7 +92,7 @@ export function buildPaperclipRunnerConfig(v: CreateConfigValues): Record<string
     delete schemaValues[unsupportedKey];
   }
   const providerCandidate = schemaValues.provider;
-  const provider = isPaperclipRunnerProvider(providerCandidate)
+  const provider = isThinkingMachRunnerProvider(providerCandidate)
     ? providerCandidate
     : "codex";
   const acpxAgent = schemaValues.acpxAgent === "codex" ? "codex" : "claude";
@@ -155,7 +155,7 @@ export function buildPaperclipRunnerConfig(v: CreateConfigValues): Record<string
   const lifecycleMode = lifecycleCandidate === "warm" ? "warm" : "per_turn";
   const configuredIdleTimeoutMs =
     v.paperclipRunnerIdleTimeoutMs ?? schemaValues.idleTimeoutMs;
-  const idleTimeoutMs = resolvePaperclipRunnerIdleTimeoutMs(
+  const idleTimeoutMs = resolveThinkingMachRunnerIdleTimeoutMs(
     configuredIdleTimeoutMs,
   );
   const configuredCodexPermissionMode =
@@ -166,7 +166,7 @@ export function buildPaperclipRunnerConfig(v: CreateConfigValues): Record<string
     && configuredCodexPermissionMode !== "never"
   ) {
     throw new Error(
-      "Paperclip Runner currently supports Codex only with codexPermissionMode set to never. Select Full auto (never ask) before saving.",
+      "ThinkingMach Runner currently supports Codex only with codexPermissionMode set to never. Select Full auto (never ask) before saving.",
     );
   }
   for (const normalizedKey of [
@@ -213,14 +213,14 @@ export function buildPaperclipRunnerConfig(v: CreateConfigValues): Record<string
     ...schemaValues,
     provider,
     ...(provider === "codex"
-      ? { model: resolvePaperclipRunnerModel("codex", config.model) }
+      ? { model: resolveThinkingMachRunnerModel("codex", config.model) }
       : {}),
     codexPermissionMode: "never",
-    opencodePermissionMode: resolvePaperclipRunnerPermissionMode(
+    opencodePermissionMode: resolveThinkingMachRunnerPermissionMode(
       "opencode",
       v.adapterSchemaValues?.opencodePermissionMode,
     ),
-    acpxPermissionMode: resolvePaperclipRunnerPermissionMode(
+    acpxPermissionMode: resolveThinkingMachRunnerPermissionMode(
       "acpx",
       v.adapterSchemaValues?.acpxPermissionMode,
     ),
@@ -269,3 +269,6 @@ export function buildPaperclipRunnerConfig(v: CreateConfigValues): Record<string
     ...(lifecycleMode === "warm" ? { idleTimeoutMs } : {}),
   };
 }
+
+export const buildThinkingMachRunnerConfig = buildThinkingMachRunnerConfig;
+

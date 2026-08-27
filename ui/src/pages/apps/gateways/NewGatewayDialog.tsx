@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ToolMcpGatewayContextScopeType, ToolProfileWithDetails } from "@paperclipai/shared";
+import type { ToolMcpGatewayContextScopeType, ToolProfileWithDetails } from "@thinkingmach/shared";
 import { toolsApi } from "@/api/tools";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

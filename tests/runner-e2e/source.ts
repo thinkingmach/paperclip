@@ -22,11 +22,11 @@ export function resolveRunnerE2ESource(
 ): RunnerE2ESource {
   return {
     sha:
-      nonEmpty(environment.PAPERCLIP_RUNNER_E2E_SOURCE_SHA) ??
+      nonEmpty(environment.THINKINGMACH_RUNNER_E2E_SOURCE_SHA) ??
       nonEmpty(existing?.sha) ??
       nonEmpty(environment.GITHUB_SHA),
     ref:
-      nonEmpty(environment.PAPERCLIP_RUNNER_E2E_SOURCE_REF) ??
+      nonEmpty(environment.THINKINGMACH_RUNNER_E2E_SOURCE_REF) ??
       nonEmpty(existing?.ref) ??
       nonEmpty(environment.GITHUB_REF),
     workflowRunUrl:

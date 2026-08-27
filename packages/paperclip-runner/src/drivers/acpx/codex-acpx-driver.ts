@@ -31,7 +31,7 @@ import {
   type OpenHarnessSessionInput,
   type PersistedHarnessSession,
 } from "../../contracts/harness-driver.js";
-import { PAPERCLIP_RUNTIME_REQUEST_SCHEMA_V2 } from "../../contracts/question-set.js";
+import { THINKINGMACH_RUNTIME_REQUEST_SCHEMA_V2 } from "../../contracts/question-set.js";
 import type { NativeAcpxPermissionMode } from "../../contracts/native-execution.js";
 import type { NativeUserMessage } from "../../contracts/types.js";
 import type {
@@ -198,7 +198,7 @@ export async function probeQualifiedAcpxEnvironment(
     model: options.model,
     permissionMode: "deny-all",
     systemInstructions:
-      "Paperclip Runner environment qualification probe. Do not execute a provider turn.",
+      "ThinkingMach Runner environment qualification probe. Do not execute a provider turn.",
     ...(options.environment === undefined
       ? {}
       : { environment: options.environment }),
@@ -998,7 +998,7 @@ class CodexAcpxSession implements HarnessSession {
     const cleanup = Promise.resolve()
       .then(() =>
         this.#host.interruptActiveTurn(
-          "Paperclip parked the ACPX input on a durable wait.",
+          "ThinkingMach parked the ACPX input on a durable wait.",
         ),
       )
       .catch((error: unknown) => {
@@ -1086,7 +1086,7 @@ class CodexAcpxSession implements HarnessSession {
       return { accepted: true };
     }
     if (!this.#dynamicToolHandler) {
-      throw new Error(`Unsupported Paperclip operation ${tool}`);
+      throw new Error(`Unsupported ThinkingMach operation ${tool}`);
     }
     return await this.#dynamicToolHandler({
       tool,
@@ -1831,7 +1831,7 @@ function runtimeInputProtocolPayload(
     throw new Error("ACPX runtime input request omitted its question set");
   }
   return {
-    schema: PAPERCLIP_RUNTIME_REQUEST_SCHEMA_V2,
+    schema: THINKINGMACH_RUNTIME_REQUEST_SCHEMA_V2,
     requestKind: "runtime",
     requestId: request.requestId,
     type: "input",
@@ -2116,8 +2116,8 @@ function reportRetainedAcpxCleanupFailure(
       errorName,
     }),
     {
-      code: "PAPERCLIP_ACPX_RETAINED_CLEANUP_FAILURE",
-      type: "PaperclipRunnerCleanupWarning",
+      code: "THINKINGMACH_ACPX_RETAINED_CLEANUP_FAILURE",
+      type: "ThinkingMachRunnerCleanupWarning",
     },
   );
 }

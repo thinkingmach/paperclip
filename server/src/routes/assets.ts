@@ -2,8 +2,8 @@ import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import createDOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
-import type { Db } from "@paperclipai/db";
-import { ASSET_NAMESPACE_RULE, createAssetImageMetadataSchema } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { ASSET_NAMESPACE_RULE, createAssetImageMetadataSchema } from "@thinkingmach/shared";
 import type { StorageService } from "../storage/types.js";
 import { assetService, logActivity } from "../services/index.js";
 import {

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { and, eq, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { heartbeatRuns } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { heartbeatRuns } from "@thinkingmach/db";
 import { REDACTED_EVENT_VALUE } from "../redaction.js";
 import { getSecretProvider } from "../secrets/provider-registry.js";
 import type { StoredSecretVersionMaterial } from "../secrets/types.js";

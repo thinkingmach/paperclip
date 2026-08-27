@@ -2,7 +2,7 @@
  * Server-side execution logic for the Hermes Agent adapter.
  *
  * Spawns `hermes chat -q "..." -Q` as a child process, streams output,
- * and returns structured results to Paperclip.
+ * and returns structured results to ThinkingMach.
  *
  * Verified CLI flags (hermes chat):
  *   -q/--query         single query (non-interactive)
@@ -25,21 +25,21 @@ import type {
   AdapterExecutionContext,
   AdapterExecutionResult,
   UsageSummary,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 
 import {
   runChildProcess,
-  buildPaperclipEnv,
+  buildThinkingMachEnv,
   buildRuntimeToolsEnv,
   renderTemplate,
   ensureAbsoluteDirectory,
-  DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+  DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   joinPromptSections,
-  renderPaperclipWakePrompt,
-  selectPaperclipTaskMarkdown,
-  stringifyPaperclipWakePayload,
-  isPaperclipRecoveryWakePayload,
-} from "@paperclipai/adapter-utils/server-utils";
+  renderThinkingMachWakePrompt,
+  selectThinkingMachTaskMarkdown,
+  stringifyThinkingMachWakePayload,
+  isThinkingMachRecoveryWakePayload,
+} from "@thinkingmach/adapter-utils/server-utils";
 
 import {
   HERMES_CLI,
@@ -53,7 +53,7 @@ import {
   detectModel,
   resolveProvider,
 } from "./detect-model.js";
-import { reconcileHermesPaperclipSkills } from "./skills.js";
+import { reconcileHermesThinkingMachSkills } from "./skills.js";
 
 // ---------------------------------------------------------------------------
 // Config helpers
@@ -83,25 +83,25 @@ export function resolveHermesCommand(config: Record<string, unknown>): string {
 // ---------------------------------------------------------------------------
 
 const HERMES_DEFAULT_PROMPT_TEMPLATE = [
-  'You are "{{agent.name}}", an AI agent employee in a Paperclip-managed company.',
+  'You are "{{agent.name}}", an AI agent employee in a ThinkingMach-managed company.',
   "",
-  "Paperclip runtime identity:",
+  "ThinkingMach runtime identity:",
   "- Agent ID: {{agent.id}}",
   "- Company ID: {{agent.companyId}}",
   "- Run ID: {{run.id}}",
   "- API base: {{paperclipApiUrl}}",
   "",
-  "Paperclip API guidance:",
-  "- Use `curl` from the terminal for Paperclip API calls; browser/web extraction tools may not reach localhost.",
-  "- Use `$PAPERCLIP_API_URL`, `$PAPERCLIP_API_KEY`, and `$PAPERCLIP_RUN_ID`; do not hard-code local ports or copy secrets into comments.",
+  "ThinkingMach API guidance:",
+  "- Use `curl` from the terminal for ThinkingMach API calls; browser/web extraction tools may not reach localhost.",
+  "- Use `$THINKINGMACH_API_URL`, `$THINKINGMACH_API_KEY`, and `$THINKINGMACH_RUN_ID`; do not hard-code local ports or copy secrets into comments.",
   "- Displayed command logs may redact secrets; rely on environment variables instead of printed token values.",
-  "- Include `-H \"Authorization: Bearer $PAPERCLIP_API_KEY\"` on API requests.",
-  "- Include `-H \"X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID\"` on mutating issue requests.",
+  "- Include `-H \"Authorization: Bearer $THINKINGMACH_API_KEY\"` on API requests.",
+  "- Include `-H \"X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID\"` on mutating issue requests.",
   "- For multiline comments or status updates, preserve newlines with `jq --arg` or a heredoc-fed helper rather than hand-escaping JSON.",
   "",
   "Safe multiline update pattern:",
   "```bash",
-  "api=\"${PAPERCLIP_API_URL%/}\"",
+  "api=\"${THINKINGMACH_API_URL%/}\"",
   "case \"$api\" in */api) ;; *) api=\"$api/api\" ;; esac",
   "",
   "body=$(cat <<'MD'",
@@ -113,13 +113,13 @@ const HERMES_DEFAULT_PROMPT_TEMPLATE = [
   ")",
   "jq -n --arg status done --arg comment \"$body\" '{status:$status, comment:$comment}' | \\",
   "  curl -sS -X PATCH \"$api/issues/{{context.issueId}}\" \\",
-  "    -H \"Authorization: Bearer $PAPERCLIP_API_KEY\" \\",
-  "    -H \"X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID\" \\",
+  "    -H \"Authorization: Bearer $THINKINGMACH_API_KEY\" \\",
+  "    -H \"X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID\" \\",
   "    -H \"Content-Type: application/json\" \\",
   "    --data-binary @-",
   "```",
   "",
-  DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+  DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
 ].join("\n");
 
 function renderConditionalSections(template: string, vars: Record<string, unknown>): string {
@@ -155,24 +155,24 @@ export function buildPrompt(
   // Build API URL — ensure it has the /api path
   let paperclipApiUrl =
     cfgString(config.paperclipApiUrl) ||
-    process.env.PAPERCLIP_API_URL ||
+    process.env.THINKINGMACH_API_URL ||
     "http://127.0.0.1:3100/api";
   // Ensure /api suffix
   if (!paperclipApiUrl.endsWith("/api")) {
     paperclipApiUrl = paperclipApiUrl.replace(/\/+$/, "") + "/api";
   }
 
-  const paperclipTaskMarkdown = selectPaperclipTaskMarkdown(context, {
+  const paperclipTaskMarkdown = selectThinkingMachTaskMarkdown(context, {
     resumedSession: options.resumedSession === true,
   });
-  const wakePrompt = renderPaperclipWakePrompt(context.paperclipWake, {
+  const wakePrompt = renderThinkingMachWakePrompt(context.thinkingmachWake, {
     resumedSession: options.resumedSession === true,
     // The task-context markdown is the authoritative brief on this lane; keep
     // the wake prompt's description copy out so the prompt carries it once.
     suppressIssueDescription: paperclipTaskMarkdown.length > 0,
   });
   const sessionHandoffMarkdown = cfgString(context.paperclipSessionHandoffMarkdown)?.trim() || "";
-  const wakePayloadJson = stringifyPaperclipWakePayload(context.paperclipWake) || "";
+  const wakePayloadJson = stringifyThinkingMachWakePayload(context.thinkingmachWake) || "";
 
   const vars: Record<string, unknown> = {
     agentId: ctx.agent?.id || "",
@@ -191,16 +191,16 @@ export function buildPrompt(
     wakeReason,
     projectName,
     paperclipApiUrl,
-    paperclipWakePrompt: wakePrompt,
+    thinkingmachWakePrompt: wakePrompt,
     paperclipTaskMarkdown,
     taskContext: paperclipTaskMarkdown,
-    paperclipWakeJson: wakePayloadJson,
+    thinkingmachWakeJson: wakePayloadJson,
     wakePayloadJson,
-    paperclipApiKeyEnv: "PAPERCLIP_API_KEY",
-    paperclipRunIdEnv: "PAPERCLIP_RUN_ID",
+    paperclipApiKeyEnv: "THINKINGMACH_API_KEY",
+    paperclipRunIdEnv: "THINKINGMACH_RUN_ID",
   };
 
-  const rendered = isPaperclipRecoveryWakePayload(context.paperclipWake)
+  const rendered = isThinkingMachRecoveryWakePayload(context.thinkingmachWake)
     ? ""
     : renderTemplate(renderConditionalSections(template, vars), vars);
   return joinPromptSections([
@@ -354,19 +354,19 @@ export async function execute(
 
   // The server adds this runtime inventory at the run boundary. Requiring the
   // marker avoids touching a developer's real Hermes home in direct unit or
-  // library calls that did not opt into Paperclip runtime skills.
-  if (Object.prototype.hasOwnProperty.call(config, "paperclipRuntimeSkills")) {
+  // library calls that did not opt into ThinkingMach runtime skills.
+  if (Object.prototype.hasOwnProperty.call(config, "thinkingmachRuntimeSkills")) {
     try {
-      const selectedSkills = await reconcileHermesPaperclipSkills(config);
+      const selectedSkills = await reconcileHermesThinkingMachSkills(config);
       if (selectedSkills.length > 0) {
         await ctx.onLog(
           "stdout",
-          `[hermes] Reconciled ${selectedSkills.length} Paperclip-managed skill(s) into the Hermes skills home.\n`,
+          `[hermes] Reconciled ${selectedSkills.length} ThinkingMach-managed skill(s) into the Hermes skills home.\n`,
         );
       }
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);
-      await ctx.onLog("stderr", `[hermes] Cannot start without the required Paperclip-managed skills: ${reason}\n`);
+      await ctx.onLog("stderr", `[hermes] Cannot start without the required ThinkingMach-managed skills: ${reason}\n`);
       throw err;
     }
   }
@@ -402,8 +402,8 @@ export async function execute(
     model,
   });
 
-  // ── Load agent instructions file (Paperclip instruction bundles) ──────
-  // Paperclip can materialize managed instructions into instructionsFilePath;
+  // ── Load agent instructions file (ThinkingMach instruction bundles) ──────
+  // ThinkingMach can materialize managed instructions into instructionsFilePath;
   // when present, inject that bundle into the Hermes prompt.
   const instructionsFilePath = cfgString(config.instructionsFilePath);
   let agentInstructions = "";
@@ -420,7 +420,7 @@ export async function execute(
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);
       // Non-fatal: log to stdout with an explicit "Warning:" prefix so the
-      // Paperclip UI doesn't render this as a red error (stderr output is
+      // ThinkingMach UI doesn't render this as a red error (stderr output is
       // surfaced as an error signal even when execution continues).
       await ctx.onLog(
         "stdout",
@@ -468,7 +468,7 @@ export async function execute(
   args.push("--source", "tool");
 
   // Bypass Hermes dangerous-command approval prompts.
-  // Paperclip agents run as non-interactive subprocesses with no TTY,
+  // ThinkingMach agents run as non-interactive subprocesses with no TTY,
   // so approval prompts would always timeout and deny legitimate commands
   // (curl, python3 -c, etc.). Agents operate in a sandbox — the approval
   // system is designed for human-attended interactive sessions.
@@ -487,27 +487,27 @@ export async function execute(
   const env: Record<string, string> = {
     ...(process.env as Record<string, string>),
     ...(userEnv && typeof userEnv === "object" ? userEnv : {}),
-    ...buildPaperclipEnv(ctx.agent),
+    ...buildThinkingMachEnv(ctx.agent),
     ...buildRuntimeToolsEnv(ctx.runtimeTools),
   };
 
-  if (ctx.runId) env.PAPERCLIP_RUN_ID = ctx.runId;
+  if (ctx.runId) env.THINKINGMACH_RUN_ID = ctx.runId;
 
-  // PAPERCLIP_API_KEY is never accepted from config — the harness-minted run
-  // token is the only source of Paperclip API identity.
-  delete env.PAPERCLIP_API_KEY;
-  if ((ctx as any).authToken) env.PAPERCLIP_API_KEY = (ctx as any).authToken;
+  // THINKINGMACH_API_KEY is never accepted from config — the harness-minted run
+  // token is the only source of ThinkingMach API identity.
+  delete env.THINKINGMACH_API_KEY;
+  if ((ctx as any).authToken) env.THINKINGMACH_API_KEY = (ctx as any).authToken;
 
   // BUG FIX: Read task context from ctx.context (wake context), not ctx.config (adapter config)
   const ctxContext = (ctx as any).context || {};
   const envTaskId = cfgString(ctxContext.taskId) || cfgString(ctxContext.issueId) || cfgString(ctx.config?.taskId);
-  if (envTaskId) env.PAPERCLIP_TASK_ID = envTaskId;
+  if (envTaskId) env.THINKINGMACH_TASK_ID = envTaskId;
   const envWakeReason = cfgString(ctxContext.wakeReason) || cfgString(ctx.config?.wakeReason);
-  if (envWakeReason) env.PAPERCLIP_WAKE_REASON = envWakeReason;
+  if (envWakeReason) env.THINKINGMACH_WAKE_REASON = envWakeReason;
   const envCommentId = cfgString(ctxContext.commentId) || cfgString(ctxContext.wakeCommentId) || cfgString(ctx.config?.commentId);
-  if (envCommentId) env.PAPERCLIP_WAKE_COMMENT_ID = envCommentId;
-  const wakePayloadJson = stringifyPaperclipWakePayload(ctxContext.paperclipWake);
-  if (wakePayloadJson) env.PAPERCLIP_WAKE_PAYLOAD_JSON = wakePayloadJson;
+  if (envCommentId) env.THINKINGMACH_WAKE_COMMENT_ID = envCommentId;
+  const wakePayloadJson = stringifyThinkingMachWakePayload(ctxContext.thinkingmachWake);
+  if (wakePayloadJson) env.THINKINGMACH_WAKE_PAYLOAD_JSON = wakePayloadJson;
 
   // ── Resolve working directory ──────────────────────────────────────────
   const cwd =
@@ -532,7 +532,7 @@ export async function execute(
 
   // ── Execute ────────────────────────────────────────────────────────────
   // Hermes writes non-error noise to stderr (MCP init, INFO logs, etc).
-  // Paperclip renders all stderr as red/error in the UI.
+  // ThinkingMach renders all stderr as red/error in the UI.
   // Wrap onLog to reclassify benign stderr lines as stdout.
   const wrappedOnLog = async (stream: "stdout" | "stderr", chunk: string) => {
     if (stream === "stderr") {
@@ -602,7 +602,7 @@ export async function execute(
     executionResult.summary = parsed.response.slice(0, 2000);
   }
 
-  // Set resultJson so Paperclip can persist run metadata (used for UI display + auto-comments)
+  // Set resultJson so ThinkingMach can persist run metadata (used for UI display + auto-comments)
   executionResult.resultJson = {
     result: parsed.response || "",
     session_id: parsed.sessionId || null,

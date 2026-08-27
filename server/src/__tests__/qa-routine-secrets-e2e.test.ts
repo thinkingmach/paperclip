@@ -32,7 +32,7 @@ import {
   routineRuns,
   routines,
   secretAccessEvents,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -51,11 +51,11 @@ describeEmbedded("PAP-9522 QA: routine secrets end-to-end", () => {
   let db!: ReturnType<typeof createDb>;
   let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
   const secretsTmpDir = path.join(os.tmpdir(), `paperclip-qa-routine-secrets-${randomUUID()}`);
-  const previousKeyFile = process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+  const previousKeyFile = process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
 
   beforeAll(async () => {
     mkdirSync(secretsTmpDir, { recursive: true });
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
     tempDb = await startEmbeddedPostgresTestDatabase("paperclip-qa-routine-secrets-");
     db = createDb(tempDb.connectionString);
   }, 30_000);
@@ -77,8 +77,8 @@ describeEmbedded("PAP-9522 QA: routine secrets end-to-end", () => {
 
   afterAll(async () => {
     await tempDb?.cleanup();
-    if (previousKeyFile === undefined) delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
-    else process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = previousKeyFile;
+    if (previousKeyFile === undefined) delete process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
+    else process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = previousKeyFile;
     rmSync(secretsTmpDir, { recursive: true, force: true });
   });
 

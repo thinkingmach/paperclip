@@ -12,7 +12,7 @@ Provider notes: [Google Workspace](./GOOGLE-WORKSPACE.md),
 [Gmail](./GMAIL.md), [PostHog](./POSTHOG.md). Optional credential custody:
 [Vercel Connect](./VERCEL-CONNECT.md).
 
-Post-read action: classify a new integration request, pick the right Paperclip
+Post-read action: classify a new integration request, pick the right ThinkingMach
 layer to change, and avoid creating a parallel connection framework.
 
 ## Decision Record
@@ -25,10 +25,10 @@ substrate on the PAP-10341 branch canonical:
   rules, action requests, gateway sessions, audit events, and runtime slots.
   Connections v1 is retired as an implementation path.
 - **D2: one credential authority per connection, brokered projections.** The
-  default is the Paperclip instance vault: durable third-party credentials live
+  default is the ThinkingMach instance vault: durable third-party credentials live
   in `company_secrets` as secret refs. A reviewed remote MCP method may instead
   opt in to [Vercel Connect](./VERCEL-CONNECT.md), in which case Vercel is the
-  durable credential authority and Paperclip stores only the connector reference
+  durable credential authority and ThinkingMach stores only the connector reference
   and redacted grant metadata. A connection must never mix those two sources.
   Adapter config, plugin config, harness credential files, and run environments
   may receive only brokered or projected credentials.
@@ -38,8 +38,8 @@ substrate on the PAP-10341 branch canonical:
 - **D4: unification lands on PAP-10341.** Pages, CircleBack-style harness MCP
   OAuth, provider gallery work, and plugin-provided integrations converge on
   this branch instead of spawning new integration substrates.
-- **D5: inbound stays thin.** External clients that call Paperclip use scoped
-  Paperclip tokens and existing profiles/rules. They do not get a separate
+- **D5: inbound stays thin.** External clients that call ThinkingMach use scoped
+  ThinkingMach tokens and existing profiles/rules. They do not get a separate
   permission model.
 
 ## Canonical Object Model
@@ -80,7 +80,7 @@ solves the problem:
 | Transport | how the external system is reached | remote HTTP MCP, local stdio, REST/OpenAPI, webhook |
 
 The agent should not hold a durable provider credential. It should hold a
-Paperclip run/session token; the server or broker resolves the connection,
+ThinkingMach run/session token; the server or broker resolves the connection,
 checks governance, invokes the provider, and writes audit.
 
 ## Identity vs. connections
@@ -93,9 +93,9 @@ identity-service documentation or re-deriving it.
 
 | Plane | Question | Lives where | Token profile |
 | --- | --- | --- | --- |
-| **P1. Sign-in methods** | *Who are you?* | `paperclip-id` (id.paperclip.ing → Account) | Minimal-scope provider tokens (`openid email profile`), used once to authenticate, encrypted at rest, never exported |
-| **P2. Connections (Apps)** | *What may your agents touch?* | Paperclip App instances (`tool_connections`), acquired via the **connect broker** for hosted + self-hosted | Rich-scope, long-lived resource tokens in the **instance's** encrypted vault; per-agent grants; risk-tier policy defaults |
-| **P3. Login with Paperclip** | *Who may authenticate against us?* | `paperclip-id` OIDC provider + DB-backed client registry | Our ES256 ID/access tokens issued *by* us to registered RPs (instances, the broker, future third parties) |
+| **P1. Sign-in methods** | *Who are you?* | `paperclip-id` (id.thinkingmach.com → Account) | Minimal-scope provider tokens (`openid email profile`), used once to authenticate, encrypted at rest, never exported |
+| **P2. Connections (Apps)** | *What may your agents touch?* | ThinkingMach App instances (`tool_connections`), acquired via the **connect broker** for hosted + self-hosted | Rich-scope, long-lived resource tokens in the **instance's** encrypted vault; per-agent grants; risk-tier policy defaults |
+| **P3. Login with ThinkingMach** | *Who may authenticate against us?* | `paperclip-id` OIDC provider + DB-backed client registry | Our ES256 ID/access tokens issued *by* us to registered RPs (instances, the broker, future third parties) |
 
 Everything in `doc/connections/` — the [First-30 matrix](./FIRST-30-MATRIX.md),
 the [connection authoring runbook](./CONNECTOR-PLAYBOOK.md), and the connect-broker work —
@@ -107,17 +107,17 @@ Adopted as a standing rule (decision D7) with the identity-model plan. State it
 verbatim in any P2 design so the app-store work cannot drift into merging the
 planes:
 
-> Sign-in tokens are never reused as resource tokens; id.paperclip.ing never
+> Sign-in tokens are never reused as resource tokens; id.thinkingmach.com never
 > stores resource tokens; no connections hub on the ID service.
 
-P2 tokens flow broker → instance vault as pass-through only; the id.paperclip.ing
+P2 tokens flow broker → instance vault as pass-through only; the id.thinkingmach.com
 Account page therefore must **not** grow a "Connections" hub. The reasons to
 hold the planes apart (from the plan §3):
 
 - **Scope discipline.** Sign-in wants the narrowest grant; connections want
   deliberately broad ones. One button that does both is how you grant repo
   access just to log in.
-- **Blast radius.** id.paperclip.ing holding every customer's Vercel/Slack/GitHub
+- **Blast radius.** id.thinkingmach.com holding every customer's Vercel/Slack/GitHub
   resource tokens would make it the single juiciest target in the fleet; the
   broker is intentionally pass-through.
 - **Self-hosted symmetry.** Instances own their vaults, so self-hosters don't
@@ -128,7 +128,7 @@ hold the planes apart (from the plan §3):
 
 The explicit Vercel Connect exception does not change D7 or merge P1 and P2.
 The operator chooses Vercel as the P2 credential authority for an individual
-connection. `id.paperclip.ing` is not involved, and neither sign-in tokens nor
+connection. `id.thinkingmach.com` is not involved, and neither sign-in tokens nor
 provider tokens pass through it. The deployment's Vercel access token or
 workload OIDC identity is bootstrap authority for that external vault, not a
 provider resource credential.
@@ -139,9 +139,9 @@ Use the surface-correct name for each plane; they intentionally differ:
 
 | Surface | Plane | Name to use |
 | --- | --- | --- |
-| Paperclip App instances | P2 | **"Connections"** |
-| id.paperclip.ing Account | P1 | **"Ways to sign in"** |
-| id.paperclip.ing admin | P3 | **"OIDC clients"** (until the app store productizes it) |
+| ThinkingMach App instances | P2 | **"Connections"** |
+| id.thinkingmach.com Account | P1 | **"Ways to sign in"** |
+| id.thinkingmach.com admin | P3 | **"OIDC clients"** (until the app store productizes it) |
 
 ## Packaging Rule
 
@@ -168,7 +168,7 @@ not own durable tokens.
   playbook work.
 - [Connecting any remote MCP server](./GENERIC-REMOTE-MCP.md) is the baseline:
   how an operator connects a standards-compliant remote MCP endpoint with no
-  Paperclip code change, and how sign-in resolves a client.
+  ThinkingMach code change, and how sign-in resolves a client.
 - [Connection authoring runbook](./CONNECTOR-PLAYBOOK.md) is the one
   end-to-end, agent-executable guide for adding a vendor as a catalog entry on
   Apps v2: research, connection-type selection, OAuth/API-key/generated-URL

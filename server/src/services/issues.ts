@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer";
 import { createHash, randomUUID } from "node:crypto";
 import { and, asc, desc, eq, gt, gte, inArray, isNotNull, isNull, like, lt, ne, notInArray, or, sql, type SQL } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   activityLog,
   agentWakeupRequests,
@@ -36,7 +36,7 @@ import {
   projectWorkspaces,
   projects,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AcceptedPlanDecomposition,
   IssueComment,
@@ -55,7 +55,7 @@ import type {
   IssueWatchdogSummary,
   LowTrustBoundary,
   SuccessfulRunHandoffState,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   clampIssueRequestDepth,
   extractAgentMentionIds,
@@ -65,7 +65,7 @@ import {
   issueCommentPresentationSchema,
   isUuidLike,
   normalizeIssueIdentifier as normalizeIssueReferenceIdentifier,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { conflict, HttpError, notFound, unprocessable } from "../errors.js";
 import { isForeignKeyViolation } from "../db-errors.js";
 import { logger } from "../middleware/logger.js";
@@ -211,8 +211,8 @@ function wakeRequestTargetsIssue(issueId: string) {
   return sql`(
     ${agentWakeupRequests.payload} ->> 'issueId' = ${issueId}
     or ${agentWakeupRequests.payload} ->> 'taskId' = ${issueId}
-    or ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'issueId' = ${issueId}
-    or ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'taskId' = ${issueId}
+    or ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'issueId' = ${issueId}
+    or ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'taskId' = ${issueId}
   )`;
 }
 
@@ -1691,9 +1691,9 @@ function inboxVisibleForUserCondition(companyId: string, userId: string) {
 }
 
 const LEGACY_PLUGIN_OPERATION_ORIGIN_KINDS = [
-  "plugin:paperclipai.content-machine:case",
-  "plugin:paperclipai.content-machine:evaluation",
-  "plugin:paperclipai.content-machine:source-sync",
+  "plugin:thinkingmach.content-machine:case",
+  "plugin:thinkingmach.content-machine:evaluation",
+  "plugin:thinkingmach.content-machine:source-sync",
 ] as const;
 
 function nonPluginOperationIssueCondition() {
@@ -2992,8 +2992,8 @@ async function listIssueReviewAttentionMap(
         issueId: sql<string | null>`coalesce(
           ${agentWakeupRequests.payload} ->> 'issueId',
           ${agentWakeupRequests.payload} ->> 'taskId',
-          ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'issueId',
-          ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'taskId'
+          ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'issueId',
+          ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'taskId'
         )`,
         agentId: agentWakeupRequests.agentId,
         status: agentWakeupRequests.status,
@@ -3007,8 +3007,8 @@ async function listIssueReviewAttentionMap(
         inArray(sql<string>`coalesce(
           ${agentWakeupRequests.payload} ->> 'issueId',
           ${agentWakeupRequests.payload} ->> 'taskId',
-          ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'issueId',
-          ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'taskId'
+          ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'issueId',
+          ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'taskId'
         )`, reviewIds),
       )),
     dbOrTx
@@ -3876,8 +3876,8 @@ async function listIssueBlockedInboxAttentionMap(
             issueId: sql<string | null>`coalesce(
               ${agentWakeupRequests.payload} ->> 'issueId',
               ${agentWakeupRequests.payload} ->> 'taskId',
-              ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'issueId',
-              ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'taskId'
+              ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'issueId',
+              ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'taskId'
             )`,
             agentId: agentWakeupRequests.agentId,
             status: agentWakeupRequests.status,
@@ -3889,8 +3889,8 @@ async function listIssueBlockedInboxAttentionMap(
             inArray(sql<string>`coalesce(
               ${agentWakeupRequests.payload} ->> 'issueId',
               ${agentWakeupRequests.payload} ->> 'taskId',
-              ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'issueId',
-              ${agentWakeupRequests.payload} -> '_paperclipWakeContext' ->> 'taskId'
+              ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'issueId',
+              ${agentWakeupRequests.payload} -> '_thinkingmachWakeContext' ->> 'taskId'
             )`, graphIssueIds),
           )),
     graphIssueIds.length === 0
@@ -6481,8 +6481,8 @@ export function issueService(db: Db) {
           coalesce(
             wake.payload ->> 'issueId',
             wake.payload ->> 'taskId',
-            wake.payload -> '_paperclipWakeContext' ->> 'issueId',
-            wake.payload -> '_paperclipWakeContext' ->> 'taskId'
+            wake.payload -> '_thinkingmachWakeContext' ->> 'issueId',
+            wake.payload -> '_thinkingmachWakeContext' ->> 'taskId'
           )
         `;
         const rawWakeRows = Array.from(await db.execute(sql`
@@ -7281,8 +7281,8 @@ export function issueService(db: Db) {
             issueData.projectId = workspaceSource.projectId;
           }
           // Workspace linkage is only inheritable inside the source project. A
-          // cross-project child (for example, a Paperclip ID issue created from
-          // a Paperclip App parent) must fall through to its own project's
+          // cross-project child (for example, a ThinkingMach ID issue created from
+          // a ThinkingMach App parent) must fall through to its own project's
           // default workspaces, otherwise the inherited ids fail the
           // project-match assertions below and the create is impossible without
           // the caller naming the target workspaces explicitly.

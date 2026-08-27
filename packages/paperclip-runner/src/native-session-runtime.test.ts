@@ -15,8 +15,8 @@ import type {
 } from "./protocol/replay-contract.js";
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   nativeRuntimePromptDigest,
 } from "./contracts/runtime-context.js";
@@ -1145,8 +1145,8 @@ describe("executeNativeSession recovery", () => {
     const digest = "0".repeat(64);
     const context = {
       prompt: {
-        revision: PAPERCLIP_EXECUTION_PROMPT_REVISION,
-        text: PAPERCLIP_EXECUTION_PROMPT,
+        revision: THINKINGMACH_EXECUTION_PROMPT_REVISION,
+        text: THINKINGMACH_EXECUTION_PROMPT,
         digest: nativeRuntimePromptDigest(),
       },
       instructions: {
@@ -2977,7 +2977,7 @@ describe("executeNativeSession recovery", () => {
     ).resolves.toMatchObject({ result, terminal });
 
     expect(cancel).toHaveBeenCalledWith({
-      reason: "Paperclip accepted the durable semantic result.",
+      reason: "ThinkingMach accepted the durable semantic result.",
       signal: expect.any(AbortSignal),
     });
     expect(providerResult).not.toHaveBeenCalled();

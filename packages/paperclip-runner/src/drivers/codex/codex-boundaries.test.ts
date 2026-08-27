@@ -46,7 +46,7 @@ describe("Codex value and workspace boundaries", () => {
         validateCodexWorkingDirectory(workspace, {
           HOME: hostHome,
           CODEX_HOME: codexHome,
-          PAPERCLIP_WORKSPACE_CWD: workspaceRoot,
+          THINKINGMACH_WORKSPACE_CWD: workspaceRoot,
         }),
       ).toBe(realpathSync.native(workspace));
       expect(() =>
@@ -59,7 +59,7 @@ describe("Codex value and workspace boundaries", () => {
         validateCodexWorkingDirectory(ordinaryHomeWorkspace, {
           HOME: hostHome,
           CODEX_HOME: codexHome,
-          PAPERCLIP_WORKSPACE_CWD: join(hostHome, "projects"),
+          THINKINGMACH_WORKSPACE_CWD: join(hostHome, "projects"),
         }),
       ).toBe(realpathSync.native(ordinaryHomeWorkspace));
       expect(() =>
@@ -70,7 +70,7 @@ describe("Codex value and workspace boundaries", () => {
       ).toThrow("cannot overlap sensitive host HOME state");
       expect(() =>
         validateCodexWorkingDirectory(join(workspaceRoot, "future-run"), {
-          PAPERCLIP_WORKSPACE_CWD: workspaceRoot,
+          THINKINGMACH_WORKSPACE_CWD: workspaceRoot,
         }),
       ).toThrow("must exist before provider admission");
 
@@ -86,12 +86,12 @@ describe("Codex value and workspace boundaries", () => {
       expect(() =>
         validateCodexWorkingDirectory(protectedHomeDirectory, {
           HOME: hostHome,
-          PAPERCLIP_WORKSPACE_CWD: workspaceRoot,
+          THINKINGMACH_WORKSPACE_CWD: workspaceRoot,
         }),
       ).toThrow("cannot overlap sensitive host HOME state");
       expect(() =>
         validateCodexWorkingDirectory(outside, {
-          PAPERCLIP_WORKSPACE_CWD: workspaceRoot,
+          THINKINGMACH_WORKSPACE_CWD: workspaceRoot,
         }),
       ).toThrow("outside the assigned workspace");
       expect(() =>
@@ -104,7 +104,7 @@ describe("Codex value and workspace boundaries", () => {
       symlinkSync(outside, escaped, "dir");
       expect(() =>
         validateCodexWorkingDirectory(escaped, {
-          PAPERCLIP_WORKSPACE_CWD: workspaceRoot,
+          THINKINGMACH_WORKSPACE_CWD: workspaceRoot,
         }),
       ).toThrow("outside the assigned workspace");
 
@@ -112,7 +112,7 @@ describe("Codex value and workspace boundaries", () => {
       writeFileSync(file, "not a directory");
       expect(() =>
         validateCodexWorkingDirectory(file, {
-          PAPERCLIP_WORKSPACE_CWD: workspaceRoot,
+          THINKINGMACH_WORKSPACE_CWD: workspaceRoot,
         }),
       ).toThrow("must be a directory");
     } finally {
@@ -125,7 +125,7 @@ describe("Codex value and workspace boundaries", () => {
     const remoteEnvironment = {
       HOME: remoteWorkspace,
       CODEX_HOME: `${remoteWorkspace}/.codex`,
-      PAPERCLIP_WORKSPACE_CWD: remoteWorkspace,
+      THINKINGMACH_WORKSPACE_CWD: remoteWorkspace,
     };
 
     expect(
@@ -155,7 +155,7 @@ describe("Codex value and workspace boundaries", () => {
     expect(() =>
       validateCodexWorkingDirectory(
         "/",
-        { PAPERCLIP_WORKSPACE_CWD: "/" },
+        { THINKINGMACH_WORKSPACE_CWD: "/" },
         "remote_runner",
       ),
     ).toThrow("filesystem root");

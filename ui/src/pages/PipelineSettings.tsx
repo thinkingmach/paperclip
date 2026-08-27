@@ -12,32 +12,8 @@ import {
   type IssueExecutionWorkspaceSettings,
   type RoutineEnvConfig,
   type RoutineVariable,
-} from "@paperclipai/shared";
-import {
-  Activity as ActivityIcon,
-  AlertTriangle,
-  Archive,
-  ArrowUpRight,
-  BadgeCheck,
-  Ban,
-  Check,
-  ChevronDown,
-  Circle,
-  CircleCheck,
-  GitBranch,
-  Hammer,
-  History as HistoryIcon,
-  Hexagon,
-  KeyRound,
-  LayoutGrid,
-  MoreHorizontal,
-  Pause,
-  Play,
-  Plus,
-  Save,
-  SlidersHorizontal,
-  Trash2,
-} from "lucide-react";
+} from "@thinkingmach/shared";
+import { Activity as ActivityIcon, AlertTriangle, Archive, ArrowUpRight, BadgeCheck, Ban, Check, ChevronDown, Circle, CircleCheck, GitBranch, Hammer, History as HistoryIcon, Hexagon, KeyRound, LayoutGrid, MoreHorizontal, Pause, Play, Plus, Save, SlidersHorizontal, Trash2,  } from "lucide-react";
 import { agentsApi } from "../api/agents";
 import { accessApi } from "../api/access";
 import { authApi } from "../api/auth";
@@ -1904,7 +1880,7 @@ export function PipelineSettings() {
     onError: async (error) => {
       pushToast({
         title: "Failed to save stage",
-        body: error instanceof Error ? error.message : "Paperclip could not save the stage.",
+        body: error instanceof Error ? error.message : "ThinkingMach could not save the stage.",
         tone: "error",
       });
     },
@@ -1937,7 +1913,7 @@ export function PipelineSettings() {
           ? error.message
           : error instanceof Error
             ? error.message
-            : "Paperclip could not save the stage secrets.",
+            : "ThinkingMach could not save the stage secrets.",
         tone: "error",
       });
     },
@@ -2014,7 +1990,7 @@ export function PipelineSettings() {
     onError: (error) => {
       pushToast({
         title: "Failed to delete stage",
-        body: error instanceof Error ? error.message : "Paperclip could not delete the stage.",
+        body: error instanceof Error ? error.message : "ThinkingMach could not delete the stage.",
         tone: "error",
       });
     },
@@ -2046,7 +2022,7 @@ export function PipelineSettings() {
       setStrictTransitionsEnabled(pipeline?.enforceTransitions ?? false);
       pushToast({
         title: "Failed to update transition rules",
-        body: error instanceof Error ? error.message : "Paperclip could not update transition rules.",
+        body: error instanceof Error ? error.message : "ThinkingMach could not update transition rules.",
         tone: "error",
       });
     },
@@ -2308,7 +2284,7 @@ export function PipelineSettings() {
         <div className="space-y-1">
           <h3 className="text-sm font-semibold text-foreground">Break into smaller pieces</h3>
           <p className="max-w-md text-sm text-muted-foreground">
-            The agent decides what the pieces are. Paperclip creates and tracks them.
+            The agent decides what the pieces are. ThinkingMach creates and tracks them.
           </p>
         </div>
         <ToggleSwitch
@@ -3000,7 +2976,7 @@ export function PipelineSettings() {
                               </div>
                               {selectedAutomationProject && !selectedAutomationProjectWorkspace ? (
                                 <p className="mt-2 text-xs text-muted-foreground">
-                                  This project has no saved workspace default. Paperclip will use the project fallback when automation runs.
+                                  This project has no saved workspace default. ThinkingMach will use the project fallback when automation runs.
                                 </p>
                               ) : null}
                             </FieldRow>

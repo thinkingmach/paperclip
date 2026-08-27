@@ -28,8 +28,8 @@ function jsonResponse(body: unknown, status = 200): Response {
 
 function catalogTeam(overrides: Record<string, unknown> = {}) {
   return {
-    id: "paperclipai:bundled:software-development:product-engineering",
-    key: "paperclipai/bundled/software-development/product-engineering",
+    id: "thinkingmach:bundled:software-development:product-engineering",
+    key: "thinkingmach/bundled/software-development/product-engineering",
     kind: "bundled",
     category: "software-development",
     slug: "product-engineering",
@@ -58,8 +58,8 @@ function catalogTeam(overrides: Record<string, unknown> = {}) {
 
 function installedCatalogTeam(overrides: Record<string, unknown> = {}) {
   return {
-    catalogId: "paperclipai:bundled:software-development:product-engineering",
-    catalogKey: "paperclipai/bundled/software-development/product-engineering",
+    catalogId: "thinkingmach:bundled:software-development:product-engineering",
+    catalogKey: "thinkingmach/bundled/software-development/product-engineering",
     present: true,
     currentContentHash: "sha256:catalog-team",
     installedOriginHashes: ["sha256:catalog-team"],
@@ -76,9 +76,9 @@ describe("teams CLI commands", () => {
 
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    delete process.env.PAPERCLIP_API_URL;
-    delete process.env.PAPERCLIP_API_KEY;
-    delete process.env.PAPERCLIP_COMPANY_ID;
+    delete process.env.THINKINGMACH_API_URL;
+    delete process.env.THINKINGMACH_API_KEY;
+    delete process.env.THINKINGMACH_COMPANY_ID;
     fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
     logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
@@ -116,7 +116,7 @@ describe("teams CLI commands", () => {
     );
     const rendered = logSpy.mock.calls.map((call: unknown[]) => String(call[0])).join("\n");
     expect(rendered).toContain("id");
-    expect(rendered).toContain("paperclipai:bundled:software-development:product-engineering");
+    expect(rendered).toContain("thinkingmach:bundled:software-development:product-engineering");
   });
 
   it("searches catalog teams as JSON", async () => {
@@ -148,8 +148,8 @@ describe("teams CLI commands", () => {
       .mockResolvedValueOnce(jsonResponse([
         catalogTeam(),
         catalogTeam({
-          id: "paperclipai:optional:content:content-machine",
-          key: "paperclipai/optional/content/content-machine",
+          id: "thinkingmach:optional:content:content-machine",
+          key: "thinkingmach/optional/content/content-machine",
           kind: "optional",
           category: "content",
           slug: "content-machine",
@@ -200,8 +200,8 @@ describe("teams CLI commands", () => {
       .mockResolvedValueOnce(jsonResponse([
         installedCatalogTeam(),
         installedCatalogTeam({
-          catalogId: "paperclipai:removed:team",
-          catalogKey: "paperclipai/removed/team",
+          catalogId: "thinkingmach:removed:team",
+          catalogKey: "thinkingmach/removed/team",
           present: false,
           currentContentHash: null,
           installedOriginHashes: ["sha256:removed"],
@@ -224,15 +224,15 @@ describe("teams CLI commands", () => {
     const rows = JSON.parse(String(logSpy.mock.calls[0]?.[0]));
     expect(rows).toMatchObject([
       {
-        catalogId: "paperclipai:bundled:software-development:product-engineering",
-        catalogKey: "paperclipai/bundled/software-development/product-engineering",
+        catalogId: "thinkingmach:bundled:software-development:product-engineering",
+        catalogKey: "thinkingmach/bundled/software-development/product-engineering",
         installedStatus: "installed",
         installedAgentCount: 3,
         outOfDate: false,
       },
       {
-        catalogId: "paperclipai:removed:team",
-        catalogKey: "paperclipai/removed/team",
+        catalogId: "thinkingmach:removed:team",
+        catalogKey: "thinkingmach/removed/team",
         installedStatus: "installed_missing",
         installedAgentCount: 2,
         present: false,
@@ -247,7 +247,7 @@ describe("teams CLI commands", () => {
     await runCommand([
       "teams",
       "inspect",
-      "paperclipai/bundled/software-development/product-engineering",
+      "thinkingmach/bundled/software-development/product-engineering",
       "--api-base",
       "http://paperclip.test",
       "--api-key",
@@ -256,7 +256,7 @@ describe("teams CLI commands", () => {
     ]);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://paperclip.test/api/teams/catalog/ref?ref=paperclipai%2Fbundled%2Fsoftware-development%2Fproduct-engineering",
+      "http://paperclip.test/api/teams/catalog/ref?ref=thinkingmach%2Fbundled%2Fsoftware-development%2Fproduct-engineering",
       expect.objectContaining({ method: "GET" }),
     );
     expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toEqual(detail);
@@ -309,7 +309,7 @@ describe("teams CLI commands", () => {
     const result = {
       team: catalogTeam(),
       portabilityImport: {
-        company: { id: "company-1", name: "Paperclip", action: "unchanged" },
+        company: { id: "company-1", name: "ThinkingMach", action: "unchanged" },
         agents: [],
         projects: [],
         envInputs: [],
@@ -458,8 +458,8 @@ describe("teams CLI commands", () => {
     expect(errorSpy).not.toHaveBeenCalled();
   });
 
-  it("auto-requests board approval for forbidden installs inside a Paperclip task run", async () => {
-    process.env.PAPERCLIP_TASK_ID = "11111111-1111-4111-8111-111111111111";
+  it("auto-requests board approval for forbidden installs inside a ThinkingMach task run", async () => {
+    process.env.THINKINGMACH_TASK_ID = "11111111-1111-4111-8111-111111111111";
     const approval = {
       id: "approval-2",
       companyId: "company-1",

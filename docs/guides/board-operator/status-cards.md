@@ -9,15 +9,15 @@ Enable **Status Cards** from **Instance Settings > Experimental**. When `enableS
 
 ## How updates work
 
-Status cards use SQL change detection before spending model tokens. Paperclip reruns the stored query set on scheduler ticks, compares the result with the previous fingerprint, and marks meaningful additions, removals, or configured field changes as pending.
+Status cards use SQL change detection before spending model tokens. ThinkingMach reruns the stored query set on scheduler ticks, compares the result with the previous fingerprint, and marks meaningful additions, removals, or configured field changes as pending.
 
-- **Manual** is the default. Changes make the card stale, but Paperclip never starts an automatic update.
+- **Manual** is the default. Changes make the card stale, but ThinkingMach never starts an automatic update.
 - **Interval** checks every 5, 15, 30, or 60 minutes and only starts an update when the watched result changed.
 - **Reactive** waits for the debounce window, then updates after significant changes. The v1 defaults are a 60-second debounce and at most 6 updates per hour.
 - **Active hours** batch changes outside the configured window into a later update.
 - **Daily token caps** pause automatic work when the card reaches its budget. Manual refresh remains available.
 
-Incremental updates receive the previous summary and only the changed tasks. Paperclip uses a full rebuild after prompt or agent changes, large deltas, periodic drift guards, restore from archive, or an explicit full refresh. Archived cards are disarmed; restoring one leaves it stale and schedules a full refresh rather than silently resuming the old schedule.
+Incremental updates receive the previous summary and only the changed tasks. ThinkingMach uses a full rebuild after prompt or agent changes, large deltas, periodic drift guards, restore from archive, or an explicit full refresh. Archived cards are disarmed; restoring one leaves it stale and schedules a full refresh rather than silently resuming the old schedule.
 
 ## Cost model
 

@@ -74,7 +74,7 @@ vi.mock("./components/CloudAccessGate", async () => {
 // The prefix resolver + redirect logic both read the active company.
 const PAP_COMPANY = {
   id: "company-1",
-  name: "Paperclip",
+  name: "ThinkingMach",
   issuePrefix: "PAP",
   status: "active",
 };

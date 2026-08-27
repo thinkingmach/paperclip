@@ -8,8 +8,8 @@ import {
   resolveConfigPath,
 } from "../config/store.js";
 import {
-  findPaperclipConfigKeyWarnings,
-  type PaperclipConfig,
+  findThinkingMachConfigKeyWarnings,
+  type ThinkingMachConfig,
 } from "../config/schema.js";
 import { ensureLocalSecretsKeyFile } from "../config/secrets-key.js";
 import { promptDatabase } from "../prompts/database.js";
@@ -22,9 +22,9 @@ import {
   resolveDefaultBackupDir,
   resolveDefaultEmbeddedPostgresDir,
   resolveDefaultLogsDir,
-  resolvePaperclipInstanceId,
+  resolveThinkingMachInstanceId,
 } from "../config/home.js";
-import { printPaperclipCliBanner } from "../utils/banner.js";
+import { printThinkingMachCliBanner } from "../utils/banner.js";
 
 type Section = "llm" | "database" | "logging" | "server" | "storage" | "secrets";
 
@@ -37,8 +37,8 @@ const SECTION_LABELS: Record<Section, string> = {
   secrets: "Secrets",
 };
 
-function defaultConfig(): PaperclipConfig {
-  const instanceId = resolvePaperclipInstanceId();
+function defaultConfig(): ThinkingMachConfig {
+  const instanceId = resolveThinkingMachInstanceId();
   return {
     $meta: {
       version: 1,
@@ -85,22 +85,22 @@ export async function configure(opts: {
   config?: string;
   section?: string;
 }): Promise<void> {
-  printPaperclipCliBanner();
+  printThinkingMachCliBanner();
   p.intro(pc.bgCyan(pc.black(" paperclip configure ")));
   const configPath = resolveConfigPath(opts.config);
 
   if (!configExists(opts.config)) {
-    p.log.error("No config file found. Run `paperclipai onboard` first.");
+    p.log.error("No config file found. Run `thinkingmach onboard` first.");
     p.outro("");
     process.exitCode = 1;
     return;
   }
 
-  let config: PaperclipConfig;
+  let config: ThinkingMachConfig;
   let invalidBackupPath: string | undefined;
   try {
     config = readConfig(opts.config) ?? defaultConfig();
-    for (const warning of findPaperclipConfigKeyWarnings(config)) {
+    for (const warning of findThinkingMachConfigKeyWarnings(config)) {
       p.log.warn(`Unknown config key ${warning.path}; did you mean ${warning.suggestion}? It will be preserved.`);
     }
   } catch (err) {
@@ -203,7 +203,7 @@ export async function configure(opts: {
           } else if (keyResult.status === "skipped_provider") {
             p.log.message(pc.dim("Skipping local key file management for non-local provider"));
           } else {
-            p.log.message(pc.dim("Skipping local key file management because PAPERCLIP_SECRETS_MASTER_KEY is set"));
+            p.log.message(pc.dim("Skipping local key file management because THINKINGMACH_SECRETS_MASTER_KEY is set"));
           }
         }
         break;

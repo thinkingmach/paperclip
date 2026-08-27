@@ -6,7 +6,7 @@ import {
   parseRoutineMentionHref,
   parseSkillMentionHref,
   parseUserMentionHref,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { getAgentIcon } from "./agent-icons";
 import { hexToRgb, pickTextColorForPillBg } from "./color-contrast";
 

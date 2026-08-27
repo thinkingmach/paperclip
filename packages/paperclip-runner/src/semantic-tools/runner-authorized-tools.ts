@@ -1,32 +1,32 @@
 import { createHash } from "node:crypto";
 
-import type { PaperclipJsonSchema } from "../catalog/semantic-action-types.js";
-import type { PaperclipSemanticToolDefinition } from "./types.js";
+import type { ThinkingMachJsonSchema } from "../catalog/semantic-action-types.js";
+import type { ThinkingMachSemanticToolDefinition } from "./types.js";
 
-export const PAPERCLIP_RUNNER_AUTHORIZED_TOOLS_SCHEMA =
+export const THINKINGMACH_RUNNER_AUTHORIZED_TOOLS_SCHEMA =
   "paperclip.runner.authorized-tools.v1" as const;
 
-export interface PaperclipRunnerAuthorizedTool {
+export interface ThinkingMachRunnerAuthorizedTool {
   readonly operationId: string;
   readonly version: 1;
   readonly description: string;
-  readonly inputSchema: PaperclipJsonSchema;
-  readonly responseSchema: PaperclipJsonSchema;
+  readonly inputSchema: ThinkingMachJsonSchema;
+  readonly responseSchema: ThinkingMachJsonSchema;
 }
 
-export interface PaperclipRunnerAuthorizedToolSet {
-  readonly schema: typeof PAPERCLIP_RUNNER_AUTHORIZED_TOOLS_SCHEMA;
+export interface ThinkingMachRunnerAuthorizedToolSet {
+  readonly schema: typeof THINKINGMACH_RUNNER_AUTHORIZED_TOOLS_SCHEMA;
   readonly schemaVersion: 1;
   readonly catalogDigest: string;
-  readonly operations: readonly PaperclipRunnerAuthorizedTool[];
+  readonly operations: readonly ThinkingMachRunnerAuthorizedTool[];
 }
 
-export function createPaperclipRunnerAuthorizedToolSet(
-  definitions: readonly PaperclipSemanticToolDefinition[],
-): PaperclipRunnerAuthorizedToolSet {
+export function createThinkingMachRunnerAuthorizedToolSet(
+  definitions: readonly ThinkingMachSemanticToolDefinition[],
+): ThinkingMachRunnerAuthorizedToolSet {
   const names = new Set<string>();
   const operations = definitions
-    .map((definition): PaperclipRunnerAuthorizedTool => {
+    .map((definition): ThinkingMachRunnerAuthorizedTool => {
       if (definition.annotations.version !== 1 || names.has(definition.name)) {
         throw new Error("paperclip_runner_authorized_tools_invalid");
       }
@@ -47,7 +47,7 @@ export function createPaperclipRunnerAuthorizedToolSet(
           : 0,
     );
   return deepFreeze({
-    schema: PAPERCLIP_RUNNER_AUTHORIZED_TOOLS_SCHEMA,
+    schema: THINKINGMACH_RUNNER_AUTHORIZED_TOOLS_SCHEMA,
     schemaVersion: 1,
     catalogDigest: digestOperations(operations),
     operations,
@@ -64,7 +64,7 @@ function deepFreeze<T>(value: T): T {
 }
 
 function digestOperations(
-  operations: readonly PaperclipRunnerAuthorizedTool[],
+  operations: readonly ThinkingMachRunnerAuthorizedTool[],
 ): string {
   return `sha256:${createHash("sha256")
     .update(canonicalJson(operations))

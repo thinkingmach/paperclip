@@ -1,16 +1,16 @@
 # Standalone Standalone Adapter Demo
 
 This tutorial exercises the Standalone tracer entirely inside
-`packages/paperclip-runner/`. It does not install the runner into Paperclip,
-call a Paperclip API, change an instance flag, edit an agent profile, create a
-Paperclip task, or use the repository server/database integration.
+`packages/paperclip-runner/`. It does not install the runner into ThinkingMach,
+call a ThinkingMach API, change an instance flag, edit an agent profile, create a
+ThinkingMach task, or use the repository server/database integration.
 
 ## 1. Run the default legacy path
 
 From the repository root:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:standalone
+pnpm --filter @thinkingmach/paperclip-runner trace:standalone
 ```
 
 The JSON trace must report:
@@ -24,7 +24,7 @@ The JSON trace must report:
 ## 2. Enable the native standalone path
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:standalone -- --feature-flag enabled
+pnpm --filter @thinkingmach/paperclip-runner trace:standalone -- --feature-flag enabled
 ```
 
 The trace must report `resolvedMode: "native"`. Both paths execute the same
@@ -35,7 +35,7 @@ inspectable.
 ## 3. Prove the kill switch
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:standalone -- --feature-flag enabled --kill-switch enabled
+pnpm --filter @thinkingmach/paperclip-runner trace:standalone -- --feature-flag enabled --kill-switch enabled
 ```
 
 The trace must return to `resolvedMode: "legacy"` with
@@ -45,7 +45,7 @@ allowed after the kill switch resolves the path.
 ## 4. Open the standalone demo page
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner demo:standalone
+pnpm --filter @thinkingmach/paperclip-runner demo:standalone
 ```
 
 Open `http://127.0.0.1:4182/standalone-demo/`. The page starts on the legacy
@@ -56,13 +56,13 @@ trace JSON to inspect replay and idempotency details.
 ## 5. Run the package-local checks
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/standalone/standalone-demo.test.ts \
   src/conformance/control-plane-port.test.ts
-pnpm --filter @paperclipai/paperclip-runner run build:standalone
+pnpm --filter @thinkingmach/paperclip-runner run build:standalone
 ```
 
-These checks require no running Paperclip service or credentials.
+These checks require no running ThinkingMach service or credentials.
 
 ## Human checkpoint
 
@@ -70,5 +70,5 @@ These checks require no running Paperclip service or credentials.
 2. Enable the native demo flag and compare the contract and reducer panels.
 3. Inspect the replay and finalization fields in the JSON trace.
 4. Enable the kill switch and confirm native invocations return to zero.
-5. Confirm no Paperclip instance or repository path outside
+5. Confirm no ThinkingMach instance or repository path outside
    `packages/paperclip-runner/` was needed.

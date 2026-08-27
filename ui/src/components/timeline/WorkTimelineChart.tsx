@@ -10,7 +10,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "@/lib/router";
-import type { WorkTimelineActor, WorkTimelineResult } from "@paperclipai/shared";
+import type { WorkTimelineActor, WorkTimelineResult } from "@thinkingmach/shared";
 import { applyCompanyPrefix, extractCompanyPrefixFromPath } from "@/lib/company-routes";
 import { getAgentIcon } from "@/lib/agent-icons";
 import {

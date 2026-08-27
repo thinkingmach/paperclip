@@ -4,4 +4,4 @@ export {
   EMBEDDED_POSTGRES_TEST_TIMEOUT_MS,
   type EmbeddedPostgresTestDatabase,
   type EmbeddedPostgresTestSupport,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";

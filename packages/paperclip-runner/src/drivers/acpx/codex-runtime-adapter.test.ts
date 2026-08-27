@@ -82,7 +82,7 @@ describe("Codex ACPX runtime adapter", () => {
       cwd: "/workspace",
       sessionOptions: {
         model: "gpt-5.6-sol",
-        systemPrompt: { append: "Use Paperclip tools." },
+        systemPrompt: { append: "Use ThinkingMach tools." },
       },
     });
     expect(
@@ -127,7 +127,7 @@ describe("Codex ACPX runtime adapter", () => {
 
       expect(runtimeOptions?.spawnEnvironment?.()).toEqual({
         PATH: "/verified/bin",
-        PAPERCLIP_ACPX_ISOLATED_CONTEXT: "1",
+        THINKINGMACH_ACPX_ISOLATED_CONTEXT: "1",
       });
       expect(runtime.ensureSession).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -2602,7 +2602,7 @@ function openOptions(
     // supplies both live credential-quorum listener descriptors.
     credentialFenceFds: [42, 43] as const,
     activateCredentialFenceOwner: async () => undefined,
-    systemInstructions: "Use Paperclip tools.",
+    systemInstructions: "Use ThinkingMach tools.",
     mcpServers: [],
     retainFailedAdmissionCleanup: vi.fn(),
   };

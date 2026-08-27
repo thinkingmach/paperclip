@@ -4,8 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { describe, expect, it, vi } from "vitest";
-import type { agents } from "@paperclipai/db";
-import { sessionCodec as codexSessionCodec } from "@paperclipai/adapter-codex-local/server";
+import type { agents } from "@thinkingmach/db";
+import { sessionCodec as codexSessionCodec } from "@thinkingmach/adapter-codex-local/server";
 import { resolveDefaultAgentWorkspaceDir } from "../home-paths.js";
 import {
   applyPersistedExecutionWorkspaceConfig,
@@ -42,7 +42,7 @@ import {
   stripWorkspaceRuntimeFromExecutionRunConfig,
   shouldResetTaskSessionForModelChange,
   stripConfiguredModelFromSessionParams,
-  stripPaperclipSessionMetadataFromSessionParams,
+  stripThinkingMachSessionMetadataFromSessionParams,
   normalizeSessionParams,
   shouldResetTaskSessionForWake,
   scrubGitCredentialText,
@@ -385,7 +385,7 @@ describe("assertGitSensitiveAdapterWorkspaceValid", () => {
     const actualBranch = "PAP-1-push-pr-head";
     try {
       await runGit(repoRoot, ["config", "user.email", "test@example.com"]);
-      await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+      await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
       await fs.writeFile(path.join(repoRoot, "README.md"), "initial\n", "utf8");
       await runGit(repoRoot, ["add", "README.md"]);
       await runGit(repoRoot, ["commit", "-m", "Initial commit"]);
@@ -979,7 +979,7 @@ describe("requiresPushCapabilityPreflight", () => {
     expect(requiresPushCapabilityPreflight({
       adapterType: "codex_local",
       issueId: "issue-1",
-      explicitRunScopedSkillKeys: ["paperclipai/bundled/software-development/github-pr-workflow"],
+      explicitRunScopedSkillKeys: ["thinkingmach/bundled/software-development/github-pr-workflow"],
     })).toBe(true);
 
     expect(requiresPushCapabilityPreflight({
@@ -991,7 +991,7 @@ describe("requiresPushCapabilityPreflight", () => {
     expect(requiresPushCapabilityPreflight({
       adapterType: "cursor-cloud",
       issueId: "issue-1",
-      explicitRunScopedSkillKeys: ["paperclipai/bundled/software-development/github-pr-workflow"],
+      explicitRunScopedSkillKeys: ["thinkingmach/bundled/software-development/github-pr-workflow"],
     })).toBe(false);
   });
 });
@@ -2535,10 +2535,10 @@ describe("stripConfiguredModelFromSessionParams", () => {
   });
 });
 
-describe("stripPaperclipSessionMetadataFromSessionParams", () => {
-  it("removes all internal Paperclip session metadata before adapter invocation", () => {
+describe("stripThinkingMachSessionMetadataFromSessionParams", () => {
+  it("removes all internal ThinkingMach session metadata before adapter invocation", () => {
     expect(
-      stripPaperclipSessionMetadataFromSessionParams({
+      stripThinkingMachSessionMetadataFromSessionParams({
         sessionId: "thread-1",
         cwd: "/tmp/project",
         __paperclipConfiguredModel: "gpt-5.4-mini",
@@ -2606,7 +2606,7 @@ describe("comment wake batching", () => {
         wakeReason: "issue_commented",
         wakeCommentId: "comment-1",
         wakeCommentIds: ["comment-1"],
-        paperclipWake: {
+        thinkingmachWake: {
           latestCommentId: "comment-1",
         },
       },
@@ -2620,7 +2620,7 @@ describe("comment wake batching", () => {
     expect(extractWakeCommentIds(merged)).toEqual(["comment-1", "comment-2"]);
     expect(merged.commentId).toBe("comment-2");
     expect(merged.wakeCommentId).toBe("comment-2");
-    expect(merged.paperclipWake).toBeUndefined();
+    expect(merged.thinkingmachWake).toBeUndefined();
   });
 
   it("keeps forceFreshSession sticky once any coalesced wake requests it", () => {
@@ -2994,7 +2994,7 @@ describe("prioritizeProjectWorkspaceCandidatesForRun", () => {
 });
 
 describe("parseSessionCompactionPolicy", () => {
-  it("disables Paperclip-managed rotation by default for codex and claude local", () => {
+  it("disables ThinkingMach-managed rotation by default for codex and claude local", () => {
     expect(parseSessionCompactionPolicy(buildAgent("codex_local"))).toEqual({
       enabled: true,
       maxSessionRuns: 0,

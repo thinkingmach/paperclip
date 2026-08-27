@@ -8,7 +8,7 @@ let issueDetailNavigationGeneration = 0;
 
 declare global {
   interface Window {
-    __PAPERCLIP_ISSUE_DETAIL_NAVIGATE_START__?: number;
+    __THINKINGMACH_ISSUE_DETAIL_NAVIGATE_START__?: number;
   }
 }
 
@@ -26,8 +26,8 @@ export function beginIssueDetailNavigation(): void {
   performance.clearMeasures(ISSUE_DETAIL_HEADER_MEASURE);
   performance.clearMeasures(ISSUE_DETAIL_CONTENT_MEASURE);
 
-  const externallyCapturedStart = window.__PAPERCLIP_ISSUE_DETAIL_NAVIGATE_START__;
-  delete window.__PAPERCLIP_ISSUE_DETAIL_NAVIGATE_START__;
+  const externallyCapturedStart = window.__THINKINGMACH_ISSUE_DETAIL_NAVIGATE_START__;
+  delete window.__THINKINGMACH_ISSUE_DETAIL_NAVIGATE_START__;
   performance.mark(ISSUE_DETAIL_NAVIGATE_MARK, {
     startTime: typeof externallyCapturedStart === "number" ? externallyCapturedStart : performance.now(),
   });

@@ -15,7 +15,7 @@ baseline), [SDK component decisions](sdk-component-decisions.md).
 Scenario chat adds a **Codex-style interactive chat** over the same package-local
 Capability runner and mock `ControlPlanePort`. The board opens a scenario, chats
 with the agent, and — this is the point of the phase — **sees the mock
-Paperclip activity for every turn** instead of having it hidden behind chat.
+ThinkingMach activity for every turn** instead of having it hidden behind chat.
 The 7F explorer remains unchanged as the corpus-review surface; the chat is a
 sibling surface in the same app shell, one React tree, sharing the picker,
 transcript grammar, inspector components, and token layer.
@@ -345,7 +345,7 @@ made from §1–§11 is recorded here rather than left for a reviewer to discove
    composer `disconnected` because "free-text input is a live-driver
    capability". With the provider relay unavailable in the package-local demo
    (the same 7F §3.1 condition), that rule would have made the phase's own
-   acceptance — "a user can complete successful and denied mock Paperclip
+   acceptance — "a user can complete successful and denied mock ThinkingMach
    interactions from chat" — unreachable. Scripted mode therefore accepts a
    prompt and drives the next recorded turn against the live mock core, and the
    composer note says exactly that, with the number of scripted turns left. The
@@ -508,7 +508,7 @@ The §11 matrix is **fully accepted**. The gate is closed.
 ## 12. Out of scope / rejected
 
 - All 7F §10 rejections stand (no Tailwind/Radix, no dark mode, no markdown
-  renderer, no virtualization, no parity re-judging, no live-Paperclip
+  renderer, no virtualization, no parity re-judging, no live-ThinkingMach
   affordances).
 - **No bottom-sheet drawer on mobile.** The segmented Chat · Activity
   pattern is proven, keeps one React tree, and route-mirrors; a drawer adds

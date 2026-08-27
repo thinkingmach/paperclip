@@ -2,7 +2,7 @@
 
 import { renderToStaticMarkup } from "react-dom/server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { AgentDetail, AgentRuntimeState, HeartbeatRun, Issue } from "@paperclipai/shared";
+import type { AgentDetail, AgentRuntimeState, HeartbeatRun, Issue } from "@thinkingmach/shared";
 import { describe, expect, it, vi } from "vitest";
 import { AgentOverview } from "./AgentDetail";
 

@@ -12,5 +12,5 @@ export function parseOpenCodeProxyPermissionMode(
   ) {
     return configured;
   }
-  throw new Error("PAPERCLIP_OPENCODE_PERMISSION_MODE is invalid");
+  throw new Error("THINKINGMACH_OPENCODE_PERMISSION_MODE is invalid");
 }

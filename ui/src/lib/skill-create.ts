@@ -2,7 +2,7 @@ import type {
   CompanySkillCreateRequest,
   CompanySkillDetail,
   CompanySkillSharingScope,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export const SKILL_CREATE_ACCENTS = [
   "#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444",

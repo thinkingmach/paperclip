@@ -14,13 +14,13 @@ import {
   ServerCog,
   Trash2,
 } from "lucide-react";
-import type { ToolApplication, ToolConnection } from "@paperclipai/shared";
+import type { ToolApplication, ToolConnection } from "@thinkingmach/shared";
 import {
   appSupportsCatalogSetup,
   getAppDefinitionForUrl,
   getAppStoreDefinition,
   isToolConnectionAttentionHealth,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useNavigate } from "@/lib/router";
 import { useCompany } from "@/context/CompanyContext";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";

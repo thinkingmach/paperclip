@@ -4,9 +4,9 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   prepareAdapterExecutionTargetRuntime,
-  startAdapterExecutionTargetPaperclipBridge,
+  startAdapterExecutionTargetThinkingMachBridge,
   startAdapterExecutionTargetProcessSessionBridge,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import { runChildProcess } from "../server-utils.js";
 import { classifyWorkspaceRestoreFailure } from "../workspace-restore-merge.js";
 
@@ -27,12 +27,12 @@ import { classifyWorkspaceRestoreFailure } from "../workspace-restore-merge.js";
 
 // Wrap the staging seam and both sandbox bridges so a test can stub them without
 // changing behavior for the other tests.
-vi.mock("@paperclipai/adapter-utils/execution-target", async (importActual) => {
-  const actual = await importActual<typeof import("@paperclipai/adapter-utils/execution-target")>();
+vi.mock("@thinkingmach/adapter-utils/execution-target", async (importActual) => {
+  const actual = await importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>();
   return {
     ...actual,
     prepareAdapterExecutionTargetRuntime: vi.fn(actual.prepareAdapterExecutionTargetRuntime),
-    startAdapterExecutionTargetPaperclipBridge: vi.fn(actual.startAdapterExecutionTargetPaperclipBridge),
+    startAdapterExecutionTargetThinkingMachBridge: vi.fn(actual.startAdapterExecutionTargetThinkingMachBridge),
     startAdapterExecutionTargetProcessSessionBridge: vi.fn(actual.startAdapterExecutionTargetProcessSessionBridge),
   };
 });
@@ -156,7 +156,7 @@ function stubBridges(options: { stopRejects?: boolean } = {}) {
         throw new Error("bridge stop boom");
       })
     : vi.fn(async () => {});
-  vi.mocked(startAdapterExecutionTargetPaperclipBridge).mockImplementation(async () => {
+  vi.mocked(startAdapterExecutionTargetThinkingMachBridge).mockImplementation(async () => {
     return { env: {}, stop } as never;
   });
   vi.mocked(startAdapterExecutionTargetProcessSessionBridge).mockImplementation(async () => {
@@ -320,7 +320,7 @@ describe("composed ACPX run fault matrix", () => {
     const { stateDir, localCwd, executionTarget } = await setupRemoteSandbox();
     const capture = captureDisposition();
     const stop = vi.fn(async () => {});
-    vi.mocked(startAdapterExecutionTargetPaperclipBridge).mockImplementationOnce(async () => {
+    vi.mocked(startAdapterExecutionTargetThinkingMachBridge).mockImplementationOnce(async () => {
       throw new Error("paperclip bridge boom");
     });
     vi.mocked(startAdapterExecutionTargetProcessSessionBridge).mockImplementationOnce(

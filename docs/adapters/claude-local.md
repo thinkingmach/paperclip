@@ -53,7 +53,7 @@ Symptom in logs / issue thread:
 API Error: 400 diagnostics.previous_message_id: must be the `id` from a prior /v1/messages response (starts with `msg_`)
 ```
 
-What it means: the on-disk Claude Code transcript JSONL for that session contains a malformed (non-`msg_`-prefixed) `previous_message_id`. Anthropic's `/v1/messages` rejects every resume attempt against that transcript with a deterministic 400. Without guards, Paperclip would re-persist the same poisoned session id and the issue is stranded permanently — see [RED-976](../../../) / [RED-978](../../../).
+What it means: the on-disk Claude Code transcript JSONL for that session contains a malformed (non-`msg_`-prefixed) `previous_message_id`. Anthropic's `/v1/messages` rejects every resume attempt against that transcript with a deterministic 400. Without guards, ThinkingMach would re-persist the same poisoned session id and the issue is stranded permanently — see [RED-976](../../../) / [RED-978](../../../).
 
 What the adapter does automatically:
 
@@ -69,14 +69,14 @@ On-call checklist if you see this in production:
 
 ## Skills Injection
 
-The adapter creates a temporary directory with symlinks to Paperclip skills and passes it via `--add-dir`. This makes skills discoverable without polluting the agent's working directory.
+The adapter creates a temporary directory with symlinks to ThinkingMach skills and passes it via `--add-dir`. This makes skills discoverable without polluting the agent's working directory.
 
 ## Remote credential ownership
 
 When no API key or `CLAUDE_CODE_OAUTH_TOKEN` is configured,
 `claude_local` uses a snapshot-owns-auth topology for managed sandbox execution
 targets. When the run uses a sandbox execution target and no explicit
-`CLAUDE_CONFIG_DIR` is configured, Paperclip creates a remote
+`CLAUDE_CONFIG_DIR` is configured, ThinkingMach creates a remote
 `CLAUDE_CONFIG_DIR` under the run's Claude runtime directory. It uploads
 sanitized host-side settings such as `settings.json` and `CLAUDE.md`, but the
 managed seed does not upload host Claude credential files.
@@ -88,7 +88,7 @@ into the managed `CLAUDE_CONFIG_DIR`. That means credentials baked into the
 sandbox image win for managed remote Claude runs.
 
 Worked example: a sandbox image contains `$HOME/.claude/.credentials.json` from
-its own Claude Code login. Paperclip starts a managed remote `claude_local` run,
+its own Claude Code login. ThinkingMach starts a managed remote `claude_local` run,
 uploads only the sanitized config seed, and sets `CLAUDE_CONFIG_DIR` to the
 remote runtime config path. Because the managed config has no credential file,
 the adapter copies the sandbox image's `$HOME/.claude/.credentials.json` into
@@ -96,16 +96,16 @@ that path before invoking Claude. The sandbox snapshot owns the credential for
 the run.
 
 This differs from [`codex_local`](/adapters/codex-local), where a
-Paperclip-managed sandbox run uploads a host-owned `CODEX_HOME/auth.json` and
+ThinkingMach-managed sandbox run uploads a host-owned `CODEX_HOME/auth.json` and
 therefore shadows any Codex login already present inside the sandbox image.
 
 For manual local CLI usage outside heartbeat runs (for example running as `claudecoder` directly), use:
 
 ```sh
-npx paperclipai agent local-cli claudecoder --company-id <company-id>
+npx thinkingmach agent local-cli claudecoder --company-id <company-id>
 ```
 
-This installs Paperclip skills in `~/.claude/skills`, creates an agent API key, and prints shell exports to run as that agent.
+This installs ThinkingMach skills in `~/.claude/skills`, creates an agent API key, and prints shell exports to run as that agent.
 
 ## Environment Test
 

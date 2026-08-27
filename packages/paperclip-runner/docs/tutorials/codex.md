@@ -4,8 +4,8 @@
 
 Codex connects the mock core to a real Codex app-server session.
 
-Codex gets one small task envelope. Codex does not get the Paperclip skill.
-Codex does not get a Paperclip API key or API instructions.
+Codex gets one small task envelope. Codex does not get the ThinkingMach skill.
+Codex does not get a ThinkingMach API key or API instructions.
 
 ## What this phase proves
 
@@ -20,7 +20,7 @@ keep clear session identities and safe diagnostics.
 - Run commands from the repository root.
 - Install Node.js 20+, pnpm 9+, Rust, and the `codex` CLI.
 - Sign in to Codex with the normal local Codex setup.
-- Do not add a Paperclip or OpenAI API key for this tutorial.
+- Do not add a ThinkingMach or OpenAI API key for this tutorial.
 
 Check the installed harness:
 
@@ -32,18 +32,18 @@ codex app-server --help
 Run the real-Codex steps from an ordinary operator shell with a workspace that
 has no `AGENTS.md` in that directory or any ancestor. A child directory of this
 repository is not skillless because Codex discovers the repository
-`AGENTS.md`. In a Paperclip-managed agent run, `PAPERCLIP_WORKSPACE_CWD` also
+`AGENTS.md`. In a ThinkingMach-managed agent run, `THINKINGMACH_WORKSPACE_CWD` also
 prevents `mktemp -d` from selecting a directory outside the assigned workspace;
 use a separate clean operator workspace rather than bypassing that guard.
 
 ## Step 1: Run the focused conformance checks
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner typecheck:typescript
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner typecheck:typescript
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/drivers/codex/app-server-transport.test.ts \
   src/drivers/codex/codex-app-server-driver.test.ts
-pnpm --filter @paperclipai/paperclip-runner check:forbidden-imports
+pnpm --filter @thinkingmach/paperclip-runner check:forbidden-imports
 ```
 
 Confirm that the driver tests pass and the package boundary check says
@@ -56,7 +56,7 @@ Choose a temporary directory and trace file:
 ```sh
 codex_workspace="$(mktemp -d)"
 codex_trace="$codex_workspace/trace.json"
-pnpm --filter @paperclipai/paperclip-runner trace:codex -- \
+pnpm --filter @thinkingmach/paperclip-runner trace:codex -- \
   --working-directory "$codex_workspace" \
   --output "$codex_trace"
 ```
@@ -143,7 +143,7 @@ Use a new directory:
 
 ```sh
 codex_steer_workspace="$(mktemp -d)"
-pnpm --filter @paperclipai/paperclip-runner trace:codex -- \
+pnpm --filter @thinkingmach/paperclip-runner trace:codex -- \
   --working-directory "$codex_steer_workspace" \
   --steer "Keep the answer short and verify the exact file text."
 ```
@@ -157,7 +157,7 @@ Use a new directory:
 
 ```sh
 codex_interrupt_workspace="$(mktemp -d)"
-pnpm --filter @paperclipai/paperclip-runner trace:codex -- \
+pnpm --filter @thinkingmach/paperclip-runner trace:codex -- \
   --working-directory "$codex_interrupt_workspace" \
   --interrupt
 ```
@@ -169,7 +169,7 @@ event. It must not create a replacement session.
 ## Step 7: Run the package verification path
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner verify
+pnpm --filter @thinkingmach/paperclip-runner verify
 ```
 
 This command is the package acceptance path. The real Codex example remains a

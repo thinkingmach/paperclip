@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 
 // This test pins the published subpath surface of `package.json`.
 //
-// `@paperclipai/server` is itself a published npm package. Its published
-// build imports `@paperclipai/adapter-utils/duplex-observability` as a real
+// `@thinkingmach/server` is itself a published npm package. Its published
+// build imports `@thinkingmach/adapter-utils/duplex-observability` as a real
 // npm dependency, not as a workspace link. Node resolves that import against
 // `publishConfig.exports`, so the subpath must stay published there. An
 // earlier revision of this file denied the subpath with an explicit `null`

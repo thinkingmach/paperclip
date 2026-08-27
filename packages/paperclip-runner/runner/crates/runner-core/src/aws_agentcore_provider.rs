@@ -1,8 +1,8 @@
 //! Amazon Bedrock AgentCore Harness provider.
 //!
-//! The Harness owns the remote model loop. Paperclip supplies only caller-side
+//! The Harness owns the remote model loop. ThinkingMach supplies only caller-side
 //! inline functions, then executes those functions through the durable PRP
-//! bridge. No Paperclip credential or callback address enters AgentCore.
+//! bridge. No ThinkingMach credential or callback address enters AgentCore.
 
 use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::fs;
@@ -42,7 +42,7 @@ const MAX_AGENTCORE_TOOLS: usize = 64;
 // bounded cold start, but leave enough of the eval's outer deadline for the
 // durable runner to classify the failure and service runner.shutdown cleanly.
 const AGENTCORE_INVOCATION_DELIVERY_TIMEOUT: Duration = Duration::from_secs(120);
-// InvokeHarness accepts at most 50 HarnessSkill entries. Paperclip reserves one
+// InvokeHarness accepts at most 50 HarnessSkill entries. ThinkingMach reserves one
 // for the generated instruction companion, leaving at most 49 assigned skills.
 const MAX_CONTEXT_SKILL_SOURCES: usize = 50;
 const MAX_CONTEXT_UPLOAD_FILES: usize = 10_000;
@@ -542,7 +542,7 @@ fn prepare_agentcore_runtime_context_assets(
         .map(|(path, bytes)| (PathBuf::from("instructions").join(path), bytes))
         .collect();
     let instruction_companion = format!(
-        "---\nname: paperclip-instructions-{}\ndescription: Paperclip agent instruction sibling bundle\n---\nRead `instructions/{entry_path}` and its sibling files as read-only context.\n",
+        "---\nname: paperclip-instructions-{}\ndescription: ThinkingMach agent instruction sibling bundle\n---\nRead `instructions/{entry_path}` and its sibling files as read-only context.\n",
         &instruction_digest[..12]
     );
     let instruction_asset_digest = sha_hex(
@@ -609,7 +609,7 @@ fn agentcore_system_instructions(config: &AwsAgentCoreProviderConfig) -> Result<
         .instructions
         .strip_suffix(&local_directive)
         .map(|prefix| format!(
-            "{prefix}Read-only instruction siblings are in the attached Paperclip HarnessSkill under `instructions/`."
+            "{prefix}Read-only instruction siblings are in the attached ThinkingMach HarnessSkill under `instructions/`."
         ))
         .ok_or_else(|| "AgentCore instruction-root directive is missing or inconsistent".to_owned())
 }
@@ -1660,7 +1660,7 @@ impl Provider for AwsAgentCoreHarnessProvider {
                 if !validator_for(schema)
                     .map_err(|_| {
                         LocalRunnerError::invalid(
-                            "authorized Paperclip tool has invalid JSON Schema",
+                            "authorized ThinkingMach tool has invalid JSON Schema",
                         )
                     })?
                     .is_valid(&input)
@@ -1864,7 +1864,7 @@ impl Provider for AwsAgentCoreHarnessProvider {
             LocalRunnerError::invalid("failed to build AgentCore user continuation")
         })?;
         // The durable runner records ToolResult before calling this method. A
-        // transport ambiguity therefore never repeats the Paperclip mutation;
+        // transport ambiguity therefore never repeats the ThinkingMach mutation;
         // it fails closed with the last authoritative Memory cursor preserved
         // for the control plane's reconciliation workflow.
         self.invoke(vec![assistant, user])?;
@@ -1977,7 +1977,7 @@ fn encode_tools(
     let mut schemas = BTreeMap::new();
     for tool in tools {
         validator_for(&tool.input_schema).map_err(|_| {
-            LocalRunnerError::invalid("authorized Paperclip tool has invalid JSON Schema")
+            LocalRunnerError::invalid("authorized ThinkingMach tool has invalid JSON Schema")
         })?;
         let remote_name = remote_tool_name(&tool.operation_id);
         if reverse
@@ -2217,7 +2217,7 @@ mod tests {
             max_iterations: 8,
             max_output_tokens: 4096,
             timeout_seconds: 300,
-            instructions: "Paperclip test instructions".to_owned(),
+            instructions: "ThinkingMach test instructions".to_owned(),
             runtime_context: None,
         }
     }
@@ -2912,7 +2912,7 @@ mod tests {
 
         let instructions = agentcore_system_instructions(&config).unwrap();
         assert!(instructions.starts_with("paperclip prompt\n\nAGENTS entry\n\n"));
-        assert!(instructions.ends_with("attached Paperclip HarnessSkill under `instructions/`."));
+        assert!(instructions.ends_with("attached ThinkingMach HarnessSkill under `instructions/`."));
         assert!(!instructions.contains(local_root));
     }
 

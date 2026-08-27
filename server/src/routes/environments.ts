@@ -1,5 +1,5 @@
 import { Router, type Request } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   AGENT_ADAPTER_TYPES,
   cancelEnvironmentCustomImageSetupSessionSchema,
@@ -15,7 +15,7 @@ import {
   startEnvironmentCustomImageSetupSessionSchema,
   type EnvironmentDeleteBlastRadius,
   updateEnvironmentSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { conflict, forbidden, unprocessable } from "../errors.js";
 import { isCloudManagedInstance } from "../services/cloud-instance.js";
 import { getManagedInstanceConfig, SECRET_LIKE_CONFIG_KEY_PATTERN } from "../services/managed-config.js";
@@ -74,7 +74,7 @@ export function isPlatformProvisionedEnvironment(environment: {
   metadata: Record<string, unknown> | null;
 }): boolean {
   return (
-    environment.metadata?.managedByPaperclip === true ||
+    environment.metadata?.managedByThinkingMach === true ||
     environment.metadata?.managedKubernetesSandbox === true
   );
 }
@@ -141,13 +141,13 @@ function isTenantEditableManagedSandbox(environment: {
 }): boolean {
   return (
     environment.driver === "sandbox" &&
-    environment.metadata?.managedByPaperclip === true &&
+    environment.metadata?.managedByThinkingMach === true &&
     environment.metadata?.managedKubernetesSandbox !== true
   );
 }
 
 const PLATFORM_PROVISIONED_MARKER_KEYS = [
-  "managedByPaperclip",
+  "managedByThinkingMach",
   "managedKubernetesSandbox",
 ] as const;
 
@@ -155,7 +155,7 @@ const PLATFORM_PROVISIONED_MARKER_KEYS = [
  * Whether some bootstrap path on this instance currently owns the managed
  * sandbox slot: the managed-config `environments` section
  * (`applyManagedEnvironments`) or the forced execution-mode bootstrap
- * (`PAPERCLIP_EXECUTION_MODE=kubernetes`). Both adopt and refresh the
+ * (`THINKINGMACH_EXECUTION_MODE=kubernetes`). Both adopt and refresh the
  * marked sandbox row on every boot. Fails closed: an unparseable document
  * or env value counts as configured, keeping the slot protected (a
  * malformed value refuses startup anyway, so a running server never hits
@@ -208,7 +208,7 @@ async function isPlatformSlotEnvironment(
   if (environment.driver === "local") return true;
   if (environment.driver !== "sandbox") return false;
   if (
-    environment.metadata?.managedByPaperclip === true &&
+    environment.metadata?.managedByThinkingMach === true &&
     isManagedSandboxProvisioningConfigured()
   ) {
     return true;
@@ -341,7 +341,7 @@ export function environmentRoutes(
   const instanceSettings = instanceSettingsService(db);
   const projects = projectService(db);
   const secrets = secretService(db);
-  const strictSecretsMode = process.env.PAPERCLIP_SECRETS_STRICT_MODE === "true";
+  const strictSecretsMode = process.env.THINKINGMACH_SECRETS_STRICT_MODE === "true";
 
   function parseObject(value: unknown): Record<string, unknown> {
     return value && typeof value === "object" && !Array.isArray(value)
@@ -592,7 +592,7 @@ export function environmentRoutes(
       return "Cannot delete this environment while a sandbox cleanup is pending. Wait for the cleanup sweep to destroy the orphan sandbox, then retry.";
     }
     if (impact.reusableSandboxLeaseCount > 0) {
-      return "Cannot delete this environment while it has a reusable sandbox lease. Remove the associated execution workspace or issue so Paperclip can destroy the sandbox, then retry.";
+      return "Cannot delete this environment while it has a reusable sandbox lease. Remove the associated execution workspace or issue so ThinkingMach can destroy the sandbox, then retry.";
     }
     return null;
   }

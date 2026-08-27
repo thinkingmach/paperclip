@@ -4,7 +4,7 @@ import path from "node:path";
 import express from "express";
 import request from "supertest";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { healthRoutes } from "../routes/health.js";
 import * as devServerStatus from "../dev-server-status.js";
 import { resolveHotRestartIntentPath } from "../services/hot-restart.js";
@@ -28,9 +28,9 @@ afterEach(() => {
 
 describe("GET /health dev-server supervisor access", () => {
   it("exposes dev-server metadata to the supervising dev runner in authenticated mode", async () => {
-    const previousFile = process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
-    const previousToken = process.env.PAPERCLIP_DEV_SERVER_STATUS_TOKEN;
-    process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
+    const previousFile = process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
+    const previousToken = process.env.THINKINGMACH_DEV_SERVER_STATUS_TOKEN;
+    process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
       dirty: true,
       lastChangedAt: "2026-03-20T12:00:00.000Z",
       changedPathCount: 1,
@@ -38,7 +38,7 @@ describe("GET /health dev-server supervisor access", () => {
       pendingMigrations: [],
       lastRestartAt: "2026-03-20T11:30:00.000Z",
     });
-    process.env.PAPERCLIP_DEV_SERVER_STATUS_TOKEN = "dev-runner-token";
+    process.env.THINKINGMACH_DEV_SERVER_STATUS_TOKEN = "dev-runner-token";
 
     let selectCall = 0;
     const db = {
@@ -99,7 +99,7 @@ describe("GET /health dev-server supervisor access", () => {
 
       const res = await request(app)
         .get("/health")
-        .set("X-Paperclip-Dev-Server-Status-Token", "dev-runner-token");
+        .set("X-ThinkingMach-Dev-Server-Status-Token", "dev-runner-token");
 
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
@@ -125,14 +125,14 @@ describe("GET /health dev-server supervisor access", () => {
       });
     } finally {
       if (previousFile === undefined) {
-        delete process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
+        delete process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
       } else {
-        process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = previousFile;
+        process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = previousFile;
       }
       if (previousToken === undefined) {
-        delete process.env.PAPERCLIP_DEV_SERVER_STATUS_TOKEN;
+        delete process.env.THINKINGMACH_DEV_SERVER_STATUS_TOKEN;
       } else {
-        process.env.PAPERCLIP_DEV_SERVER_STATUS_TOKEN = previousToken;
+        process.env.THINKINGMACH_DEV_SERVER_STATUS_TOKEN = previousToken;
       }
     }
   });
@@ -140,9 +140,9 @@ describe("GET /health dev-server supervisor access", () => {
 
 describe("POST /health/dev-server/restart", () => {
   it("records a manual restart request for the dev runner", async () => {
-    const previousFile = process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
-    const previousHome = process.env.PAPERCLIP_HOME;
-    process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
+    const previousFile = process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
+    const previousHome = process.env.THINKINGMACH_HOME;
+    process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
       dirty: true,
       lastChangedAt: "2026-03-20T12:00:00.000Z",
       changedPathCount: 1,
@@ -150,8 +150,8 @@ describe("POST /health/dev-server/restart", () => {
       pendingMigrations: [],
       lastRestartAt: "2026-03-20T11:30:00.000Z",
     });
-    process.env.PAPERCLIP_HOME = path.dirname(
-      process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE,
+    process.env.THINKINGMACH_HOME = path.dirname(
+      process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE,
     );
 
     try {
@@ -175,7 +175,7 @@ describe("POST /health/dev-server/restart", () => {
       });
 
       const requestPath = path.join(
-        path.dirname(process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE),
+        path.dirname(process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE),
         "dev-server-restart-request.json",
       );
       expect(existsSync(requestPath)).toBe(true);
@@ -186,19 +186,19 @@ describe("POST /health/dev-server/restart", () => {
       });
     } finally {
       if (previousFile === undefined) {
-        delete process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
+        delete process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
       } else {
-        process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = previousFile;
+        process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = previousFile;
       }
-      if (previousHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousHome;
+      if (previousHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousHome;
     }
   });
 
   it("rolls back the hot intent when the supervisor request cannot be written", async () => {
-    const previousFile = process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
-    const previousHome = process.env.PAPERCLIP_HOME;
-    process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
+    const previousFile = process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
+    const previousHome = process.env.THINKINGMACH_HOME;
+    process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
       dirty: true,
       changedPathCount: 1,
       changedPathsSample: ["server/src/routes/health.ts"],
@@ -206,7 +206,7 @@ describe("POST /health/dev-server/restart", () => {
     });
     const home = mkdtempSync(path.join(os.tmpdir(), "paperclip-health-restart-home-"));
     tempDirs.push(home);
-    process.env.PAPERCLIP_HOME = home;
+    process.env.THINKINGMACH_HOME = home;
     vi.spyOn(devServerStatus, "writeDevServerRestartRequest").mockReturnValue(false);
 
     try {
@@ -225,18 +225,18 @@ describe("POST /health/dev-server/restart", () => {
       expect(existsSync(resolveHotRestartIntentPath(home))).toBe(false);
     } finally {
       if (previousFile === undefined) {
-        delete process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
+        delete process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
       } else {
-        process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = previousFile;
+        process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = previousFile;
       }
-      if (previousHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousHome;
+      if (previousHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousHome;
     }
   });
 
   it("rejects unauthenticated manual restarts in authenticated mode", async () => {
-    const previousFile = process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
-    process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
+    const previousFile = process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
+    process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = createDevServerStatusFile({
       dirty: true,
       changedPathCount: 1,
       changedPathsSample: ["server/src/routes/health.ts"],
@@ -265,9 +265,9 @@ describe("POST /health/dev-server/restart", () => {
       expect(res.body).toEqual({ error: "board_access_required" });
     } finally {
       if (previousFile === undefined) {
-        delete process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE;
+        delete process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE;
       } else {
-        process.env.PAPERCLIP_DEV_SERVER_STATUS_FILE = previousFile;
+        process.env.THINKINGMACH_DEV_SERVER_STATUS_FILE = previousFile;
       }
     }
   });

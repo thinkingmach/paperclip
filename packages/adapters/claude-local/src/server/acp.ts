@@ -8,35 +8,35 @@ import type {
   AdapterEnvironmentTestResult,
   AdapterExecutionContext,
   AdapterExecutionResult,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   parseLocalProcessFilesystemScope,
   parseLocalProcessNetworkScope,
-} from "@paperclipai/adapter-utils/local-process-sandbox";
+} from "@thinkingmach/adapter-utils/local-process-sandbox";
 import {
   ensureAdapterExecutionTargetCommandResolvable,
   readAdapterExecutionTarget,
   resolveAdapterExecutionTargetCwd,
   runAdapterExecutionTargetProcess,
-} from "@paperclipai/adapter-utils/execution-target";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
 import {
   DEFAULT_ACP_ENGINE_MODE,
   DEFAULT_ACP_ENGINE_NON_INTERACTIVE_PERMISSIONS,
   DEFAULT_ACP_ENGINE_PERMISSION_MODE,
   DEFAULT_ACP_ENGINE_WARM_HANDLE_IDLE_MS,
-} from "@paperclipai/adapter-utils/acpx-engine/constants";
+} from "@thinkingmach/adapter-utils/acpx-engine/constants";
 import type {
   AcpxEngineExecutorOptions,
   AcpxRemoteManagedHomeContext,
   AcpxRemoteManagedHomeResult,
-} from "@paperclipai/adapter-utils/acpx-engine/execute";
+} from "@thinkingmach/adapter-utils/acpx-engine/execute";
 import {
   asBoolean,
   asNumber,
   asString,
   parseObject,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 import {
   materializeRemoteClaudeConfig,
   prepareClaudeConfigSeed,
@@ -48,7 +48,7 @@ import {
   classifyThrownErrorClass,
   logSandboxProbeDiagnostic,
 } from "./probe-diagnostics.js";
-import { createWorkspaceRestoreTeardown } from "@paperclipai/adapter-utils/workspace-restore-teardown";
+import { createWorkspaceRestoreTeardown } from "@thinkingmach/adapter-utils/workspace-restore-teardown";
 import { buildLocalAdapterTestProbeEnv } from "./probe-env.js";
 import { detectClaudeLoginRequired, parseClaudeStreamJson } from "./parse.js";
 import { buildClaudeProbePermissionArgs } from "./permissions.js";
@@ -345,7 +345,7 @@ export function createClaudeAcpExecutor(options: ClaudeAcpExecutorOptions = {}):
   return async (ctx) => {
     let currentExecutor = executor;
     if (!currentExecutor) {
-      const { createAcpxEngineExecutor } = await import("@paperclipai/adapter-utils/acpx-engine/execute");
+      const { createAcpxEngineExecutor } = await import("@thinkingmach/adapter-utils/acpx-engine/execute");
       currentExecutor = createAcpxEngineExecutor(withClaudeAcpDefaults(options));
       executor = currentExecutor;
     }
@@ -601,7 +601,7 @@ export async function probeClaudeAcpSandboxLogin(input: {
       trustedEnv: process.env,
     });
     if (!built.command) {
-      return [buildAcpLoginProbeUnavailableCheck("Claude is not installed on the Paperclip host.")];
+      return [buildAcpLoginProbeUnavailableCheck("Claude is not installed on the ThinkingMach host.")];
     }
     command = built.command;
     env = built.env;
@@ -695,7 +695,7 @@ export async function testClaudeAcpEnvironment(
       code: "claude_acp_remote_target",
       level: "info",
       message: "Claude ACP will run against the remote execution environment.",
-      hint: "Remote ACP requires a bidirectional process target such as SSH or Paperclip's sandbox process-session bridge.",
+      hint: "Remote ACP requires a bidirectional process target such as SSH or ThinkingMach's sandbox process-session bridge.",
     });
   }
 

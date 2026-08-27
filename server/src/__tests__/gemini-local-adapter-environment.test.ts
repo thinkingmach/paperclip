@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { testEnvironment } from "@paperclipai/adapter-gemini-local/server";
+import { testEnvironment } from "@thinkingmach/adapter-gemini-local/server";
 
 async function writeFakeGeminiCommand(binDir: string, argsCapturePath: string): Promise<string> {
   const commandPath = path.join(binDir, "gemini");
   const script = `#!/usr/bin/env node
 const fs = require("node:fs");
-const outPath = process.env.PAPERCLIP_TEST_ARGS_PATH;
+const outPath = process.env.THINKINGMACH_TEST_ARGS_PATH;
 if (outPath) {
   fs.writeFileSync(outPath, JSON.stringify(process.argv.slice(2)), "utf8");
 }
@@ -90,7 +90,7 @@ describe("gemini_local environment diagnostics", () => {
         yolo: true,
         env: {
           GEMINI_API_KEY: "test-key",
-          PAPERCLIP_TEST_ARGS_PATH: argsCapturePath,
+          THINKINGMACH_TEST_ARGS_PATH: argsCapturePath,
           PATH: `${binDir}${path.delimiter}${process.env.PATH ?? ""}`,
         },
       },

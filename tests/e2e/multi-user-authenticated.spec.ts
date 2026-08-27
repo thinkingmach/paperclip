@@ -3,9 +3,9 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { test, expect, type Browser, type Page } from "@playwright/test";
 
-const BASE = process.env.PAPERCLIP_E2E_BASE_URL ?? "http://127.0.0.1:3105";
-const DATA_DIR = process.env.PAPERCLIP_E2E_DATA_DIR ?? process.env.PAPERCLIP_HOME;
-const CONFIG_PATH = process.env.PAPERCLIP_E2E_CONFIG_PATH ?? path.resolve(process.cwd(), ".paperclip/config.json");
+const BASE = process.env.THINKINGMACH_E2E_BASE_URL ?? "http://127.0.0.1:3105";
+const DATA_DIR = process.env.THINKINGMACH_E2E_DATA_DIR ?? process.env.THINKINGMACH_HOME;
+const CONFIG_PATH = process.env.THINKINGMACH_E2E_CONFIG_PATH ?? path.resolve(process.cwd(), ".paperclip/config.json");
 const BOOTSTRAP_SCRIPT_PATH = path.resolve(process.cwd(), "packages/db/scripts/create-auth-bootstrap-invite.ts");
 const OWNER_PASSWORD = "paperclip-owner-password";
 const INVITED_PASSWORD = "paperclip-invited-password";
@@ -51,7 +51,7 @@ const invitedUser: HumanUser = {
 
 function createBootstrapInvite() {
   if (!DATA_DIR) {
-    throw new Error("PAPERCLIP_E2E_DATA_DIR or PAPERCLIP_HOME is required for authenticated bootstrap tests");
+    throw new Error("THINKINGMACH_E2E_DATA_DIR or THINKINGMACH_HOME is required for authenticated bootstrap tests");
   }
   if (!existsSync(CONFIG_PATH)) {
     throw new Error(`Authenticated bootstrap config not found at ${CONFIG_PATH}`);
@@ -65,7 +65,7 @@ function createBootstrapInvite() {
     pnpmCommand,
     [
       "--filter",
-      "@paperclipai/db",
+      "@thinkingmach/db",
       "exec",
       "tsx",
       BOOTSTRAP_SCRIPT_PATH,
@@ -80,7 +80,7 @@ function createBootstrapInvite() {
         ...process.env,
         FORCE_COLOR: "0",
         NO_COLOR: "1",
-        PAPERCLIP_HOME: DATA_DIR,
+        THINKINGMACH_HOME: DATA_DIR,
       },
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
@@ -90,9 +90,9 @@ function createBootstrapInvite() {
 
 async function signUp(page: Page, user: HumanUser) {
   await page.goto(`${BASE}/auth`);
-  await expect(page.getByRole("heading", { name: "Sign in to Paperclip" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sign in to ThinkingMach" })).toBeVisible();
   await page.getByRole("button", { name: "Create one" }).click();
-  await expect(page.getByRole("heading", { name: "Create your Paperclip account" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Create your ThinkingMach account" })).toBeVisible();
   await page.getByLabel("Name").fill(user.name);
   await page.getByLabel("Email").fill(user.email);
   await page.getByLabel("Password").fill(user.password);
@@ -102,7 +102,7 @@ async function signUp(page: Page, user: HumanUser) {
 
 async function acceptBootstrapInvite(page: Page, inviteUrl: string) {
   await page.goto(inviteUrl);
-  await expect(page.getByRole("heading", { name: "Bootstrap your Paperclip instance" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Bootstrap your ThinkingMach instance" })).toBeVisible();
   await page.getByRole("button", { name: "Accept bootstrap invite" }).click();
   await expect(page.getByRole("heading", { name: "Bootstrap complete" })).toBeVisible({
     timeout: 20_000,
@@ -137,7 +137,7 @@ async function signUpFromInvite(page: Page, inviteUrl: string, user: HumanUser) 
   await expect(page.getByText("Sign in or create an account before submitting a human join request.")).toBeVisible();
   await page.getByRole("link", { name: "Sign in / Create account" }).click();
   await expect(page).toHaveURL(/\/auth\?next=/);
-  await expect(page.getByRole("heading", { name: "Sign in to Paperclip" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sign in to ThinkingMach" })).toBeVisible();
   await page.getByRole("button", { name: "Create one" }).click();
   await page.getByLabel("Name").fill(user.name);
   await page.getByLabel("Email").fill(user.email);

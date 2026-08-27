@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { WikiPage, WikiRouteSidebar } from "../src/ui/index.js";
 
 const COMPANY_ID = "11111111-1111-4111-8111-111111111111";
-const EXPANDED_STORAGE_KEY = `paperclipai.plugin-llm-wiki:route-sidebar-expanded:v2:${COMPANY_ID}`;
+const EXPANDED_STORAGE_KEY = `thinkingmach.plugin-llm-wiki:route-sidebar-expanded:v2:${COMPANY_ID}`;
 
 type BridgeGlobal = typeof globalThis & {
   __paperclipPluginBridge__?: {
@@ -656,7 +656,7 @@ describe("WikiPage", () => {
     delete (globalThis as BridgeGlobal).__paperclipPluginBridge__;
   });
 
-  it("renders structured Paperclip source refs as text", () => {
+  it("renders structured ThinkingMach source refs as text", () => {
     act(() => {
       root.render(createElement(WikiPage, {
         context: { companyId: COMPANY_ID, companyPrefix: "PAP" },

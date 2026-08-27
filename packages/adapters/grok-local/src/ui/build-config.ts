@@ -1,4 +1,4 @@
-import { buildAdapterEnvConfig, type CreateConfigValues } from "@paperclipai/adapter-utils";
+import { buildAdapterEnvConfig, type CreateConfigValues } from "@thinkingmach/adapter-utils";
 import { DEFAULT_GROK_LOCAL_MODEL } from "../index.js";
 
 function parseCommaArgs(value: string): string[] {

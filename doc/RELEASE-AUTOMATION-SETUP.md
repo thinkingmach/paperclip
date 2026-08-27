@@ -1,6 +1,6 @@
 # Release Automation Setup
 
-This document covers the GitHub and npm setup required for the current Paperclip release model:
+This document covers the GitHub and npm setup required for the current ThinkingMach release model:
 
 - automatic canaries from `master`
 - manual stable promotion from a chosen source ref
@@ -29,13 +29,13 @@ Required files:
 
 ## 2. Configure npm Trusted Publishing
 
-Do this for every public package that Paperclip publishes.
+Do this for every public package that ThinkingMach publishes.
 
 At minimum that includes:
 
-- `paperclipai`
-- `@paperclipai/server`
-- `@paperclipai/ui`
+- `thinkingmach`
+- `@thinkingmach/server`
+- `@thinkingmach/ui`
 - public packages under `packages/`
 
 ### 2.1. In npm, open each package settings page
@@ -44,7 +44,7 @@ For each package:
 
 1. open npm as an owner of the package
 2. go to the package settings / publishing access area
-3. add a trusted publisher for the GitHub repository `paperclipai/paperclip`
+3. add a trusted publisher for the GitHub repository `thinkingmach/paperclip`
 
 ### 2.2. Add one trusted publisher entry per package
 
@@ -56,7 +56,7 @@ Configure:
 
 Repository:
 
-- `paperclipai/paperclip`
+- `thinkingmach/paperclip`
 
 Environment name:
 
@@ -82,7 +82,7 @@ Repo policy:
 Bootstrap sequence for a new package:
 
 1. publish the package once from a trusted maintainer machine using normal npm auth
-2. open that package on npm and add the `paperclipai/paperclip` trusted publisher for `.github/workflows/release.yml`
+2. open that package on npm and add the `thinkingmach/paperclip` trusted publisher for `.github/workflows/release.yml`
 3. rerun or dry-run the release flow as needed to confirm CI publishing now works
 4. only then enable `"publishFromCi": true`
 
@@ -104,7 +104,7 @@ Only after that should you remove old token-based access.
 After trusted publishing works:
 
 1. revoke any repository or organization `NPM_TOKEN` secrets used for publish
-2. revoke any personal automation token that used to publish Paperclip
+2. revoke any personal automation token that used to publish ThinkingMach
 3. if npm offers a package-level setting to restrict publishing to trusted publishers, enable it
 
 Goal:
@@ -262,11 +262,11 @@ After setup:
 Install-path check:
 
 ```bash
-npm install --prefix "$(mktemp -d)" paperclipai@canary --no-audit --no-fund
+npm install --prefix "$(mktemp -d)" thinkingmach@canary --no-audit --no-fund
 ```
 
 The release script runs this clean-prefix install after publishing every workspace
-package dependency-first and publishing `paperclipai` last. A package that is not
+package dependency-first and publishing `thinkingmach` last. A package that is not
 yet registry-visible stops the train before the channel entrypoint can advance.
 
 ## 12. Verify the Stable Workflow

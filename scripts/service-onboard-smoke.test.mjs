@@ -39,7 +39,7 @@ test("release-smoke workflow runs the service leg against the input version", ()
   assert.match(smokeWorkflow, /^  smoke_service:$/m);
   assert.match(smokeWorkflow, /scripts\/service-onboard-smoke\.sh/);
   const serviceJob = smokeWorkflow.split(/^  smoke:$/m)[0];
-  assert.match(serviceJob, /PAPERCLIPAI_VERSION: \$\{\{ inputs\.paperclip_version \}\}/);
+  assert.match(serviceJob, /THINKINGMACH_VERSION: \$\{\{ inputs\.paperclip_version \}\}/);
   // Diagnostics must survive the run: cleanup stays off in CI and the
   // artifact name cannot collide with the Docker job's upload.
   assert.match(serviceJob, /SMOKE_CLEANUP: "false"/);

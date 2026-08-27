@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ExternalObjectSummary, Issue, IssueRecoveryAction } from "@paperclipai/shared";
+import type { ExternalObjectSummary, Issue, IssueRecoveryAction } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { Archive, Eye, Flag } from "lucide-react";
 import {

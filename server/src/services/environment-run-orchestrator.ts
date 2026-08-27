@@ -15,7 +15,7 @@
  * and transport logic.
  */
 
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import type {
   Environment,
   EnvironmentLease,
@@ -24,7 +24,7 @@ import type {
   ExecutionWorkspace,
   ExecutionWorkspaceConfig,
   IssueExecutionWorkspaceSettings,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { environmentService } from "./environments.js";
 import {
   environmentRuntimeService,
@@ -43,8 +43,8 @@ import {
   type AdapterExecutionTarget,
   type AdapterRemoteExecutionSpec,
   type AdapterWorkspaceRealization,
-} from "@paperclipai/adapter-utils/execution-target";
-import type { DuplexObservabilityRecorder } from "@paperclipai/adapter-utils/duplex-observability";
+} from "@thinkingmach/adapter-utils/execution-target";
+import type { DuplexObservabilityRecorder } from "@thinkingmach/adapter-utils/duplex-observability";
 import { buildWorkspaceRealizationRequest } from "./workspace-realization.js";
 import { executionWorkspaceService } from "./execution-workspaces.js";
 import { logActivity } from "./activity-log.js";

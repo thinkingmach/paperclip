@@ -30,7 +30,7 @@ import {
   toolProfileEntries,
   toolProfiles,
   toolRuntimeSlots,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { and, eq } from "drizzle-orm";
 import {
   getEmbeddedPostgresTestSupport,

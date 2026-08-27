@@ -6,13 +6,13 @@
 //
 // The build resolves the commit in two steps:
 //   1. `git rev-parse --short HEAD` in the server directory.
-//   2. The `PAPERCLIP_BUILD_COMMIT` environment variable.
+//   2. The `THINKINGMACH_BUILD_COMMIT` environment variable.
 // A Docker image build excludes `.git`, so the git lookup fails there. The
-// image build passes the commit in `PAPERCLIP_BUILD_COMMIT` instead, so the
+// image build passes the commit in `THINKINGMACH_BUILD_COMMIT` instead, so the
 // stamp still records the true built commit.
 //
 // The build must not fail when no commit is available. A missing `git`, a
-// checkout with no `.git`, and an unset `PAPERCLIP_BUILD_COMMIT` together write
+// checkout with no `.git`, and an unset `THINKINGMACH_BUILD_COMMIT` together write
 // no stamp and exit 0.
 
 import { execFileSync } from "node:child_process";
@@ -28,11 +28,11 @@ const outFile = join(distDir, "build-info.json");
 /**
  * Resolve the commit for the build stamp. Prefer the git commit. Fall back to
  * the supplied commit — the value a Docker image build passes in
- * `PAPERCLIP_BUILD_COMMIT` when `.git` is absent. Return null when neither
+ * `THINKINGMACH_BUILD_COMMIT` when `.git` is absent. Return null when neither
  * source gives a non-empty value.
  *
  * @param {unknown} gitCommit The `git rev-parse` result, or null on failure.
- * @param {unknown} suppliedCommit The `PAPERCLIP_BUILD_COMMIT` value.
+ * @param {unknown} suppliedCommit The `THINKINGMACH_BUILD_COMMIT` value.
  * @returns {string | null}
  */
 export function resolveBuildCommit(gitCommit, suppliedCommit) {
@@ -68,7 +68,7 @@ function readGitCommit() {
  * no commit is available, so the build continues.
  */
 function main() {
-  const commit = resolveBuildCommit(readGitCommit(), process.env.PAPERCLIP_BUILD_COMMIT);
+  const commit = resolveBuildCommit(readGitCommit(), process.env.THINKINGMACH_BUILD_COMMIT);
 
   if (!commit) {
     console.log("[build-stamp] no commit available; wrote no build stamp");

@@ -3,13 +3,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async (importOriginal) => {
+vi.mock("@thinkingmach/adapter-utils/execution-target", async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return { ...actual, runAdapterExecutionTargetProcess: vi.fn() };
 });
 
 import { ensureRemoteOpenCodeModelConfiguredAndAvailable, execute } from "./execute.js";
-import { runAdapterExecutionTargetProcess } from "@paperclipai/adapter-utils/execution-target";
+import { runAdapterExecutionTargetProcess } from "@thinkingmach/adapter-utils/execution-target";
 
 const runProcessMock = vi.mocked(runAdapterExecutionTargetProcess);
 
@@ -80,8 +80,8 @@ describe("OpenCode local skill injection", () => {
             HOME: configuredHome,
             OPENCODE_ALLOW_ALL_MODELS: "1",
           },
-          paperclipRuntimeSkills: [{
-            key: "paperclipai/paperclip/paperclip",
+          thinkingmachRuntimeSkills: [{
+            key: "thinkingmach/paperclip/paperclip",
             runtimeName: "paperclip",
             source: skillSource,
           }],

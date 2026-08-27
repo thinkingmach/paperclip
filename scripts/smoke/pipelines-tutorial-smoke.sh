@@ -6,11 +6,11 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 1
 fi
 
-: "${PAPERCLIP_API_URL:?Set PAPERCLIP_API_URL for the target dev instance.}"
-: "${PAPERCLIP_API_KEY:?Set PAPERCLIP_API_KEY for the target dev instance.}"
-: "${PAPERCLIP_COMPANY_ID:?Set PAPERCLIP_COMPANY_ID for the target dev company.}"
+: "${THINKINGMACH_API_URL:?Set THINKINGMACH_API_URL for the target dev instance.}"
+: "${THINKINGMACH_API_KEY:?Set THINKINGMACH_API_KEY for the target dev instance.}"
+: "${THINKINGMACH_COMPANY_ID:?Set THINKINGMACH_COMPANY_ID for the target dev company.}"
 
-read -r -a PC_CMD <<< "${PAPERCLIPAI_CMD:-pnpm --silent paperclipai}"
+read -r -a PC_CMD <<< "${THINKINGMACH_CMD:-pnpm --silent thinkingmach}"
 RUN_KEY="${PIPELINE_SMOKE_KEY:-$(date +%Y%m%d%H%M%S)}"
 RELEASE_PIPELINE="release-coverage-${RUN_KEY}"
 FEATURE_PIPELINE="feature-content-${RUN_KEY}"
@@ -23,7 +23,7 @@ cleanup() {
 trap cleanup EXIT
 
 pc_json() {
-  "${PC_CMD[@]}" "$@" --json -C "$PAPERCLIP_COMPANY_ID"
+  "${PC_CMD[@]}" "$@" --json -C "$THINKINGMACH_COMPANY_ID"
 }
 
 api_json() {
@@ -32,14 +32,14 @@ api_json() {
   local body="${3:-}"
   if [[ -n "$body" ]]; then
     curl -sS -X "$method" \
-      -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
+      -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
       -H "Content-Type: application/json" \
       --data "$body" \
-      "${PAPERCLIP_API_URL%/}$path"
+      "${THINKINGMACH_API_URL%/}$path"
   else
     curl -sS -X "$method" \
-      -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
-      "${PAPERCLIP_API_URL%/}$path"
+      -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
+      "${THINKINGMACH_API_URL%/}$path"
   fi
 }
 

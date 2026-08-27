@@ -6,8 +6,8 @@ import { z } from "zod";
  *
  * NOTE: this shape is intentionally duplicated across the package boundary. It
  * MUST stay structurally in sync with:
- *   - server `@paperclipai/shared` `adapterRegistryEntrySchema` (the parser side)
- *   - operator `AdapterRegistryEntry` Go struct (PAPERCLIP_ADAPTERS emitter)
+ *   - server `@thinkingmach/shared` `adapterRegistryEntrySchema` (the parser side)
+ *   - operator `AdapterRegistryEntry` Go struct (THINKINGMACH_ADAPTERS emitter)
  * The duplication is deliberate: this plugin is standalone-installable and must
  * not pull in heavy workspace packages at runtime.
  */

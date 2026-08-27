@@ -19,25 +19,25 @@ const mode = modeIndex < 0 ? "nightly" : process.argv[modeIndex + 1];
 const execute = process.argv.includes("--execute");
 if (mode !== "nightly" && mode !== "chaos")
   throw new Error(`unsupported workflow eval schedule mode: ${mode}`);
-const now = process.env.PAPERCLIP_EVAL_GENERATED_AT ?? new Date().toISOString();
+const now = process.env.THINKINGMACH_EVAL_GENERATED_AT ?? new Date().toISOString();
 const rotationDay = Number(
-  process.env.PAPERCLIP_EVAL_ROTATION_DAY ??
+  process.env.THINKINGMACH_EVAL_ROTATION_DAY ??
     evals.runnerLiveRotationWeek(now),
 );
 const seed =
-  process.env.PAPERCLIP_EVAL_SCHEDULE_SEED ?? "runner-live-seven-week-v1";
+  process.env.THINKINGMACH_EVAL_SCHEDULE_SEED ?? "runner-live-seven-week-v1";
 const outputDirectory = resolve(
   packageRoot,
   ".paperclip-local/evals/workflows",
 );
 const historyDirectory = resolve(
-  process.env.PAPERCLIP_EVAL_HISTORY_DIR ?? resolve(outputDirectory, "history"),
+  process.env.THINKINGMACH_EVAL_HISTORY_DIR ?? resolve(outputDirectory, "history"),
 );
 await mkdir(outputDirectory, { recursive: true });
 
 function safeBundleId(schedule) {
   const runnerBuild =
-    process.env.PAPERCLIP_EVAL_RUNNER_BUILD ?? packageManifest.version;
+    process.env.THINKINGMACH_EVAL_RUNNER_BUILD ?? packageManifest.version;
   const identity = JSON.stringify({
     runnerVersion: packageManifest.version,
     runnerBuild,
@@ -132,7 +132,7 @@ if (mode === "nightly") {
   }
 
   const campaignCostLimit = evals.parseRunnerLiveCampaignCostLimit(
-    process.env.PAPERCLIP_EVAL_MAX_CAMPAIGN_COST_USD,
+    process.env.THINKINGMACH_EVAL_MAX_CAMPAIGN_COST_USD,
   );
   let observedCampaignCost = 0;
   const observations = await evals.executeRunnerLiveSchedule(
@@ -192,7 +192,7 @@ if (mode === "nightly") {
       id: bundleId,
       runnerVersion: packageManifest.version,
       runnerBuild:
-        process.env.PAPERCLIP_EVAL_RUNNER_BUILD ?? packageManifest.version,
+        process.env.THINKINGMACH_EVAL_RUNNER_BUILD ?? packageManifest.version,
       promptPolicyId: "runner-live-workflow-v1",
       providerVersions,
       scheduleSeed: schedule.seed,
@@ -209,7 +209,7 @@ if (mode === "nightly") {
     current: report,
     history,
     baselineReady:
-      process.env.PAPERCLIP_EVAL_BASELINE_READY === "true" &&
+      process.env.THINKINGMACH_EVAL_BASELINE_READY === "true" &&
       history.length >= 7,
   });
   await Promise.all([

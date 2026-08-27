@@ -138,7 +138,7 @@ async function expectVisible(locator, checkpoint, code, timeout = 30_000) {
   }
 }
 
-async function gotoPaperclipPage(
+async function gotoThinkingMachPage(
   page,
   url,
   readyLocator,
@@ -533,7 +533,7 @@ async function runSmoke({ config, chromium }) {
   const connectionName = `PostHog live self-test ${startedAt.toISOString()}`;
   const outputDirectory = process.env.POSTHOG_EVIDENCE_DIR
     ? path.resolve(process.env.POSTHOG_EVIDENCE_DIR)
-    : path.join(process.env.PAPERCLIP_RUN_SCRATCH_DIR || process.cwd(), `posthog-live-${runKey}`);
+    : path.join(process.env.THINKINGMACH_RUN_SCRATCH_DIR || process.cwd(), `posthog-live-${runKey}`);
   await mkdir(outputDirectory, { recursive: true });
 
   const summary = {
@@ -587,7 +587,7 @@ async function runSmoke({ config, chromium }) {
     });
 
     activeCheckpoint = "A.paperclip-login";
-    await gotoPaperclipPage(
+    await gotoThinkingMachPage(
       page,
       new URL("/auth?next=/", config.baseUrl).toString(),
       page.locator("#email"),
@@ -675,7 +675,7 @@ async function runSmoke({ config, chromium }) {
     activeCheckpoint = "B.oauth-callback";
     await completePosthogAuthorization(page, config);
     const permissionsPath = `/${TARGET_COMPANY_PREFIX}/apps/${connectionId}/permissions`;
-    await gotoPaperclipPage(
+    await gotoThinkingMachPage(
       page,
       new URL(permissionsPath, config.baseUrl).toString(),
       page.getByText("PostHog connected", { exact: true }),
@@ -801,7 +801,7 @@ async function runSmoke({ config, chromium }) {
     };
 
     activeCheckpoint = "C.permissions-ui";
-    await gotoPaperclipPage(
+    await gotoThinkingMachPage(
       page,
       new URL(`/${TARGET_COMPANY_PREFIX}/apps/${connectionId}/permissions`, config.baseUrl).toString(),
       page.getByText("Who can use it", { exact: true }),
@@ -820,7 +820,7 @@ async function runSmoke({ config, chromium }) {
     summary.screenshots.push(permissionsShot);
 
     activeCheckpoint = "D.test-panel";
-    await gotoPaperclipPage(
+    await gotoThinkingMachPage(
       page,
       new URL(`/${TARGET_COMPANY_PREFIX}/apps/${connectionId}/test`, config.baseUrl).toString(),
       page.getByLabel("Choose which agent to test as"),
@@ -887,7 +887,7 @@ async function runSmoke({ config, chromium }) {
     };
 
     activeCheckpoint = "E.create-proof-issue";
-    const parentIssueId = process.env.POSTHOG_PROOF_PARENT_ISSUE_ID || process.env.PAPERCLIP_TASK_ID;
+    const parentIssueId = process.env.POSTHOG_PROOF_PARENT_ISSUE_ID || process.env.THINKINGMACH_TASK_ID;
     if (!parentIssueId) fail("E.create-proof-issue", "parent_issue_id_missing");
     const child = await apiJson(
       context.request,
@@ -899,7 +899,7 @@ async function runSmoke({ config, chromium }) {
         description: [
           "Invoke exactly one installed PostHog action: the read-only upstream `project-get` tool, with an empty `{}` input.",
           `Verify the returned project ID is exactly ${config.projectId} and make no PostHog mutations.`,
-          "Then post exactly one JSON object with keys `projectId`, `projectName`, and `invocationId` (the Paperclip invocation ID), and mark this issue done.",
+          "Then post exactly one JSON object with keys `projectId`, `projectName`, and `invocationId` (the ThinkingMach invocation ID), and mark this issue done.",
           "Do not report tokens, cookies, authorization data, request headers, raw tool payloads, or any other fields.",
         ].join("\n\n"),
         status: "todo",
@@ -908,7 +908,7 @@ async function runSmoke({ config, chromium }) {
         assigneeAgentId: agent.id,
         acceptanceCriteria: [
           `The installed PostHog project-get action returns project ${config.projectId}.`,
-          "The comment contains only sanitized project ID/name and Paperclip invocation ID.",
+          "The comment contains only sanitized project ID/name and ThinkingMach invocation ID.",
           "No mutation is attempted.",
         ],
       },
@@ -1009,7 +1009,7 @@ async function runSmoke({ config, chromium }) {
     };
 
     activeCheckpoint = "F.evidence";
-    await gotoPaperclipPage(
+    await gotoThinkingMachPage(
       page,
       new URL(`/${TARGET_COMPANY_PREFIX}/issues/${child.identifier}`, config.baseUrl).toString(),
       page.getByText(child.title, { exact: true }).first(),
@@ -1020,7 +1020,7 @@ async function runSmoke({ config, chromium }) {
     await safeScreenshot(page, screenshotFile(outputDirectory, childShot), config, "F.child-screenshot");
     summary.screenshots.push(childShot);
 
-    await gotoPaperclipPage(
+    await gotoThinkingMachPage(
       page,
       new URL(`/${TARGET_COMPANY_PREFIX}/apps/${connectionId}/activity`, config.baseUrl).toString(),
       page.getByText(PROJECT_GET, { exact: false }).first(),

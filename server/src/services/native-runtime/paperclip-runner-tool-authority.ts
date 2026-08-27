@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { and, desc, eq, isNull } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   documentRevisions,
@@ -10,7 +10,7 @@ import {
   issueDocuments,
   issues,
   issueThreadInteractions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { CAPABILITY_SEMANTIC_TOOL_CATALOG } from "../../vendor/paperclip-runner/index.js";
 import { agentService } from "../agents.js";
 import { approvalService } from "../approvals.js";
@@ -67,7 +67,7 @@ function canonicalJson(value: unknown): string {
   return JSON.stringify(value) ?? "null";
 }
 
-export class PaperclipRunnerToolAuthority {
+export class ThinkingMachRunnerToolAuthority {
   constructor(readonly db: Db, readonly binding: Binding) {}
 
   definitions(): Array<Record<string, unknown>> {

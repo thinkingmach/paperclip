@@ -2,8 +2,8 @@
 
 **Time to first success: about 3 minutes**, once the package is installed. You
 open a blank chat, type whatever you like, and watch a real Codex session work a
-brand-new mock Paperclip issue through a real `paperclip-runnerd` process. No
-scenario to pick, no recorded transcript, and no real Paperclip service anywhere
+brand-new mock ThinkingMach issue through a real `paperclip-runnerd` process. No
+scenario to pick, no recorded transcript, and no real ThinkingMach service anywhere
 in the picture.
 
 This is the second primary Capability path. The first — the preset scenario
@@ -24,7 +24,7 @@ the seed, exposure profile, bounds, and route contract behind what you see here.
 Install the workspace from the repository root:
 
 ```sh
-NODE_ENV=development pnpm install --filter @paperclipai/paperclip-runner --frozen-lockfile --offline --ignore-scripts
+NODE_ENV=development pnpm install --filter @thinkingmach/paperclip-runner --frozen-lockfile --offline --ignore-scripts
 ```
 
 Setting `NODE_ENV=development` matters even if your shell already has
@@ -34,7 +34,7 @@ build tooling lives there.
 ## 1. Prove the path without a browser (about 1 minute)
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner smoke:capability:cleanroom -- --json
+pnpm --filter @thinkingmach/paperclip-runner smoke:capability:cleanroom -- --json
 ```
 
 This builds the TypeScript output and `paperclip-runnerd`, starts the package
@@ -61,7 +61,7 @@ Every assertion must read `true`. The two issue identifiers differ because
 ## 2. Open the chat in a browser (about 1 minute)
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner console:issue-thread
+pnpm --filter @thinkingmach/paperclip-runner console:issue-thread
 ```
 
 Open `http://127.0.0.1:4184/`. The landing surface is the scenario explorer.
@@ -72,7 +72,7 @@ Above the issue header, a two-item rail offers **Scenario explorer** and
 The first load takes a few seconds: the server is starting a real runnerd and a
 real Codex app-server for you. When it settles you should see:
 
-- three identity chips — `Real Codex`, `Real runnerd`, `Mock Paperclip` — plus a
+- three identity chips — `Real Codex`, `Real runnerd`, `Mock ThinkingMach` — plus a
   `Clean room <token>` chip naming the tenant;
 - a mock issue identifier such as `MCK-3799` with the title `Clean-room chat`;
 - a blank thread with a short explanation of what the surface is;
@@ -120,7 +120,7 @@ branch rooted at the selected mock-company revision.
 Drag the bright divider at the drawer's left edge to resize it (up to 960px), or
 focus that divider and use the arrow keys. As soon as you send a message, the
 live activity rail reports the current Codex stage; shell commands, built-in
-Codex tools, and Paperclip semantic calls also appear as individual activity
+Codex tools, and ThinkingMach semantic calls also appear as individual activity
 rows while the turn is still open.
 
 Two things are worth finding on your first pass:
@@ -130,7 +130,7 @@ Two things are worth finding on your first pass:
   grants are withheld on purpose, so a denial stays reachable in a conversation
   nobody scripted.
 - **Control plane** carries a `network-guard-…` row reading
-  `Real Paperclip API requests: 0. Child PAPERCLIP_* environment keys: none.`
+  `Real ThinkingMach API requests: 0. Child THINKINGMACH_* environment keys: none.`
 
 Close the drawer and the surface is a plain chat again.
 

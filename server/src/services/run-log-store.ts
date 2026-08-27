@@ -2,7 +2,7 @@ import { createReadStream, promises as fs } from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { notFound } from "../errors.js";
-import { resolvePaperclipInstanceRoot } from "../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../home-paths.js";
 import { createS3StorageProvider } from "../storage/s3-provider.js";
 import type { StorageProvider } from "../storage/types.js";
 
@@ -383,7 +383,7 @@ export function createDurableRunLogStore(options: DurableRunLogStoreOptions): Ru
 }
 
 // Build the run-log S3 mirror from dedicated RUN_LOG_S3_* env. Deliberately
-// separate from PAPERCLIP_STORAGE_PROVIDER so enabling durable run logs does
+// separate from THINKINGMACH_STORAGE_PROVIDER so enabling durable run logs does
 // NOT redirect the product's workspace/file storage (smaller blast radius).
 // Unset RUN_LOG_S3_BUCKET -> no mirror -> local-only (safe degrade). Creds come
 // from the standard AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY chain.
@@ -415,7 +415,7 @@ let cachedStore: RunLogStore | null = null;
 
 export function getRunLogStore() {
   if (cachedStore) return cachedStore;
-  const basePath = process.env.RUN_LOG_BASE_PATH ?? path.resolve(resolvePaperclipInstanceRoot(), "data", "run-logs");
+  const basePath = process.env.RUN_LOG_BASE_PATH ?? path.resolve(resolveThinkingMachInstanceRoot(), "data", "run-logs");
   cachedStore = createDurableRunLogStore({ basePath, s3: resolveRunLogS3() });
   return cachedStore;
 }

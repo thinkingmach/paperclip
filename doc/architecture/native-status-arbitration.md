@@ -1,7 +1,7 @@
 # Native status arbitration
 
 Native runner results do not directly mutate an issue's status. The model may
-report that work is done, blocked, ready for review, or yielded, but Paperclip's
+report that work is done, blocked, ready for review, or yielded, but ThinkingMach's
 server remains the authority that decides and commits the resulting workflow
 state.
 
@@ -55,7 +55,7 @@ The server also owns facts the runner cannot choose:
 
 ## Evidence classification
 
-`classifyNativeEvidence()` compares model claims with durable Paperclip
+`classifyNativeEvidence()` compares model claims with durable ThinkingMach
 records. It recognizes these evidence families:
 
 - run events with an authoritative control-plane evidence verdict;
@@ -107,7 +107,7 @@ This produces `completion_contract_satisfied`.
 
 ### Low-risk claim-policy completion
 
-Ordinary issue completion changes Paperclip workflow state, but it does not by
+Ordinary issue completion changes ThinkingMach workflow state, but it does not by
 itself authorize deployments, spending, secret access, approvals, or arbitrary
 API calls. Default native completion contracts therefore use low-risk
 `agent_claim_policy` authority.

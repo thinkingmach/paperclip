@@ -13,8 +13,8 @@ RUN cargo build --locked --release -p paperclip-runner-core --bin paperclip-runn
     && strip /workspace/packages/paperclip-runner/runner/target/release/paperclip-runnerd
 
 FROM node:24-bookworm@sha256:9137a20e25879e0b557227b57e3ee4e9af4bde29eb3db66134cd1723e84f830b AS provider-pack-build
-ARG PAPERCLIP_RUNNER_SOURCE_REVISION
-RUN test -n "${PAPERCLIP_RUNNER_SOURCE_REVISION}"
+ARG THINKINGMACH_RUNNER_SOURCE_REVISION
+RUN test -n "${THINKINGMACH_RUNNER_SOURCE_REVISION}"
 RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 WORKDIR /workspace
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc tsconfig.base.json ./
@@ -41,27 +41,27 @@ COPY \
     packages/paperclip-runner/scripts/generate-protocol-schema-module.mjs \
     ./packages/paperclip-runner/scripts/
 COPY packages/paperclip-runner/src ./packages/paperclip-runner/src
-RUN pnpm install --frozen-lockfile --filter '@paperclipai/paperclip-runner...'
-RUN pnpm --filter @paperclipai/paperclip-runner build:typescript \
-    && PAPERCLIP_RUNNER_SOURCE_REVISION="${PAPERCLIP_RUNNER_SOURCE_REVISION}" \
+RUN pnpm install --frozen-lockfile --filter '@thinkingmach/paperclip-runner...'
+RUN pnpm --filter @thinkingmach/paperclip-runner build:typescript \
+    && THINKINGMACH_RUNNER_SOURCE_REVISION="${THINKINGMACH_RUNNER_SOURCE_REVISION}" \
       node packages/paperclip-runner/scripts/build-provider-pack.mjs /provider-pack
 
 # Fleet sandbox base image. Keep this section aligned with
-# paperclipai/paperclip-cloud/fleet-sandbox-image/Dockerfile. The only Paperclip
+# thinkingmach/paperclip-cloud/fleet-sandbox-image/Dockerfile. The only ThinkingMach
 # runner-specific addition is /usr/local/bin/paperclip-runnerd below.
 FROM daytonaio/sandbox:0.8.0@sha256:eadf88e4391072b7ad4bed27d9cadfc9fe9d8ed375d9219d34c2ccb518f213e3
 
-ARG PAPERCLIP_RUNNER_CONTENT_ID
-ARG PAPERCLIP_RUNNER_SOURCE_REVISION
-RUN test -n "${PAPERCLIP_RUNNER_CONTENT_ID}" \
-    && test -n "${PAPERCLIP_RUNNER_SOURCE_REVISION}"
-LABEL io.paperclip.runner.content-id="${PAPERCLIP_RUNNER_CONTENT_ID}" \
-      org.opencontainers.image.revision="${PAPERCLIP_RUNNER_SOURCE_REVISION}"
+ARG THINKINGMACH_RUNNER_CONTENT_ID
+ARG THINKINGMACH_RUNNER_SOURCE_REVISION
+RUN test -n "${THINKINGMACH_RUNNER_CONTENT_ID}" \
+    && test -n "${THINKINGMACH_RUNNER_SOURCE_REVISION}"
+LABEL io.paperclip.runner.content-id="${THINKINGMACH_RUNNER_CONTENT_ID}" \
+      org.opencontainers.image.revision="${THINKINGMACH_RUNNER_SOURCE_REVISION}"
 
 USER root
 
-ENV PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT=/opt/paperclip-runner/provider-pack
-ENV PATH=${PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin:/usr/local/share/nvm/current/bin:/usr/local/python/current/bin:/usr/local/py-utils/bin:${PATH}
+ENV THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT=/opt/paperclip-runner/provider-pack
+ENV PATH=${THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin:/usr/local/share/nvm/current/bin:/usr/local/python/current/bin:/usr/local/py-utils/bin:${PATH}
 
 RUN npm install -g \
       @anthropic-ai/claude-code@2.1.19 \

@@ -1,4 +1,4 @@
-import type { IssueCommentMetadata, IssueCommentPresentation } from "@paperclipai/shared";
+import type { IssueCommentMetadata, IssueCommentPresentation } from "@thinkingmach/shared";
 
 export type NoticeMetadataRow = IssueCommentMetadata["sections"][number]["rows"][number];
 export type NoticeMetadataSection = IssueCommentMetadata["sections"][number];

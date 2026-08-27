@@ -4,7 +4,7 @@ Status: **approved for implementation** (UX gate TASK-16832, 2026-08-08).
 Owner: UXDesigner. Implementer: browser tracer owner (TASK-16834).
 Companion record: [component decisions](live-console-component-decisions.md).
 This map is the interaction contract for the Live console required by
-spec §29.1. It binds every surface to canonical Paperclip Runner Protocol (PRP)
+spec §29.1. It binds every surface to canonical ThinkingMach Runner Protocol (PRP)
 events and reducer state only. No surface may derive state from third-party
 component message types, and no surface may show a control the upstream
 capability set does not support.

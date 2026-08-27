@@ -1,11 +1,11 @@
 import { and, asc, eq, gt, or } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   heartbeatRunEvents,
   heartbeatRuns,
   nativeRunFinalizations,
   nativeRunResults,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   CompleteControlPlaneRunInput,
   ControlPlanePort,
@@ -25,7 +25,7 @@ import {
 import { appendHeartbeatRunEvent } from "../heartbeat-run-events.js";
 import { nativeSha256 } from "./canonical.js";
 
-export interface PaperclipControlPlaneBinding {
+export interface ThinkingMachControlPlaneBinding {
   companyId: string;
   issueId: string;
   runId: string;
@@ -64,16 +64,16 @@ function assertTerminal(value: unknown): asserts value is PrpTerminalState {
 }
 
 /** Production implementation of the runner package's deliberately narrow persistence port. */
-export class PaperclipControlPlanePort implements ControlPlanePort {
+export class ThinkingMachControlPlanePort implements ControlPlanePort {
   readonly #db: Db;
-  readonly #binding: PaperclipControlPlaneBinding;
+  readonly #binding: ThinkingMachControlPlaneBinding;
   #sessionId: string | null = null;
   readonly #onCommittedEvent?: (event: PrpEvent) => Promise<void>;
   readonly #onDuplicateEvent?: (event: PrpEvent) => Promise<void>;
 
   constructor(
     db: Db,
-    binding: PaperclipControlPlaneBinding,
+    binding: ThinkingMachControlPlaneBinding,
     options: {
       onCommittedEvent?: (event: PrpEvent) => Promise<void>;
       onDuplicateEvent?: (event: PrpEvent) => Promise<void>;

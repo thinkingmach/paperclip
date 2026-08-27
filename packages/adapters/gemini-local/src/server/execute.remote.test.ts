@@ -11,7 +11,7 @@ const {
   restoreWorkspaceFromSshExecution,
   runSshCommand,
   syncDirectoryToSsh,
-  startAdapterExecutionTargetPaperclipBridge,
+  startAdapterExecutionTargetThinkingMachBridge,
 } = vi.hoisted(() => ({
   runChildProcess: vi.fn(async () => ({
     exitCode: 0,
@@ -41,19 +41,19 @@ const {
     exitCode: 0,
   })),
   syncDirectoryToSsh: vi.fn(async () => undefined),
-  startAdapterExecutionTargetPaperclipBridge: vi.fn(async () => ({
+  startAdapterExecutionTargetThinkingMachBridge: vi.fn(async () => ({
     env: {
-      PAPERCLIP_API_URL: "http://127.0.0.1:4310",
-      PAPERCLIP_API_KEY: "bridge-token",
-      PAPERCLIP_API_BRIDGE_MODE: "queue_v1",
+      THINKINGMACH_API_URL: "http://127.0.0.1:4310",
+      THINKINGMACH_API_KEY: "bridge-token",
+      THINKINGMACH_API_BRIDGE_MODE: "queue_v1",
     },
     stop: async () => {},
   })),
 }));
 
-vi.mock("@paperclipai/adapter-utils/server-utils", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/server-utils")>(
-    "@paperclipai/adapter-utils/server-utils",
+vi.mock("@thinkingmach/adapter-utils/server-utils", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/server-utils")>(
+    "@thinkingmach/adapter-utils/server-utils",
   );
   return {
     ...actual,
@@ -63,9 +63,9 @@ vi.mock("@paperclipai/adapter-utils/server-utils", async () => {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/ssh", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/ssh")>(
-    "@paperclipai/adapter-utils/ssh",
+vi.mock("@thinkingmach/adapter-utils/ssh", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/ssh")>(
+    "@thinkingmach/adapter-utils/ssh",
   );
   return {
     ...actual,
@@ -76,13 +76,13 @@ vi.mock("@paperclipai/adapter-utils/ssh", async () => {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
-    startAdapterExecutionTargetPaperclipBridge,
+    startAdapterExecutionTargetThinkingMachBridge,
   };
 });
 
@@ -140,13 +140,13 @@ describe("gemini remote execution", () => {
           {
             workspaceId: "workspace-1",
             cwd: workspaceDir,
-            repoUrl: "https://github.com/paperclipai/paperclip.git",
+            repoUrl: "https://github.com/thinkingmach/paperclip.git",
             repoRef: "main",
           },
           {
             workspaceId: "workspace-2",
             cwd: alternateWorkspaceDir,
-            repoUrl: "https://github.com/paperclipai/paperclip.git",
+            repoUrl: "https://github.com/thinkingmach/paperclip.git",
             repoRef: "feature/other",
           },
         ],
@@ -204,29 +204,29 @@ describe("gemini remote execution", () => {
     const call = runChildProcess.mock.calls[0] as unknown as
       | [string, string, string[], { env: Record<string, string>; remoteExecution?: { remoteCwd: string } | null }]
       | undefined;
-    expect(call?.[3].env.PAPERCLIP_WORKSPACE_CWD).toBe(managedRemoteWorkspace);
-    expect(JSON.parse(call?.[3].env.PAPERCLIP_WORKSPACES_JSON ?? "[]")).toEqual([
+    expect(call?.[3].env.THINKINGMACH_WORKSPACE_CWD).toBe(managedRemoteWorkspace);
+    expect(JSON.parse(call?.[3].env.THINKINGMACH_WORKSPACES_JSON ?? "[]")).toEqual([
       {
         workspaceId: "workspace-1",
         cwd: managedRemoteWorkspace,
-        repoUrl: "https://github.com/paperclipai/paperclip.git",
+        repoUrl: "https://github.com/thinkingmach/paperclip.git",
         repoRef: "main",
       },
       {
         workspaceId: "workspace-2",
-        repoUrl: "https://github.com/paperclipai/paperclip.git",
+        repoUrl: "https://github.com/thinkingmach/paperclip.git",
         repoRef: "feature/other",
       },
     ]);
-    expect(call?.[3].env.PAPERCLIP_API_URL).toBe("http://127.0.0.1:4310");
-    expect(call?.[3].env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+    expect(call?.[3].env.THINKINGMACH_API_URL).toBe("http://127.0.0.1:4310");
+    expect(call?.[3].env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
     expect(call?.[3].env.GEMINI_CLI_TRUST_WORKSPACE).toBe("true");
     expect(call?.[3].env.TERM).toBe("xterm-256color");
     expect(call?.[3].env.COLORTERM).toBe("truecolor");
     expect(call?.[3].env.NO_BROWSER).toBe("1");
     expect(call?.[3].env).not.toHaveProperty("NO_COLOR");
     expect(call?.[3].remoteExecution?.remoteCwd).toBe(managedRemoteWorkspace);
-    expect(startAdapterExecutionTargetPaperclipBridge).toHaveBeenCalledTimes(1);
+    expect(startAdapterExecutionTargetThinkingMachBridge).toHaveBeenCalledTimes(1);
     expect(restoreWorkspaceFromSshExecution).toHaveBeenCalledTimes(1);
   });
 

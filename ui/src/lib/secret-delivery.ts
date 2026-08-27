@@ -1,4 +1,4 @@
-import type { SecretAccessEvent } from "@paperclipai/shared";
+import type { SecretAccessEvent } from "@thinkingmach/shared";
 
 /**
  * Delivery mode for an agent secret binding, derived from its `configPath`.

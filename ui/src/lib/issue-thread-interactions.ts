@@ -38,7 +38,7 @@ export type {
   SuggestTasksPayload,
   SuggestTasksResult,
   SuggestTasksResultCreatedTask,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type {
   AskUserQuestionsAnswer,
   AskUserQuestionsInteraction,
@@ -56,7 +56,7 @@ import type {
   SuggestedTaskDraft,
   SuggestTasksInteraction,
   SuggestTasksResultCreatedTask,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export interface SuggestedTaskTreeNode {
   task: SuggestedTaskDraft;

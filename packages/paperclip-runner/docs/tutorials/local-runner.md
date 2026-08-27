@@ -9,7 +9,7 @@ stdio.
 ## What this phase proves
 
 This phase proves that a native session can run from start to finish without
-Paperclip, a network provider, or a real model. It proves cleanup, request
+ThinkingMach, a network provider, or a real model. It proves cleanup, request
 resolution, interruption, bounded logs, one terminal result, and live/replay
 parity.
 
@@ -24,14 +24,14 @@ Start from a clean repository checkout and run every command from the
 repository root. Install the package dependencies and browser:
 
 ```sh
-pnpm install --filter @paperclipai/paperclip-runner --lockfile=false --ignore-scripts --dev
-pnpm --filter @paperclipai/paperclip-runner exec playwright install chromium
+pnpm install --filter @thinkingmach/paperclip-runner --lockfile=false --ignore-scripts --dev
+pnpm --filter @thinkingmach/paperclip-runner exec playwright install chromium
 ```
 
 On a minimal Linux host, install the browser libraries too:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner exec playwright install-deps chromium
+pnpm --filter @thinkingmach/paperclip-runner exec playwright install-deps chromium
 ```
 
 `playwright install-deps` requires root. On a Debian or Ubuntu host where root
@@ -41,13 +41,13 @@ extracts them without installing system packages, and scopes `LD_LIBRARY_PATH`
 to the verification process:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner verify:rootless
+pnpm --filter @thinkingmach/paperclip-runner verify:rootless
 ```
 
 ## 1. Run the package verification path
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner verify
+pnpm --filter @thinkingmach/paperclip-runner verify
 ```
 
 Expected: Rust, TypeScript, protocol, boundary, documentation, and browser
@@ -57,7 +57,7 @@ semantic result.
 ## 2. Run the happy path in the CLI
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:local-runner -- --scenario happy-path --quiet
+pnpm --filter @thinkingmach/paperclip-runner trace:local-runner -- --scenario happy-path --quiet
 ```
 
 Expected summary facts:
@@ -79,11 +79,11 @@ The command writes
 ## 3. Run the scripted control flows
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:local-runner -- --scenario permission-input --quiet
-pnpm --filter @paperclipai/paperclip-runner trace:local-runner -- --scenario interrupted --quiet
-pnpm --filter @paperclipai/paperclip-runner trace:local-runner -- --scenario error --quiet
-pnpm --filter @paperclipai/paperclip-runner trace:local-runner -- --scenario duplicate-terminal --quiet
-pnpm --filter @paperclipai/paperclip-runner trace:local-runner -- --scenario happy-path --duplicate-turn-command --quiet
+pnpm --filter @thinkingmach/paperclip-runner trace:local-runner -- --scenario permission-input --quiet
+pnpm --filter @thinkingmach/paperclip-runner trace:local-runner -- --scenario interrupted --quiet
+pnpm --filter @thinkingmach/paperclip-runner trace:local-runner -- --scenario error --quiet
+pnpm --filter @thinkingmach/paperclip-runner trace:local-runner -- --scenario duplicate-terminal --quiet
+pnpm --filter @thinkingmach/paperclip-runner trace:local-runner -- --scenario happy-path --duplicate-turn-command --quiet
 ```
 
 Expected:
@@ -99,7 +99,7 @@ Expected:
 Start the package-local server:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner browser:dev --host 127.0.0.1 --port 4179
+pnpm --filter @thinkingmach/paperclip-runner browser:dev --host 127.0.0.1 --port 4179
 ```
 
 Open `http://127.0.0.1:4179`, then follow these steps:

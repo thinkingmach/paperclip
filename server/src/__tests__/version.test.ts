@@ -121,7 +121,7 @@ describe("resolveServerVersion", () => {
         // stamp and the source placeholder — this is the analytics/debug-panel fix.
         buildVersion: "v2026.722.0-15-g4c55f0d",
         buildCommit: "0123456789abcdef0123456789abcdef01234567",
-        packageVersion: "0.3.1",
+        packageVersion: "0.3.3",
         gitDescribeCommand: () => {
           throw new Error("fatal: not a git repository");
         },
@@ -138,7 +138,7 @@ describe("resolveServerVersion", () => {
     expect(
       resolveServerVersion({
         buildVersion: "v2026.722.0-0-g4c55f0d",
-        packageVersion: "0.3.1",
+        packageVersion: "0.3.3",
         gitDescribeCommand: () => {
           throw new Error("no git");
         },
@@ -151,7 +151,7 @@ describe("resolveServerVersion", () => {
     expect(
       resolveServerVersion({
         buildVersion: "2026.725.0-canary.2",
-        packageVersion: "0.3.1",
+        packageVersion: "0.3.3",
         gitDescribeCommand: () => {
           throw new Error("no git");
         },
@@ -165,7 +165,7 @@ describe("resolveServerVersion", () => {
       resolveServerVersion({
         // A stamped version is only a fallback: a real checkout's git describe wins.
         buildVersion: "v2020.1.1-0-g0000000",
-        packageVersion: "0.3.1",
+        packageVersion: "0.3.3",
         gitDescribeCommand: () => "v2026.626.0-58-g518fc71ce\n",
         debugLog: vi.fn(),
       }),
@@ -180,7 +180,7 @@ describe("resolveServerVersion", () => {
         buildCommit: "0123456789abcdef0123456789abcdef01234567",
         packageVersion: "2026.707.0-canary.12",
         debugLog,
-        packageRoot: "/tmp/npm/_npx/example/node_modules/@paperclipai/server",
+        packageRoot: "/tmp/npm/_npx/example/node_modules/@thinkingmach/server",
       }),
     ).toBe("2026.707.0-canary.12");
 
@@ -211,8 +211,8 @@ describe("resolveServerVersion", () => {
   });
 
   it("keeps fallback diagnostics quiet by default", () => {
-    const previousDebugFlag = process.env.PAPERCLIP_DEBUG_VERSION_RESOLUTION;
-    delete process.env.PAPERCLIP_DEBUG_VERSION_RESOLUTION;
+    const previousDebugFlag = process.env.THINKINGMACH_DEBUG_VERSION_RESOLUTION;
+    delete process.env.THINKINGMACH_DEBUG_VERSION_RESOLUTION;
     const consoleDebug = vi.spyOn(console, "debug").mockImplementation(() => {});
 
     try {
@@ -230,9 +230,9 @@ describe("resolveServerVersion", () => {
     } finally {
       consoleDebug.mockRestore();
       if (previousDebugFlag === undefined) {
-        delete process.env.PAPERCLIP_DEBUG_VERSION_RESOLUTION;
+        delete process.env.THINKINGMACH_DEBUG_VERSION_RESOLUTION;
       } else {
-        process.env.PAPERCLIP_DEBUG_VERSION_RESOLUTION = previousDebugFlag;
+        process.env.THINKINGMACH_DEBUG_VERSION_RESOLUTION = previousDebugFlag;
       }
     }
   });

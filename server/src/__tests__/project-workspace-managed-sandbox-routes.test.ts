@@ -304,7 +304,7 @@ describe("project workspace host-path floor", () => {
       .post("/api/companies/company-1/projects")
       .send({
         name: "Project",
-        workspace: { name: "Primary", repoUrl: "https://github.com/paperclipai/paperclip" },
+        workspace: { name: "Primary", repoUrl: "https://github.com/thinkingmach/paperclip" },
       });
 
     expect([200, 201], JSON.stringify(res.body)).toContain(res.status);

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 
 import { eq } from "drizzle-orm";
-import { agents, companies, createDb, heartbeatRuns, issues } from "@paperclipai/db";
+import { agents, companies, createDb, heartbeatRuns, issues } from "@thinkingmach/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import {
@@ -18,7 +18,7 @@ import {
   runnerPrpWebSocketInternals,
   setupRunnerPrpWebSocketServer,
 } from "../../realtime/runner-prp-ws.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 
 const fakeCodexAppServer = resolve(
   import.meta.dirname,
@@ -45,7 +45,7 @@ describe("paperclip-runner real server vertical slice", () => {
     await temporary.cleanup();
   });
 
-  runnerBinaryIt("runs Rust runnerd through Paperclip PRP and reads the real bound task", async () => {
+  runnerBinaryIt("runs Rust runnerd through ThinkingMach PRP and reads the real bound task", async () => {
     const db = createDb(temporary.connectionString);
     await db.insert(companies).values({ id: companyId, name: "Real runner slice", issuePrefix: "RRS" });
     await db.insert(agents).values({
@@ -79,7 +79,7 @@ describe("paperclip-runner real server vertical slice", () => {
     });
     await db.update(issues).set({ executionRunId: runId }).where(eq(issues.id, issueId));
 
-    const authority = new PaperclipRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
+    const authority = new ThinkingMachRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
     const server = createServer();
     await new Promise<void>((resolveListen) => server.listen(0, "127.0.0.1", resolveListen));
     const address = server.address();
@@ -152,7 +152,7 @@ describe("paperclip-runner real server vertical slice", () => {
         contextSnapshot: { issueId },
       });
       await db.update(issues).set({ executionRunId: resumedRunId }).where(eq(issues.id, issueId));
-      const resumedAuthority = new PaperclipRunnerToolAuthority(db, {
+      const resumedAuthority = new ThinkingMachRunnerToolAuthority(db, {
         companyId,
         agentId,
         issueId,

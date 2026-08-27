@@ -1,5 +1,5 @@
 import { lazy, Suspense, type ReactNode } from "react";
-import type { ToolConnectionCredentialSource } from "@paperclipai/shared";
+import type { ToolConnectionCredentialSource } from "@thinkingmach/shared";
 import { Navigate, Outlet, Route, Routes, useActiveCompanyPrefix, useLocation, useParams } from "@/lib/router";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/i18n";
@@ -22,7 +22,7 @@ import { Cases } from "./pages/Cases";
 import { CaseDetail } from "./pages/CaseDetail";
 import { OnboardingWizardVariant } from "./components/OnboardingWizardVariant";
 import { CloudAccessGate } from "./components/CloudAccessGate";
-import { PaperclipLoading } from "./components/AnimatedPaperclipIcon";
+import { ThinkingMachLoading } from "./components/AnimatedThinkingMachIcon";
 import { Dashboard } from "./pages/Dashboard";
 import { DashboardLive } from "./pages/DashboardLive";
 import { Timeline } from "./pages/Timeline";
@@ -71,7 +71,7 @@ import { canEnterAppsConnect } from "./pages/apps/app-connect-policy";
 import { AppsReview } from "./pages/apps/AppsReview";
 import { AppDetail } from "./pages/apps/AppDetail";
 import { AppNotConnected } from "./pages/apps/AppNotConnected";
-import { PaperclipCloudOAuthHandoffPage } from "./pages/apps/PaperclipCloudOAuthHandoff";
+import { ThinkingMachCloudOAuthHandoffPage } from "./pages/apps/ThinkingMachCloudOAuthHandoff";
 import { GatewaysList } from "./pages/apps/gateways/GatewaysList";
 import { GatewayDetail } from "./pages/apps/gateways/GatewayDetail";
 import { CompanySkills } from "./pages/CompanySkills";
@@ -137,7 +137,7 @@ const ProductionOrgChart = lazy(() =>
 );
 
 function ProductionSurface({ children }: { children: ReactNode }) {
-  return <Suspense fallback={<PaperclipLoading />}>{children}</Suspense>;
+  return <Suspense fallback={<ThinkingMachLoading />}>{children}</Suspense>;
 }
 
 function boardRoutes(streamlinedUiEnabled: boolean) {
@@ -171,7 +171,7 @@ function boardRoutes(streamlinedUiEnabled: boolean) {
         <Route
           path="company/export/*"
           element={(
-            <Suspense fallback={<PaperclipLoading />}>
+            <Suspense fallback={<ThinkingMachLoading />}>
               <CompanyExport />
             </Suspense>
           )}
@@ -472,7 +472,7 @@ function LegacySettingsRedirect() {
   const { hidden: hiddenSettings } = useHiddenSettings();
 
   if (loading) {
-    return <PaperclipLoading />;
+    return <ThinkingMachLoading />;
   }
 
   const targetCompany =
@@ -575,7 +575,7 @@ export function OnboardingRoutePage() {
             <p className="text-sm text-muted-foreground">
               {t("app.cloudCreateUnavailable", {
                 defaultValue:
-                  "Organizations are created in Paperclip Cloud. This instance can't reach it right now — try again from your Cloud portfolio.",
+                  "Organizations are created in ThinkingMach Cloud. This instance can't reach it right now — try again from your Cloud portfolio.",
               })}
             </p>
           ) : (
@@ -611,7 +611,7 @@ function CompanyRootRedirect() {
   const location = useLocation();
 
   if (loading) {
-    return <PaperclipLoading />;
+    return <ThinkingMachLoading />;
   }
 
   const targetCompany = selectedCompany ?? companies[0] ?? null;
@@ -656,7 +656,7 @@ function UnprefixedBoardRedirect() {
   const { companies, selectedCompany, loading } = useCompany();
 
   if (loading) {
-    return <PaperclipLoading />;
+    return <ThinkingMachLoading />;
   }
 
   const targetCompany = selectedCompany ?? companies[0] ?? null;
@@ -704,7 +704,7 @@ function NoCompaniesStartPage() {
             <p className="text-sm text-muted-foreground">
               {t("app.cloudCreateUnavailable", {
                 defaultValue:
-                  "Organizations are created in Paperclip Cloud. This instance can't reach it right now — try again from your Cloud portfolio.",
+                  "Organizations are created in ThinkingMach Cloud. This instance can't reach it right now — try again from your Cloud portfolio.",
               })}
             </p>
           ) : (
@@ -730,7 +730,7 @@ export function App() {
   return (
     <>
       <Routes>
-        <Route path="oauth-handoff" element={<PaperclipCloudOAuthHandoffPage />} />
+        <Route path="oauth-handoff" element={<ThinkingMachCloudOAuthHandoffPage />} />
         <Route path="auth" element={<AuthPage />} />
         <Route path="board-claim/:token" element={<BoardClaimPage />} />
         <Route path="cli-auth/:id" element={<CliAuthPage />} />
@@ -740,7 +740,7 @@ export function App() {
         <Route path="ux-lab/responsible-user-denial" element={<ResponsibleUserDenialUxLab />} />
         <Route path="ux-lab/cross-issue-collaboration" element={<CrossIssueCollaborationUxLab />} />
 
-        <Route element={streamlinedUiLoaded ? <CloudAccessGate /> : <PaperclipLoading />}>
+        <Route element={streamlinedUiLoaded ? <CloudAccessGate /> : <ThinkingMachLoading />}>
           <Route index element={<CompanyRootRedirect />} />
           <Route path="onboarding" element={<OnboardingRoutePage />} />
           <Route path="instance" element={<LegacySettingsRedirect />} />

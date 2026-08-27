@@ -4,7 +4,7 @@ import {
   RUNTIME_EXPOSURE_BIND_HOST,
   commandSelectsBindMode,
   forceLoopbackBindInCommand,
-  isPaperclipDevRunnerCommand,
+  isThinkingMachDevRunnerCommand,
   rewriteUrlHostToLoopback,
 } from "./loopback-bind.js";
 
@@ -46,7 +46,7 @@ describe("forceLoopbackBindInCommand", () => {
   });
 
   it("keeps the legacy lan aliases so dev-service detection still matches", () => {
-    // `isPaperclipDevRuntimeService` matches `--tailscale-auth` as a substring;
+    // `isThinkingMachDevRuntimeService` matches `--tailscale-auth` as a substring;
     // an explicit `--bind` already beats the alias in every dev-runner version.
     expect(forceLoopbackBindInCommand("pnpm dev:once --tailscale-auth")).toBe(
       "pnpm dev:once --tailscale-auth --bind loopback",
@@ -95,24 +95,24 @@ describe("commandSelectsBindMode", () => {
   });
 });
 
-describe("isPaperclipDevRunnerCommand", () => {
+describe("isThinkingMachDevRunnerCommand", () => {
   it("matches the real managed dev commands", () => {
-    expect(isPaperclipDevRunnerCommand("pnpm dev --bind lan")).toBe(true);
-    expect(isPaperclipDevRunnerCommand("pnpm dev")).toBe(true);
-    expect(isPaperclipDevRunnerCommand("pnpm dev:once --tailscale-auth")).toBe(true);
-    expect(isPaperclipDevRunnerCommand("pnpm dev:watch")).toBe(true);
-    expect(isPaperclipDevRunnerCommand("npm run dev --bind lan")).toBe(true);
-    expect(isPaperclipDevRunnerCommand("yarn dev")).toBe(true);
-    expect(isPaperclipDevRunnerCommand("node /tmp/x/dev-runner.mjs --bind lan")).toBe(true);
-    expect(isPaperclipDevRunnerCommand("tsx ../scripts/dev-runner.ts watch")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("pnpm dev --bind lan")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("pnpm dev")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("pnpm dev:once --tailscale-auth")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("pnpm dev:watch")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("npm run dev --bind lan")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("yarn dev")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("node /tmp/x/dev-runner.mjs --bind lan")).toBe(true);
+    expect(isThinkingMachDevRunnerCommand("tsx ../scripts/dev-runner.ts watch")).toBe(true);
   });
 
   it("does not match unrelated commands that merely use --bind", () => {
-    expect(isPaperclipDevRunnerCommand('python3 -m http.server "$PORT" --bind 127.0.0.1')).toBe(false);
-    expect(isPaperclipDevRunnerCommand("node -e 'listen()'")).toBe(false);
-    expect(isPaperclipDevRunnerCommand("pnpm build")).toBe(false);
-    expect(isPaperclipDevRunnerCommand("pnpm develop")).toBe(false);
-    expect(isPaperclipDevRunnerCommand("./my-dev-runnerish --bind lan")).toBe(false);
+    expect(isThinkingMachDevRunnerCommand('python3 -m http.server "$PORT" --bind 127.0.0.1')).toBe(false);
+    expect(isThinkingMachDevRunnerCommand("node -e 'listen()'")).toBe(false);
+    expect(isThinkingMachDevRunnerCommand("pnpm build")).toBe(false);
+    expect(isThinkingMachDevRunnerCommand("pnpm develop")).toBe(false);
+    expect(isThinkingMachDevRunnerCommand("./my-dev-runnerish --bind lan")).toBe(false);
   });
 });
 

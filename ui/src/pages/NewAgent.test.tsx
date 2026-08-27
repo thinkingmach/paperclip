@@ -4,7 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getEnvironmentCapabilities } from "@paperclipai/shared";
+import { getEnvironmentCapabilities } from "@thinkingmach/shared";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "../context/ToastContext";
 import { NewAgent } from "./NewAgent";
@@ -418,7 +418,7 @@ describe("NewAgent Claude subscription login", () => {
     const result = await renderNewAgent();
     roots.push(result.root);
 
-    expect(result.container.textContent).not.toContain("Paperclip Runner");
+    expect(result.container.textContent).not.toContain("ThinkingMach Runner");
     expect(result.container.textContent).toContain("Claude Code");
   });
 
@@ -428,6 +428,6 @@ describe("NewAgent Claude subscription login", () => {
     const result = await renderNewAgent();
     roots.push(result.root);
 
-    expect(result.container.textContent).toContain("Paperclip Runner");
+    expect(result.container.textContent).toContain("ThinkingMach Runner");
   });
 });

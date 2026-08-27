@@ -30,7 +30,7 @@ export function readBuildVersion(
 ): string | null {
   const environmentVersion = parseBuildVersion(
     opts.environmentVersion === undefined
-      ? process.env.PAPERCLIP_BUILD_VERSION
+      ? process.env.THINKINGMACH_BUILD_VERSION
       : opts.environmentVersion,
   );
   if (environmentVersion) return environmentVersion;

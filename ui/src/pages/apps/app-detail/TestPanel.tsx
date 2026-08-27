@@ -1,17 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  AlertTriangle,
-  Ban,
-  Check,
-  ChevronDown,
-  ChevronsUpDown,
-  Clock,
-  Loader2,
-  Play,
-  Search,
-  ShieldQuestion,
-} from "lucide-react";
+import { AlertTriangle, Ban, Check, ChevronDown, ChevronsUpDown, Clock, Loader2, Play, Search, ShieldQuestion,  } from "lucide-react";
 import type {
   ToolCatalogEntry,
   ToolConnectionAccessSummary,
@@ -19,7 +8,7 @@ import type {
   ToolConnectionTestCallResult,
   ToolConnectionTestCallStatus,
   ToolConnectionTestDecision,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { toolsApi } from "@/api/tools";
 import { queryKeys } from "@/lib/queryKeys";
@@ -835,7 +824,7 @@ function splitRequiredOptional(schema: JsonSchemaNode): JsonSchemaNode {
 
 const GUT_CHECK: Record<ToolConnectionTestDecision, (app: string, agent: string) => string> = {
   allowed: (app, agent) => `This runs a real call against ${app} as ${agent}.`,
-  ask_first: () => `Waiting for your OK before this call leaves Paperclip.`,
+  ask_first: () => `Waiting for your OK before this call leaves ThinkingMach.`,
   off: (_app, agent) => `No call will be made — this action is off for ${agent}.`,
 };
 

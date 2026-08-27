@@ -14,7 +14,7 @@ const ANTHROPIC_VERSION = "2023-06-01";
 export const CLAUDE_MANAGED_BETA_VERSION = "managed-agents-2026-04-01" as const;
 export const CLAUDE_MANAGED_QUALIFIED_MODEL = "claude-sonnet-5" as const;
 export const CLAUDE_MANAGED_SYSTEM_PROMPT =
-  "You are a Paperclip remote agent. Follow the current user turn and use only the custom tools supplied for that session. Paperclip tool authority, completion, blocking, review, and yielding are enforced by the runner. Never request or infer a Paperclip endpoint or credential.";
+  "You are a ThinkingMach remote agent. Follow the current user turn and use only the custom tools supplied for that session. ThinkingMach tool authority, completion, blocking, review, and yielding are enforced by the runner. Never request or infer a ThinkingMach endpoint or credential.";
 
 export interface ManagedAgentSetupOptions extends BaseClientOptions {
   companyId?: string;
@@ -164,7 +164,7 @@ function resourceByProfile(
   );
   if (matches.length > 1) {
     throw new Error(
-      `Multiple Anthropic ${resourceLabel} resources use Paperclip profile ${profileKey}; pass an explicit resource ID`,
+      `Multiple Anthropic ${resourceLabel} resources use ThinkingMach profile ${profileKey}; pass an explicit resource ID`,
     );
   }
   return matches[0] ?? null;
@@ -189,7 +189,7 @@ export function assertSafeManagedEnvironment(environment: Record<string, unknown
     || installed.length > 0
   ) {
     throw new Error(
-      "Existing Anthropic Environment does not match Paperclip's no-network, no-package profile",
+      "Existing Anthropic Environment does not match ThinkingMach's no-network, no-package profile",
     );
   }
 }
@@ -241,8 +241,8 @@ async function resolveEnvironment(
   if (options.probe) throw new Error("Probe found no matching Anthropic Environment");
 
   const environment = await anthropicRequest(key, "POST", "/v1/environments", {
-    name: `Paperclip · ${options.displayName}`,
-    description: "Paperclip remote-agent environment: no network or added packages.",
+    name: `ThinkingMach · ${options.displayName}`,
+    description: "ThinkingMach remote-agent environment: no network or added packages.",
     config: {
       type: "cloud",
       networking: {
@@ -294,8 +294,8 @@ async function resolveAgent(
   if (options.probe) throw new Error("Probe found no matching Anthropic Agent");
 
   const agent = await anthropicRequest(key, "POST", "/v1/agents", {
-    name: `Paperclip · ${options.displayName}`,
-    description: "Versioned Paperclip remote agent; runnerd supplies session tools.",
+    name: `ThinkingMach · ${options.displayName}`,
+    description: "Versioned ThinkingMach remote agent; runnerd supplies session tools.",
     model: options.model,
     system: CLAUDE_MANAGED_SYSTEM_PROMPT,
     tools: [],

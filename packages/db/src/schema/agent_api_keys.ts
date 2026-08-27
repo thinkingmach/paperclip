@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, timestamp, index, jsonb } from "drizzle-orm/pg-core";
-import type { AgentApiKeyScope } from "@paperclipai/shared";
+import type { AgentApiKeyScope } from "@thinkingmach/shared";
 import { agents } from "./agents.js";
 import { companies } from "./companies.js";
 

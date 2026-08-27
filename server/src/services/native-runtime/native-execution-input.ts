@@ -13,7 +13,7 @@ import {
   parseNativeExecutionInput,
   resolveQualifiedAcpxProfile,
 } from "../../vendor/paperclip-runner/index.js";
-import { renderPaperclipWakePrompt } from "@paperclipai/adapter-utils/server-utils";
+import { renderThinkingMachWakePrompt } from "@thinkingmach/adapter-utils/server-utils";
 
 /** Closed constructor: callers cannot spread legacy context or environment data. */
 export function buildNativeExecutionInput(input: {
@@ -28,7 +28,7 @@ export function buildNativeExecutionInput(input: {
   };
   taskPrompt: string;
   /**
-   * The already-sanitized Paperclip wake envelope for this run. Native drivers
+   * The already-sanitized ThinkingMach wake envelope for this run. Native drivers
    * receive a closed execution input rather than the legacy adapter context,
    * so the constructor must deliberately project the same bounded wake delta
    * that legacy adapters place in their provider prompt.
@@ -87,7 +87,7 @@ export function buildNativeExecutionInput(input: {
         input.model ?? "",
       )
     : null;
-  const wakePrompt = renderPaperclipWakePrompt(input.wakePayload, {
+  const wakePrompt = renderThinkingMachWakePrompt(input.wakePayload, {
     resumedSession: input.resumedSession === true,
     suppressIssueDescription: input.taskPrompt.trim().length > 0,
   });

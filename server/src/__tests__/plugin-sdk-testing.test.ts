@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
-import { createTestHarness } from "@paperclipai/plugin-sdk/testing";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
+import { createTestHarness } from "@thinkingmach/plugin-sdk/testing";
 
 describe("plugin SDK test harness", () => {
   it("returns scoped execution workspace metadata with the read capability", async () => {
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-execution-workspace-metadata",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Execution Workspace Metadata",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: ["execution.workspaces.read"],
       entrypoints: { worker: "./dist/worker.js" },
@@ -42,13 +42,13 @@ describe("plugin SDK test harness", () => {
   });
 
   it("requires execution.workspaces.read before returning workspace metadata", async () => {
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-missing-execution-workspace-read",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Missing Workspace Read Capability",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: [],
       entrypoints: { worker: "./dist/worker.js" },
@@ -61,13 +61,13 @@ describe("plugin SDK test harness", () => {
   });
 
   it("requires skills.managed capability before resetting a missing declaration", async () => {
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-missing-managed-skill-capability",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Missing Managed Skill Capability",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: [],
       entrypoints: { worker: "./dist/worker.js" },
@@ -84,13 +84,13 @@ describe("plugin SDK test harness", () => {
   });
 
   it("requires access and authorization capabilities for permission SDK calls", async () => {
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-missing-access-authz-capability",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Missing Access Capability",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: [],
       entrypoints: { worker: "./dist/worker.js" },
@@ -109,13 +109,13 @@ describe("plugin SDK test harness", () => {
   });
 
   it("returns tombstone-safe deleted comments from the in-memory issue helper", async () => {
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-comment-redaction",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Comment Redaction",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: ["issue.comments.read"],
       entrypoints: { worker: "./dist/worker.js" },
@@ -162,13 +162,13 @@ describe("plugin SDK test harness", () => {
   });
 
   it("rejects a human-attributed comment when the actorUserId is not an active member", async () => {
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-human-attributed-comment-unverified",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Human-Attributed Comment (unverified)",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: ["issue.comments.create", "issue.comments.create_human_attributed"],
       entrypoints: { worker: "./dist/worker.js" },
@@ -207,13 +207,13 @@ describe("plugin SDK test harness", () => {
     // LOOA-648: the harness mirrors the host's viewer write-bar so a plugin's
     // own test suite cannot pass an attribution production rejects. A viewer is
     // an active member but read-only in the web app.
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-human-attributed-comment-viewer",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Human-Attributed Comment (viewer)",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: ["issue.comments.create", "issue.comments.create_human_attributed"],
       entrypoints: { worker: "./dist/worker.js" },
@@ -246,13 +246,13 @@ describe("plugin SDK test harness", () => {
   });
 
   it("attributes a comment to an active human member for a verified actorUserId", async () => {
-    const manifest: PaperclipPluginManifestV1 = {
+    const manifest: ThinkingMachPluginManifestV1 = {
       id: "paperclip.test-human-attributed-comment-verified",
       apiVersion: 1,
       version: "0.1.0",
       displayName: "Human-Attributed Comment (verified)",
       description: "Test plugin",
-      author: "Paperclip",
+      author: "ThinkingMach",
       categories: ["automation"],
       capabilities: ["issue.comments.create", "issue.comments.create_human_attributed"],
       entrypoints: { worker: "./dist/worker.js" },

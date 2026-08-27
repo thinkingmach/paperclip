@@ -115,8 +115,8 @@ describe.sequential("cli auth routes", () => {
     const res = await request(app)
       .post("/api/cli-auth/challenges")
       .send({
-        command: "paperclipai company import",
-        clientName: "paperclipai cli",
+        command: "thinkingmach company import",
+        clientName: "thinkingmach cli",
         requestedAccess: "board",
       });
 
@@ -171,15 +171,15 @@ describe.sequential("cli auth routes", () => {
 
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toContain("text/markdown");
-    expect(res.text).toContain("# Paperclip Skill");
+    expect(res.text).toContain("# ThinkingMach Skill");
   });
 
   it.sequential("marks challenge status as requiring sign-in for anonymous viewers", async () => {
     mockBoardAuthService.describeCliAuthChallenge.mockResolvedValue({
       id: "challenge-1",
       status: "pending",
-      command: "paperclipai company import",
-      clientName: "paperclipai cli",
+      command: "thinkingmach company import",
+      clientName: "thinkingmach cli",
       requestedAccess: "board",
       requestedCompanyId: null,
       requestedCompanyName: null,

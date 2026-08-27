@@ -14,7 +14,7 @@ function normalizeOptionalEnvValue(value: string | undefined): string | null {
 }
 
 /**
- * The canonical Paperclip Cloud instance predicate.
+ * The canonical ThinkingMach Cloud instance predicate.
  *
  * The tenant token is the signal injected on live cloud stacks. The managed
  * config document is the legacy/bootstrap signal used by managed feature and
@@ -25,13 +25,13 @@ export function isCloudManagedInstance(
   env: CloudInstanceEnv = process.env,
 ): boolean {
   return (
-    normalizeOptionalEnvValue(env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN) !== null ||
-    env.PAPERCLIP_MANAGED_CONFIG !== undefined
+    normalizeOptionalEnvValue(env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN) !== null ||
+    env.THINKINGMACH_MANAGED_CONFIG !== undefined
   );
 }
 
 /**
- * Public stack metadata injected by the Paperclip Cloud provisioner.
+ * Public stack metadata injected by the ThinkingMach Cloud provisioner.
  *
  * A managed signal can exist briefly before every metadata value is available,
  * so absent or blank values are represented as null rather than making health
@@ -43,10 +43,10 @@ export function getCloudStackContext(
   if (!isCloudManagedInstance(env)) return null;
 
   return {
-    stackId: normalizeOptionalEnvValue(env.PAPERCLIP_CLOUD_STACK_ID),
-    stackSlug: normalizeOptionalEnvValue(env.PAPERCLIP_STACK_SLUG),
-    accountGroupId: normalizeOptionalEnvValue(env.PAPERCLIP_CLOUD_ACCOUNT_GROUP_ID),
-    primaryHost: normalizeOptionalEnvValue(env.PAPERCLIP_PRIMARY_HOST),
-    cloudOrigin: normalizeOptionalEnvValue(env.PAPERCLIP_CLOUD_API_ORIGIN),
+    stackId: normalizeOptionalEnvValue(env.THINKINGMACH_CLOUD_STACK_ID),
+    stackSlug: normalizeOptionalEnvValue(env.THINKINGMACH_STACK_SLUG),
+    accountGroupId: normalizeOptionalEnvValue(env.THINKINGMACH_CLOUD_ACCOUNT_GROUP_ID),
+    primaryHost: normalizeOptionalEnvValue(env.THINKINGMACH_PRIMARY_HOST),
+    cloudOrigin: normalizeOptionalEnvValue(env.THINKINGMACH_CLOUD_API_ORIGIN),
   };
 }

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import request from "supertest";
 import { expect, it } from "vitest";
-import { issues } from "@paperclipai/db";
+import { issues } from "@thinkingmach/db";
 import { issueRoutes } from "../routes/issues.js";
 import {
   describeEmbeddedPostgres,
@@ -12,7 +12,7 @@ import {
 } from "./helpers/route-test-harness.js";
 
 /**
- * Regression coverage for https://github.com/paperclipai/paperclip/issues/4628.
+ * Regression coverage for https://github.com/thinkingmach/paperclip/issues/4628.
  * Express's `qs` parser hands the list route either a string or an array for
  * `?status=`, and the route normalizes both shapes.
  */

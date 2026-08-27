@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { and, asc, count, desc, eq, gt, gte, inArray, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { companyMemberships, decisionBundles, decisionEffectExecutions, decisionRetention, decisions, decisionTargetIssues, heartbeatRuns, issueRelations, issues } from "@paperclipai/db";
-import { ATTENTION_SOURCE_KINDS, decisionEffectTargetIssueIds } from "@paperclipai/shared";
-import type { AttentionArchiveManifestEntry, DecisionEffect, DecisionInput, DecisionOption, DecisionStatsCounts, DecisionStatsResponse } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { companyMemberships, decisionBundles, decisionEffectExecutions, decisionRetention, decisions, decisionTargetIssues, heartbeatRuns, issueRelations, issues } from "@thinkingmach/db";
+import { ATTENTION_SOURCE_KINDS, decisionEffectTargetIssueIds } from "@thinkingmach/shared";
+import type { AttentionArchiveManifestEntry, DecisionEffect, DecisionInput, DecisionOption, DecisionStatsCounts, DecisionStatsResponse } from "@thinkingmach/shared";
 import { conflict, forbidden, notFound, tooManyRequests, unprocessable } from "../errors.js";
 import { authorizationService, type AuthorizationActor } from "./authorization.js";
 import { logActivity, publishActivity, type ActivityPublication } from "./activity-log.js";
@@ -211,7 +211,7 @@ export function decisionService(db: Db, options: DecisionServiceOptions) {
       }
     }
     const open = await dbOrTx.select({ value: count() }).from(decisions).where(and(eq(decisions.companyId, input.companyId), eq(decisions.originAgentId, input.agentId), eq(decisions.status, "open")));
-    const cap = Number(process.env.PAPERCLIP_DECISIONS_OPEN_CAP ?? 50);
+    const cap = Number(process.env.THINKINGMACH_DECISIONS_OPEN_CAP ?? 50);
     if (Number(open[0]?.value ?? 0) >= cap) throw tooManyRequests("Open decision cap reached");
     const expiresAt = input.expiresAt ?? new Date(Date.now() + 7 * DAY);
     if (expiresAt.getTime() <= Date.now() || expiresAt.getTime() > Date.now() + 30 * DAY) throw unprocessable("expiresAt must be within 30 days");
@@ -719,11 +719,11 @@ export function decisionService(db: Db, options: DecisionServiceOptions) {
   }
 
   async function sweepExpired(now = new Date()) {
-    const configuredBatchSize = Number(process.env.PAPERCLIP_DECISIONS_SWEEP_BATCH_SIZE ?? 100);
+    const configuredBatchSize = Number(process.env.THINKINGMACH_DECISIONS_SWEEP_BATCH_SIZE ?? 100);
     const batchSize = Number.isFinite(configuredBatchSize)
       ? Math.max(1, Math.trunc(configuredBatchSize))
       : 100;
-    const configuredRecoveryGraceMs = Number(process.env.PAPERCLIP_DECISIONS_RECOVERY_GRACE_MS ?? 60_000);
+    const configuredRecoveryGraceMs = Number(process.env.THINKINGMACH_DECISIONS_RECOVERY_GRACE_MS ?? 60_000);
     const recoveryGraceMs = Number.isFinite(configuredRecoveryGraceMs) && configuredRecoveryGraceMs >= 0
       ? configuredRecoveryGraceMs
       : 60_000;

@@ -2,15 +2,15 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionContext, AdapterInvocationMeta } from "@paperclipai/adapter-utils";
-import { runChildProcess } from "@paperclipai/adapter-utils/server-utils";
+import type { AdapterExecutionContext, AdapterInvocationMeta } from "@thinkingmach/adapter-utils";
+import { runChildProcess } from "@thinkingmach/adapter-utils/server-utils";
 
 // Every test in this file needs a real teardown, so the mock below delegates
 // to the actual factory by default. Only the wiring test further down reads
 // the call arguments; it does not change this behavior.
 const mockCreateWorkspaceRestoreTeardown = vi.hoisted(() => vi.fn());
 
-vi.mock("@paperclipai/adapter-utils/workspace-restore-teardown", async (importOriginal) => {
+vi.mock("@thinkingmach/adapter-utils/workspace-restore-teardown", async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   mockCreateWorkspaceRestoreTeardown.mockImplementation(
     actual.createWorkspaceRestoreTeardown as (...args: unknown[]) => unknown,
@@ -82,8 +82,8 @@ type FakeRuntimeTurn = {
 
 const tempRoots: string[] = [];
 const originalNodeVersion = process.version;
-const originalPaperclipHome = process.env.PAPERCLIP_HOME;
-const originalPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
+const originalThinkingMachHome = process.env.THINKINGMACH_HOME;
+const originalThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
 const originalCodexHome = process.env.CODEX_HOME;
 const originalOpenAiApiKey = process.env.OPENAI_API_KEY;
 
@@ -130,10 +130,10 @@ function setNodeVersion(version: string): void {
 
 afterEach(async () => {
   setNodeVersion(originalNodeVersion);
-  if (originalPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-  else process.env.PAPERCLIP_HOME = originalPaperclipHome;
-  if (originalPaperclipInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-  else process.env.PAPERCLIP_INSTANCE_ID = originalPaperclipInstanceId;
+  if (originalThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+  else process.env.THINKINGMACH_HOME = originalThinkingMachHome;
+  if (originalThinkingMachInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+  else process.env.THINKINGMACH_INSTANCE_ID = originalThinkingMachInstanceId;
   if (originalCodexHome === undefined) delete process.env.CODEX_HOME;
   else process.env.CODEX_HOME = originalCodexHome;
   if (originalOpenAiApiKey === undefined) delete process.env.OPENAI_API_KEY;
@@ -232,8 +232,8 @@ class FakeRuntime {
 async function makeTempRoot(prefix: string) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
   tempRoots.push(root);
-  process.env.PAPERCLIP_HOME = path.join(root, "paperclip-home");
-  process.env.PAPERCLIP_INSTANCE_ID = "test";
+  process.env.THINKINGMACH_HOME = path.join(root, "paperclip-home");
+  process.env.THINKINGMACH_INSTANCE_ID = "test";
   return root;
 }
 
@@ -603,7 +603,7 @@ describe("codex_local ACP lane", () => {
     );
   });
 
-  it("explains the Paperclip server credential boundary when ACP auth is missing", async () => {
+  it("explains the ThinkingMach server credential boundary when ACP auth is missing", async () => {
     const root = await makeTempRoot("paperclip-codex-acp-missing-auth-");
     const commandPath = path.join(root, "bin", "codex-acp");
     const sharedCodexHome = path.join(root, "shared-codex-home");
@@ -641,7 +641,7 @@ describe("codex_local ACP lane", () => {
       expect.objectContaining({
         code: "codex_acp_credentials_missing",
         level: "warn",
-        message: expect.stringContaining("Paperclip server"),
+        message: expect.stringContaining("ThinkingMach server"),
         hint: expect.stringContaining("separate Codex/chat session"),
       }),
     );
@@ -731,7 +731,7 @@ describe("codex_local ACP lane", () => {
         modelReasoningEffort: "high",
         fastMode: true,
         promptTemplate: "Do the assigned work.",
-        paperclipRuntimeSkills: [skill],
+        thinkingmachRuntimeSkills: [skill],
         paperclipSkillSync: { desiredSkills: [skill.key] },
       },
       onMeta: async (payload: AdapterInvocationMeta) => {

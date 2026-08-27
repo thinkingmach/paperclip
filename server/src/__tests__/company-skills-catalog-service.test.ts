@@ -4,12 +4,12 @@ import path from "node:path";
 import { promises as fs } from "node:fs";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { and, eq } from "drizzle-orm";
-import { companies, companySkills, createDb, folders } from "@paperclipai/db";
+import { companies, companySkills, createDb, folders } from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
 } from "./helpers/embedded-postgres.js";
-import type { CatalogSkill, CatalogSkillFile } from "@paperclipai/shared";
+import type { CatalogSkill, CatalogSkillFile } from "@thinkingmach/shared";
 
 function sha256(value: string | Buffer) {
   return createHash("sha256").update(value).digest("hex");
@@ -36,8 +36,8 @@ const sampleFiles: CatalogSkillFile[] = [
 ];
 
 const sampleCatalogSkill: CatalogSkill = {
-  id: "paperclipai:bundled:software-development:review",
-  key: "paperclipai/bundled/software-development/review",
+  id: "thinkingmach:bundled:software-development:review",
+  key: "thinkingmach/bundled/software-development/review",
   kind: "bundled",
   category: "software-development",
   slug: "review",
@@ -57,8 +57,8 @@ const sampleCatalogSkill: CatalogSkill = {
 
 const mockCatalogService = vi.hoisted(() => ({
   getCatalogPackageMetadata: vi.fn(() => ({
-    packageName: "@paperclipai/skills-catalog",
-    packageVersion: "0.3.1",
+    packageName: "@thinkingmach/skills-catalog",
+    packageVersion: "0.3.3",
   })),
   getCatalogSkillOrThrow: vi.fn(),
   resolveCatalogSkillReference: vi.fn(),
@@ -81,7 +81,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
   let db!: ReturnType<typeof createDb>;
   let svc!: Awaited<ReturnType<typeof createService>>;
   let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
-  let oldPaperclipHome: string | undefined;
+  let oldThinkingMachHome: string | undefined;
   const cleanupDirs = new Set<string>();
 
   async function createService() {
@@ -93,7 +93,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
     const companyId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -101,7 +101,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
   }
 
   beforeAll(async () => {
-    oldPaperclipHome = process.env.PAPERCLIP_HOME;
+    oldThinkingMachHome = process.env.THINKINGMACH_HOME;
     tempDb = await startEmbeddedPostgresTestDatabase("paperclip-company-skills-catalog-");
     db = createDb(tempDb.connectionString);
     svc = await createService();
@@ -110,7 +110,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
   beforeEach(async () => {
     const home = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-catalog-home-"));
     cleanupDirs.add(home);
-    process.env.PAPERCLIP_HOME = home;
+    process.env.THINKINGMACH_HOME = home;
     mockCatalogService.getCatalogSkillOrThrow.mockReturnValue(sampleCatalogSkill);
     mockCatalogService.resolveCatalogSkillReference.mockReturnValue({
       skill: sampleCatalogSkill,
@@ -140,8 +140,8 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
   });
 
   afterAll(async () => {
-    if (oldPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-    else process.env.PAPERCLIP_HOME = oldPaperclipHome;
+    if (oldThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+    else process.env.THINKINGMACH_HOME = oldThinkingMachHome;
     await tempDb?.cleanup();
   });
 
@@ -168,7 +168,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
         catalogKey: sampleCatalogSkill.key,
         catalogKind: "bundled",
         catalogCategory: "software-development",
-        packageName: "@paperclipai/skills-catalog",
+        packageName: "@thinkingmach/skills-catalog",
         originHash: sampleCatalogSkill.contentHash,
         installedHash: sampleCatalogSkill.contentHash,
         auditVerdict: "pass",
@@ -181,8 +181,8 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
     expect(listed.find((skill) => skill.id === result.skill.id)).toMatchObject({
       catalogKind: "bundled",
       originHash: sampleCatalogSkill.contentHash,
-      packageName: "@paperclipai/skills-catalog",
-      packageVersion: "0.3.1",
+      packageName: "@thinkingmach/skills-catalog",
+      packageVersion: "0.3.3",
     });
     const folder = await db
       .select()
@@ -196,7 +196,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
     });
   });
 
-  it("repairs an existing unfiled Paperclip catalog skill during inventory refresh", async () => {
+  it("repairs an existing unfiled ThinkingMach catalog skill during inventory refresh", async () => {
     const companyId = await createCompany();
     const installed = await svc.installFromCatalog(companyId, { catalogSkillId: sampleCatalogSkill.id });
     await db
@@ -300,7 +300,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
   it("restores portable catalog provenance when importing packaged skills", async () => {
     const companyId = await createCompany();
     const importedFiles = {
-      "skills/paperclipai/bundled/software-development/review/SKILL.md": [
+      "skills/thinkingmach/bundled/software-development/review/SKILL.md": [
         "---",
         `key: "${sampleCatalogSkill.key}"`,
         'slug: "review"',
@@ -317,8 +317,8 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
         `      catalogKey: "${sampleCatalogSkill.key}"`,
         '      catalogKind: "bundled"',
         '      catalogPath: "catalog/bundled/software-development/review"',
-        '      packageName: "@paperclipai/skills-catalog"',
-        '      packageVersion: "0.3.1"',
+        '      packageName: "@thinkingmach/skills-catalog"',
+        '      packageVersion: "0.3.3"',
         `      installedHash: "${sampleCatalogSkill.contentHash}"`,
         '      userModifiedAt: "2026-05-01T00:00:00.000Z"',
         '      updateHoldReason: "local_modifications"',
@@ -332,7 +332,7 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
         "# Review",
         "",
       ].join("\n"),
-      "skills/paperclipai/bundled/software-development/review/references/checklist.md": sampleReferenceMarkdown,
+      "skills/thinkingmach/bundled/software-development/review/references/checklist.md": sampleReferenceMarkdown,
     };
 
     const [result] = await svc.importPackageFiles(companyId, importedFiles, { onConflict: "replace" });
@@ -352,8 +352,8 @@ describeEmbeddedPostgres("companySkillService.installFromCatalog", () => {
         catalogKey: sampleCatalogSkill.key,
         catalogKind: "bundled",
         catalogPath: "catalog/bundled/software-development/review",
-        packageName: "@paperclipai/skills-catalog",
-        packageVersion: "0.3.1",
+        packageName: "@thinkingmach/skills-catalog",
+        packageVersion: "0.3.3",
         installedHash: sampleCatalogSkill.contentHash,
         userModifiedAt: "2026-05-01T00:00:00.000Z",
         updateHoldReason: "local_modifications",

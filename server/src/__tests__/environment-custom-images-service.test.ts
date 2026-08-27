@@ -9,7 +9,7 @@ import {
   environmentCustomImageTemplates,
   environments,
   plugins,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { PluginWorkerManager } from "../services/plugin-worker-manager.js";
 import {
   environmentCustomImageService,

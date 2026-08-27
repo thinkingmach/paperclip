@@ -122,7 +122,7 @@ interface EmbeddedEvalReport {
 }
 
 declare global {
-  interface Window { __PAPERCLIP_EVAL_REPORT__?: EmbeddedEvalReport }
+  interface Window { __THINKINGMACH_EVAL_REPORT__?: EmbeddedEvalReport }
 }
 
 interface StoredChatSession {
@@ -257,8 +257,8 @@ function currentTurnActivity(snapshot: CapabilityIssueThreadSnapshot): string {
   );
   if (activity?.kind === "tool_activity") {
     return activity.status === "running"
-      ? `Paperclip tool · ${activity.operationId}`
-      : `Paperclip tool completed · ${activity.operationId}`;
+      ? `ThinkingMach tool · ${activity.operationId}`
+      : `ThinkingMach tool completed · ${activity.operationId}`;
   }
   if (activity?.kind === "progress_activity") return activity.summary;
   if (activity?.kind === "agent_message") return `Receiving ${harness} response`;
@@ -293,7 +293,7 @@ function useLayout(): "side" | "overlay" | "segment" {
 }
 
 export function App() {
-  const embeddedEval = window.__PAPERCLIP_EVAL_REPORT__ ?? null;
+  const embeddedEval = window.__THINKINGMACH_EVAL_REPORT__ ?? null;
   const route = useRoute();
   const chat = route.surface === "chat";
   const layout = useLayout();
@@ -304,8 +304,8 @@ export function App() {
       return;
     }
     document.title = chat
-      ? "🫧 Mock Paperclip · Issue thread"
-      : "🧯 Mock Paperclip · Issue thread";
+      ? "🫧 Mock ThinkingMach · Issue thread"
+      : "🧯 Mock ThinkingMach · Issue thread";
   }, [chat, embeddedEval]);
 
   const [snapshot, setSnapshot] = useState<CapabilityIssueThreadSnapshot | null>(null);
@@ -1371,13 +1371,13 @@ export function App() {
                     <p>
                       This is a blank thread on a brand-new mock tenant:{" "}
                       <strong>{snapshot.issue.identifier}</strong> in{" "}
-                      <strong>Mock Paperclip (clean room)</strong>. Nothing has been said, called, or
+                      <strong>Mock ThinkingMach (clean room)</strong>. Nothing has been said, called, or
                       recorded yet.
                     </p>
                     <p className="pit-muted">
                       Your first message starts a real {snapshot.identity.agentLabel.replace(/^Real /, "")} turn through real runnerd. The agent may
                       call the semantic tools this session exposes, and every record it creates lands
-                      in the mock control plane only — never a real Paperclip API. Detailed tool,
+                      in the mock control plane only — never a real ThinkingMach API. Detailed tool,
                       policy, event, and state evidence stays in the Evidence drawer until you open
                       it.
                     </p>

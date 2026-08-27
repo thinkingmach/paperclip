@@ -1,14 +1,5 @@
 import type { CSSProperties } from "react";
-import {
-  Ban,
-  Circle,
-  CircleCheck,
-  CircleDashed,
-  CircleDot,
-  CircleMinus,
-  RotateCw,
-  type LucideIcon,
-} from "lucide-react";
+import { Ban, Circle, CircleCheck, CircleDashed, CircleDot, CircleMinus, RotateCw, type LucideIcon,  } from "lucide-react";
 import { cn } from "../lib/utils";
 import { taskStatusIconVar, taskStatusIconVarDefault } from "../lib/status-colors";
 

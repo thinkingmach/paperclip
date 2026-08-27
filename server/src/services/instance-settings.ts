@@ -1,5 +1,5 @@
-import type { Db } from "@paperclipai/db";
-import { companies, instanceSettings } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { companies, instanceSettings } from "@thinkingmach/db";
 
 /**
  * A `Db` or an open transaction handle — the subset of query builders the
@@ -14,7 +14,7 @@ export type InstanceSettingsWriteDb = Pick<
 import {
   DEFAULT_FEEDBACK_DATA_SHARING_PREFERENCE,
   DEFAULT_BACKUP_RETENTION,
-  PAPERCLIP_CLOUD_MANAGED_BY,
+  THINKINGMACH_CLOUD_MANAGED_BY,
   instanceGeneralSettingsSchema,
   type InstanceGeneralSettings,
   instanceExperimentalSettingsSchema,
@@ -26,8 +26,9 @@ import {
   type InstanceSettings,
   type PatchInstanceSettings,
   type PatchInstanceExperimentalSettings,
-} from "@paperclipai/shared";
-import { applyOperatorGeneralDefaults, stripOperatorGeneralEchoes } from "@paperclipai/shared";
+  applyOperatorGeneralDefaults,
+  stripOperatorGeneralEchoes,
+} from "@thinkingmach/shared";
 import { eq } from "drizzle-orm";
 import { getManagedInstanceConfig, type ManagedInstanceConfig } from "./managed-config.js";
 import { getOperatorSettingDefaults } from "./setting-defaults.js";
@@ -69,7 +70,7 @@ export function isTruthyRuntimeEnvValue(value: string | undefined) {
 }
 
 function getRuntimeInstanceId(env: Record<string, string | undefined>) {
-  const instanceId = env.PAPERCLIP_INSTANCE_ID?.trim();
+  const instanceId = env.THINKINGMACH_INSTANCE_ID?.trim();
   return instanceId ? instanceId : null;
 }
 
@@ -117,7 +118,7 @@ export function applyExperimentalSettingsPatch(
   }
 
   const runtimeEnv = options.runtimeEnv ?? process.env;
-  if (!isTruthyRuntimeEnvValue(runtimeEnv.PAPERCLIP_IN_WORKTREE)) {
+  if (!isTruthyRuntimeEnvValue(runtimeEnv.THINKINGMACH_IN_WORKTREE)) {
     return nextExperimental;
   }
 
@@ -181,7 +182,7 @@ export async function resolveWorktreeRunExecutionActivationState(options: {
   runtimeEnv?: Record<string, string | undefined>;
 }): Promise<WorktreeRunExecutionActivationState> {
   const runtimeEnv = options.runtimeEnv ?? process.env;
-  if (!isTruthyRuntimeEnvValue(runtimeEnv.PAPERCLIP_IN_WORKTREE)) {
+  if (!isTruthyRuntimeEnvValue(runtimeEnv.THINKINGMACH_IN_WORKTREE)) {
     return suppressWorktreeRunExecution("not_worktree_runtime");
   }
   try {
@@ -243,7 +244,7 @@ export function normalizeExperimentalSettings(raw: unknown): InstanceExperimenta
       enableDecisions: parsed.data.enableDecisions ?? false,
       enableGoalsSidebarLink: parsed.data.enableGoalsSidebarLink ?? false,
       enableServerInfoDebugView: parsed.data.enableServerInfoDebugView ?? false,
-      enablePaperclipDeveloperMode: parsed.data.enablePaperclipDeveloperMode ?? false,
+      enableThinkingMachDeveloperMode: parsed.data.enableThinkingMachDeveloperMode ?? false,
       enableSimplifiedEnglishInteractions: parsed.data.enableSimplifiedEnglishInteractions ?? false,
       autoRestartDevServerWhenIdle: parsed.data.autoRestartDevServerWhenIdle ?? false,
       enableWorkspaceBranchReconcileForward: parsed.data.enableWorkspaceBranchReconcileForward ?? true,
@@ -280,7 +281,7 @@ export function normalizeExperimentalSettings(raw: unknown): InstanceExperimenta
     enableDecisions: false,
     enableGoalsSidebarLink: false,
     enableServerInfoDebugView: false,
-    enablePaperclipDeveloperMode: false,
+    enableThinkingMachDeveloperMode: false,
     enableSimplifiedEnglishInteractions: false,
     autoRestartDevServerWhenIdle: false,
     enableWorkspaceBranchReconcileForward: true,
@@ -322,16 +323,16 @@ export function applyManagedExperimentalOverlay(
     // document during rollout, but never let the retired flag disable Apps.
     if (key === "enableApps") continue;
     next[key] = value;
-    managedKeys[key] = { managed: true, managedBy: PAPERCLIP_CLOUD_MANAGED_BY };
+    managedKeys[key] = { managed: true, managedBy: THINKINGMACH_CLOUD_MANAGED_BY };
   }
   return { experimental: next, managedKeys };
 }
 
 export function instanceSettingsService(db: Db, options: InstanceSettingsServiceOptions = {}) {
-  // Fail closed: a malformed PAPERCLIP_MANAGED_CONFIG throws here (and at
+  // Fail closed: a malformed THINKINGMACH_MANAGED_CONFIG throws here (and at
   // boot in index.ts) rather than silently running without the overlay.
   const managedConfig = getManagedInstanceConfig(options.runtimeEnv ?? process.env);
-  // Same posture for PAPERCLIP_SETTING_DEFAULTS: parsed once, applied per
+  // Same posture for THINKINGMACH_SETTING_DEFAULTS: parsed once, applied per
   // read, never persisted (see applyOperatorGeneralDefaults) — including on
   // the write path, where a full-GET echo of the overlaid value is stripped
   // back to the schema default (see stripOperatorGeneralEchoes).

@@ -3,11 +3,11 @@ import type { DatabaseConfig } from "../config/schema.js";
 import {
   resolveDefaultBackupDir,
   resolveDefaultEmbeddedPostgresDir,
-  resolvePaperclipInstanceId,
+  resolveThinkingMachInstanceId,
 } from "../config/home.js";
 
 export async function promptDatabase(current?: DatabaseConfig): Promise<DatabaseConfig> {
-  const instanceId = resolvePaperclipInstanceId();
+  const instanceId = resolveThinkingMachInstanceId();
   const defaultEmbeddedDir = resolveDefaultEmbeddedPostgresDir(instanceId);
   const defaultBackupDir = resolveDefaultBackupDir(instanceId);
   const base: DatabaseConfig = current ?? {

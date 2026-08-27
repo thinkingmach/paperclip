@@ -4,8 +4,8 @@ import {
   createDb,
   heartbeatRuns,
   nativeRunFinalizations,
-} from "@paperclipai/db";
-import { resolveMigrationConnection } from "@paperclipai/db/migration-runtime";
+} from "@thinkingmach/db";
+import { resolveMigrationConnection } from "@thinkingmach/db/migration-runtime";
 
 import { instanceSettingsService } from "./services/instance-settings.js";
 

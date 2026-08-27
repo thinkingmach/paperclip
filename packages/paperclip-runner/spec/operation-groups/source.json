@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "documentTitle": "Paperclip agent operation groups",
-  "evalRepositoryUrl": "https://github.com/paperclipai/paperclip-evals/blob/master/",
+  "documentTitle": "ThinkingMach agent operation groups",
+  "evalRepositoryUrl": "https://github.com/thinkingmach/paperclip-evals/blob/master/",
   "prpEventFamilyDescriptions": {
     "runner": "Runner connection, drain, and diagnostic lifecycle.",
     "runtime": "Runner phase transitions.",
@@ -18,25 +18,25 @@
     "attention": "Continuation and attention routing lifecycle.",
     "work": "Recorded work-assessment evidence.",
     "issue": "Issue-status decision proposal outcome and application evidence.",
-    "plan": "Complete provider-authored within-turn checklist snapshots, separate from durable Paperclip Plan documents.",
+    "plan": "Complete provider-authored within-turn checklist snapshots, separate from durable ThinkingMach Plan documents.",
     "tool": "Provider-neutral process, MCP, dynamic, and built-in execution activity.",
     "research": "Provider-reported search, page-open, and in-page research activity.",
     "delegation": "Child-agent delegation lifecycle and aggregate status.",
     "model": "Requested/effective model routing and verification state.",
     "context": "Context-window compaction markers without hidden summaries.",
     "artifact": "Authorized artifact viewing and structured generated outputs.",
-    "review": "Provider review-mode state, separate from Paperclip authority.",
+    "review": "Provider review-mode state, separate from ThinkingMach authority.",
     "hook": "Bounded provider hook lifecycle and blocking outcomes.",
     "memory": "Authorized or unavailable memory citation references.",
     "safety": "Provider safety review state attached to governed work.",
     "terminal": "Content-free terminal input activity metadata.",
     "wait": "Intentional provider waits, distinct from warm idle and human input.",
     "provider": "Redacted provider notices and actionable warnings.",
-    "semantic_tool": "Canonical authorized Paperclip tool input and result evidence.",
+    "semantic_tool": "Canonical authorized ThinkingMach tool input and result evidence.",
     "usage": "Provider/model-attributed usage and accounting boundaries."
   },
   "prpCommandFamilyDescriptions": {
-    "semantic_tool": "Returns an authorized, correlated Paperclip tool result to the provider through runnerd.",
+    "semantic_tool": "Returns an authorized, correlated ThinkingMach tool result to the provider through runnerd.",
     "run": "Prepare or cancel a run.",
     "session": "Open, snapshot, or close a normalized provider session.",
     "turn": "Start, steer, interrupt, or stop a model turn.",
@@ -298,7 +298,7 @@
   "rules": {
     "companyAuthorization": [
       "Every entity read and write is resolved inside the authenticated actor's company; cross-company identifiers fail without disclosing protected facts.",
-      "Board actors use active membership and role permissions. Agent writes require a company-scoped run JWT and X-Paperclip-Run-Id; active-task tools cannot accept a caller-selected company or arbitrary task.",
+      "Board actors use active membership and role permissions. Agent writes require a company-scoped run JWT and X-ThinkingMach-Run-Id; active-task tools cannot accept a caller-selected company or arbitrary task.",
       "Optional tools are omitted unless every required claim, role, and task-mode condition is satisfied. A grant never bypasses approval, budget, pause, execution-lock, interaction-owner, or other governed-action checks."
     ],
     "taskModes": [

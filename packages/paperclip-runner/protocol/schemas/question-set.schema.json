@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://paperclip.dev/schemas/prp/v1/question-set.schema.json",
-  "title": "Paperclip question set",
+  "title": "ThinkingMach question set",
   "type": "object",
   "required": ["schema", "questions"],
   "properties": {

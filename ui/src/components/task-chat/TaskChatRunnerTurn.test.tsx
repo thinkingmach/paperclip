@@ -1198,7 +1198,7 @@ describe("TaskChatRunnerTurn", () => {
       },
     ]);
     render([
-      { id: "t1", kind: "tool", name: "Paperclip_finish", status: "completed" },
+      { id: "t1", kind: "tool", name: "ThinkingMach_finish", status: "completed" },
     ]);
 
     expect(
@@ -1262,7 +1262,7 @@ describe("TaskChatRunnerTurn", () => {
       {
         id: "tool",
         kind: "tool",
-        name: "Paperclip_finish",
+        name: "ThinkingMach_finish",
         rawName: "paperclip_finish",
         target: "reportedWorkDisposition: done",
         status: "completed",
@@ -1281,7 +1281,7 @@ describe("TaskChatRunnerTurn", () => {
       },
     ]);
 
-    expect(container.textContent).not.toContain("Paperclip_finish");
+    expect(container.textContent).not.toContain("ThinkingMach_finish");
     expect(container.textContent).toContain("Interrupted");
     expect(container.textContent).not.toContain("Session started");
     expect(container.textContent).not.toContain("Turn started");

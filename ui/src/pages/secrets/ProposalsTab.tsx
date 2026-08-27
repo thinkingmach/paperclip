@@ -1,16 +1,8 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import {
-  AlertCircle,
-  ArrowRight,
-  ExternalLink,
-  Inbox,
-  KeyRound,
-  Link2,
-  Loader2,
-} from "lucide-react";
-import type { CompanySecretProviderConfig, SecretProposalView } from "@paperclipai/shared";
+import { AlertCircle, ArrowRight, ExternalLink, Inbox, KeyRound, Link2, Loader2,  } from "lucide-react";
+import type { CompanySecretProviderConfig, SecretProposalView } from "@thinkingmach/shared";
 import { secretsApi } from "../../api/secrets";
 import { queryKeys } from "../../lib/queryKeys";
 import { cn } from "../../lib/utils";

@@ -15,15 +15,7 @@ import {
   loadDraft,
   saveDraft,
 } from "@/lib/composer-draft";
-import {
-  ArrowUp,
-  Check,
-  ChevronDown,
-  CircleHelp,
-  Loader2,
-  Plus,
-  X,
-} from "lucide-react";
+import { ArrowUp, Check, ChevronDown, CircleHelp, Loader2, Plus, X,  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -58,7 +50,7 @@ import {
 import { AgentIcon } from "@/components/AgentIconPicker";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { MentionOption } from "@/components/MarkdownEditor";
-import type { IssueAttachment, IssueWorkMode } from "@paperclipai/shared";
+import type { IssueAttachment, IssueWorkMode } from "@thinkingmach/shared";
 import { TaskChatComposerTakeoverActionsContext } from "./TaskChatComposerTakeoverContext";
 
 /** Structurally identical to IssueChatThread's module-private CommentReassignment. */

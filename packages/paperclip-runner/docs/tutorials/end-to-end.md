@@ -3,13 +3,13 @@
 ## What this tutorial is
 
 This tutorial combines each implemented Native Runner phase into one procedure.
-It currently includes Conformance through the Standalone Paperclip adapter tracer.
+It currently includes Conformance through the Standalone ThinkingMach adapter tracer.
 
 ## What this tutorial proves
 
 This tutorial proves that the standalone package boundary, static replay path,
 local live-run path, durable transport, and direct Codex driver work
-together. It does not use the Paperclip control plane. Codex uses a real
+together. It does not use the ThinkingMach control plane. Codex uses a real
 local Codex session through the mock core.
 
 The current system includes the Rust mock-core tracer, shared protocol fixtures,
@@ -20,7 +20,7 @@ The final phase adds a skillless task envelope, direct app-server driver,
 semantic completion tools, and the same reducer/replay proof used by fixtures.
 SDK freezes that browser transport and reducer projection as public SDK
 subpaths, then proves them with a reference console and a second consumer.
-Standalone consumes the public runner contract from Paperclip behind a default-off
+Standalone consumes the public runner contract from ThinkingMach behind a default-off
 flag while preserving server-owned workspace, governance, and status authority.
 
 ## Current end-to-end path
@@ -29,7 +29,7 @@ flag while preserving server-owned workspace, governance, and status authority.
 2. Confirm the final JSON contains `run_conformance_0001`,
    `session_conformance_0001`, and `succeeded`.
 3. Confirm the cross-language parity check passes.
-4. Confirm the shell prompt returns and no Paperclip service was started.
+4. Confirm the shell prompt returns and no ThinkingMach service was started.
 5. Follow [Replay: Validate and Replay a PRP Fixture](replay.md).
 6. Compare the happy-path CLI snapshot with the browser page and exercise the
    duplicate, gap, unknown-field, and unsupported-version fixtures.
@@ -38,7 +38,7 @@ flag while preserving server-owned workspace, governance, and status authority.
 9. Open the browser live mode and confirm the completed run says `Match` for live and replay output.
 10. Follow [Codex: Run the Skillless Codex Driver](codex.md).
 11. Inspect the exact model-context snapshot and confirm that it has no
-    Paperclip instructions, bearer credentials, or unrelated skills.
+    ThinkingMach instructions, bearer credentials, or unrelated skills.
 12. Run the safe task, then steer and interrupt separate sessions. Confirm
     stable session identities and exactly one result and terminal event.
 13. Follow [Live console: Run the Protocol Demo Server](live-console-protocol-server.md).
@@ -48,23 +48,23 @@ flag while preserving server-owned workspace, governance, and status authority.
 16. Run the fake lifecycle in both consumers, then confirm the mini consumer
     reaches `Replay parity: match` after reconnect and replay.
 17. Run the safe real-Codex browser smoke.
-18. Follow [Standalone: Run the Thin Paperclip Adapter](standalone-thin-paperclip-adapter.md).
+18. Follow [Standalone: Run the Thin ThinkingMach Adapter](standalone-thin-paperclip-adapter.md).
 19. Run the unchanged port conformance suite against mock and database-backed
-    Paperclip ports, then inspect one local feature-flagged task.
+    ThinkingMach ports, then inspect one local feature-flagged task.
 20. Disable the flag and confirm a fresh task selects legacy while persisted
     native finalization remains native.
 
 The one-command form after installation is:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner verify
+pnpm --filter @thinkingmach/paperclip-runner verify
 ```
 
 On a minimal Debian or Ubuntu host without root access, use the rootless browser
 dependency path:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner verify:rootless
+pnpm --filter @thinkingmach/paperclip-runner verify:rootless
 ```
 
 ## Cumulative guarantees
@@ -72,9 +72,9 @@ pnpm --filter @paperclipai/paperclip-runner verify:rootless
 - the fixture is validated before any mock-core mutation;
 - event sequence and run identity agree through the terminal result;
 - Rust and TypeScript printed output is covered by exact string and parity assertions;
-- deliberate TypeScript and Cargo references to Paperclip core are rejected;
+- deliberate TypeScript and Cargo references to ThinkingMach core are rejected;
 - documentation and journal indexes are machine checked;
-- the package remains runnable without Paperclip core;
+- the package remains runnable without ThinkingMach core;
 - JSON Schema remains the language-neutral authority for TypeScript and Rust;
 - replay is deterministic and idempotent under duplicate delivery;
 - source gaps are visible and never synthesized away;
@@ -96,7 +96,7 @@ pnpm --filter @paperclipai/paperclip-runner verify:rootless
 - lease expiry, drain, revoke, and unrecoverable storage outcomes are explicit;
 - CLI and browser diagnostics do not expose bootstrap or connection-lease
   tokens.
-- the Codex child receives an allowlisted environment without Paperclip or
+- the Codex child receives an allowlisted environment without ThinkingMach or
   OpenAI bearer credentials;
 - automatic skill and app instruction blocks are disabled, while Codex's
   built-in collaboration instructions are enabled by default and remain
@@ -147,19 +147,19 @@ pnpm --filter @paperclipai/paperclip-runner verify:rootless
 ## Step 6: Chat with a live session in the browser
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner console:live-console
+pnpm --filter @thinkingmach/paperclip-runner console:live-console
 ```
 
 Open `http://127.0.0.1:4180/` and press **Live console**. Work through the
 [Live console tutorial](live-console.md) to reach every
 state above from the eleven deterministic demo chats. Add
-`PAPERCLIP_LIVE_CONSOLE_DRIVER=codex` to run the identical screens against a real
+`THINKINGMACH_LIVE_CONSOLE_DRIVER=codex` to run the identical screens against a real
 Codex session.
 
 ## Step 7: Run the reusable SDK consumers
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner console:sdk
+pnpm --filter @thinkingmach/paperclip-runner console:sdk
 ```
 
 Open `http://127.0.0.1:4181/reference-console/` and

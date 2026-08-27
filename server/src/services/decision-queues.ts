@@ -1,5 +1,5 @@
 import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   approvals,
@@ -16,7 +16,7 @@ import {
   issueWorkProducts,
   issues,
   joinRequests,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AttentionItem,
   AttentionSourceKind,
@@ -24,7 +24,7 @@ import type {
   DecisionQueueItem,
   DecisionQueueSeedRule,
   DecisionTriage,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { notFound, unprocessable } from "../errors.js";
 import { logActivity } from "./activity-log.js";
 import {

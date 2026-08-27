@@ -4,7 +4,7 @@ import type {
   CompanySearchResult,
   CompanySearchResponse,
   CompanySearchZeroResults,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Badge } from "@/components/ui/badge";
 import { IssueGroupHeader } from "@/components/IssueGroupHeader";
 import { Input } from "@/components/ui/input";
@@ -17,19 +17,7 @@ import { ZeroResultsRecovery } from "@/components/search/ZeroResultsRecovery";
 import type { FilterChipLookups, SearchFilters } from "@/lib/search-filters";
 import { SEARCH_OPERATOR_QUICK_FILTERS, searchOperatorSuggestions } from "@/lib/search-query-parser";
 import { Tabs } from "@/components/ui/tabs";
-import {
-  Bot,
-  CircleDot,
-  DollarSign,
-  Hexagon,
-  History,
-  Inbox,
-  LayoutDashboard,
-  Plus,
-  Search as SearchIcon,
-  SquarePen,
-  Target,
-} from "lucide-react";
+import { Bot, CircleDot, DollarSign, Hexagon, History, Inbox, LayoutDashboard, Plus, Search as SearchIcon, SquarePen, Target,  } from "lucide-react";
 import {
   Command,
   CommandEmpty,

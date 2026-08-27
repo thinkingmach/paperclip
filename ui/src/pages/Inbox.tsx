@@ -1,7 +1,7 @@
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "@/lib/router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deriveOriginatingActor, INBOX_MINE_ISSUE_STATUS_FILTER } from "@paperclipai/shared";
+import { deriveOriginatingActor, INBOX_MINE_ISSUE_STATUS_FILTER } from "@thinkingmach/shared";
 import { usePublishSharedQueryData, useSharedPollingQuery } from "@/hooks/useSharedPolling";
 import { approvalsApi } from "../api/approvals";
 import { accessApi } from "../api/access";
@@ -106,24 +106,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs } from "@/components/ui/tabs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  Inbox as InboxIcon,
-  AlertTriangle,
-  Check,
-  ChevronRight,
-  ArrowUpDown,
-  Layers,
-  Plus,
-  XCircle,
-  X,
-  RotateCcw,
-  UserPlus,
-  Search,
-  ListTree,
-} from "lucide-react";
+import { Inbox as InboxIcon, AlertTriangle, Check, ChevronRight, ArrowUpDown, Layers, Plus, XCircle, X, RotateCcw, UserPlus, Search, ListTree,  } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PageTabBar } from "../components/PageTabBar";
-import type { Approval, HeartbeatRun, Issue, JoinRequest } from "@paperclipai/shared";
+import type { Approval, HeartbeatRun, Issue, JoinRequest } from "@thinkingmach/shared";
 import {
   ACTIONABLE_APPROVAL_STATUSES,
   DEFAULT_INBOX_ISSUE_COLUMNS,

@@ -5,7 +5,7 @@ import {
   capabilityEvalSuiteLookup,
 } from "@paperclip-runner-local/capability";
 
-import "@paperclipai/paperclip-runner/styles.css";
+import "@thinkingmach/paperclip-runner/styles.css";
 import "./explorer.css";
 
 import evalReport from "virtual:capability-eval-report";
@@ -17,7 +17,7 @@ import { CapabilityRemoteChatSession } from "./remote-chat-session.js";
 /**
  * Package-local entry. The scenario index and every fixture are bundled from
  * checked-in artifacts, so fake mode performs zero network I/O and holds no
- * Paperclip or provider credential (UX map §1, §5).
+ * ThinkingMach or provider credential (UX map §1, §5).
  */
 
 const container = document.querySelector("#root");

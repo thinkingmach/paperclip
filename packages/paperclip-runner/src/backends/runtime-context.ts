@@ -36,7 +36,7 @@ export function nativeTaskConstraints(input: NativeExecutionInput): string[] {
   }
   return [
     "Use only the assigned skills and provider-native tools.",
-    "Use Paperclip semantic tools for coordination and finalization.",
+    "Use ThinkingMach semantic tools for coordination and finalization.",
     finalResponseConstraint,
   ];
 }

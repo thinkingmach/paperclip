@@ -430,7 +430,7 @@ export class BrokerCore {
     for (const port of lease.ports) {
       const entry = before.entries.get(port);
       if (entry && !isSameNumberLoopbackEntry(entry, port)) {
-        denied("manual_mapping_present", `port ${port} already has a non-Paperclip mapping`);
+        denied("manual_mapping_present", `port ${port} already has a non-ThinkingMach mapping`);
       }
     }
 

@@ -624,7 +624,7 @@ fn bootstrap_success(
                     && params.get("turnId").and_then(Value::as_str) == Some("turn-1")
                     && params.get("result").is_none()
                     && params.pointer("/error/message").and_then(Value::as_str)
-                        == Some("Paperclip semantic operation failed")
+                        == Some("ThinkingMach semantic operation failed")
                     && !params.to_string().contains("violet-internal-diagnostic-4821")
             } else {
                 mode != "resolutions-wrong-ack"

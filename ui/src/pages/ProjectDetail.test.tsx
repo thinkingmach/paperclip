@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Project } from "@paperclipai/shared";
+import type { Project } from "@thinkingmach/shared";
 import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
@@ -269,14 +269,14 @@ describe("ProjectDetail", () => {
   });
 
   describe("plugin detail-tab deep links", () => {
-    const PLUGIN_TAB = "plugin:paperclipai.plugin-llm-wiki:project-knowledge";
+    const PLUGIN_TAB = "plugin:thinkingmach.plugin-llm-wiki:project-knowledge";
     const knowledgeSlot = {
       id: "project-knowledge",
       type: "detailTab",
       displayName: "Knowledge",
       entityTypes: ["project"],
       pluginId: "plugin-llm-wiki",
-      pluginKey: "paperclipai.plugin-llm-wiki",
+      pluginKey: "thinkingmach.plugin-llm-wiki",
       pluginDisplayName: "LLM Wiki",
       pluginVersion: "0.2.0",
     };
@@ -332,7 +332,7 @@ describe("ProjectDetail", () => {
       expect(container.querySelector('[data-testid="navigate"]')).toBeNull();
       expect(container.querySelector('[data-testid="plugin-slot-mount"]')).not.toBeNull();
       expect(mockPluginSlotMount).toHaveBeenCalledWith(expect.objectContaining({
-        slot: expect.objectContaining({ id: "project-knowledge", pluginKey: "paperclipai.plugin-llm-wiki" }),
+        slot: expect.objectContaining({ id: "project-knowledge", pluginKey: "thinkingmach.plugin-llm-wiki" }),
       }));
       expect(container.textContent).toContain("Knowledge");
     });

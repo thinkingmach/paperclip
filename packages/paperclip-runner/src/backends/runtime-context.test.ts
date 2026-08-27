@@ -20,7 +20,7 @@ const temporaryRoots: string[] = [];
 function runtimeInput(rootPath: string, entryPath: string): NativeExecutionInput {
   return {
     runtimeContext: {
-      prompt: { text: "Paperclip runtime." },
+      prompt: { text: "ThinkingMach runtime." },
       instructions: { bundle: { rootPath }, entryPath },
     },
   } as unknown as NativeExecutionInput;

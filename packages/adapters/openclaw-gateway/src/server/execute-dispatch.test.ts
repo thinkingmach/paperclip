@@ -1,4 +1,4 @@
-import type { AdapterExecutionContext } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext } from "@thinkingmach/adapter-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const websocketState = vi.hoisted(() => ({

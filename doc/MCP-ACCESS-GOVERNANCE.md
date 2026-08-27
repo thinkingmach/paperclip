@@ -1,6 +1,6 @@
 # MCP Access Governance
 
-Operator guide for Paperclip's MCP tool access surface. Audience: board users and CloudOps engineers who install connections, write policies, approve action requests, and respond to runtime alerts. For runtime alert response, pair this with [MCP-RUNTIME-OPERATIONS.md](./MCP-RUNTIME-OPERATIONS.md).
+Operator guide for ThinkingMach's MCP tool access surface. Audience: board users and CloudOps engineers who install connections, write policies, approve action requests, and respond to runtime alerts. For runtime alert response, pair this with [MCP-RUNTIME-OPERATIONS.md](./MCP-RUNTIME-OPERATIONS.md).
 
 > Time-to-first-success: under 5 minutes if you follow [Quick start](#quick-start) and use the bundled example. Everything else is reference and how-to material that you read on demand.
 
@@ -9,7 +9,7 @@ Operator guide for Paperclip's MCP tool access surface. Audience: board users an
 - [Mental model](#mental-model)
 - [Canonical integration model](#canonical-integration-model)
 - [Quick start](#quick-start)
-- [Paperclip as MCP endpoint vs MCP gateway](#paperclip-as-mcp-endpoint-vs-mcp-gateway)
+- [ThinkingMach as MCP endpoint vs MCP gateway](#paperclip-as-mcp-endpoint-vs-mcp-gateway)
 - [Managed connections](#managed-connections)
 - [Catalog and risk classification](#catalog-and-risk-classification)
 - [Profiles and bindings](#profiles-and-bindings)
@@ -23,7 +23,7 @@ Operator guide for Paperclip's MCP tool access surface. Audience: board users an
 
 ## Mental model
 
-Paperclip governs MCP tool access by separating four concerns:
+ThinkingMach governs MCP tool access by separating four concerns:
 
 ```
 ┌────────────┐    ┌──────────────┐    ┌──────────┐    ┌────────────────┐
@@ -78,14 +78,14 @@ The fastest path is the bundled example. From the Tools & Access UI (`/<prefix>/
 curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/install" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/install" \
   -d '{}' | jq .
 
 # Run the bundled smoke check (validates an allowed read, a denied write, audit visibility).
 curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/smoke" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/examples/safe-read-only-todo-kv/smoke" \
   -d '{}' | jq '{ok, checks: [.checks[] | {name, ok, decision, reasonCode}]}'
 ```
 
@@ -93,38 +93,38 @@ Expected: `ok: true` with three green checks: `allow_read_tool`, `deny_write_too
 
 If the smoke fails, fix the failing check before introducing any production connection. The bundled fixture only depends on local code, so any failure is a control-plane problem rather than an upstream MCP issue.
 
-## Paperclip as MCP endpoint vs MCP gateway
+## ThinkingMach as MCP endpoint vs MCP gateway
 
-Paperclip plays two roles in the MCP graph, and confusing them is the most common operator error.
+ThinkingMach plays two roles in the MCP graph, and confusing them is the most common operator error.
 
 ```
-              Paperclip as MCP endpoint
-              (clients call Paperclip)
+              ThinkingMach as MCP endpoint
+              (clients call ThinkingMach)
                        ┌──────────────┐
-   Claude Code  ─────▶ │   Paperclip  │
+   Claude Code  ─────▶ │   ThinkingMach  │
    IDE / CLI    ─────▶ │ /mcp surface │
                        └──────────────┘
                           (task ops, agent ops)
 
 
-              Paperclip as MCP gateway / proxy
-              (agents call upstream MCP through Paperclip)
+              ThinkingMach as MCP gateway / proxy
+              (agents call upstream MCP through ThinkingMach)
 
    ┌─────┐       ┌────────────┐       ┌──────────────┐
-   │Agent│──────▶│ Paperclip  │──────▶│ Upstream MCP │
+   │Agent│──────▶│ ThinkingMach  │──────▶│ Upstream MCP │
    │ run │       │  gateway   │       │ (GitHub etc.)│
    └─────┘       │  + policy  │       └──────────────┘
                  │  + audit   │
                  └────────────┘
 ```
 
-**Endpoint mode** — Paperclip exposes its own MCP surface so external clients (Claude Code, IDEs, scripts) can manipulate Paperclip tasks and agents. This is what `doc/TASKS-mcp.md` covers. Access control here is the standard Paperclip auth model ([DEPLOYMENT-MODES.md](./DEPLOYMENT-MODES.md)): bearer keys, sessions, board API key.
+**Endpoint mode** — ThinkingMach exposes its own MCP surface so external clients (Claude Code, IDEs, scripts) can manipulate ThinkingMach tasks and agents. This is what `doc/TASKS-mcp.md` covers. Access control here is the standard ThinkingMach auth model ([DEPLOYMENT-MODES.md](./DEPLOYMENT-MODES.md)): bearer keys, sessions, board API key.
 
-**Gateway mode** — Paperclip proxies tool calls from a Paperclip agent to an upstream MCP server (GitHub, Linear, a local stdio fixture, etc.). Every call goes through profile selection, policy evaluation, optional human approval, rate limiting, redaction, and audit. This is what the rest of this document covers.
+**Gateway mode** — ThinkingMach proxies tool calls from a ThinkingMach agent to an upstream MCP server (GitHub, Linear, a local stdio fixture, etc.). Every call goes through profile selection, policy evaluation, optional human approval, rate limiting, redaction, and audit. This is what the rest of this document covers.
 
-Operators usually mean *gateway* when they say "MCP access governance". For Paperclip-managed local adapter runs, Paperclip writes adapter MCP config that points at named gateway endpoints with short-lived scoped bearer tokens. Policies, approvals, and the audit log only exist for calls that enter gateway mode.
+Operators usually mean *gateway* when they say "MCP access governance". For ThinkingMach-managed local adapter runs, ThinkingMach writes adapter MCP config that points at named gateway endpoints with short-lived scoped bearer tokens. Policies, approvals, and the audit log only exist for calls that enter gateway mode.
 
-V1 does not claim host-wide MCP enforcement. If an unmanaged external client, hand-edited adapter config, or process outside the Paperclip-controlled workspace calls an upstream MCP server directly, Paperclip can warn about known overlapping config entries but cannot prevent or audit that bypass. Treat managed MCP config as a control-plane containment feature for Paperclip-launched agents, not as an endpoint firewall for the operator's whole machine.
+V1 does not claim host-wide MCP enforcement. If an unmanaged external client, hand-edited adapter config, or process outside the ThinkingMach-controlled workspace calls an upstream MCP server directly, ThinkingMach can warn about known overlapping config entries but cannot prevent or audit that bypass. Treat managed MCP config as a control-plane containment feature for ThinkingMach-launched agents, not as an endpoint firewall for the operator's whole machine.
 
 ## Managed connections
 
@@ -132,7 +132,7 @@ A connection is an enabled, governed link to one MCP server. Two transports are 
 
 | Transport | When to use | Trust posture |
 | --- | --- | --- |
-| `remote_http` | Hosted SaaS MCP servers (GitHub, Linear, custom remote MCP). Default for cloud. | Paperclip authenticates with stored credential refs and proxies calls. Process supervision is upstream's problem. |
+| `remote_http` | Hosted SaaS MCP servers (GitHub, Linear, custom remote MCP). Default for cloud. | ThinkingMach authenticates with stored credential refs and proxies calls. Process supervision is upstream's problem. |
 | `local_stdio` | Local fixtures or approved stdio templates that must run as a child process. | Only allowed when the host is explicitly trusted; see [Local trusted deployment](#local-trusted-deployment). Cloud public deployments fail closed unless a trusted runtime host is configured. |
 
 Operators do not paste arbitrary `command` / `args` for stdio. Allowed stdio entries are limited to the approved template catalog (e.g. `paperclip.echo-calculator-time`, `paperclip.synthetic-todo-kv`). To add a new template, ship a code change.
@@ -143,7 +143,7 @@ Operators do not paste arbitrary `command` / `args` for stdio. Allowed stdio ent
 curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/connections" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/connections" \
   -d '{
     "applicationId": "'"$APPLICATION_ID"'",
     "name": "Linear (remote)",
@@ -166,22 +166,22 @@ Connections are created `enabled: false`. Run a health check and a catalog refre
 ```sh
 # Health check (no secrets in output)
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-connections/$CONNECTION_ID/health-check" -d '{}' \
+  "$THINKINGMACH_URL/api/tool-connections/$CONNECTION_ID/health-check" -d '{}' \
   | jq '{connection: {healthStatus: .connection.healthStatus, healthMessage: .connection.healthMessage}}'
 
 # Catalog refresh (pulls schema, sets risk levels, quarantines unexpected writes)
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-connections/$CONNECTION_ID/catalog/refresh" -d '{}' \
+  "$THINKINGMACH_URL/api/tool-connections/$CONNECTION_ID/catalog/refresh" -d '{}' \
   | jq '{discoveredCount, quarantinedCount}'
 
 # Enable
 curl -fsS -X PATCH -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-connections/$CONNECTION_ID" \
+  "$THINKINGMACH_URL/api/tool-connections/$CONNECTION_ID" \
   -d '{"enabled": true, "status": "active"}' | jq '{id, enabled, status, healthStatus}'
 
 # Disable (does not delete; preserves audit history)
 curl -fsS -X PATCH -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-connections/$CONNECTION_ID" \
+  "$THINKINGMACH_URL/api/tool-connections/$CONNECTION_ID" \
   -d '{"enabled": false, "status": "disabled"}' | jq '{id, enabled, status}'
 ```
 
@@ -189,7 +189,7 @@ Connection statuses: `draft`, `active`, `disabled`, `archived`. Health statuses:
 
 ## Catalog and risk classification
 
-Each tool discovered on a connection becomes a **catalog entry** with a risk level Paperclip infers from MCP annotations:
+Each tool discovered on a connection becomes a **catalog entry** with a risk level ThinkingMach infers from MCP annotations:
 
 | Risk | Trigger | Default treatment |
 | --- | --- | --- |
@@ -197,7 +197,7 @@ Each tool discovered on a connection becomes a **catalog entry** with a risk lev
 | `write` | `annotations.readOnlyHint: false` or `writeHint: true` | Requires approval by default unless the profile or a policy says otherwise. |
 | `destructive` | `annotations.destructiveHint: true` | Quarantined on first sight. Requires explicit operator action before any agent call can succeed. |
 
-When a catalog refresh discovers a new write/destructive tool that did not exist on the prior schema, Paperclip sets `status: quarantined` and records the reason in `quarantineReason`. Quarantined entries are never returned to the agent's tool list until an operator reviews and re-enables them. This is the **changed-tool quarantine** rule and the primary defense against an upstream server silently adding a destructive verb.
+When a catalog refresh discovers a new write/destructive tool that did not exist on the prior schema, ThinkingMach sets `status: quarantined` and records the reason in `quarantineReason`. Quarantined entries are never returned to the agent's tool list until an operator reviews and re-enables them. This is the **changed-tool quarantine** rule and the primary defense against an upstream server silently adding a destructive verb.
 
 To inspect and re-enable a quarantined entry, use the UI Catalog view, or PATCH the entry's status via the catalog routes (see [Reference](#reference)).
 
@@ -210,7 +210,7 @@ Example: create a profile that allows only read-only tools and bind it to a proj
 ```sh
 # Profile with default-deny and one include entry for read-only catalog entries.
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/profiles" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/profiles" \
   -d '{
     "profileKey": "engineering.read-only",
     "name": "Engineering read-only",
@@ -222,7 +222,7 @@ curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: ap
 
 # Bind it to a project so every agent run in that project gets this profile.
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/profiles/$PROFILE_ID/bind" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/profiles/$PROFILE_ID/bind" \
   -d '{ "targetType": "project", "targetId": "'"$PROJECT_ID"'", "priority": 10 }' | jq .
 ```
 
@@ -239,7 +239,7 @@ Binding scopes, narrowest first: `issue` > `routine` > `agent` > `project` > `co
 
 ```sh
 curl -fsS -H "Authorization: Bearer $BOARD_API_KEY" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/profiles/effective/agents/$AGENT_ID" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/profiles/effective/agents/$AGENT_ID" \
   | jq '{profileIds, allowedToolNames}'
 ```
 
@@ -265,7 +265,7 @@ To dry-run a policy decision without making a real call. The dry-run endpoint ta
 
 ```sh
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/policy/test" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/policy/test" \
   -d '{
     "companyId": "'"$COMPANY_ID"'",
     "actor": {
@@ -298,12 +298,12 @@ After approval, the operator can promote that approval into a **trust rule**: a 
 ```sh
 # Approve via API (UI does the same). Approval requires companyId — body or query.
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/action-requests/$ACTION_REQUEST_ID/approve" \
+  "$THINKINGMACH_URL/api/tool-gateway/action-requests/$ACTION_REQUEST_ID/approve" \
   -d '{ "companyId": "'"$COMPANY_ID"'" }' | jq '{id, status, resolvedAt, resolvedByUserId}'
 
 # Retry the original tool call with approvedActionRequestId (the agent does this).
-curl -fsS -X POST -H "X-Paperclip-Tool-Gateway-Token: $GATEWAY_TOKEN" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/tools/call" \
+curl -fsS -X POST -H "X-ThinkingMach-Tool-Gateway-Token: $GATEWAY_TOKEN" -H "Content-Type: application/json" \
+  "$THINKINGMACH_URL/api/tool-gateway/tools/call" \
   -d '{
     "tool": "create_item",
     "parameters": { "title": "Approved item" },
@@ -312,7 +312,7 @@ curl -fsS -X POST -H "X-Paperclip-Tool-Gateway-Token: $GATEWAY_TOKEN" -H "Conten
 
 # Promote the approval to a trust rule
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/action-requests/$ACTION_REQUEST_ID/trust-rule" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/action-requests/$ACTION_REQUEST_ID/trust-rule" \
   -d '{
     "approvalThreshold": 2,
     "expiresAt": "2026-09-01T00:00:00.000Z"
@@ -320,7 +320,7 @@ curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: ap
 
 # Revoke a trust rule (audit-safe; does not delete)
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/trust-rules/$POLICY_ID/revoke" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/trust-rules/$POLICY_ID/revoke" \
   -d '{ "reason": "Catalog schema changed." }' | jq '{id, enabled, config: {revokedAt: .config.trustRule.revokedAt}}'
 ```
 
@@ -340,7 +340,7 @@ You don't normally touch slots. They're spun up on first call and evicted after 
 
 Day-to-day runtime response — health summary, stuck-slot diagnosis, stop/restart, restart-storm playbook — lives in [MCP-RUNTIME-OPERATIONS.md](./MCP-RUNTIME-OPERATIONS.md). Read that doc when paged.
 
-Cloud reminder: in `authenticated/public`, local stdio slots fail closed unless `PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST` is set on a worker explicitly designated to supervise local processes. Set it on one worker, not on the API edge.
+Cloud reminder: in `authenticated/public`, local stdio slots fail closed unless `THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST` is set on a worker explicitly designated to supervise local processes. Set it on one worker, not on the API edge.
 
 ## Audit and the call event log
 
@@ -357,7 +357,7 @@ To pull recent audit:
 
 ```sh
 curl -fsS -H "Authorization: Bearer $BOARD_API_KEY" \
-  "$PAPERCLIP_URL/api/tool-gateway/audit?companyId=$COMPANY_ID&limit=100" \
+  "$THINKINGMACH_URL/api/tool-gateway/audit?companyId=$COMPANY_ID&limit=100" \
   | jq '[.[] | {createdAt, action: .action, decision: .details.decision, tool: .details.tool, outcome: .details.outcome, reasonCode: .details.reasonCode}]'
 ```
 
@@ -370,10 +370,10 @@ Audit is the source of truth for the security memo. It is intentionally append-o
 
 ## Local trusted deployment
 
-Local stdio MCP connections introduce a different trust model from remote_http: Paperclip is running a child process under its own credentials. Two questions decide whether this is safe in your deployment:
+Local stdio MCP connections introduce a different trust model from remote_http: ThinkingMach is running a child process under its own credentials. Two questions decide whether this is safe in your deployment:
 
 1. **Who controls the host?** If the operator and the host are the same human (developer laptop, internal CI runner), you can opt into local stdio. If the host is multi-tenant (shared cloud worker), you must not.
-2. **Who controls the template?** Only approved templates baked into the Paperclip build can run. Agents cannot supply arbitrary `command` / `args`.
+2. **Who controls the template?** Only approved templates baked into the ThinkingMach build can run. Agents cannot supply arbitrary `command` / `args`.
 
 The decision matrix:
 
@@ -381,12 +381,12 @@ The decision matrix:
 | --- | --- | --- |
 | `local_trusted` | Available, used for fixtures and developer flows | Always; this mode exists for it. |
 | `authenticated/private` (Tailnet/VPN/LAN) | Available with explicit opt-in | When the operator has root on the host and trusts the template list. |
-| `authenticated/public` (internet-facing) | Fail closed | Only when one worker is designated trusted by setting `PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST` and is isolated from the public-facing edge. |
+| `authenticated/public` (internet-facing) | Fail closed | Only when one worker is designated trusted by setting `THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST` and is isolated from the public-facing edge. |
 
 In all modes:
 
 - `remote_http` is the preferred path. If you can replace a local stdio fixture with a remote_http endpoint, do.
-- Never set `PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST` on the same worker that serves public HTTP traffic.
+- Never set `THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST` on the same worker that serves public HTTP traffic.
 - Treat the approved-template list as a code-review surface: a PR that adds a new template ships a new code-execution path.
 
 For deployment mode and bind semantics generally, see [DEPLOYMENT-MODES.md](./DEPLOYMENT-MODES.md).
@@ -396,12 +396,12 @@ For deployment mode and bind semantics generally, see [DEPLOYMENT-MODES.md](./DE
 These are intentional gaps as of the MCP Access Governance v1 launch. Track or work around as noted.
 
 - **Audit-write failures are production incidents.** `mcp_runtime_audit_write_failures` is backed by the durable runtime metric counter and fires when MCP audit-event persistence fails. Treat any firing alert as a control-plane incident — page CloudOps and freeze tool calls until audit durability is restored.
-- **No CLI surface for tool access yet.** Connections, profiles, policies, approvals, and trust rules are managed via the UI and the REST API only. There is no `paperclipai tool ...` subcommand.
+- **No CLI surface for tool access yet.** Connections, profiles, policies, approvals, and trust rules are managed via the UI and the REST API only. There is no `thinkingmach tool ...` subcommand.
 - **No bulk catalog review.** When an upstream server adds many new tools at once, you review each quarantined entry individually. Bulk operations are planned but not in v1.
 - **Trust rules match exact argument shapes only.** A trust rule built from one approval covers calls whose canonical argument hash matches and whose catalog schema hash is unchanged. Wildcards and structural filters across the rest of the schema are not supported in v1.
 - **Rate limits are per-policy.** Rate limit counters are scoped to the matching policy and counter key. There is no cross-policy aggregation (e.g. "300 requests/hour across all GitHub policies"). Operators who need that wire two `rate_limit` policies and accept the additive behavior.
 - **Action request expiry is fixed by policy.** The approval card carries a server-set expiry; the human approver cannot extend it from the UI. If a request expires before approval, the agent must retry the tool call.
-- **Endpoint mode (Paperclip as MCP server) is not policy-governed.** Tool access governance applies only to *gateway mode* — Paperclip's own MCP endpoint surface (`/mcp`) uses standard Paperclip auth and is not subject to the profile/policy stack.
+- **Endpoint mode (ThinkingMach as MCP server) is not policy-governed.** Tool access governance applies only to *gateway mode* — ThinkingMach's own MCP endpoint surface (`/mcp`) uses standard ThinkingMach auth and is not subject to the profile/policy stack.
 - **No multi-region runtime supervisor.** Local stdio slots run on the worker that serves the request that started them. If you scale workers, slots do not migrate. Plan capacity per worker, not per cluster.
 
 ## Reference
@@ -418,7 +418,7 @@ These are intentional gaps as of the MCP Access Governance v1 launch. Track or w
 | Policies | `GET\|POST /api/companies/:companyId/tools/policies`, `PATCH\|DELETE /api/companies/:companyId/tools/policies/:id` | Types: `allow`, `block`, `require_approval`, `rate_limit`, `trust_rule`. |
 | Policy dry-run | `POST /api/companies/:companyId/tools/policy/test` | Structured `{ companyId, actor, request, runContext? }` body; decision returned under `.decision`. |
 | Gateway sessions | `POST /api/tool-gateway/sessions`, `POST /api/tool-gateway/sessions/:sessionId/revoke` | Board callers must supply `companyId`, `agentId`, `runId` to create and `companyId` to revoke; agent JWTs auto-fill from the token. Revocation invalidates the session immediately and emits `tool_gateway.session_revoked` without logging the raw session token. |
-| Gateway calls | `POST /api/tool-gateway/tools/call` | `X-Paperclip-Tool-Gateway-Token` header; body uses `tool` + `parameters`. Approval-required calls respond `409` with `reasonCode: approval_required` and an `actionRequestId`; the agent retries with `approvedActionRequestId`. |
+| Gateway calls | `POST /api/tool-gateway/tools/call` | `X-ThinkingMach-Tool-Gateway-Token` header; body uses `tool` + `parameters`. Approval-required calls respond `409` with `reasonCode: approval_required` and an `actionRequestId`; the agent retries with `approvedActionRequestId`. |
 | Action requests | `POST /api/tool-gateway/action-requests/:id/approve` | Requires `companyId` (body or query). Listing is via the audit log: filter for `tool_gateway.approval_requested`. |
 | Trust rules | `POST /api/companies/:companyId/tools/action-requests/:id/trust-rule`, `POST /api/companies/:companyId/tools/trust-rules/:id/revoke` | Approval-derived allow policies. |
 | Runtime health | `GET /api/companies/:companyId/tools/runtime-health` | Alerts and metrics. Pair with [MCP-RUNTIME-OPERATIONS.md](./MCP-RUNTIME-OPERATIONS.md). |

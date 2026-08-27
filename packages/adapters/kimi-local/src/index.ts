@@ -1,4 +1,4 @@
-import { buildSandboxNpmInstallCommand } from "@paperclipai/adapter-utils";
+import { buildSandboxNpmInstallCommand } from "@thinkingmach/adapter-utils";
 
 export const type = "kimi_local";
 export const label = "Kimi Code CLI (local)";
@@ -33,7 +33,7 @@ export function modelSupportsEffort(model: string): boolean {
 }
 
 /**
- * Map a Paperclip effort value onto Kimi's supported thinking-effort set.
+ * Map a ThinkingMach effort value onto Kimi's supported thinking-effort set.
  * Returns null for values Kimi cannot honor so the caller leaves Kimi's own
  * default_effort in place instead of forwarding an invalid tier.
  */
@@ -51,14 +51,14 @@ export const agentConfigurationDoc = `# kimi_local agent configuration
 Adapter: kimi_local
 
 Use when:
-- You want Paperclip to run the Kimi Code CLI (kimi) locally on the host machine
+- You want ThinkingMach to run the Kimi Code CLI (kimi) locally on the host machine
 - You want Kimi sessions resumed across heartbeats with -r
-- You want Paperclip skills injected into the Kimi skills home without polluting the agent workspace
+- You want ThinkingMach skills injected into the Kimi skills home without polluting the agent workspace
 
 Don't use when:
 - You need webhook-style external invocation (use http or openclaw_gateway)
 - You only need a one-shot script without an AI coding agent loop (use process)
-- Kimi Code CLI is not installed on the machine that runs Paperclip
+- Kimi Code CLI is not installed on the machine that runs ThinkingMach
 
 Core fields:
 - cwd (string, optional): default absolute working directory fallback for the agent process (created if missing when possible)
@@ -79,6 +79,6 @@ Notes:
 - CLI-lane runs use \`kimi -p\` with \`--output-format stream-json\` for non-interactive headless execution; the prompt is passed as an argument, not stdin.
 - The adapter sets a headless-safe environment (CI=1, NO_COLOR=1, KIMI_CODE_NO_AUTO_UPDATE=1) so unattended runs never wait on interactive prompts or update preflight.
 - Sessions resume with \`-r <session_id>\` when the stored session cwd matches the current cwd; the session id is captured from the trailing session.resume_hint meta event.
-- Desired Paperclip skills are delivered to local runs via \`--skills-dir\` pointing at a per-run managed directory, so skills load reliably without polluting the user's \`~/.kimi-code/skills\` home. Remote runs sync skills into the remote skills home.
+- Desired ThinkingMach skills are delivered to local runs via \`--skills-dir\` pointing at a per-run managed directory, so skills load reliably without polluting the user's \`~/.kimi-code/skills\` home. Remote runs sync skills into the remote skills home.
 - Authentication uses \`kimi login\` (OAuth device flow), providers configured in Kimi's config.toml, or the KIMI_MODEL_NAME + KIMI_MODEL_API_KEY environment pair.
 `;

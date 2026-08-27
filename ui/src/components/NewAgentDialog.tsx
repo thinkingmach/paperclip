@@ -13,13 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  ArrowLeft,
-  Bot,
-  Check,
-  MailPlus,
-  Settings2,
-} from "lucide-react";
+import { ArrowLeft, Bot, Check, MailPlus, Settings2,  } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { buildAgentOnboardingPrompt } from "@/lib/agent-onboarding-prompt";
@@ -295,7 +289,7 @@ export function NewAgentDialog() {
                   Back
                 </button>
                 <p className="text-sm text-muted-foreground">
-                  Choose the runtime Paperclip should start or resume directly.
+                  Choose the runtime ThinkingMach should start or resume directly.
                 </p>
               </div>
 
@@ -340,7 +334,7 @@ export function NewAgentDialog() {
                 <div className="space-y-1">
                   <h2 className="text-sm font-semibold">Invite an external agent</h2>
                   <p className="text-sm text-muted-foreground">
-                    Generate a one-time onboarding prompt that any compatible agent can use to request access, wait for approval, and claim its Paperclip API key.
+                    Generate a one-time onboarding prompt that any compatible agent can use to request access, wait for approval, and claim its ThinkingMach API key.
                   </p>
                 </div>
               </div>

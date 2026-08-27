@@ -1,7 +1,7 @@
 /** Live provider projection of the per-action protocol definitions. */
-import { PAPERCLIP_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
+import { THINKINGMACH_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
 import type { CapabilitySemanticOperationId, CapabilitySemanticToolDescriptor } from "./types.js";
-const descriptors = PAPERCLIP_PROTOCOL_ACTIONS.filter((action) => action.live !== null)
+const descriptors = THINKINGMACH_PROTOCOL_ACTIONS.filter((action) => action.live !== null)
   .sort((left, right) => left.live!.order - right.live!.order)
   .map((action) => action.live!.descriptor as unknown as CapabilitySemanticToolDescriptor);
 export const CAPABILITY_SEMANTIC_TOOL_CATALOG: readonly CapabilitySemanticToolDescriptor[] = Object.freeze(descriptors);

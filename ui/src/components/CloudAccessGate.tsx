@@ -6,7 +6,7 @@ import { authApi } from "@/api/auth";
 import { healthApi } from "@/api/health";
 import { queryKeys } from "@/lib/queryKeys";
 import { BootstrapPendingPage } from "@/components/BootstrapPendingPage";
-import { PaperclipLoading } from "@/components/AnimatedPaperclipIcon";
+import { ThinkingMachLoading } from "@/components/AnimatedThinkingMachIcon";
 import { Card } from "@/components/ui/card";
 
 function NoBoardAccessPage() {
@@ -16,7 +16,7 @@ function NoBoardAccessPage() {
         <h1 className="text-xl font-semibold">No organization access</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           This account is signed in, but it does not have an active organization membership or instance-admin access on
-          this Paperclip instance.
+          this ThinkingMach instance.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
           Use an organization invite or sign in with an account that already belongs to this org.
@@ -75,7 +75,7 @@ export function CloudAccessGate() {
     (isAuthenticatedMode && sessionQuery.isLoading) ||
     (isAuthenticatedMode && !isBootstrapPending && !!sessionQuery.data && boardAccessQuery.isLoading)
   ) {
-    return <PaperclipLoading />;
+    return <ThinkingMachLoading />;
   }
 
   if (healthQuery.error || boardAccessQuery.error) {
@@ -93,7 +93,7 @@ export function CloudAccessGate() {
   if (isBootstrapPending) {
     const health = healthQuery.data;
     if (!health) {
-      return <PaperclipLoading />;
+      return <ThinkingMachLoading />;
     }
     const claimError = claimMutation.error instanceof ApiError
       ? { status: claimMutation.error.status, message: claimMutation.error.message }

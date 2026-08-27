@@ -5,7 +5,7 @@ import { agents } from "./agents.js";
 import { issues } from "./issues.js";
 
 /**
- * The onboarding answers Paperclip Cloud collected during signup, pushed into
+ * The onboarding answers ThinkingMach Cloud collected during signup, pushed into
  * this stack at activation and applied here.
  *
  * `revision` is the content hash Cloud computed over the seed. Cloud retries

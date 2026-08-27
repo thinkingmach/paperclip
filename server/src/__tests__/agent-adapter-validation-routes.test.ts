@@ -534,7 +534,7 @@ describe("agent routes adapter validation", () => {
 
   it("refuses to create an agent on an adapter the instance has disabled", async () => {
     // A disabled adapter is one the instance cannot run (e.g. curated out of
-    // PAPERCLIP_ADAPTERS). Creating an agent on it "succeeds" and then every
+    // THINKINGMACH_ADAPTERS). Creating an agent on it "succeeds" and then every
     // run of that agent dies at lease time with "not in the configured adapter
     // registry", so the refusal belongs here, where it can name the choices.
     const { registerServerAdapter } = await import("../adapters/index.js");
@@ -630,7 +630,7 @@ describe("agent routes adapter validation", () => {
           adapterConfig: {
             provider: "codex",
             paperclipSkillSync: {
-              desiredSkills: ["paperclipai/paperclip/paperclip", "company-1/reviewer"],
+              desiredSkills: ["thinkingmach/paperclip/paperclip", "company-1/reviewer"],
             },
           },
         }),
@@ -666,7 +666,7 @@ describe("agent routes adapter validation", () => {
       adapterConfig: {
         model: "gpt-5.5",
         paperclipSkillSync: {
-          desiredSkills: ["paperclipai/paperclip/paperclip", "company-1/reviewer"],
+          desiredSkills: ["thinkingmach/paperclip/paperclip", "company-1/reviewer"],
         },
       },
     });
@@ -976,7 +976,7 @@ describe("agent routes adapter validation", () => {
       "paperclip_runner_codex_permission_mode_unqualified",
     ],
   ])(
-    "rejects a same-provider Paperclip Runner edit with %s",
+    "rejects a same-provider ThinkingMach Runner edit with %s",
     async (_label, existingAdapterConfig, adapterConfigPatch, expectedCode) => {
       const existing = await mockAgentService.getById();
       mockAgentService.getById.mockResolvedValue({

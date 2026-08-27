@@ -116,19 +116,19 @@ describe("runner E2E catalog", () => {
     });
     expect(localQuestion?.buildPrompt("nonce")).toContain("ask_user_questions");
     expect(localQuestion?.buildPrompt("nonce")).toContain(
-      "do not spell, quote, repeat, announce, or include PAPERCLIP_E2E_QUESTION_DONE_nonce",
+      "do not spell, quote, repeat, announce, or include THINKINGMACH_E2E_QUESTION_DONE_nonce",
     );
     expect(localQuestion?.buildPrompt("nonce")).toContain(
       "refer to it only as “the terminal marker.”",
     );
     expect(localQuestion?.buildPrompt("nonce")).toContain(
-      'API_ORIGIN="${PAPERCLIP_API_URL%/}"; API_ORIGIN="${API_ORIGIN%/api}"',
+      'API_ORIGIN="${THINKINGMACH_API_URL%/}"; API_ORIGIN="${API_ORIGIN%/api}"',
     );
     expect(localQuestion?.buildPrompt("nonce")).toContain(
       '"idempotencyKey":"question-nonce"',
     );
     expect(localQuestion?.buildPrompt("nonce")).toContain(
-      'PATCH $API_ORIGIN/api/issues/$PAPERCLIP_TASK_ID with exactly {"status":"in_review"}',
+      'PATCH $API_ORIGIN/api/issues/$THINKINGMACH_TASK_ID with exactly {"status":"in_review"}',
     );
     expect(localQuestion?.buildPrompt("nonce")).toContain(
       "Do not include `reviewInteractionId`",
@@ -313,10 +313,10 @@ describe("runner E2E catalog", () => {
     expect(task!.buildPrompt("nonce")).toContain("request_confirmation");
     expect(task!.buildPrompt("nonce")).toContain("baseRevisionId");
     expect(task!.buildPrompt("nonce")).toContain(
-      "do not spell, quote, repeat, announce, or include PAPERCLIP_E2E_PLAN_DONE_nonce",
+      "do not spell, quote, repeat, announce, or include THINKINGMACH_E2E_PLAN_DONE_nonce",
     );
     expect(task!.buildPrompt("nonce")).toContain(
-      'summary:"PAPERCLIP_E2E_PLAN_DONE_nonce"',
+      'summary:"THINKINGMACH_E2E_PLAN_DONE_nonce"',
     );
     expect(task!.buildPrompt("nonce")).toContain(
       "one atomic issue PATCH with status `done` and that exact comment",
@@ -327,17 +327,17 @@ describe("runner E2E catalog", () => {
   it("accepts only complete immutable Daytona digests", () => {
     expect(
       isImmutableDaytonaImage(
-        `ghcr.io/paperclipai/paperclip-daytona-runner@sha256:${"a".repeat(64)}`,
+        `ghcr.io/thinkingmach/paperclip-daytona-runner@sha256:${"a".repeat(64)}`,
       ),
     ).toBe(true);
     expect(
       isImmutableDaytonaImage(
-        "ghcr.io/paperclipai/paperclip-daytona-runner@sha256:REPLACE_ME",
+        "ghcr.io/thinkingmach/paperclip-daytona-runner@sha256:REPLACE_ME",
       ),
     ).toBe(false);
     expect(
       isImmutableDaytonaImage(
-        "ghcr.io/paperclipai/paperclip-daytona-runner:e2e-latest",
+        "ghcr.io/thinkingmach/paperclip-daytona-runner:e2e-latest",
       ),
     ).toBe(false);
   });

@@ -12,8 +12,8 @@ import {
   issues,
   labels,
   projects,
-} from "@paperclipai/db";
-import { companySearchQuerySchema, COMPANY_SEARCH_MAX_QUERY_LENGTH } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { companySearchQuerySchema, COMPANY_SEARCH_MAX_QUERY_LENGTH } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -98,7 +98,7 @@ describeEmbeddedPostgres("companySearchService", () => {
     await tempDb?.cleanup();
   });
 
-  async function createCompany(name = "Paperclip") {
+  async function createCompany(name = "ThinkingMach") {
     const companyId = randomUUID();
     await db.insert(companies).values({
       id: companyId,

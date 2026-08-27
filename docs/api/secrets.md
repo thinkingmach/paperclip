@@ -74,7 +74,7 @@ GET /api/agents/me/secret-proposals
 DELETE /api/agents/me/secret-proposals/{proposalId}
 ```
 
-An agent can ask Paperclip to bind an existing secret under a new path without
+An agent can ask ThinkingMach to bind an existing secret under a new path without
 knowing a secret ID. Set `kind` to `binding` and identify the source by the
 agent's own existing `env.*` or `access.*` config path:
 
@@ -107,7 +107,7 @@ freshly authorized binding write. Card acceptance is not execution. Read
 
 - `executed` means the binding write completed.
 - `failed` means the card was accepted but execution failed. The card renders
-  **FAILED**, exposes a non-secret `errorCode`, and Paperclip posts a **Secret
+  **FAILED**, exposes a non-secret `errorCode`, and ThinkingMach posts a **Secret
   binding execution failed** comment with `Binding created: no`.
 - `rejected`, `withdrawn`, or `expired` means no binding was created.
 
@@ -138,7 +138,7 @@ POST /api/companies/{companyId}/secrets
 
 The value is encrypted at rest. Only the secret ID and metadata are returned.
 
-To link a provider-owned secret without copying the value into Paperclip, create
+To link a provider-owned secret without copying the value into ThinkingMach, create
 an external-reference secret:
 
 ```json
@@ -151,7 +151,7 @@ an external-reference secret:
 }
 ```
 
-Paperclip stores the provider reference and a non-sensitive fingerprint only.
+ThinkingMach stores the provider reference and a non-sensitive fingerprint only.
 The value is resolved, when the provider is configured, through the server
 runtime path that enforces binding context and records access events.
 
@@ -167,12 +167,12 @@ responses must not include secret values or provider credentials.
 For `aws_secrets_manager`, an unready health response names the missing
 non-secret provider environment variables, the AWS SDK default credential source
 expected by the server runtime, and the custody rule that AWS bootstrap
-credentials must not be stored in Paperclip `company_secrets`.
+credentials must not be stored in ThinkingMach `company_secrets`.
 
 The equivalent CLI check is:
 
 ```sh
-npx paperclipai secrets doctor --company-id {companyId}
+npx thinkingmach secrets doctor --company-id {companyId}
 ```
 
 ## Provider Vaults
@@ -342,9 +342,9 @@ Every route in this surface enforces the same redaction contract:
 
 ## Remote Import From AWS Secrets Manager
 
-Remote import links existing AWS Secrets Manager entries into Paperclip as
+Remote import links existing AWS Secrets Manager entries into ThinkingMach as
 `external_reference` secrets. Import stores provider reference metadata only; it
-does not copy the remote secret plaintext into Paperclip.
+does not copy the remote secret plaintext into ThinkingMach.
 
 The routes are board-only and company-scoped. `providerConfigId` must point to
 a same-company AWS provider vault with status `ready` or `warning`. Disabled,
@@ -406,13 +406,13 @@ decisions:
 Candidate statuses:
 
 - `ready`: the row can be selected for import.
-- `duplicate`: a Paperclip secret already links the same canonical provider
+- `duplicate`: a ThinkingMach secret already links the same canonical provider
   reference for the same provider vault.
 - `conflict`: the row has a name/key collision or provider guardrail failure.
 
 Conflict types are `exact_reference`, `name`, `key`, and
-`provider_guardrail`. AWS refs under Paperclip's own managed namespace are
-blocked as external references; use the Paperclip-managed secret flow for those
+`provider_guardrail`. AWS refs under ThinkingMach's own managed namespace are
+blocked as external references; use the ThinkingMach-managed secret flow for those
 resources instead.
 
 ### Import Selected Remote References
@@ -437,9 +437,9 @@ POST /api/companies/{companyId}/secrets/remote-import
 ```
 
 The `secrets` array accepts 1-100 rows. Each row may override the suggested
-Paperclip `name`, `key`, optional Paperclip `description`,
+ThinkingMach `name`, `key`, optional ThinkingMach `description`,
 `providerVersionRef`, and sanitized `providerMetadata`. Blank descriptions are
-stored as `null`; AWS provider descriptions are not copied into Paperclip
+stored as `null`; AWS provider descriptions are not copied into ThinkingMach
 descriptions. The backend re-checks duplicate refs and name/key conflicts at
 submit time; a stale preview does not bypass those checks.
 
@@ -468,7 +468,7 @@ The import response is row-level:
 
 Row statuses:
 
-- `imported`: Paperclip created an active `external_reference` secret and one
+- `imported`: ThinkingMach created an active `external_reference` secret and one
   metadata-only version row.
 - `skipped`: the row had an exact-reference duplicate or name/key conflict.
 - `error`: the provider rejected the reference or the row failed validation.
@@ -507,7 +507,7 @@ Reference secrets in agent adapter config instead of inline values:
 ```
 
 The server resolves and decrypts secret references at runtime, injecting the
-real value into the agent process environment. Paperclip's custody guarantees
+real value into the agent process environment. ThinkingMach's custody guarantees
 end at injection: the agent process can read, log, or forward the value, so
 treat any secret bound to an agent as exposed to that agent. See the custody
 boundaries note in the [secrets deploy guide](/deploy/secrets#custody-boundaries).
@@ -532,7 +532,7 @@ User-specific env bindings use a definition key instead of a concrete
 `required` defaults to `true` and `allowMissingOverride` defaults to `false`.
 Missing required user-secret values must fail closed before adapter dispatch.
 Optional missing values omit the environment variable; they must not inject an
-empty string or another user's value. Paperclip records value-free access
+empty string or another user's value. ThinkingMach records value-free access
 events with `secretScope`, `responsibleUserId`, `credentialOwnerUserId`, and
 `userSecretDefinitionId`.
 
@@ -543,7 +543,7 @@ as declarations in the package manifest. Exports omit secret values, secret IDs,
 provider references, and encrypted provider material. Use:
 
 ```sh
-npx paperclipai secrets declarations --company-id {companyId}
+npx thinkingmach secrets declarations --company-id {companyId}
 ```
 
 to inspect the declarations that an export would emit before moving a package.

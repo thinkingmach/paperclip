@@ -1,13 +1,13 @@
-import { parseHiddenSettingsList } from "@paperclipai/shared";
+import { parseHiddenSettingsList } from "@thinkingmach/shared";
 import { logger } from "../middleware/logger.js";
 
 /**
- * Operator-hidden settings, from the `PAPERCLIP_HIDDEN_SETTINGS` env var
+ * Operator-hidden settings, from the `THINKINGMACH_HIDDEN_SETTINGS` env var
  * (comma-separated keys from the shared settings-visibility registry). Unknown
  * keys are warned about once and ignored so one list can be rolled across a
  * fleet of mixed app versions without refusing boot on older images.
  */
-export const HIDDEN_SETTINGS_ENV_KEY = "PAPERCLIP_HIDDEN_SETTINGS";
+export const HIDDEN_SETTINGS_ENV_KEY = "THINKINGMACH_HIDDEN_SETTINGS";
 
 export type HiddenSettingsEnv = Record<string, string | undefined>;
 

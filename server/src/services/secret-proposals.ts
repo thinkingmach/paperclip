@@ -1,5 +1,5 @@
 import { and, count, desc, eq, gte, inArray, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   companySecretBindings,
@@ -10,8 +10,8 @@ import {
   issues,
   userSecretDeclarations,
   userSecretDefinitions,
-} from "@paperclipai/db";
-import type { SecretProvider } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { SecretProvider } from "@thinkingmach/shared";
 import { badRequest, conflict, forbidden, HttpError, notFound, unprocessable } from "../errors.js";
 import { getSecretProvider } from "../secrets/provider-registry.js";
 import { agentService } from "./agents.js";

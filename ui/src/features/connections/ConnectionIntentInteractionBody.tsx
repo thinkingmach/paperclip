@@ -1,14 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  CheckCircle2,
-  Clock,
-  Loader2,
-  Plug,
-  RotateCcw,
-  XCircle,
-} from "lucide-react";
-import type { ConnectionIntentInteraction } from "@paperclipai/shared";
+import { CheckCircle2, Clock, Loader2, Plug, RotateCcw, XCircle,  } from "lucide-react";
+import type { ConnectionIntentInteraction } from "@thinkingmach/shared";
 import { connectionIntentsApi } from "@/api/connection-intents";
 import { AppLogo } from "@/pages/apps/AppLogo";
 import { Button } from "@/components/ui/button";

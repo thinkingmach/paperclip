@@ -2,13 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import {
-  mergePaperclipConfig,
+  mergeThinkingMachConfig,
   paperclipConfigSchema,
-  type PaperclipConfig,
+  type ThinkingMachConfig,
 } from "./schema.js";
 import {
   resolveDefaultConfigPath,
-  resolvePaperclipInstanceId,
+  resolveThinkingMachInstanceId,
 } from "./home.js";
 
 const DEFAULT_CONFIG_BASENAME = "config.json";
@@ -33,8 +33,8 @@ function findConfigFileFromAncestors(startDir: string): string | null {
 
 export function resolveConfigPath(overridePath?: string): string {
   if (overridePath) return path.resolve(overridePath);
-  if (process.env.PAPERCLIP_CONFIG) return path.resolve(process.env.PAPERCLIP_CONFIG);
-  return findConfigFileFromAncestors(process.cwd()) ?? resolveDefaultConfigPath(resolvePaperclipInstanceId());
+  if (process.env.THINKINGMACH_CONFIG) return path.resolve(process.env.THINKINGMACH_CONFIG);
+  return findConfigFileFromAncestors(process.cwd()) ?? resolveDefaultConfigPath(resolveThinkingMachInstanceId());
 }
 
 function parseJson(filePath: string): unknown {
@@ -88,7 +88,7 @@ function formatValidationError(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
 
-export function readConfig(configPath?: string): PaperclipConfig | null {
+export function readConfig(configPath?: string): ThinkingMachConfig | null {
   const filePath = resolveConfigPath(configPath);
   if (!fs.existsSync(filePath)) return null;
   const raw = parseJson(filePath);
@@ -100,7 +100,7 @@ export function readConfig(configPath?: string): PaperclipConfig | null {
   return parsed.data;
 }
 
-function effectiveConfig(config: PaperclipConfig): Record<string, unknown> {
+function effectiveConfig(config: ThinkingMachConfig): Record<string, unknown> {
   const meta = { ...config.$meta } as Record<string, unknown>;
   delete meta.updatedAt;
   delete meta.source;
@@ -184,7 +184,7 @@ export function backupInvalidConfig(configPath?: string): string {
 }
 
 export function writeConfig(
-  config: PaperclipConfig,
+  config: ThinkingMachConfig,
   configPath?: string,
   options: { invalidBackupPath?: string } = {},
 ): boolean {
@@ -196,7 +196,7 @@ export function writeConfig(
   if (fs.existsSync(filePath)) {
     try {
       const source = paperclipConfigSchema.parse(migrateLegacyConfig(parseJson(filePath)));
-      nextConfig = paperclipConfigSchema.parse(mergePaperclipConfig(source, nextConfig));
+      nextConfig = paperclipConfigSchema.parse(mergeThinkingMachConfig(source, nextConfig));
       if (isDeepStrictEqual(effectiveConfig(source), effectiveConfig(nextConfig))) {
         return false;
       }

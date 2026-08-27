@@ -12,7 +12,7 @@ import type {
   TaskChatProviderActivityFamily,
   TaskChatRuntimeRequestDecision,
 } from "./task-chat-model";
-import type { IssueWorkProduct } from "@paperclipai/shared";
+import type { IssueWorkProduct } from "@thinkingmach/shared";
 import { stateChipFor } from "./RichWorkProductCard";
 
 function workProduct(overrides: Partial<IssueWorkProduct> = {}): IssueWorkProduct {
@@ -27,7 +27,7 @@ function workProduct(overrides: Partial<IssueWorkProduct> = {}): IssueWorkProduc
     provider: "github",
     externalId: "42",
     title: "Ship rich work-product cards",
-    url: "https://github.com/paperclipai/paperclip/pull/42",
+    url: "https://github.com/thinkingmach/paperclip/pull/42",
     status: "merged",
     reviewState: "none",
     isPrimary: true,
@@ -118,7 +118,7 @@ describe("TaskChatProtocolCard", () => {
   it("renders a rich deliverable card without a completed chip", () => {
     const product = workProduct({
       metadata: {
-        repo: "paperclipai/paperclip",
+        repo: "thinkingmach/paperclip",
         number: 42,
         baseRef: "master",
         headRef: "feat/rich-cards",
@@ -142,7 +142,7 @@ describe("TaskChatProtocolCard", () => {
 
     expect(container.querySelector('[data-testid="task-chat-rich-work-product-pull_request"]')).not.toBeNull();
     expect(container.textContent).toContain("Open on GitHub");
-    expect(container.textContent).toContain("paperclipai/paperclip · #42 · master ← feat/rich-cards");
+    expect(container.textContent).toContain("thinkingmach/paperclip · #42 · master ← feat/rich-cards");
     expect(container.textContent).toContain("+17 −5 · 3 files");
     expect(container.textContent).toContain("Merged");
     expect(container.textContent).not.toContain("Completed");

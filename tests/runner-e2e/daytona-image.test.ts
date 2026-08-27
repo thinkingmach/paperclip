@@ -47,7 +47,7 @@ describe("runner E2E Daytona image contract", () => {
       "/opt/paperclip-runner/provider-pack/provider-pack.json",
     );
     expect(dockerfile).toContain(
-      "${PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin",
+      "${THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin",
     );
     for (const command of ["acpx", "claude-agent-acp", "codex-acp"]) {
       expect(dockerfile).toContain(command);
@@ -94,7 +94,7 @@ describe("runner E2E Daytona image contract", () => {
       "e2e-content-${{ needs.catalog.outputs.daytona_image_content_id }}",
     );
     expect(workflow).toContain(
-      '--build-arg "PAPERCLIP_RUNNER_CONTENT_ID=${IMAGE_CONTENT_ID}"',
+      '--build-arg "THINKINGMACH_RUNNER_CONTENT_ID=${IMAGE_CONTENT_ID}"',
     );
     expect(workflow).not.toContain("e2e-git-${{ github.sha }}");
     expect(workflow).toContain("cosign sign --yes");
@@ -108,15 +108,15 @@ describe("runner E2E Daytona image contract", () => {
     expect(workflow).toContain('.architecture == "amd64"');
     expect(workflow).toContain('.os == "linux"');
     expect(workflow).toContain('.config.User == "daytona"');
-    expect(workflow).toContain("PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT=");
+    expect(workflow).toContain("THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT=");
     expect(workflow).toContain(
       "node packages/paperclip-runner/scripts/build-provider-pack.mjs packages/paperclip-runner/provider-pack",
     );
     expect(workflow).toContain(
-      "PAPERCLIP_RUNNER_REMOTE_PROVIDER_PACK_PATH: ${{ github.workspace }}/packages/paperclip-runner/provider-pack",
+      "THINKINGMACH_RUNNER_REMOTE_PROVIDER_PACK_PATH: ${{ github.workspace }}/packages/paperclip-runner/provider-pack",
     );
     expect(workflow).toContain(
-      "PAPERCLIP_RUNNER_SOURCE_REVISION: ${{ needs.daytona_image.outputs.source_revision }}",
+      "THINKINGMACH_RUNNER_SOURCE_REVISION: ${{ needs.daytona_image.outputs.source_revision }}",
     );
     expect(workflow.indexOf("cosign verify")).toBeLessThan(
       workflow.indexOf("docker logout ghcr.io"),
@@ -193,7 +193,7 @@ describe("runner E2E Daytona image contract", () => {
       await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: 9\n");
       await writeFile(
         path.join(root, "packages/paperclip-runner/package.json"),
-        '{"name":"@paperclipai/paperclip-runner"}\n',
+        '{"name":"@thinkingmach/paperclip-runner"}\n',
       );
       await writeFile(
         path.join(root, "packages/paperclip-runner/src/runner.ts"),

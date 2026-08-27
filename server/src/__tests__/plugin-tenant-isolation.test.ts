@@ -10,7 +10,7 @@ import {
   pluginLogs,
   pluginWebhookDeliveries,
   plugins,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { buildHostServices, flushPluginLogBuffer } from "../services/plugin-host-services.js";
 import { pluginRegistryService } from "../services/plugin-registry.js";
 import {
@@ -71,7 +71,7 @@ describeEmbeddedPostgres("plugin tenant isolation (company_id FK)", () => {
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: "paperclip.tenant-isolation-test",
-      packageName: "@paperclipai/plugin-tenant-isolation-test",
+      packageName: "@thinkingmach/plugin-tenant-isolation-test",
       version: "0.0.1",
       apiVersion: 1,
       categories: ["automation"],
@@ -81,7 +81,7 @@ describeEmbeddedPostgres("plugin tenant isolation (company_id FK)", () => {
         version: "0.0.1",
         displayName: "Tenant Isolation Test",
         description: "Test plugin",
-        author: "Paperclip",
+        author: "ThinkingMach",
         categories: ["automation"],
         capabilities: [],
         entrypoints: { worker: "./dist/worker.js" },

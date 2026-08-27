@@ -28,7 +28,7 @@ function runShard(args) {
 function readPinnedTrustedPrWorkflow() {
   const caller = readFileSync(prCallerWorkflow, "utf8");
   const pin = caller.match(
-    /uses: paperclipai\/paperclip\/\.github\/workflows\/pr-trusted\.yml@([0-9a-f]{40})/,
+    /uses: thinkingmach\/paperclip\/\.github\/workflows\/pr-trusted\.yml@([0-9a-f]{40})/,
   );
   assert.ok(pin, "pr.yml must call the trusted workflow at a full commit SHA");
 

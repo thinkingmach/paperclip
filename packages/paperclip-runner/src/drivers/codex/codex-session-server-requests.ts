@@ -1,4 +1,4 @@
-import type { HarnessRuntimeRequest, PaperclipQuestionSet } from "../../contracts/harness-driver.js";
+import type { HarnessRuntimeRequest, ThinkingMachQuestionSet } from "../../contracts/harness-driver.js";
 import {
   CODEX_BLOCK_TOOL_NAME,
 } from "../../contracts/codex.js";
@@ -237,7 +237,7 @@ async function handleServerRequestBody(
       );
       return safeRequestResponse(request.method);
     }
-    let input: PaperclipQuestionSet | null = null;
+    let input: ThinkingMachQuestionSet | null = null;
     const responseContext = createCodexQuestionResponseContext();
     try {
       input = normalizeCodexQuestionSet(

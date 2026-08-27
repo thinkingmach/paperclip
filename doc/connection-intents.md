@@ -18,16 +18,16 @@ Every active heartbeat with a responsible user receives two run-bound tools:
 - `connections_search({ query })` searches first-party connectable definitions and returns `ready`, `needs_user_action`, `available`, or `unavailable` from the requesting agent's perspective.
 - `connection_request({ service })` returns immediately when the service is already usable. Otherwise it creates or reuses a `connection_intent` and instructs the agent to end the run pending continuation.
 
-Claude and Codex receive the tools through a native managed MCP server. Local/process adapters receive `PAPERCLIP_RUNTIME_TOOLS_*` environment variables and CLI guidance. Cloud, HTTP, gateway, and external adapters receive the typed runtime descriptor in their invocation context; compatible adapters may also project it into their remote environment.
+Claude and Codex receive the tools through a native managed MCP server. Local/process adapters receive `THINKINGMACH_RUNTIME_TOOLS_*` environment variables and CLI guidance. Cloud, HTTP, gateway, and external adapters receive the typed runtime descriptor in their invocation context; compatible adapters may also project it into their remote environment.
 
 The equivalent CLI helpers are:
 
 ```sh
-paperclipai connections search notion
-paperclipai connections request notion
+thinkingmach connections search notion
+thinkingmach connections request notion
 ```
 
-The manually configured Paperclip MCP server also advertises `connections_search` and `connection_request`. Both helper surfaces require the narrow runtime token and fail outside an active heartbeat.
+The manually configured ThinkingMach MCP server also advertises `connections_search` and `connection_request`. Both helper surfaces require the narrow runtime token and fail outside an active heartbeat.
 
 ## Security and lifecycle
 

@@ -40,7 +40,7 @@ describe("redactSensitive", () => {
       error_uri: "https://attacker.example/explain?leak=sk-live-canary",
     }) as Record<string, unknown>;
 
-    // The `error` code is Paperclip's one allowlisted label, so it stays legible
+    // The `error` code is ThinkingMach's one allowlisted label, so it stays legible
     // in logs; the provider's prose does not.
     expect(out.error).toBe("access_denied");
     expect(out.state).toBe("paperclip-state");

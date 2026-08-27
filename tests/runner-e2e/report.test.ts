@@ -69,7 +69,7 @@ describe("runner E2E report aggregation", () => {
                 {
                   matcher: {
                     kind: "message_contains" as const,
-                    expected: "PAPERCLIP_E2E_OK",
+                    expected: "THINKINGMACH_E2E_OK",
                   },
                   passed: true,
                   detail: "matched",
@@ -125,17 +125,17 @@ describe("runner E2E report aggregation", () => {
         cwd: repositoryRoot,
         env: {
           ...process.env,
-          PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root,
-          PAPERCLIP_RUNNER_E2E_REPORT_OUT: output,
-          PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
-          PAPERCLIP_RUNNER_E2E_SOURCE_SHA:
+          THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root,
+          THINKINGMACH_RUNNER_E2E_REPORT_OUT: output,
+          THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
+          THINKINGMACH_RUNNER_E2E_SOURCE_SHA:
             "0123456789abcdef0123456789abcdef01234567",
-          PAPERCLIP_RUNNER_E2E_SOURCE_REF:
+          THINKINGMACH_RUNNER_E2E_SOURCE_REF:
             "refs/heads/fix/runner-paid-source-attribution",
           GITHUB_SHA: "trusted-default-workflow-sha",
           GITHUB_REF: "refs/heads/master",
           GITHUB_SERVER_URL: "https://github.com",
-          GITHUB_REPOSITORY: "paperclipai/paperclip",
+          GITHUB_REPOSITORY: "thinkingmach/paperclip",
           GITHUB_RUN_ID: "123456",
         },
       },
@@ -155,7 +155,7 @@ describe("runner E2E report aggregation", () => {
         sha: "0123456789abcdef0123456789abcdef01234567",
         ref: "refs/heads/fix/runner-paid-source-attribution",
         workflowRunUrl:
-          "https://github.com/paperclipai/paperclip/actions/runs/123456",
+          "https://github.com/thinkingmach/paperclip/actions/runs/123456",
       },
     });
     expect(normalized.billing).toMatchObject({
@@ -173,7 +173,7 @@ describe("runner E2E report aggregation", () => {
         sha: "0123456789abcdef0123456789abcdef01234567",
         ref: "refs/heads/fix/runner-paid-source-attribution",
         workflowRunUrl:
-          "https://github.com/paperclipai/paperclip/actions/runs/123456",
+          "https://github.com/thinkingmach/paperclip/actions/runs/123456",
       },
     });
     const dashboard = await readFile(
@@ -303,9 +303,9 @@ describe("runner E2E report aggregation", () => {
         cwd: repositoryRoot,
         env: {
           ...process.env,
-          PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root,
-          PAPERCLIP_RUNNER_E2E_REPORT_OUT: output,
-          PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
+          THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root,
+          THINKINGMACH_RUNNER_E2E_REPORT_OUT: output,
+          THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
         },
       },
     );
@@ -366,9 +366,9 @@ describe("runner E2E report aggregation", () => {
           cwd: repositoryRoot,
           env: {
             ...process.env,
-            PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root,
-            PAPERCLIP_RUNNER_E2E_REPORT_OUT: output,
-            PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
+            THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root,
+            THINKINGMACH_RUNNER_E2E_REPORT_OUT: output,
+            THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
           },
         },
       ),

@@ -1,8 +1,8 @@
 # Durable continuation scheduling
 
-Paperclip does not keep an agent process alive between turns. A heartbeat run is
+ThinkingMach does not keep an agent process alive between turns. A heartbeat run is
 finite: it starts, performs work, records a terminal result, and exits. If work
-must continue later, Paperclip represents that intent in database state and
+must continue later, ThinkingMach represents that intent in database state and
 creates another heartbeat run when the continuation becomes eligible.
 
 “Durable continuation scheduler” is a useful umbrella term, but it is not the

@@ -3,23 +3,23 @@ title: Secrets Management
 summary: Master key, encryption, and strict mode
 ---
 
-Paperclip encrypts secrets at rest using a local master key. Agent environment variables that contain sensitive values (API keys, tokens) are stored as encrypted secret references.
+ThinkingMach encrypts secrets at rest using a local master key. Agent environment variables that contain sensitive values (API keys, tokens) are stored as encrypted secret references.
 
 ## Custody Boundaries
 
-Paperclip protects secret values up to the moment they are handed to an agent
+ThinkingMach protects secret values up to the moment they are handed to an agent
 or workload:
 
 - Storage: values are encrypted at rest by the active provider. The local
   provider keeps them encrypted with a key that never leaves the host.
 - Transport: values are decrypted server-side and injected into the agent
   process environment, SSH command env, sandbox driver, or HTTP request
-  immediately before the call. Paperclip does not return decrypted values to
+  immediately before the call. ThinkingMach does not return decrypted values to
   the board UI.
 - Audit: each resolution records a non-sensitive event (secret id, version,
   provider id, consumer, outcome) without the value or provider credentials.
 
-Once a value reaches the consuming process, Paperclip can no longer guarantee
+Once a value reaches the consuming process, ThinkingMach can no longer guarantee
 secrecy. The agent (or sandbox, or remote host) can read the value, write it to
 its own logs or transcript, or pass it to downstream tools. Treat any secret
 you bind to an agent as exposed to that agent. Limit blast radius with bindings
@@ -43,16 +43,16 @@ For agent and project environment variables:
 4. Set the row source to `Secret`, select the stored secret, and choose either
    `latest` or a pinned version.
 
-At runtime, Paperclip resolves the selected secret server-side and injects the
+At runtime, ThinkingMach resolves the selected secret server-side and injects the
 resolved value under the env key from the binding row. The stored secret name
 can be human-readable; the binding key is what the agent process receives.
 
 Project env applies to every issue run in that project. When a project env key
-matches an agent env key, the project value wins before Paperclip injects its
-own `PAPERCLIP_*` runtime variables.
+matches an agent env key, the project value wins before ThinkingMach injects its
+own `THINKINGMACH_*` runtime variables.
 
 Separately from env bindings, the **server itself** consumes a company secret
-named `GITHUB_TOKEN`, `GH_TOKEN`, or `PAPERCLIP_GITHUB_TOKEN` (by name, no
+named `GITHUB_TOKEN`, `GH_TOKEN`, or `THINKINGMACH_GITHUB_TOKEN` (by name, no
 binding needed) to authenticate server-side git operations — cloning private
 GitHub repos for repo-only project workspaces and refreshing worktree base
 refs. See
@@ -77,7 +77,7 @@ at dispatch time. The environment binding stores only the definition key:
 }
 ```
 
-Paperclip stores the feature as value-free metadata plus the user's own secret
+ThinkingMach stores the feature as value-free metadata plus the user's own secret
 value record:
 
 - `user_secret_definitions`: company-level metadata for the reusable slot.
@@ -118,7 +118,7 @@ A user-secret definition can carry provider and vault defaults. A user's value
 may also carry provider/vault metadata when the implementation path supports
 overrides. In both cases, provider vault config contains non-secret routing
 metadata only. Provider credentials still come from deployment infrastructure
-identity, not from Paperclip secrets.
+identity, not from ThinkingMach secrets.
 
 ### External Reference Naming
 
@@ -143,28 +143,28 @@ Guidance:
   vault id, Region, KMS key id or alias, tag counts, and fingerprint hashes.
   Do not store raw AWS descriptions, full tag maps, token scopes, provider
   error bodies, or anything copied from the secret value.
-- Keep Paperclip-managed AWS values under the Paperclip managed namespace.
+- Keep ThinkingMach-managed AWS values under the ThinkingMach managed namespace.
   External refs under that namespace are blocked by guardrails; use the
-  Paperclip-managed flow when Paperclip should create and rotate the value.
+  ThinkingMach-managed flow when ThinkingMach should create and rotate the value.
 
 ### IAM Caveats
 
-Paperclip enforces company scoping, responsible-user derivation, declaration
+ThinkingMach enforces company scoping, responsible-user derivation, declaration
 policy, current-user value APIs, redaction, and access-event metadata. It does
 not replace the IAM policy of an external vault.
 
-For AWS Secrets Manager, the Paperclip runtime role needs `GetSecretValue` and
+For AWS Secrets Manager, the ThinkingMach runtime role needs `GetSecretValue` and
 any required KMS decrypt permission for every user-scoped value it may resolve.
-If you link user-specific external refs outside the Paperclip managed prefix,
+If you link user-specific external refs outside the ThinkingMach managed prefix,
 scope those permissions to the approved external prefixes and KMS keys. AWS
 tag/name filters help operators search, but they are not a reliable permission
 boundary for resolution.
 
 If stronger provider-side isolation is required, split user-secret workloads by
 provider vault, AWS account, Region, prefix, or runtime role before linking the
-refs. Paperclip can prevent an agent from choosing another credential owner,
+refs. ThinkingMach can prevent an agent from choosing another credential owner,
 but a runtime role with broad external vault read permissions can still read
-what IAM allows if another code path is introduced outside Paperclip.
+what IAM allows if another code path is introduced outside ThinkingMach.
 
 ## Default Provider: `local_encrypted`
 
@@ -175,8 +175,8 @@ Secrets are encrypted with a local master key stored at:
 ```
 
 This key is auto-created during onboarding. The key never leaves your machine.
-Paperclip best-effort enforces `0600` permissions when it creates or loads the
-key file. `paperclipai doctor` and the provider health API warn when the file is
+ThinkingMach best-effort enforces `0600` permissions when it creates or loads the
+key file. `thinkingmach doctor` and the provider health API warn when the file is
 readable by group or other users.
 
 Back up the key file together with database backups. A database backup without
@@ -190,48 +190,48 @@ metadata is not enough to restore named secret versions.
 Onboarding writes default secrets config:
 
 ```sh
-pnpm paperclipai onboard
+pnpm thinkingmach onboard
 ```
 
 Update secrets settings:
 
 ```sh
-pnpm paperclipai configure --section secrets
+pnpm thinkingmach configure --section secrets
 ```
 
 Validate secrets config:
 
 ```sh
-pnpm paperclipai doctor
-npx paperclipai secrets doctor --company-id <company-id>
+pnpm thinkingmach doctor
+npx thinkingmach secrets doctor --company-id <company-id>
 ```
 
 ### Environment Overrides
 
 | Variable | Description |
 |----------|-------------|
-| `PAPERCLIP_SECRETS_MASTER_KEY` | 32-byte key as base64, hex, or raw string |
-| `PAPERCLIP_SECRETS_MASTER_KEY_FILE` | Custom key file path |
-| `PAPERCLIP_SECRETS_STRICT_MODE` | Set to `true` to enforce secret refs |
+| `THINKINGMACH_SECRETS_MASTER_KEY` | 32-byte key as base64, hex, or raw string |
+| `THINKINGMACH_SECRETS_MASTER_KEY_FILE` | Custom key file path |
+| `THINKINGMACH_SECRETS_STRICT_MODE` | Set to `true` to enforce secret refs |
 
 ## Strict Mode
 
 When strict mode is enabled, sensitive env keys (matching `*_API_KEY`, `*_TOKEN`, `*_SECRET`) must use secret references instead of inline plain values.
 
 ```sh
-PAPERCLIP_SECRETS_STRICT_MODE=true
+THINKINGMACH_SECRETS_STRICT_MODE=true
 ```
 
 Recommended for any deployment beyond local trusted.
 
 Authenticated deployments default strict mode on unless explicitly overridden by
-configuration or `PAPERCLIP_SECRETS_STRICT_MODE=false`.
+configuration or `THINKINGMACH_SECRETS_STRICT_MODE=false`.
 
 ## External References
 
-Provider-owned secrets can be linked without copying values into Paperclip by
+Provider-owned secrets can be linked without copying values into ThinkingMach by
 using `managedMode: "external_reference"` plus a provider `externalRef`.
-Paperclip stores metadata and a non-sensitive fingerprint, never the value.
+ThinkingMach stores metadata and a non-sensitive fingerprint, never the value.
 Runtime resolution remains server-side and binding-enforced.
 
 The built-in AWS, GCP, and Vault provider IDs currently accept external
@@ -239,7 +239,7 @@ reference metadata, but runtime resolution requires provider configuration in th
 deployment. Their provider health check reports this as a warning until
 configured.
 
-For hosted Paperclip Cloud on AWS, see the AWS Secrets Manager operational
+For hosted ThinkingMach Cloud on AWS, see the AWS Secrets Manager operational
 contract — required env vars, IAM/KMS scoping, naming and tag conventions, and
 backup/rotation/incident runbooks — in `doc/SECRETS-AWS-PROVIDER.md`.
 
@@ -279,8 +279,8 @@ at validation time.
 
 That keeps the bootstrap rule from the AWS provider applicable to every
 provider family: **provider credentials live in deployment infrastructure
-identity, not in Paperclip company secrets**. Allowed credential sources are
-workload identity attached to the Paperclip server (instance profile, IRSA, ECS
+identity, not in ThinkingMach company secrets**. Allowed credential sources are
+workload identity attached to the ThinkingMach server (instance profile, IRSA, ECS
 task role), `AWS_PROFILE` / SSO / shared config for local runs, an orchestrator
 secret store that boots the server, or short-lived shell credentials for local
 development. Do not paste long-lived API keys into the vault config.
@@ -352,7 +352,7 @@ key file is backed up alongside the database.
 **AWS Secrets Manager vaults** read the per-vault `region`, `namespace`,
 `secretNamePrefix`, `kmsKeyId`, `ownerTag`, and `environmentTag` to route
 managed writes and external-reference reads. The vault config supplements (and
-can override) the deployment-level `PAPERCLIP_SECRETS_AWS_*` env. Bootstrap
+can override) the deployment-level `THINKINGMACH_SECRETS_AWS_*` env. Bootstrap
 credentials still come from the AWS SDK default credential chain — see
 `doc/SECRETS-AWS-PROVIDER.md` for the full IAM and KMS contract.
 
@@ -366,7 +366,7 @@ rejected.
 ### Remote Import From AWS Vaults
 
 AWS provider vaults can import existing AWS Secrets Manager entries as
-Paperclip `external_reference` secrets. This is a metadata-only link: Paperclip
+ThinkingMach `external_reference` secrets. This is a metadata-only link: ThinkingMach
 stores the AWS ARN/path, a fingerprint/version reference, and binding metadata.
 It does not read, copy, store, log, or display the remote plaintext secret
 value during preview or import.
@@ -378,16 +378,16 @@ Operator flow in the board UI:
 3. In the `Secrets` tab, choose `Import from vault`.
 4. Select an AWS vault, search the remote inventory, and load more pages as
    needed.
-5. Check the rows to import, review/edit the Paperclip name and key, then
+5. Check the rows to import, review/edit the ThinkingMach name and key, then
    submit.
 6. Review the result summary for created, skipped, and failed rows.
 
 The preview list is intentionally paged and search-first. AWS accounts can have
 large per-Region inventories, and `ListSecrets` returns opaque `NextToken`
-cursors. Do not expect Paperclip to crawl a whole account in the background;
+cursors. Do not expect ThinkingMach to crawl a whole account in the background;
 load pages deliberately and retry throttled requests with backoff.
 
-Remote import exposes AWS secret metadata visible to the Paperclip runtime
+Remote import exposes AWS secret metadata visible to the ThinkingMach runtime
 role, including names/ARNs and safe derived fields such as dates, whether a
 description or KMS key exists, and tag count. Treat names, ARNs, tags, and
 search text as operational metadata that may be sensitive. The API and activity
@@ -404,12 +404,12 @@ Required AWS posture:
 - Runtime resolution of an imported reference still needs
   `secretsmanager:GetSecretValue` on the selected external ARN/path and KMS
   decrypt when that secret uses a customer-managed key.
-- Keep managed create/rotate/delete permissions scoped to the Paperclip
+- Keep managed create/rotate/delete permissions scoped to the ThinkingMach
   deployment prefix. Do not broaden managed write/delete permissions just
   because import inventory is enabled.
 
 Safe scoping comes from deployment posture rather than AWS list filtering:
-dedicated Paperclip runtime roles per environment/account, AWS vaults pointed at
+dedicated ThinkingMach runtime roles per environment/account, AWS vaults pointed at
 the intended account and Region, import-enabled roles only where inventory
 exposure is acceptable, and board-only access to the import routes. Tags and
 name filters are search aids, not a permission model.
@@ -431,42 +431,42 @@ If import preview fails:
 
 Each provider family has a different backup story:
 
-- `local_encrypted`: back up the local master key file and the Paperclip
+- `local_encrypted`: back up the local master key file and the ThinkingMach
   database together. Either alone is not enough to restore the encrypted
   values, and the vault row only records the path and acknowledgement, not the
   key bytes. This includes user-scoped values: the database holds
   `user_secret_definitions`, `user_secret_declarations`,
   `company_secrets.scope = "user"` rows, version metadata, and owner ids; the
   key file is required to decrypt their local material.
-- `aws_secrets_manager`: back up Paperclip's database for vault metadata
+- `aws_secrets_manager`: back up ThinkingMach's database for vault metadata
   (vault id, region, prefix, KMS key id, default flag, bindings, version
   pointers, user-secret definitions/declarations, owner ids, and access-event
   metadata). The actual secret values live in AWS Secrets Manager under the
   configured prefix or operator-owned external refs; restore by pointing the
-  same Paperclip company at the same AWS namespace and confirming the runtime
+  same ThinkingMach company at the same AWS namespace and confirming the runtime
   role still has `GetSecretValue` plus KMS decrypt for both managed and linked
   user-scoped values. The full restore checklist lives in
   `doc/SECRETS-AWS-PROVIDER.md`.
 - `gcp_secret_manager` and `vault`: while these are coming soon, only the
-  draft vault config exists in Paperclip. Database backups capture it. There
+  draft vault config exists in ThinkingMach. Database backups capture it. There
   is nothing to restore on the provider side until runtime support lands.
 
 ### AWS Provider Bootstrap Boundary
 
-The AWS Secrets Manager provider cannot bootstrap itself from Paperclip
+The AWS Secrets Manager provider cannot bootstrap itself from ThinkingMach
 `company_secrets`. Its initial AWS access must be present before the server can
 create or resolve AWS-backed company secrets, regardless of whether you use the
 deployment-level default or a per-company vault.
 
-For Paperclip Cloud, provision the server runtime IAM role/workload identity,
-KMS key, deployment prefix, and non-secret `PAPERCLIP_SECRETS_AWS_*` environment
+For ThinkingMach Cloud, provision the server runtime IAM role/workload identity,
+KMS key, deployment prefix, and non-secret `THINKINGMACH_SECRETS_AWS_*` environment
 configuration before enabling AWS-backed secrets in the board UI. For
 self-hosted and local runs, use the AWS SDK default credential chain: instance
 profile, ECS task role, EKS IRSA/OIDC web identity, AWS SSO/shared config via
 `AWS_PROFILE`, or short-lived shell credentials for local development.
 
 Do not store AWS root credentials or long-lived IAM user access keys in
-Paperclip secrets. Bootstrap material belongs in infrastructure IAM/workload
+ThinkingMach secrets. Bootstrap material belongs in infrastructure IAM/workload
 identity, the process environment, an AWS profile, or the orchestrator secret
 store.
 
@@ -475,15 +475,15 @@ store.
 If you have existing agents with inline API keys in their config, migrate them to encrypted secret refs:
 
 ```sh
-npx paperclipai secrets migrate-inline-env --company-id <company-id>
-npx paperclipai secrets migrate-inline-env --company-id <company-id> --apply
+npx thinkingmach secrets migrate-inline-env --company-id <company-id>
+npx thinkingmach secrets migrate-inline-env --company-id <company-id> --apply
 
 # low-level script for direct database maintenance
 pnpm secrets:migrate-inline-env         # dry run
 pnpm secrets:migrate-inline-env --apply # apply migration
 ```
 
-Use the CLI command for normal operations because it goes through the Paperclip
+Use the CLI command for normal operations because it goes through the ThinkingMach
 API, creates or rotates secret records, and updates agent env bindings with
 audit logging.
 
@@ -493,13 +493,13 @@ Company exports include only environment declarations. They do not include
 secret IDs, provider references, encrypted material, or plaintext values.
 
 ```sh
-npx paperclipai secrets declarations --company-id <company-id> --kind secret
+npx thinkingmach secrets declarations --company-id <company-id> --kind secret
 ```
 
 Before importing a package into another instance, use those declarations to
 create local values or link hosted provider references in the target deployment.
 For hosted providers such as AWS Secrets Manager, the hosted provider remains
-the value custodian; Paperclip stores metadata and provider version references,
+the value custodian; ThinkingMach stores metadata and provider version references,
 not provider credentials or plaintext secret values.
 
 ## Secret References in Agent Config

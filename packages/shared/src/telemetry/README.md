@@ -1,6 +1,6 @@
 # Telemetry Data Contract
 
-This document explains how contributors should use Paperclip's public telemetry
+This document explains how contributors should use ThinkingMach's public telemetry
 contract. It does not duplicate the full list of individual events or
 dimensions. It documents extra semantic and privacy rules where the generated
 shape is not sufficient.
@@ -19,9 +19,9 @@ Use these files when reviewing or changing telemetry code:
 
 | Contract item | Public source |
 | --- | --- |
-| First-party event names | `PaperclipEventName` in `generated/paperclip-telemetry.ts` |
+| First-party event names | `ThinkingMachEventName` in `generated/paperclip-telemetry.ts` |
 | Per-event dimensions and optionality | `EventDimensionsMap` in `generated/paperclip-telemetry.ts` |
-| Enum descriptions for telemetry dimensions | `PAPERCLIP_ENUM_DESCRIPTIONS` in `generated/paperclip-telemetry.ts` |
+| Enum descriptions for telemetry dimensions | `THINKINGMACH_ENUM_DESCRIPTIONS` in `generated/paperclip-telemetry.ts` |
 | Schema version and event envelope helpers | `SCHEMA_VERSION`, `makeEvent()`, and `makeBatch()` in `generated/paperclip-telemetry.ts` |
 | Runtime-safe event names and dimensions | `TelemetryEventName` and `TelemetryEventDimensions` in `types.ts` |
 | Allowed primitive dimension values | `TelemetryDimensionValue` in `types.ts` |
@@ -35,7 +35,7 @@ will drift as the generated contract changes.
 
 ## Emission Boundary
 
-Paperclip telemetry uses named events with explicit dimension fields. Treat
+ThinkingMach telemetry uses named events with explicit dimension fields. Treat
 open-ended string dimensions as public contract values, not as a place for user
 content or private operational data. Do not send PII, secrets, credentials,
 private paths, prompts, model output, or other sensitive values through
@@ -90,7 +90,7 @@ the authority for its exact dimensions and optionality.
 
 ### Other Data Paths
 
-This document covers Paperclip Telemetry only. The generated Telemetry
+This document covers ThinkingMach Telemetry only. The generated Telemetry
 contract covers neither the Observability path nor the run-log path. Two other
 data paths document their own contract in their own file:
 

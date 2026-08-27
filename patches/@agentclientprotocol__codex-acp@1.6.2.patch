@@ -35,7 +35,7 @@ diff --git a/dist/index.js b/dist/index.js
 @@ -26988,4 +26988,13 @@
  };
 +function paperclipBaseInstructions(request) {
-+  if (process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT !== "1") return void 0;
++  if (process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT !== "1") return void 0;
 +  const prompt = request?._meta?.systemPrompt;
 +  if (typeof prompt === "string") return prompt;
 +  if (prompt && typeof prompt === "object" && typeof prompt.append === "string") {
@@ -72,7 +72,7 @@ diff --git a/dist/index.js b/dist/index.js
 @@ -27437,5 +27449,12 @@
      const mergedConfig = {
        ...mergeGatewayConfig(this.config, this.gatewayConfig),
-+      ...(process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT === "1" ? {
++      ...(process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT === "1" ? {
 +        "include_apps_instructions": false,
 +        "features.apps": false,
 +        "features.memory_tool": false,
@@ -87,7 +87,7 @@ diff --git a/dist/index.js b/dist/index.js
      }));
      let serversToConfigure = requestedServers;
 -    if (shouldDeduplicateMcpConflicts()) {
-+    if (process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT !== "1" && shouldDeduplicateMcpConflicts()) {
++    if (process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT !== "1" && shouldDeduplicateMcpConflicts()) {
        const existingNames = await this.getConfigMcpServerNames(projectPath);
        serversToConfigure = requestedServers.filter((mcp) => !existingNames.has(mcp.name));
      }
@@ -97,7 +97,7 @@ diff --git a/dist/index.js b/dist/index.js
        return;
      }
 -    const skillExtraRoots = additionalRoots.map((root) => path6.join(root, ".agents", "skills"));
-+    const isolated = process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT === "1";
++    const isolated = process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT === "1";
 +    const skillExtraRoots = isolated ? [] : additionalRoots.map((root) => path6.join(root, ".agents", "skills"));
      if (!arraysEqual(this.skillExtraRoots, skillExtraRoots)) {
        await this.codexClient.skillsExtraRootsSet({ extraRoots: skillExtraRoots });

@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import { z } from "zod";
 import { and, asc, desc, eq, ilike, inArray, isNull, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   assets,
@@ -18,13 +18,13 @@ import {
   issues,
   labels,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   createDocumentAnnotationCommentSchema,
   createDocumentAnnotationThreadSchema,
   updateDocumentAnnotationThreadSchema,
   isUuidLike,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { formatAttachmentSize, MAX_ATTACHMENT_BYTES, normalizeContentType } from "../attachment-types.js";
 import { badRequest, conflict, forbidden, notFound, unprocessable } from "../errors.js";
 import { validate } from "../middleware/validate.js";

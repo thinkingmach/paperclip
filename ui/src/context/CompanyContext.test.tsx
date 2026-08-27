@@ -4,7 +4,7 @@ import { act, useEffect } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Company } from "@paperclipai/shared";
+import type { Company } from "@thinkingmach/shared";
 import { queryKeys } from "../lib/queryKeys";
 import {
   CompanyProvider,
@@ -45,7 +45,7 @@ const archivedCompany = { id: "archived-company" };
 function makeCompany(id: string): Company {
   return {
     id,
-    name: "Paperclip",
+    name: "ThinkingMach",
     description: null,
     status: "active",
     pauseReason: null,

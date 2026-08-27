@@ -1,4 +1,4 @@
-import type { CompanySecret, EnvBinding, SecretVersionSelector, UserSecretDefinition } from "@paperclipai/shared";
+import type { CompanySecret, EnvBinding, SecretVersionSelector, UserSecretDefinition } from "@thinkingmach/shared";
 
 export type RowSource = "text" | "secret" | "user_secret";
 

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { decisionEffectTargetIssueIds, type Agent, type AttentionSubject } from "@paperclipai/shared";
+import { decisionEffectTargetIssueIds, type Agent, type AttentionSubject } from "@thinkingmach/shared";
 import { decisionsApi, type DecisionOutcome } from "../api/decisions";
 import { issuesApi } from "../api/issues";
 import { queryKeys } from "../lib/queryKeys";

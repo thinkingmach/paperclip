@@ -53,7 +53,7 @@ function pickReadableTextColor(background: string): string {
 
 /**
  * True when the UI is served by an isolated git-worktree preview instance
- * (`PAPERCLIP_IN_WORKTREE=true` on the server). Unlike {@link getWorktreeUiBranding}
+ * (`THINKINGMACH_IN_WORKTREE=true` on the server). Unlike {@link getWorktreeUiBranding}
  * this only depends on the enabled flag, so it stays reliable even if the
  * worktree name/color branding is absent.
  */

@@ -3,7 +3,7 @@
  *
  * A managed runtime that opts into HTTPS exposure needs TWO deterministically
  * related loopback ports reserved together (PAP-17049 plan, PAP-17050 verdict
- * requirement #2): the app port and its Paperclip Vite HMR companion at a fixed
+ * requirement #2): the app port and its ThinkingMach Vite HMR companion at a fixed
  * offset. Allocating them as a pair — and only from the dedicated allowlisted
  * range — means a compromised caller can never ask the broker to publish an
  * arbitrary existing loopback service, and the HMR listener is never orphaned
@@ -17,7 +17,7 @@ import {
   RUNTIME_EXPOSURE_APP_PORT_MAX,
   deriveViteHmrPort,
   isRuntimeExposureAppPort,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export interface ExposurePortPair {
   appPort: number;
@@ -42,7 +42,7 @@ export interface AllocateExposurePortPairInput {
    *
    * Only honored when it is genuinely safe: the port must be an allowlisted app
    * port, unreserved, and free together with its HMR companion. A legacy pinned
-   * port outside the dedicated range (the Paperclip App template's 45439) can
+   * port outside the dedicated range (the ThinkingMach App template's 45439) can
    * never be published by the broker, so it is ignored here rather than making
    * the caller special-case it.
    */

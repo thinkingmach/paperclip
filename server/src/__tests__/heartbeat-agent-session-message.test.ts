@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { renderPaperclipWakePrompt } from "@paperclipai/adapter-utils/server-utils";
-import { buildPaperclipWakePayload } from "../services/heartbeat.js";
+import { renderThinkingMachWakePrompt } from "@thinkingmach/adapter-utils/server-utils";
+import { buildThinkingMachWakePayload } from "../services/heartbeat.js";
 
 describe("agent session wake messages", () => {
   it("includes the issue brief and requires fallback fetch when a long description is truncated", async () => {
@@ -9,7 +9,7 @@ describe("agent session wake messages", () => {
       "x".repeat(13_000),
     ].join("\n");
 
-    const wakePayload = await buildPaperclipWakePayload({
+    const wakePayload = await buildThinkingMachWakePayload({
       db: {
         select: () => ({
           from: () => ({
@@ -46,7 +46,7 @@ describe("agent session wake messages", () => {
   });
 
   it("turns the canonical session-message context into adapter prompt input", async () => {
-    const wakePayload = await buildPaperclipWakePayload({
+    const wakePayload = await buildThinkingMachWakePayload({
       db: {} as never,
       companyId: "company-1",
       contextSnapshot: {
@@ -70,12 +70,12 @@ describe("agent session wake messages", () => {
         sessionId: "session-1",
       },
     });
-    expect(renderPaperclipWakePrompt(wakePayload)).toContain("hello");
+    expect(renderThinkingMachWakePrompt(wakePayload)).toContain("hello");
   });
 
   it("leaves a normal context-only wake without a renderable payload", async () => {
     await expect(
-      buildPaperclipWakePayload({
+      buildThinkingMachWakePayload({
         db: {} as never,
         companyId: "company-1",
         contextSnapshot: {
@@ -87,7 +87,7 @@ describe("agent session wake messages", () => {
 
   it("redacts and bounds session messages before materializing the wake payload", async () => {
     const secret = "do-not-render-this-value";
-    const wakePayload = await buildPaperclipWakePayload({
+    const wakePayload = await buildThinkingMachWakePayload({
       db: {} as never,
       companyId: "company-1",
       contextSnapshot: {

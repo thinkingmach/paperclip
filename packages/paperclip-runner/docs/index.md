@@ -3,7 +3,7 @@
 These documents cover the package-local browser SDK, React components,
 standalone demos, scenario explorer, issue-thread surface, and live-session
 development tools. They do not enable a production provider or change
-Paperclip's runtime selection.
+ThinkingMach's runtime selection.
 
 ## Tutorials
 

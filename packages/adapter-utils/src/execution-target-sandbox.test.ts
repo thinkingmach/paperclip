@@ -19,7 +19,7 @@ import {
   adapterExecutionTargetEnablesSandboxDuplexBridge,
   adapterExecutionTargetSessionIdentity,
   adapterExecutionTargetToRemoteSpec,
-  adapterExecutionTargetUsesPaperclipBridge,
+  adapterExecutionTargetUsesThinkingMachBridge,
   ensureAdapterExecutionTargetCommandResolvable,
   formatAdapterExecutionTimeoutErrorMessage,
   formatAdapterExecutionTimeoutStartLogLine,
@@ -30,7 +30,7 @@ import {
   runAdapterExecutionTargetProcess,
   runAdapterExecutionTargetShellCommand,
   startAdapterExecutionTargetProcessSessionBridge,
-  startAdapterExecutionTargetPaperclipBridge,
+  startAdapterExecutionTargetThinkingMachBridge,
   type AdapterSandboxExecutionTarget,
   type EffectiveExecutionCapabilities,
   type EffectiveSandboxCapabilities,
@@ -172,11 +172,11 @@ describe("sandbox adapter execution targets", () => {
 
   function encodeTailTick(stdout: Buffer, stderr: Buffer): string {
     return [
-      "__PAPERCLIP_RUN_LOG_STDOUT__",
+      "__THINKINGMACH_RUN_LOG_STDOUT__",
       stdout.toString("base64"),
-      "__PAPERCLIP_RUN_LOG_STDERR__",
+      "__THINKINGMACH_RUN_LOG_STDERR__",
       stderr.toString("base64"),
-      "__PAPERCLIP_RUN_LOG_END__",
+      "__THINKINGMACH_RUN_LOG_END__",
       "",
     ].join("\n");
   }
@@ -2032,7 +2032,7 @@ describe("sandbox adapter execution targets", () => {
       },
     };
 
-    expect(adapterExecutionTargetUsesPaperclipBridge(target)).toBe(true);
+    expect(adapterExecutionTargetUsesThinkingMachBridge(target)).toBe(true);
     expect(adapterExecutionTargetSessionIdentity(target)).toEqual({
       transport: "ssh",
       host: "ssh.example.test",
@@ -2077,7 +2077,7 @@ describe("sandbox adapter execution targets", () => {
     }));
   });
 
-  it("starts a localhost Paperclip bridge for sandbox targets in bridge mode", async () => {
+  it("starts a localhost ThinkingMach bridge for sandbox targets in bridge mode", async () => {
     const rootDir = await mkdtemp(path.join(os.tmpdir(), "paperclip-execution-target-bridge-"));
     cleanupDirs.push(rootDir);
     const remoteCwd = path.join(rootDir, "workspace");
@@ -2115,7 +2115,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge",
       target,
       runtimeRootDir,
@@ -2125,13 +2125,13 @@ describe("sandbox adapter execution targets", () => {
     });
     try {
       expect(bridge).not.toBeNull();
-      expect(bridge?.env.PAPERCLIP_API_URL).toMatch(/^http:\/\/127\.0\.0\.1:\d+$/);
-      expect(bridge?.env.PAPERCLIP_API_KEY).not.toBe("real-run-jwt");
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_URL).toMatch(/^http:\/\/127\.0\.0\.1:\d+$/);
+      expect(bridge?.env.THINKINGMACH_API_KEY).not.toBe("real-run-jwt");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
 
-      const response = await fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/agents/me`, {
+      const response = await fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/agents/me`, {
         headers: {
-          authorization: `Bearer ${bridge!.env.PAPERCLIP_API_KEY}`,
+          authorization: `Bearer ${bridge!.env.THINKINGMACH_API_KEY}`,
           accept: "application/json",
         },
       });
@@ -2170,7 +2170,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-stream",
       target,
       runtimeRootDir,
@@ -2212,7 +2212,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const defaultBridge = await startAdapterExecutionTargetPaperclipBridge({
+    const defaultBridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-stream-default",
       target: baseTarget,
       runtimeRootDir,
@@ -2226,7 +2226,7 @@ describe("sandbox adapter execution targets", () => {
       await defaultBridge?.stop();
     }
 
-    const optOutBridge = await startAdapterExecutionTargetPaperclipBridge({
+    const optOutBridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-stream-opt-out",
       target: { ...baseTarget, streamRunLogs: false },
       runtimeRootDir,
@@ -2306,7 +2306,7 @@ describe("sandbox adapter execution targets", () => {
     expect(runner.execute).toHaveBeenCalledWith(expect.objectContaining({
       command: "sh",
       cwd: "/workspace",
-      env: { PAPERCLIP_SANDBOX_EXEC_CHANNEL: "bridge" },
+      env: { THINKINGMACH_SANDBOX_EXEC_CHANNEL: "bridge" },
       timeoutMs: 50,
     }));
   });
@@ -2389,7 +2389,7 @@ describe("sandbox adapter execution targets", () => {
     );
   });
 
-  it("exposes the Paperclip bridge to the sandbox shell surface", async () => {
+  it("exposes the ThinkingMach bridge to the sandbox shell surface", async () => {
     const rootDir = await mkdtemp(path.join(os.tmpdir(), "paperclip-execution-target-bridge-shell-"));
     cleanupDirs.push(rootDir);
     const remoteCwd = path.join(rootDir, "workspace");
@@ -2431,7 +2431,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-shell",
       target,
       runtimeRootDir,
@@ -2442,14 +2442,14 @@ describe("sandbox adapter execution targets", () => {
     try {
       expect(bridge).not.toBeNull();
       const shellProbe = [
-        "const url = `${process.env.PAPERCLIP_API_URL}/api/agents/me`;",
-        "fetch(url, { headers: { authorization: `Bearer ${process.env.PAPERCLIP_API_KEY}`, accept: 'application/json' } })",
+        "const url = `${process.env.THINKINGMACH_API_URL}/api/agents/me`;",
+        "fetch(url, { headers: { authorization: `Bearer ${process.env.THINKINGMACH_API_KEY}`, accept: 'application/json' } })",
         "  .then(async (response) => {",
         "    const body = await response.json();",
         "    process.stdout.write(JSON.stringify({",
         "      status: response.status,",
         "      body,",
-        "      bridgeMode: process.env.PAPERCLIP_API_BRIDGE_MODE,",
+        "      bridgeMode: process.env.THINKINGMACH_API_BRIDGE_MODE,",
         "    }));",
         "  })",
         "  .catch((error) => {",
@@ -2479,7 +2479,7 @@ describe("sandbox adapter execution targets", () => {
         bridgeMode: "queue_v1",
       });
       expect(`${result.stdout}\n${result.stderr}`).not.toContain("real-run-jwt");
-      expect(`${result.stdout}\n${result.stderr}`).not.toContain(bridge!.env.PAPERCLIP_API_KEY);
+      expect(`${result.stdout}\n${result.stderr}`).not.toContain(bridge!.env.THINKINGMACH_API_KEY);
       const runnerCommandText = JSON.stringify(
         runner.execute.mock.calls.map(([call]) => ({
           command: call.command,
@@ -2487,10 +2487,10 @@ describe("sandbox adapter execution targets", () => {
         })),
       );
       expect(runnerCommandText).not.toContain("real-run-jwt");
-      expect(runnerCommandText).not.toContain(bridge!.env.PAPERCLIP_API_KEY);
+      expect(runnerCommandText).not.toContain(bridge!.env.THINKINGMACH_API_KEY);
       const runtimeFiles = (await readRuntimeTextFiles(runtimeRootDir)).join("\n");
       expect(runtimeFiles).not.toContain("real-run-jwt");
-      expect(runtimeFiles).not.toContain(bridge!.env.PAPERCLIP_API_KEY);
+      expect(runtimeFiles).not.toContain(bridge!.env.THINKINGMACH_API_KEY);
       expect(requests).toEqual([{
         method: "GET",
         url: "/api/agents/me",
@@ -2538,7 +2538,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-timeout",
       target,
       runtimeRootDir,
@@ -2611,7 +2611,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-limit",
       target,
       runtimeRootDir,
@@ -2621,10 +2621,10 @@ describe("sandbox adapter execution targets", () => {
       maxBodyBytes: 512,
     });
     try {
-      const response = await fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/issues/issue-1/comments`, {
+      const response = await fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/issues/issue-1/comments`, {
         method: "POST",
         headers: {
-          authorization: `Bearer ${bridge!.env.PAPERCLIP_API_KEY}`,
+          authorization: `Bearer ${bridge!.env.THINKINGMACH_API_KEY}`,
           "content-type": "application/json",
         },
         body: JSON.stringify({ body: "Status update." }),
@@ -2700,7 +2700,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-safe-limit",
       target,
       runtimeRootDir,
@@ -2710,10 +2710,10 @@ describe("sandbox adapter execution targets", () => {
       maxBodyBytes: 512,
     });
     try {
-      const response = await fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/issues/issue-1`, {
+      const response = await fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/issues/issue-1`, {
         method: "GET",
         headers: {
-          authorization: `Bearer ${bridge!.env.PAPERCLIP_API_KEY}`,
+          authorization: `Bearer ${bridge!.env.THINKINGMACH_API_KEY}`,
         },
       });
 
@@ -2776,7 +2776,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-outcome",
       target,
       runtimeRootDir,
@@ -2785,10 +2785,10 @@ describe("sandbox adapter execution targets", () => {
       hostApiUrl: `http://127.0.0.1:${address.port}`,
     });
     try {
-      const response = await fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/issues/issue-1/comments`, {
+      const response = await fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/issues/issue-1/comments`, {
         method: "POST",
         headers: {
-          authorization: `Bearer ${bridge!.env.PAPERCLIP_API_KEY}`,
+          authorization: `Bearer ${bridge!.env.THINKINGMACH_API_KEY}`,
           "content-type": "application/json",
         },
         body: JSON.stringify({ body: "Status update." }),
@@ -2838,14 +2838,14 @@ describe("sandbox adapter execution targets", () => {
     }
 
     // Simulate a deployment where a public base URL is configured: server boot
-    // exports the public origin via PAPERCLIP_RUNTIME_API_URL / PAPERCLIP_API_URL
-    // and the local listen host/port via PAPERCLIP_LISTEN_HOST / PAPERCLIP_LISTEN_PORT.
+    // exports the public origin via THINKINGMACH_RUNTIME_API_URL / THINKINGMACH_API_URL
+    // and the local listen host/port via THINKINGMACH_LISTEN_HOST / THINKINGMACH_LISTEN_PORT.
     // The wildcard listen host must map to the loopback address of the same
     // family (0.0.0.0 -> 127.0.0.1), where the test API server is bound.
-    vi.stubEnv("PAPERCLIP_RUNTIME_API_URL", "https://public.example.invalid");
-    vi.stubEnv("PAPERCLIP_API_URL", "https://public.example.invalid");
-    vi.stubEnv("PAPERCLIP_LISTEN_HOST", "0.0.0.0");
-    vi.stubEnv("PAPERCLIP_LISTEN_PORT", String(address.port));
+    vi.stubEnv("THINKINGMACH_RUNTIME_API_URL", "https://public.example.invalid");
+    vi.stubEnv("THINKINGMACH_API_URL", "https://public.example.invalid");
+    vi.stubEnv("THINKINGMACH_LISTEN_HOST", "0.0.0.0");
+    vi.stubEnv("THINKINGMACH_LISTEN_PORT", String(address.port));
 
     const target: AdapterSandboxExecutionTarget = {
       kind: "remote",
@@ -2858,7 +2858,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-local",
       target,
       runtimeRootDir,
@@ -2867,9 +2867,9 @@ describe("sandbox adapter execution targets", () => {
     });
     try {
       expect(bridge).not.toBeNull();
-      const response = await fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/agents/me`, {
+      const response = await fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/agents/me`, {
         headers: {
-          authorization: `Bearer ${bridge!.env.PAPERCLIP_API_KEY}`,
+          authorization: `Bearer ${bridge!.env.THINKINGMACH_API_KEY}`,
           accept: "application/json",
         },
       });
@@ -2912,10 +2912,10 @@ describe("sandbox adapter execution targets", () => {
 
     // Neither the public URL envs nor the listen host/port should matter when
     // the caller passes an explicit hostApiUrl.
-    vi.stubEnv("PAPERCLIP_RUNTIME_API_URL", "https://public.example.invalid");
-    vi.stubEnv("PAPERCLIP_API_URL", "https://public.example.invalid");
-    vi.stubEnv("PAPERCLIP_LISTEN_HOST", "203.0.113.1");
-    vi.stubEnv("PAPERCLIP_LISTEN_PORT", "9");
+    vi.stubEnv("THINKINGMACH_RUNTIME_API_URL", "https://public.example.invalid");
+    vi.stubEnv("THINKINGMACH_API_URL", "https://public.example.invalid");
+    vi.stubEnv("THINKINGMACH_LISTEN_HOST", "203.0.113.1");
+    vi.stubEnv("THINKINGMACH_LISTEN_PORT", "9");
 
     const target: AdapterSandboxExecutionTarget = {
       kind: "remote",
@@ -2928,7 +2928,7 @@ describe("sandbox adapter execution targets", () => {
       timeoutMs: 30_000,
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-bridge-override",
       target,
       runtimeRootDir,
@@ -2938,9 +2938,9 @@ describe("sandbox adapter execution targets", () => {
     });
     try {
       expect(bridge).not.toBeNull();
-      const response = await fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/agents/me`, {
+      const response = await fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/agents/me`, {
         headers: {
-          authorization: `Bearer ${bridge!.env.PAPERCLIP_API_KEY}`,
+          authorization: `Bearer ${bridge!.env.THINKINGMACH_API_KEY}`,
           accept: "application/json",
         },
       });
@@ -3013,8 +3013,8 @@ describe("sandbox adapter execution targets", () => {
     }): Promise<CommandManagedDuplexChannel> => {
       control.openCount += 1;
       const joined = openInput.command.join(" ");
-      const nonce = /PAPERCLIP_BRIDGE_NONCE='([^']*)'/.exec(joined)?.[1] ?? "";
-      const port = /PAPERCLIP_BRIDGE_PORT='([^']*)'/.exec(joined)?.[1] ?? "";
+      const nonce = /THINKINGMACH_BRIDGE_NONCE='([^']*)'/.exec(joined)?.[1] ?? "";
+      const port = /THINKINGMACH_BRIDGE_PORT='([^']*)'/.exec(joined)?.[1] ?? "";
       let dataListener: ((chunk: Uint8Array) => void) | null = null;
       let exitListener: ((exit: { exitCode: number | null }) => void) | null = null;
       const channel: CommandManagedDuplexChannel = {
@@ -3113,9 +3113,9 @@ describe("sandbox adapter execution targets", () => {
     }): Promise<CommandManagedDuplexChannel> => {
       control.openCount += 1;
       const joined = openInput.command.join(" ");
-      const nonce = /PAPERCLIP_BRIDGE_NONCE='([^']*)'/.exec(joined)?.[1] ?? "";
-      const port = /PAPERCLIP_BRIDGE_PORT='([^']*)'/.exec(joined)?.[1] ?? "";
-      const bridgeToken = /PAPERCLIP_BRIDGE_TOKEN='([^']*)'/.exec(joined)?.[1] ?? "";
+      const nonce = /THINKINGMACH_BRIDGE_NONCE='([^']*)'/.exec(joined)?.[1] ?? "";
+      const port = /THINKINGMACH_BRIDGE_PORT='([^']*)'/.exec(joined)?.[1] ?? "";
+      const bridgeToken = /THINKINGMACH_BRIDGE_TOKEN='([^']*)'/.exec(joined)?.[1] ?? "";
       const [hostSide, sandboxSide] = duplexPair();
       const dataListeners: Array<(chunk: Uint8Array) => void> = [];
       const exitListeners: Array<(exit: { exitCode: number | null }) => void> = [];
@@ -3282,7 +3282,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-startup-fail",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3295,7 +3295,7 @@ describe("sandbox adapter execution targets", () => {
     try {
       expect(bridge).not.toBeNull();
       expect(openCount).toBe(1);
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("channel_open_failed");
     } finally {
@@ -3329,7 +3329,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-http2",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3341,10 +3341,10 @@ describe("sandbox adapter execution targets", () => {
     try {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       // The host builds the origin from the port it assigned, never from a frame.
-      expect(bridge?.env.PAPERCLIP_API_URL).toMatch(/^http:\/\/127\.0\.0\.1:\d+$/);
-      expect(bridge?.env.PAPERCLIP_API_KEY).not.toBe("real-run-jwt");
+      expect(bridge?.env.THINKINGMACH_API_URL).toMatch(/^http:\/\/127\.0\.0\.1:\d+$/);
+      expect(bridge?.env.THINKINGMACH_API_KEY).not.toBe("real-run-jwt");
 
       // The sandbox gateway forwards one agent request as one real HTTP/2
       // stream, over the one session that runs directly on the sandbox
@@ -3392,7 +3392,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-duplex-log",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3407,7 +3407,7 @@ describe("sandbox adapter execution targets", () => {
     try {
       // The http2 transport served, and it still streams run logs with the same
       // gate and the same log line as the file path.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       expect(bridge?.runLogTail).toBeTruthy();
       expect(combinedStream(logs, "stdout")).toContain("Sandbox run log streaming enabled");
       const wrapped = bridge!.runLogTail!.create().wrapCommand("agent-cli", ["--message", "hello world"]);
@@ -3437,7 +3437,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-http2-log-off",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3447,7 +3447,7 @@ describe("sandbox adapter execution targets", () => {
       enableSandboxDuplexBridge: true,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       expect(bridge?.runLogTail ?? null).toBeNull();
     } finally {
       await bridge?.stop();
@@ -3484,7 +3484,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
       duplexObservabilityRecorder: recorder,
     };
-    const openBridge = await startAdapterExecutionTargetPaperclipBridge({
+    const openBridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-http2-open",
       target: openTarget,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3495,7 +3495,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: adapterExecutionTargetDuplexObservabilityRecorder(openTarget),
     });
     try {
-      expect(openBridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(openBridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       const open = counters.find((record) => record.metric === DUPLEX_COUNTER_CHANNEL_OPEN_TOTAL);
       expect(open?.dimensions.transport).toBe("http2");
       expect(open?.dimensions.provider).toBe("daytona");
@@ -3516,7 +3516,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
       duplexObservabilityRecorder: recorder,
     };
-    const fallbackBridge = await startAdapterExecutionTargetPaperclipBridge({
+    const fallbackBridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-duplex-fallback",
       target: fallbackTarget,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3527,7 +3527,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: adapterExecutionTargetDuplexObservabilityRecorder(fallbackTarget),
     });
     try {
-      expect(fallbackBridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(fallbackBridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((record) => record.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("gate_off");
       expect(fallback?.dimensions.transport).toBe("file");
@@ -3557,7 +3557,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(capability),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-gate",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3570,7 +3570,7 @@ describe("sandbox adapter execution targets", () => {
       expect(bridge).not.toBeNull();
       // Neither gate combination opened a duplex channel; the file bridge serves.
       expect(control.openCount).toBe(0);
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
     } finally {
       await bridge?.stop();
       await api.close();
@@ -3616,7 +3616,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-fail",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3630,7 +3630,7 @@ describe("sandbox adapter execution targets", () => {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
       // Fail closed: the file bridge serves after the bounded cleanup.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       // The bounded cleanup left no live provider session.
       expect(control.closeCount + control.stopCount).toBeGreaterThanOrEqual(1);
     } finally {
@@ -3691,7 +3691,7 @@ describe("sandbox adapter execution targets", () => {
         effectiveCapabilities: duplexCapabilities(true),
       };
 
-      const bridge = await startAdapterExecutionTargetPaperclipBridge({
+      const bridge = await startAdapterExecutionTargetThinkingMachBridge({
         runId: "run-addr",
         target,
         runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3705,8 +3705,8 @@ describe("sandbox adapter execution targets", () => {
         expect(bridge).not.toBeNull();
         // The address-bearing READY frame failed the strict schema, so the host
         // fell closed to the file bridge and built no channel-supplied endpoint.
-        expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
-        expect(bridge?.env.PAPERCLIP_API_URL).not.toContain(String(attackerPort));
+        expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
+        expect(bridge?.env.THINKINGMACH_API_URL).not.toContain(String(attackerPort));
         expect(control.closeCount + control.stopCount).toBeGreaterThanOrEqual(1);
         // Give any stray forward a moment, then assert the attacker got nothing.
         await new Promise((resolve) => setTimeout(resolve, 100));
@@ -3743,7 +3743,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-http2-403",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3753,7 +3753,7 @@ describe("sandbox adapter execution targets", () => {
       enableSandboxDuplexBridge: true,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
 
       // An unlisted route answers 403 over the real HTTP/2 stream and never
@@ -3867,7 +3867,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-obs",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3878,7 +3878,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: recorder,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",
@@ -3933,7 +3933,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(false),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-fb",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -3944,7 +3944,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: recorder,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback).toBeDefined();
       const approvedReasons = [
@@ -4011,7 +4011,7 @@ describe("sandbox adapter execution targets", () => {
         effectiveCapabilities: duplexCapabilities(true),
       };
 
-      const bridge = await startAdapterExecutionTargetPaperclipBridge({
+      const bridge = await startAdapterExecutionTargetThinkingMachBridge({
         runId: "run-stage",
         target,
         runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4023,7 +4023,7 @@ describe("sandbox adapter execution targets", () => {
       });
       try {
         // The channel never opened, so the host serves the file bridge.
-        expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+        expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
         // The channel-open span and the fallback counter name the exact stage.
         const openSpan = spans.find(
           (s) => s.name === DUPLEX_SPAN_CHANNEL_OPEN && s.dimensions.outcome === "error",
@@ -4074,7 +4074,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-loss",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4085,7 +4085,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: recorder,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       if (dispatchFirst) {
         const response = await http2TestRequest(sessionRef.current!, {
@@ -4137,7 +4137,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-guard",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4149,7 +4149,7 @@ describe("sandbox adapter execution targets", () => {
     });
     try {
       // The throwing recorder never blocked the http2 selection.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",
@@ -4206,11 +4206,11 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const previousDebug = process.env.PAPERCLIP_BRIDGE_DEBUG;
-    process.env.PAPERCLIP_BRIDGE_DEBUG = "1";
-    let bridge: Awaited<ReturnType<typeof startAdapterExecutionTargetPaperclipBridge>> = null;
+    const previousDebug = process.env.THINKINGMACH_BRIDGE_DEBUG;
+    process.env.THINKINGMACH_BRIDGE_DEBUG = "1";
+    let bridge: Awaited<ReturnType<typeof startAdapterExecutionTargetThinkingMachBridge>> = null;
     try {
-      bridge = await startAdapterExecutionTargetPaperclipBridge({
+      bridge = await startAdapterExecutionTargetThinkingMachBridge({
         runId: "run-redact",
         target,
         runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4223,7 +4223,7 @@ describe("sandbox adapter execution targets", () => {
           logLines.push(chunk);
         },
       });
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
 
       // Dispatch one real HTTP/2 stream that carries the sentinel route,
@@ -4255,8 +4255,8 @@ describe("sandbox adapter execution targets", () => {
       // recording API server saw only the real token, never the bridge token.
       expect(api.requests[0]?.auth).toBe(`Bearer ${AGENT_TOKEN_SENTINEL}`);
     } finally {
-      if (previousDebug === undefined) delete process.env.PAPERCLIP_BRIDGE_DEBUG;
-      else process.env.PAPERCLIP_BRIDGE_DEBUG = previousDebug;
+      if (previousDebug === undefined) delete process.env.THINKINGMACH_BRIDGE_DEBUG;
+      else process.env.THINKINGMACH_BRIDGE_DEBUG = previousDebug;
       sessionRef.current?.close();
       await bridge?.stop();
       await api.close();
@@ -4288,7 +4288,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-prov",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4299,7 +4299,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: recorder,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",
@@ -4359,7 +4359,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-cap",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4376,7 +4376,7 @@ describe("sandbox adapter execution targets", () => {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
       // The cap drove the failure, so the file bridge serves after the bounded cleanup.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("contaminated");
       // The bounded cleanup left no live provider session.
@@ -4417,7 +4417,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-cap-small",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4434,7 +4434,7 @@ describe("sandbox adapter execution targets", () => {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
       // The cap drove the failure, so the file bridge serves after the bounded cleanup.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("contaminated");
       expect(control.closeCount + control.stopCount).toBeGreaterThanOrEqual(1);
@@ -4475,7 +4475,7 @@ describe("sandbox adapter execution targets", () => {
     };
 
     __duplexReadinessTesting.resetNewlineScanUnits();
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-scan-bound",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4532,7 +4532,7 @@ describe("sandbox adapter execution targets", () => {
     };
 
     __duplexReadinessTesting.resetBufferGrowthCopyUnits();
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-growth-bound",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4590,7 +4590,7 @@ describe("sandbox adapter execution targets", () => {
     };
 
     __duplexReadinessTesting.resetNewlineScanUnits();
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-blank-scan",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4611,7 +4611,7 @@ describe("sandbox adapter execution targets", () => {
       expect(scanUnits).toBeLessThanOrEqual(4 * totalBytes);
       // The gate skipped the noise and accepted the READY frame, so the http2
       // transport serves and no fallback fired.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback).toBeUndefined();
     } finally {
@@ -4633,7 +4633,7 @@ describe("sandbox adapter execution targets", () => {
     // in the code. The preface scan then starts only on the bytes the gate
     // retained after that accepted line.
     const { runner, control } = makeHttp2SelectionRunner((ctx) => {
-      ctx.emitRaw("sh -c exec env PAPERCLIP_BRIDGE_NONCE=... node gateway.mjs\n");
+      ctx.emitRaw("sh -c exec env THINKINGMACH_BRIDGE_NONCE=... node gateway.mjs\n");
       ctx.emitRaw('{"version":2,"type":"ready"}\n');
       ctx.emitRaw("x".repeat(50_000)); // an arbitrarily long prologue, no fixed length
       ctx.emitReady();
@@ -4650,7 +4650,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-noise-ready",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4667,7 +4667,7 @@ describe("sandbox adapter execution targets", () => {
       // The gate skipped the echo, the partial frame, and the long prologue,
       // then accepted the READY frame, so the http2 transport serves and no
       // fallback fired.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback).toBeUndefined();
     } finally {
@@ -4701,7 +4701,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-noise-nonce",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4716,7 +4716,7 @@ describe("sandbox adapter execution targets", () => {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
       // The wrong nonce failed the handshake, so the file bridge serves.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("ready_nonce_mismatch");
       // The bounded cleanup left no live provider session.
@@ -4758,7 +4758,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-cap-bypass",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4774,7 +4774,7 @@ describe("sandbox adapter execution targets", () => {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
       // The cap drove the failure before READY acceptance, so the file bridge serves.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("contaminated");
       // The bounded cleanup left no live provider session.
@@ -4809,7 +4809,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-open-span",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4821,7 +4821,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: recorder,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const openSpan = spans.find((span) => span.name === DUPLEX_SPAN_CHANNEL_OPEN);
       expect(openSpan).toBeDefined();
       expect(openSpan?.dimensions).toMatchObject({
@@ -4861,7 +4861,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-hdr",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4871,7 +4871,7 @@ describe("sandbox adapter execution targets", () => {
       enableSandboxDuplexBridge: true,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",
@@ -4928,7 +4928,7 @@ describe("sandbox adapter execution targets", () => {
     // holds no nested-budget derivation (that budget set belonged to the retired
     // duplex_v1 broker only), so a large forward budget must still select and
     // serve normally.
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-budget",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4939,7 +4939,7 @@ describe("sandbox adapter execution targets", () => {
       forwardTimeoutMs: 60_000,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",
@@ -4980,7 +4980,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-no-preface",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -4997,7 +4997,7 @@ describe("sandbox adapter execution targets", () => {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
       // The missing preface aborted the open; the file bridge serves.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("preface_missing");
       // The bounded cleanup left no live provider session.
@@ -5027,7 +5027,7 @@ describe("sandbox adapter execution targets", () => {
     };
 
     // The kill switch is off. The host must never open the channel at all.
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-disabled",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5040,7 +5040,7 @@ describe("sandbox adapter execution targets", () => {
     try {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(0);
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       const fallback = counters.find((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallback?.dimensions.fallback_reason).toBe("gate_off");
     } finally {
@@ -5073,7 +5073,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-one-way",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5089,7 +5089,7 @@ describe("sandbox adapter execution targets", () => {
       // The host opened the channel exactly once for the whole run — no retry
       // loop re-attempted http2_v1 after the fallback.
       expect(control.openCount).toBe(1);
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       // Exactly one fallback record — the transition never repeats.
       const fallbacks = counters.filter((c) => c.metric === DUPLEX_COUNTER_FALLBACK_TOTAL);
       expect(fallbacks).toHaveLength(1);
@@ -5121,7 +5121,7 @@ describe("sandbox adapter execution targets", () => {
       command: readonly string[];
     }): Promise<CommandManagedDuplexChannel> => {
       const joined = openInput.command.join(" ");
-      const nonce = /PAPERCLIP_BRIDGE_NONCE='([^']*)'/.exec(joined)?.[1] ?? "";
+      const nonce = /THINKINGMACH_BRIDGE_NONCE='([^']*)'/.exec(joined)?.[1] ?? "";
       let dataListener: ((chunk: Uint8Array) => void) | null = null;
       const channel: CommandManagedDuplexChannel = {
         write: (data: Uint8Array) => {
@@ -5159,7 +5159,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-no-early-write",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5174,7 +5174,7 @@ describe("sandbox adapter execution targets", () => {
       // The preface never arrived, so the open fell back to the file bridge —
       // and across the whole open attempt, including the wait after READY,
       // the host wrote zero bytes to the channel.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("queue_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("queue_v1");
       expect(hostWrites).toHaveLength(0);
     } finally {
       await bridge?.stop();
@@ -5212,7 +5212,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-invalid-ready-bytes",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5226,7 +5226,7 @@ describe("sandbox adapter execution targets", () => {
     });
     try {
       // The invalid line was skipped as noise, and READY still passed.
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       const logDump = logLines.join("");
       expect(logDump).not.toContain(INVALID_LINE_SENTINEL);
     } finally {
@@ -5261,7 +5261,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-orderly-close",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5272,7 +5272,7 @@ describe("sandbox adapter execution targets", () => {
       duplexObservabilityRecorder: recorder,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       // The agent turn completes cleanly before the channel ends.
       expect(bridge?.settleRunDisposition?.()).toEqual({ failed: false, lossReason: null });
       emitExit!();
@@ -5316,7 +5316,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-safe-retry",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5329,7 +5329,7 @@ describe("sandbox adapter execution targets", () => {
       maxBodyBytes: 1,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",
@@ -5372,7 +5372,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-unsafe-indeterminate",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5383,7 +5383,7 @@ describe("sandbox adapter execution targets", () => {
       maxBodyBytes: 1,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "POST",
@@ -5448,7 +5448,7 @@ describe("sandbox adapter execution targets", () => {
       effectiveCapabilities: duplexCapabilities(true),
     };
 
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-abort-forward",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5461,7 +5461,7 @@ describe("sandbox adapter execution targets", () => {
       forwardTimeoutMs: 60_000,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const clientStream = sessionRef.current!.request({
         ":method": "GET",
@@ -5509,7 +5509,7 @@ describe("sandbox adapter execution targets", () => {
       runner,
       effectiveCapabilities: duplexCapabilities(true),
     };
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-pty-replay",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5519,7 +5519,7 @@ describe("sandbox adapter execution targets", () => {
       enableSandboxDuplexBridge: true,
       duplexReadinessTimeoutMs: 2_000,
     });
-    const mode = bridge?.env.PAPERCLIP_API_BRIDGE_MODE;
+    const mode = bridge?.env.THINKINGMACH_API_BRIDGE_MODE;
     await bridge?.stop();
     await api.close();
     return { mode, control };
@@ -5532,7 +5532,7 @@ describe("sandbox adapter execution targets", () => {
     const { mode } = await runReadinessReplay((ctx) => {
       ctx.emitRaw(
         "daytona@212487a7f3c9:~$ exec 2>'/tmp/paperclip-duplex-x.log'; stty raw -echo; " +
-          "exec 'bash' '-c' 'exec env PAPERCLIP_BRIDGE_NONCE=" + ctx.nonce + " node gateway.mjs'\r\n",
+          "exec 'bash' '-c' 'exec env THINKINGMACH_BRIDGE_NONCE=" + ctx.nonce + " node gateway.mjs'\r\n",
       );
       ctx.emitRaw('{"version":2,"type":"ready","nonce":"' + ctx.nonce + '"}\n');
       ctx.connectHttp2();
@@ -5652,7 +5652,7 @@ describe("sandbox adapter execution targets", () => {
       runner,
       effectiveCapabilities: duplexCapabilities(true),
     };
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-preface-offset",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5662,7 +5662,7 @@ describe("sandbox adapter execution targets", () => {
       enableSandboxDuplexBridge: true,
     });
     try {
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",
@@ -5707,7 +5707,7 @@ describe("sandbox adapter execution targets", () => {
       runner,
       effectiveCapabilities: duplexCapabilities(true),
     };
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: "run-preface-lookalike",
       target,
       runtimeRootDir: path.join(remoteCwd, ".paperclip-runtime", "codex"),
@@ -5719,7 +5719,7 @@ describe("sandbox adapter execution targets", () => {
     try {
       expect(bridge).not.toBeNull();
       expect(control.openCount).toBe(1);
-      expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe("http2_v1");
+      expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe("http2_v1");
       await waitForCondition(() => sessionRef.current !== null, "the http2 client session to open", 4000);
       const response = await http2TestRequest(sessionRef.current!, {
         method: "GET",

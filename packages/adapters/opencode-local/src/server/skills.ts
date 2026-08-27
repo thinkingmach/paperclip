@@ -5,14 +5,14 @@ import { fileURLToPath } from "node:url";
 import type {
   AdapterSkillContext,
   AdapterSkillSnapshot,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   buildPersistentSkillSnapshot,
-  ensurePaperclipSkillSymlink,
-  readPaperclipRuntimeSkillEntries,
+  ensureThinkingMachSkillSymlink,
+  readThinkingMachRuntimeSkillEntries,
   readInstalledSkillTargets,
-  resolveLegacyPaperclipDesiredSkillNames,
-} from "@paperclipai/adapter-utils/server-utils";
+  resolveLegacyThinkingMachDesiredSkillNames,
+} from "@thinkingmach/adapter-utils/server-utils";
 
 const __moduleDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -31,8 +31,8 @@ export function resolveOpenCodeSkillsHome(config: Record<string, unknown>) {
 }
 
 async function buildOpenCodeSkillSnapshot(config: Record<string, unknown>): Promise<AdapterSkillSnapshot> {
-  const availableEntries = await readPaperclipRuntimeSkillEntries(config, __moduleDir);
-  const desiredSkills = resolveLegacyPaperclipDesiredSkillNames(config, availableEntries);
+  const availableEntries = await readThinkingMachRuntimeSkillEntries(config, __moduleDir);
+  const desiredSkills = resolveLegacyThinkingMachDesiredSkillNames(config, availableEntries);
   const skillsHome = resolveOpenCodeSkillsHome(config);
   const installed = await readInstalledSkillTargets(skillsHome);
   return buildPersistentSkillSnapshot({
@@ -45,7 +45,7 @@ async function buildOpenCodeSkillSnapshot(config: Record<string, unknown>): Prom
     installedDetail: "Installed in the shared Claude/OpenCode skills home.",
     missingDetail: "Configured but not currently linked into the shared Claude/OpenCode skills home.",
     externalConflictDetail: "Skill name is occupied by an external installation in the shared skills home.",
-    externalDetail: "Installed outside Paperclip management in the shared skills home.",
+    externalDetail: "Installed outside ThinkingMach management in the shared skills home.",
     warnings: [
       "OpenCode currently uses the shared Claude skills home (~/.claude/skills).",
     ],
@@ -60,9 +60,9 @@ export async function syncOpenCodeSkills(
   ctx: AdapterSkillContext,
   desiredSkills: string[],
 ): Promise<AdapterSkillSnapshot> {
-  const availableEntries = await readPaperclipRuntimeSkillEntries(ctx.config, __moduleDir);
+  const availableEntries = await readThinkingMachRuntimeSkillEntries(ctx.config, __moduleDir);
   const desiredSet = new Set([
-    ...resolveLegacyPaperclipDesiredSkillNames({}, availableEntries),
+    ...resolveLegacyThinkingMachDesiredSkillNames({}, availableEntries),
     ...desiredSkills,
   ]);
   const skillsHome = resolveOpenCodeSkillsHome(ctx.config);
@@ -73,7 +73,7 @@ export async function syncOpenCodeSkills(
   for (const available of availableEntries) {
     if (!desiredSet.has(available.key)) continue;
     const target = path.join(skillsHome, available.runtimeName);
-    await ensurePaperclipSkillSymlink(available.source, target);
+    await ensureThinkingMachSkillSymlink(available.source, target);
   }
 
   for (const [name, installedEntry] of installed.entries()) {
@@ -91,5 +91,5 @@ export function resolveOpenCodeDesiredSkillNames(
   config: Record<string, unknown>,
   availableEntries: Array<{ key: string }>,
 ) {
-  return resolveLegacyPaperclipDesiredSkillNames(config, availableEntries);
+  return resolveLegacyThinkingMachDesiredSkillNames(config, availableEntries);
 }

@@ -1,15 +1,15 @@
 import { and, desc, eq, gte, ilike, inArray, lt, or, sql, type SQL } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   activityLog,
   agents,
   authUsers,
   toolAccessAuditEvents,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   ToolConnectionLifecycleEvent,
   ToolConnectionLifecycleEventType,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 /** Activity-log actions rendered as connection lifecycle rows. */
 export const CONNECTION_LIFECYCLE_ACTIONS = [

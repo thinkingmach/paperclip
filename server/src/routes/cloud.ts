@@ -38,9 +38,9 @@ export function cloudRoutes(opts: {
       });
     }
 
-    const tenantToken = runtimeEnv.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN?.trim();
+    const tenantToken = runtimeEnv.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN?.trim();
     if (!context.cloudOrigin || !context.stackId || !tenantToken) {
-      throw new HttpError(503, "Paperclip Cloud portfolio is not configured", {
+      throw new HttpError(503, "ThinkingMach Cloud portfolio is not configured", {
         code: "cloud_portfolio_not_configured",
       });
     }
@@ -62,7 +62,7 @@ export function cloudRoutes(opts: {
     try {
       portfolioUrl = new URL(CLOUD_PORTFOLIO_PATH, context.cloudOrigin);
     } catch {
-      throw new HttpError(503, "Paperclip Cloud portfolio is not configured", {
+      throw new HttpError(503, "ThinkingMach Cloud portfolio is not configured", {
         code: "cloud_portfolio_not_configured",
       });
     }
@@ -81,9 +81,9 @@ export function cloudRoutes(opts: {
       if (!upstream.ok) {
         logger.warn(
           { status: upstream.status, stackId: context.stackId },
-          "Paperclip Cloud portfolio request failed",
+          "ThinkingMach Cloud portfolio request failed",
         );
-        throw new HttpError(502, "Paperclip Cloud portfolio request failed", {
+        throw new HttpError(502, "ThinkingMach Cloud portfolio request failed", {
           code: "cloud_portfolio_upstream_error",
         });
       }
@@ -92,7 +92,7 @@ export function cloudRoutes(opts: {
       try {
         payload = await upstream.json();
       } catch {
-        throw new HttpError(502, "Paperclip Cloud portfolio returned invalid JSON", {
+        throw new HttpError(502, "ThinkingMach Cloud portfolio returned invalid JSON", {
           code: "cloud_portfolio_invalid_response",
         });
       }
@@ -106,9 +106,9 @@ export function cloudRoutes(opts: {
       if (error instanceof HttpError) throw error;
       logger.warn(
         { err: error, stackId: context.stackId },
-        "Paperclip Cloud portfolio request failed",
+        "ThinkingMach Cloud portfolio request failed",
       );
-      throw new HttpError(502, "Paperclip Cloud portfolio request failed", {
+      throw new HttpError(502, "ThinkingMach Cloud portfolio request failed", {
         code: "cloud_portfolio_upstream_error",
       });
     }

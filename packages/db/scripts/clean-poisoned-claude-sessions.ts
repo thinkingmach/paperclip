@@ -18,8 +18,8 @@
  *     [--claude-config-dir ~/.claude] \
  *     [--dry-run] [--json]
  *
- * Or in a Paperclip checkout shell:
- *   pnpm --filter @paperclipai/db exec tsx scripts/clean-poisoned-claude-sessions.ts --dry-run
+ * Or in a ThinkingMach checkout shell:
+ *   pnpm --filter @thinkingmach/db exec tsx scripts/clean-poisoned-claude-sessions.ts --dry-run
  *
  * Exits 0 on success even when nothing was healed. Idempotent.
  */
@@ -194,7 +194,7 @@ const USAGE = `Usage:
 
 Flags:
   --config <path>            Path to paperclip config.json (defaults to
-                             $PAPERCLIP_HOME/instances/default/config.json or
+                             $THINKINGMACH_HOME/instances/default/config.json or
                              the standard locations).
   --database-url <url>       Override DB connection string entirely.
   --claude-config-dir <path> Override Claude CLI config dir (default:
@@ -226,8 +226,8 @@ function readDatabaseUrlFromConfig(configPath: string): string {
 function defaultConfigPath(): string | null {
   const candidates: string[] = [];
   const home = os.homedir();
-  if (process.env.PAPERCLIP_HOME) {
-    candidates.push(path.join(process.env.PAPERCLIP_HOME, "config.json"));
+  if (process.env.THINKINGMACH_HOME) {
+    candidates.push(path.join(process.env.THINKINGMACH_HOME, "config.json"));
   }
   candidates.push(path.join(home, ".paperclip", "instances", "default", "config.json"));
   for (const candidate of candidates) {

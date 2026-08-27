@@ -19,7 +19,7 @@ import { companies } from "./companies.js";
 import { heartbeatRuns } from "./heartbeat_runs.js";
 import { projectWorkspaces } from "./project_workspaces.js";
 import { executionWorkspaces } from "./execution_workspaces.js";
-import type { IssueReviewPolicy, IssueUnblockDescriptor, SourceTrustMetadata } from "@paperclipai/shared";
+import type { IssueReviewPolicy, IssueUnblockDescriptor, SourceTrustMetadata } from "@thinkingmach/shared";
 
 export const issues = pgTable(
   "issues",

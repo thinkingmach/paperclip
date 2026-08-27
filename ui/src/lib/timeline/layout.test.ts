@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { WorkTimelineResult } from "@paperclipai/shared";
+import type { WorkTimelineResult } from "@thinkingmach/shared";
 import { chooseTickStepMs, computeLayout, issueColor, shortLabel, type LayoutOptions } from "./layout";
 
 const DAY = "2026-07-02";

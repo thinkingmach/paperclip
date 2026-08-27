@@ -167,8 +167,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=sha
           labels: |
-            io.github.paperclipai.schema.last-migration=${{ steps.schema.outputs.last }}
-            io.github.paperclipai.schema.migration-count=${{ steps.schema.outputs.count }}
+            io.github.thinkingmach.schema.last-migration=${{ steps.schema.outputs.last }}
+            io.github.thinkingmach.schema.migration-count=${{ steps.schema.outputs.count }}
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -179,8 +179,8 @@ jobs:
           # target the default would silently become that stage.
           target: production
           build-args: |
-            PAPERCLIP_BUILD_VERSION=${{ steps.build-version.outputs.version }}
-            PAPERCLIP_BUILD_COMMIT=${{ github.sha }}
+            THINKINGMACH_BUILD_VERSION=${{ steps.build-version.outputs.version }}
+            THINKINGMACH_BUILD_COMMIT=${{ github.sha }}
             CLI_TOOLS_CACHE_EPOCH=${{ steps.tools-epoch.outputs.epoch }}
           platforms: linux/amd64,linux/arm64
           push: true
@@ -363,8 +363,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=sha
           labels: |
-            io.github.paperclipai.schema.last-migration=${{ steps.schema.outputs.last }}
-            io.github.paperclipai.schema.migration-count=${{ steps.schema.outputs.count }}
+            io.github.thinkingmach.schema.last-migration=${{ steps.schema.outputs.last }}
+            io.github.thinkingmach.schema.migration-count=${{ steps.schema.outputs.count }}
 
       - name: Build and push (cloud)
         uses: docker/build-push-action@v7
@@ -379,8 +379,8 @@ jobs:
           build-args: |
             CLOUD_BUNDLED_PLUGINS=daytona
             CLOUD_BUNDLED_SERVER_DEPS=@sentry/node
-            PAPERCLIP_BUILD_VERSION=${{ steps.build-version.outputs.version }}
-            PAPERCLIP_BUILD_COMMIT=${{ github.sha }}
+            THINKINGMACH_BUILD_VERSION=${{ steps.build-version.outputs.version }}
+            THINKINGMACH_BUILD_COMMIT=${{ github.sha }}
             CLI_TOOLS_CACHE_EPOCH=${{ steps.tools-epoch.outputs.epoch }}
           # amd64 only, unlike the self-hosted image above: the cloud variant
           # is consumed exclusively by managed-deployment hosts, which run

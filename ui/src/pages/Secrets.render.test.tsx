@@ -12,7 +12,7 @@ import type {
   SecretProviderDescriptor,
   UserSecretCoverageSummary,
   UserSecretDefinition,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ProviderVaultsTab, Secrets } from "./Secrets";
 import { ApiError } from "../api/client";
@@ -211,7 +211,7 @@ function makeDiscoveryPreview(
     provider: "aws_secrets_manager",
     nextToken: null,
     sampledSecretCount: 2,
-    skippedForeignPaperclipSampleCount: 0,
+    skippedForeignThinkingMachSampleCount: 0,
     warnings: [],
     candidates: [
       {
@@ -242,7 +242,7 @@ function makeDiscoveryPreview(
           hasKmsKey: true,
           sampleCount: 2,
           paperclipManagedSampleCount: 0,
-          skippedForeignPaperclipSampleCount: 0,
+          skippedForeignThinkingMachSampleCount: 0,
         },
         warnings: [],
       },
@@ -510,7 +510,7 @@ describe("Secrets page layout", () => {
     });
   });
 
-  it("warns that removing a provider vault only removes Paperclip config", async () => {
+  it("warns that removing a provider vault only removes ThinkingMach config", async () => {
     mockSecretsApi.removeProviderConfig.mockResolvedValueOnce(providerConfigs[1]);
     const root = createRoot(container);
     const queryClient = new QueryClient({
@@ -548,12 +548,12 @@ describe("Secrets page layout", () => {
     await flushReact();
 
     expect(document.body.textContent).toContain("Remove provider vault");
-    expect(document.body.textContent).toContain("from Paperclip only");
+    expect(document.body.textContent).toContain("from ThinkingMach only");
     expect(document.body.textContent).toContain("does not delete");
     expect(document.body.textContent).toContain("AWS Secrets Manager");
 
     const confirmButton = [...document.querySelectorAll("button")].find(
-      (button) => button.textContent?.includes("Remove from Paperclip"),
+      (button) => button.textContent?.includes("Remove from ThinkingMach"),
     ) as HTMLButtonElement | undefined;
     await act(async () => {
       confirmButton?.click();
@@ -1030,7 +1030,7 @@ describe("Secrets page layout", () => {
 
   it("explains AWS managed secret creation failures with actionable safe details", async () => {
     const rawProviderMessage =
-      "AccessDeniedException: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized";
+      "AccessDeniedException: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized";
     mockSecretsApi.create.mockRejectedValueOnce(
       new ApiError("AWS Secrets Manager denied the request. Check IAM permissions for this provider vault.", 403, {
         details: {
@@ -1039,12 +1039,12 @@ describe("Secrets page layout", () => {
           operation: "secret.create",
           providerConfigId: "vault-aws",
           region: "us-east-1",
-          credentialPath: "Paperclip server runtime/provider credential path",
+          credentialPath: "ThinkingMach server runtime/provider credential path",
           requiredCapability: "secretsmanager:CreateSecret",
           actionableMessage:
             "AWS managed secret creation needs secretsmanager:CreateSecret in the selected region for this provider vault.",
           safeAlternative:
-            "If the secret already exists in AWS, link it as an external reference instead of creating a Paperclip-managed value.",
+            "If the secret already exists in AWS, link it as an external reference instead of creating a ThinkingMach-managed value.",
         },
       }),
     );
@@ -1233,7 +1233,7 @@ describe("Secrets page layout", () => {
 
   it("shows AWS discovery errors without replacing manual vault form values", async () => {
     const rawProviderMessage =
-      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized";
+      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized";
     mockSecretsApi.providerConfigDiscoveryPreview.mockRejectedValueOnce(
       new ApiError("AWS Secrets Manager denied the request. Check IAM permissions for this provider vault.", 403, {
         details: {
@@ -1243,10 +1243,10 @@ describe("Secrets page layout", () => {
           providerConfigId: "discovery-preview",
           providerVaultContext: "draft_config",
           region: "us-west-2",
-          credentialPath: "Paperclip server runtime/provider credential path",
+          credentialPath: "ThinkingMach server runtime/provider credential path",
           requiredCapability: "secretsmanager:ListSecrets",
           actionableMessage:
-            "AWS discovery preview needs secretsmanager:ListSecrets in the selected region for the Paperclip server runtime/provider credential path.",
+            "AWS discovery preview needs secretsmanager:ListSecrets in the selected region for the ThinkingMach server runtime/provider credential path.",
           safeAlternative:
             "If the operator already knows the exact AWS Secrets Manager ARN, paste/link that ARN instead of using discovery. Exact-resource DescribeSecret and runtime read permissions are still required.",
         },
@@ -1291,7 +1291,7 @@ describe("Secrets page layout", () => {
     expect(errorBanner).not.toBeNull();
     expect(errorBanner?.textContent).toContain("AWS discovery needs ListSecrets permission");
     expect(errorBanner?.textContent).toContain("secretsmanager:ListSecrets");
-    expect(errorBanner?.textContent).toContain("Paperclip server runtime/provider credential path");
+    expect(errorBanner?.textContent).toContain("ThinkingMach server runtime/provider credential path");
     expect(errorBanner?.textContent).toContain("paste/link that ARN");
     expect(errorBanner?.textContent).toContain("DescribeSecret");
     expect(errorBanner?.textContent).toContain("us-west-2");

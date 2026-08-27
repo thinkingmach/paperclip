@@ -16,7 +16,7 @@ import {
   secretAccessEvents,
   userSecretDeclarations,
   userSecretDefinitions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { ServerAdapterModule } from "../adapters/index.js";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 
@@ -95,8 +95,8 @@ vi.mock("../services/instance-settings.js", () => ({
   instanceSettingsService: () => mockInstanceSettingsService,
 }));
 
-vi.mock("@paperclipai/adapter-claude-local/server", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@paperclipai/adapter-claude-local/server")>();
+vi.mock("@thinkingmach/adapter-claude-local/server", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@thinkingmach/adapter-claude-local/server")>();
   return {
     ...actual,
     runClaudeLogin: mockRunClaudeLogin,
@@ -133,12 +133,12 @@ const externalAdapter: ServerAdapterModule = {
 describeEmbeddedPostgres("agents adapter-config user-secret resolution routes", () => {
   let stopDb: (() => Promise<void>) | null = null;
   let db!: ReturnType<typeof createDb>;
-  const previousKeyFile = process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+  const previousKeyFile = process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
   const secretsTmpDir = path.join(os.tmpdir(), `paperclip-adapter-user-secret-${randomUUID()}`);
 
   beforeAll(async () => {
     mkdirSync(secretsTmpDir, { recursive: true });
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
     const started = await startEmbeddedPostgresTestDatabase("adapter-user-secret-routes");
     stopDb = started.cleanup;
     db = createDb(started.connectionString);
@@ -197,8 +197,8 @@ describeEmbeddedPostgres("agents adapter-config user-secret resolution routes", 
     const { unregisterServerAdapter } = await import("../adapters/index.js");
     unregisterServerAdapter("external_test");
     if (stopDb) await stopDb();
-    if (previousKeyFile === undefined) delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
-    else process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = previousKeyFile;
+    if (previousKeyFile === undefined) delete process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
+    else process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = previousKeyFile;
     rmSync(secretsTmpDir, { recursive: true, force: true });
   });
 

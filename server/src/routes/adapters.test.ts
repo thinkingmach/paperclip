@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AdapterLoginCapability, ServerAdapterModule } from "@paperclipai/adapter-utils";
+import type { AdapterLoginCapability, ServerAdapterModule } from "@thinkingmach/adapter-utils";
 import { requireServerAdapter } from "../adapters/registry.js";
 import { buildAdapterCapabilities } from "./adapters.js";
 

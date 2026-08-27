@@ -308,10 +308,10 @@ describe("Codex app-server Codex driver", () => {
     });
   });
 
-  it("places Paperclip runtime instructions in Codex's system channel and enables only selected skill instructions", async () => {
+  it("places ThinkingMach runtime instructions in Codex's system channel and enables only selected skill instructions", async () => {
     const transport = new FakeCodexTransport();
     const baseInstructions = [
-      "You are running as a Paperclip agent.",
+      "You are running as a ThinkingMach agent.",
       "Follow the attached AGENTS.md instructions.",
       "Read-only instruction sibling root: /paperclip/context/instructions",
     ].join("\n\n");

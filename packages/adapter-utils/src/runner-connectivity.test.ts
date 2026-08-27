@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { AdapterExecutionTarget } from "./execution-target.js";
 import {
   buildDirectRunnerConnectUrl,
-  resolvePaperclipRunnerTransport,
+  resolveThinkingMachRunnerTransport,
   type RunnerIngressEndpoint,
 } from "./runner-connectivity.js";
 
@@ -33,7 +33,7 @@ function ingress(): RunnerIngressEndpoint {
 
 describe("paperclip runner transport routing", () => {
   it("keeps same-host runnerd on plaintext loopback", async () => {
-    const result = await resolvePaperclipRunnerTransport({
+    const result = await resolveThinkingMachRunnerTransport({
       target: { kind: "local" },
       runId: "00000000-0000-4000-8000-000000000001",
       localConnectUrl:
@@ -54,7 +54,7 @@ describe("paperclip runner transport routing", () => {
       effectiveCapabilities: capabilities,
       getRunnerIngressEndpoint,
     };
-    const result = await resolvePaperclipRunnerTransport({
+    const result = await resolveThinkingMachRunnerTransport({
       target,
       runId: "00000000-0000-4000-8000-000000000001",
       localConnectUrl: "ws://127.0.0.1/unused",
@@ -76,7 +76,7 @@ describe("paperclip runner transport routing", () => {
       getRunnerIngressEndpoint: vi.fn(async () => ingress()),
     };
 
-    const result = await resolvePaperclipRunnerTransport({
+    const result = await resolveThinkingMachRunnerTransport({
       target,
       runId: "00000000-0000-4000-8000-000000000001",
       localConnectUrl: "ws://127.0.0.1/unused",
@@ -98,7 +98,7 @@ describe("paperclip runner transport routing", () => {
       getRunnerIngressEndpoint,
     };
     await expect(
-      resolvePaperclipRunnerTransport({
+      resolveThinkingMachRunnerTransport({
         target,
         runId: "00000000-0000-4000-8000-000000000001",
         localConnectUrl: "ws://127.0.0.1/unused",
@@ -111,9 +111,9 @@ describe("paperclip runner transport routing", () => {
       target,
       runId: "00000000-0000-4000-8000-000000000002",
       localConnectUrl: "ws://127.0.0.1/unused",
-    } as Parameters<typeof resolvePaperclipRunnerTransport>[0];
+    } as Parameters<typeof resolveThinkingMachRunnerTransport>[0];
     await expect(
-      resolvePaperclipRunnerTransport(missingAuthorization),
+      resolveThinkingMachRunnerTransport(missingAuthorization),
     ).rejects.toMatchObject({ code: "runner_ingress_unavailable" });
     expect(getRunnerIngressEndpoint).not.toHaveBeenCalled();
   });
@@ -134,7 +134,7 @@ describe("paperclip runner transport routing", () => {
         strictHostKeyChecking: true,
       },
     };
-    const result = await resolvePaperclipRunnerTransport({
+    const result = await resolveThinkingMachRunnerTransport({
       target,
       runId: "00000000-0000-4000-8000-000000000001",
       localConnectUrl: "ws://127.0.0.1/unused",
@@ -163,7 +163,7 @@ describe("paperclip runner transport routing", () => {
       },
     };
     await expect(
-      resolvePaperclipRunnerTransport({
+      resolveThinkingMachRunnerTransport({
         target,
         runId: "00000000-0000-4000-8000-000000000001",
         localConnectUrl: "ws://127.0.0.1/unused",
@@ -186,7 +186,7 @@ describe("paperclip runner transport routing", () => {
       },
     };
     await expect(
-      resolvePaperclipRunnerTransport({
+      resolveThinkingMachRunnerTransport({
         target,
         runId: "00000000-0000-4000-8000-000000000001",
         localConnectUrl: "ws://127.0.0.1/unused",

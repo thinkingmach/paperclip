@@ -49,9 +49,9 @@ Reconciled op-set relationship (pinned by the drift test):
 - Neither `src/tools/` nor `src/semantic-tools/` is canonical; both are
   projections of `canonical-operations.ts`.
 
-## Real-binding status (before real Paperclip service binding)
+## Real-binding status (before real ThinkingMach service binding)
 
-No operation is bound to a real Paperclip service yet; the deterministic mock is
+No operation is bound to a real ThinkingMach service yet; the deterministic mock is
 the only backend (real-service binding is deliverable G). Each operation's
 current executability is classified as:
 

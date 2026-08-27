@@ -19,7 +19,7 @@ import {
   principalPermissionGrants,
   routines,
   routineTriggers,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -115,7 +115,7 @@ describeEmbeddedPostgres("companyService", () => {
       .from(companySkills)
       .where(and(
         eq(companySkills.companyId, created.id),
-        eq(companySkills.key, "paperclipai/bundled/paperclip-operations/reflection-coach"),
+        eq(companySkills.key, "thinkingmach/bundled/paperclip-operations/reflection-coach"),
       ));
     expect(skill).toMatchObject({
       slug: "reflection-coach",
@@ -893,11 +893,11 @@ describeEmbeddedPostgres("companyService", () => {
     beforeEach(() => {
       // The tenant server token is the managed-instance signal the prefix
       // re-derivation gates on.
-      process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
+      process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
     });
 
     afterEach(() => {
-      delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
+      delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
     });
 
     async function seedCompanyWithWork(name: string, issuePrefix: string) {
@@ -1090,7 +1090,7 @@ describeEmbeddedPostgres("companyService", () => {
     });
 
     it("never touches the prefix on a self-hosted instance", async () => {
-      delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
+      delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
       const companyId = await seedCompanyWithWork("Acme Robotics", "ACM");
 
       const updated = await companyService(db).update(

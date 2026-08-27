@@ -4,7 +4,7 @@ import { act, forwardRef, useImperativeHandle, type ForwardedRef } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { IssueDocument } from "@paperclipai/shared";
+import type { IssueDocument } from "@thinkingmach/shared";
 import type {
   IssueThreadInteraction,
   RequestConfirmationInteraction,

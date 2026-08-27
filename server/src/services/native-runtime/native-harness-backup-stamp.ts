@@ -7,7 +7,7 @@ import {
   readlinkSync,
 } from "node:fs";
 import { resolve } from "node:path";
-import { resolvePaperclipInstanceRoot } from "../../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../../home-paths.js";
 
 export interface NativeHarnessBackupStamp {
   schema: "paperclip.native-harness-backup-stamp.v1";
@@ -19,8 +19,8 @@ export interface NativeHarnessBackupStamp {
 
 function stateRoot(normalizedSessionId: string): string {
   return resolve(
-    process.env.PAPERCLIP_RUNNER_STATE_DIR
-      ?? resolve(resolvePaperclipInstanceRoot(), "runtime", "paperclip-runner", "durable-sessions"),
+    process.env.THINKINGMACH_RUNNER_STATE_DIR
+      ?? resolve(resolveThinkingMachInstanceRoot(), "runtime", "paperclip-runner", "durable-sessions"),
     createHash("sha256").update(normalizedSessionId).digest("hex"),
   );
 }

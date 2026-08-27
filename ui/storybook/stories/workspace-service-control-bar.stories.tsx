@@ -85,7 +85,7 @@ export const LongUrl: Story = {
   args: {
     services: [
       entry({
-        url: "https://pap-14233-execution-workspace-service-start-stop.preview.paperclip.ing/deeply/nested/path",
+        url: "https://pap-14233-execution-workspace-service-start-stop.preview.thinkingmach.com/deeply/nested/path",
       }),
     ],
   },

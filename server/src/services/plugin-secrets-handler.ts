@@ -4,10 +4,10 @@
  */
 
 import { and, eq } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { companySecretBindings } from "@paperclipai/db";
-import type { EnvSecretRefBinding, SecretProjectionClass, SecretVersionSelector } from "@paperclipai/shared";
-import { envBindingSecretRefSchema } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { companySecretBindings } from "@thinkingmach/db";
+import type { EnvSecretRefBinding, SecretProjectionClass, SecretVersionSelector } from "@thinkingmach/shared";
+import { envBindingSecretRefSchema } from "@thinkingmach/shared";
 import {
   collectSecretRefPaths,
   isUuidSecretRef,

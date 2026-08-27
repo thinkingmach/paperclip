@@ -5,7 +5,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Goal } from "@paperclipai/shared";
+import type { Goal } from "@thinkingmach/shared";
 import { useCompanyMission } from "./useCompanyMission";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

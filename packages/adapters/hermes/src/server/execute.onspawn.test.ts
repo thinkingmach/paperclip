@@ -5,7 +5,7 @@
  * reaper can track live child processes by PID, preventing false-positive
  * reaps on runs whose updatedAt becomes stale.
  *
- * @see https://github.com/paperclipai/paperclip/issues/8723
+ * @see https://github.com/thinkingmach/paperclip/issues/8723
  */
 
 import { describe, expect, it, vi, beforeEach } from "vitest";
@@ -13,8 +13,8 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 // Mock the adapter-utils server-utils module that execute.ts imports from.
 // We intercept runChildProcess so we can inspect its opts without spawning
 // a real child process.
-vi.mock("@paperclipai/adapter-utils/server-utils", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@paperclipai/adapter-utils/server-utils")>();
+vi.mock("@thinkingmach/adapter-utils/server-utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@thinkingmach/adapter-utils/server-utils")>();
   return {
     ...actual,
     runChildProcess: vi.fn(async () => ({
@@ -39,7 +39,7 @@ vi.mock("node:fs/promises", () => ({
 }));
 
 import { execute } from "./execute.js";
-import * as serverUtils from "@paperclipai/adapter-utils/server-utils";
+import * as serverUtils from "@thinkingmach/adapter-utils/server-utils";
 
 function makeCtx(overrides: Record<string, unknown> = {}) {
   const onSpawn = vi.fn(async () => undefined);
@@ -68,7 +68,7 @@ function makeCtx(overrides: Record<string, unknown> = {}) {
       context: {
         issueId: "issue-1",
         wakeReason: "manual",
-        paperclipWake: null,
+        thinkingmachWake: null,
       },
       onLog: vi.fn(async () => undefined),
       onMeta: vi.fn(async () => undefined),
@@ -187,9 +187,9 @@ describe("hermes-local adapter onSpawn forwarding", () => {
     expect(result.errorMessage).toBeUndefined();
   });
 
-  it("does not inherit PAPERCLIP_API_KEY without a harness token", async () => {
-    const previousApiKey = process.env.PAPERCLIP_API_KEY;
-    process.env.PAPERCLIP_API_KEY = "parent-process-key";
+  it("does not inherit THINKINGMACH_API_KEY without a harness token", async () => {
+    const previousApiKey = process.env.THINKINGMACH_API_KEY;
+    process.env.THINKINGMACH_API_KEY = "parent-process-key";
 
     try {
       const { ctx } = makeCtx();
@@ -198,10 +198,10 @@ describe("hermes-local adapter onSpawn forwarding", () => {
       const mocked = vi.mocked(serverUtils.runChildProcess);
       const lastCall = mocked.mock.calls[mocked.mock.calls.length - 1];
       const opts = lastCall[3] as { env: Record<string, string> };
-      expect(opts.env.PAPERCLIP_API_KEY).toBeUndefined();
+      expect(opts.env.THINKINGMACH_API_KEY).toBeUndefined();
     } finally {
-      if (previousApiKey === undefined) delete process.env.PAPERCLIP_API_KEY;
-      else process.env.PAPERCLIP_API_KEY = previousApiKey;
+      if (previousApiKey === undefined) delete process.env.THINKINGMACH_API_KEY;
+      else process.env.THINKINGMACH_API_KEY = previousApiKey;
     }
   });
 });

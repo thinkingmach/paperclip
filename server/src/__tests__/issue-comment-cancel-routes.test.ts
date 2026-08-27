@@ -85,7 +85,7 @@ const mockExternalObjectService = vi.hoisted(() => ({
 }));
 
 function registerModuleMocks() {
-  vi.doMock("@paperclipai/shared/telemetry", () => ({
+  vi.doMock("@thinkingmach/shared/telemetry", () => ({
     trackAgentTaskCompleted: vi.fn(),
     trackErrorHandlerCrash: vi.fn(),
   }));
@@ -223,7 +223,7 @@ function makeComment(overrides: Record<string, unknown> = {}) {
 describe.sequential("issue comment cancel routes", () => {
   beforeEach(() => {
     vi.resetModules();
-    vi.doUnmock("@paperclipai/shared/telemetry");
+    vi.doUnmock("@thinkingmach/shared/telemetry");
     vi.doUnmock("../telemetry.js");
     vi.doUnmock("../services/access.js");
     vi.doUnmock("../services/activity-log.js");
@@ -448,7 +448,7 @@ describe.sequential("issue comment cancel routes", () => {
       status: "succeeded",
       payload: {
         issueId: "11111111-1111-4111-8111-111111111111",
-        _paperclipWakeContext: {
+        _thinkingmachWakeContext: {
           wakeCommentIds: ["comment-1"],
         },
       },

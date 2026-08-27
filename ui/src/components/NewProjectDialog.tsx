@@ -19,15 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Maximize2,
-  Minimize2,
-  Target,
-  Calendar,
-  Plus,
-  X,
-  HelpCircle,
-} from "lucide-react";
+import { Maximize2, Minimize2, Target, Calendar, Plus, X, HelpCircle,  } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,

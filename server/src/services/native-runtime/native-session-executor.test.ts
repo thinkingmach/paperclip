@@ -16,11 +16,11 @@ import {
   issues,
   nativeRunFinalizations,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   NativeExecutionInputV1,
   PrpEvent,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 import { createHash } from "node:crypto";
 import {
   createNativeHarnessBackupStamp,
@@ -108,11 +108,11 @@ vi.mock("../../vendor/paperclip-runner/index.js", async (importOriginal) => ({
   createNativeSessionBackend: state.createBackend,
   createRunnerdCodexTransport: state.createTransport,
   executeNativeSession: state.execute,
-  parsePaperclipQuestionSet: (value: unknown) => value,
+  parseThinkingMachQuestionSet: (value: unknown) => value,
 }));
 
 vi.mock("./paperclip-runner-tool-authority.js", () => ({
-  PaperclipRunnerToolAuthority: class {
+  ThinkingMachRunnerToolAuthority: class {
     readonly binding: Record<string, unknown>;
 
     constructor(_db: unknown, binding: Record<string, unknown>) {
@@ -135,7 +135,7 @@ vi.mock("../activity-log.js", () => ({
 }));
 
 vi.mock("./native-codex-runner.js", () => ({
-  resolvePaperclipRunnerBinary: state.resolveRunnerBinary,
+  resolveThinkingMachRunnerBinary: state.resolveRunnerBinary,
 }));
 
 import {
@@ -145,7 +145,7 @@ import {
   cancelNativeSession,
   createGovernedWaitEventObservation,
   createRunnerdBackend,
-  executePaperclipNativeSession,
+  executeThinkingMachNativeSession,
   getNativeSessionSteeringState,
   NativeSessionSteeringError,
   assertRemoteRunnerBuildMetadata,
@@ -708,8 +708,8 @@ describe("verified native harness backups", () => {
 
   it("verifies the lease stamp and all backup directory digests before replacement", async () => {
     const stateBase = await mkdtemp(join(tmpdir(), "paperclip-harness-stamp-"));
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     try {
       const sessionRoot = join(
         stateBase,
@@ -752,9 +752,9 @@ describe("verified native harness backups", () => {
       expect(verifyNativeHarnessBackupStamp(stamp, "sandbox-1")).toBe(false);
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -991,7 +991,7 @@ describe("remote runner build metadata", () => {
   const current = {
     schema: "paperclip-runner/runnerd-build-metadata/v1",
     binaryName: "paperclip-runnerd",
-    packageName: "@paperclipai/paperclip-runner",
+    packageName: "@thinkingmach/paperclip-runner",
     binaryContractVersion: 2,
     prpTransportModes: ["dial_ws_loopback", "dial_wss", "listen_ws"],
   };
@@ -1229,7 +1229,7 @@ describe("native provider bootstrap environment", () => {
           PATH: "/opt/homebrew/bin:/usr/bin",
           HOME: "/Users/runner",
           CODEX_HOME: "/Users/runner/.codex",
-          PAPERCLIP_INTERNAL_SECRET: "must-not-leak",
+          THINKINGMACH_INTERNAL_SECRET: "must-not-leak",
         },
       ),
     ).toEqual({
@@ -1262,14 +1262,14 @@ describe("native provider bootstrap environment", () => {
     expect(
       buildNativeProviderEnvironment(
         {
-          PAPERCLIP_WORKSPACE_CWD: "/untrusted/configured-workspace",
+          THINKINGMACH_WORKSPACE_CWD: "/untrusted/configured-workspace",
         },
         { HOME: "/Users/runner" },
         "/Users/runner/.paperclip/instances/default/workspaces/agent-1",
       ),
     ).toEqual({
       HOME: "/Users/runner",
-      PAPERCLIP_WORKSPACE_CWD:
+      THINKINGMACH_WORKSPACE_CWD:
         "/Users/runner/.paperclip/instances/default/workspaces/agent-1",
     });
   });
@@ -1779,7 +1779,7 @@ describe("native session cancellation", () => {
   });
 
   it("routes control-plane cancellation to the active normalized session and removes the handle", async () => {
-    const running = executePaperclipNativeSession({
+    const running = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -1809,7 +1809,7 @@ describe("native session cancellation", () => {
     state.cancel.mockImplementationOnce(() => {
       throw new Error("transport unavailable");
     });
-    const running = executePaperclipNativeSession({
+    const running = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -1835,7 +1835,7 @@ describe("native session cancellation", () => {
     state.cancel.mockImplementationOnce(() => ({
       cleanup: Promise.reject(new Error("provider cleanup failed")),
     }));
-    const running = executePaperclipNativeSession({
+    const running = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -1892,7 +1892,7 @@ describe("native session cancellation", () => {
 
   it("recovers a post-dispatch persistence failure without cancelling the provider twice", async () => {
     const persistence = cancellationDb({ failResultJsonUpdateAt: 2 });
-    const running = executePaperclipNativeSession({
+    const running = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -2006,7 +2006,7 @@ describe("native session execution lease fencing", () => {
     state.createTransport.mockClear();
 
     await expect(
-      executePaperclipNativeSession({
+      executeThinkingMachNativeSession({
         db: leaseDb(execution, {
           phase: "workspace_finalizing",
           resultId: "native-result-1",
@@ -2028,7 +2028,7 @@ describe("native session execution lease fencing", () => {
       state.createTransport.mockClear();
 
       await expect(
-        executePaperclipNativeSession({
+        executeThinkingMachNativeSession({
           db: leaseDb(
             execution,
             {},
@@ -2098,7 +2098,7 @@ describe("native runtime request resolution", () => {
   });
 
   it("revalidates lifecycle after provider reads and blocks stale dispatch", async () => {
-    const running = executePaperclipNativeSession({
+    const running = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -2127,7 +2127,7 @@ describe("native runtime request resolution", () => {
   });
 
   it("atomically joins duplicate responses and rejects a concurrent conflict", async () => {
-    const running = executePaperclipNativeSession({
+    const running = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -2184,7 +2184,7 @@ describe("native runtime request resolution", () => {
   });
 
   it("clears completed response reservations when the session tears down", async () => {
-    const firstSession = executePaperclipNativeSession({
+    const firstSession = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -2201,7 +2201,7 @@ describe("native runtime request resolution", () => {
     await firstSession;
 
     state.release = null;
-    const secondSession = executePaperclipNativeSession({
+    const secondSession = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -2253,7 +2253,7 @@ describe("native session same-turn steering", () => {
   });
 
   async function startActiveSession() {
-    const running = executePaperclipNativeSession({
+    const running = executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -2389,12 +2389,12 @@ describe("native warm session supervision", () => {
         return result;
       });
 
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(base),
       execution: base,
       runnerInstanceId: "runner",
     });
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(second),
       execution: second,
       runnerInstanceId: "runner",
@@ -2413,10 +2413,10 @@ describe("native warm session supervision", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-runnerd-warm-authority-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    const previousPaperclipHome = process.env.PAPERCLIP_HOME;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
-    process.env.PAPERCLIP_HOME = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    const previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
+    process.env.THINKINGMACH_HOME = stateBase;
     const firstClose = vi.fn(async () => undefined);
     const secondClose = vi.fn(async () => undefined);
     const firstSession = { close: firstClose };
@@ -2490,7 +2490,7 @@ describe("native warm session supervision", () => {
       });
 
     try {
-      await executePaperclipNativeSession({
+      await executeThinkingMachNativeSession({
         db: leaseDb(first),
         execution: first,
         runnerInstanceId: "runner-runnerd-warm",
@@ -2535,7 +2535,7 @@ describe("native warm session supervision", () => {
           }),
         }),
       } as unknown as Db;
-      await executePaperclipNativeSession({
+      await executeThinkingMachNativeSession({
         db: continuationDb,
         execution: second,
         runnerInstanceId: "runner-runnerd-warm",
@@ -2549,14 +2549,14 @@ describe("native warm session supervision", () => {
       });
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
-      if (previousPaperclipHome === undefined) {
-        delete process.env.PAPERCLIP_HOME;
+      if (previousThinkingMachHome === undefined) {
+        delete process.env.THINKINGMACH_HOME;
       } else {
-        process.env.PAPERCLIP_HOME = previousPaperclipHome;
+        process.env.THINKINGMACH_HOME = previousThinkingMachHome;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -2619,12 +2619,12 @@ describe("native warm session supervision", () => {
         return result;
       });
 
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(base),
       execution: base,
       runnerInstanceId: "runner-first",
     });
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(second),
       execution: second,
       runnerInstanceId: "runner-second",
@@ -2701,12 +2701,12 @@ describe("native warm session supervision", () => {
         return result;
       });
 
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(base),
       execution: base,
       runnerInstanceId: "runner",
     });
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(lowered),
       execution: lowered,
       runnerInstanceId: "runner",
@@ -2905,7 +2905,7 @@ describe("native process ownership", () => {
       onSpawn: options.onSpawn,
     }));
 
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(),
       execution,
       runnerInstanceId: "runner",
@@ -2977,7 +2977,7 @@ describe("native process ownership", () => {
         highestContiguousSourceSeq: 1,
       });
 
-      await executePaperclipNativeSession({
+      await executeThinkingMachNativeSession({
         db: leaseDb(providerExecution),
         execution: providerExecution,
         runnerInstanceId: "runner",
@@ -3000,7 +3000,7 @@ describe("native process ownership", () => {
     state.createBackend.mockClear();
 
     await expect(
-      executePaperclipNativeSession({
+      executeThinkingMachNativeSession({
         db: leaseDb(piExecution),
         execution: piExecution,
         runnerInstanceId: "runner",
@@ -3015,18 +3015,18 @@ describe("runnerd provider runtime wiring", () => {
   let previousStateDirectory: string | undefined;
 
   beforeEach(async () => {
-    previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
+    previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
     isolatedStateDirectory = await mkdtemp(
       join(tmpdir(), "paperclip-runnerd-wiring-"),
     );
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = isolatedStateDirectory;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = isolatedStateDirectory;
   });
 
   afterEach(async () => {
     if (previousStateDirectory === undefined) {
-      delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+      delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
     } else {
-      process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+      process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
     }
     await rm(isolatedStateDirectory, { recursive: true, force: true });
   });
@@ -3068,7 +3068,7 @@ describe("runnerd provider runtime wiring", () => {
         }),
     );
 
-    const active = executePaperclipNativeSession({
+    const active = executeThinkingMachNativeSession({
       db: leaseDb(first),
       execution: first,
       runnerInstanceId: "runner-runnerd-overlap",
@@ -3076,7 +3076,7 @@ describe("runnerd provider runtime wiring", () => {
     });
     await vi.waitFor(() => expect(release).toBeTypeOf("function"));
     await expect(
-      executePaperclipNativeSession({
+      executeThinkingMachNativeSession({
         db: leaseDb(second),
         execution: second,
         runnerInstanceId: "runner-runnerd-overlap",
@@ -3091,8 +3091,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-runner-binding-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const prior = {
       ...execution,
       binding: {
@@ -3172,7 +3172,7 @@ describe("runnerd provider runtime wiring", () => {
         }),
       } as unknown as Db;
 
-      await executePaperclipNativeSession({
+      await executeThinkingMachNativeSession({
         db: continuationDb,
         execution: continuation,
         runnerInstanceId: "runner-new-heartbeat",
@@ -3222,9 +3222,9 @@ describe("runnerd provider runtime wiring", () => {
       );
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3238,7 +3238,7 @@ describe("runnerd provider runtime wiring", () => {
       runnerInstanceId: "runner-local-workspace",
       runnerEnvironment: {
         HOME: "/home/runner",
-        PAPERCLIP_WORKSPACE_CWD: "/untrusted/configured-workspace",
+        THINKINGMACH_WORKSPACE_CWD: "/untrusted/configured-workspace",
       },
     });
 
@@ -3248,7 +3248,7 @@ describe("runnerd provider runtime wiring", () => {
     expect(state.createTransport).toHaveBeenCalledWith(
       expect.objectContaining({
         environment: expect.objectContaining({
-          PAPERCLIP_WORKSPACE_CWD: execution.workspace.cwd,
+          THINKINGMACH_WORKSPACE_CWD: execution.workspace.cwd,
         }),
       }),
     );
@@ -3258,8 +3258,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-legacy-runner-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const legacyExecution = {
       ...execution,
       binding: {
@@ -3339,9 +3339,9 @@ describe("runnerd provider runtime wiring", () => {
       );
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3351,8 +3351,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-company-session-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const legacyExecution = {
       ...execution,
       binding: {
@@ -3413,9 +3413,9 @@ describe("runnerd provider runtime wiring", () => {
       ).resolves.toBeUndefined();
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3425,8 +3425,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-prior-run-session-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const priorExecution = {
       ...execution,
       binding: {
@@ -3526,9 +3526,9 @@ describe("runnerd provider runtime wiring", () => {
       );
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3538,8 +3538,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-legacy-terminal-unsuspended-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const priorExecution = {
       ...execution,
       binding: {
@@ -3624,9 +3624,9 @@ describe("runnerd provider runtime wiring", () => {
       expect(state.createTransport).not.toHaveBeenCalled();
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3636,8 +3636,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-running-prior-run-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const priorExecution = {
       ...execution,
       binding: {
@@ -3719,9 +3719,9 @@ describe("runnerd provider runtime wiring", () => {
       expect(state.createTransport).not.toHaveBeenCalled();
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3731,8 +3731,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-terminal-unsuspended-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const priorExecution = {
       ...execution,
       binding: {
@@ -3816,9 +3816,9 @@ describe("runnerd provider runtime wiring", () => {
       expect(state.createTransport).not.toHaveBeenCalled();
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3828,8 +3828,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-current-scoped-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const currentExecution = {
       ...execution,
       binding: {
@@ -3890,9 +3890,9 @@ describe("runnerd provider runtime wiring", () => {
       );
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -3904,8 +3904,8 @@ describe("runnerd provider runtime wiring", () => {
       const stateBase = await mkdtemp(
         join(tmpdir(), `paperclip-${caseName}-runner-state-`),
       );
-      const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-      process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+      const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+      process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
       const currentExecution = {
         ...execution,
         binding: {
@@ -3976,9 +3976,9 @@ describe("runnerd provider runtime wiring", () => {
         expect(state.createTransport).not.toHaveBeenCalled();
       } finally {
         if (previousStateDirectory === undefined) {
-          delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+          delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
         } else {
-          process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+          process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
         }
         await rm(stateBase, { recursive: true, force: true });
       }
@@ -3991,8 +3991,8 @@ describe("runnerd provider runtime wiring", () => {
       const stateBase = await mkdtemp(
         join(tmpdir(), `paperclip-${caseName}-scoped-state-`),
       );
-      const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-      process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+      const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+      process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
       const scopedExecution = {
         ...execution,
         binding: {
@@ -4087,9 +4087,9 @@ describe("runnerd provider runtime wiring", () => {
         expect(state.createTransport).not.toHaveBeenCalled();
       } finally {
         if (previousStateDirectory === undefined) {
-          delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+          delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
         } else {
-          process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+          process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
         }
         await rm(stateBase, { recursive: true, force: true });
       }
@@ -4100,8 +4100,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-symlink-scoped-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const scopedExecution = {
       ...execution,
       binding: {
@@ -4151,9 +4151,9 @@ describe("runnerd provider runtime wiring", () => {
       expect(state.createTransport).not.toHaveBeenCalled();
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -4163,8 +4163,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-prior-run-mismatched-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const currentExecution = {
       ...execution,
       binding: {
@@ -4244,9 +4244,9 @@ describe("runnerd provider runtime wiring", () => {
       await expect(access(join(stateBase, "quarantine"))).rejects.toThrow();
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -4256,8 +4256,8 @@ describe("runnerd provider runtime wiring", () => {
     const stateBase = await mkdtemp(
       join(tmpdir(), "paperclip-mismatched-session-state-"),
     );
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const currentExecution = {
       ...execution,
       binding: {
@@ -4307,9 +4307,9 @@ describe("runnerd provider runtime wiring", () => {
       await expect(access(legacyRoot)).resolves.toBeUndefined();
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -4390,8 +4390,8 @@ describe("runnerd provider runtime wiring", () => {
 
   it("scopes local durable sessions by agent, workspace, and provider profile while reusing them across runs", async () => {
     const stateBase = await mkdtemp(join(tmpdir(), "paperclip-session-scope-"));
-    const previousStateDirectory = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    const previousStateDirectory = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     const scopedExecution = (input: {
       runId: string;
       agentId?: string;
@@ -4550,9 +4550,9 @@ describe("runnerd provider runtime wiring", () => {
       ).resolves.toEqual({ runId: continuation.binding.runId });
     } finally {
       if (previousStateDirectory === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
       } else {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateDirectory;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateDirectory;
       }
       await rm(stateBase, { recursive: true, force: true });
     }
@@ -4647,7 +4647,7 @@ describe("runnerd provider runtime wiring", () => {
       highestContiguousSourceSeq: 1,
     });
 
-    await executePaperclipNativeSession({
+    await executeThinkingMachNativeSession({
       db: leaseDb(remoteExecution),
       execution: remoteExecution,
       runnerInstanceId: "runner",
@@ -4692,7 +4692,7 @@ describe("runnerd provider runtime wiring", () => {
       expect.objectContaining({
         runnerBinary: "/tmp/paperclip-runnerd",
         environment: expect.objectContaining({
-          PAPERCLIP_WORKSPACE_CWD: remoteCwd,
+          THINKINGMACH_WORKSPACE_CWD: remoteCwd,
         }),
       }),
     );
@@ -4783,7 +4783,7 @@ describe("runnerd provider runtime wiring", () => {
           },
         }),
       ).rejects.toThrow(
-        "runner_remote_provider_artifact_incompatible: configure PAPERCLIP_RUNNER_REMOTE_PROVIDER_PACK_PATH",
+        "runner_remote_provider_artifact_incompatible: configure THINKINGMACH_RUNNER_REMOTE_PROVIDER_PACK_PATH",
       );
       expect(state.createBackend).not.toHaveBeenCalled();
     },

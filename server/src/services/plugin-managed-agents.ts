@@ -1,17 +1,17 @@
 import { and, eq, isNull, ne } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   companies,
   pluginEntities,
   pluginManagedResources,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   Agent,
-  PaperclipPluginManifestV1,
+  ThinkingMachPluginManifestV1,
   PluginManagedAgentDeclaration,
   PluginManagedAgentResolution,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { notFound } from "../errors.js";
 import { agentService } from "./agents.js";
 import { approvalService } from "./approvals.js";
@@ -28,7 +28,7 @@ function managedAgentPauseReason(pluginKey: string) {
 interface PluginManagedAgentServiceOptions {
   pluginId: string;
   pluginKey: string;
-  manifest?: PaperclipPluginManifestV1 | null;
+  manifest?: ThinkingMachPluginManifestV1 | null;
   instructionTemplateVariables?: (companyId: string) => Promise<Record<string, string | null | undefined>>;
 }
 

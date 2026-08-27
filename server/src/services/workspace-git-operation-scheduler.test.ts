@@ -9,7 +9,7 @@ import {
   workspaceGitSchedulerOptionsFromEnv,
   type WorkspaceGitRunner,
 } from "./workspace-git-operation-scheduler.js";
-import { WORKSPACE_GIT_SCAN_SATURATED_CODE } from "@paperclipai/adapter-utils/git-workspace-sync";
+import { WORKSPACE_GIT_SCAN_SATURATED_CODE } from "@thinkingmach/adapter-utils/git-workspace-sync";
 
 const tempPaths: string[] = [];
 
@@ -55,10 +55,10 @@ describe("WorkspaceGitOperationScheduler", () => {
       defaultCacheTtlMs: 10_000,
     });
     expect(workspaceGitSchedulerOptionsFromEnv({
-      PAPERCLIP_WORKSPACE_GIT_SCAN_CONCURRENCY: "4",
-      PAPERCLIP_WORKSPACE_GIT_SCAN_QUEUE_CAPACITY: "12",
-      PAPERCLIP_WORKSPACE_GIT_SCAN_TIMEOUT_MS: "5000",
-      PAPERCLIP_WORKSPACE_GIT_SCAN_CACHE_TTL_MS: "7000",
+      THINKINGMACH_WORKSPACE_GIT_SCAN_CONCURRENCY: "4",
+      THINKINGMACH_WORKSPACE_GIT_SCAN_QUEUE_CAPACITY: "12",
+      THINKINGMACH_WORKSPACE_GIT_SCAN_TIMEOUT_MS: "5000",
+      THINKINGMACH_WORKSPACE_GIT_SCAN_CACHE_TTL_MS: "7000",
     })).toEqual({
       concurrency: 4,
       queueCapacity: 12,
@@ -347,7 +347,7 @@ describe("WorkspaceGitOperationScheduler", () => {
     const pidPath = path.join(path.dirname(workspace), "fake-git.pid");
     await fs.writeFile(scriptPath, [
       'import fs from "node:fs";',
-      'fs.writeFileSync(process.env.PAPERCLIP_FAKE_GIT_PID_PATH, String(process.pid));',
+      'fs.writeFileSync(process.env.THINKINGMACH_FAKE_GIT_PID_PATH, String(process.pid));',
       'if (process.argv.includes("hang")) {',
       '  process.on("SIGTERM", () => {});',
       '  setInterval(() => {}, 1000);',
@@ -364,7 +364,7 @@ describe("WorkspaceGitOperationScheduler", () => {
     });
     const env = {
       ...(process.env.SystemRoot ? { SystemRoot: process.env.SystemRoot } : {}),
-      PAPERCLIP_FAKE_GIT_PID_PATH: pidPath,
+      THINKINGMACH_FAKE_GIT_PID_PATH: pidPath,
     };
 
     await expect(scheduler.run({ ...scanInput(workspace, "hang"), env })).rejects.toMatchObject({

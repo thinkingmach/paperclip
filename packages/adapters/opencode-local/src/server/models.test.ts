@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import * as serverUtils from "@paperclipai/adapter-utils/server-utils";
+import * as serverUtils from "@thinkingmach/adapter-utils/server-utils";
 import {
   discoverOpenCodeModels,
   ensureOpenCodeModelConfiguredAndAvailable,
@@ -10,7 +10,7 @@ import {
 
 describe("openCode models", () => {
   afterEach(() => {
-    delete process.env.PAPERCLIP_OPENCODE_COMMAND;
+    delete process.env.THINKINGMACH_OPENCODE_COMMAND;
     delete process.env.OPENCODE_ALLOW_ALL_MODELS;
     resetOpenCodeModelsCacheForTests();
     vi.restoreAllMocks();
@@ -18,7 +18,7 @@ describe("openCode models", () => {
   });
 
   it("returns an empty list when discovery command is unavailable", async () => {
-    process.env.PAPERCLIP_OPENCODE_COMMAND =
+    process.env.THINKINGMACH_OPENCODE_COMMAND =
       "__paperclip_missing_opencode_command__";
     await expect(listOpenCodeModels()).resolves.toEqual([]);
   });
@@ -45,7 +45,7 @@ describe("openCode models", () => {
   });
 
   it("proceeds with the configured model when discovery cannot run (probe is best-effort, never fatal)", async () => {
-    process.env.PAPERCLIP_OPENCODE_COMMAND =
+    process.env.THINKINGMACH_OPENCODE_COMMAND =
       "__paperclip_missing_opencode_command__";
     await expect(
       ensureOpenCodeModelConfiguredAndAvailable({
@@ -55,7 +55,7 @@ describe("openCode models", () => {
   });
 
   it("skips the availability check when OPENCODE_ALLOW_ALL_MODELS is set in the run env", async () => {
-    process.env.PAPERCLIP_OPENCODE_COMMAND =
+    process.env.THINKINGMACH_OPENCODE_COMMAND =
       "__paperclip_missing_opencode_command__";
     await expect(
       ensureOpenCodeModelConfiguredAndAvailable({
@@ -71,7 +71,7 @@ describe("openCode models", () => {
   });
 
   it("honours OPENCODE_ALLOW_ALL_MODELS from the process env", async () => {
-    process.env.PAPERCLIP_OPENCODE_COMMAND =
+    process.env.THINKINGMACH_OPENCODE_COMMAND =
       "__paperclip_missing_opencode_command__";
     process.env.OPENCODE_ALLOW_ALL_MODELS = "1";
     await expect(

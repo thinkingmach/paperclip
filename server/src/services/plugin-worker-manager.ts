@@ -22,7 +22,7 @@ import { fork, type ChildProcess } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { EventEmitter } from "node:events";
 import { createInterface, type Interface as ReadlineInterface } from "node:readline";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import {
   JSONRPC_VERSION,
   JSONRPC_ERROR_CODES,
@@ -43,7 +43,7 @@ import {
   DUPLEX_CHANNEL_EXIT_NOTIFICATION,
   encodeChannelBytes,
   decodeChannelBytes,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import type {
   JsonRpcId,
   PluginInvocationContext,
@@ -57,8 +57,8 @@ import type {
   WorkerToHostMethodName,
   WorkerToHostMethods,
   InitializeParams,
-} from "@paperclipai/plugin-sdk";
-import { getActiveStepContext } from "@paperclipai/adapter-utils/acpx-engine/startup-timing";
+} from "@thinkingmach/plugin-sdk";
+import { getActiveStepContext } from "@thinkingmach/adapter-utils/acpx-engine/startup-timing";
 import {
   isLoginCommandKey,
   validateLoginSessionHome,
@@ -398,7 +398,7 @@ export interface WorkerStartOptions {
   /** Absolute path to the plugin worker entrypoint (CJS bundle). */
   entrypointPath: string;
   /** Plugin manifest. */
-  manifest: PaperclipPluginManifestV1;
+  manifest: ThinkingMachPluginManifestV1;
   /** Resolved plugin configuration. */
   config: Record<string, unknown>;
   /** Host instance information for the initialize call. */
@@ -2742,7 +2742,7 @@ export function createPluginWorkerHandle(
       ...options.env,
       PATH: process.env.PATH ?? "",
       NODE_PATH: process.env.NODE_PATH ?? "",
-      PAPERCLIP_PLUGIN_ID: pluginId,
+      THINKINGMACH_PLUGIN_ID: pluginId,
       NODE_ENV: process.env.NODE_ENV ?? "production",
       TZ: process.env.TZ ?? "UTC",
     };

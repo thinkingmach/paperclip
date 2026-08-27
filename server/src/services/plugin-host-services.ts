@@ -1,4 +1,4 @@
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   activityLog,
   agentTaskSessions as agentTaskSessionsTable,
@@ -12,7 +12,7 @@ import {
   pluginLogs,
   principalPermissionGrants,
   projects as projectsTable,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { eq, and, like, desc, inArray, sql, isNull, isNotNull, gt, lte } from "drizzle-orm";
 import type {
   HostServices,
@@ -26,9 +26,9 @@ import type {
   PluginIssueAssigneeSummary,
   PluginIssueOrchestrationSummary,
   PluginExecutionWorkspaceMetadata,
-} from "@paperclipai/plugin-sdk";
-import type { CreateIssueThreadInteraction, InviteJoinType, IssueDocumentSummary, PermissionKey, PrincipalType } from "@paperclipai/shared";
-import { pluginOperationIssueOriginKind } from "@paperclipai/shared";
+} from "@thinkingmach/plugin-sdk";
+import type { CreateIssueThreadInteraction, InviteJoinType, IssueDocumentSummary, PermissionKey, PrincipalType } from "@thinkingmach/shared";
+import { pluginOperationIssueOriginKind } from "@thinkingmach/shared";
 import { companyService } from "./companies.js";
 import { agentService } from "./agents.js";
 import { projectService } from "./projects.js";
@@ -78,11 +78,11 @@ import { getTelemetryClient } from "../telemetry.js";
 import { accessService } from "./access.js";
 import { authorizationService, type AuthorizationActor } from "./authorization.js";
 import { redactEventPayload, sanitizeRecord } from "../redaction.js";
-import type { WorkerHostCallContext } from "@paperclipai/plugin-sdk";
+import type { WorkerHostCallContext } from "@thinkingmach/plugin-sdk";
 import {
   normalizeProviderFamily,
   SANDBOX_STARTUP_SPAN_ATTRS,
-} from "@paperclipai/adapter-utils/acpx-engine/startup-timing";
+} from "@thinkingmach/adapter-utils/acpx-engine/startup-timing";
 import { recordProviderPluginSpan, type ParsedTraceparent } from "../instrumentation.js";
 
 // ---------------------------------------------------------------------------
@@ -484,7 +484,7 @@ if (_logFlushInterval.unref) _logFlushInterval.unref();
  * buildHostServices — creates a concrete implementation of the `HostServices`
  * interface for a specific plugin.
  *
- * This implementation delegates to the core Paperclip domain services,
+ * This implementation delegates to the core ThinkingMach domain services,
  * providing the bridge between the plugin worker's SDK and the host platform.
  *
  * @param db - Database connection instance.
@@ -701,7 +701,7 @@ export function buildHostServices(
   notifyWorker?: (method: string, params: unknown) => void,
   options: {
     pluginWorkerManager?: PluginWorkerManager;
-    manifest?: import("@paperclipai/shared").PaperclipPluginManifestV1;
+    manifest?: import("@thinkingmach/shared").ThinkingMachPluginManifestV1;
     heartbeatRuntimeEnv?: Record<string, string | undefined>;
   } = {},
 ): HostServices & { dispose(): void } {
@@ -1564,7 +1564,7 @@ export function buildHostServices(
         await scopedBus.emit(params.name, params.companyId, params.payload);
       },
       async subscribe(params: { eventPattern: string; filter?: Record<string, unknown> | null }) {
-        const handler = async (event: import("@paperclipai/plugin-sdk").PluginEvent) => {
+        const handler = async (event: import("@thinkingmach/plugin-sdk").PluginEvent) => {
           if (notifyWorker) {
             notifyWorker("onEvent", { event });
           }

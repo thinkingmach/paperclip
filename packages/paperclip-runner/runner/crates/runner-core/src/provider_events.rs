@@ -941,7 +941,7 @@ fn normalize_acpx_status(
             .or_else(|| breakdown.get("cacheWriteTokens"));
         // ACPX marks every breakdown field optional and defines omission as
         // unknown. Only advertise a complete per-turn delta when every field
-        // that feeds a Paperclip token budget is explicitly present.
+        // that feeds a ThinkingMach token budget is explicitly present.
         let run_delta_available = breakdown
             .get("inputTokens")
             .and_then(Value::as_u64)

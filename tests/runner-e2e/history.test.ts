@@ -57,8 +57,8 @@ function result(execution: MatrixExecution, status: "passed" | "failed") {
 
 describe("runner E2E campaign history", () => {
   it("records the resolved paid target instead of the trusted workflow checkout", () => {
-    vi.stubEnv("PAPERCLIP_RUNNER_E2E_SOURCE_SHA", "target-sha");
-    vi.stubEnv("PAPERCLIP_RUNNER_E2E_SOURCE_REF", "refs/heads/target");
+    vi.stubEnv("THINKINGMACH_RUNNER_E2E_SOURCE_SHA", "target-sha");
+    vi.stubEnv("THINKINGMACH_RUNNER_E2E_SOURCE_REF", "refs/heads/target");
     vi.stubEnv("GITHUB_SHA", "trusted-master-sha");
     vi.stubEnv("GITHUB_REF", "refs/heads/master");
     const execution = runnerMatrix[0]!;

@@ -24,7 +24,7 @@ describe("TaskChatSystemNotice (PAP-443)", () => {
   });
 
   const recoveryBody =
-    "Paperclip stopped before dispatching the adapter because required secret/env bindings are missing. " +
+    "ThinkingMach stopped before dispatching the adapter because required secret/env bindings are missing. " +
     "Latest retry failure: `configuration_incomplete`. Moving it to `blocked` with a source-scoped recovery action.";
 
   function renderNotice(
@@ -131,7 +131,7 @@ describe("TaskChatSystemNotice (PAP-443)", () => {
     const onTryAgain = vi.fn();
     renderNotice(
       {
-        text: "Paperclip retried continuation, but it still has no live execution path.",
+        text: "ThinkingMach retried continuation, but it still has no live execution path.",
         presentation: {
           kind: "system_notice",
           tone: "danger",
@@ -161,7 +161,7 @@ describe("TaskChatSystemNotice (PAP-443)", () => {
   it("moves Try again into the expanded notice footer", () => {
     renderNotice(
       {
-        text: "Paperclip retried continuation, but it still has no live execution path.",
+        text: "ThinkingMach retried continuation, but it still has no live execution path.",
         presentation: {
           kind: "system_notice",
           tone: "danger",
@@ -188,7 +188,7 @@ describe("TaskChatSystemNotice (PAP-443)", () => {
   it("shows the pending state and omits Try again from unrelated notices", () => {
     renderNotice(
       {
-        text: "Paperclip retried continuation, but it still has no live execution path.",
+        text: "ThinkingMach retried continuation, but it still has no live execution path.",
         presentation: {
           kind: "system_notice",
           tone: "danger",

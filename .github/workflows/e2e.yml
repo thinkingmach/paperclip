@@ -41,7 +41,7 @@ jobs:
     environment:
       name: runner-e2e-paid
     env:
-      PAPERCLIP_E2E_SKIP_LLM: ${{ inputs.skip_llm && 'true' || 'false' }}
+      THINKINGMACH_E2E_SKIP_LLM: ${{ inputs.skip_llm && 'true' || 'false' }}
     steps:
       - name: Reauthorize execution before optional provider access
         env:
@@ -75,7 +75,7 @@ jobs:
 
       - name: Run e2e tests
         env:
-          PAPERCLIP_PLAYWRIGHT_CHANNEL: "chrome"
+          THINKINGMACH_PLAYWRIGHT_CHANNEL: "chrome"
           ANTHROPIC_API_KEY: ${{ !inputs.skip_llm && secrets.ANTHROPIC_API_KEY || '' }}
         run: pnpm run test:e2e
 

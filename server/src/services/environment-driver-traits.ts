@@ -14,7 +14,7 @@
  * instead of a driver-name condition.
  */
 
-import type { EnvironmentDriver } from "@paperclipai/shared";
+import type { EnvironmentDriver } from "@thinkingmach/shared";
 import type { SandboxCapabilityKey } from "./environment-runtime.js";
 
 /**

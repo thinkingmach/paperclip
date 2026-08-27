@@ -15,14 +15,14 @@ let tempHome: string;
 let originalHome: string | undefined;
 
 beforeAll(async () => {
-  originalHome = process.env.PAPERCLIP_HOME;
+  originalHome = process.env.THINKINGMACH_HOME;
   tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-managed-clone-"));
-  process.env.PAPERCLIP_HOME = tempHome;
+  process.env.THINKINGMACH_HOME = tempHome;
 });
 
 afterAll(async () => {
-  if (originalHome === undefined) delete process.env.PAPERCLIP_HOME;
-  else process.env.PAPERCLIP_HOME = originalHome;
+  if (originalHome === undefined) delete process.env.THINKINGMACH_HOME;
+  else process.env.THINKINGMACH_HOME = originalHome;
   await fs.rm(tempHome, { recursive: true, force: true });
 });
 
@@ -30,7 +30,7 @@ async function createLocalSourceRepo() {
   const sourceRepo = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-clone-source-"));
   await execFile("git", ["init"], { cwd: sourceRepo });
   await execFile("git", ["config", "user.email", "paperclip@example.com"], { cwd: sourceRepo });
-  await execFile("git", ["config", "user.name", "Paperclip Test"], { cwd: sourceRepo });
+  await execFile("git", ["config", "user.name", "ThinkingMach Test"], { cwd: sourceRepo });
   await fs.writeFile(path.join(sourceRepo, "README.md"), "hello\n", "utf8");
   await execFile("git", ["add", "README.md"], { cwd: sourceRepo });
   await execFile("git", ["commit", "-m", "init"], { cwd: sourceRepo });
@@ -179,7 +179,7 @@ describe("ensureManagedProjectWorkspace clone credentials", () => {
 
   it("keeps the credential env alive through the sanitizer spread order", () => {
     // The clone env is `{ ...sanitize(process.env), GIT_TERMINAL_PROMPT, ...auth.env }`. The
-    // sanitizer strips every PAPERCLIP_* key, so the token env must be spread after it.
+    // sanitizer strips every THINKINGMACH_* key, so the token env must be spread after it.
     const invocation = buildGitAuthInvocation({
       token: "tok",
       source: "company_secret",

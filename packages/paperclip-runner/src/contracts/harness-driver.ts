@@ -4,11 +4,11 @@ import type {
 } from "../protocol/replay-contract.js";
 import type { NativeSessionCapabilities, NativeUserMessage } from "./types.js";
 import {
-  PAPERCLIP_RUNTIME_REQUEST_SCHEMA_V2,
-  parsePaperclipQuestionResponse,
-  type PaperclipQuestionResponse,
-  type PaperclipQuestionSet,
-  type PaperclipRuntimeRequestOrigin,
+  THINKINGMACH_RUNTIME_REQUEST_SCHEMA_V2,
+  parseThinkingMachQuestionResponse,
+  type ThinkingMachQuestionResponse,
+  type ThinkingMachQuestionSet,
+  type ThinkingMachRuntimeRequestOrigin,
 } from "./question-set.js";
 
 export * from "./question-set.js";
@@ -115,9 +115,9 @@ export interface HarnessRuntimeRequest {
   prompt: string;
   details: Record<string, unknown>;
   /** Provider-neutral presentation model for structured input requests. */
-  input?: PaperclipQuestionSet;
+  input?: ThinkingMachQuestionSet;
   /** Diagnostic origin only; provider response shapes never enter PRP. */
-  origin?: PaperclipRuntimeRequestOrigin;
+  origin?: ThinkingMachRuntimeRequestOrigin;
 }
 
 export type HarnessRuntimeRequestResolution =
@@ -132,7 +132,7 @@ export type HarnessRuntimeRequestResolution =
     }
   | {
       action: "submit";
-      response: PaperclipQuestionResponse;
+      response: ThinkingMachQuestionResponse;
     };
 
 export type HarnessRuntimeRequestAction = HarnessRuntimeRequestResolution["action"];
@@ -196,7 +196,7 @@ function parseAnswers(value: unknown): Record<string, { answers: string[] }> | n
 export function parseHarnessRuntimeRequestResolution(
   requestKind: HarnessRuntimeRequestKind,
   value: unknown,
-  questionSet?: PaperclipQuestionSet,
+  questionSet?: ThinkingMachQuestionSet,
 ): HarnessRuntimeRequestResolution {
   const candidate = plainRecord(value) ?? {};
   const rawAction = candidate.action;
@@ -239,7 +239,7 @@ export function parseHarnessRuntimeRequestResolution(
     try {
       return {
         action,
-        response: parsePaperclipQuestionResponse(questionSet, candidate.response),
+        response: parseThinkingMachQuestionResponse(questionSet, candidate.response),
       };
     } catch (error) {
       throw new HarnessRuntimeRequestResolutionError(
@@ -323,7 +323,7 @@ export type HarnessRuntimeRequestOutcome = {
   adapter?: string;
   requestType?: "input" | "permission";
   /** Canonical submitted answers retained for durable replay and audit UI. */
-  response?: PaperclipQuestionResponse;
+  response?: ThinkingMachQuestionResponse;
 };
 
 export function harnessRuntimeRequestOutcome(
@@ -334,7 +334,7 @@ export function harnessRuntimeRequestOutcome(
   outcome: {
     action?: HarnessRuntimeRequestAction | null;
     reason?: string | null;
-    response?: PaperclipQuestionResponse | null;
+    response?: ThinkingMachQuestionResponse | null;
   } = {},
 ): HarnessRuntimeRequestOutcome {
   return {
@@ -368,7 +368,7 @@ export function harnessRuntimeInputExpiredOutcome(
     requestKind: "runtime",
     replayAllowed: false,
     request: {
-      schema: PAPERCLIP_RUNTIME_REQUEST_SCHEMA_V2,
+      schema: THINKINGMACH_RUNTIME_REQUEST_SCHEMA_V2,
       requestKind: "runtime",
       requestId: request.requestId,
       type: "input",

@@ -91,7 +91,7 @@ export function ClaudeLocalAdvancedFields({
         The execution engine picks which binary runs on the execution host, and
         the ACP sub-fields below name host paths. The platform-managed
         environment owns both, so the managed-sandbox-only policy hides them,
-        the same way `runnerManaged` hides them for the Paperclip Runner.
+        the same way `runnerManaged` hides them for the ThinkingMach Runner.
       */}
       {!managedSandboxOnly && <Field label="Execution engine" hint="Auto uses ACP when prerequisites pass and falls back to Claude CLI with diagnostics.">
         <select
@@ -177,7 +177,7 @@ export function ClaudeLocalAdvancedFields({
           {!managedSandboxOnly && (
             <Field
               label="ACP state directory"
-              hint="Optional ACP session state directory. Defaults to Paperclip-managed organization/agent scoped storage."
+              hint="Optional ACP session state directory. Defaults to ThinkingMach-managed organization/agent scoped storage."
             >
               <div className="flex items-center gap-2">
                 <DraftInput

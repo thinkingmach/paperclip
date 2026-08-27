@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { HeartbeatRun, RoutineRunSummary } from "@paperclipai/shared";
+import type { HeartbeatRun, RoutineRunSummary } from "@thinkingmach/shared";
 import { Activity, CircleDotDashed } from "lucide-react";
 import { agentsApi } from "@/api/agents";
 import { heartbeatsApi } from "@/api/heartbeats";

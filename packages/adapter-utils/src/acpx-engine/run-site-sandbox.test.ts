@@ -24,7 +24,7 @@ import type {
   SandboxReuseCandidate,
   StagedRuntimeResource,
 } from "./run-contracts.js";
-import type { PreparedAdapterExecutionTargetRuntime } from "@paperclipai/adapter-utils/execution-target";
+import type { PreparedAdapterExecutionTargetRuntime } from "@thinkingmach/adapter-utils/execution-target";
 
 function makeStagedRuntime(id: string): PreparedAdapterExecutionTargetRuntime {
   return {
@@ -88,9 +88,9 @@ function makeSite(overrides: Partial<SandboxRunSiteOptions> = {}) {
     measureStageStep: (run) => run(),
     publishStagedProjectHints: () => {},
     onReuseLog: async () => {},
-    startPaperclipBridge: async () => {
+    startThinkingMachBridge: async () => {
       bridgeCalls.push("paperclip:start");
-      return { env: { PAPERCLIP_API_KEY: "run-token" }, stop: async () => {} } as never;
+      return { env: { THINKINGMACH_API_KEY: "run-token" }, stop: async () => {} } as never;
     },
     startProcessSessionBridge: async ({ launchEnv }) => {
       bridgeCalls.push("process-session:start");
@@ -103,7 +103,7 @@ function makeSite(overrides: Partial<SandboxRunSiteOptions> = {}) {
       for (const contribution of contributions) Object.assign(merged, contribution.env);
       return merged;
     },
-    onPaperclipBridgeLog: async () => {},
+    onThinkingMachBridgeLog: async () => {},
     stopBridges: async () => {},
     ...overrides,
   };
@@ -163,17 +163,17 @@ describe("sandbox run site", () => {
 
   it("test_sandbox_site_preserves_bridge_overlap_and_callback_sequencing", async () => {
     const events: string[] = [];
-    let releasePaperclip!: () => void;
+    let releaseThinkingMach!: () => void;
     const paperclipGate = new Promise<void>((resolve) => {
-      releasePaperclip = resolve;
+      releaseThinkingMach = resolve;
     });
     let processLaunchEnv: Record<string, string> | null = null;
     const { site } = makeSite({
-      startPaperclipBridge: async () => {
+      startThinkingMachBridge: async () => {
         events.push("paperclip:start");
         await paperclipGate;
         events.push("paperclip:env-ready");
-        return { env: { PAPERCLIP_API_KEY: "run-token" }, stop: async () => {} } as never;
+        return { env: { THINKINGMACH_API_KEY: "run-token" }, stop: async () => {} } as never;
       },
       startProcessSessionBridge: async ({ launchEnv }) => {
         events.push("process-session:start");
@@ -195,10 +195,10 @@ describe("sandbox run site", () => {
 
     // Release the paperclip env; the process-session launch now observes the
     // merged run-scoped env (the single sequencing point).
-    releasePaperclip();
+    releaseThinkingMach();
     const transport = await transportPromise;
     expect(events.indexOf("paperclip:env-ready")).toBeLessThan(events.indexOf("process-session:launch"));
-    expect(processLaunchEnv).toEqual({ BASE: "1", CODEX_HOME: "/remote/home", PAPERCLIP_API_KEY: "run-token" });
+    expect(processLaunchEnv).toEqual({ BASE: "1", CODEX_HOME: "/remote/home", THINKINGMACH_API_KEY: "run-token" });
     expect(transport.launchEnv).toEqual(processLaunchEnv);
   });
 

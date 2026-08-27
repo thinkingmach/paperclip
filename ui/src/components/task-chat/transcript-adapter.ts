@@ -90,7 +90,7 @@ export function splitTranscriptAtAnchors(
  * The live parent row's nesting rule (PAP-354, narrowed by PAP-361): only tool
  * calls, provider-supplied reasoning summaries, and usage readouts nest inside
  * the expandable live turn. The classic parent-row surface may flatten a live
- * interstitial into its status line; the Paperclip Runner task surface instead
+ * interstitial into its status line; the ThinkingMach Runner task surface instead
  * projects commentary as durable chronological phase boundaries. The run's
  * final reply is resolved separately into the turn's durable response slot or
  * its posted comment bubble. Markers, statuses and interaction cards stay in
@@ -1134,7 +1134,7 @@ export function paperclipRunnerHistoryItems(
 }
 
 /**
- * Semantic rows for the Paperclip runner's Codex-style activity disclosure.
+ * Semantic rows for the ThinkingMach runner's Codex-style activity disclosure.
  *
  * This is intentionally narrower than the stored transcript and the runner
  * inspector: it keeps work a person can understand or act on while excluding
@@ -1205,7 +1205,7 @@ export function paperclipRunnerActivityItems(
 }
 
 /**
- * Ordered input for the Paperclip Runner task-turn timeline. This keeps the
+ * Ordered input for the ThinkingMach Runner task-turn timeline. This keeps the
  * semantic activity filter above, but retains runtime-request lifecycles so
  * the shared projector can use each request as a phase boundary and place its
  * terminal receipt at the request's first-seen position.
@@ -1225,7 +1225,7 @@ export function paperclipRunnerTimelineItems(
 }
 
 /**
- * Resolve the durable response owned by a Paperclip Runner turn. Provider final
+ * Resolve the durable response owned by a ThinkingMach Runner turn. Provider final
  * text wins when present, followed by a compatible terminal assistant message
  * and then the accepted run-result summary. The caller keeps yielded
  * control-plane waits out of the final-response slot.
@@ -1525,12 +1525,12 @@ function phaseSummary(
         case "paperclip_read":
           text =
             count === 1
-              ? "Read from Paperclip"
-              : `Read from Paperclip ${count} times`;
+              ? "Read from ThinkingMach"
+              : `Read from ThinkingMach ${count} times`;
           break;
         case "task_operation":
           text =
-            count === 1 ? "Used Paperclip" : `Used Paperclip ${count} times`;
+            count === 1 ? "Used ThinkingMach" : `Used ThinkingMach ${count} times`;
           break;
         default:
           text = count === 1 ? "Used a tool" : `Used ${count} tools`;

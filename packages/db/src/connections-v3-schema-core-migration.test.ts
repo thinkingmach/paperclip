@@ -41,7 +41,7 @@ describeEmbeddedPostgres("connections v3 schema core migration", () => {
     const applicationId = randomUUID();
     const connectionId = randomUUID();
     const secretId = randomUUID();
-    await sql`INSERT INTO "companies" ("id", "name", "issue_prefix") VALUES (${companyId}, 'Paperclip', 'PAP')`;
+    await sql`INSERT INTO "companies" ("id", "name", "issue_prefix") VALUES (${companyId}, 'ThinkingMach', 'PAP')`;
     await sql`INSERT INTO "tool_applications" ("id", "company_id", "application_key", "name", "type") VALUES (${applicationId}, ${companyId}, 'linear', 'Linear', 'mcp_http')`;
     await sql`
       INSERT INTO "tool_connections" ("id", "company_id", "application_id", "name", "connection_kind", "transport", "config", "credential_secret_refs")

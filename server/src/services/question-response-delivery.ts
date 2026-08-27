@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, inArray, isNull, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agentWakeupRequests,
   agents,
@@ -7,13 +7,13 @@ import {
   issueQuestionResponseDeliveries,
   issues,
   issueThreadInteractions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AskUserQuestionsInteraction,
-  PaperclipQuestionSetPayload,
-} from "@paperclipai/shared";
+  ThinkingMachQuestionSetPayload,
+} from "@thinkingmach/shared";
 import type {
-  PaperclipQuestionResponse,
+  ThinkingMachQuestionResponse,
 } from "../vendor/paperclip-runner/index.js";
 import { isUniqueViolation } from "../db-errors.js";
 import { getTelemetryClient } from "../telemetry.js";
@@ -63,8 +63,8 @@ export interface QuestionResponseDeliveryEnvelope {
   schema: "paperclip.question_response_delivery.v1";
   interactionId: string;
   sourceRunId: string | null;
-  questionSet: PaperclipQuestionSetPayload;
-  response: PaperclipQuestionResponse;
+  questionSet: ThinkingMachQuestionSetPayload;
+  response: ThinkingMachQuestionResponse;
 }
 
 export interface QuestionResponseDeliveryOutcome {
@@ -112,7 +112,7 @@ function compactLine(value: unknown): string | null {
   return normalized.length > 0 ? normalized : null;
 }
 
-function canonicalQuestionSet(interaction: Pick<AskUserQuestionsInteraction, "title" | "payload">): PaperclipQuestionSetPayload {
+function canonicalQuestionSet(interaction: Pick<AskUserQuestionsInteraction, "title" | "payload">): ThinkingMachQuestionSetPayload {
   if (interaction.payload.questionSet) return structuredClone(interaction.payload.questionSet);
   return {
     schema: "paperclip.question_set.v1",
@@ -155,7 +155,7 @@ export function buildQuestionResponseDeliveryEnvelope(
   }
   const questionSet = canonicalQuestionSet(interaction);
   const questionById = new Map(questionSet.questions.map((question) => [question.id, question]));
-  const response: PaperclipQuestionResponse = {
+  const response: ThinkingMachQuestionResponse = {
     schema: "paperclip.question_response.v1",
     answers: Object.fromEntries(interaction.result.answers.map((answer) => {
       const question = questionById.get(answer.questionId);

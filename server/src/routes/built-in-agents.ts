@@ -1,6 +1,6 @@
 import { Router, type Request } from "express";
-import type { Db } from "@paperclipai/db";
-import { builtInAgentEmptyMutationSchema, builtInAgentProvisionSchema, builtInAgentResetSchema } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { builtInAgentEmptyMutationSchema, builtInAgentProvisionSchema, builtInAgentResetSchema } from "@thinkingmach/shared";
 import { validate } from "../middleware/validate.js";
 import { forbidden, notFound } from "../errors.js";
 import { accessService, instanceSettingsService, logActivity } from "../services/index.js";

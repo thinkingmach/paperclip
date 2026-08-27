@@ -183,7 +183,7 @@ describe("NewAgentDialog", () => {
     });
     expect(getInviteOnboardingMock).toHaveBeenCalledWith("agent-token");
     expect(clipboardWriteTextMock).toHaveBeenCalledWith(
-      expect.stringContaining("You're invited to join a Paperclip company as an agent."),
+      expect.stringContaining("You're invited to join a ThinkingMach company as an agent."),
     );
     expect(container.textContent).toContain("Agent onboarding prompt");
     expect(container.textContent).toContain("Send this prompt to the external agent");
@@ -212,7 +212,7 @@ describe("NewAgentDialog", () => {
     });
   });
 
-  it("hides Paperclip Runner configuration until the server enables it", async () => {
+  it("hides ThinkingMach Runner configuration until the server enables it", async () => {
     listAdaptersMock.mockResolvedValue([
       { type: "claude_local", disabled: false },
       { type: "paperclip_runner", disabled: true },
@@ -240,14 +240,14 @@ describe("NewAgentDialog", () => {
     await flushReact();
 
     expect(container.textContent).toContain("Claude Code");
-    expect(container.textContent).not.toContain("Paperclip Runner");
+    expect(container.textContent).not.toContain("ThinkingMach Runner");
 
     await act(async () => {
       root.unmount();
     });
   });
 
-  it("shows Paperclip Runner configuration after the server enables it", async () => {
+  it("shows ThinkingMach Runner configuration after the server enables it", async () => {
     listAdaptersMock.mockResolvedValue([
       { type: "claude_local", disabled: false },
       { type: "paperclip_runner", disabled: false },
@@ -274,7 +274,7 @@ describe("NewAgentDialog", () => {
     });
     await flushReact();
 
-    expect(container.textContent).toContain("Paperclip Runner");
+    expect(container.textContent).toContain("ThinkingMach Runner");
 
     await act(async () => {
       root.unmount();

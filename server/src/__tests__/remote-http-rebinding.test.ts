@@ -136,7 +136,7 @@ describe("guarded remote HTTP fetch (PAP-17098 DNS rebinding)", () => {
       headers: { "user-agent": "Caller/2.0" },
     }, options);
 
-    expect(seen).toEqual(["Paperclip/1.0", "Caller/2.0"]);
+    expect(seen).toEqual(["ThinkingMach/1.0", "Caller/2.0"]);
   });
 
   it("turns a platform-fetch DNS cause into the stable DNS code", async () => {

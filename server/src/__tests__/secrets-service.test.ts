@@ -6,7 +6,7 @@ import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { MockInstance } from "vitest";
 import { and, eq } from "drizzle-orm";
-import { resolveCodexAuthCacheDir, withAccountHomeSecretMutationLock } from "@paperclipai/adapter-codex-local/server";
+import { resolveCodexAuthCacheDir, withAccountHomeSecretMutationLock } from "@thinkingmach/adapter-codex-local/server";
 import {
   activityLog,
   agents,
@@ -21,8 +21,8 @@ import {
   secretAccessEvents,
   userSecretDeclarations,
   userSecretDefinitions,
-} from "@paperclipai/db";
-import { LOW_TRUST_REVIEW_PRESET } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { LOW_TRUST_REVIEW_PRESET } from "@thinkingmach/shared";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { awsSecretsManagerProvider } from "../secrets/aws-secrets-manager-provider.js";
 import { localEncryptedProvider } from "../secrets/local-encrypted-provider.js";
@@ -147,12 +147,12 @@ function waitEntryDetectionWindow(uncontendedEntryDurationMs: number, violationS
 describeEmbeddedPostgres("secretService", () => {
   let stopDb: (() => Promise<void>) | null = null;
   let db!: ReturnType<typeof createDb>;
-  const previousKeyFile = process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+  const previousKeyFile = process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
   const secretsTmpDir = path.join(os.tmpdir(), `paperclip-secrets-service-${randomUUID()}`);
 
   beforeAll(async () => {
     mkdirSync(secretsTmpDir, { recursive: true });
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
     const started = await startEmbeddedPostgresTestDatabase("secrets-service");
     stopDb = started.cleanup;
     db = createDb(started.connectionString);
@@ -177,9 +177,9 @@ describeEmbeddedPostgres("secretService", () => {
   afterAll(async () => {
     await stopDb?.();
     if (previousKeyFile === undefined) {
-      delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+      delete process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
     } else {
-      process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = previousKeyFile;
+      process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = previousKeyFile;
     }
     rmSync(secretsTmpDir, { recursive: true, force: true });
   });
@@ -1954,7 +1954,7 @@ describeEmbeddedPostgres("secretService", () => {
         operation: "createSecret",
         message: "AWS Secrets Manager denied the request. Check IAM permissions for this provider vault.",
         rawMessage:
-          "AccessDeniedException: arn:aws:sts::123456789012:assumed-role/prod/Paperclip cannot create secret",
+          "AccessDeniedException: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach cannot create secret",
       }),
     );
     vi.spyOn(db, "delete").mockImplementationOnce(() => {
@@ -1968,7 +1968,7 @@ describeEmbeddedPostgres("secretService", () => {
       }),
     ).rejects.toMatchObject({
       status: 500,
-      message: "Secret create failed and Paperclip could not roll back the local secret reservation.",
+      message: "Secret create failed and ThinkingMach could not roll back the local secret reservation.",
       details: {
         code: "secret_create_rollback_failed",
         provider: "aws_secrets_manager",
@@ -2035,7 +2035,7 @@ describeEmbeddedPostgres("secretService", () => {
       }),
     ).rejects.toMatchObject({
       status: 500,
-      message: "Secret create failed and Paperclip could not roll back the local secret reservation.",
+      message: "Secret create failed and ThinkingMach could not roll back the local secret reservation.",
       details: {
         code: "secret_create_rollback_failed",
         provider: "aws_secrets_manager",
@@ -3065,7 +3065,7 @@ describeEmbeddedPostgres("secretService", () => {
       }),
     ).rejects.toMatchObject({
       status: 500,
-      message: "Secret create failed and Paperclip could not clean up the remote provider secret.",
+      message: "Secret create failed and ThinkingMach could not clean up the remote provider secret.",
       details: {
         code: "secret_create_provider_cleanup_failed",
         provider: "aws_secrets_manager",
@@ -3134,7 +3134,7 @@ describeEmbeddedPostgres("secretService", () => {
       }),
     ).rejects.toMatchObject({
       status: 500,
-      message: "Secret create failed and Paperclip could not roll back the local secret reservation.",
+      message: "Secret create failed and ThinkingMach could not roll back the local secret reservation.",
       details: {
         code: "secret_create_rollback_failed",
         provider: "aws_secrets_manager",
@@ -3437,7 +3437,7 @@ describeEmbeddedPostgres("secretService", () => {
       config: { region: "us-east-1", namespace: "prod-use1" },
     });
     const rawProviderMessage =
-      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized to perform secretsmanager:ListSecrets";
+      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized to perform secretsmanager:ListSecrets";
 
     vi.spyOn(awsSecretsManagerProvider, "listRemoteSecrets").mockRejectedValueOnce(
       new SecretProviderClientError({
@@ -3475,7 +3475,7 @@ describeEmbeddedPostgres("secretService", () => {
       config: { region: "us-east-1", namespace: "prod-use1" },
     });
     const rawProviderMessage =
-      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized to perform secretsmanager:CreateSecret on arn:aws:secretsmanager:us-east-1:123456789012:secret:paperclip/prod-use1";
+      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized to perform secretsmanager:CreateSecret on arn:aws:secretsmanager:us-east-1:123456789012:secret:paperclip/prod-use1";
 
     vi.spyOn(awsSecretsManagerProvider, "createSecret").mockRejectedValueOnce(
       new SecretProviderClientError({
@@ -3540,7 +3540,7 @@ describeEmbeddedPostgres("secretService", () => {
         operation: "createSecret",
         message: "AWS Secrets Manager denied the request. Check IAM permissions for this provider vault.",
         rawMessage:
-          "AccessDeniedException: arn:aws:sts::123456789012:assumed-role/prod/Paperclip cannot create secret",
+          "AccessDeniedException: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach cannot create secret",
       }),
     );
     vi.spyOn(db, "delete").mockImplementationOnce(() => {
@@ -3558,7 +3558,7 @@ describeEmbeddedPostgres("secretService", () => {
       }),
     ).rejects.toMatchObject({
       status: 500,
-      message: "Secret create failed and Paperclip could not roll back the local secret reservation.",
+      message: "Secret create failed and ThinkingMach could not roll back the local secret reservation.",
       details: {
         code: "secret_create_rollback_failed",
         provider: "aws_secrets_manager",
@@ -3590,7 +3590,7 @@ describeEmbeddedPostgres("secretService", () => {
       provider: "aws_secrets_manager",
       nextToken: null,
       sampledSecretCount: 1,
-      skippedForeignPaperclipSampleCount: 0,
+      skippedForeignThinkingMachSampleCount: 0,
       candidates: [
         {
           provider: "aws_secrets_manager",
@@ -3616,7 +3616,7 @@ describeEmbeddedPostgres("secretService", () => {
             hasKmsKey: false,
             sampleCount: 1,
             paperclipManagedSampleCount: 0,
-            skippedForeignPaperclipSampleCount: 0,
+            skippedForeignThinkingMachSampleCount: 0,
           },
           warnings: [],
         },
@@ -3656,7 +3656,7 @@ describeEmbeddedPostgres("secretService", () => {
     const companyId = await seedCompany();
     const svc = secretService(db);
     const rawProviderMessage =
-      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized to perform secretsmanager:ListSecrets";
+      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized to perform secretsmanager:ListSecrets";
 
     vi.spyOn(awsSecretsManagerProvider, "discoverProviderConfigs").mockRejectedValueOnce(
       new SecretProviderClientError({
@@ -3688,10 +3688,10 @@ describeEmbeddedPostgres("secretService", () => {
         providerConfigId: "discovery-preview",
         providerVaultContext: "draft_config",
         region: "us-east-1",
-        credentialPath: "Paperclip server runtime/provider credential path",
+        credentialPath: "ThinkingMach server runtime/provider credential path",
         requiredCapability: "secretsmanager:ListSecrets",
         actionableMessage:
-          "AWS discovery preview needs secretsmanager:ListSecrets in the selected region for the Paperclip server runtime/provider credential path.",
+          "AWS discovery preview needs secretsmanager:ListSecrets in the selected region for the ThinkingMach server runtime/provider credential path.",
         safeAlternative:
           "If the operator already knows the exact AWS Secrets Manager ARN, paste/link that ARN instead of using discovery. Exact-resource DescribeSecret and runtime read permissions are still required.",
       },
@@ -3933,7 +3933,7 @@ describeEmbeddedPostgres("secretService", () => {
       config: { region: "us-east-1", namespace: "prod-use1" },
     });
     const rawProviderMessage =
-      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized to perform secretsmanager:DescribeSecret on arn:aws:secretsmanager:us-east-1:123456789012:secret:prod/openai";
+      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized to perform secretsmanager:DescribeSecret on arn:aws:secretsmanager:us-east-1:123456789012:secret:prod/openai";
     vi.spyOn(awsSecretsManagerProvider, "linkExternalSecret").mockRejectedValueOnce(
       new SecretProviderClientError({
         code: "access_denied",
@@ -3971,7 +3971,7 @@ describeEmbeddedPostgres("secretService", () => {
     expect(JSON.stringify(result.results[0]?.reason)).not.toContain("123456789012");
   });
 
-  it("rejects Paperclip-managed AWS namespace refs during preview and import commit", async () => {
+  it("rejects ThinkingMach-managed AWS namespace refs during preview and import commit", async () => {
     const companyId = await seedCompany();
     const svc = secretService(db);
     const awsVault = await svc.createProviderConfig(companyId, {
@@ -4031,7 +4031,7 @@ describeEmbeddedPostgres("secretService", () => {
       errorCount: 1,
       results: [expect.objectContaining({ status: "error" })],
     });
-    expect(result.results[0]?.reason).toMatch(/Paperclip-managed namespace/i);
+    expect(result.results[0]?.reason).toMatch(/ThinkingMach-managed namespace/i);
     const imported = await db.select().from(companySecrets).where(eq(companySecrets.key, "foreign-managed-secret"));
     expect(imported).toHaveLength(0);
   });

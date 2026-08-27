@@ -23,7 +23,7 @@ import {
   toolGatewaySessions,
   toolInvocations,
   toolPolicies,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { PluginToolDispatcher } from "../services/plugin-tool-dispatcher.js";
 import type { VercelConnectClient } from "../services/vercel-connect.js";
 import { secretService } from "../services/secrets.js";
@@ -659,7 +659,7 @@ describeEmbeddedPostgres("tool gateway service", () => {
   });
 
   it("does not leave unsigned action requests pending when signing is unavailable", async () => {
-    vi.stubEnv("PAPERCLIP_TOOL_ACTION_SIGNING_SECRET", "");
+    vi.stubEnv("THINKINGMACH_TOOL_ACTION_SIGNING_SECRET", "");
     const { company, agent, run } = await createRunFixture(db);
     await db.insert(toolPolicies).values({
       companyId: company.id,

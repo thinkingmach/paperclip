@@ -1,4 +1,4 @@
-import type { HeartbeatRunEvent } from "@paperclipai/shared";
+import type { HeartbeatRunEvent } from "@thinkingmach/shared";
 import type { TranscriptEntry } from "@/adapters";
 
 function record(value: unknown): Record<string, unknown> | null {

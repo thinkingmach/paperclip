@@ -62,7 +62,7 @@
       "reasonCode": "budget_hard_stop",
       "owner": {
         "kind": "system",
-        "name": "Paperclip budget policy"
+        "name": "ThinkingMach budget policy"
       },
       "unblockAction": "Raise the actor budget or wait for the monthly reset.",
       "scope": "task_wide"

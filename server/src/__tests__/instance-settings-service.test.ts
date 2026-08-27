@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { InstanceExperimentalSettings } from "@paperclipai/shared";
+import type { InstanceExperimentalSettings } from "@thinkingmach/shared";
 import {
   applyExperimentalSettingsPatch,
   normalizeExperimentalSettings,
@@ -18,7 +18,7 @@ describe("instance settings service", () => {
       enableBuiltInAgents: true,
       enableGoalsSidebarLink: true,
       enableServerInfoDebugView: true,
-      enablePaperclipDeveloperMode: true,
+      enableThinkingMachDeveloperMode: true,
       autoRestartDevServerWhenIdle: true,
       enableWorkspaceBranchReconcileForward: true,
       enableWorkspaceDirtyQuarantineRepair: false,
@@ -46,7 +46,7 @@ describe("instance settings service", () => {
       enableDecisions: false,
       enableGoalsSidebarLink: true,
       enableServerInfoDebugView: true,
-      enablePaperclipDeveloperMode: true,
+      enableThinkingMachDeveloperMode: true,
       enableSimplifiedEnglishInteractions: false,
       autoRestartDevServerWhenIdle: true,
       enableWorkspaceBranchReconcileForward: true,
@@ -135,12 +135,12 @@ describe("instance settings service", () => {
     ).toBe(false);
   });
 
-  it("defaults enablePaperclipDeveloperMode to false for empty and legacy settings", () => {
-    expect(normalizeExperimentalSettings(undefined).enablePaperclipDeveloperMode).toBe(false);
-    expect(normalizeExperimentalSettings({}).enablePaperclipDeveloperMode).toBe(false);
+  it("defaults enableThinkingMachDeveloperMode to false for empty and legacy settings", () => {
+    expect(normalizeExperimentalSettings(undefined).enableThinkingMachDeveloperMode).toBe(false);
+    expect(normalizeExperimentalSettings({}).enableThinkingMachDeveloperMode).toBe(false);
     expect(
       normalizeExperimentalSettings({ enableServerInfoDebugView: true })
-        .enablePaperclipDeveloperMode,
+        .enableThinkingMachDeveloperMode,
     ).toBe(false);
   });
 
@@ -215,8 +215,8 @@ describe("instance settings service", () => {
       {
         now: () => activatedAt,
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       },
     );
@@ -236,8 +236,8 @@ describe("instance settings service", () => {
       { enableWorktreeRunExecution: false },
       {
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       },
     );
@@ -254,8 +254,8 @@ describe("instance settings service", () => {
       {
         now: () => new Date("2026-07-10T12:00:00.000Z"),
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       },
     );
@@ -264,8 +264,8 @@ describe("instance settings service", () => {
       { enableWorktreeRunExecution: false },
       {
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       },
     );
@@ -276,8 +276,8 @@ describe("instance settings service", () => {
       {
         now: () => new Date("2026-07-10T12:05:00.000Z"),
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       },
     );
@@ -298,8 +298,8 @@ describe("instance settings service", () => {
       },
       {
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       },
     );
@@ -319,8 +319,8 @@ describe("instance settings service", () => {
       resolveWorktreeRunExecutionActivationState({
         getExperimental: async () => experimental,
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       }),
     ).resolves.toEqual({
@@ -341,8 +341,8 @@ describe("instance settings service", () => {
       resolveWorktreeRunExecutionActivationState({
         getExperimental: async () => experimental,
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       }),
     ).resolves.toMatchObject({
@@ -363,8 +363,8 @@ describe("instance settings service", () => {
       resolveWorktreeRunExecutionActivationState({
         getExperimental: async () => experimental,
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "target-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "target-instance",
         },
       }),
     ).resolves.toMatchObject({
@@ -382,8 +382,8 @@ describe("instance settings service", () => {
           throw new Error("settings unavailable");
         },
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "true",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "true",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       }),
     ).resolves.toMatchObject({
@@ -397,8 +397,8 @@ describe("instance settings service", () => {
       resolveWorktreeRunExecutionActivationState({
         getExperimental,
         runtimeEnv: {
-          PAPERCLIP_IN_WORKTREE: "false",
-          PAPERCLIP_INSTANCE_ID: "worktree-instance",
+          THINKINGMACH_IN_WORKTREE: "false",
+          THINKINGMACH_INSTANCE_ID: "worktree-instance",
         },
       }),
     ).resolves.toMatchObject({

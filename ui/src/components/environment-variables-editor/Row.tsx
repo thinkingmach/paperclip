@@ -1,14 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ChevronDown,
-  KeyRound,
-  MoreHorizontal,
-  ShieldAlert,
-  Type as TypeIcon,
-  UserRound,
-  X,
-} from "lucide-react";
-import type { CompanySecret, UserSecretDefinition } from "@paperclipai/shared";
+import { ChevronDown, KeyRound, MoreHorizontal, ShieldAlert, Type as TypeIcon, UserRound, X,  } from "lucide-react";
+import type { CompanySecret, UserSecretDefinition } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,

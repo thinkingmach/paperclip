@@ -1,9 +1,9 @@
 import {
-  isPaperclipRunnerProvider,
-  PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES,
-  resolvePaperclipRunnerPermissionMode,
-  type PaperclipRunnerProvider,
-} from "@paperclipai/adapter-utils";
+  isThinkingMachRunnerProvider,
+  THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES,
+  resolveThinkingMachRunnerPermissionMode,
+  type ThinkingMachRunnerProvider,
+} from "@thinkingmach/adapter-utils";
 import {
   AGENTCORE_QUALIFIED_MODEL,
   CLAUDE_MANAGED_QUALIFIED_MODEL,
@@ -19,10 +19,10 @@ export const QUALIFIED_ACPX_RUNNER_MODELS = {
   codex: "gpt-5.6-sol",
 } as const;
 
-export type QualifiedPaperclipRunnerAcpxAgent =
+export type QualifiedThinkingMachRunnerAcpxAgent =
   keyof typeof QUALIFIED_ACPX_RUNNER_MODELS;
 
-export type PaperclipRunnerProviderProfile =
+export type ThinkingMachRunnerProviderProfile =
   | {
       provider: "codex";
       backend: "codex_app_server";
@@ -51,10 +51,10 @@ export type PaperclipRunnerProviderProfile =
       provider: "acpx";
       backend: "acpx_runtime";
       model: string;
-      acpxAgent: QualifiedPaperclipRunnerAcpxAgent;
+      acpxAgent: QualifiedThinkingMachRunnerAcpxAgent;
     };
 
-export type PaperclipRunnerNativeProviderInput =
+export type ThinkingMachRunnerNativeProviderInput =
   | {
       provider: "codex";
       model: string | null;
@@ -108,17 +108,17 @@ export type PaperclipRunnerNativeProviderInput =
   | {
       provider: "acpx";
       model: string;
-      acpxAgent: QualifiedPaperclipRunnerAcpxAgent;
+      acpxAgent: QualifiedThinkingMachRunnerAcpxAgent;
       acpxPermissionMode: "approve-all" | "approve-reads" | "deny-all";
     };
 
-export class PaperclipRunnerProviderProfileError extends Error {
+export class ThinkingMachRunnerProviderProfileError extends Error {
   constructor(
     readonly code: string,
     message: string,
   ) {
     super(message);
-    this.name = "PaperclipRunnerProviderProfileError";
+    this.name = "ThinkingMachRunnerProviderProfileError";
   }
 }
 
@@ -142,7 +142,7 @@ function positiveNumberOrNull(
   if (value === undefined || value === null || value === "") return null;
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
-    throw new PaperclipRunnerProviderProfileError(code, message);
+    throw new ThinkingMachRunnerProviderProfileError(code, message);
   }
   return parsed;
 }
@@ -161,7 +161,7 @@ function boundedPositiveInteger(
     || value <= 0
     || value > maximum
   ) {
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       code,
       `${label} must be an integer between 1 and ${maximum}.`,
     );
@@ -170,23 +170,23 @@ function boundedPositiveInteger(
 }
 
 function assertPermissionMode(
-  provider: PaperclipRunnerProvider,
+  provider: ThinkingMachRunnerProvider,
   config: Record<string, unknown>,
 ): void {
-  const capability = PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES[provider];
+  const capability = THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES[provider];
   if (!capability.configurable) return;
   const configured = config[capability.configKey];
   if (
     configured !== undefined
-    && resolvePaperclipRunnerPermissionMode(provider, configured) !== configured
+    && resolveThinkingMachRunnerPermissionMode(provider, configured) !== configured
   ) {
     if (provider === "codex") {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_codex_permission_mode_unqualified",
-        "Paperclip Runner currently supports Codex only with codexPermissionMode set to never. Update the agent configuration before starting a new native run.",
+        "ThinkingMach Runner currently supports Codex only with codexPermissionMode set to never. Update the agent configuration before starting a new native run.",
       );
     }
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       "runner_permission_mode_invalid",
       `${capability.configKey} is not supported by ${provider}.`,
     );
@@ -225,7 +225,7 @@ export function assertManagedProfileRecoveryBinding(input: {
     || snapshot.environmentId !== stored.environmentId
     || snapshot.betaVersion !== stored.betaVersion
   ) {
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       "paperclip_runner_claude_managed_recovery_identity_mismatch",
       "The persisted Claude Managed identity no longer matches its qualified profile.",
     );
@@ -233,7 +233,7 @@ export function assertManagedProfileRecoveryBinding(input: {
   const rawBinding = asRecord(asRecord(input.adapterConfig).env).ANTHROPIC_API_KEY;
   const boundSecretId = asRecord(rawBinding).secretId;
   if (boundSecretId !== stored.apiKeySecretId) {
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       "paperclip_runner_claude_managed_recovery_secret_mismatch",
       "The persisted Claude Managed run is not bound to its profile's current API-key secret.",
     );
@@ -288,7 +288,7 @@ export function assertAgentCoreProfileRecoveryBinding(input: {
     snapshot.profileId !== stored.id
     || fields.some((field) => snapshot[field] !== configuration[field])
   ) {
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       "paperclip_runner_aws_agentcore_recovery_identity_mismatch",
       "The persisted AWS AgentCore identity no longer matches its qualified profile.",
     );
@@ -296,20 +296,20 @@ export function assertAgentCoreProfileRecoveryBinding(input: {
 }
 
 /**
- * Resolve the immutable provider identity used for a fresh Paperclip Runner
+ * Resolve the immutable provider identity used for a fresh ThinkingMach Runner
  * selection. The persisted adapterConfig is the authority; runtimeConfig is
  * deliberately not consulted so model-profile or migration metadata cannot
  * silently switch the harness selected for a run.
  */
-export function resolvePaperclipRunnerProviderProfile(
+export function resolveThinkingMachRunnerProviderProfile(
   adapterConfig: unknown,
-): PaperclipRunnerProviderProfile {
+): ThinkingMachRunnerProviderProfile {
   const config = asRecord(adapterConfig);
   const candidate = config.provider ?? "codex";
-  if (!isPaperclipRunnerProvider(candidate)) {
-    throw new PaperclipRunnerProviderProfileError(
+  if (!isThinkingMachRunnerProvider(candidate)) {
+    throw new ThinkingMachRunnerProviderProfileError(
       "paperclip_runner_provider_unsupported",
-      "Paperclip Runner provider must be Codex, OpenCode, Claude Managed, AWS AgentCore, or ACPX.",
+      "ThinkingMach Runner provider must be Codex, OpenCode, Claude Managed, AWS AgentCore, or ACPX.",
     );
   }
 
@@ -325,9 +325,9 @@ export function resolvePaperclipRunnerProviderProfile(
 
   if (candidate === "opencode") {
     if (!model || !model.includes("/") || model.endsWith("/")) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_opencode_model_invalid",
-        "Paperclip Runner OpenCode requires model in provider/model form.",
+        "ThinkingMach Runner OpenCode requires model in provider/model form.",
       );
     }
     return {
@@ -340,19 +340,19 @@ export function resolvePaperclipRunnerProviderProfile(
   if (candidate === "claude_managed") {
     const managedProfileId = optionalString(config.managedProfileId);
     if (!managedProfileId) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_profile_required",
-        "Paperclip Runner Claude Managed requires a company managed-agent profile.",
+        "ThinkingMach Runner Claude Managed requires a company managed-agent profile.",
       );
     }
     if (config.managedAgentsRetentionAcknowledged !== true) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_retention_required",
-        "Paperclip Runner Claude Managed requires acknowledgement of stateful beta retention.",
+        "ThinkingMach Runner Claude Managed requires acknowledgement of stateful beta retention.",
       );
     }
     if (model !== null && model !== CLAUDE_MANAGED_QUALIFIED_MODEL) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_model_unqualified",
         `The Claude Managed profile requires exact model ${CLAUDE_MANAGED_QUALIFIED_MODEL}.`,
       );
@@ -365,7 +365,7 @@ export function resolvePaperclipRunnerProviderProfile(
       maxSessionListCostUsd: positiveNumberOrNull(
         config.maxSessionListCostUsd,
         "paperclip_runner_claude_managed_spend_cap_invalid",
-        "Paperclip Runner Claude Managed requires a positive session spend ceiling when overridden.",
+        "ThinkingMach Runner Claude Managed requires a positive session spend ceiling when overridden.",
       ),
     };
   }
@@ -373,19 +373,19 @@ export function resolvePaperclipRunnerProviderProfile(
   if (candidate === "aws_agentcore") {
     const agentCoreProfileId = optionalString(config.agentCoreProfileId);
     if (!agentCoreProfileId) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_profile_required",
-        "Paperclip Runner AWS AgentCore requires a company remote-agent profile.",
+        "ThinkingMach Runner AWS AgentCore requires a company remote-agent profile.",
       );
     }
     if (config.agentCoreRetentionAcknowledged !== true) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_retention_required",
-        "Paperclip Runner AWS AgentCore requires acknowledgement of 90-day Memory retention.",
+        "ThinkingMach Runner AWS AgentCore requires acknowledgement of 90-day Memory retention.",
       );
     }
     if (model !== null && model !== AGENTCORE_QUALIFIED_MODEL) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_model_unqualified",
         `The AWS AgentCore profile requires exact model ${AGENTCORE_QUALIFIED_MODEL}.`,
       );
@@ -398,23 +398,23 @@ export function resolvePaperclipRunnerProviderProfile(
       maxEstimatedSessionCostUsd: positiveNumberOrNull(
         config.maxEstimatedSessionCostUsd,
         "paperclip_runner_aws_agentcore_spend_cap_invalid",
-        "Paperclip Runner AWS AgentCore requires a positive estimated session spend ceiling when overridden.",
+        "ThinkingMach Runner AWS AgentCore requires a positive estimated session spend ceiling when overridden.",
       ),
     };
   }
 
   const acpxAgent = config.acpxAgent;
   if (acpxAgent !== "claude" && acpxAgent !== "codex") {
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       "paperclip_runner_acpx_agent_unavailable",
-      "Paperclip Runner ACPX requires the qualified Claude or Codex agent profile; Pi is not available.",
+      "ThinkingMach Runner ACPX requires the qualified Claude or Codex agent profile; Pi is not available.",
     );
   }
   const qualifiedModel = QUALIFIED_ACPX_RUNNER_MODELS[acpxAgent];
   if (model !== qualifiedModel) {
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       "paperclip_runner_acpx_model_unqualified",
-      `Paperclip Runner ACPX ${acpxAgent} requires exact model ${qualifiedModel}.`,
+      `ThinkingMach Runner ACPX ${acpxAgent} requires exact model ${qualifiedModel}.`,
     );
   }
   return {
@@ -431,8 +431,8 @@ export function resolvePaperclipRunnerProviderProfile(
  * configuration can select a stored profile, but it cannot replace that
  * profile's immutable remote resource identity.
  */
-export function resolvePaperclipRunnerNativeProviderInput(input: {
-  backend: PaperclipRunnerProviderProfile["backend"];
+export function resolveThinkingMachRunnerNativeProviderInput(input: {
+  backend: ThinkingMachRunnerProviderProfile["backend"];
   adapterConfig: unknown;
   managedProfile?: {
     id: string;
@@ -449,20 +449,20 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
     profileKey: string;
     configuration: Record<string, unknown>;
   } | null;
-}): PaperclipRunnerNativeProviderInput {
+}): ThinkingMachRunnerNativeProviderInput {
   const config = asRecord(input.adapterConfig);
-  const profile = resolvePaperclipRunnerProviderProfile(config);
+  const profile = resolveThinkingMachRunnerProviderProfile(config);
   if (profile.backend !== input.backend) {
-    throw new PaperclipRunnerProviderProfileError(
+    throw new ThinkingMachRunnerProviderProfileError(
       "paperclip_runner_provider_changed",
-      "Paperclip Runner provider changed after this run selected its native backend.",
+      "ThinkingMach Runner provider changed after this run selected its native backend.",
     );
   }
   if (profile.provider === "opencode") {
     return {
       provider: "opencode",
       model: profile.model,
-      opencodePermissionMode: resolvePaperclipRunnerPermissionMode(
+      opencodePermissionMode: resolveThinkingMachRunnerPermissionMode(
         "opencode",
         config.opencodePermissionMode,
       ) as "allow" | "ask" | "deny",
@@ -473,7 +473,7 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
       provider: "acpx",
       model: profile.model,
       acpxAgent: profile.acpxAgent,
-      acpxPermissionMode: resolvePaperclipRunnerPermissionMode(
+      acpxPermissionMode: resolveThinkingMachRunnerPermissionMode(
         "acpx",
         config.acpxPermissionMode,
       ) as "approve-all" | "approve-reads" | "deny-all",
@@ -488,13 +488,13 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
         && profile.managedProfileId !== stored.profileKey
       )
     ) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_profile_mismatch",
         "The qualified Claude Managed profile does not match the adapter selection.",
       );
     }
     if (stored.betaVersion !== CLAUDE_MANAGED_BETA_VERSION) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_beta_unqualified",
         "The Claude Managed profile beta version is not qualified.",
       );
@@ -503,19 +503,19 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
     const maxSessionListCostUsd = profile.maxSessionListCostUsd
       ?? stored.defaultMaxListCostCents / 100;
     if (!model) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_model_invalid",
         "The Claude Managed profile requires a model.",
       );
     }
     if (model !== CLAUDE_MANAGED_QUALIFIED_MODEL) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_model_unqualified",
         `The Claude Managed profile requires exact model ${CLAUDE_MANAGED_QUALIFIED_MODEL}.`,
       );
     }
     if (!Number.isFinite(maxSessionListCostUsd) || maxSessionListCostUsd <= 0) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_claude_managed_spend_cap_invalid",
         "The Claude Managed profile requires a positive session spend ceiling.",
       );
@@ -542,7 +542,7 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
         && profile.agentCoreProfileId !== stored.profileKey
       )
     ) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_profile_mismatch",
         "The qualified AWS AgentCore profile does not match the adapter selection.",
       );
@@ -551,7 +551,7 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
     const required = (key: string): string => {
       const value = optionalString(remote[key]);
       if (!value) {
-        throw new PaperclipRunnerProviderProfileError(
+        throw new ThinkingMachRunnerProviderProfileError(
           "paperclip_runner_aws_agentcore_profile_invalid",
           `The qualified AWS AgentCore profile is missing ${key}.`,
         );
@@ -559,7 +559,7 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
       return value;
     };
     if (remote.eventExpiryDays !== 90) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_retention_unqualified",
         "The qualified AWS AgentCore profile must retain Memory events for exactly 90 days.",
       );
@@ -571,14 +571,14 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
         "The AWS AgentCore profile requires a positive estimated session spend ceiling.",
       );
     if (maxEstimatedSessionCostUsd === null) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_spend_cap_invalid",
         "The AWS AgentCore profile requires a positive estimated session spend ceiling.",
       );
     }
     const model = profile.model ?? required("defaultModel");
     if (model !== AGENTCORE_QUALIFIED_MODEL) {
-      throw new PaperclipRunnerProviderProfileError(
+      throw new ThinkingMachRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_model_unqualified",
         `The AWS AgentCore profile requires exact model ${AGENTCORE_QUALIFIED_MODEL}.`,
       );
@@ -633,7 +633,7 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
   return {
     provider: "codex",
     model: profile.model,
-    codexApprovalPolicy: resolvePaperclipRunnerPermissionMode(
+    codexApprovalPolicy: resolveThinkingMachRunnerPermissionMode(
       "codex",
       config.codexPermissionMode,
     ) as "never" | "on-request" | "untrusted",

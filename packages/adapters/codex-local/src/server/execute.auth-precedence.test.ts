@@ -15,7 +15,7 @@ const {
   resolveAdapterExecutionTargetCommandForLogs,
   runAdapterExecutionTargetProcess,
   runAdapterExecutionTargetShellCommand,
-  startAdapterExecutionTargetPaperclipBridge,
+  startAdapterExecutionTargetThinkingMachBridge,
 } = vi.hoisted(() => ({
   ensureAdapterExecutionTargetCommandResolvable: vi.fn(async () => undefined),
   ensureAdapterExecutionTargetRuntimeCommandInstalled: vi.fn(async () => undefined),
@@ -45,12 +45,12 @@ const {
     pid: null,
     startedAt: new Date().toISOString(),
   })),
-  startAdapterExecutionTargetPaperclipBridge: vi.fn(async () => null),
+  startAdapterExecutionTargetThinkingMachBridge: vi.fn(async () => null),
 }));
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
@@ -60,7 +60,7 @@ vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
     resolveAdapterExecutionTargetCommandForLogs,
     runAdapterExecutionTargetProcess,
     runAdapterExecutionTargetShellCommand,
-    startAdapterExecutionTargetPaperclipBridge,
+    startAdapterExecutionTargetThinkingMachBridge,
   };
 });
 

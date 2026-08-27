@@ -1,8 +1,8 @@
 /**
- * Hermes Agent adapter for Paperclip.
+ * Hermes Agent adapter for ThinkingMach.
  *
  * Runs Hermes Agent (https://github.com/NousResearch/hermes-agent)
- * as a managed employee in a Paperclip company. Hermes Agent is a
+ * as a managed employee in a ThinkingMach company. Hermes Agent is a
  * full-featured AI agent with 30+ native tools, persistent memory,
  * skills, session persistence, and MCP support.
  *
@@ -13,7 +13,7 @@ import type {
   AdapterRuntimeCommandSpec,
   AdapterSessionManagement,
   ServerAdapterModule,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 
 import { ADAPTER_TYPE, ADAPTER_LABEL } from "./shared/constants.js";
 import {
@@ -40,7 +40,7 @@ export {
 /**
  * Models available through Hermes Agent.
  *
- * Hermes supports any model via any provider. The Paperclip UI should
+ * Hermes supports any model via any provider. The ThinkingMach UI should
  * prefer detectModel() plus manual entry over curated placeholder models,
  * since Hermes availability depends on the user's local configuration.
  */
@@ -67,7 +67,7 @@ function getRuntimeCommandSpec(config: Record<string, unknown>): AdapterRuntimeC
 }
 
 /**
- * Documentation shown in the Paperclip UI when configuring a Hermes agent.
+ * Documentation shown in the ThinkingMach UI when configuring a Hermes agent.
  */
 export const agentConfigurationDoc = `# Hermes Agent Configuration
 
@@ -113,34 +113,34 @@ tools, persistent memory, session persistence, skills, and MCP support.
 | env | object | {} | Extra environment variables |
 | promptTemplate | string | (default) | Custom prompt template with {{variable}} placeholders |
 
-## Hermes-Originated Paperclip Tasks
+## Hermes-Originated ThinkingMach Tasks
 
-This adapter package also ships a Hermes-facing Paperclip task bridge skill:
+This adapter package also ships a Hermes-facing ThinkingMach task bridge skill:
 \`paperclip-task-bridge\`. Use it when a user starts in Hermes and asks Hermes
-to create, comment on, update, or list Paperclip tasks.
+to create, comment on, update, or list ThinkingMach tasks.
 
 Configure credentials through Hermes env/profile secrets, never in prompt text:
 
-- \`PAPERCLIP_API_URL\` - Paperclip base URL, with or without \`/api\`
-- \`PAPERCLIP_BRIDGE_API_KEY\` - Paperclip agent API key created with \`scope.kind = "task_bridge"\`
-- optional fallback \`PAPERCLIP_API_KEY\` - must still be a task_bridge key, never a normal claimed agent key
-- optional \`PAPERCLIP_COMPANY_ID\`, \`PAPERCLIP_AGENT_ID\`, and \`PAPERCLIP_RUN_ID\`
+- \`THINKINGMACH_API_URL\` - ThinkingMach base URL, with or without \`/api\`
+- \`THINKINGMACH_BRIDGE_API_KEY\` - ThinkingMach agent API key created with \`scope.kind = "task_bridge"\`
+- optional fallback \`THINKINGMACH_API_KEY\` - must still be a task_bridge key, never a normal claimed agent key
+- optional \`THINKINGMACH_COMPANY_ID\`, \`THINKINGMACH_AGENT_ID\`, and \`THINKINGMACH_RUN_ID\`
 
 The bridge is separate from adapter execution:
 
-- \`hermes_local\` means Paperclip shells out to local \`hermes chat\`.
-- \`hermes_gateway\` means Paperclip wakes remote Hermes through Hermes's API server.
-- \`paperclip-task-bridge\` means Hermes calls Paperclip's REST API to manage tasks.
+- \`hermes_local\` means ThinkingMach shells out to local \`hermes chat\`.
+- \`hermes_gateway\` means ThinkingMach wakes remote Hermes through Hermes's API server.
+- \`paperclip-task-bridge\` means Hermes calls ThinkingMach's REST API to manage tasks.
 
 Create task bridge keys with a parent issue or project boundary. Do not expose
-normal claimed Paperclip agent API keys to internet-facing Hermes chat/webhook
+normal claimed ThinkingMach agent API keys to internet-facing Hermes chat/webhook
 task-bridge surfaces.
 
 ## Available Template Variables
 
-- \`{{agentId}}\` — Paperclip agent ID
+- \`{{agentId}}\` — ThinkingMach agent ID
 - \`{{agentName}}\` — Agent display name
-- \`{{companyId}}\` — Paperclip company ID
+- \`{{companyId}}\` — ThinkingMach company ID
 - \`{{companyName}}\` — Company display name
 - \`{{runId}}\` — Current heartbeat run ID
 - \`{{taskId}}\` — Current task/issue ID (if assigned)
@@ -150,7 +150,7 @@ task-bridge surfaces.
 `;
 
 /**
- * External adapter plugin entrypoint expected by Paperclip's adapter manager.
+ * External adapter plugin entrypoint expected by ThinkingMach's adapter manager.
  */
 export function createServerAdapter(): ServerAdapterModule {
   return {

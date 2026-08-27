@@ -5,7 +5,7 @@ import type {
   CompanySecretProviderConfig,
   SecretProposalAgentRef,
   SecretProposalView,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { AgentIcon } from "@/components/AgentIconPicker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

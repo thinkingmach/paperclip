@@ -1,9 +1,9 @@
 import { Router, type Request, type Response } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   updateDocumentResourceMembershipSchema,
   updateResourceMembershipSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { validate } from "../middleware/validate.js";
 import { getActorInfo } from "./authz.js";
 import { logActivity, resourceMembershipService } from "../services/index.js";

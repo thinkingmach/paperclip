@@ -6,16 +6,7 @@
  * `getAdapterDisplay()`.
  */
 import type { ComponentType } from "react";
-import {
-  Bot,
-  Code,
-  Gem,
-  Moon,
-  MousePointer2,
-  Sparkles,
-  Terminal,
-  Cpu,
-} from "lucide-react";
+import { Bot, Code, Gem, Moon, MousePointer2, Sparkles, Terminal, Cpu,  } from "lucide-react";
 import { OpenCodeLogoIcon } from "@/components/OpenCodeLogoIcon";
 
 // ---------------------------------------------------------------------------
@@ -81,7 +72,7 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
     recommended: true,
   },
   paperclip_runner: {
-    label: "Paperclip Runner",
+    label: "ThinkingMach Runner",
     description: "Experimental Rust runner with a Codex provider",
     icon: Cpu,
     experimental: true,

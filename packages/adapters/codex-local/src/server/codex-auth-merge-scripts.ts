@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { shellQuote } from "@paperclipai/adapter-utils/ssh";
-import type { SandboxManagedRuntimeAssetProvision } from "@paperclipai/adapter-utils/sandbox-managed-runtime";
+import { shellQuote } from "@thinkingmach/adapter-utils/ssh";
+import type { SandboxManagedRuntimeAssetProvision } from "@thinkingmach/adapter-utils/sandbox-managed-runtime";
 
 // Codex-specific inbound auth-merge assets. These live alongside the Codex
 // adapter server code; the two script files (`codex-auth-merge-extract.sh` and

@@ -31,7 +31,7 @@ it("spawns a real Node ACP agent with per-session env on this platform", async (
       mode: "oneshot",
       stateDir,
       cwd: repoRoot,
-      env: { PAPERCLIP_ACPX_SPAWN_SMOKE: "spawn-ok" },
+      env: { THINKINGMACH_ACPX_SPAWN_SMOKE: "spawn-ok" },
     },
     context: {},
     onLog: async (_stream: string, text: string) => logs.push(text),

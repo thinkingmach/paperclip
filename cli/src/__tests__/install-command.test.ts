@@ -13,7 +13,7 @@ import {
   runCommandWithDiagnostics,
 } from "../commands/install.js";
 import { uninstallCommand } from "../commands/uninstall.js";
-import { resolvePaperclipInstanceId } from "../config/home.js";
+import { resolveThinkingMachInstanceId } from "../config/home.js";
 import {
   INSTALL_MANIFEST_VERSION,
   flipCurrentAtomic,
@@ -37,7 +37,7 @@ describe("managed install commands", () => {
     process.env = {
       ...ORIGINAL_ENV,
       HOME: path.join(root, "home"),
-      PAPERCLIP_HOME: path.join(root, "home", ".paperclip"),
+      THINKINGMACH_HOME: path.join(root, "home", ".paperclip"),
       PATH: "/usr/bin:/bin",
       SHELL: "/bin/bash",
     };
@@ -66,19 +66,19 @@ describe("managed install commands", () => {
     const sha = "a".repeat(40);
     const runCommand = vi.fn(async (_file: string, _args: string[]) => ({ stdout: JSON.stringify({ sha }), stderr: "" }));
     for (const ref of ["master", "v1.2.3", sha, sha.slice(0, 12)]) {
-      await expect(resolveGitHubRef("paperclipai/paperclip", ref, runCommand)).resolves.toBe(sha);
+      await expect(resolveGitHubRef("thinkingmach/paperclip", ref, runCommand)).resolves.toBe(sha);
     }
     expect(runCommand.mock.calls.map((call) => call[1].at(-1))).toEqual([
-      "https://api.github.com/repos/paperclipai/paperclip/commits/master",
-      "https://api.github.com/repos/paperclipai/paperclip/commits/v1.2.3",
-      `https://api.github.com/repos/paperclipai/paperclip/commits/${sha}`,
-      `https://api.github.com/repos/paperclipai/paperclip/commits/${sha.slice(0, 12)}`,
+      "https://api.github.com/repos/thinkingmach/paperclip/commits/master",
+      "https://api.github.com/repos/thinkingmach/paperclip/commits/v1.2.3",
+      `https://api.github.com/repos/thinkingmach/paperclip/commits/${sha}`,
+      `https://api.github.com/repos/thinkingmach/paperclip/commits/${sha.slice(0, 12)}`,
     ]);
   });
 
   it("supports fork overrides and classifies SHA refs as pinned", () => {
     expect(resolveGitInstallRequest({ ref: "feature/test", repo: "HenkDz/paperclip" })).toEqual({ repo: "HenkDz/paperclip", ref: "feature/test", pinned: false });
-    expect(resolveGitInstallRequest({ ref: "abcdef1" })).toEqual({ repo: "paperclipai/paperclip", ref: "abcdef1", pinned: true });
+    expect(resolveGitInstallRequest({ ref: "abcdef1" })).toEqual({ repo: "thinkingmach/paperclip", ref: "abcdef1", pinned: true });
     expect(() => resolveGitInstallRequest({ repo: "HenkDz/paperclip" })).toThrow("requires --ref");
   });
 
@@ -95,12 +95,12 @@ describe("managed install commands", () => {
     const sha = "b".repeat(40);
     const paths = resolveInstallStorePaths();
     const payloadPath = payloadPathFor(paths, "git", sha.slice(0, 12));
-    const packageRoot = path.join(payloadPath, "node_modules", "paperclipai");
+    const packageRoot = path.join(payloadPath, "node_modules", "thinkingmach");
     fs.mkdirSync(path.join(packageRoot, "dist"), { recursive: true });
-    fs.writeFileSync(path.join(packageRoot, "package.json"), JSON.stringify({ version: "0.3.1" }));
+    fs.writeFileSync(path.join(packageRoot, "package.json"), JSON.stringify({ version: "0.3.3" }));
     fs.writeFileSync(path.join(packageRoot, "dist", "index.js"), "#!/usr/bin/env node\n");
-    const runCommand = vi.fn(async (_file: string, _args: string[]) => ({ stdout: "0.3.1\n", stderr: "" }));
-    await expect(installGitPayload("paperclipai/paperclip", sha, runCommand, paths)).resolves.toEqual({ payloadPath, reused: true, version: "0.3.1" });
+    const runCommand = vi.fn(async (_file: string, _args: string[]) => ({ stdout: "0.3.3\n", stderr: "" }));
+    await expect(installGitPayload("thinkingmach/paperclip", sha, runCommand, paths)).resolves.toEqual({ payloadPath, reused: true, version: "0.3.3" });
     expect(runCommand).toHaveBeenCalledOnce();
     expect(runCommand.mock.calls[0]?.[0]).toBe(process.execPath);
   });
@@ -112,12 +112,12 @@ describe("managed install commands", () => {
       if (file === "tar") {
         const checkout = args[args.indexOf("-C") + 1];
         const packages = [
-          { dir: "packages/shared", name: "@paperclipai/shared", packageJson: { name: "@paperclipai/shared", version: "0.3.1" } },
-          { dir: "packages/db", name: "@paperclipai/db", packageJson: { name: "@paperclipai/db", version: "0.3.1", dependencies: { "@paperclipai/shared": "workspace:*" }, bundleDependencies: ["embedded-postgres"] } },
-          { dir: "server", name: "@paperclipai/server", packageJson: { name: "@paperclipai/server", version: "0.3.1", dependencies: { "@paperclipai/db": "workspace:*" } } },
+          { dir: "packages/shared", name: "@thinkingmach/shared", packageJson: { name: "@thinkingmach/shared", version: "0.3.3" } },
+          { dir: "packages/db", name: "@thinkingmach/db", packageJson: { name: "@thinkingmach/db", version: "0.3.3", dependencies: { "@thinkingmach/shared": "workspace:*" }, bundleDependencies: ["embedded-postgres"] } },
+          { dir: "server", name: "@thinkingmach/server", packageJson: { name: "@thinkingmach/server", version: "0.3.3", dependencies: { "@thinkingmach/db": "workspace:*" } } },
         ];
         fs.mkdirSync(path.join(checkout, "cli"), { recursive: true });
-        fs.writeFileSync(path.join(checkout, "cli", "package.json"), JSON.stringify({ version: "0.3.1" }));
+        fs.writeFileSync(path.join(checkout, "cli", "package.json"), JSON.stringify({ version: "0.3.3" }));
         fs.mkdirSync(path.join(checkout, "scripts"), { recursive: true });
         fs.writeFileSync(path.join(checkout, "scripts", "release-package-manifest.json"), JSON.stringify(packages.map(({ dir, name }) => ({ dir, name }))));
         for (const workspacePackage of packages) {
@@ -130,24 +130,24 @@ describe("managed install commands", () => {
         if (args.includes("pack")) {
           const destination = args[args.indexOf("--pack-destination") + 1];
           const packageDir = args[args.indexOf("--dir") + 1];
-          const packageName = packageDir === "server" ? "paperclipai-server" : "paperclipai-shared";
-          fs.writeFileSync(path.join(destination, `${packageName}-0.3.1.tgz`), "package");
+          const packageName = packageDir === "server" ? "thinkingmach-server" : "thinkingmach-shared";
+          fs.writeFileSync(path.join(destination, `${packageName}-0.3.3.tgz`), "package");
         }
         return { stdout: "", stderr: "" };
       }
       if (file === "bash") return { stdout: "", stderr: "" };
       if (file === "npm" && args[0] === "pack") {
-        const packageName = args[1]?.includes("workspace-package-") ? "paperclipai-db" : "paperclipai";
-        fs.writeFileSync(path.join(args[args.indexOf("--pack-destination") + 1], `${packageName}-0.3.1.tgz`), "package");
+        const packageName = args[1]?.includes("workspace-package-") ? "thinkingmach-db" : "thinkingmach";
+        fs.writeFileSync(path.join(args[args.indexOf("--pack-destination") + 1], `${packageName}-0.3.3.tgz`), "package");
         return { stdout: "", stderr: "" };
       }
-      if (file === "npm" && args[0] === "install") { const prefix = args[args.indexOf("--prefix") + 1]; const packageRoot = path.join(prefix, "node_modules", "paperclipai"); fs.mkdirSync(path.join(packageRoot, "dist"), { recursive: true }); fs.writeFileSync(path.join(packageRoot, "package.json"), JSON.stringify({ version: "0.3.1" })); fs.writeFileSync(path.join(packageRoot, "dist", "index.js"), "#!/usr/bin/env node\n"); return { stdout: "", stderr: "" }; }
+      if (file === "npm" && args[0] === "install") { const prefix = args[args.indexOf("--prefix") + 1]; const packageRoot = path.join(prefix, "node_modules", "thinkingmach"); fs.mkdirSync(path.join(packageRoot, "dist"), { recursive: true }); fs.writeFileSync(path.join(packageRoot, "package.json"), JSON.stringify({ version: "0.3.3" })); fs.writeFileSync(path.join(packageRoot, "dist", "index.js"), "#!/usr/bin/env node\n"); return { stdout: "", stderr: "" }; }
       if (file === process.execPath && args[0]?.endsWith("prepare-bundled-package.mjs")) {
         fs.mkdirSync(args[2], { recursive: true });
-        fs.writeFileSync(path.join(args[2], "package.json"), JSON.stringify({ name: "@paperclipai/db", version: "0.3.1" }));
+        fs.writeFileSync(path.join(args[2], "package.json"), JSON.stringify({ name: "@thinkingmach/db", version: "0.3.3" }));
         return { stdout: "", stderr: "" };
       }
-      if (file === process.execPath) return { stdout: "0.3.1\n", stderr: "" };
+      if (file === process.execPath) return { stdout: "0.3.3\n", stderr: "" };
       throw new Error(`Unexpected command: ${file} ${args.join(" ")}`);
     });
 
@@ -172,7 +172,7 @@ describe("managed install commands", () => {
     process.env.NODE_ENV = "production";
     const sha = "d".repeat(40);
     const runCommand = createGitCheckoutRunCommand(sha);
-    await expect(installGitPayload("paperclipai/paperclip", sha, runCommand, resolveInstallStorePaths())).resolves.toMatchObject({ version: "0.3.1", reused: false });
+    await expect(installGitPayload("thinkingmach/paperclip", sha, runCommand, resolveInstallStorePaths())).resolves.toMatchObject({ version: "0.3.3", reused: false });
     const buildCalls = runCommand.mock.calls.filter(([file, args]) =>
       file === "bash" ||
       file === "corepack" ||
@@ -184,16 +184,16 @@ describe("managed install commands", () => {
       expect(env, `${call[0]} ${call[1].join(" ")} must run with an explicit env`).toBeDefined();
       expect(env, `${call[0]} ${call[1].join(" ")} must not inherit NODE_ENV`).not.toHaveProperty("NODE_ENV");
     }
-    const uiPackCall = buildCalls.find(([file, , options]) => file === "corepack" && options?.env?.PAPERCLIP_RELEASE_REUSE_UI_DIST === "1");
+    const uiPackCall = buildCalls.find(([file, , options]) => file === "corepack" && options?.env?.THINKINGMACH_RELEASE_REUSE_UI_DIST === "1");
     expect(uiPackCall).toBeDefined();
   });
 
   it("resolves the complete server workspace dependency closure in dependency order", () => {
     const checkout = path.join(root, "checkout");
     const packages = [
-      { dir: "packages/shared", name: "@paperclipai/shared", dependencies: {} },
-      { dir: "packages/db", name: "@paperclipai/db", dependencies: { "@paperclipai/shared": "workspace:*" } },
-      { dir: "server", name: "@paperclipai/server", dependencies: { "@paperclipai/db": "workspace:*" } },
+      { dir: "packages/shared", name: "@thinkingmach/shared", dependencies: {} },
+      { dir: "packages/db", name: "@thinkingmach/db", dependencies: { "@thinkingmach/shared": "workspace:*" } },
+      { dir: "server", name: "@thinkingmach/server", dependencies: { "@thinkingmach/db": "workspace:*" } },
     ];
     fs.mkdirSync(path.join(checkout, "scripts"), { recursive: true });
     fs.writeFileSync(path.join(checkout, "scripts", "release-package-manifest.json"), JSON.stringify(packages.map(({ dir, name }) => ({ dir, name }))));
@@ -203,9 +203,9 @@ describe("managed install commands", () => {
     }
 
     expect(resolveGitInstallWorkspacePackages(checkout).map(({ name }) => name)).toEqual([
-      "@paperclipai/shared",
-      "@paperclipai/db",
-      "@paperclipai/server",
+      "@thinkingmach/shared",
+      "@thinkingmach/db",
+      "@thinkingmach/server",
     ]);
   });
 
@@ -220,7 +220,7 @@ describe("managed install commands", () => {
       if (file === "npm" && args[0] === "view") return { stdout: JSON.stringify(version), stderr: "" };
       if (file === "npm" && args[0] === "install") {
         const prefix = args[args.indexOf("--prefix") + 1];
-        const entrypoint = path.join(prefix, "node_modules", "paperclipai", "dist", "index.js");
+        const entrypoint = path.join(prefix, "node_modules", "thinkingmach", "dist", "index.js");
         fs.mkdirSync(path.dirname(entrypoint), { recursive: true });
         fs.writeFileSync(entrypoint, "#!/usr/bin/env node\n");
         return { stdout: "", stderr: "" };
@@ -242,13 +242,13 @@ describe("managed install commands", () => {
     const installCall = runCommand.mock.calls.find(
       ([file, args]) => file === "npm" && args[0] === "install",
     );
-    expect(installCall?.[1]).toContain("--@paperclipai:registry=https://registry.npmjs.org");
+    expect(installCall?.[1]).toContain("--@thinkingmach:registry=https://registry.npmjs.org");
     const installOptions = installCall?.[2] as { env?: NodeJS.ProcessEnv } | undefined;
     expect(installOptions?.env?.npm_config_userconfig).toContain(".npmrc-");
-    const entrypoint = path.join(manifest!.payloadPath, "node_modules", "paperclipai", "dist", "index.js");
+    const entrypoint = path.join(manifest!.payloadPath, "node_modules", "thinkingmach", "dist", "index.js");
     expect(resolveCliVersion(entrypoint)).toContain(`managed npm latest; payload ${manifest!.payloadPath}`);
 
-    const userData = path.join(process.env.PAPERCLIP_HOME!, "instances", "default", "keep.txt");
+    const userData = path.join(process.env.THINKINGMACH_HOME!, "instances", "default", "keep.txt");
     fs.mkdirSync(path.dirname(userData), { recursive: true });
     fs.writeFileSync(userData, "keep");
     const uninstallService = vi.fn(async () => {
@@ -298,7 +298,7 @@ describe("managed install commands", () => {
       ".config",
       "systemd",
       "user",
-      systemdServiceName(resolvePaperclipInstanceId()),
+      systemdServiceName(resolveThinkingMachInstanceId()),
     );
     fs.mkdirSync(path.dirname(unitPath), { recursive: true });
     fs.writeFileSync(unitPath, "unit");
@@ -369,7 +369,7 @@ describe("managed install commands", () => {
     const outside = path.join(root, "outside-git"); fs.mkdirSync(outside);
     fs.symlinkSync(outside, path.join(paths.installsRoot, "git"));
     const runCommand = vi.fn(async () => ({ stdout: "", stderr: "" }));
-    await expect(installGitPayload("paperclipai/paperclip", "4".repeat(40), runCommand, paths)).rejects.toThrow("unsafe payload root");
+    await expect(installGitPayload("thinkingmach/paperclip", "4".repeat(40), runCommand, paths)).rejects.toThrow("unsafe payload root");
     expect(runCommand).not.toHaveBeenCalled();
   });
 

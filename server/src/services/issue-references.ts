@@ -1,5 +1,5 @@
 import { and, asc, eq, inArray, isNull } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   documentAnnotationComments,
   documents,
@@ -7,15 +7,15 @@ import {
   issueDocuments,
   issueReferenceMentions,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   IssueReferenceSource,
   IssueReferenceSourceKind,
   IssueRelatedWorkItem,
   IssueRelatedWorkSummary,
   IssueRelationIssueSummary,
-} from "@paperclipai/shared";
-import { extractIssueReferenceMatches } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { extractIssueReferenceMatches } from "@thinkingmach/shared";
 import { notFound } from "../errors.js";
 
 const SOURCE_KIND_ORDER: Record<IssueReferenceSourceKind, number> = {

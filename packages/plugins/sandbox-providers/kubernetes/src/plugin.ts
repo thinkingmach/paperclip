@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { definePlugin } from "@paperclipai/plugin-sdk";
+import { definePlugin } from "@thinkingmach/plugin-sdk";
 import type {
   PluginEnvironmentAcquireLeaseParams,
   PluginEnvironmentDestroyLeaseParams,
@@ -17,7 +17,7 @@ import type {
   PluginEnvironmentSyncResult,
   PluginEnvironmentValidateConfigParams,
   PluginEnvironmentValidationResult,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import {
   kubernetesProviderConfigSchema,
   type KubernetesProviderConfig,
@@ -55,7 +55,7 @@ import {
 // The namespace paperclip-server itself runs in. Used when building
 // NetworkPolicy manifests so the tenant namespace allows inbound traffic
 // from the server pod.
-const PAPERCLIP_SERVER_NAMESPACE = "paperclip";
+const THINKINGMACH_SERVER_NAMESPACE = "paperclip";
 
 // Name of the ServiceAccount created inside each tenant namespace by ensureTenant.
 const TENANT_SERVICE_ACCOUNT = "paperclip-tenant-sa";
@@ -339,7 +339,7 @@ const plugin = definePlugin({
     await ensureTenant(clients, {
       namespace,
       companyId: params.companyId,
-      paperclipServerNamespace: PAPERCLIP_SERVER_NAMESPACE,
+      paperclipServerNamespace: THINKINGMACH_SERVER_NAMESPACE,
       serviceAccountAnnotations: config.serviceAccountAnnotations,
       egressMode: config.egressMode,
       egressAllowFqdns: [...adapterDefaults.allowFqdns, ...config.egressAllowFqdns],
@@ -422,10 +422,10 @@ const plugin = definePlugin({
     // defaultEnv (non-secret base, e.g. the inference base URL) is layered first;
     // the process-env secrets named by envKeys override it.
     const adapterEnv = buildAdapterEnv(adapterDefaults);
-    adapterEnv.PAPERCLIP_NETWORK_EGRESS_POLICY = "kubernetes-default-deny";
-    adapterEnv.PAPERCLIP_NETWORK_EGRESS_GRANT_PATH = NETWORK_EGRESS_GRANT_PATH;
-    adapterEnv.PAPERCLIP_NETWORK_EGRESS_ALLOW_FQDNS = scopedNetworkEgress.allowFqdns.join(",");
-    adapterEnv.PAPERCLIP_NETWORK_EGRESS_ALLOW_CIDRS = scopedNetworkEgress.allowCidrs.join(",");
+    adapterEnv.THINKINGMACH_NETWORK_EGRESS_POLICY = "kubernetes-default-deny";
+    adapterEnv.THINKINGMACH_NETWORK_EGRESS_GRANT_PATH = NETWORK_EGRESS_GRANT_PATH;
+    adapterEnv.THINKINGMACH_NETWORK_EGRESS_ALLOW_FQDNS = scopedNetworkEgress.allowFqdns.join(",");
+    adapterEnv.THINKINGMACH_NETWORK_EGRESS_ALLOW_CIDRS = scopedNetworkEgress.allowCidrs.join(",");
     const bootstrapToken = generateBootstrapToken();
 
     // Secret ownerRef: for job backend, the Job owns the Secret (cascade delete).

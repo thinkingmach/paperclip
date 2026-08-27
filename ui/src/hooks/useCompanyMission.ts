@@ -11,7 +11,7 @@ import {
  * Whether a company already has its mission, for deciding which onboarding
  * step it belongs on.
  *
- * A company created by Paperclip Cloud does have one: Cloud collects the
+ * A company created by ThinkingMach Cloud does have one: Cloud collects the
  * mission at signup and the tenant writes it as a company-level goal. Opening
  * such a company on the mission step asks the customer something they answered
  * minutes earlier on another origin.

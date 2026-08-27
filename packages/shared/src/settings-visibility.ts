@@ -5,7 +5,7 @@ import { INSTANCE_FEATURE_KEYS, type InstanceFeatureKey } from "./feature-catalo
  *
  * A hosting operator (a managed cloud, an internal shared server) can hide
  * settings surfaces that do not apply to their deployment by setting the
- * `PAPERCLIP_HIDDEN_SETTINGS` environment variable to a comma-separated
+ * `THINKINGMACH_HIDDEN_SETTINGS` environment variable to a comma-separated
  * list of keys from this registry. Hiding a surface removes it from the UI
  * (nav, routes, page sections). Surfaces backed by instance-level mutation
  * routes are also floored with a 403 carrying
@@ -106,7 +106,7 @@ export type HideableSettingKey =
   | HideableGeneralSection
   | HideableExperimentalSetting;
 
-/** Every key `PAPERCLIP_HIDDEN_SETTINGS` accepts. */
+/** Every key `THINKINGMACH_HIDDEN_SETTINGS` accepts. */
 export const HIDEABLE_SETTING_KEYS: readonly HideableSettingKey[] = [
   ...HIDEABLE_INSTANCE_PAGES,
   ...HIDEABLE_COMPANY_PAGES,
@@ -125,7 +125,7 @@ export interface ParsedHiddenSettings {
   unknown: string[];
 }
 
-/** Parse a `PAPERCLIP_HIDDEN_SETTINGS`-style comma-separated list. */
+/** Parse a `THINKINGMACH_HIDDEN_SETTINGS`-style comma-separated list. */
 export function parseHiddenSettingsList(raw: string | undefined): ParsedHiddenSettings {
   const hidden: HideableSettingKey[] = [];
   const unknown: string[] = [];

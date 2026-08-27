@@ -12,7 +12,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: "@paperclipai/paperclip-runner/standalone",
+        find: "@thinkingmach/paperclip-runner/standalone",
         replacement: resolve(packageRoot, "src/standalone/index.ts"),
       },
     ],

@@ -1,11 +1,11 @@
-import type { PaperclipQuestion, PaperclipQuestionResponse, PaperclipQuestionSet, TranscriptEntry } from "@paperclipai/adapter-utils";
+import type { ThinkingMachQuestion, ThinkingMachQuestionResponse, ThinkingMachQuestionSet, TranscriptEntry } from "@thinkingmach/adapter-utils";
 import type { UIAdapterModule } from "../types";
-import { parseCodexStdoutLine, buildPaperclipRunnerConfig } from "@paperclipai/adapter-codex-local/ui";
+import { parseCodexStdoutLine, buildThinkingMachRunnerConfig } from "@thinkingmach/adapter-codex-local/ui";
 import { CodexLocalConfigFields } from "../codex-local/config-fields";
 
 type JsonRecord = Record<string, unknown>;
 
-interface PaperclipRunnerParserState {
+interface ThinkingMachRunnerParserState {
   assistantDeltaItemIds: Set<string>;
   reasoningDeltaItemIds: Set<string>;
   resultSummaries: Set<string>;
@@ -170,7 +170,7 @@ function dynamicToolEntries(
   ts: string,
 ): TranscriptEntry[] {
   const id = itemId(event, item);
-  const name = text(item.tool, text(item.name, "Paperclip tool"));
+  const name = text(item.tool, text(item.name, "ThinkingMach tool"));
   if (phase === "started") {
     return [{ kind: "tool_call", ts, name, toolUseId: id, input: item.arguments ?? item.input ?? {} }];
   }
@@ -210,7 +210,7 @@ function parseItemEvent(
   payload: JsonRecord,
   phase: "started" | "completed",
   ts: string,
-  state: PaperclipRunnerParserState,
+  state: ThinkingMachRunnerParserState,
 ): TranscriptEntry[] {
   const item = record(payload.item);
   const type = normalizedItemType(item, payload);
@@ -266,7 +266,7 @@ function parseDeltaEvent(
   event: JsonRecord,
   payload: JsonRecord,
   ts: string,
-  state: PaperclipRunnerParserState,
+  state: ThinkingMachRunnerParserState,
 ): TranscriptEntry[] {
   const kind = text(payload.kind).replaceAll("_", "").toLowerCase();
   const value = text(payload.text);
@@ -408,7 +408,7 @@ function runtimeRequestEntry(
   payload: JsonRecord,
   event: JsonRecord,
   ts: string,
-  state: PaperclipRunnerParserState,
+  state: ThinkingMachRunnerParserState,
 ): TranscriptEntry | null {
   const request = record(payload.request ?? payload);
   const requestId = text(request.requestId, text(payload.requestId));
@@ -501,11 +501,11 @@ function runtimeRequestEntry(
   return entry;
 }
 
-function parseQuestionResponse(value: unknown): PaperclipQuestionResponse | null {
+function parseQuestionResponse(value: unknown): ThinkingMachQuestionResponse | null {
   const response = record(value);
   if (response.schema !== "paperclip.question_response.v1") return null;
   const rawAnswers = record(response.answers);
-  const answers: PaperclipQuestionResponse["answers"] = {};
+  const answers: ThinkingMachQuestionResponse["answers"] = {};
   for (const [questionId, rawAnswer] of Object.entries(rawAnswers).slice(0, 64)) {
     const answer = record(rawAnswer);
     const selectedOptionIds = (Array.isArray(answer.selectedOptionIds) ? answer.selectedOptionIds : [])
@@ -523,7 +523,7 @@ function parseQuestionResponse(value: unknown): PaperclipQuestionResponse | null
   return { schema: "paperclip.question_response.v1", answers };
 }
 
-function parseQuestionSet(value: unknown): PaperclipQuestionSet | null {
+function parseQuestionSet(value: unknown): ThinkingMachQuestionSet | null {
   const input = record(value);
   if (!Array.isArray(input.questions) || input.questions.length === 0) return null;
   // Early v2 events passed through a broad JWT redactor that replaced the
@@ -533,8 +533,8 @@ function parseQuestionSet(value: unknown): PaperclipQuestionSet | null {
   if (input.schema !== undefined
     && input.schema !== "paperclip.question_set.v1"
     && input.schema !== "***REDACTED***") return null;
-  const questions = input.questions.map(record).slice(0, 64).map((question, questionIndex): PaperclipQuestion => {
-    const answerMode: PaperclipQuestion["answerMode"] = question.answerMode === "single_select" || question.answerMode === "multi_select" ? question.answerMode : "text";
+  const questions = input.questions.map(record).slice(0, 64).map((question, questionIndex): ThinkingMachQuestion => {
+    const answerMode: ThinkingMachQuestion["answerMode"] = question.answerMode === "single_select" || question.answerMode === "multi_select" ? question.answerMode : "text";
     const options = (Array.isArray(question.options) ? question.options : []).map(record).slice(0, 128).map((option, optionIndex) => ({
       id: text(option.id, `option-${optionIndex + 1}`).slice(0, 160),
       label: text(option.label, `Option ${optionIndex + 1}`).slice(0, 1_000),
@@ -542,11 +542,11 @@ function parseQuestionSet(value: unknown): PaperclipQuestionSet | null {
     }));
     const customAnswer = record(question.customAnswer);
     const validation = record(question.textValidation);
-    const inputType: NonNullable<PaperclipQuestion["textValidation"]>["inputType"] =
+    const inputType: NonNullable<ThinkingMachQuestion["textValidation"]>["inputType"] =
       validation.inputType === "number" || validation.inputType === "integer" || validation.inputType === "text"
         ? validation.inputType
         : undefined;
-    const parsedQuestion: PaperclipQuestion = {
+    const parsedQuestion: ThinkingMachQuestion = {
       id: text(question.id, `question-${questionIndex + 1}`).slice(0, 160),
       ...(nullableText(question.header) ? { header: text(question.header).slice(0, 1_000) } : {}),
       prompt: text(question.prompt, `Question ${questionIndex + 1}`).slice(0, 4_000),
@@ -640,7 +640,7 @@ function runTerminalEntry(payload: JsonRecord, ts: string): Extract<TranscriptEn
 function semanticToolEntries(eventType: string, payload: JsonRecord, ts: string): TranscriptEntry[] {
   const semantic = record(payload.semantic_tool ?? payload.semanticTool);
   const callId = text(semantic.callId, "semantic-tool");
-  const operationId = text(semantic.operationId, "Paperclip operation");
+  const operationId = text(semantic.operationId, "ThinkingMach operation");
   const content = record(semantic.content);
   const references = (Array.isArray(content.references) ? content.references : []).map(record);
   const input = {
@@ -665,7 +665,7 @@ function semanticToolEntries(eventType: string, payload: JsonRecord, ts: string)
 function parsePrpEvent(
   event: JsonRecord,
   ts: string,
-  state: PaperclipRunnerParserState,
+  state: ThinkingMachRunnerParserState,
 ): TranscriptEntry[] {
   const eventType = text(event.eventType);
   const payload = record(event.payload);
@@ -716,9 +716,9 @@ function parsePrpEvent(
   }
   if (eventType === "session.started" || eventType === "session.resumed") {
     const context = record(payload.context);
-    const model = text(context.model, text(record(payload.model).name, "Paperclip runner"));
+    const model = text(context.model, text(record(payload.model).name, "ThinkingMach runner"));
     const sessionId = text(payload.providerSessionId, text(payload.driverSessionId, text(event.normalizedSessionId)));
-    return [{ kind: "system", ts, text: `Paperclip session ${eventType === "session.resumed" ? "resumed" : "started"} · ${model}${sessionId ? ` · ${sessionId}` : ""}` }];
+    return [{ kind: "system", ts, text: `ThinkingMach session ${eventType === "session.resumed" ? "resumed" : "started"} · ${model}${sessionId ? ` · ${sessionId}` : ""}` }];
   }
   if (eventType === "turn.started") return [{ kind: "system", ts, text: "Turn started" }];
   if (eventType === "turn.completed") return [{ kind: "system", ts, text: "Turn completed" }];
@@ -752,7 +752,7 @@ function parsePrpEvent(
   return [];
 }
 
-function createParserState(): PaperclipRunnerParserState {
+function createParserState(): ThinkingMachRunnerParserState {
   return {
     assistantDeltaItemIds: new Set(),
     reasoningDeltaItemIds: new Set(),
@@ -764,7 +764,7 @@ function createParserState(): PaperclipRunnerParserState {
   };
 }
 
-function parsePaperclipRunnerLine(line: string, ts: string, state: PaperclipRunnerParserState): TranscriptEntry[] {
+function parseThinkingMachRunnerLine(line: string, ts: string, state: ThinkingMachRunnerParserState): TranscriptEntry[] {
   let parsed: unknown;
   try {
     parsed = JSON.parse(line);
@@ -777,21 +777,21 @@ function parsePaperclipRunnerLine(line: string, ts: string, state: PaperclipRunn
   return Object.keys(event).length > 0 ? parsePrpEvent(event, ts, state) : [];
 }
 
-export function parsePaperclipRunnerStdoutLine(line: string, ts: string): TranscriptEntry[] {
-  return parsePaperclipRunnerLine(line, ts, createParserState());
+export function parseThinkingMachRunnerStdoutLine(line: string, ts: string): TranscriptEntry[] {
+  return parseThinkingMachRunnerLine(line, ts, createParserState());
 }
 
 export const paperclipRunnerUIAdapter: UIAdapterModule = {
   type: "paperclip_runner",
-  label: "Paperclip Runner",
-  parseStdoutLine: parsePaperclipRunnerStdoutLine,
+  label: "ThinkingMach Runner",
+  parseStdoutLine: parseThinkingMachRunnerStdoutLine,
   createStdoutParser: () => {
     let state = createParserState();
     return {
-      parseLine: (line, ts) => parsePaperclipRunnerLine(line, ts, state),
+      parseLine: (line, ts) => parseThinkingMachRunnerLine(line, ts, state),
       reset: () => { state = createParserState(); },
     };
   },
   ConfigFields: CodexLocalConfigFields,
-  buildAdapterConfig: buildPaperclipRunnerConfig,
+  buildAdapterConfig: buildThinkingMachRunnerConfig,
 };

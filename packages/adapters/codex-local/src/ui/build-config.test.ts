@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildCodexLocalConfig, buildPaperclipRunnerConfig } from "./build-config.js";
-import type { CreateConfigValues } from "@paperclipai/adapter-utils";
+import { buildCodexLocalConfig, buildThinkingMachRunnerConfig } from "./build-config.js";
+import type { CreateConfigValues } from "@thinkingmach/adapter-utils";
 
 function makeValues(overrides: Partial<CreateConfigValues> = {}): CreateConfigValues {
   return {
@@ -86,9 +86,9 @@ describe("buildCodexLocalConfig", () => {
   });
 });
 
-describe("buildPaperclipRunnerConfig", () => {
+describe("buildThinkingMachRunnerConfig", () => {
   it("keeps only settings implemented by the Codex runner profile", () => {
-    const config = buildPaperclipRunnerConfig(makeValues({
+    const config = buildThinkingMachRunnerConfig(makeValues({
       codexEngine: "acp",
       codexAcpAgentCommand: "custom-acp",
       codexAcpStateDir: "/tmp/acp",
@@ -126,7 +126,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("persists bounded Codex permission and warm lifecycle values", () => {
-    const config = buildPaperclipRunnerConfig(makeValues({
+    const config = buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       codexPermissionMode: "never",
       paperclipRunnerLifecycleMode: "warm",
@@ -142,7 +142,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("rejects an unsupported persisted Codex permission instead of coercing it", () => {
-    expect(() => buildPaperclipRunnerConfig(makeValues({
+    expect(() => buildThinkingMachRunnerConfig(makeValues({
       adapterSchemaValues: {
         provider: "unknown",
         codexPermissionMode: "unrestricted",
@@ -153,7 +153,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("builds a qualified OpenCode profile from schema-backed values", () => {
-    expect(buildPaperclipRunnerConfig(makeValues({
+    expect(buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       model: "",
       adapterSchemaValues: {
@@ -170,7 +170,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("does not let a stale schema model override the active Codex model", () => {
-    expect(buildPaperclipRunnerConfig(makeValues({
+    expect(buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       model: "gpt-5.6-sol",
       adapterSchemaValues: {
@@ -189,7 +189,7 @@ describe("buildPaperclipRunnerConfig", () => {
     ["claude", "claude-sonnet-5"],
     ["codex", "gpt-5.6-sol"],
   ] as const)("builds the qualified ACPX %s profile", (acpxAgent, model) => {
-    expect(buildPaperclipRunnerConfig(makeValues({
+    expect(buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       model: "stale-model-from-another-provider",
       adapterSchemaValues: {
@@ -206,7 +206,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("does not materialize the unavailable ACPX Pi profile", () => {
-    expect(buildPaperclipRunnerConfig(makeValues({
+    expect(buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       model: "",
       adapterSchemaValues: {
@@ -221,7 +221,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("builds a Claude Managed profile reference with explicit retention and spend controls", () => {
-    const config = buildPaperclipRunnerConfig(makeValues({
+    const config = buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       model: "claude-sonnet-5",
       adapterSchemaValues: {
@@ -243,7 +243,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("builds an AgentCore profile reference with bounded invocation controls", () => {
-    expect(buildPaperclipRunnerConfig(makeValues({
+    expect(buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       model: "",
       adapterSchemaValues: {
@@ -274,7 +274,7 @@ describe("buildPaperclipRunnerConfig", () => {
     ["maxOutputTokens", 4_097],
     ["timeoutSeconds", 301],
   ])("rejects an unsafe AgentCore %s value", (field, value) => {
-    expect(() => buildPaperclipRunnerConfig(makeValues({
+    expect(() => buildThinkingMachRunnerConfig(makeValues({
       adapterType: "paperclip_runner",
       adapterSchemaValues: {
         provider: "aws_agentcore",
@@ -286,14 +286,14 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("uses the Codex default when no model was selected", () => {
-    expect(buildPaperclipRunnerConfig(makeValues({ model: "" }))).toMatchObject({
+    expect(buildThinkingMachRunnerConfig(makeValues({ model: "" }))).toMatchObject({
       provider: "codex",
       model: "gpt-5.6-sol",
     });
   });
 
   it("bounds warm lifecycle values to the shared safe default", () => {
-    expect(buildPaperclipRunnerConfig(makeValues({
+    expect(buildThinkingMachRunnerConfig(makeValues({
       paperclipRunnerLifecycleMode: "warm",
       paperclipRunnerIdleTimeoutMs: 86_400_001,
     }))).toMatchObject({
@@ -303,7 +303,7 @@ describe("buildPaperclipRunnerConfig", () => {
   });
 
   it("omits an idle timeout for turn-by-turn sessions", () => {
-    const config = buildPaperclipRunnerConfig(makeValues({
+    const config = buildThinkingMachRunnerConfig(makeValues({
       paperclipRunnerLifecycleMode: "per_turn",
       paperclipRunnerIdleTimeoutMs: 45_000,
     }));

@@ -7,7 +7,7 @@
 import type {
   CompanyImportTransferDeclaration,
   CompanyImportTransferDeclaredPart,
-} from "@paperclipai/shared/company-import-transfer";
+} from "@thinkingmach/shared/company-import-transfer";
 
 /** Local zips larger than this take the chunked transfer path. */
 export const CHUNKED_IMPORT_THRESHOLD_BYTES = 48 * 1024 * 1024;

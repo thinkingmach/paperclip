@@ -191,7 +191,7 @@ describe("SearchableSelect", () => {
           {
             key: "all:path-only",
             value: "path-only",
-            label: "Paperclip app",
+            label: "ThinkingMach app",
             searchText: "/srv/paperclip/mobile-checkout",
           },
           {
@@ -395,8 +395,8 @@ describe("SearchableSelect", () => {
     const groups = buildWorkspaceSelectGroups([
       workspace({
         id: "workspace-paperclip",
-        name: "Paperclip app",
-        cwd: "/srv/paperclip/home/paperclipai/paperclip/.paperclip/worktrees/PAP-11722-new-existing-workspace-selector",
+        name: "ThinkingMach app",
+        cwd: "/srv/paperclip/home/thinkingmach/paperclip/.paperclip/worktrees/PAP-11722-new-existing-workspace-selector",
         branchName: "feature/reusable-workspaces",
         status: "running",
         lastUsedAt: "2026-06-24T10:00:00.000Z",
@@ -443,7 +443,7 @@ describe("SearchableSelect", () => {
     setInputValue(input!, "pclip reusable");
     await flush();
 
-    expect(container.textContent).toContain("Paperclip app");
+    expect(container.textContent).toContain("ThinkingMach app");
     expect(container.textContent).not.toContain("Marketing site");
 
     const selectedOptionKey = () => (

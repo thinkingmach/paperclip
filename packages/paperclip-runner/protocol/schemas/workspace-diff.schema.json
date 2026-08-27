@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://paperclip.dev/schemas/prp/v1/workspace-diff.schema.json",
-  "title": "Paperclip workspace diff",
+  "title": "ThinkingMach workspace diff",
   "type": "object",
   "required": ["schema", "changeSetId", "revision", "source", "complete", "files", "totals", "patchArtifactRef"],
   "properties": {

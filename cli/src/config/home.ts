@@ -7,33 +7,33 @@ import {
   resolveDefaultSecretsKeyFilePath as resolveSharedDefaultSecretsKeyFilePath,
   resolveDefaultStorageDir as resolveSharedDefaultStorageDir,
   resolveHomeAwarePath,
-  resolvePaperclipConfigPathForInstance,
-  resolvePaperclipHomeDir,
-  resolvePaperclipInstanceId,
-  resolvePaperclipInstanceRoot as resolveSharedPaperclipInstanceRoot,
-} from "@paperclipai/shared/home-paths";
+  resolveThinkingMachConfigPathForInstance,
+  resolveThinkingMachHomeDir,
+  resolveThinkingMachInstanceId,
+  resolveThinkingMachInstanceRoot as resolveSharedThinkingMachInstanceRoot,
+} from "@thinkingmach/shared/home-paths";
 
 export {
   expandHomePrefix,
   resolveHomeAwarePath,
-  resolvePaperclipHomeDir,
-  resolvePaperclipInstanceId,
+  resolveThinkingMachHomeDir,
+  resolveThinkingMachInstanceId,
 };
 
-export function resolvePaperclipInstanceRoot(instanceId?: string): string {
-  return resolveSharedPaperclipInstanceRoot({ instanceId });
+export function resolveThinkingMachInstanceRoot(instanceId?: string): string {
+  return resolveSharedThinkingMachInstanceRoot({ instanceId });
 }
 
 export function resolveDefaultConfigPath(instanceId?: string): string {
-  return resolvePaperclipConfigPathForInstance({ instanceId });
+  return resolveThinkingMachConfigPathForInstance({ instanceId });
 }
 
 export function resolveDefaultContextPath(): string {
-  return path.resolve(resolvePaperclipHomeDir(), "context.json");
+  return path.resolve(resolveThinkingMachHomeDir(), "context.json");
 }
 
 export function resolveDefaultCliAuthPath(): string {
-  return path.resolve(resolvePaperclipHomeDir(), "auth.json");
+  return path.resolve(resolveThinkingMachHomeDir(), "auth.json");
 }
 
 export function resolveDefaultEmbeddedPostgresDir(instanceId?: string): string {
@@ -57,10 +57,10 @@ export function resolveDefaultBackupDir(instanceId?: string): string {
 }
 
 export function describeLocalInstancePaths(instanceId?: string) {
-  const resolvedInstanceId = resolvePaperclipInstanceId(instanceId);
-  const instanceRoot = resolvePaperclipInstanceRoot(resolvedInstanceId);
+  const resolvedInstanceId = resolveThinkingMachInstanceId(instanceId);
+  const instanceRoot = resolveThinkingMachInstanceRoot(resolvedInstanceId);
   return {
-    homeDir: resolvePaperclipHomeDir(),
+    homeDir: resolveThinkingMachHomeDir(),
     instanceId: resolvedInstanceId,
     instanceRoot,
     configPath: resolveDefaultConfigPath(resolvedInstanceId),

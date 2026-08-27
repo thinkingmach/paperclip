@@ -1,4 +1,4 @@
-import { getAgentWorkEligibility, isAgentInvokable } from "@paperclipai/shared";
+import { getAgentWorkEligibility, isAgentInvokable } from "@thinkingmach/shared";
 import { buildIssueGraphLivenessIncidentKey } from "./origins.js";
 
 export type IssueLivenessSeverity = "warning" | "critical";

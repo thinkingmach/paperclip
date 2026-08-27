@@ -114,7 +114,7 @@ async function startFakeProvider() {
 
 function connectionAwareScript(connectionId: string) {
   return `
-const post = async (url, body, token = process.env.PAPERCLIP_RUNTIME_TOOLS_TOKEN) => {
+const post = async (url, body, token = process.env.THINKINGMACH_RUNTIME_TOOLS_TOKEN) => {
   const response = await fetch(url, {
     method: "POST",
     headers: { authorization: \`Bearer \${token}\`, "content-type": "application/json" },
@@ -123,30 +123,30 @@ const post = async (url, body, token = process.env.PAPERCLIP_RUNTIME_TOOLS_TOKEN
   if (!response.ok) throw new Error(\`\${response.status}: \${await response.text()}\`);
   return await response.json();
 };
-const search = await post(process.env.PAPERCLIP_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL, { query: "notion" });
+const search = await post(process.env.THINKINGMACH_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL, { query: "notion" });
 const notion = search.results.find((result) => result.service === "notion");
 if (!notion) throw new Error("Notion was not advertised");
 if (notion.state !== "ready") {
-  const requested = await post(process.env.PAPERCLIP_RUNTIME_TOOLS_CONNECTION_REQUEST_URL, { service: notion.service });
+  const requested = await post(process.env.THINKINGMACH_RUNTIME_TOOLS_CONNECTION_REQUEST_URL, { service: notion.service });
   if (requested.state !== "needs_user_action") throw new Error("Expected a user-action request");
   console.log("waiting for connection intent");
   process.exit(0);
 }
-const apiHeaders = { authorization: \`Bearer \${process.env.PAPERCLIP_API_KEY}\`, "content-type": "application/json" };
-const sessionResponse = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/sessions\`, {
+const apiHeaders = { authorization: \`Bearer \${process.env.THINKINGMACH_API_KEY}\`, "content-type": "application/json" };
+const sessionResponse = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/sessions\`, {
   method: "POST",
   headers: apiHeaders,
-  body: JSON.stringify({ runId: process.env.PAPERCLIP_RUN_ID, ttlMs: 60000 })
+  body: JSON.stringify({ runId: process.env.THINKINGMACH_RUN_ID, ttlMs: 60000 })
 });
 if (!sessionResponse.ok) throw new Error(await sessionResponse.text());
 const session = await sessionResponse.json();
-const toolsResponse = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/tools\`, {
+const toolsResponse = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/tools\`, {
   headers: { "x-paperclip-tool-gateway-token": session.token }
 });
 const tools = await toolsResponse.json();
 const tool = tools.find((entry) => entry.connectionId === ${JSON.stringify(connectionId)} && entry.upstreamToolName === "notion:list_pages");
 if (!tool) throw new Error("Continuation did not receive the installed Notion tool");
-const call = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/tools/call\`, {
+const call = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/tools/call\`, {
   method: "POST",
   headers: { "x-paperclip-tool-gateway-token": session.token, "content-type": "application/json" },
   body: JSON.stringify({ tool: tool.name, parameters: {} })

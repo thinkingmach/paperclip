@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   approvals,
   completionContracts,
@@ -12,9 +12,9 @@ import {
   nativeRunResults,
   statusDecisions,
   workAssessments,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { classifyNativeEvidence } from "./evidence-classifier.js";
-import type { PrpIgnoredAttentionRequest } from "@paperclipai/paperclip-runner";
+import type { PrpIgnoredAttentionRequest } from "@thinkingmach/paperclip-runner";
 import {
   arbitrateNativeStatus,
   NATIVE_STATUS_ARBITER_POLICY_VERSION,

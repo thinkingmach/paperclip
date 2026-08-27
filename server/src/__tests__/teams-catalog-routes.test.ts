@@ -51,8 +51,8 @@ async function createApp(actor: Record<string, unknown>) {
 
 function catalogTeam(overrides: Record<string, unknown> = {}) {
   return {
-    id: "paperclipai:bundled:software-development:product-engineering",
-    key: "paperclipai/bundled/software-development/product-engineering",
+    id: "thinkingmach:bundled:software-development:product-engineering",
+    key: "thinkingmach/bundled/software-development/product-engineering",
     kind: "bundled",
     category: "software-development",
     slug: "product-engineering",
@@ -96,7 +96,7 @@ describe("teams catalog routes", () => {
     mockCatalogModule.listCatalogTeams.mockReturnValue([catalogTeam()]);
     mockCatalogModule.getCatalogTeamOrThrow.mockReturnValue(catalogTeam());
     mockCatalogModule.readCatalogTeamFile.mockResolvedValue({
-      catalogTeamId: "paperclipai:bundled:software-development:product-engineering",
+      catalogTeamId: "thinkingmach:bundled:software-development:product-engineering",
       path: "TEAM.md",
       kind: "team",
       content: "# Product Engineering",
@@ -116,8 +116,8 @@ describe("teams catalog routes", () => {
     });
     mockTeamsCatalogService.listInstalledCatalogTeams.mockResolvedValue([
       {
-        catalogId: "paperclipai:bundled:software-development:product-engineering",
-        catalogKey: "paperclipai/bundled/software-development/product-engineering",
+        catalogId: "thinkingmach:bundled:software-development:product-engineering",
+        catalogKey: "thinkingmach/bundled/software-development/product-engineering",
         present: true,
         currentContentHash: "sha256:catalog-team",
         installedOriginHashes: ["sha256:old"],
@@ -128,7 +128,7 @@ describe("teams catalog routes", () => {
     mockTeamsCatalogService.installCatalogTeam.mockResolvedValue({
       team: catalogTeam(),
       portabilityImport: {
-        company: { id: companyId, name: "Paperclip", action: "unchanged" },
+        company: { id: companyId, name: "ThinkingMach", action: "unchanged" },
         agents: [],
         projects: [],
         envInputs: [],
@@ -175,7 +175,7 @@ describe("teams catalog routes", () => {
     expect(mockTeamsCatalogService.listInstalledCatalogTeams).toHaveBeenCalledWith(companyId);
     expect(res.body).toEqual([
       expect.objectContaining({
-        catalogId: "paperclipai:bundled:software-development:product-engineering",
+        catalogId: "thinkingmach:bundled:software-development:product-engineering",
         present: true,
         outOfDate: true,
         agentCount: 3,
@@ -222,7 +222,7 @@ describe("teams catalog routes", () => {
     });
 
     const res = await request(app)
-      .post(`/api/companies/${companyId}/teams/catalog/ref/preview?ref=paperclipai%2Fbundled%2Fsoftware-development%2Fproduct-engineering`)
+      .post(`/api/companies/${companyId}/teams/catalog/ref/preview?ref=thinkingmach%2Fbundled%2Fsoftware-development%2Fproduct-engineering`)
       .send({
         targetManagerSlug: "engineering-lead",
         sourcePolicy: { allowExternalSources: true },
@@ -231,7 +231,7 @@ describe("teams catalog routes", () => {
     expect(res.status, JSON.stringify(res.body)).toBe(200);
     expect(mockTeamsCatalogService.previewCatalogTeamImport).toHaveBeenCalledWith(
       companyId,
-      "paperclipai/bundled/software-development/product-engineering",
+      "thinkingmach/bundled/software-development/product-engineering",
       expect.objectContaining({
         targetManagerSlug: "engineering-lead",
         sourcePolicy: { allowExternalSources: true },

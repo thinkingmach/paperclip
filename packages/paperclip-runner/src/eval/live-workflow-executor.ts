@@ -37,7 +37,7 @@ const LIVE_GRANTS = [
 
 function promptFor(evalCase: RunnerWorkflowEvalCase): string {
   const common =
-    "Use only the typed Paperclip tools. Do not call REST APIs. Reply with concise user-facing prose after the final tool result.";
+    "Use only the typed ThinkingMach tools. Do not call REST APIs. Reply with concise user-facing prose after the final tool result.";
   const prompts: Record<RunnerWorkflowEvalCase["id"], string> = {
     "final-response":
       "Write a detailed answer of at least 1200 characters, then call finish_task exactly once with a faithful summary. Do not replace the answer with a completion acknowledgement.",
@@ -289,7 +289,7 @@ function candidateTransportEnvironment(
             required.has(name)),
       ),
     ),
-    PAPERCLIP_PROVIDER_TRACE_PATH: tracePath,
+    THINKINGMACH_PROVIDER_TRACE_PATH: tracePath,
   };
 }
 

@@ -26,7 +26,7 @@ import {
   type IssueComment,
   upsertIssueDocumentSchema,
   upsertIssueFeedbackVoteSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   addCommonClientOptions,
   apiPath,
@@ -1399,7 +1399,7 @@ async function uploadAttachment(
   const form = new FormData();
   form.set("file", new Blob([bytes], { type: inferContentTypeFromPath(input.filePath) }), input.filePath.split(/[\\/]/).pop() ?? "attachment");
   if (input.commentId) form.set("issueCommentId", input.commentId);
-  // This multipart upload uses a hand-rolled fetch rather than PaperclipApiClient,
+  // This multipart upload uses a hand-rolled fetch rather than ThinkingMachApiClient,
   // so it must forward the agent run-id header itself — otherwise an
   // agent-authenticated upload is rejected with "401 Agent run id required"
   // (the client injects x-paperclip-run-id automatically for JSON requests).

@@ -31,11 +31,11 @@ function abortError(): DOMException {
  * these as scheduling/telemetry only and never as security signals.
  */
 function applyObservabilityHeaders(headers: Headers) {
-  if (headers.has("X-Paperclip-Tab-Visible")) return; // caller override wins
+  if (headers.has("X-ThinkingMach-Tab-Visible")) return; // caller override wins
   const visibility = getPageVisibility();
-  headers.set("X-Paperclip-Tab-Visible", getVisibilityHeaderValue(visibility));
+  headers.set("X-ThinkingMach-Tab-Visible", getVisibilityHeaderValue(visibility));
   if (typeof window !== "undefined" && window.location) {
-    headers.set("X-Paperclip-Route", window.location.pathname);
+    headers.set("X-ThinkingMach-Route", window.location.pathname);
   }
 }
 

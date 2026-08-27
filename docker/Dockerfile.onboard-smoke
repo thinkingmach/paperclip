@@ -1,12 +1,12 @@
 FROM ubuntu:24.04
 
 ARG NODE_MAJOR=24
-ARG PAPERCLIPAI_VERSION=latest
+ARG THINKINGMACH_VERSION=latest
 ARG HOST_UID=10001
 
 ENV DEBIAN_FRONTEND=noninteractive \
-  PAPERCLIP_HOME=/paperclip \
-  PAPERCLIP_OPEN_ON_LISTEN=false \
+  THINKINGMACH_HOME=/paperclip \
+  THINKINGMACH_OPEN_ON_LISTEN=false \
   HOST=0.0.0.0 \
   PORT=3100 \
   HOME=/home/paperclip \
@@ -14,7 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LC_ALL=en_US.UTF-8 \
   NPM_CONFIG_UPDATE_NOTIFIER=false \
   NODE_MAJOR=${NODE_MAJOR} \
-  PAPERCLIPAI_VERSION=${PAPERCLIPAI_VERSION}
+  THINKINGMACH_VERSION=${THINKINGMACH_VERSION}
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates curl gnupg locales \
@@ -42,4 +42,4 @@ USER paperclip
 # and ignore the deployment env vars. A loopback listener inside the container
 # is unreachable through Docker's port mapping, so the smoke health check can
 # never pass without this flag.
-CMD ["bash", "-lc", "set -euo pipefail; mkdir -p \"$PAPERCLIP_HOME\"; npx --yes \"paperclipai@${PAPERCLIPAI_VERSION}\" onboard --yes --bind lan --data-dir \"$PAPERCLIP_HOME\""]
+CMD ["bash", "-lc", "set -euo pipefail; mkdir -p \"$THINKINGMACH_HOME\"; npx --yes \"thinkingmach@${THINKINGMACH_VERSION}\" onboard --yes --bind lan --data-dir \"$THINKINGMACH_HOME\""]

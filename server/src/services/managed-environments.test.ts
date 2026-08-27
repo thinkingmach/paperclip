@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { MANAGED_CONFIG_ENV_KEY, parseManagedConfigEnv } from "./managed-config.js";
 import {
   applyManagedEnvironments,
@@ -130,7 +130,7 @@ describe("applyManagedEnvironments", () => {
     });
     await expect(
       applyManagedEnvironments(noDb, config, {
-        env: { PAPERCLIP_EXECUTION_MODE: "kubernetes" },
+        env: { THINKINGMACH_EXECUTION_MODE: "kubernetes" },
       }),
     ).rejects.toThrow(/mutually exclusive/);
   });
@@ -580,7 +580,7 @@ describe("applyManagedEnvironments", () => {
     // the managed row AND carrying the reconciliation stamp reverts.
     const stampedRow = environmentRow({
       status: "archived",
-      metadata: { managedByPaperclip: true, managedDefaultStamped: true },
+      metadata: { managedByThinkingMach: true, managedDefaultStamped: true },
     });
     const stamped = instanceSettingsSeam({
       get: vi.fn().mockResolvedValue({ defaultEnvironmentId: "env-1" }) as InstanceSettingsSeam["get"],
@@ -605,7 +605,7 @@ describe("applyManagedEnvironments", () => {
     // The marker clears with the revert so a later deliberate tenant
     // selection of the managed row is never mistaken for a stamp.
     expect(stampedEnvironments.update).toHaveBeenCalledWith("env-1", {
-      metadata: { managedByPaperclip: true },
+      metadata: { managedByThinkingMach: true },
     });
 
     // The tenant's own deliberate managed-row default (no stamp marker)
@@ -615,7 +615,7 @@ describe("applyManagedEnvironments", () => {
     });
     const unmarkedEnvironments = environmentsSeam({
       findManagedSandboxEnvironment: vi.fn().mockResolvedValue(
-        environmentRow({ metadata: { managedByPaperclip: true } }),
+        environmentRow({ metadata: { managedByThinkingMach: true } }),
       ),
     });
     await applyManagedEnvironments(noDb, config, {

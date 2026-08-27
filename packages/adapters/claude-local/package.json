@@ -1,14 +1,14 @@
 {
-  "name": "@paperclipai/adapter-claude-local",
-  "version": "0.3.1",
+  "name": "@thinkingmach/adapter-claude-local",
+  "version": "0.3.3",
   "license": "MIT",
-  "homepage": "https://github.com/paperclipai/paperclip",
+  "homepage": "https://github.com/thinkingmach/paperclip",
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/adapters/claude-local"
   },
   "type": "module",
@@ -55,8 +55,8 @@
   "dependencies": {
     "@agentclientprotocol/claude-agent-acp": "^0.73.0",
     "@anthropic-ai/sdk": "0.121.0",
-    "@paperclipai/adapter-utils": "workspace:*",
-    "@paperclipai/shared": "workspace:*",
+    "@thinkingmach/adapter-utils": "workspace:*",
+    "@thinkingmach/shared": "workspace:*",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {

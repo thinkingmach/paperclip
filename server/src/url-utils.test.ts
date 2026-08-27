@@ -30,7 +30,7 @@ describe("rewriteLoopbackUrlPort", () => {
 
   it("leaves explicit external base URLs untouched (BRO-1558)", () => {
     // A Tailscale Serve listener on :8443 must survive; rewriting its port to the internal
-    // listen port produced an unreachable URL that leaked to agents as a dead PAPERCLIP_API_URL.
+    // listen port produced an unreachable URL that leaked to agents as a dead THINKINGMACH_API_URL.
     const serve = "https://erics-mac-studio-1.tailc54c7.ts.net:8443";
     expect(rewriteLoopbackUrlPort(serve, 3101)).toBe(serve);
   });

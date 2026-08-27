@@ -1150,21 +1150,21 @@ export interface AskUserQuestionsQuestion {
  * mirrors `paperclip.question_set.v1` without making the shared package depend
  * on a particular runner implementation.
  */
-export interface PaperclipQuestionSetOption {
+export interface ThinkingMachQuestionSetOption {
   id: string;
   label: string;
   description?: string;
   recommended?: boolean;
 }
 
-export interface PaperclipQuestionSetQuestion {
+export interface ThinkingMachQuestionSetQuestion {
   id: string;
   header?: string;
   prompt: string;
   helpText?: string;
   required: boolean;
   answerMode: "single_select" | "multi_select" | "text";
-  options?: PaperclipQuestionSetOption[];
+  options?: ThinkingMachQuestionSetOption[];
   customAnswer?: {
     enabled: true;
     label?: string;
@@ -1180,12 +1180,12 @@ export interface PaperclipQuestionSetQuestion {
   };
 }
 
-export interface PaperclipQuestionSetPayload {
+export interface ThinkingMachQuestionSetPayload {
   schema: "paperclip.question_set.v1";
   title?: string;
   description?: string;
   submitLabel?: string;
-  questions: PaperclipQuestionSetQuestion[];
+  questions: ThinkingMachQuestionSetQuestion[];
 }
 
 export interface AskUserQuestionsPayload {
@@ -1195,7 +1195,7 @@ export interface AskUserQuestionsPayload {
   supersedeOnUserComment?: boolean;
   questions: AskUserQuestionsQuestion[];
   /** Exact presentation for a recovered harness request. */
-  questionSet?: PaperclipQuestionSetPayload;
+  questionSet?: ThinkingMachQuestionSetPayload;
   /** Correlates a recovered interaction with the live runtime request it replaces. */
   runtimeRequestId?: string | null;
 }

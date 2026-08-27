@@ -71,7 +71,7 @@ fn provider_receives_the_isolated_codex_auth_home() {
         .arg("--exact")
         .arg("--ignored")
         .arg("--nocapture")
-        .env("PAPERCLIP_CODEX_AUTH_TEST_HOME", &directory)
+        .env("THINKINGMACH_CODEX_AUTH_TEST_HOME", &directory)
         .env("HOME", &directory)
         .env("CODEX_HOME", &directory)
         .status()
@@ -83,7 +83,7 @@ fn provider_receives_the_isolated_codex_auth_home() {
 #[test]
 #[ignore = "subprocess helper for provider_receives_the_isolated_codex_auth_home"]
 fn provider_receives_isolated_codex_auth_home_subprocess() {
-    let Some(directory) = std::env::var_os("PAPERCLIP_CODEX_AUTH_TEST_HOME").map(PathBuf::from)
+    let Some(directory) = std::env::var_os("THINKINGMACH_CODEX_AUTH_TEST_HOME").map(PathBuf::from)
     else {
         return;
     };
@@ -500,7 +500,7 @@ fn codex_completion_cancels_pending_tool_request_before_releasing_capacity() {
     assert_eq!(
         call_count(&directory, "tool-response:failure"),
         1,
-        "Paperclip explicitly resolves the provider RPC as cancelled",
+        "ThinkingMach explicitly resolves the provider RPC as cancelled",
     );
     assert!(provider
         .deliver_tool_result(&ToolResult {
@@ -855,7 +855,7 @@ fn durable_backend_closes_when_identity_rollover_resumes_unowned_work() {
         .as_u64()
         .expect("attached provider generation is persisted");
 
-    // Race the provider's idle snapshot with work Paperclip never dispatched.
+    // Race the provider's idle snapshot with work ThinkingMach never dispatched.
     // The replacement process observes this turn during thread/resume and must
     // close the durable run instead of leaving a quarantined session open.
     fs::write(directory.join("resume-unowned-turn"), b"armed")

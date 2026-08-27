@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { and, desc, eq, inArray, isNull, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   heartbeatRunEvents,
   heartbeatRuns,
   issues,
   nativeRunFinalizations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { readProcessStartedAt } from "../hot-restart.js";
 import { getServerInfoSnapshot } from "../../server-info.js";
 import { redactSensitiveText } from "../../redaction.js";

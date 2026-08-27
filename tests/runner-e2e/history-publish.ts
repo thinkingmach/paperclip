@@ -325,7 +325,7 @@ async function uploadFile(
 
 async function main() {
   const reportRoot = path.resolve(
-    process.env.PAPERCLIP_RUNNER_E2E_REPORT_DIR ??
+    process.env.THINKINGMACH_RUNNER_E2E_REPORT_DIR ??
       "runner-e2e-merged-report/normalized",
   );
   const bucket = process.env.RUNNER_E2E_HISTORY_S3_BUCKET ?? "";

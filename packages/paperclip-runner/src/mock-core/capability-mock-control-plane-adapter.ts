@@ -67,7 +67,7 @@ export interface CapabilityMockControlPlaneAdapterOptions {
 /**
  * Deterministic, serializable control-plane authority for Capability scenarios.
  *
- * The adapter deliberately models Paperclip semantics instead of Paperclip
+ * The adapter deliberately models ThinkingMach semantics instead of ThinkingMach
  * transport. It imports no server route, service, database, or provider binding.
  */
 export class CapabilityMockControlPlaneAdapter implements CapabilityMockControlPlanePort {

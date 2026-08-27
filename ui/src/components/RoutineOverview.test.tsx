@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
-import type { RoutineDetail, RoutineRunSummary } from "@paperclipai/shared";
+import type { RoutineDetail, RoutineRunSummary } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RoutineDetailContext, type RoutineDetailContextValue } from "./routine-sections/context";
 import {

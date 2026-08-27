@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 const mockRunTargetShellCommand = vi.hoisted(() => vi.fn());
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async (importOriginal) => ({
+vi.mock("@thinkingmach/adapter-utils/execution-target", async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   runAdapterExecutionTargetShellCommand: mockRunTargetShellCommand,
 }));
@@ -28,12 +28,12 @@ describe("codex managed-home auth fail-fast", () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-codex-failfast-"));
     cleanupDirs.push(root);
 
-    const paperclipHome = path.join(root, "paperclip-home");
+    const thinkingmachHome = path.join(root, "paperclip-home");
     const emptySharedHome = path.join(root, "shared-codex-home");
     const workspaceDir = path.join(root, "workspace");
     // A managed per-agent home with no credentials seeded into it.
     const managedAgentHome = path.join(
-      paperclipHome,
+      thinkingmachHome,
       "instances",
       "default",
       "companies",
@@ -46,8 +46,8 @@ describe("codex managed-home auth fail-fast", () => {
     await fs.mkdir(workspaceDir, { recursive: true });
 
     // Source home has no auth.json, so nothing is symlinked into the managed home.
-    vi.stubEnv("PAPERCLIP_HOME", paperclipHome);
-    vi.stubEnv("PAPERCLIP_INSTANCE_ID", "default");
+    vi.stubEnv("THINKINGMACH_HOME", thinkingmachHome);
+    vi.stubEnv("THINKINGMACH_INSTANCE_ID", "default");
     vi.stubEnv("CODEX_HOME", emptySharedHome);
 
     await expect(
@@ -100,11 +100,11 @@ describe("codex sandbox-target credential gate", () => {
   async function makeCredentiallessManagedHome() {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-codex-sandbox-gate-"));
     cleanupDirs.push(root);
-    const paperclipHome = path.join(root, "paperclip-home");
+    const thinkingmachHome = path.join(root, "paperclip-home");
     const emptySharedHome = path.join(root, "shared-codex-home");
     await fs.mkdir(emptySharedHome, { recursive: true });
     const managedAgentHome = path.join(
-      paperclipHome,
+      thinkingmachHome,
       "instances",
       "default",
       "companies",
@@ -114,8 +114,8 @@ describe("codex sandbox-target credential gate", () => {
       "codex-home",
     );
     const env = {
-      PAPERCLIP_HOME: paperclipHome,
-      PAPERCLIP_INSTANCE_ID: "default",
+      THINKINGMACH_HOME: thinkingmachHome,
+      THINKINGMACH_INSTANCE_ID: "default",
       CODEX_HOME: emptySharedHome,
     } as NodeJS.ProcessEnv;
     return { env, managedAgentHome };

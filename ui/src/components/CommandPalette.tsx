@@ -19,20 +19,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import {
-  CircleDot,
-  Bot,
-  Hexagon,
-  Target,
-  LayoutDashboard,
-  Inbox,
-  DollarSign,
-  History,
-  SquarePen,
-  FileCode2,
-  Plus,
-  Search,
-} from "lucide-react";
+import { CircleDot, Bot, Hexagon, Target, LayoutDashboard, Inbox, DollarSign, History, SquarePen, FileCode2, Plus, Search,  } from "lucide-react";
 import { Identity } from "./Identity";
 import { agentUrl, projectUrl } from "../lib/utils";
 import {

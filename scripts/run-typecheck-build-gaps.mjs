@@ -109,7 +109,7 @@ function checkServerRuntimeAssets() {
       .join("\n");
 
     fail(
-      `Missing server runtime asset(s) in dist:\n${missingList}\nRun pnpm --filter @paperclipai/server build and ensure source runtime asset trees are copied into dist.`,
+      `Missing server runtime asset(s) in dist:\n${missingList}\nRun pnpm --filter @thinkingmach/server build and ensure source runtime asset trees are copied into dist.`,
     );
   }
 
@@ -176,7 +176,7 @@ console.log(
 );
 
 if (buildGapPackages.length > 0) {
-  run("pnpm", ["--filter", "@paperclipai/plugin-sdk", "ensure-build-deps"]);
+  run("pnpm", ["--filter", "@thinkingmach/plugin-sdk", "ensure-build-deps"]);
 
   for (const workspacePkg of buildGapPackages) {
     run("pnpm", ["--filter", workspacePkg.name, "typecheck"]);

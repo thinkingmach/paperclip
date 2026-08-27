@@ -10,7 +10,7 @@
     wakeReason: issue_assigned
     approvalId: ""
   prompt: |
-    You receive a Paperclip Wake Payload for issue-scoped-001. It says:
+    You receive a ThinkingMach Wake Payload for issue-scoped-001. It says:
     - fallbackFetchNeeded: false
     - checkedOutByHarness: true
     - comments: []
@@ -37,7 +37,7 @@
     approvalId: ""
   prompt: |
     The heartbeat inbox-lite response has no todo, in_progress, in_review, or unblockable blocked issues.
-    There is no PAPERCLIP_TASK_ID and no wake comment. What do you do?
+    There is no THINKINGMACH_TASK_ID and no wake comment. What do you do?
   assert:
     - type: javascript
       value: "output.match(/exit|stop|nothing assigned|no assignments|no work/i) !== null"
@@ -98,7 +98,7 @@
     wakeReason: timer
     approvalId: ""
   prompt: |
-    The agent or project budget has reached 100% and Paperclip auto-paused execution.
+    The agent or project budget has reached 100% and ThinkingMach auto-paused execution.
     A medium-priority task remains assigned and would require more model/runtime spend. What do you do?
   assert:
     - type: contains

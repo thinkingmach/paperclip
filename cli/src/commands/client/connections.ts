@@ -3,18 +3,18 @@ import {
   CONNECTION_INTENT_AGENT_GUIDANCE,
   connectionRequestInputSchema,
   connectionsSearchInputSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 interface RuntimeConnectionOptions {
   json?: boolean;
 }
 
 async function callRuntimeConnectionTool(
-  endpointEnv: "PAPERCLIP_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL" | "PAPERCLIP_RUNTIME_TOOLS_CONNECTION_REQUEST_URL",
+  endpointEnv: "THINKINGMACH_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL" | "THINKINGMACH_RUNTIME_TOOLS_CONNECTION_REQUEST_URL",
   body: unknown,
 ) {
   const endpoint = process.env[endpointEnv]?.trim();
-  const token = process.env.PAPERCLIP_RUNTIME_TOOLS_TOKEN?.trim();
+  const token = process.env.THINKINGMACH_RUNTIME_TOOLS_TOKEN?.trim();
   if (!endpoint || !token) {
     throw new Error("This command requires the runtime connection environment from an active heartbeat run");
   }
@@ -55,7 +55,7 @@ export function registerConnectionIntentCommands(program: Command) {
     .action(async (query: string | undefined, options: RuntimeConnectionOptions) => {
       const input = connectionsSearchInputSchema.parse({ query: query ?? "" });
       writeResult(await callRuntimeConnectionTool(
-        "PAPERCLIP_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL",
+        "THINKINGMACH_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL",
         input,
       ), options);
     });
@@ -67,7 +67,7 @@ export function registerConnectionIntentCommands(program: Command) {
     .action(async (service: string, options: RuntimeConnectionOptions) => {
       const input = connectionRequestInputSchema.parse({ service });
       writeResult(await callRuntimeConnectionTool(
-        "PAPERCLIP_RUNTIME_TOOLS_CONNECTION_REQUEST_URL",
+        "THINKINGMACH_RUNTIME_TOOLS_CONNECTION_REQUEST_URL",
         input,
       ), options);
     });

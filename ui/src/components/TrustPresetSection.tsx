@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { AgentPermissions, TrustPreset } from "@paperclipai/shared";
+import type { AgentPermissions, TrustPreset } from "@thinkingmach/shared";
 import { Lock, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, CollapsibleSection } from "./agent-config-primitives";
@@ -106,7 +106,7 @@ export function TrustPresetSection({
     <div>
       <h3 className="mb-3 text-sm font-medium">Trust</h3>
       <div className="rounded-lg border border-border p-4 space-y-3">
-        <Field label="Trust preset" hint="Choose how broadly this agent can read and act on Paperclip work objects.">
+        <Field label="Trust preset" hint="Choose how broadly this agent can read and act on ThinkingMach work objects.">
           <select
             className={inputClass}
             value={preset}
@@ -213,11 +213,11 @@ export function TrustPresetSection({
                 Want to set more than one containment boundary?{" "}
                 <a
                   className="underline underline-offset-2 hover:text-foreground"
-                  href="https://paperclip.ing/ee"
+                  href="https://thinkingmach.com/ee"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Get Paperclip EE.
+                  Get ThinkingMach EE.
                 </a>
               </p>
               <CollapsibleSection

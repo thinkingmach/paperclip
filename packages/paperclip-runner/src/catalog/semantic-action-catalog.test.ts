@@ -6,8 +6,8 @@ import Ajv2020 from "ajv/dist/2020.js";
 import { describe, expect, it } from "vitest";
 
 import {
-  PAPERCLIP_SEMANTIC_ACTION_CATALOG,
-  canonicalPaperclipSemanticActionCatalog,
+  THINKINGMACH_SEMANTIC_ACTION_CATALOG,
+  canonicalThinkingMachSemanticActionCatalog,
   paperclipSemanticAction,
 } from "./semantic-action-catalog.js";
 
@@ -19,14 +19,14 @@ const packageRoot = resolve(
 
 describe("semantic action catalog", () => {
   it("defines one immutable v1 declaration for each Codex-spine action", () => {
-    const operationIds = PAPERCLIP_SEMANTIC_ACTION_CATALOG.map(
+    const operationIds = THINKINGMACH_SEMANTIC_ACTION_CATALOG.map(
       (action) => action.operationId,
     );
 
     expect(operationIds).toHaveLength(27);
     expect(new Set(operationIds).size).toBe(operationIds.length);
     expect(operationIds).not.toContain("generic_api_request");
-    expect(Object.isFrozen(PAPERCLIP_SEMANTIC_ACTION_CATALOG)).toBe(true);
+    expect(Object.isFrozen(THINKINGMACH_SEMANTIC_ACTION_CATALOG)).toBe(true);
     expect(
       Object.isFrozen(paperclipSemanticAction("write_document")?.inputSchema),
     ).toBe(true);
@@ -39,7 +39,7 @@ describe("semantic action catalog", () => {
       strict: true,
     });
 
-    for (const action of PAPERCLIP_SEMANTIC_ACTION_CATALOG) {
+    for (const action of THINKINGMACH_SEMANTIC_ACTION_CATALOG) {
       expect(
         () => ajv.compile(action.inputSchema),
         `${action.operationId} input`,
@@ -92,11 +92,11 @@ describe("semantic action catalog", () => {
       "utf8",
     );
 
-    expect(generated).toBe(canonicalPaperclipSemanticActionCatalog());
+    expect(generated).toBe(canonicalThinkingMachSemanticActionCatalog());
   });
 
   it("does not carry executable authorization or binding hooks", () => {
-    for (const action of PAPERCLIP_SEMANTIC_ACTION_CATALOG) {
+    for (const action of THINKINGMACH_SEMANTIC_ACTION_CATALOG) {
       const keys = Object.keys(action);
       expect(keys).not.toContain("authorize");
       expect(keys).not.toContain("execute");

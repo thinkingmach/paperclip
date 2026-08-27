@@ -5,7 +5,7 @@ import type {
   FakeSandboxEnvironmentConfig,
   SandboxEnvironmentConfig,
   SandboxEnvironmentProvider,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export interface SandboxProviderValidationResult {
   ok: boolean;

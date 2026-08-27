@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { resolvePaperclipInstanceId } from "./home-paths.js";
+import { resolveThinkingMachInstanceId } from "./home-paths.js";
 
 export interface RuntimeToolsTokenClaims {
   sub: string;
@@ -15,7 +15,7 @@ export interface RuntimeToolsTokenClaims {
 const TOKEN_TTL_SECONDS = 60 * 60;
 
 function secret() {
-  return process.env.PAPERCLIP_AGENT_JWT_SECRET?.trim()
+  return process.env.THINKINGMACH_AGENT_JWT_SECRET?.trim()
     || process.env.BETTER_AUTH_SECRET?.trim()
     || null;
 }
@@ -47,7 +47,7 @@ export function createRuntimeToolsToken(input: {
 }) {
   if (!secret()) return null;
   const now = Math.floor(Date.now() / 1000);
-  const instanceId = resolvePaperclipInstanceId();
+  const instanceId = resolveThinkingMachInstanceId();
   const claims: RuntimeToolsTokenClaims = {
     sub: input.agentId,
     company_id: input.companyId,
@@ -79,7 +79,7 @@ export function verifyRuntimeToolsToken(token: string): RuntimeToolsTokenClaims 
   if (header.alg !== "HS256") return null;
   const companyId = typeof claims.company_id === "string" ? claims.company_id : null;
   const instanceId = typeof claims.instance_id === "string" ? claims.instance_id : null;
-  if (!companyId || !instanceId || instanceId !== resolvePaperclipInstanceId()) return null;
+  if (!companyId || !instanceId || instanceId !== resolveThinkingMachInstanceId()) return null;
   const expected = sign(`${parts[0]}.${parts[1]}`, companyId, instanceId);
   if (!expected || !safeEqual(parts[2]!, expected)) return null;
   if (

@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { and, desc, eq, inArray, isNull, lte, ne, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   approvals,
@@ -34,8 +34,8 @@ import {
   toolProfileEntries,
   toolProfiles,
   toolStdioCommandTemplates,
-} from "@paperclipai/db";
-import type { ToolRunContext } from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/db";
+import type { ToolRunContext } from "@thinkingmach/plugin-sdk";
 import type {
   CreateToolMcpGateway,
   CreateToolMcpGatewayToken,
@@ -55,11 +55,11 @@ import type {
   ToolMcpGatewayTokenCreated,
   ToolMcpGatewayWithTokens,
   UpdateToolMcpGateway,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   isGoogleWorkspaceConnectorProfileId,
   type GoogleWorkspaceConnectorProfileId,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type { AgentToolDescriptor, PluginToolDispatcher } from "./plugin-tool-dispatcher.js";
 import { logActivity, type LogActivityInput } from "./activity-log.js";
 import { secretService } from "./secrets.js";
@@ -91,11 +91,11 @@ import { recordToolRuntimeAuditWriteFailure } from "./tool-runtime-metrics.js";
 import { composioChildConfig, createComposioSessionManager } from "./composio-session-manager.js";
 import type { ComposioClient } from "./composio.js";
 import {
-  createPaperclipCloudConnector,
-  isPaperclipCloudConnectorStrategy,
+  createThinkingMachCloudConnector,
+  isThinkingMachCloudConnectorStrategy,
   paperclipCloudConnectorConfigFromEnv,
-  PaperclipCloudConnectorError,
-  type PaperclipCloudConnector,
+  ThinkingMachCloudConnectorError,
+  type ThinkingMachCloudConnector,
 } from "./paperclip-cloud-connector.js";
 import {
   createVercelConnectClient,
@@ -456,20 +456,20 @@ function mcpGatewayProtocolLimits(
 ): McpGatewayProtocolLimitOptions {
   const envDefaults: McpGatewayProtocolLimitOptions = {
     authFailures: {
-      windowMs: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_AUTH_FAILURE_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.authFailures.windowMs),
-      max: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_AUTH_FAILURE_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.authFailures.max),
+      windowMs: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_AUTH_FAILURE_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.authFailures.windowMs),
+      max: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_AUTH_FAILURE_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.authFailures.max),
     },
     gatewayRequests: {
-      windowMs: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_REQUEST_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.gatewayRequests.windowMs),
-      max: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_REQUEST_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.gatewayRequests.max),
+      windowMs: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_REQUEST_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.gatewayRequests.windowMs),
+      max: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_REQUEST_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.gatewayRequests.max),
     },
     tokenRequests: {
-      windowMs: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_TOKEN_REQUEST_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.tokenRequests.windowMs),
-      max: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_TOKEN_REQUEST_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.tokenRequests.max),
+      windowMs: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_TOKEN_REQUEST_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.tokenRequests.windowMs),
+      max: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_TOKEN_REQUEST_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.tokenRequests.max),
     },
     sessionSetup: {
-      windowMs: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_SESSION_SETUP_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.sessionSetup.windowMs),
-      max: positiveInt(process.env.PAPERCLIP_MCP_GATEWAY_SESSION_SETUP_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.sessionSetup.max),
+      windowMs: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_SESSION_SETUP_WINDOW_MS, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.sessionSetup.windowMs),
+      max: positiveInt(process.env.THINKINGMACH_MCP_GATEWAY_SESSION_SETUP_LIMIT, DEFAULT_MCP_GATEWAY_PROTOCOL_LIMITS.sessionSetup.max),
     },
   };
   return {
@@ -738,8 +738,8 @@ const BUILTIN_TOOLS: ToolGatewayDescriptor[] = [
   },
   {
     name: "paperclip-self:list_my_issues",
-    displayName: "List my Paperclip issues",
-    description: "Paperclip self-MCP read fixture that lists the authenticated agent's current issues.",
+    displayName: "List my ThinkingMach issues",
+    description: "ThinkingMach self-MCP read fixture that lists the authenticated agent's current issues.",
     parametersSchema: {
       type: "object",
       properties: { limit: { type: "number" } },
@@ -752,7 +752,7 @@ const BUILTIN_TOOLS: ToolGatewayDescriptor[] = [
   {
     name: "paperclip-self:get_issue_context",
     displayName: "Get issue context",
-    description: "Paperclip self-MCP read fixture that returns scoped issue context and plan document metadata.",
+    description: "ThinkingMach self-MCP read fixture that returns scoped issue context and plan document metadata.",
     parametersSchema: {
       type: "object",
       properties: { issueId: { type: "string" } },
@@ -793,7 +793,7 @@ const BUILTIN_TOOLS: ToolGatewayDescriptor[] = [
 const VIRTUAL_SEARCH_TOOLS: ToolGatewayDescriptor = {
   name: "search_tools",
   displayName: "Search available tools",
-  description: "Search the tools available through this Paperclip gateway without loading every target tool into the tool list.",
+  description: "Search the tools available through this ThinkingMach gateway without loading every target tool into the tool list.",
   parametersSchema: {
     type: "object",
     properties: {
@@ -810,7 +810,7 @@ const VIRTUAL_SEARCH_TOOLS: ToolGatewayDescriptor = {
 const VIRTUAL_RUN_TOOL: ToolGatewayDescriptor = {
   name: "run_tool",
   displayName: "Run a selected tool",
-  description: "Run a target tool by name after Paperclip applies the target tool's profile, policy, approval, and rate-limit checks.",
+  description: "Run a target tool by name after ThinkingMach applies the target tool's profile, policy, approval, and rate-limit checks.",
   parametersSchema: {
     type: "object",
     properties: {
@@ -841,9 +841,9 @@ export function createToolGatewayService(
     /** Test seam for Composio session creation without vendor traffic. */
     composioClientFactory?: (apiKey: string) => ComposioClient;
     /** Test seam for refreshing personal Gmail grants. */
-    paperclipCloudConnector?: PaperclipCloudConnector | null;
+    paperclipCloudConnector?: ThinkingMachCloudConnector | null;
     /** @deprecated Use paperclipCloudConnector. */
-    paperclipIdGmailConnector?: PaperclipCloudConnector | null;
+    paperclipIdGmailConnector?: ThinkingMachCloudConnector | null;
     /** Refreshes customer-owned/DCR OAuth grants before remote MCP execution. */
     oauthGrantRefresher?: (input: {
       companyId: string;
@@ -885,11 +885,11 @@ export function createToolGatewayService(
   const configuredCloudConnector = options.paperclipCloudConnector ?? options.paperclipIdGmailConnector;
   const connectorWasProvided = options.paperclipCloudConnector !== undefined || options.paperclipIdGmailConnector !== undefined;
   let cachedCloudConnector = configuredCloudConnector ?? null;
-  const currentCloudConnector = (): PaperclipCloudConnector | null => {
+  const currentCloudConnector = (): ThinkingMachCloudConnector | null => {
     if (cachedCloudConnector || connectorWasProvided) return cachedCloudConnector;
     const config = paperclipCloudConnectorConfigFromEnv();
     cachedCloudConnector = config
-      ? createPaperclipCloudConnector({ config, now: options.now })
+      ? createThinkingMachCloudConnector({ config, now: options.now })
       : null;
     return cachedCloudConnector;
   };
@@ -1796,7 +1796,7 @@ export function createToolGatewayService(
         kind: "request_confirmation",
         idempotencyKey: `tool-action:${actionRequest.id}`,
         title: "Approve tool action",
-        summary: `${input.tool.name} requires approval before Paperclip will execute it.`,
+        summary: `${input.tool.name} requires approval before ThinkingMach will execute it.`,
         continuationPolicy: "wake_assignee",
         payload: {
           version: 1,
@@ -2156,7 +2156,7 @@ export function createToolGatewayService(
 
     if (tool.name === "paperclip-self:list_my_issues") {
       if (!session.agentId) {
-        throw new ToolGatewayHttpError(403, "Paperclip self tools require an agent-scoped gateway session", "agent_context_required");
+        throw new ToolGatewayHttpError(403, "ThinkingMach self tools require an agent-scoped gateway session", "agent_context_required");
       }
       const limit = Math.max(1, Math.min(50, Number(params.limit ?? 10) || 10));
       const rows = await db
@@ -2180,7 +2180,7 @@ export function createToolGatewayService(
 
     if (tool.name === "paperclip-self:get_issue_context") {
       if (!session.agentId) {
-        throw new ToolGatewayHttpError(403, "Paperclip self tools require an agent-scoped gateway session", "agent_context_required");
+        throw new ToolGatewayHttpError(403, "ThinkingMach self tools require an agent-scoped gateway session", "agent_context_required");
       }
       const issueId = typeof params.issueId === "string" ? params.issueId : session.issueId;
       if (!issueId) {
@@ -2636,13 +2636,13 @@ export function createToolGatewayService(
     return resolved.value;
   }
 
-  async function maybeRefreshPaperclipCloudGoogleGrant(
+  async function maybeRefreshThinkingMachCloudGoogleGrant(
     session: ToolGatewaySession,
     connection: typeof toolConnections.$inferSelect,
     grant: typeof connectionGrants.$inferSelect,
   ): Promise<typeof connectionGrants.$inferSelect> {
     const oauth = asRecord(asRecord(connection.config)?.oauth);
-    if (!oauth || !isPaperclipCloudConnectorStrategy(oauth.strategy)) return grant;
+    if (!oauth || !isThinkingMachCloudConnectorStrategy(oauth.strategy)) return grant;
     const configuredProfile = oauth.connectorProfile;
     const connectorProfile: GoogleWorkspaceConnectorProfileId = configuredProfile === undefined
       ? "gmail.draft"
@@ -2664,14 +2664,14 @@ export function createToolGatewayService(
     const currentTime = options.now?.() ?? Date.now();
     if (Number.isFinite(expiresAt) && expiresAt > currentTime + 60_000) return grant;
     if (oauth.strategy === "paperclip_id_connector") {
-      // Paperclip ID used different endpoints, signing metadata, envelope
+      // ThinkingMach ID used different endpoints, signing metadata, envelope
       // purposes, and a different Google client. Its refresh token cannot be
-      // exchanged through Paperclip Cloud. Let an unexpired access token finish
+      // exchanged through ThinkingMach Cloud. Let an unexpired access token finish
       // its useful life, then require an explicit managed-connector enrollment
       // and provider reconnect instead of sending it to the wrong client.
       await db.update(connectionGrants).set({ status: "needs_reauthorization", updatedAt: new Date(currentTime) })
         .where(eq(connectionGrants.id, grant.id));
-      throw new ToolGatewayHttpError(409, "Legacy Google authorization must be reconnected through Paperclip Cloud", "google_reauthorization_required", {
+      throw new ToolGatewayHttpError(409, "Legacy Google authorization must be reconnected through ThinkingMach Cloud", "google_reauthorization_required", {
         connectionId: connection.id,
         grantId: grant.id,
       });
@@ -2732,7 +2732,7 @@ export function createToolGatewayService(
         return updated;
       } catch (error) {
         if (error instanceof ToolGatewayHttpError) throw error;
-        if (error instanceof PaperclipCloudConnectorError && error.code === "REAUTHORIZATION_REQUIRED") {
+        if (error instanceof ThinkingMachCloudConnectorError && error.code === "REAUTHORIZATION_REQUIRED") {
           await db.update(connectionGrants).set({ status: "needs_reauthorization", updatedAt: new Date(options.now?.() ?? Date.now()) })
             .where(eq(connectionGrants.id, grant.id));
           throw new ToolGatewayHttpError(409, "Google authorization must be reconnected", "google_reauthorization_required", {
@@ -2846,12 +2846,12 @@ export function createToolGatewayService(
         });
       }
     }
-    grant = await maybeRefreshPaperclipCloudGoogleGrant(session, connection, grant);
+    grant = await maybeRefreshThinkingMachCloudGoogleGrant(session, connection, grant);
     const oauth = asRecord(asRecord(connection.config)?.oauth);
     if (
       connection.authKind === "oauth"
       && connection.credentialSource === "paperclip_vault"
-      && !isPaperclipCloudConnectorStrategy(oauth?.strategy)
+      && !isThinkingMachCloudConnectorStrategy(oauth?.strategy)
       && options.oauthGrantRefresher
     ) {
       try {
@@ -3037,7 +3037,7 @@ export function createToolGatewayService(
       rejectLabel: "Not now",
       detailsMarkdown: grantKind === "organization"
         ? "Vercel Connect reports that the shared organization identity needs authorization."
-        : "This run needs your personal authorization. Paperclip will not use another user's identity.",
+        : "This run needs your personal authorization. ThinkingMach will not use another user's identity.",
       target: {
         type: "custom" as const,
         key: `connection:${connection.uid}:user:${userId}`,
@@ -3104,7 +3104,7 @@ export function createToolGatewayService(
       prompt: `Allow this agent to use your ${connection.name} account for autonomous runs`,
       acceptLabel: "Review delegation",
       rejectLabel: "Not now",
-      detailsMarkdown: "This autonomous run is paused. Paperclip will not use your personal identity until you explicitly delegate it to this named agent.",
+      detailsMarkdown: "This autonomous run is paused. ThinkingMach will not use your personal identity until you explicitly delegate it to this named agent.",
       target: {
         type: "custom" as const,
         key: `connection:${connection.uid}:delegation:${userId}:${session.agentId}`,
@@ -3996,7 +3996,7 @@ export function createToolGatewayService(
       .set({
         status: "awaiting_approval",
         errorCode: "elicitation_required",
-        errorMessage: "Remote MCP tool requested elicitation; Paperclip created an issue interaction for the response.",
+        errorMessage: "Remote MCP tool requested elicitation; ThinkingMach created an issue interaction for the response.",
         updatedAt: now,
       })
       .where(eq(toolInvocations.id, input.invocationId));
@@ -4188,7 +4188,7 @@ export function createToolGatewayService(
         response.status === 401
         && connection.authKind === "oauth"
         && connection.credentialSource === "paperclip_vault"
-        && !isPaperclipCloudConnectorStrategy(oauth?.strategy)
+        && !isThinkingMachCloudConnectorStrategy(oauth?.strategy)
         && options.oauthGrantRefresher
       ) {
         credentialHeaders = {
@@ -4386,7 +4386,7 @@ export function createToolGatewayService(
         client: "cursor",
         label: "Cursor",
         config: { mcpServers: { [gateway.name]: { url: endpoint, headers: { Authorization: `Bearer ${bearerPlaceholder}` } } } },
-        notes: ["Use the full Paperclip origin before the endpoint path."],
+        notes: ["Use the full ThinkingMach origin before the endpoint path."],
       },
       {
         client: "claude_desktop",
@@ -4410,7 +4410,7 @@ export function createToolGatewayService(
         client: "opencode",
         label: "OpenCode",
         config: { mcp: { [gateway.name]: { url: endpoint, headers: { Authorization: `Bearer ${bearerPlaceholder}` } } } },
-        notes: ["Use the full Paperclip origin before the endpoint path."],
+        notes: ["Use the full ThinkingMach origin before the endpoint path."],
       },
     ];
   }

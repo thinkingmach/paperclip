@@ -1,6 +1,6 @@
 # Google Workspace connections
 
-Paperclip presents Google Workspace as nine independent Apps entries, not as
+ThinkingMach presents Google Workspace as nine independent Apps entries, not as
 one combined Google connection:
 
 1. Gmail
@@ -20,7 +20,7 @@ Workspace Search.
 
 Google's hosted Workspace MCP servers are Developer Preview services. The app
 cards remain independent even when several services use the same customer-owned
-Google OAuth client or the same Paperclip Cloud broker deployment.
+Google OAuth client or the same ThinkingMach Cloud broker deployment.
 
 ## Developer Preview enrollment
 
@@ -41,7 +41,7 @@ Enrollment does not authorize every user of an OAuth client. Additional tester
 emails and Cloud projects must be added through Google's member request forms.
 Google's preview terms also prohibit making a pre-GA integration available to
 end users outside the enrolled company or domain unless Google grants explicit
-permission. Consequently, Paperclip-managed Google OAuth is limited to
+permission. Consequently, ThinkingMach-managed Google OAuth is limited to
 registered internal testers during preview. Other companies must enroll their
 own Workspace testers and Cloud project and use a customer-owned OAuth app until
 Google makes Workspace MCP generally available.
@@ -63,14 +63,14 @@ Google makes Workspace MCP generally available.
 The setup flow asks for the capability first. It then offers the authentication
 methods available for that capability:
 
-- **Connect with Paperclip** uses the Paperclip Cloud broker when that exact
+- **Connect with ThinkingMach** uses the ThinkingMach Cloud broker when that exact
   profile is returned for this enrolled instance by the signed
   `POST https://my.paperclip.app/v1/connector/instance-status` request. The
   anonymous capabilities document is global discovery only and never enables
   an internal-pilot method locally.
 - **Use your own Google OAuth app** uses customer-supplied OAuth credentials and
   the app definition's exact reviewed scopes.
-- **Use the Paperclip robot account** remains an additional Google Sheets-only
+- **Use the ThinkingMach robot account** remains an additional Google Sheets-only
   option for explicitly shared spreadsheets.
 
 Before Google consent, the setup flow asks whether the credential is for just
@@ -82,11 +82,11 @@ principal.
 
 ## Broker profiles
 
-The Paperclip-managed method signs every broker request with one explicit
+The ThinkingMach-managed method signs every broker request with one explicit
 profile. The broker binds that profile into sessions, one-time claims, sealed
 token envelopes, and refresh. Per-profile removal is local-only for managed
 Google grants. Google's revocation endpoint can invalidate all grants for the
-same user and managed client, so Paperclip does not call it while removing one
+same user and managed client, so ThinkingMach does not call it while removing one
 Workspace profile.
 
 | App | Read profile | Write profile |
@@ -106,17 +106,17 @@ whose provider, profile, or exact scope set does not match its closed registry.
 
 ## Instance configuration
 
-All Paperclip-managed Google methods use the existing enrolled-instance keys:
+All ThinkingMach-managed Google methods use the existing enrolled-instance keys:
 
 ```dotenv
-PAPERCLIP_CLOUD_CONNECTOR_BASE_URL=https://my.paperclip.app
-PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT=production
-PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID=inst_example
-PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY=...
-PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY=...
+THINKINGMACH_CLOUD_CONNECTOR_BASE_URL=https://my.paperclip.app
+THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT=production
+THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID=inst_example
+THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY=...
+THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY=...
 ```
 
-No per-app client secret is stored on the Paperclip instance for the managed
+No per-app client secret is stored on the ThinkingMach instance for the managed
 path. For customer-owned OAuth, the setup flow collects that customer's Google
 OAuth client ID and secret and stores them through the normal instance-vault
 path.
@@ -126,13 +126,13 @@ delivery path. A self-hosted instance creates its keys during enrollment and
 stores them with owner-only permissions in the instance's ignored secret
 directory. The setup page supplies its authenticated same-origin HTTPS address
 to enrollment, so a normal Tailscale-hosted self-hoster does not need to edit
-`config.json` or set `PAPERCLIP_PUBLIC_URL`; the enrolled origin becomes the
-durable callback binding. The former `PAPERCLIP_ID_CONNECTOR_*` values use an incompatible
-Paperclip ID protocol and are not read aliases. Enroll with Paperclip Cloud and
+`config.json` or set `THINKINGMACH_PUBLIC_URL`; the enrolled origin becomes the
+durable callback binding. The former `THINKINGMACH_ID_CONNECTOR_*` values use an incompatible
+ThinkingMach ID protocol and are not read aliases. Enroll with ThinkingMach Cloud and
 reconnect legacy grants before their old access tokens expire.
 
 The gallery requests the broker capability document with a short cache. A
-Paperclip-managed method is omitted unless its exact profile is enabled at the
+ThinkingMach-managed method is omitted unless its exact profile is enabled at the
 broker; the independent app card and customer-owned OAuth method remain
 available. This supports profile-by-profile rollout and rollback without
 collapsing the nine cards into one app.

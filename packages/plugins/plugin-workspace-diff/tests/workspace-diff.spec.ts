@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { afterEach, describe, expect, it } from "vitest";
-import type { PluginExecutionWorkspaceMetadata } from "@paperclipai/plugin-sdk";
+import type { PluginExecutionWorkspaceMetadata } from "@thinkingmach/plugin-sdk";
 import type { WorkspaceDiffQueryOptions } from "../src/contracts.js";
 import { WORKSPACE_DIFF_CAPS, workspaceDiffService } from "../src/workspace-diff.js";
 
@@ -20,7 +20,7 @@ async function createTempRepo() {
   const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-plugin-workspace-diff-"));
   tempDirs.add(repoRoot);
   await runGit(repoRoot, ["init"]);
-  await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+  await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
   await runGit(repoRoot, ["config", "user.email", "test@paperclip.local"]);
   await fs.writeFile(path.join(repoRoot, "tracked-staged.txt"), "alpha\n", "utf8");
   await fs.writeFile(path.join(repoRoot, "tracked-unstaged.txt"), "bravo\n", "utf8");

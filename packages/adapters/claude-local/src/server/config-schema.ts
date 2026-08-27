@@ -1,9 +1,9 @@
-import type { AdapterConfigSchema } from "@paperclipai/adapter-utils";
+import type { AdapterConfigSchema } from "@thinkingmach/adapter-utils";
 import {
   DEFAULT_ACP_ENGINE_MODE,
   DEFAULT_ACP_ENGINE_NON_INTERACTIVE_PERMISSIONS,
   DEFAULT_ACP_ENGINE_WARM_HANDLE_IDLE_MS,
-} from "@paperclipai/adapter-utils/acpx-engine/constants";
+} from "@thinkingmach/adapter-utils/acpx-engine/constants";
 
 const acpVisible = { visibleWhen: { key: "engine", values: ["acp"] } };
 
@@ -57,7 +57,7 @@ export function getConfigSchema(): AdapterConfigSchema {
         key: "stateDir",
         label: "ACP state directory",
         type: "text",
-        hint: "Optional ACP session state directory. Defaults to Paperclip-managed company/agent scoped storage.",
+        hint: "Optional ACP session state directory. Defaults to ThinkingMach-managed company/agent scoped storage.",
         meta: acpVisible,
       },
       {

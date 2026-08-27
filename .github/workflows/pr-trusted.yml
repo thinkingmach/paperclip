@@ -75,7 +75,7 @@ jobs:
           # Reusable workflows retain the caller's github context and event
           # payload, so a pull_request caller must still report pull_request.
           [[ "$EVENT_NAME" == 'pull_request' ]] || fail_closed 'event is not pull_request'
-          [[ "$EVENT_REPOSITORY" == 'paperclipai/paperclip' ]] || fail_closed 'unexpected repository'
+          [[ "$EVENT_REPOSITORY" == 'thinkingmach/paperclip' ]] || fail_closed 'unexpected repository'
           [[ "$EVENT_REPOSITORY_ID" == '1170821064' ]] || fail_closed 'unexpected repository ID'
           [[ "$EVENT_BASE_REPOSITORY_ID" == '1170821064' ]] || fail_closed 'unexpected base repository ID'
           [[ -n "$EVENT_BASE_REF" ]] || fail_closed 'missing base branch'
@@ -99,7 +99,7 @@ jobs:
           pr_json="$(gh api \
             -H 'Accept: application/vnd.github+json' \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/paperclipai/paperclip/pulls/$EVENT_PR_NUMBER" 2>/dev/null)" \
+            "/repos/thinkingmach/paperclip/pulls/$EVENT_PR_NUMBER" 2>/dev/null)" \
             || fail_closed 'could not refresh pull request state'
 
           jq -e \
@@ -122,7 +122,7 @@ jobs:
           base_ref_json="$(gh api \
             -H 'Accept: application/vnd.github+json' \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/paperclipai/paperclip/git/ref/heads/$EVENT_BASE_REF" 2>/dev/null)" \
+            "/repos/thinkingmach/paperclip/git/ref/heads/$EVENT_BASE_REF" 2>/dev/null)" \
             || fail_closed 'could not inspect the current base branch'
           live_base_ref_sha="$(jq -r '.object.sha // empty' <<< "$base_ref_json")"
           is_commit_sha "$live_base_ref_sha" || fail_closed 'current base branch has no valid commit SHA'
@@ -130,7 +130,7 @@ jobs:
           base_comparison="$(gh api \
             -H 'Accept: application/vnd.github+json' \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/paperclipai/paperclip/compare/$EVENT_BASE_SHA...$live_base_ref_sha" 2>/dev/null)" \
+            "/repos/thinkingmach/paperclip/compare/$EVENT_BASE_SHA...$live_base_ref_sha" 2>/dev/null)" \
             || fail_closed 'could not compare the triggering and current base branches'
           jq -e \
             --arg event_base_sha "$EVENT_BASE_SHA" '
@@ -142,13 +142,13 @@ jobs:
           event_merge_json="$(gh api \
             -H 'Accept: application/vnd.github+json' \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/paperclipai/paperclip/git/commits/$EVENT_MERGE_SHA" 2>/dev/null)" \
+            "/repos/thinkingmach/paperclip/git/commits/$EVENT_MERGE_SHA" 2>/dev/null)" \
             || fail_closed 'could not inspect the event merge commit'
 
           live_merge_json="$(gh api \
             -H 'Accept: application/vnd.github+json' \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/paperclipai/paperclip/git/commits/$live_merge_sha" 2>/dev/null)" \
+            "/repos/thinkingmach/paperclip/git/commits/$live_merge_sha" 2>/dev/null)" \
             || fail_closed 'could not inspect the current merge commit'
 
           validate_merge_commit() {
@@ -179,7 +179,7 @@ jobs:
             base_merge_json="$(gh api \
               -H 'Accept: application/vnd.github+json' \
               -H 'X-GitHub-Api-Version: 2022-11-28' \
-              "/repos/paperclipai/paperclip/git/commits/$event_merge_parent" 2>/dev/null)" \
+              "/repos/thinkingmach/paperclip/git/commits/$event_merge_parent" 2>/dev/null)" \
               || fail_closed 'could not inspect the stacked base merge commit'
             jq -e \
               --arg expected_sha "$event_merge_parent" \
@@ -200,7 +200,7 @@ jobs:
           run_json="$(gh api \
             -H 'Accept: application/vnd.github+json' \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/paperclipai/paperclip/actions/runs/$RUN_ID" 2>/dev/null)" \
+            "/repos/thinkingmach/paperclip/actions/runs/$RUN_ID" 2>/dev/null)" \
             || fail_closed 'could not refresh workflow run state'
 
           triggering_actor_id="$(jq -r '.triggering_actor.id // empty' <<< "$run_json")"
@@ -339,7 +339,7 @@ jobs:
       - name: Verify release package bootstrap for changed manifests
         run: |
           mapfile -t changed_paths < <(git diff --name-only "${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}")
-          PAPERCLIP_RELEASE_BOOTSTRAP_BASE_SHA="${{ github.event.pull_request.base.sha }}" \
+          THINKINGMACH_RELEASE_BOOTSTRAP_BASE_SHA="${{ github.event.pull_request.base.sha }}" \
             node ./scripts/check-release-package-bootstrap.mjs "${changed_paths[@]}"
 
       - name: Validate dependency resolution and regenerate stale lockfile
@@ -453,7 +453,7 @@ jobs:
             shard_count: 5
           # workspaces-a was the slowest check in the fully-green PR run
           # 31371439296 (2026-08-10) at 319s, with the ui project's single
-          # vitest invocation accounting for ~224s and the paperclipai CLI
+          # vitest invocation accounting for ~224s and the thinkingmach CLI
           # ~37s. Two shards use Vitest's native --shard on each project's
           # file list (ui: 439 files, cli: 54), bringing each job to roughly
           # half the suite time (~130s + setup) without a duration manifest.
@@ -623,8 +623,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Verify Paperclip Runner
-        run: pnpm --filter @paperclipai/paperclip-runner check:all
+      - name: Verify ThinkingMach Runner
+        run: pnpm --filter @thinkingmach/paperclip-runner check:all
 
       - name: Build
         run: pnpm build
@@ -836,7 +836,7 @@ jobs:
         # browser bundles inside the 30 minute job budget.
         run: google-chrome --version
 
-      - name: Generate Paperclip config
+      - name: Generate ThinkingMach config
         run: |
           mkdir -p ~/.paperclip/instances/default
           cat > ~/.paperclip/instances/default/config.json << 'CONF'
@@ -853,8 +853,8 @@ jobs:
 
       - name: Run e2e tests
         env:
-          PAPERCLIP_E2E_SKIP_LLM: "true"
-          PAPERCLIP_PLAYWRIGHT_CHANNEL: "chrome"
+          THINKINGMACH_E2E_SKIP_LLM: "true"
+          THINKINGMACH_PLAYWRIGHT_CHANNEL: "chrome"
         run: |
           # Playwright's own --shard balances by test count, and one spec
           # (smoke-lab) is ~40% of the lane's wall clock. Partition by recorded

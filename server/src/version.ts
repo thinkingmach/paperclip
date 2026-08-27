@@ -22,7 +22,7 @@ const GIT_DESCRIBE_RE =
   /^v(?<publicVersion>\d+\.\d+\.\d+)-(?<commitsSinceTag>\d+)-g(?<sha>[0-9a-f]{7,40})(?<dirty>-dirty)?$/i;
 
 function defaultDebugLog(fields: Record<string, unknown>, message: string): void {
-  if (process.env.PAPERCLIP_DEBUG_VERSION_RESOLUTION !== "1") return;
+  if (process.env.THINKINGMACH_DEBUG_VERSION_RESOLUTION !== "1") return;
 
   console.debug(message, fields);
 }

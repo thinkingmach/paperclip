@@ -3,7 +3,7 @@
 import { flushSync } from "react-dom";
 import type { ComponentProps } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import type { WorkTimelineResult } from "@paperclipai/shared";
+import type { WorkTimelineResult } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { WorkTimelineChart } from "./WorkTimelineChart";
 import { computeLayout } from "@/lib/timeline/layout";

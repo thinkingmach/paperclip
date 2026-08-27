@@ -4,7 +4,7 @@ import { lstat, mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { withAccountHomeSecretMutationLock } from "@paperclipai/adapter-codex-local/server";
+import { withAccountHomeSecretMutationLock } from "@thinkingmach/adapter-codex-local/server";
 import { AdapterAuthSessionConflictError } from "../services/device-login-service.js";
 import type {
   AdapterAuthSessionRow,
@@ -202,8 +202,8 @@ vi.mock("../middleware/logger.js", () => ({
 // Retain the production readiness helper while making the promotion decision
 // observable. This lets the route test prove that a resolved but rejected
 // Decision H outcome becomes a failed terminal rather than authenticated.
-vi.mock("@paperclipai/adapter-codex-local/server", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@paperclipai/adapter-codex-local/server")>();
+vi.mock("@thinkingmach/adapter-codex-local/server", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@thinkingmach/adapter-codex-local/server")>();
   return {
     ...actual,
     promoteDeviceLoginCredential: mockDeviceLoginPromotion,

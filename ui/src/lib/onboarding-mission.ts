@@ -1,4 +1,4 @@
-import type { Goal } from "@paperclipai/shared";
+import type { Goal } from "@thinkingmach/shared";
 
 import { formatOnboardingGoalInput, parseOnboardingGoalInput } from "./onboarding-goal";
 import { selectDefaultCompanyGoalId } from "./onboarding-launch";

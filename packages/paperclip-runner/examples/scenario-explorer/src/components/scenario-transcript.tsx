@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Badge } from "@paperclipai/paperclip-runner/react";
+import { Badge } from "@thinkingmach/paperclip-runner/react";
 import type { CapabilityTimelineEntry } from "@paperclip-runner-local/capability";
 
 import { DispositionBadge, JsonBlock, Mono, RedactionChip } from "./primitives.js";

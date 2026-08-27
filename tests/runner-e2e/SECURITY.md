@@ -19,7 +19,7 @@ gh api users/LOGIN --jq '{login,id}'
 
 The paid workflows reject manual dispatches when the workflow definition does
 not come from the default branch. A trusted dispatcher may name any branch in
-`paperclipai/paperclip` as the code under test. The authorization job resolves
+`thinkingmach/paperclip` as the code under test. The authorization job resolves
 that branch through the GitHub API and passes only its immutable commit SHA to a
 credential-free target-lock job. That job checks out the commit, regenerates
 `pnpm-lock.yaml` once with lifecycle scripts disabled and lockfile-only mode,
@@ -74,7 +74,7 @@ report, history, and Pages jobs receive none of these secrets.
 Each full-stack matrix cell receives only its selected profile credential, plus
 Daytona only for Daytona cells. Secret-bearing and OIDC jobs use frozen installs
 without a shared dependency cache.
-The Paperclip server process also receives none; the browser posts each value
+The ThinkingMach server process also receives none; the browser posts each value
 once to the encrypted company secret API and agents/environments retain only
 secret references.
 
@@ -93,7 +93,7 @@ Any other or missing toggle value falls back to the GitHub-hosted
 between those two reviewed literal labels; it never evaluates a configured
 runner label.
 
-Keep both runner targets restricted to `paperclipai/paperclip` and workflows
+Keep both runner targets restricted to `thinkingmach/paperclip` and workflows
 that independently authorize trusted source revisions. Never let a fork or
 untrusted pull-request workflow target them. The RunsOn fleet must launch a
 fresh ephemeral instance for every job, prohibit persistent runner reuse, and
@@ -135,7 +135,7 @@ publishing environment subject:
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": "repo:paperclipai/paperclip:environment:runner-e2e-history"
+          "token.actions.githubusercontent.com:sub": "repo:thinkingmach/paperclip:environment:runner-e2e-history"
         }
       }
     }
@@ -181,7 +181,7 @@ latest pointers are mutable, and S3 versioning makes those updates recoverable.
 CloudFront and GitHub Pages are public. Fixture identifiers, timing, token
 usage, costs, normalized results, and allowlisted inert structured per-attempt
 evidence are expected public data. Screenshots, video, archives, generated
-Playwright/blob/HTML report trees, credentials, Paperclip homes, databases,
+Playwright/blob/HTML report trees, credentials, ThinkingMach homes, databases,
 workspaces, master keys, raw/unredacted logs, and unallowlisted files are not.
 Only allowlisted `.log` copies that passed exact-value/key-shape scanning and
 redaction may cross the public boundary.

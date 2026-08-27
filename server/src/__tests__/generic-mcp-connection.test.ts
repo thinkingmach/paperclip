@@ -29,9 +29,9 @@ import {
   toolProfileEntries,
   toolProfiles,
   toolRuntimeSlots,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { and, eq, sql } from "drizzle-orm";
-import { MCP_CONFIG_HELP_PROMPT } from "@paperclipai/shared";
+import { MCP_CONFIG_HELP_PROMPT } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -155,7 +155,7 @@ function headerRecord(init: RequestInit | undefined): Record<string, string> {
 /**
  * A single fetch implementation standing in for an MCP server plus its
  * authorization server. Returns the request log so tests can assert on the exact
- * protocol parameters Paperclip sent (RFC 8707 `resource`, DCR metadata, PKCE).
+ * protocol parameters ThinkingMach sent (RFC 8707 `resource`, DCR metadata, PKCE).
  */
 function installMcpOAuthFixture(options: FixtureOptions = {}) {
   const auth = options.auth ?? "public";
@@ -219,7 +219,7 @@ function installMcpOAuthFixture(options: FixtureOptions = {}) {
       const requested = parsedBody as Record<string, unknown>;
       return jsonResponse({
         client_id: "fixture-dcr-client",
-        // A conforming server echoes back what it registered, and Paperclip
+        // A conforming server echoes back what it registered, and ThinkingMach
         // requires its own callback even when the provider adds a routing URI.
         redirect_uris: [
           ...(requested.redirect_uris as string[]),
@@ -582,11 +582,11 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
   });
 
   it("emits deployment guidance without exposing server env-var names", async () => {
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "");
-    vi.stubEnv("PAPERCLIP_AUTH_PUBLIC_BASE_URL", "");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "");
+    vi.stubEnv("THINKINGMACH_AUTH_PUBLIC_BASE_URL", "");
     vi.stubEnv("BETTER_AUTH_URL", "");
     vi.stubEnv("BETTER_AUTH_BASE_URL", "");
-    vi.stubEnv("PAPERCLIP_MANAGED_RUNTIME_PUBLIC_URL", "");
+    vi.stubEnv("THINKINGMACH_MANAGED_RUNTIME_PUBLIC_URL", "");
     const app = createRouteApp(db, {
       deploymentMode: "local_trusted",
       deploymentExposure: "private",
@@ -600,7 +600,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
     expect(response.body).toMatchObject({
       details: { code: "oauth_redirect_origin_unsupported" },
     });
-    expect(JSON.stringify(response.body)).not.toContain("PAPERCLIP_PUBLIC_URL");
+    expect(JSON.stringify(response.body)).not.toContain("THINKINGMACH_PUBLIC_URL");
   });
 
   it("stores a bearer key as a secret and never reads it back", async () => {
@@ -825,7 +825,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
     expect(serialized).toContain("X-Api-Key");
   });
 
-  it("rejects header names Paperclip refuses to send", async () => {
+  it("rejects header names ThinkingMach refuses to send", async () => {
     installMcpOAuthFixture({ auth: "public" });
     const company = await createCompany(db);
     const service = toolAccessService(db);
@@ -1174,7 +1174,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
 
   it("prefers a deployment-preconfigured client over any registration", async () => {
     const fixture = installMcpOAuthFixture({ auth: "oauth", cimd: true });
-    vi.stubEnv("PAPERCLIP_TOOL_OAUTH_CLIENT_ID", "preconfigured-client");
+    vi.stubEnv("THINKINGMACH_TOOL_OAUTH_CLIENT_ID", "preconfigured-client");
     const company = await createCompany(db);
     const service = toolAccessService(db);
 
@@ -1193,7 +1193,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
     installMcpOAuthFixture({ auth: "oauth", dcr: false });
     const company = await createCompany(db);
     const app = createRouteApp(db);
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", PUBLIC_BASE_URL);
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", PUBLIC_BASE_URL);
 
     const response = await request(app)
       .post(`/api/companies/${company.id}/tools/apps/connect`)
@@ -1347,7 +1347,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
    */
   const PROVIDER_CANARY = "canary-sk-live-9f3a2b7c";
   const HOSTILE_ERROR_DESCRIPTION =
-    `\u001b[31mFATAL\u001b[0m **Paperclip needs your recovery key**: ${PROVIDER_CANARY} <script>alert(1)</script>`;
+    `\u001b[31mFATAL\u001b[0m **ThinkingMach needs your recovery key**: ${PROVIDER_CANARY} <script>alert(1)</script>`;
   const HOSTILE_ERROR_BODY = {
     error_description: HOSTILE_ERROR_DESCRIPTION,
     error_uri: `https://attacker.fixture.test/why?leak=${PROVIDER_CANARY}`,
@@ -1405,7 +1405,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
       actor: { actorType: "user", actorId: "board-user" },
     }).then(() => null, (error: unknown) => error);
 
-    // Paperclip's own copy for `invalid_grant`, not a syllable of the provider's.
+    // ThinkingMach's own copy for `invalid_grant`, not a syllable of the provider's.
     expect(thrown).toMatchObject({
       status: 502,
       message: "The authorization server rejected the authorization code or refresh token.",
@@ -1445,7 +1445,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
     }).then(() => null, (error: unknown) => error);
 
     // Off the allowlist, so the label collapses and the message falls back to
-    // Paperclip's generic copy rather than naming the provider's code.
+    // ThinkingMach's generic copy rather than naming the provider's code.
     expect(thrown).toMatchObject({
       status: 502,
       message: "OAuth token exchange failed",
@@ -1474,7 +1474,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
 
     expect(thrown).toMatchObject({
       status: 502,
-      message: "The authorization server rejected Paperclip's callback URL.",
+      message: "The authorization server rejected ThinkingMach's callback URL.",
       details: {
         code: "oauth_dynamic_client_registration_failed",
         providerError: "invalid_redirect_uri",
@@ -1488,7 +1488,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
   });
 
   it("redacts a hostile denial from the callback route and consumes the state", async () => {
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", PUBLIC_BASE_URL);
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", PUBLIC_BASE_URL);
     installMcpOAuthFixture({ auth: "oauth" });
     const company = await createCompany(db);
     const service = toolAccessService(db);
@@ -1553,7 +1553,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
   });
 
   it("returns browser denials to Permissions without reflecting provider-authored details", async () => {
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", PUBLIC_BASE_URL);
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", PUBLIC_BASE_URL);
     installMcpOAuthFixture({ auth: "oauth" });
     const company = await createCompany(db);
     const service = toolAccessService(db);
@@ -1594,7 +1594,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
     const service = toolAccessService(db);
     await service.connectGalleryApp(company.id, { link: MCP_URL, name: "Fixture unsolicited denial" });
 
-    // An unsolicited callback carries no state Paperclip issued, so it is
+    // An unsolicited callback carries no state ThinkingMach issued, so it is
     // rejected on that ground and never reaches the provider-error branch.
     await expect(service.completeOAuthCallback({
       state: "state-paperclip-never-issued",
@@ -1650,7 +1650,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
       const state = new URL(start.authorizationUrl).searchParams.get("state")!;
       const code = fixture.issueAuthorizationCode(start.authorizationUrl);
 
-      // Real providers invent their own cancel codes. Whether or not Paperclip
+      // Real providers invent their own cancel codes. Whether or not ThinkingMach
       // recognizes the label, the request is over.
       const thrown = await service.completeOAuthCallback({
         state,
@@ -1749,7 +1749,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
       expect(resolved).toMatchObject({ status: "rejected", resolvedByUserId: "board-user" });
       expect(resolved!.result).toMatchObject({ outcome: "rejected" });
       expect(resolved!.resolvedAt).not.toBeNull();
-      // The prompt's reason is Paperclip's own copy, never the provider's.
+      // The prompt's reason is ThinkingMach's own copy, never the provider's.
       expect(JSON.stringify(resolved!.result)).not.toContain("access_denied");
       await expect(db.select().from(toolOauthStates)).resolves.toHaveLength(0);
     });
@@ -1859,7 +1859,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
       actor: { actorType: "user", actorId: "board-user" },
     });
 
-    // The callback moved. Paperclip cannot re-register in the operator's console,
+    // The callback moved. ThinkingMach cannot re-register in the operator's console,
     // so it must stop and say so rather than silently minting a new client.
     await expect(service.startOAuth(company.id, connected.connectionId, {
       redirectUri: "https://other.fixture.test/api/tools/oauth/callback",
@@ -1868,7 +1868,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
   });
 
   /**
-   * PAP-17099 — the authorization endpoint is the one discovered value Paperclip
+   * PAP-17099 — the authorization endpoint is the one discovered value ThinkingMach
    * hands to the operator's browser as a top-level navigation, so a hostile
    * server must not be able to advertise a scheme that runs code in the board's
    * origin, reads a local file, or downgrades the authorization request.
@@ -1904,7 +1904,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
 
       const connected = await service.connectGalleryApp(company.id, { link: MCP_URL, name: "Fixture poisoned config" });
       // A row written before the gate existed (or by any other writer) is not
-      // trusted just because it is in Paperclip's own database.
+      // trusted just because it is in ThinkingMach's own database.
       const poisonStoredAuthorizationUrl = async () => {
         const [row] = await db.select().from(toolConnections).where(eq(toolConnections.id, connected.connectionId));
         const poisoned = {
@@ -2132,7 +2132,7 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
 
   it("serves a client metadata document with no company or secret data", async () => {
     const company = await createCompany(db);
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", PUBLIC_BASE_URL);
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", PUBLIC_BASE_URL);
     const app = createRouteApp(db);
 
     const response = await request(app).get("/api/tools/oauth/client-metadata").expect(200);
@@ -2147,8 +2147,8 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
   });
 
   it("uses the configured auth origin for self-hosted OAuth callbacks", async () => {
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "https://public.paperclip.example");
-    vi.stubEnv("PAPERCLIP_AUTH_PUBLIC_BASE_URL", "https://auth.paperclip.example");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "https://public.paperclip.example");
+    vi.stubEnv("THINKINGMACH_AUTH_PUBLIC_BASE_URL", "https://auth.paperclip.example");
     const app = createRouteApp(db);
 
     const response = await request(app).get("/api/tools/oauth/client-metadata").expect(200);
@@ -2159,11 +2159,11 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
   });
 
   it("uses the managed runtime origin when no explicit callback origin is configured", async () => {
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "");
-    vi.stubEnv("PAPERCLIP_AUTH_PUBLIC_BASE_URL", "");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "");
+    vi.stubEnv("THINKINGMACH_AUTH_PUBLIC_BASE_URL", "");
     vi.stubEnv("BETTER_AUTH_URL", "");
     vi.stubEnv("BETTER_AUTH_BASE_URL", "");
-    vi.stubEnv("PAPERCLIP_MANAGED_RUNTIME_PUBLIC_URL", "https://worktree.tail29c1aa.ts.net");
+    vi.stubEnv("THINKINGMACH_MANAGED_RUNTIME_PUBLIC_URL", "https://worktree.tail29c1aa.ts.net");
     const app = createRouteApp(db);
 
     const response = await request(app).get("/api/tools/oauth/client-metadata").expect(200);
@@ -2174,8 +2174,8 @@ describeEmbeddedPostgres("generic remote MCP connections", () => {
   });
 
   it("keeps an explicit callback origin ahead of managed runtime inference", async () => {
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", PUBLIC_BASE_URL);
-    vi.stubEnv("PAPERCLIP_MANAGED_RUNTIME_PUBLIC_URL", "https://inferred.tail29c1aa.ts.net");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", PUBLIC_BASE_URL);
+    vi.stubEnv("THINKINGMACH_MANAGED_RUNTIME_PUBLIC_URL", "https://inferred.tail29c1aa.ts.net");
     const app = createRouteApp(db);
 
     const response = await request(app).get("/api/tools/oauth/client-metadata").expect(200);

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { CONNECTABLE_APP_DEFINITIONS, type AppDefinition } from "@paperclipai/shared";
+import { CONNECTABLE_APP_DEFINITIONS, type AppDefinition } from "@thinkingmach/shared";
 import { queryKeys } from "@/lib/queryKeys";
 import { AppsConnect } from "@/pages/apps/AppsConnect";
 

@@ -5,7 +5,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { HeartbeatRun, Issue, IssueRecoveryAction } from "@paperclipai/shared";
+import type { HeartbeatRun, Issue, IssueRecoveryAction } from "@thinkingmach/shared";
 import { RunWorkspaceRecoverySurface } from "./RunWorkspaceRecoverySurface";
 import { ToastProvider } from "../context/ToastContext";
 

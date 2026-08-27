@@ -26,7 +26,7 @@ const MAX_RECOVERY_SEMANTIC_RESULT_DEPTH = 128;
 
 /**
  * Package-owned adapter from the concrete harness driver contract to the
- * normalized session boundary consumed by Paperclip. Provider mechanics stay
+ * normalized session boundary consumed by ThinkingMach. Provider mechanics stay
  * behind HarnessDriver; the control plane sees only PRP events and results.
  */
 export class HarnessDriverBackend implements NativeSessionBackend {

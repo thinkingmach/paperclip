@@ -1,13 +1,13 @@
 /**
- * `@paperclipai/plugin-sdk` — Paperclip plugin worker-side SDK.
+ * `@thinkingmach/plugin-sdk` — ThinkingMach plugin worker-side SDK.
  *
  * This is the main entrypoint for plugin worker code.  For plugin UI bundles,
- * import from `@paperclipai/plugin-sdk/ui` instead.
+ * import from `@thinkingmach/plugin-sdk/ui` instead.
  *
  * @example
  * ```ts
  * // Plugin worker entrypoint (dist/worker.ts)
- * import { definePlugin, runWorker, z } from "@paperclipai/plugin-sdk";
+ * import { definePlugin, runWorker, z } from "@thinkingmach/plugin-sdk";
  *
  * const plugin = definePlugin({
  *   async setup(ctx) {
@@ -98,7 +98,7 @@ export {
 // Plugin definition and lifecycle types
 export type {
   PluginDefinition,
-  PaperclipPlugin,
+  ThinkingMachPlugin,
   PluginHealthDiagnostics,
   PluginConfigChangeContext,
   PluginConfigValidationResult,
@@ -327,11 +327,11 @@ export type {
   EnvSecretRefBinding,
 } from "./types.js";
 
-// Manifest and constant types re-exported from @paperclipai/shared
+// Manifest and constant types re-exported from @thinkingmach/shared
 // Plugin authors import manifest types from here so they have a single
-// dependency (@paperclipai/plugin-sdk) for all plugin authoring needs.
+// dependency (@thinkingmach/plugin-sdk) for all plugin authoring needs.
 export type {
-  PaperclipPluginManifestV1,
+  ThinkingMachPluginManifestV1,
   PluginJobDeclaration,
   PluginWebhookDeclaration,
   PluginToolDeclaration,
@@ -412,7 +412,7 @@ export type {
  *
  * @example
  * ```ts
- * import { z } from "@paperclipai/plugin-sdk";
+ * import { z } from "@thinkingmach/plugin-sdk";
  *
  * const configSchema = z.object({
  *   apiKey: z.string().describe("Your API key"),
@@ -446,4 +446,4 @@ export {
   HUMAN_COMPANY_MEMBERSHIP_ROLE_LABELS,
   MEMBERSHIP_STATUSES,
   PRINCIPAL_TYPES,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";

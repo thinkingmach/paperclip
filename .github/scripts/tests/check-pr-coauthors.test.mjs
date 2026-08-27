@@ -113,7 +113,7 @@ test('fetchAllPullRequestCommits: pages until a short batch', async () => {
     seen.push(path);
     if (path.endsWith('page=1')) return Array.from({ length: 100 }, () => commit('stubbi'));
     return [commit('tonio-alucema')];
-  }, 'paperclipai/paperclip', 9900, 'token');
+  }, 'thinkingmach/paperclip', 9900, 'token');
 
   assert.equal(commits.length, 101);
   assert.equal(seen.length, 2);
@@ -127,7 +127,7 @@ test('fetchAllPullRequestCommits: stops at the API ceiling instead of looping', 
   const commits = await fetchAllPullRequestCommits(async () => {
     calls += 1;
     return Array.from({ length: 100 }, () => commit('stubbi'));
-  }, 'paperclipai/paperclip', 9900, 'token');
+  }, 'thinkingmach/paperclip', 9900, 'token');
 
   assert.equal(calls, 3);
   assert.equal(commits.length, 300);

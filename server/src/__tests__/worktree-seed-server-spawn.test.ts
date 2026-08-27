@@ -13,8 +13,8 @@ import { realizeExecutionWorkspace } from "../services/workspace-runtime.ts";
 
 const execFileAsync = promisify(execFile);
 const cleanup: string[] = [];
-const originalConfig = process.env.PAPERCLIP_CONFIG;
-const originalWorktreesDir = process.env.PAPERCLIP_WORKTREES_DIR;
+const originalConfig = process.env.THINKINGMACH_CONFIG;
+const originalWorktreesDir = process.env.THINKINGMACH_WORKTREES_DIR;
 
 async function runGit(cwd: string, args: string[]) {
   await execFileAsync("git", args, { cwd });
@@ -43,7 +43,7 @@ async function writeConfig(configPath: string, instanceId: string) {
   }, null, 2)}\n`, "utf8");
   await fs.writeFile(
     path.join(path.dirname(configPath), ".env"),
-    `PAPERCLIP_INSTANCE_ID=${instanceId}\n`,
+    `THINKINGMACH_INSTANCE_ID=${instanceId}\n`,
     "utf8",
   );
 }
@@ -80,10 +80,10 @@ function verifiedSeedResult() {
 }
 
 afterEach(async () => {
-  if (originalConfig === undefined) delete process.env.PAPERCLIP_CONFIG;
-  else process.env.PAPERCLIP_CONFIG = originalConfig;
-  if (originalWorktreesDir === undefined) delete process.env.PAPERCLIP_WORKTREES_DIR;
-  else process.env.PAPERCLIP_WORKTREES_DIR = originalWorktreesDir;
+  if (originalConfig === undefined) delete process.env.THINKINGMACH_CONFIG;
+  else process.env.THINKINGMACH_CONFIG = originalConfig;
+  if (originalWorktreesDir === undefined) delete process.env.THINKINGMACH_WORKTREES_DIR;
+  else process.env.THINKINGMACH_WORKTREES_DIR = originalWorktreesDir;
   for (const dir of cleanup.splice(0)) {
     await fs.rm(dir, { recursive: true, force: true });
   }
@@ -102,7 +102,7 @@ describe("managed worktree seed source through the server spawn path", () => {
     await fs.mkdir(repoRoot, { recursive: true });
     await runGit(repoRoot, ["init", "-q"]);
     await runGit(repoRoot, ["config", "user.email", "paperclip@example.com"]);
-    await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+    await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
     await fs.mkdir(path.join(repoRoot, "scripts"), { recursive: true });
     await fs.writeFile(path.join(repoRoot, "README.md"), "server spawn regression\n", "utf8");
     await fs.copyFile(
@@ -133,7 +133,7 @@ const stateDir = path.join(cwd, ".paperclip");
 const normalized = path.basename(cwd).trim().toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/-+/g, "-").replace(/^[-_]+|[-_]+$/g, "");
 const instanceId = \`${"${(normalized || \"worktree\").slice(0, 48)}"}-\${crypto.createHash("sha256").update(path.resolve(cwd)).digest("hex").slice(0, 12)}\`;
 const targetConfigPath = path.join(stateDir, "config.json");
-const instanceRoot = path.join(process.env.PAPERCLIP_WORKTREES_DIR, "instances", instanceId);
+const instanceRoot = path.join(process.env.THINKINGMACH_WORKTREES_DIR, "instances", instanceId);
 fs.mkdirSync(stateDir, { recursive: true });
 fs.mkdirSync(instanceRoot, { recursive: true });
 fs.writeFileSync(targetConfigPath, JSON.stringify({
@@ -155,14 +155,14 @@ fs.writeFileSync(targetConfigPath, JSON.stringify({
   },
 }, null, 2) + "\\n");
 fs.writeFileSync(path.join(stateDir, ".env"), [
-  "PAPERCLIP_HOME=" + JSON.stringify(process.env.PAPERCLIP_WORKTREES_DIR),
-  "PAPERCLIP_INSTANCE_ID=" + JSON.stringify(instanceId),
-  "PAPERCLIP_CONFIG=" + JSON.stringify(targetConfigPath),
+  "THINKINGMACH_HOME=" + JSON.stringify(process.env.THINKINGMACH_WORKTREES_DIR),
+  "THINKINGMACH_INSTANCE_ID=" + JSON.stringify(instanceId),
+  "THINKINGMACH_CONFIG=" + JSON.stringify(targetConfigPath),
   "",
 ].join("\\n"));
 fs.writeFileSync(path.join(stateDir, "seed-manifest.json"), JSON.stringify({
   version: 2,
-  source: { instanceId: "ambient-instance", configPath: process.env.PAPERCLIP_CONFIG },
+  source: { instanceId: "ambient-instance", configPath: process.env.THINKINGMACH_CONFIG },
   snapshotAt: null,
   seedMode: "minimal",
   migrationRevision: null,
@@ -180,8 +180,8 @@ fs.writeFileSync(path.join(stateDir, "seed-manifest.json"), JSON.stringify({
     await fs.chmod(hookPath, 0o755);
     await runGit(repoRoot, ["config", "core.hooksPath", hooksDir]);
 
-    process.env.PAPERCLIP_CONFIG = ambientConfigPath;
-    process.env.PAPERCLIP_WORKTREES_DIR = worktreeHome;
+    process.env.THINKINGMACH_CONFIG = ambientConfigPath;
+    process.env.THINKINGMACH_WORKTREES_DIR = worktreeHome;
     const workspace = await realizeExecutionWorkspace({
       base: {
         baseCwd: repoRoot,

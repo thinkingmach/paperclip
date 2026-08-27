@@ -31,10 +31,10 @@ diff --git a/dist/acp-agent.js b/dist/acp-agent.js
              settingSources: ["user", "project", "local"],
              ...(thinking !== undefined && { thinking }),
              ...userProvidedOptions,
-+            // Paperclip Runner owns the complete session context. Its isolated
++            // ThinkingMach Runner owns the complete session context. Its isolated
 +            // user root contains only assigned skills; project/local settings
 +            // would reintroduce host prompts, plugins, skills, and MCP servers.
-+            ...(process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT === "1" && { settingSources: ["user"] }),
++            ...(process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT === "1" && { settingSources: ["user"] }),
              ...(settings && { settings }),
              env,
              // Override certain fields that must be controlled by ACP
@@ -43,7 +43,7 @@ diff --git a/dist/acp-agent.js b/dist/acp-agent.js
              forwardSubagentText,
              mcpServers: {
 -                ...(userProvidedOptions?.mcpServers || {}),
-+                ...(process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT === "1"
++                ...(process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT === "1"
 +                    ? {}
 +                    : (userProvidedOptions?.mcpServers || {})),
                  ...mcpServers,

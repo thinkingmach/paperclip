@@ -425,7 +425,7 @@ export interface SandboxSyncFileMapping {
  * order, fail-fast (first non-zero exit or timeout aborts the operation).
  *
  * SECURITY — command origin (Stage-1 design review, condition C1). `command` is
- * a **Paperclip/adapter-authored control operation**: it may be supplied ONLY by
+ * a **ThinkingMach/adapter-authored control operation**: it may be supplied ONLY by
  * core/adapter code. No server route, issue/comment content, project/workspace
  * file content, provider-plugin callback, or arbitrary adapter config may supply
  * a raw `command` string; any path embedded in it MUST be built by adapter/core

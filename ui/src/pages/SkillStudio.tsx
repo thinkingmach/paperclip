@@ -1,28 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  AlertTriangle,
-  ArrowLeft,
-  ChevronDown,
-  ChevronRight,
-  Clock,
-  Copy,
-  FileCode,
-  FilePlus,
-  FileText,
-  FolderMinus,
-  FolderPlus,
-  FlaskConical,
-  GitFork,
-  History,
-  MoreHorizontal,
-  Pencil,
-  Play,
-  Plus,
-  RotateCcw,
-  Share2,
-  Trash2,
-} from "lucide-react";
+import { AlertTriangle, ArrowLeft, ChevronDown, ChevronRight, Clock, Copy, FileCode, FilePlus, FileText, FolderMinus, FolderPlus, FlaskConical, GitFork, History, MoreHorizontal, Pencil, Play, Plus, RotateCcw, Share2, Trash2,  } from "lucide-react";
 import type {
   Agent,
   CompanySkillDetail,
@@ -38,7 +16,7 @@ import type {
   IssueThreadInteraction,
   AskUserQuestionsInteraction,
   AskUserQuestionsAnswer,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "@/lib/router";
 import {
   SearchableSelect,
@@ -126,7 +104,7 @@ import {
 import { FileTree, buildFileTree, type FileTreeNode } from "@/components/FileTree";
 import { MarkdownEditor } from "@/components/MarkdownEditor";
 import { FrontmatterPanel } from "@/components/FrontmatterPanel";
-import { joinFrontmatterBlock, splitFrontmatterBlock } from "@paperclipai/shared";
+import { joinFrontmatterBlock, splitFrontmatterBlock } from "@thinkingmach/shared";
 import { MarkdownBody } from "@/components/MarkdownBody";
 import { StatusBadge } from "@/components/StatusBadge";
 import { EmptyState } from "@/components/EmptyState";
@@ -472,7 +450,7 @@ function StudioNewSkillPanel({
       toast?.pushToast({
         tone: "success",
         title: skill.forkedFromSkillId ? "Skill fork created" : "Skill created",
-        body: `${skill.name} is now editable in the Paperclip workspace.`,
+        body: `${skill.name} is now editable in the ThinkingMach workspace.`,
       });
       navigate(skillStudioRoute(skill.id));
     },
@@ -644,7 +622,7 @@ function StudioNewSkillPanel({
       <section className="space-y-3">
         <div>
           <h2 className="text-sm font-medium text-foreground">Sharing</h2>
-          <p className="text-xs text-muted-foreground">Choose who can discover this skill inside Paperclip.</p>
+          <p className="text-xs text-muted-foreground">Choose who can discover this skill inside ThinkingMach.</p>
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
           {(["company", "private"] as const).map((scope) => (
@@ -1389,7 +1367,7 @@ function SkillPane({
     onError: onError("Couldn't delete file"),
   });
 
-  // Read-only skills (bundled Paperclip, remote GitHub, URL, skills.sh) reject
+  // Read-only skills (bundled ThinkingMach, remote GitHub, URL, skills.sh) reject
   // file writes server-side; reflect that up-front instead of letting the user
   // type into an editor whose Save silently 422s (PAP-13001 Bug B).
   const readOnly = skill.editable === false || fileQuery.data?.editable === false;

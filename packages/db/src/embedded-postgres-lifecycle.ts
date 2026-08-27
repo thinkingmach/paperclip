@@ -15,12 +15,12 @@ type EmbeddedPostgresExitTarget = {
 
 /**
  * embedded-postgres installs async-exit-hook listeners as an import side effect.
- * Paperclip-managed clusters have an explicit owner and shutdown path, so those
+ * ThinkingMach-managed clusters have an explicit owner and shutdown path, so those
  * global listeners must not be allowed to stop a cluster independently of that
  * owner (for example while a worktree seed restore is still streaming).
  *
  * Remove only listeners added by the supplied import and preserve every listener
- * that was already registered by Paperclip or its host process.
+ * that was already registered by ThinkingMach or its host process.
  */
 export async function loadWithoutEmbeddedPostgresExitHooks<T>(
   load: () => Promise<T>,

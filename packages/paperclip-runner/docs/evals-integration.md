@@ -1,10 +1,10 @@
-# Paperclip Evals Integration Contract
+# ThinkingMach Evals Integration Contract
 
 ## Stable consumer inputs
 
-Paperclip Evals consumes two explicit App artifacts:
+ThinkingMach Evals consumes two explicit App artifacts:
 
-1. a packed/released `@paperclipai/paperclip-runner` package; and
+1. a packed/released `@thinkingmach/paperclip-runner` package; and
 2. an explicit `paperclip-runnerd` executable path plus its
    `sha256:<lowercase hex>` digest.
 
@@ -17,13 +17,13 @@ relevant entry points:
   negotiation, semantic receipts/catalog, and explicit runnerd resolution;
 - `./testing`: deterministic driver/control-plane fakes and conformance kits.
 
-`resolvePaperclipRunnerdArtifact` resolves only the supplied path, verifies its
+`resolveThinkingMachRunnerdArtifact` resolves only the supplied path, verifies its
 bytes against the supplied digest, and invokes that exact executable with
 `--build-metadata`. It never searches `PATH` or the App repository.
 
 ## Versioned join
 
-`assertPaperclipRunnerEvalCompatibility` checks the complete join before any
+`assertThinkingMachRunnerEvalCompatibility` checks the complete join before any
 provider process starts:
 
 | Dimension | V1 rule |
@@ -88,10 +88,10 @@ and incompatible negotiation. It never qualifies a debug binary.
 Run it with:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner check:clean-consumers
+pnpm --filter @thinkingmach/paperclip-runner check:clean-consumers
 ```
 
-Set `PAPERCLIP_CLEAN_CONSUMER_OUTPUT_DIR` to retain the qualifying inputs and
+Set `THINKINGMACH_CLEAN_CONSUMER_OUTPUT_DIR` to retain the qualifying inputs and
 machine-readable proof outside the temporary consumer. The output contains the
 package tarball, platform-named release runnerd, `SHA256SUMS`, and
 `paperclip-runner-consumer-conformance.json`. That record is produced by the clean
@@ -99,6 +99,6 @@ consumer after it imports only the packed package, resolves the explicit binary
 and digest, and completes deterministic conformance without provider calls.
 
 ```sh
-PAPERCLIP_CLEAN_CONSUMER_OUTPUT_DIR=/absolute/release/directory \
-  pnpm --filter @paperclipai/paperclip-runner check:clean-consumers
+THINKINGMACH_CLEAN_CONSUMER_OUTPUT_DIR=/absolute/release/directory \
+  pnpm --filter @thinkingmach/paperclip-runner check:clean-consumers
 ```

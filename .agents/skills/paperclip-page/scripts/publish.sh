@@ -7,21 +7,21 @@ usage() {
 Usage:
   publish.sh <dir> [--slug slug] [--update] [--dry-run]
 
-Publishes a static directory with a root index.html to the configured Paperclip
+Publishes a static directory with a root index.html to the configured ThinkingMach
 pages bucket and prints the public URL and S3 prefix.
 
 Required environment for live publish:
-  PAPERCLIP_PAGE_BUCKET, PAPERCLIP_PAGE_BASE_URL, AWS_REGION, AWS credentials
+  THINKINGMACH_PAGE_BUCKET, THINKINGMACH_PAGE_BASE_URL, AWS_REGION, AWS credentials
 
 Optional environment:
-  PAPERCLIP_PAGE_DEFAULT_PREFIX, PAPERCLIP_PAGE_AWS_PROFILE
-  PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID, PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY,
-  PAPERCLIP_PAGE_AWS_SESSION_TOKEN
+  THINKINGMACH_PAGE_DEFAULT_PREFIX, THINKINGMACH_PAGE_AWS_PROFILE
+  THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID, THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY,
+  THINKINGMACH_PAGE_AWS_SESSION_TOKEN
 
 Credential resolution for aws calls made by this helper:
-  1. PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID + PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY
+  1. THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID + THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY
      (used only by this helper; ambient AWS_PROFILE/AWS_* identity is untouched)
-  2. PAPERCLIP_PAGE_AWS_PROFILE (passed as --profile; ambient AWS_* identity
+  2. THINKINGMACH_PAGE_AWS_PROFILE (passed as --profile; ambient AWS_* identity
      variables are stripped from the helper's aws calls)
   3. Ambient AWS credential chain (env keys, profile, instance role)
 
@@ -47,8 +47,8 @@ require_command() {
 normalize_base_url() {
   local value="$1"
   value="${value%/}"
-  [[ "$value" == https://* ]] || die "PAPERCLIP_PAGE_BASE_URL must be an https URL"
-  [[ ! "$value" =~ [[:space:]] ]] || die "PAPERCLIP_PAGE_BASE_URL cannot contain whitespace"
+  [[ "$value" == https://* ]] || die "THINKINGMACH_PAGE_BASE_URL must be an https URL"
+  [[ ! "$value" =~ [[:space:]] ]] || die "THINKINGMACH_PAGE_BASE_URL cannot contain whitespace"
   printf '%s\n' "$value"
 }
 
@@ -104,7 +104,7 @@ normalize_default_prefix() {
 
   raw="${raw#/}"
   raw="${raw%/}"
-  [[ "$raw" != *"//"* ]] || die "PAPERCLIP_PAGE_DEFAULT_PREFIX cannot contain empty path segments"
+  [[ "$raw" != *"//"* ]] || die "THINKINGMACH_PAGE_DEFAULT_PREFIX cannot contain empty path segments"
   if [[ -z "$raw" ]]; then
     printf '\n'
     return
@@ -313,26 +313,26 @@ require_command sed
 source_dir="$(cd "$source_arg" && pwd -P)"
 assert_safe_source_tree "$source_dir"
 
-bucket="${PAPERCLIP_PAGE_BUCKET:-}"
-base_url="${PAPERCLIP_PAGE_BASE_URL:-}"
+bucket="${THINKINGMACH_PAGE_BUCKET:-}"
+base_url="${THINKINGMACH_PAGE_BASE_URL:-}"
 region="${AWS_REGION:-}"
-default_prefix="$(normalize_default_prefix "${PAPERCLIP_PAGE_DEFAULT_PREFIX:-}")"
+default_prefix="$(normalize_default_prefix "${THINKINGMACH_PAGE_DEFAULT_PREFIX:-}")"
 
-[[ -n "$bucket" ]] || die "PAPERCLIP_PAGE_BUCKET is required"
-[[ "$bucket" =~ ^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$ ]] || die "PAPERCLIP_PAGE_BUCKET does not look like a valid S3 bucket name"
-[[ -n "$base_url" ]] || die "PAPERCLIP_PAGE_BASE_URL is required"
+[[ -n "$bucket" ]] || die "THINKINGMACH_PAGE_BUCKET is required"
+[[ "$bucket" =~ ^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$ ]] || die "THINKINGMACH_PAGE_BUCKET does not look like a valid S3 bucket name"
+[[ -n "$base_url" ]] || die "THINKINGMACH_PAGE_BASE_URL is required"
 base_url="$(normalize_base_url "$base_url")"
 
-page_access_key_id="${PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID:-}"
-page_secret_access_key="${PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY:-}"
+page_access_key_id="${THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID:-}"
+page_secret_access_key="${THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY:-}"
 if [[ -n "$page_access_key_id" || -n "$page_secret_access_key" ]]; then
   [[ -n "$page_access_key_id" && -n "$page_secret_access_key" ]] ||
-    die "PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID and PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY must be set together"
-  [[ -z "${PAPERCLIP_PAGE_AWS_PROFILE:-}" ]] ||
-    die "set PAPERCLIP_PAGE_AWS_PROFILE or the PAPERCLIP_PAGE_AWS_* key pair, not both"
+    die "THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID and THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY must be set together"
+  [[ -z "${THINKINGMACH_PAGE_AWS_PROFILE:-}" ]] ||
+    die "set THINKINGMACH_PAGE_AWS_PROFILE or the THINKINGMACH_PAGE_AWS_* key pair, not both"
 fi
-if [[ -n "${PAPERCLIP_PAGE_AWS_SESSION_TOKEN:-}" && -z "$page_access_key_id" ]]; then
-  die "PAPERCLIP_PAGE_AWS_SESSION_TOKEN requires the PAPERCLIP_PAGE_AWS_* key pair"
+if [[ -n "${THINKINGMACH_PAGE_AWS_SESSION_TOKEN:-}" && -z "$page_access_key_id" ]]; then
+  die "THINKINGMACH_PAGE_AWS_SESSION_TOKEN requires the THINKINGMACH_PAGE_AWS_* key pair"
 fi
 
 explicit_slug=0
@@ -354,11 +354,11 @@ if [[ "$dry_run" == "0" ]]; then
       AWS_ACCESS_KEY_ID="$page_access_key_id"
       AWS_SECRET_ACCESS_KEY="$page_secret_access_key"
     )
-    if [[ -n "${PAPERCLIP_PAGE_AWS_SESSION_TOKEN:-}" ]]; then
-      aws_env_overrides+=(AWS_SESSION_TOKEN="$PAPERCLIP_PAGE_AWS_SESSION_TOKEN")
+    if [[ -n "${THINKINGMACH_PAGE_AWS_SESSION_TOKEN:-}" ]]; then
+      aws_env_overrides+=(AWS_SESSION_TOKEN="$THINKINGMACH_PAGE_AWS_SESSION_TOKEN")
     fi
-  elif [[ -n "${PAPERCLIP_PAGE_AWS_PROFILE:-}" ]]; then
-    aws_base_args+=(--profile "$PAPERCLIP_PAGE_AWS_PROFILE")
+  elif [[ -n "${THINKINGMACH_PAGE_AWS_PROFILE:-}" ]]; then
+    aws_base_args+=(--profile "$THINKINGMACH_PAGE_AWS_PROFILE")
     aws_env_unset=(AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_PROFILE)
   fi
 fi

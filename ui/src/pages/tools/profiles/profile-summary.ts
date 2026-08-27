@@ -1,4 +1,4 @@
-import type { ToolProfileStatus, ToolProfileSummary, ToolProfileWithDetails } from "@paperclipai/shared";
+import type { ToolProfileStatus, ToolProfileSummary, ToolProfileWithDetails } from "@thinkingmach/shared";
 
 /**
  * Prosumer copy for the access-profile index (PAP-10997, AP1). Reads the

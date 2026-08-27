@@ -1,18 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "@/lib/router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  MoreHorizontal,
-  Loader2,
-  LogOut,
-  PauseCircle,
-  Pencil,
-  PlayCircle,
-  Plus,
-  Star,
-  Users,
-  AlertTriangle,
-} from "lucide-react";
+import { MoreHorizontal, Loader2, LogOut, PauseCircle, Pencil, PlayCircle, Plus, Star, Users, AlertTriangle,  } from "lucide-react";
 import { useCompany } from "../context/CompanyContext";
 import { useDialogActions } from "../context/DialogContext";
 import { useSidebar } from "../context/SidebarContext";
@@ -57,7 +46,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { Agent } from "@paperclipai/shared";
+import type { Agent } from "@thinkingmach/shared";
 
 /**
  * When no agent is running, the sidebar falls back to showing at most this many

@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readFileSync, realpathSync, statSync, type Stats } from "node:fs";
 import path from "node:path";
-import { resolvePaperclipInstanceId } from "./home-paths.js";
+import { resolveThinkingMachInstanceId } from "./home-paths.js";
 
 export type WorktreeSeedSourceDiagnostic = {
   configPath?: unknown;
@@ -29,19 +29,19 @@ function readInstanceId(configPath: string, label: "source" | "target"): string 
     // An instance-root config (`<home>/instances/<id>/config.json`) names its instance
     // by directory rather than by an adjacent .env; worktree configs always ship one.
     if (path.basename(path.dirname(configDir)) === "instances") {
-      return resolvePaperclipInstanceId(path.basename(configDir));
+      return resolveThinkingMachInstanceId(path.basename(configDir));
     }
-    throw new Error(`Registered ${label} Paperclip config is missing its adjacent .env instance pointer.`);
+    throw new Error(`Registered ${label} ThinkingMach config is missing its adjacent .env instance pointer.`);
   }
   const contents = readFileSync(envPath, "utf8");
   for (const rawLine of contents.split(/\r?\n/)) {
     const match = rawLine.match(
-      /^\s*(?:export\s+)?PAPERCLIP_INSTANCE_ID\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s#]+))/,
+      /^\s*(?:export\s+)?THINKINGMACH_INSTANCE_ID\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s#]+))/,
     );
     const value = (match?.[1] ?? match?.[2] ?? match?.[3] ?? "").trim();
     if (value) return value;
   }
-  throw new Error(`Registered ${label} Paperclip config has no PAPERCLIP_INSTANCE_ID binding.`);
+  throw new Error(`Registered ${label} ThinkingMach config has no THINKINGMACH_INSTANCE_ID binding.`);
 }
 
 function errorCode(error: unknown): string {
@@ -60,7 +60,7 @@ function inspectDeclaredEntry(entryPath: string, configPath: string, detail?: st
   } catch (error) {
     if (errorCode(error) === "ENOENT") return null;
     throw new Error(
-      `Registered base project workspace Paperclip config at ${configPath} cannot be inspected (${errorCode(error)}${detail ?? ""}).`,
+      `Registered base project workspace ThinkingMach config at ${configPath} cannot be inspected (${errorCode(error)}${detail ?? ""}).`,
     );
   }
 }
@@ -87,7 +87,7 @@ export function baseWorkspaceDeclaresInstanceConfig(baseWorkspaceCwd: string): b
       statSync(configDir);
     } catch (error) {
       throw new Error(
-        `Registered base project workspace Paperclip config at ${configPath} cannot be inspected (${errorCode(error)} on its .paperclip symlink target).`,
+        `Registered base project workspace ThinkingMach config at ${configPath} cannot be inspected (${errorCode(error)} on its .paperclip symlink target).`,
       );
     }
   }
@@ -148,36 +148,36 @@ export function resolveRegisteredWorktreeSeedSource(
   const selectedPath = registeredConfigPath ?? explicitSource;
   if (!selectedPath) {
     throw new Error(
-      "Registered base project workspace has no Paperclip config of its own and no explicit source was provided.",
+      "Registered base project workspace has no ThinkingMach config of its own and no explicit source was provided.",
     );
   }
-  const canonicalSourceConfigPath = canonicalRegularFile(selectedPath, "Registered source Paperclip config");
+  const canonicalSourceConfigPath = canonicalRegularFile(selectedPath, "Registered source ThinkingMach config");
   if (registeredConfigPath && canonicalSourceConfigPath !== registeredConfigPath) {
-    throw new Error("Registered source Paperclip config escapes the base project workspace or uses a symlink alias.");
+    throw new Error("Registered source ThinkingMach config escapes the base project workspace or uses a symlink alias.");
   }
 
   if (explicitSource) {
-    const canonicalExplicitSource = canonicalRegularFile(explicitSource, "Explicit source Paperclip config");
+    const canonicalExplicitSource = canonicalRegularFile(explicitSource, "Explicit source ThinkingMach config");
     if (canonicalExplicitSource !== canonicalSourceConfigPath) {
-      throw new Error("Explicit source Paperclip config does not match the registered base project workspace.");
+      throw new Error("Explicit source ThinkingMach config does not match the registered base project workspace.");
     }
   }
 
   const canonicalTargetConfigPath = canonicalRegularFile(
     input.targetConfigPath,
-    "Target worktree Paperclip config",
+    "Target worktree ThinkingMach config",
   );
   if (canonicalSourceConfigPath === canonicalTargetConfigPath) {
-    throw new Error("Source and target Paperclip configs are the same canonical file.");
+    throw new Error("Source and target ThinkingMach configs are the same canonical file.");
   }
 
   const sourceInstanceId = readInstanceId(canonicalSourceConfigPath, "source");
   const targetInstanceId = readInstanceId(canonicalTargetConfigPath, "target");
   if (targetInstanceId !== input.expectedTargetInstanceId) {
-    throw new Error("Target Paperclip instance does not match the registered worktree instance.");
+    throw new Error("Target ThinkingMach instance does not match the registered worktree instance.");
   }
   if (sourceInstanceId === targetInstanceId) {
-    throw new Error("Source and target Paperclip configs name the same instance.");
+    throw new Error("Source and target ThinkingMach configs name the same instance.");
   }
 
   return {

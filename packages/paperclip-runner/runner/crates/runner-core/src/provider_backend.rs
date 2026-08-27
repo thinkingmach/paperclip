@@ -263,13 +263,13 @@ fn validate_opencode_run_result(
     let schema: Value = serde_json::from_str(include_str!(
         "../../../../protocol/schemas/result.schema.json"
     ))
-    .map_err(|_| DurableRunnerError::invalid("embedded Paperclip result schema is invalid"))?;
+    .map_err(|_| DurableRunnerError::invalid("embedded ThinkingMach result schema is invalid"))?;
     let validator = jsonschema::validator_for(&schema).map_err(|_| {
-        DurableRunnerError::invalid("embedded Paperclip result schema cannot compile")
+        DurableRunnerError::invalid("embedded ThinkingMach result schema cannot compile")
     })?;
     if !validator.is_valid(&result) {
         return Err(DurableRunnerError::invalid(
-            "OpenCode paperclip/runResult failed the Paperclip result schema",
+            "OpenCode paperclip/runResult failed the ThinkingMach result schema",
         ));
     }
     let contract = state.completion_contract.as_ref().ok_or_else(|| {
@@ -1224,7 +1224,7 @@ impl CodexCommandExecutor {
                 payload: json!({
                     "provider": provider_label,
                     "code": "legacy_provider_turn_epoch_ambiguous",
-                    "message": format!("{provider_name} recovery could not safely identify and settle active work from a saturated legacy replay epoch; Paperclip terminated the provider and closed the durable run"),
+                    "message": format!("{provider_name} recovery could not safely identify and settle active work from a saturated legacy replay epoch; ThinkingMach terminated the provider and closed the durable run"),
                     "paperclipAccepted": false,
                     "providerReportedActive": provider_reported_active,
                     "ambiguousStartPending": ambiguous_turn_start_pending,
@@ -1282,7 +1282,7 @@ impl CodexCommandExecutor {
                     "provider": provider_label,
                     "code": "provider_turn_identity_reused",
                     "providerTurnId": reused_provider_turn_id,
-                    "message": format!("{provider_name} recovery reported a previously settled turn identity as active; Paperclip terminated the provider and closed the durable run"),
+                    "message": format!("{provider_name} recovery reported a previously settled turn identity as active; ThinkingMach terminated the provider and closed the durable run"),
                     "paperclipAccepted": false,
                     "providerReportedActive": true,
                     "providerShutdownFailed": provider_shutdown_failed,
@@ -1775,7 +1775,7 @@ impl CodexCommandExecutor {
             .map(CodexProvider::process_generation);
         // The provider has already been terminated. Drop its quarantined
         // handle before persisting the closure so recovery can never resume
-        // work that Codex accepted without Paperclip accepting its identity.
+        // work that Codex accepted without ThinkingMach accepting its identity.
         self.provider = None;
         let state = self
             .state
@@ -1820,8 +1820,8 @@ impl CodexCommandExecutor {
                     RejectedAcceptedTurn::InvalidIdentity => Value::Null,
                 },
                 "message": match rejected_accepted_turn {
-                    RejectedAcceptedTurn::ReusedIdentity(_) => format!("{provider_name} accepted work with a previously settled turn identity; Paperclip terminated the provider and closed the durable run"),
-                    RejectedAcceptedTurn::InvalidIdentity => format!("{provider_name} accepted work without a valid bounded turn identity; Paperclip terminated the provider and closed the durable run"),
+                    RejectedAcceptedTurn::ReusedIdentity(_) => format!("{provider_name} accepted work with a previously settled turn identity; ThinkingMach terminated the provider and closed the durable run"),
+                    RejectedAcceptedTurn::InvalidIdentity => format!("{provider_name} accepted work without a valid bounded turn identity; ThinkingMach terminated the provider and closed the durable run"),
                 },
                 "paperclipAccepted": false,
                 "providerAccepted": true,
@@ -2294,7 +2294,7 @@ impl CodexCommandExecutor {
             result: json!({
                 "error": {
                     "code": "invalid_tool_call",
-                    "message": "Paperclip rejected this semantic tool call",
+                    "message": "ThinkingMach rejected this semantic tool call",
                     "retryable": false,
                 },
             }),
@@ -2343,7 +2343,7 @@ impl CodexCommandExecutor {
             result: json!({
                 "error": {
                     "code": "semantic_tool_turn_receipt_limit",
-                    "message": "Paperclip stopped this turn at its durable semantic-tool receipt limit",
+                    "message": "ThinkingMach stopped this turn at its durable semantic-tool receipt limit",
                     "retryable": false,
                 },
             }),
@@ -3165,7 +3165,7 @@ mod tests {
         )
         .unwrap_err()
         .to_string()
-        .contains("failed the Paperclip result schema"));
+        .contains("failed the ThinkingMach result schema"));
 
         let mut wrong_criteria = opencode_result_state();
         let mut result = valid_opencode_result();

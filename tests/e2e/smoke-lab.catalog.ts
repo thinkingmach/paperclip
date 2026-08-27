@@ -56,7 +56,7 @@ export const smokeLabScenarios: SmokeLabScenario[] = [
     uiEntryPath: "apps",
     lifecycle: {
       connect: "Start fake OAuth and HTTP MCP fixture services, then use the installed HTTP fixture connection as the OAuth-backed remote MCP path.",
-      discoverCatalog: "Verify the HTTP fixture catalog is visible through Paperclip.",
+      discoverCatalog: "Verify the HTTP fixture catalog is visible through ThinkingMach.",
       ...httpLifecycle,
       revoke: "Disable the active fixture connection and re-enable it for subsequent catalog paths.",
       auditEvidence: "Activity and gateway audit rows show the allowed, approved, denied, quarantine, and revoke decisions.",

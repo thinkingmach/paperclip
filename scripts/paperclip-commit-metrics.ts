@@ -7,7 +7,7 @@ import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 
-const DEFAULT_QUERY = "\"Co-Authored-By: Paperclip <noreply@paperclip.ing>\"";
+const DEFAULT_QUERY = "\"Co-Authored-By: ThinkingMach <noreply@thinkingmach.com>\"";
 const DEFAULT_CACHE_FILE = path.resolve("data/paperclip-commit-metrics-cache.json");
 const DEFAULT_SEARCH_START = "2008-01-01T00:00:00Z";
 const SEARCH_WINDOW_LIMIT = 900;
@@ -15,8 +15,8 @@ const MIN_WINDOW_MS = 60_000;
 const DEFAULT_STATS_FETCH_LIMIT = 250;
 const DEFAULT_STATS_CONCURRENCY = 4;
 const DEFAULT_SEARCH_FIELD = "committer-date";
-const PAPERCLIP_EMAIL = "noreply@paperclip.ing";
-const PAPERCLIP_NAME = "paperclip";
+const THINKINGMACH_EMAIL = "noreply@thinkingmach.com";
+const THINKINGMACH_NAME = "paperclip";
 
 interface CliOptions {
   cacheFile: string;
@@ -568,7 +568,7 @@ function normalizeContributor(input: {
   if (!displayName && !email && !login) {
     return null;
   }
-  if ((email && email === PAPERCLIP_EMAIL) || (displayName && displayName.toLowerCase() === PAPERCLIP_NAME)) {
+  if ((email && email === THINKINGMACH_EMAIL) || (displayName && displayName.toLowerCase() === THINKINGMACH_NAME)) {
     return null;
   }
 
@@ -704,7 +704,7 @@ function buildSummary(cache: CacheFile, options: CliOptions, shas: string[], fet
 }
 
 function printSummary(summary: Summary) {
-  console.log("Paperclip commit metrics");
+  console.log("ThinkingMach commit metrics");
   console.log(`Query: ${summary.detectedQuery}`);
   console.log(`Range: ${summary.range.start} -> ${summary.range.end} (${summary.range.searchField})`);
   if (summary.filters.excludedOwners.length > 0) {

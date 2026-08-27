@@ -17,12 +17,12 @@ import {
   issues,
   nativeRunFinalizations,
   nativeRunResults,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   PrpEvent,
   PrpStructuredRunResult,
   PrpTerminalState,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 
 import {
   getEmbeddedPostgresTestSupport,
@@ -34,7 +34,7 @@ import {
 } from "../../realtime/runner-prp-ws.js";
 import { NativeRunCoordinatorStore } from "./native-run-coordinator-store.js";
 import { runnerPrpCoordinator } from "./runner-prp-coordinator.js";
-import { PaperclipRunnerSemanticAuthority } from "./runner-semantic-authority.js";
+import { ThinkingMachRunnerSemanticAuthority } from "./runner-semantic-authority.js";
 
 const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
 const describeEmbeddedPostgres = embeddedPostgresSupport.supported
@@ -195,7 +195,7 @@ describeEmbeddedPostgres("hidden runner PRP coordinator", () => {
       runnerInstanceId,
       nativeSessionId: sessionId,
       driverKind: "codex",
-      driverVersion: "0.3.0",
+      driverVersion: "0.3.3",
       completionContractId,
       completionContractSha256,
       nativePhase: "observed",
@@ -246,7 +246,7 @@ describeEmbeddedPostgres("hidden runner PRP coordinator", () => {
         environmentLeaseId: "environment-lease-1",
         turnId: "turn-1",
         itemId: "item-1",
-        runnerVersion: "0.3.0",
+        runnerVersion: "0.3.3",
         runnerDigest: `sha256:${"a".repeat(64)}`,
       }),
     ).rejects.toThrow("runner_prp_run_not_authorized");
@@ -256,7 +256,7 @@ describeEmbeddedPostgres("hidden runner PRP coordinator", () => {
       environmentLeaseId: "environment-lease-1",
       turnId: "turn-1",
       itemId: "item-1",
-      runnerVersion: "0.3.0",
+      runnerVersion: "0.3.3",
       runnerDigest: `sha256:${"a".repeat(64)}`,
     });
 
@@ -284,7 +284,7 @@ describeEmbeddedPostgres("hidden runner PRP coordinator", () => {
         environmentLeaseId: "environment-lease-1",
         turnId: "turn-1",
         itemId: "item-1",
-        runnerVersion: "0.3.0",
+        runnerVersion: "0.3.3",
         runnerDigest: `sha256:${"a".repeat(64)}`,
       }),
     ).rejects.toThrow("runner_prp_authority_already_registered");
@@ -300,7 +300,7 @@ describeEmbeddedPostgres("hidden runner PRP coordinator", () => {
 
   it("rechecks task ownership and returns semantic receipts", async () => {
     const seed = await seedNativeRun();
-    const authority = new PaperclipRunnerSemanticAuthority(db, {
+    const authority = new ThinkingMachRunnerSemanticAuthority(db, {
       companyId: seed.companyId,
       issueId: seed.issueId,
       runId: seed.runId,

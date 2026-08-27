@@ -63,7 +63,7 @@ The app component currently exposes 10 gradient pairs. `AgentCapsule` wraps out-
 | 9 | `--agent-9a` | `#f3b49e` | `--agent-9b` | `#1f4ed4` |
 | 10 | `--agent-10a` | `#f2d95f` | `--agent-10b` | `#4fbcba` |
 
-Do not treat these as the universal Paperclip capsule palette. The website brand guide exposes 12 presets, the video references have a separate 12-gradient palette, and the hero bank has 45 gradients.
+Do not treat these as the universal ThinkingMach capsule palette. The website brand guide exposes 12 presets, the video references have a separate 12-gradient palette, and the hero bank has 45 gradients.
 
 ## Website Marketing Capsule Palette
 

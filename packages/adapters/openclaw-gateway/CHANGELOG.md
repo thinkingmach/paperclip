@@ -1,20 +1,20 @@
-# @paperclipai/adapter-openclaw-gateway
+# @thinkingmach/adapter-openclaw-gateway
 
-## 0.3.1
+## 0.3.3
 
 ### Patch Changes
 
-- Stable release preparation for 0.3.1
+- Stable release preparation for 0.3.3
 - Updated dependencies
-  - @paperclipai/adapter-utils@0.3.1
+  - @thinkingmach/adapter-utils@0.3.3
 
-## 0.3.0
+## 0.3.3
 
 ### Minor Changes
 
-- Stable release preparation for 0.3.0
+- Stable release preparation for 0.3.3
 
 ### Patch Changes
 
 - Updated dependencies
-  - @paperclipai/adapter-utils@0.3.0
+  - @thinkingmach/adapter-utils@0.3.3

@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Company } from "@paperclipai/shared";
+import type { Company } from "@thinkingmach/shared";
 import { companiesApi } from "../api/companies";
 import {
   fetchCompanyListForCurrentAccount,

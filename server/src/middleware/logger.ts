@@ -13,8 +13,8 @@ const sharedOpts = {
 
 const isProduction = process.env.NODE_ENV === "production";
 export const logger = isProduction
-  ? pino({ level: process.env.PAPERCLIP_LOG_LEVEL?.trim() || "info", redact: [...HTTP_LOG_REDACT_PATHS] })
-  : pino({ level: process.env.PAPERCLIP_LOG_LEVEL?.trim() || "debug", redact: [...HTTP_LOG_REDACT_PATHS] }, pino.transport({
+  ? pino({ level: process.env.THINKINGMACH_LOG_LEVEL?.trim() || "info", redact: [...HTTP_LOG_REDACT_PATHS] })
+  : pino({ level: process.env.THINKINGMACH_LOG_LEVEL?.trim() || "debug", redact: [...HTTP_LOG_REDACT_PATHS] }, pino.transport({
       target: "pino-pretty",
       options: { ...sharedOpts, ignore: "pid,hostname,req,res,responseTime", colorize: true, destination: 1 },
     }));

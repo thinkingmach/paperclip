@@ -1,14 +1,14 @@
 ---
 name: release
 description: >
-  Coordinate a full Paperclip release across engineering verification, npm,
+  Coordinate a full ThinkingMach release across engineering verification, npm,
   GitHub, smoke testing, and announcement follow-up. Use when leadership asks
   to ship a release, not merely to discuss versioning.
 ---
 
 # Release Coordination Skill
 
-Run the full Paperclip maintainer release workflow, not just an npm publish.
+Run the full ThinkingMach maintainer release workflow, not just an npm publish.
 
 This skill coordinates:
 
@@ -40,7 +40,7 @@ Before proceeding, verify all of the following:
 4. The candidate SHA has passed the verification gate or is about to.
 5. If manifests changed, the CI-owned `pnpm-lock.yaml` refresh is already merged on `master`.
 6. npm publish rights are available through GitHub trusted publishing, or through local npm auth for emergency/manual use.
-7. If running through Paperclip, you have issue context for status updates and follow-up task creation.
+7. If running through ThinkingMach, you have issue context for status updates and follow-up task creation.
 
 If any precondition fails, stop and report the blocker.
 
@@ -55,7 +55,7 @@ Collect these inputs up front:
 
 ## Step 0 — Release Model
 
-Paperclip now uses a commit-driven release model:
+ThinkingMach now uses a commit-driven release model:
 
 1. every push to `master` publishes a canary automatically
 2. canaries use `YYYY.MDD.P-canary.N`
@@ -90,7 +90,7 @@ Useful commands:
 ```bash
 git tag --list 'v*' --sort=-version:refname | head -1
 git log --oneline --no-merges
-npm view paperclipai@canary version
+npm view thinkingmach@canary version
 ```
 
 ## Step 2 — Draft the Stable Changelog
@@ -137,7 +137,7 @@ Confirm:
 Useful checks:
 
 ```bash
-npm view paperclipai@canary version
+npm view thinkingmach@canary version
 git tag --list 'canary/v*' --sort=-version:refname | head -5
 ```
 
@@ -146,13 +146,13 @@ git tag --list 'canary/v*' --sort=-version:refname | head -5
 Run:
 
 ```bash
-PAPERCLIPAI_VERSION=canary ./scripts/docker-onboard-smoke.sh
+THINKINGMACH_VERSION=canary ./scripts/docker-onboard-smoke.sh
 ```
 
 Useful isolated variant:
 
 ```bash
-HOST_PORT=3232 DATA_DIR=./data/release-smoke-canary PAPERCLIPAI_VERSION=canary ./scripts/docker-onboard-smoke.sh
+HOST_PORT=3232 DATA_DIR=./data/release-smoke-canary THINKINGMACH_VERSION=canary ./scripts/docker-onboard-smoke.sh
 ```
 
 Confirm:
@@ -212,7 +212,7 @@ Create or verify follow-up work for:
 
 - website changelog publishing
 - launch post / social announcement
-- release summary in Paperclip issue context
+- release summary in ThinkingMach issue context
 
 These should reference the stable release, not the canary.
 
@@ -223,8 +223,8 @@ deterministic case tree. This is part of the release dogfood path, not an
 optional artifact. If the API returns `403 Cases are disabled`, stop and report
 that the operator must enable `experimental.enableCases`.
 
-Use the current release issue's `PAPERCLIP_COMPANY_ID`, `PAPERCLIP_API_URL`,
-`PAPERCLIP_API_KEY`, and `PAPERCLIP_RUN_ID`. Include `X-Paperclip-Run-Id` on
+Use the current release issue's `THINKINGMACH_COMPANY_ID`, `THINKINGMACH_API_URL`,
+`THINKINGMACH_API_KEY`, and `THINKINGMACH_RUN_ID`. Include `X-ThinkingMach-Run-Id` on
 all writes so the case activity feed can attribute the run back to the issue.
 
 Create or upsert the parent `release` case first:
@@ -234,8 +234,8 @@ POST /api/companies/:companyId/cases
 {
   "caseType": "release",
   "key": "paperclip-release:vYYYY.MDD.P",
-  "title": "Paperclip vYYYY.MDD.P release",
-  "summary": "Stable release content package for Paperclip vYYYY.MDD.P.",
+  "title": "ThinkingMach vYYYY.MDD.P release",
+  "summary": "Stable release content package for ThinkingMach vYYYY.MDD.P.",
   "status": "in_progress",
   "fields": {
     "schema_version": 1,
@@ -268,9 +268,9 @@ Write the parent body document immediately after the upsert:
 ```http
 PUT /api/cases/:releaseCaseId/documents/body
 {
-  "title": "Paperclip vYYYY.MDD.P release body",
+  "title": "ThinkingMach vYYYY.MDD.P release body",
   "format": "markdown",
-  "body": "# Paperclip vYYYY.MDD.P\n\nRelease summary and links...",
+  "body": "# ThinkingMach vYYYY.MDD.P\n\nRelease summary and links...",
   "changeSummary": "Initial release case body"
 }
 ```

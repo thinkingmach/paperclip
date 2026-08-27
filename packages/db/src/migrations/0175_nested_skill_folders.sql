@@ -70,14 +70,14 @@ WHERE folder."kind" = 'skill'
     FROM "company_skills" AS skill
     WHERE skill."company_id" = folder."company_id"
       AND skill."folder_id" IS NULL
-      AND (skill."key" LIKE 'paperclipai/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
+      AND (skill."key" LIKE 'thinkingmach/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
   );
 --> statement-breakpoint
 INSERT INTO "folders" ("company_id", "kind", "parent_id", "name", "slug", "system_key", "position")
 SELECT DISTINCT skill."company_id", 'skill', NULL::uuid, 'Bundled', 'bundled', 'bundled', 0
 FROM "company_skills" AS skill
 WHERE skill."folder_id" IS NULL
-  AND (skill."key" LIKE 'paperclipai/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
+  AND (skill."key" LIKE 'thinkingmach/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
   AND NOT EXISTS (
     SELECT 1 FROM "folders" AS folder
     WHERE folder."company_id" = skill."company_id"
@@ -101,7 +101,7 @@ WITH bundled_categories AS (
       ) AS slug
   ) AS category
   WHERE skill."folder_id" IS NULL
-    AND (skill."key" LIKE 'paperclipai/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
+    AND (skill."key" LIKE 'thinkingmach/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
   ORDER BY skill."company_id", category.slug, category.name
 )
 INSERT INTO "folders" ("company_id", "kind", "parent_id", "name", "slug", "system_key", "position")
@@ -124,7 +124,7 @@ WHERE skill."company_id" = root."company_id"
   AND root."kind" = 'skill'
   AND root."system_key" = 'bundled'
   AND skill."folder_id" IS NULL
-  AND (skill."key" LIKE 'paperclipai/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
+  AND (skill."key" LIKE 'thinkingmach/bundled/%' OR skill."metadata"->>'sourceKind' = 'paperclip_bundled')
   AND category_folder."system_key" = 'bundled:' || COALESCE(
     NULLIF(TRIM(BOTH '-' FROM REGEXP_REPLACE(LOWER(COALESCE(NULLIF(SPLIT_PART(skill."key", '/', 3), ''), 'other')), '[^a-z0-9]+', '-', 'g')), ''),
     'other'

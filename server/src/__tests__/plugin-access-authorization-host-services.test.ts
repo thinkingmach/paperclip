@@ -8,7 +8,7 @@ import {
   createDb,
   invites,
   principalPermissionGrants,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { buildHostServices } from "../services/plugin-host-services.js";
 import {
   getEmbeddedPostgresTestSupport,

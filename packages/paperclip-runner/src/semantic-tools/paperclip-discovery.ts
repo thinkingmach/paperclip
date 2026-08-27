@@ -1,16 +1,16 @@
-import { PAPERCLIP_SEMANTIC_ACTION_CATALOG } from "../catalog/semantic-action-catalog.js";
+import { THINKINGMACH_SEMANTIC_ACTION_CATALOG } from "../catalog/semantic-action-catalog.js";
 import type {
-  PaperclipSemanticActionDescriptor,
-  PaperclipSemanticActionId,
+  ThinkingMachSemanticActionDescriptor,
+  ThinkingMachSemanticActionId,
 } from "../catalog/semantic-action-types.js";
-import { decidePaperclipSemanticAuthorization } from "./authorization.js";
+import { decideThinkingMachSemanticAuthorization } from "./authorization.js";
 import type {
-  PaperclipSemanticDiscoveryResult,
-  PaperclipSemanticRunContext,
-  PaperclipSemanticToolDefinition,
+  ThinkingMachSemanticDiscoveryResult,
+  ThinkingMachSemanticRunContext,
+  ThinkingMachSemanticToolDefinition,
 } from "./types.js";
 
-const NAMESPACE: Readonly<Record<PaperclipSemanticActionId, string>> =
+const NAMESPACE: Readonly<Record<ThinkingMachSemanticActionId, string>> =
   Object.freeze({
     get_task_context: "active_task",
     get_task_history: "active_task",
@@ -42,28 +42,28 @@ const NAMESPACE: Readonly<Record<PaperclipSemanticActionId, string>> =
   });
 
 export function paperclipSemanticActionNamespace(
-  operationId: PaperclipSemanticActionId,
+  operationId: ThinkingMachSemanticActionId,
 ): string {
   return NAMESPACE[operationId];
 }
 
-export function projectPaperclipSemanticTools(input: {
+export function projectThinkingMachSemanticTools(input: {
   readonly runId: string;
-  readonly context: PaperclipSemanticRunContext;
-  readonly boundOperationIds: ReadonlySet<PaperclipSemanticActionId>;
-  readonly placement?: PaperclipSemanticActionDescriptor["placement"];
-}): readonly PaperclipSemanticToolDefinition[] {
+  readonly context: ThinkingMachSemanticRunContext;
+  readonly boundOperationIds: ReadonlySet<ThinkingMachSemanticActionId>;
+  readonly placement?: ThinkingMachSemanticActionDescriptor["placement"];
+}): readonly ThinkingMachSemanticToolDefinition[] {
   return deepFreeze(authorizedBoundDescriptors(input).map(toToolDefinition));
 }
 
-export function discoverPaperclipSemanticTools(input: {
+export function discoverThinkingMachSemanticTools(input: {
   readonly runId: string;
-  readonly context: PaperclipSemanticRunContext;
-  readonly boundOperationIds: ReadonlySet<PaperclipSemanticActionId>;
+  readonly context: ThinkingMachSemanticRunContext;
+  readonly boundOperationIds: ReadonlySet<ThinkingMachSemanticActionId>;
   readonly query: string;
   readonly namespace?: string;
   readonly limit?: number;
-}): PaperclipSemanticDiscoveryResult {
+}): ThinkingMachSemanticDiscoveryResult {
   const normalized = input.query.trim().toLowerCase();
   if (normalized.length === 0 || normalized.length > 500) {
     throw new Error("semantic_discovery_query_invalid");
@@ -107,24 +107,24 @@ export function discoverPaperclipSemanticTools(input: {
   });
 }
 
-export function toPaperclipSemanticToolDefinition(
-  descriptor: PaperclipSemanticActionDescriptor,
-): PaperclipSemanticToolDefinition {
+export function toThinkingMachSemanticToolDefinition(
+  descriptor: ThinkingMachSemanticActionDescriptor,
+): ThinkingMachSemanticToolDefinition {
   return deepFreeze(toToolDefinition(descriptor));
 }
 
 function authorizedBoundDescriptors(input: {
   readonly runId: string;
-  readonly context: PaperclipSemanticRunContext;
-  readonly boundOperationIds: ReadonlySet<PaperclipSemanticActionId>;
-  readonly placement?: PaperclipSemanticActionDescriptor["placement"];
-}): PaperclipSemanticActionDescriptor[] {
-  return PAPERCLIP_SEMANTIC_ACTION_CATALOG.filter(
+  readonly context: ThinkingMachSemanticRunContext;
+  readonly boundOperationIds: ReadonlySet<ThinkingMachSemanticActionId>;
+  readonly placement?: ThinkingMachSemanticActionDescriptor["placement"];
+}): ThinkingMachSemanticActionDescriptor[] {
+  return THINKINGMACH_SEMANTIC_ACTION_CATALOG.filter(
     (descriptor) =>
       input.boundOperationIds.has(descriptor.operationId) &&
       (input.placement === undefined ||
         descriptor.placement === input.placement) &&
-      decidePaperclipSemanticAuthorization(
+      decideThinkingMachSemanticAuthorization(
         descriptor,
         input.context,
         "exposure",
@@ -134,7 +134,7 @@ function authorizedBoundDescriptors(input: {
 }
 
 function scoreDescriptor(
-  descriptor: PaperclipSemanticActionDescriptor,
+  descriptor: ThinkingMachSemanticActionDescriptor,
   query: string,
   tokens: readonly string[],
 ): number {
@@ -152,8 +152,8 @@ function scoreDescriptor(
 }
 
 function toToolDefinition(
-  descriptor: PaperclipSemanticActionDescriptor,
-): PaperclipSemanticToolDefinition {
+  descriptor: ThinkingMachSemanticActionDescriptor,
+): ThinkingMachSemanticToolDefinition {
   return {
     name: descriptor.operationId,
     description: descriptor.description,

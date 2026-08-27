@@ -105,7 +105,7 @@ test("published canaries are gated by the exact-version onboarding browser smoke
   );
   assert.match(
     releaseWorkflow,
-    /PAPERCLIPAI_VERSION: \$\{\{ needs\.publish_canary\.outputs\.canary_version \}\}/,
+    /THINKINGMACH_VERSION: \$\{\{ needs\.publish_canary\.outputs\.canary_version \}\}/,
   );
   assert.match(releaseWorkflow, /test:canary-onboarding-smoke/);
   assert.match(
@@ -124,7 +124,7 @@ test("published canaries are gated by the exact-version onboarding browser smoke
   );
   assert.match(
     releaseWorkflow,
-    /name: Smoke exact published canary through onboarding\n\s+env:\n\s+PAPERCLIP_CANARY_SMOKE_SERVER_LOG: \$\{\{ runner\.temp \}\}\/canary-onboarding-server\.log/,
+    /name: Smoke exact published canary through onboarding\n\s+env:\n\s+THINKINGMACH_CANARY_SMOKE_SERVER_LOG: \$\{\{ runner\.temp \}\}\/canary-onboarding-server\.log/,
   );
   assert.match(
     releaseWorkflow,
@@ -155,7 +155,7 @@ test("release smoke workflow extends the container readiness budget for CI", () 
     "utf8",
   );
 
-  // CI containers cold-install paperclipai and embedded postgres, so the
+  // CI containers cold-install thinkingmach and embedded postgres, so the
   // workflow must extend the harness's local-default readiness budget.
   assert.match(smokeWorkflow, /SMOKE_READY_TIMEOUT_SECONDS=\d+/);
   const ciBudget = Number(
@@ -172,7 +172,7 @@ test("release smoke workflow extends the container readiness budget for CI", () 
   );
   assert.match(
     harness,
-    /wait_for_http "\$PAPERCLIP_PUBLIC_URL\/api\/health" "\$SMOKE_READY_TIMEOUT_SECONDS" 1/,
+    /wait_for_http "\$THINKINGMACH_PUBLIC_URL\/api\/health" "\$SMOKE_READY_TIMEOUT_SECONDS" 1/,
   );
 });
 
@@ -188,7 +188,7 @@ test("release verify workflow covers the same split test surface as stable PR ve
   assert.match(verifyWorkflow, /pnpm build/);
   assert.match(
     verifyWorkflow,
-    /pnpm --filter @paperclipai\/paperclip-runner check:all/,
+    /pnpm --filter @thinkingmach\/paperclip-runner check:all/,
   );
   assert.match(verifyWorkflow, /runner_workflow_evals:/);
   assert.match(verifyWorkflow, /runner_chaos_evals:/);

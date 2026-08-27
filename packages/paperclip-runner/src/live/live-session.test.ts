@@ -673,7 +673,7 @@ describe("Capability live runnerd and Codex session", () => {
     await service.shutdown(session.id);
   });
 
-  it("returns typed mock results to the same multi-turn Codex thread without Paperclip network calls", async () => {
+  it("returns typed mock results to the same multi-turn Codex thread without ThinkingMach network calls", async () => {
     const state = providerState();
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     const service = new CapabilityLiveSessionService({ transportFactory: fakeTransportFactory(state) });
@@ -706,8 +706,8 @@ describe("Capability live runnerd and Codex session", () => {
     expect(first.snapshot.evidence.some((entry) => entry.kind === "tool_call")).toBe(true);
     expect(first.snapshot.evidence.some((entry) => entry.kind === "tool_result")).toBe(true);
     expect(first.snapshot.networkEvidence).toEqual({
-      realPaperclipRequests: 0,
-      childPaperclipEnvironmentKeys: [],
+      realThinkingMachRequests: 0,
+      childThinkingMachEnvironmentKeys: [],
     });
     expect(fetchSpy).not.toHaveBeenCalled();
     fetchSpy.mockRestore();

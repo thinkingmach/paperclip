@@ -6,7 +6,7 @@ import {
 
 /** The name the CEO role fills in — see AGENT_ROLE_LABELS. */
 const AGENT_NAME = "CEO";
-const TASK_TITLE = "Paperclip onboarding";
+const TASK_TITLE = "ThinkingMach onboarding";
 
 test("captures planning mode UI for desktop and mobile", async ({ page }) => {
   const timestamp = Date.now();

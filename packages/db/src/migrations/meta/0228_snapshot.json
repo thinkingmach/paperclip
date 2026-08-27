@@ -14271,7 +14271,7 @@
             }
           ],
           "isUnique": true,
-          "where": "\"environments\".\"driver\" = 'sandbox' AND (\"environments\".\"metadata\" ->> 'managedByPaperclip')::boolean = true",
+          "where": "\"environments\".\"driver\" = 'sandbox' AND (\"environments\".\"metadata\" ->> 'managedByThinkingMach')::boolean = true",
           "concurrently": false,
           "method": "btree",
           "with": {}

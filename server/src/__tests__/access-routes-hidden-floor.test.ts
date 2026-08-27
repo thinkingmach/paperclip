@@ -4,7 +4,7 @@ import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
 /**
  * Operator-hidden Access surface floor (`instance.access` in
- * PAPERCLIP_HIDDEN_SETTINGS): instance-admin user management routes reject
+ * THINKINGMACH_HIDDEN_SETTINGS): instance-admin user management routes reject
  * with a stable code while the rest of the access router stays untouched.
  * The floor throws before any data access, so a stub db suffices; the
  * unfloored happy paths are covered by the embedded-postgres access tests.
@@ -60,7 +60,7 @@ describe("operator-hidden access admin floor", () => {
   }, 30_000);
 
   afterEach(() => {
-    delete process.env.PAPERCLIP_HIDDEN_SETTINGS;
+    delete process.env.THINKINGMACH_HIDDEN_SETTINGS;
   });
 
   const attempts: Array<[string, () => request.Test]> = [
@@ -77,7 +77,7 @@ describe("operator-hidden access admin floor", () => {
   it.each(attempts)(
     "floors the %s route when the operator hides the surface",
     async (_name, buildRequest) => {
-      process.env.PAPERCLIP_HIDDEN_SETTINGS = "instance.access";
+      process.env.THINKINGMACH_HIDDEN_SETTINGS = "instance.access";
 
       const res = await buildRequest();
 

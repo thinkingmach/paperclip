@@ -32,7 +32,7 @@ pub fn validate_question_response(
         .map_err(|_| LocalRunnerError::invalid("embedded question-set schema cannot compile"))?;
     if !question_set_validator.is_valid(question_set) {
         return Err(LocalRunnerError::invalid(
-            "persisted question set failed the Paperclip question-set schema",
+            "persisted question set failed the ThinkingMach question-set schema",
         ));
     }
     let schema: Value = serde_json::from_str(include_str!(
@@ -44,7 +44,7 @@ pub fn validate_question_response(
     })?;
     if !validator.is_valid(response) {
         return Err(LocalRunnerError::invalid(
-            "response failed the Paperclip question-response schema",
+            "response failed the ThinkingMach question-response schema",
         ));
     }
 

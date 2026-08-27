@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { SandboxManagedRuntimeAsset } from "@paperclipai/adapter-utils/sandbox-managed-runtime";
+import type { SandboxManagedRuntimeAsset } from "@thinkingmach/adapter-utils/sandbox-managed-runtime";
 
 // Captured Codex `home` asset descriptor + the sandbox `auth.json` fixture the
 // mocked runtime hands back during teardown. Mutated per-test so a single
@@ -17,7 +17,7 @@ const {
   ensureCommandResolvable,
   resolveCommandForLogs,
   prepareAdapterExecutionTargetRuntime,
-  startAdapterExecutionTargetPaperclipBridge,
+  startAdapterExecutionTargetThinkingMachBridge,
 } = vi.hoisted(() => ({
   runChildProcess: vi.fn(async () => ({
     exitCode: 0,
@@ -31,12 +31,12 @@ const {
   ensureCommandResolvable: vi.fn(async () => undefined),
   resolveCommandForLogs: vi.fn(async () => "/usr/bin/codex"),
   prepareAdapterExecutionTargetRuntime: vi.fn(),
-  startAdapterExecutionTargetPaperclipBridge: vi.fn(async () => null),
+  startAdapterExecutionTargetThinkingMachBridge: vi.fn(async () => null),
 }));
 
-vi.mock("@paperclipai/adapter-utils/server-utils", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/server-utils")>(
-    "@paperclipai/adapter-utils/server-utils",
+vi.mock("@thinkingmach/adapter-utils/server-utils", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/server-utils")>(
+    "@thinkingmach/adapter-utils/server-utils",
   );
   return {
     ...actual,
@@ -46,14 +46,14 @@ vi.mock("@paperclipai/adapter-utils/server-utils", async () => {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
     prepareAdapterExecutionTargetRuntime,
-    startAdapterExecutionTargetPaperclipBridge,
+    startAdapterExecutionTargetThinkingMachBridge,
   };
 });
 

@@ -774,7 +774,7 @@ export const ConnectionIntentStates: Story = {
           </ScenarioCard>
           <ScenarioCard
             title="Other viewer"
-            description="Other viewers see who Paperclip is waiting for and receive no connection controls."
+            description="Other viewers see who ThinkingMach is waiting for and receive no connection controls."
           >
             <IssueThreadInteractionCard
               interaction={pendingConnectionIntentInteraction}

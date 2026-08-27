@@ -2,7 +2,7 @@
 
 ## Scope
 
-Local runner proves one native local session. It uses no Paperclip service, database,
+Local runner proves one native local session. It uses no ThinkingMach service, database,
 network provider, or model. The TypeScript mock core, Rust runner, and Rust fake
 harness are all inside `packages/paperclip-runner/`.
 
@@ -64,7 +64,7 @@ configured grace time, and then sends `KILL` to the full group. Drop cleanup is
 a final guard.
 
 The mock core passes only a small process environment. The runner also clears
-the inherited environment before it starts the fake harness. Paperclip keys,
+the inherited environment before it starts the fake harness. ThinkingMach keys,
 model keys, and AgentMail keys are not forwarded.
 
 ## Bounded diagnostics
@@ -113,7 +113,7 @@ components. All visual values remain in `styles.css`.
 ### Local transport trust model
 
 The browser server is a developer-only loopback transport, not an authenticated
-Paperclip API. Vite dev and preview default to `127.0.0.1`. Every
+ThinkingMach API. Vite dev and preview default to `127.0.0.1`. Every
 `/api/localRunner/*` request is checked before route lookup or process startup:
 
 - both ends of the accepted socket and the HTTP `Host` must be loopback;
@@ -141,5 +141,5 @@ transport.
 ## Deferred work
 
 Local runner has no durable outbox, ACK, reconnect, runner restart recovery, real
-harness, production Paperclip bridge, or browser-to-runner connection. Those
+harness, production ThinkingMach bridge, or browser-to-runner connection. Those
 items require later authorized phases.

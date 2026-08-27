@@ -19,7 +19,7 @@
   "docsUrl": "https://developers.google.com/workspace/sheets/api/reference/mcp",
   "setupPrerequisite": {
     "title": "Google Developer Preview access required",
-    "description": "Google must register both the Workspace email used to authorize Paperclip and the Google Cloud project that owns the OAuth client. Registration is limited to those emails and projects; it does not enable unrelated Paperclip customers.",
+    "description": "Google must register both the Workspace email used to authorize ThinkingMach and the Google Cloud project that owns the OAuth client. Registration is limited to those emails and projects; it does not enable unrelated ThinkingMach customers.",
     "steps": [
       "Apply with the Workspace email that will sign in and the Google Cloud project that owns the OAuth client.",
       "Wait for the Google Group notification and then Google's final project-registration email, usually within a couple of days.",
@@ -32,7 +32,7 @@
   "methods": [
     {
       "key": "paperclip-read",
-      "label": "Connect with Paperclip",
+      "label": "Connect with ThinkingMach",
       "transport": "mcp_remote",
       "auth": "oauth",
       "oauthStrategy": "paperclip_cloud_connector",
@@ -49,7 +49,7 @@
       "ownershipModes": [
         "platform_shared"
       ],
-      "whenToUse": "Use Paperclip-managed OAuth for read-only Sheets access.",
+      "whenToUse": "Use ThinkingMach-managed OAuth for read-only Sheets access.",
       "defaults": {
         "serverUrl": "https://sheetsmcp.googleapis.com/mcp/v1",
         "scopesHint": [
@@ -95,7 +95,7 @@
           "prompt": "consent"
         }
       },
-      "guidanceMd": "Enable the Drive, Sheets, and Sheets MCP APIs, then register Paperclip's callback URI.",
+      "guidanceMd": "Enable the Drive, Sheets, and Sheets MCP APIs, then register ThinkingMach's callback URI.",
       "consoleLinks": {
         "register": "https://console.cloud.google.com/auth/clients",
         "docs": "https://developers.google.com/workspace/guides/configure-mcp-servers"
@@ -107,7 +107,7 @@
     },
     {
       "key": "paperclip-write",
-      "label": "Connect with Paperclip",
+      "label": "Connect with ThinkingMach",
       "transport": "mcp_remote",
       "auth": "oauth",
       "oauthStrategy": "paperclip_cloud_connector",
@@ -124,7 +124,7 @@
       "ownershipModes": [
         "platform_shared"
       ],
-      "whenToUse": "Use Paperclip-managed OAuth to read and update Sheets.",
+      "whenToUse": "Use ThinkingMach-managed OAuth to read and update Sheets.",
       "defaults": {
         "serverUrl": "https://sheetsmcp.googleapis.com/mcp/v1",
         "scopesHint": [
@@ -173,7 +173,7 @@
           "prompt": "consent"
         }
       },
-      "guidanceMd": "Enable the Drive, Sheets, and Sheets MCP APIs, then register Paperclip's callback URI.",
+      "guidanceMd": "Enable the Drive, Sheets, and Sheets MCP APIs, then register ThinkingMach's callback URI.",
       "consoleLinks": {
         "register": "https://console.cloud.google.com/auth/clients",
         "docs": "https://developers.google.com/workspace/guides/configure-mcp-servers"
@@ -186,22 +186,22 @@
     },
     {
       "key": "local",
-      "label": "Use the Paperclip robot account",
+      "label": "Use the ThinkingMach robot account",
       "transport": "local_stdio",
       "auth": "none",
       "capabilityProfile": {
         "key": "robot",
         "label": "Share selected sheets",
-        "description": "Share only named spreadsheets with the Paperclip robot account."
+        "description": "Share only named spreadsheets with the ThinkingMach robot account."
       },
       "ownershipModes": [
         "customer"
       ],
-      "whenToUse": "Share selected spreadsheets with the Paperclip robot account instead of connecting a Google identity.",
+      "whenToUse": "Share selected spreadsheets with the ThinkingMach robot account instead of connecting a Google identity.",
       "defaults": {
         "templateKey": "paperclip.google-sheets"
       },
-      "guidanceMd": "Share each spreadsheet with the Paperclip robot email, then paste the sheet links.",
+      "guidanceMd": "Share each spreadsheet with the ThinkingMach robot email, then paste the sheet links.",
       "riskTier": "S3",
       "requiredResourceFilters": [
         "spreadsheet"

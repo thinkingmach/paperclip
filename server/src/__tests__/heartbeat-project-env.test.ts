@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { buildSkillMentionHref } from "@paperclipai/shared";
+import { buildSkillMentionHref } from "@thinkingmach/shared";
 import {
   LOW_TRUST_REVIEW_PRESET,
   applyRunScopedMentionedSkillKeys,
@@ -145,7 +145,7 @@ describe("resolveExecutionRunAdapterConfig", () => {
     });
   });
 
-  it("drops PAPERCLIP_API_KEY bindings but forwards other PAPERCLIP_-named env to resolution", async () => {
+  it("drops THINKINGMACH_API_KEY bindings but forwards other THINKINGMACH_-named env to resolution", async () => {
     const resolveAdapterConfigForRuntime = vi.fn(async (_companyId, config: Record<string, unknown>) => ({
       config: {
         ...config,
@@ -167,25 +167,25 @@ describe("resolveExecutionRunAdapterConfig", () => {
       agentId: "agent-1",
       environmentId: "environment-1",
       environmentEnv: {
-        PAPERCLIP_API_KEY: "environment-api-key",
-        PAPERCLIP_CLOUD_PROVIDER_TOKEN_ENV: "environment-cloud",
+        THINKINGMACH_API_KEY: "environment-api-key",
+        THINKINGMACH_CLOUD_PROVIDER_TOKEN_ENV: "environment-cloud",
         ENV_ONLY: "environment-only",
       },
       executionRunConfig: {
         env: {
-          PAPERCLIP_API_KEY: { type: "secret_ref", secretId: "secret-api-key", version: "latest" },
-          PAPERCLIP_CLOUD_PROVIDER_TOKEN_AGENT: "agent-cloud",
+          THINKINGMACH_API_KEY: { type: "secret_ref", secretId: "secret-api-key", version: "latest" },
+          THINKINGMACH_CLOUD_PROVIDER_TOKEN_AGENT: "agent-cloud",
           AGENT_ONLY: "agent-only",
         },
       },
       projectEnv: {
-        PAPERCLIP_API_KEY: "project-api-key",
-        PAPERCLIP_CLOUD_PROVIDER_TOKEN_PROJECT: "project-cloud",
+        THINKINGMACH_API_KEY: "project-api-key",
+        THINKINGMACH_CLOUD_PROVIDER_TOKEN_PROJECT: "project-cloud",
         PROJECT_ONLY: "project-only",
       },
       routineEnv: {
-        PAPERCLIP_API_KEY: "routine-api-key",
-        PAPERCLIP_CLOUD_PROVIDER_TOKEN_ROUTINE: "routine-cloud",
+        THINKINGMACH_API_KEY: "routine-api-key",
+        THINKINGMACH_CLOUD_PROVIDER_TOKEN_ROUTINE: "routine-cloud",
         ROUTINE_ONLY: "routine-only",
       },
       routineId: "routine-1",
@@ -196,34 +196,34 @@ describe("resolveExecutionRunAdapterConfig", () => {
     });
 
     expect(resolveEnvBindings.mock.calls[0]?.[1]).toEqual({
-      PAPERCLIP_CLOUD_PROVIDER_TOKEN_ENV: "environment-cloud",
+      THINKINGMACH_CLOUD_PROVIDER_TOKEN_ENV: "environment-cloud",
       ENV_ONLY: "environment-only",
     });
     expect(resolveAdapterConfigForRuntime.mock.calls[0]?.[1]).toEqual({
       env: {
-        PAPERCLIP_CLOUD_PROVIDER_TOKEN_AGENT: "agent-cloud",
+        THINKINGMACH_CLOUD_PROVIDER_TOKEN_AGENT: "agent-cloud",
         AGENT_ONLY: "agent-only",
       },
     });
     expect(resolveEnvBindings.mock.calls[1]?.[1]).toEqual({
-      PAPERCLIP_CLOUD_PROVIDER_TOKEN_PROJECT: "project-cloud",
+      THINKINGMACH_CLOUD_PROVIDER_TOKEN_PROJECT: "project-cloud",
       PROJECT_ONLY: "project-only",
     });
     expect(resolveEnvBindings.mock.calls[2]?.[1]).toEqual({
-      PAPERCLIP_CLOUD_PROVIDER_TOKEN_ROUTINE: "routine-cloud",
+      THINKINGMACH_CLOUD_PROVIDER_TOKEN_ROUTINE: "routine-cloud",
       ROUTINE_ONLY: "routine-only",
     });
     expect(result.resolvedConfig.env).toEqual({
-      PAPERCLIP_CLOUD_PROVIDER_TOKEN_ENV: "environment-cloud",
+      THINKINGMACH_CLOUD_PROVIDER_TOKEN_ENV: "environment-cloud",
       ENV_ONLY: "environment-only",
-      PAPERCLIP_CLOUD_PROVIDER_TOKEN_AGENT: "agent-cloud",
+      THINKINGMACH_CLOUD_PROVIDER_TOKEN_AGENT: "agent-cloud",
       AGENT_ONLY: "agent-only",
-      PAPERCLIP_CLOUD_PROVIDER_TOKEN_PROJECT: "project-cloud",
+      THINKINGMACH_CLOUD_PROVIDER_TOKEN_PROJECT: "project-cloud",
       PROJECT_ONLY: "project-only",
-      PAPERCLIP_CLOUD_PROVIDER_TOKEN_ROUTINE: "routine-cloud",
+      THINKINGMACH_CLOUD_PROVIDER_TOKEN_ROUTINE: "routine-cloud",
       ROUTINE_ONLY: "routine-only",
     });
-    expect(JSON.stringify(result.resolvedConfig.env)).not.toContain("PAPERCLIP_API_KEY");
+    expect(JSON.stringify(result.resolvedConfig.env)).not.toContain("THINKINGMACH_API_KEY");
   });
 
   it("skips project env resolution when the project has no bindings", async () => {
@@ -493,7 +493,7 @@ describe("resolveExecutionRunAdapterConfig codex_local credential pre-dispatch g
   async function stubManagedCodexEnv(options: { seedSharedAuth: boolean }) {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-codex-gate-"));
     cleanupDirs.push(root);
-    const paperclipHome = path.join(root, "paperclip-home");
+    const thinkingmachHome = path.join(root, "paperclip-home");
     const sharedCodexHome = path.join(root, "shared-codex-home");
     await fs.mkdir(sharedCodexHome, { recursive: true });
     if (options.seedSharedAuth) {
@@ -503,11 +503,11 @@ describe("resolveExecutionRunAdapterConfig codex_local credential pre-dispatch g
         "utf8",
       );
     }
-    vi.stubEnv("PAPERCLIP_HOME", paperclipHome);
-    vi.stubEnv("PAPERCLIP_INSTANCE_ID", "default");
+    vi.stubEnv("THINKINGMACH_HOME", thinkingmachHome);
+    vi.stubEnv("THINKINGMACH_INSTANCE_ID", "default");
     vi.stubEnv("CODEX_HOME", sharedCodexHome);
     const managedAgentHome = path.join(
-      paperclipHome,
+      thinkingmachHome,
       "instances",
       "default",
       "companies",
@@ -707,13 +707,13 @@ describe("applyRunScopedMentionedSkillKeys", () => {
     const originalConfig = {
       command: "codex",
       paperclipSkillSync: {
-        desiredSkills: ["paperclipai/paperclip/paperclip"],
+        desiredSkills: ["thinkingmach/paperclip/paperclip"],
       },
     };
 
     const updatedConfig = applyRunScopedMentionedSkillKeys(originalConfig, [
       "company/company-1/release-changelog",
-      "paperclipai/paperclip/paperclip",
+      "thinkingmach/paperclip/paperclip",
       "company/company-1/release-changelog",
     ]);
 
@@ -721,7 +721,7 @@ describe("applyRunScopedMentionedSkillKeys", () => {
       command: "codex",
       paperclipSkillSync: {
         desiredSkills: [
-          "paperclipai/paperclip/paperclip",
+          "thinkingmach/paperclip/paperclip",
           "company/company-1/release-changelog",
         ],
       },
@@ -729,7 +729,7 @@ describe("applyRunScopedMentionedSkillKeys", () => {
     expect(originalConfig).toEqual({
       command: "codex",
       paperclipSkillSync: {
-        desiredSkills: ["paperclipai/paperclip/paperclip"],
+        desiredSkills: ["thinkingmach/paperclip/paperclip"],
       },
     });
   });

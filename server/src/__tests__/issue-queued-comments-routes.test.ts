@@ -14,7 +14,7 @@ import {
   heartbeatRuns,
   issueComments,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { errorHandler } from "../middleware/index.js";
 import { issueRoutes } from "../routes/issues.js";
 import { heartbeatService } from "../services/heartbeat.js";
@@ -94,7 +94,7 @@ describeEmbeddedPostgres("issue queued-comment routes", () => {
     await db.insert(agents).values({
       id: agentId,
       companyId,
-      name: "Paperclip Runner",
+      name: "ThinkingMach Runner",
       role: "engineer",
       status: "idle",
       adapterType: "paperclip_runner",
@@ -130,7 +130,7 @@ describeEmbeddedPostgres("issue queued-comment routes", () => {
       payload: {
         issueId,
         commentId: commentIds[1],
-        _paperclipWakeContext: {
+        _thinkingmachWakeContext: {
           commentId: commentIds[1],
           wakeCommentId: commentIds[1],
           wakeCommentIds: commentIds,
@@ -178,7 +178,7 @@ describeEmbeddedPostgres("issue queued-comment routes", () => {
       .from(agentWakeupRequests)
       .where(eq(agentWakeupRequests.id, seeded.wakeId))
       .then((rows) => rows[0]);
-    const wakeContext = (wake?.payload as any)?._paperclipWakeContext ?? {};
+    const wakeContext = (wake?.payload as any)?._thinkingmachWakeContext ?? {};
     await db
       .update(heartbeatRuns)
       .set({ status: "succeeded", finishedAt: new Date("2026-08-22T15:05:00.000Z") })
@@ -318,7 +318,7 @@ describeEmbeddedPostgres("issue queued-comment routes", () => {
         payload: {
           issueId: seeded.issueId,
           commentId: seeded.commentIds[0],
-          _paperclipWakeContext: {
+          _thinkingmachWakeContext: {
             commentId: seeded.commentIds[0],
             wakeCommentId: seeded.commentIds[0],
             wakeCommentIds: [seeded.commentIds[0]],
@@ -360,7 +360,7 @@ describeEmbeddedPostgres("issue queued-comment routes", () => {
         .where(eq(heartbeatRuns.id, queueRunId))
         .then((rows) => rows[0]),
     ]);
-    expect((wake?.payload as any)?._paperclipWakeContext?.wakeCommentIds).toEqual([
+    expect((wake?.payload as any)?._thinkingmachWakeContext?.wakeCommentIds).toEqual([
       seeded.commentIds[1],
     ]);
     expect((queueRun?.contextSnapshot as any)?.wakeCommentIds).toEqual([
@@ -631,7 +631,7 @@ describeEmbeddedPostgres("issue queued-comment routes", () => {
         payload: {
           issueId: seeded.issueId,
           commentId: seeded.commentIds[0],
-          _paperclipWakeContext: {
+          _thinkingmachWakeContext: {
             commentId: seeded.commentIds[0],
             wakeCommentId: seeded.commentIds[0],
             wakeCommentIds: [seeded.commentIds[0]],

@@ -387,7 +387,7 @@ describe("agent test-environment route", () => {
         envVars: {
           CLAUDE_CODE_OAUTH_TOKEN: { type: "secret_ref", secretId: "secret-1" },
           FOO: { type: "plain", value: "env-foo" },
-          PAPERCLIP_API_KEY: { type: "plain", value: "must-not-flow" },
+          THINKINGMACH_API_KEY: { type: "plain", value: "must-not-flow" },
         },
       });
       mockResolveEnvironmentExecutionTarget.mockResolvedValueOnce(sandboxExecutionTarget);

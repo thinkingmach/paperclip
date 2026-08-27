@@ -364,7 +364,7 @@ describe("buildNativeExecutionInput wake projection", () => {
       },
     });
     expect(JSON.stringify([codex, opencode, claudeManaged, agentCore, acpx]))
-      .not.toMatch(/OPENAI_API_KEY|ANTHROPIC_API_KEY|AWS_SECRET_ACCESS_KEY|PAPERCLIP_API_KEY/);
+      .not.toMatch(/OPENAI_API_KEY|ANTHROPIC_API_KEY|AWS_SECRET_ACCESS_KEY|THINKINGMACH_API_KEY/);
   });
 
   it("places child completion summaries in the closed provider prompt", () => {
@@ -378,7 +378,7 @@ describe("buildNativeExecutionInput wake projection", () => {
         description: "Use the child result.",
         workMode: "standard",
       },
-      taskPrompt: "Paperclip task context:\n- Issue: DOT-146",
+      taskPrompt: "ThinkingMach task context:\n- Issue: DOT-146",
       wakePayload: {
         reason: "issue_children_completed",
         issue: {
@@ -425,11 +425,11 @@ describe("buildNativeExecutionInput wake projection", () => {
       runtimeContext: nativeRuntimeContextFixture(),
     });
 
-    expect(input.task.prompt).toContain("## Paperclip Resume Delta");
+    expect(input.task.prompt).toContain("## ThinkingMach Resume Delta");
     expect(input.task.prompt).toContain("reason: issue_children_completed");
     expect(input.task.prompt).toContain("DOT-147 Build utility (done)");
     expect(input.task.prompt).toContain("Created three files and passed 7/7 tests.");
-    expect(input.task.prompt).toContain("Paperclip task context:\n- Issue: DOT-146");
+    expect(input.task.prompt).toContain("ThinkingMach task context:\n- Issue: DOT-146");
     expect(input.task.prompt).not.toContain("Use the child result.");
   });
 });

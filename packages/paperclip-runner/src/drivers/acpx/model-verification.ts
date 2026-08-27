@@ -40,7 +40,7 @@ export async function requireVerifiedAcpxModel(
     // The caller-facing model is already pinned by resolveQualifiedAcpxProfile.
     // Select the immutable ACP-facing identifier from that same profile: some
     // providers expose a stable selector (for example Claude's `sonnet`) while
-    // Paperclip publishes the canonical model name after verification.
+    // ThinkingMach publishes the canonical model name after verification.
     await control.setModel(providerModel);
     status = await control.getStatus();
   }

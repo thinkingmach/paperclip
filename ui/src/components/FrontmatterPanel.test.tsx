@@ -3,7 +3,7 @@
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { joinFrontmatterBlock, splitFrontmatterBlock } from "@paperclipai/shared";
+import { joinFrontmatterBlock, splitFrontmatterBlock } from "@thinkingmach/shared";
 import {
   FrontmatterPanel,
   type FrontmatterPanelChange,
@@ -130,7 +130,7 @@ describe("FrontmatterPanel", () => {
   it("edits nested metadata scalar values", () => {
     const onChange = vi.fn();
     render({
-      frontmatterText: "name: coach\nmetadata:\n  author: Paperclip\n  version: 2",
+      frontmatterText: "name: coach\nmetadata:\n  author: ThinkingMach\n  version: 2",
       hasFrontmatter: true,
       onChange,
     });

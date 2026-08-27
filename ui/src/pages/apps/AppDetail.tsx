@@ -6,12 +6,12 @@ import type {
   ToolConnection,
   ToolPolicy,
   ToolProfileWithDetails,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   connectionDisplaySecondaryHint,
   humanizeConnectionDisplayName,
   isToolConnectionAttentionHealth as isAttentionHealthStatus,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Navigate, useParams, useNavigate, useSearchParams } from "@/lib/router";
 import { useCompany } from "@/context/CompanyContext";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";

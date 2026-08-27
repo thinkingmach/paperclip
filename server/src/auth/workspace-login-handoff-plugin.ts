@@ -15,8 +15,8 @@ import { and, eq } from "drizzle-orm";
 import { setSessionCookie } from "better-auth/cookies";
 import { createAuthEndpoint } from "better-auth/api";
 import type { Session, User } from "better-auth/types";
-import type { Db } from "@paperclipai/db";
-import { companyMemberships } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { companyMemberships } from "@thinkingmach/db";
 import { logger } from "../middleware/logger.js";
 import {
   exchangeWorkspaceHandoffTicket,
@@ -117,7 +117,7 @@ export function workspaceLoginHandoffPlugin(deps: {
               findClonedIdentity: async ({ userId, companyId }) => {
                 const user = await ctx.context.internalAdapter.findUserById(userId);
                 if (!user) return null;
-                // Membership lives in Paperclip's own schema, so it is read
+                // Membership lives in ThinkingMach's own schema, so it is read
                 // through the app's `db` handle rather than the Better Auth
                 // adapter. Scoped to the ticket's company: an unscoped check
                 // would accept a clone where this user belongs to some *other*

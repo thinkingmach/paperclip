@@ -1,13 +1,5 @@
 import { useId, useState, type ReactNode } from "react";
-import {
-  ChevronDown,
-  CircleAlert,
-  CircleCheck,
-  Info,
-  OctagonAlert,
-  TriangleAlert,
-  type LucideIcon,
-} from "lucide-react";
+import { ChevronDown, CircleAlert, CircleCheck, Info, OctagonAlert, TriangleAlert, type LucideIcon,  } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type SystemNoticeTone = "neutral" | "info" | "success" | "warning" | "danger";

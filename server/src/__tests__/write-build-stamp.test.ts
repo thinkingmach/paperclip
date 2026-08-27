@@ -7,7 +7,7 @@ describe("resolveBuildCommit", () => {
     expect(resolveBuildCommit("aaaaaaa", "bbbbbbb")).toBe("aaaaaaa");
   });
 
-  it("falls back to PAPERCLIP_BUILD_COMMIT when git gives no commit", () => {
+  it("falls back to THINKINGMACH_BUILD_COMMIT when git gives no commit", () => {
     // A Docker image build excludes `.git`, so the git lookup returns null. The
     // image build passes the commit in the environment instead.
     expect(resolveBuildCommit(null, "bbbbbbb")).toBe("bbbbbbb");

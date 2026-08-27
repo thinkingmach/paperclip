@@ -3,26 +3,26 @@ import { CREDENTIAL_NAMES } from "./types.js";
 import type { MatrixExecution } from "./types.js";
 
 const DATABASE_KEYS = ["DATABASE_URL", "DATABASE_MIGRATION_URL"] as const;
-const AMBIENT_PAPERCLIP_CREDENTIAL_KEYS = [
-  "PAPERCLIP_API_KEY",
-  "PAPERCLIP_AGENT_API_KEY",
-  "PAPERCLIP_TASK_BRIDGE_TOKEN",
-  "PAPERCLIP_SETUP_TOKEN",
-  "PAPERCLIP_SECRETS_MASTER_KEY",
-  "PAPERCLIP_SECRETS_MASTER_KEY_FILE",
+const AMBIENT_THINKINGMACH_CREDENTIAL_KEYS = [
+  "THINKINGMACH_API_KEY",
+  "THINKINGMACH_AGENT_API_KEY",
+  "THINKINGMACH_TASK_BRIDGE_TOKEN",
+  "THINKINGMACH_SETUP_TOKEN",
+  "THINKINGMACH_SECRETS_MASTER_KEY",
+  "THINKINGMACH_SECRETS_MASTER_KEY_FILE",
 ] as const;
 const GENERATED_SERVER_SECRET_KEYS = [
-  "PAPERCLIP_AGENT_JWT_SECRET",
-  "PAPERCLIP_DECISION_SIGNING_SECRET",
-  "PAPERCLIP_TOOL_ACTION_SIGNING_SECRET",
+  "THINKINGMACH_AGENT_JWT_SECRET",
+  "THINKINGMACH_DECISION_SIGNING_SECRET",
+  "THINKINGMACH_TOOL_ACTION_SIGNING_SECRET",
   "BETTER_AUTH_SECRET",
 ] as const;
 const AMBIENT_EXTERNAL_STATE_KEYS = [
-  "PAPERCLIP_STORAGE_S3_BUCKET",
-  "PAPERCLIP_STORAGE_S3_REGION",
-  "PAPERCLIP_STORAGE_S3_ENDPOINT",
-  "PAPERCLIP_STORAGE_S3_PREFIX",
-  "PAPERCLIP_STORAGE_S3_FORCE_PATH_STYLE",
+  "THINKINGMACH_STORAGE_S3_BUCKET",
+  "THINKINGMACH_STORAGE_S3_REGION",
+  "THINKINGMACH_STORAGE_S3_ENDPOINT",
+  "THINKINGMACH_STORAGE_S3_PREFIX",
+  "THINKINGMACH_STORAGE_S3_FORCE_PATH_STYLE",
 ] as const;
 const PROVIDER_SECRET_KEY = /^(?:OPENAI|ANTHROPIC|OPENROUTER|DAYTONA)(?:_|$)/;
 
@@ -45,10 +45,10 @@ export function runnerE2EServerControlPaths(temporaryRoot: string) {
  * Native cells use the debug binary produced once by build:runner-binaries.
  * Preserve an explicit override for release builds and developer workflows.
  */
-export function resolvePaperclipRunnerBinaryForHarness(
+export function resolveThinkingMachRunnerBinaryForHarness(
   executions: readonly MatrixExecution[],
   repositoryRoot: string,
-  configuredPath = process.env.PAPERCLIP_RUNNER_BINARY,
+  configuredPath = process.env.THINKINGMACH_RUNNER_BINARY,
   platform: NodeJS.Platform = process.platform,
 ): string | undefined {
   if (configuredPath?.trim()) return configuredPath;
@@ -73,7 +73,7 @@ export function resolvePaperclipRunnerBinaryForHarness(
  * Remote native cells stage the same controller-owned binary whose digest is
  * authorized by the PRP control plane. Local cells launch it directly.
  */
-export function resolvePaperclipRemoteRunnerBinaryForHarness(
+export function resolveThinkingMachRemoteRunnerBinaryForHarness(
   executions: readonly MatrixExecution[],
   runnerBinary: string | undefined,
 ): string | undefined {
@@ -112,11 +112,11 @@ export function buildRunnerE2EProcessEnvironment(
 }
 
 /**
- * Build the environment inherited by the Paperclip server. Paid credentials
+ * Build the environment inherited by the ThinkingMach server. Paid credentials
  * deliberately stay in the launcher/Playwright process and cross the server
  * boundary only once, in the encrypted company-secrets API request.
  */
-export function buildPaperclipServerEnvironment(
+export function buildThinkingMachServerEnvironment(
   source: NodeJS.ProcessEnv,
   overrides: NodeJS.ProcessEnv = {},
 ): NodeJS.ProcessEnv {
@@ -127,7 +127,7 @@ export function buildPaperclipServerEnvironment(
   for (const key of [
     ...CREDENTIAL_NAMES,
     ...DATABASE_KEYS,
-    ...AMBIENT_PAPERCLIP_CREDENTIAL_KEYS,
+    ...AMBIENT_THINKINGMACH_CREDENTIAL_KEYS,
     ...AMBIENT_EXTERNAL_STATE_KEYS,
   ]) {
     delete result[key];
@@ -145,11 +145,11 @@ export function assertIsolatedServerEnvironment(
     configPath: string;
   },
 ) {
-  const home = env.PAPERCLIP_HOME;
-  const config = env.PAPERCLIP_CONFIG;
+  const home = env.THINKINGMACH_HOME;
+  const config = env.THINKINGMACH_CONFIG;
   if (home !== expected.paperclipHome || config !== expected.configPath) {
     throw new Error(
-      "Paperclip server environment does not use the allocated home/config paths",
+      "ThinkingMach server environment does not use the allocated home/config paths",
     );
   }
   if (
@@ -157,27 +157,27 @@ export function assertIsolatedServerEnvironment(
     !config.startsWith(`${expected.temporaryRoot}/`)
   ) {
     throw new Error(
-      "Paperclip server paths escape the isolated temporary root",
+      "ThinkingMach server paths escape the isolated temporary root",
     );
   }
   if (env.XDG_CACHE_HOME !== path.join(expected.temporaryRoot, "xdg-cache")) {
     throw new Error(
-      "Paperclip server cache does not use the allocated temporary root",
+      "ThinkingMach server cache does not use the allocated temporary root",
     );
   }
   for (const key of [
     ...CREDENTIAL_NAMES,
     ...DATABASE_KEYS,
-    ...AMBIENT_PAPERCLIP_CREDENTIAL_KEYS,
+    ...AMBIENT_THINKINGMACH_CREDENTIAL_KEYS,
     ...AMBIENT_EXTERNAL_STATE_KEYS,
   ]) {
     if (env[key])
       throw new Error(
-        `Paperclip server environment unexpectedly contains ${key}`,
+        `ThinkingMach server environment unexpectedly contains ${key}`,
       );
   }
   for (const key of GENERATED_SERVER_SECRET_KEYS) {
     if (!env[key])
-      throw new Error(`Paperclip server environment is missing ${key}`);
+      throw new Error(`ThinkingMach server environment is missing ${key}`);
   }
 }

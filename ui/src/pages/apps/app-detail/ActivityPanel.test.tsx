@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ToolCallEvent } from "@paperclipai/shared";
+import type { ToolCallEvent } from "@thinkingmach/shared";
 import { humanizeEvent, isTestEvent, resolveActorLabel } from "./ActivityPanel";
 
 function event(overrides: Partial<ToolCallEvent>): ToolCallEvent {

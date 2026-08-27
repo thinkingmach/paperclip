@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { PaperclipApiClient } from "./client.js";
+import { ThinkingMachApiClient } from "./client.js";
 import { createToolDefinitions } from "./tools.js";
 
 function makeClient() {
-  return new PaperclipApiClient({
+  return new ThinkingMachApiClient({
     apiUrl: "http://localhost:3100/api",
     apiKey: "token-123",
     companyId: "11111111-1111-1111-1111-111111111111",
@@ -47,14 +47,14 @@ describe("paperclip MCP tools", () => {
     expect(String(url)).toBe("http://localhost:3100/api/issues/PAP-1135");
     expect(init.method).toBe("PATCH");
     expect((init.headers as Record<string, string>)["Authorization"]).toBe("Bearer token-123");
-    expect((init.headers as Record<string, string>)["X-Paperclip-Run-Id"]).toBe(
+    expect((init.headers as Record<string, string>)["X-ThinkingMach-Run-Id"]).toBe(
       "33333333-3333-3333-3333-333333333333",
     );
   });
 
   it("lists the company skill library with the default company id", async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockJsonResponse([{ key: "paperclipai/bundled/product/wireframe", name: "wireframe" }]),
+      mockJsonResponse([{ key: "thinkingmach/bundled/product/wireframe", name: "wireframe" }]),
     );
     vi.stubGlobal("fetch", fetchMock);
 

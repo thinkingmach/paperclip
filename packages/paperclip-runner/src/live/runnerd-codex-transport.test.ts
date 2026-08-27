@@ -19,8 +19,8 @@ import type { DurablePrpControlPlane } from "../control-plane/durable-prp-contro
 
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   nativeRuntimePromptDigest,
   type NativeRuntimeContextSnapshot,
@@ -258,7 +258,7 @@ it("requires a provider-pack authority for remote ACPX artifact hashes", () => {
 });
 
 it("adds Codex-style turn updates only when collaboration instructions are enabled", () => {
-  const base = "Base Paperclip instructions.";
+  const base = "Base ThinkingMach instructions.";
   const enabled = withCodexCollaborationRuntimeInstructions(base, true);
   expect(enabled).toContain(base);
   expect(enabled).toContain("Before the first tool call in a turn");
@@ -296,7 +296,7 @@ it("preserves OpenCode runtime bindings when a durable runner is respawned", () 
         HOME: "/host/home",
         CODEX_HOME: "/host/codex-home",
         DATABASE_URL: "must-not-reach-runnerd",
-        PAPERCLIP_API_KEY: "must-not-reach-runnerd",
+        THINKINGMACH_API_KEY: "must-not-reach-runnerd",
         NODE_OPTIONS: "--require=/untrusted/bootstrap.cjs",
       },
       opencodeCommand: "/provider-pack/opencode",
@@ -315,20 +315,20 @@ it("preserves OpenCode runtime bindings when a durable runner is respawned", () 
     hasRuntimeContext: true,
   });
   expect(environment).toMatchObject({
-    PAPERCLIP_OPENCODE_PERMISSION_MODE: "deny",
-    PAPERCLIP_OPENCODE_RUNTIME_DIR: "/isolated/session/opencode",
-    PAPERCLIP_RUNNER_INSTANCE_ID: "runner-1",
-    PAPERCLIP_RUN_ID: "run-1",
-    PAPERCLIP_NORMALIZED_SESSION_ID: "session-1",
-    PAPERCLIP_NATIVE_RUNTIME_CONTEXT_PATH: "/isolated/runtime-context.json",
+    THINKINGMACH_OPENCODE_PERMISSION_MODE: "deny",
+    THINKINGMACH_OPENCODE_RUNTIME_DIR: "/isolated/session/opencode",
+    THINKINGMACH_RUNNER_INSTANCE_ID: "runner-1",
+    THINKINGMACH_RUN_ID: "run-1",
+    THINKINGMACH_NORMALIZED_SESSION_ID: "session-1",
+    THINKINGMACH_NATIVE_RUNTIME_CONTEXT_PATH: "/isolated/runtime-context.json",
     OPENROUTER_API_KEY: "test-provider-key",
   });
   expect(environment.HOME).toBeUndefined();
   expect(environment.CODEX_HOME).toBeUndefined();
   expect(environment.DATABASE_URL).toBeUndefined();
-  expect(environment.PAPERCLIP_API_KEY).toBeUndefined();
+  expect(environment.THINKINGMACH_API_KEY).toBeUndefined();
   expect(environment.NODE_OPTIONS).toBeUndefined();
-  expect(environment.PAPERCLIP_OPENCODE_COMMAND).toBeUndefined();
+  expect(environment.THINKINGMACH_OPENCODE_COMMAND).toBeUndefined();
 
   const defaultPermissionEnvironment =
     createCapabilityRunnerdProviderEnvironment({
@@ -350,7 +350,7 @@ it("preserves OpenCode runtime bindings when a durable runner is respawned", () 
       runtimeContextPath: "/isolated/runtime-context.json",
       hasRuntimeContext: false,
     });
-  expect(defaultPermissionEnvironment.PAPERCLIP_OPENCODE_PERMISSION_MODE).toBe(
+  expect(defaultPermissionEnvironment.THINKINGMACH_OPENCODE_PERMISSION_MODE).toBe(
     "ask",
   );
 });
@@ -364,7 +364,7 @@ it("passes the configured Codex API key only through the provider process enviro
         PATH: "/bin",
         OPENAI_API_KEY: "configured-provider-key",
         CODEX_API_KEY: "configured-automation-key",
-        PAPERCLIP_API_KEY: "must-not-reach-provider",
+        THINKINGMACH_API_KEY: "must-not-reach-provider",
       },
     },
     identity: {
@@ -386,7 +386,7 @@ it("passes the configured Codex API key only through the provider process enviro
     OPENAI_API_KEY: "configured-provider-key",
     CODEX_API_KEY: "configured-automation-key",
   });
-  expect(environment.PAPERCLIP_API_KEY).toBeUndefined();
+  expect(environment.THINKINGMACH_API_KEY).toBeUndefined();
 });
 
 it("passes only the Anthropic credential to Claude Managed runnerd", () => {
@@ -397,10 +397,10 @@ it("passes only the Anthropic credential to Claude Managed runnerd", () => {
       environment: {
         PATH: "/bin",
         ANTHROPIC_API_KEY: "anthropic-canary",
-        PAPERCLIP_NATIVE_MCP_NAME: "paperclip",
-        PAPERCLIP_NATIVE_MCP_URL: "https://paperclip.example/mcp",
-        PAPERCLIP_NATIVE_MCP_TOKEN: "must-not-reach-provider",
-        PAPERCLIP_API_KEY: "must-not-reach-provider",
+        THINKINGMACH_NATIVE_MCP_NAME: "paperclip",
+        THINKINGMACH_NATIVE_MCP_URL: "https://paperclip.example/mcp",
+        THINKINGMACH_NATIVE_MCP_TOKEN: "must-not-reach-provider",
+        THINKINGMACH_API_KEY: "must-not-reach-provider",
         DATABASE_URL: "must-not-reach-provider",
       },
     },
@@ -419,18 +419,18 @@ it("passes only the Anthropic credential to Claude Managed runnerd", () => {
   expect(environment).toMatchObject({
     PATH: "/bin",
     ANTHROPIC_API_KEY: "anthropic-canary",
-    PAPERCLIP_RUNNER_INSTANCE_ID: "runner-1",
-    PAPERCLIP_RUN_ID: "run-1",
-    PAPERCLIP_NORMALIZED_SESSION_ID: "session-1",
+    THINKINGMACH_RUNNER_INSTANCE_ID: "runner-1",
+    THINKINGMACH_RUN_ID: "run-1",
+    THINKINGMACH_NORMALIZED_SESSION_ID: "session-1",
   });
-  expect(environment.PAPERCLIP_NATIVE_MCP_NAME).toBeUndefined();
-  expect(environment.PAPERCLIP_NATIVE_MCP_URL).toBeUndefined();
-  expect(environment.PAPERCLIP_NATIVE_MCP_TOKEN).toBeUndefined();
-  expect(environment.PAPERCLIP_API_KEY).toBeUndefined();
+  expect(environment.THINKINGMACH_NATIVE_MCP_NAME).toBeUndefined();
+  expect(environment.THINKINGMACH_NATIVE_MCP_URL).toBeUndefined();
+  expect(environment.THINKINGMACH_NATIVE_MCP_TOKEN).toBeUndefined();
+  expect(environment.THINKINGMACH_API_KEY).toBeUndefined();
   expect(environment.DATABASE_URL).toBeUndefined();
 });
 
-it("uses file-backed AWS workload identity without forwarding access keys or Paperclip tokens", () => {
+it("uses file-backed AWS workload identity without forwarding access keys or ThinkingMach tokens", () => {
   const environment = createCapabilityRunnerdProviderEnvironment({
     provider: "aws_agentcore",
     options: {
@@ -448,8 +448,8 @@ it("uses file-backed AWS workload identity without forwarding access keys or Pap
         AWS_ACCESS_KEY_ID: "must-not-reach-provider",
         AWS_SECRET_ACCESS_KEY: "must-not-reach-provider",
         AWS_SESSION_TOKEN: "must-not-reach-provider",
-        PAPERCLIP_NATIVE_MCP_URL: "https://paperclip.example/mcp",
-        PAPERCLIP_NATIVE_MCP_TOKEN: "must-not-reach-provider",
+        THINKINGMACH_NATIVE_MCP_URL: "https://paperclip.example/mcp",
+        THINKINGMACH_NATIVE_MCP_TOKEN: "must-not-reach-provider",
       },
     },
     identity: {
@@ -477,8 +477,8 @@ it("uses file-backed AWS workload identity without forwarding access keys or Pap
   expect(environment.AWS_PROFILE).toBeUndefined();
   expect(environment.AWS_CONFIG_FILE).toBeUndefined();
   expect(environment.AWS_SHARED_CREDENTIALS_FILE).toBeUndefined();
-  expect(environment.PAPERCLIP_NATIVE_MCP_URL).toBeUndefined();
-  expect(environment.PAPERCLIP_NATIVE_MCP_TOKEN).toBeUndefined();
+  expect(environment.THINKINGMACH_NATIVE_MCP_URL).toBeUndefined();
+  expect(environment.THINKINGMACH_NATIVE_MCP_TOKEN).toBeUndefined();
 });
 
 it.each([
@@ -490,7 +490,7 @@ it.each([
       "CLAUDE_CODE_OAUTH_TOKEN",
       "OPENAI_API_KEY",
       "CODEX_API_KEY",
-      "PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET",
+      "THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET",
     ],
   },
   {
@@ -500,7 +500,7 @@ it.each([
       "OPENROUTER_API_KEY",
       "OPENAI_API_KEY",
       "CODEX_API_KEY",
-      "PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET",
+      "THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET",
     ],
   },
   {
@@ -510,7 +510,7 @@ it.each([
       "OPENROUTER_API_KEY",
       "ANTHROPIC_API_KEY",
       "CLAUDE_CODE_OAUTH_TOKEN",
-      "PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET",
+      "THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET",
     ],
   },
 ])(
@@ -522,7 +522,7 @@ it.each([
       CLAUDE_CODE_OAUTH_TOKEN: "claude-oauth-canary",
       OPENAI_API_KEY: "openai-canary",
       CODEX_API_KEY: "codex-canary",
-      PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "managed-codex-canary",
+      THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "managed-codex-canary",
     };
     const environment = createCapabilityRunnerdProviderEnvironment({
       provider: "acpx",
@@ -533,10 +533,10 @@ it.each([
         environment: {
           PATH: "/bin",
           ...credentialEnvironment,
-          PAPERCLIP_ACPX_PROVIDER_PACKAGE_ROOT: "/attacker/package-root",
-          PAPERCLIP_ACPX_PROVIDER_PACKAGE_MANIFEST:
+          THINKINGMACH_ACPX_PROVIDER_PACKAGE_ROOT: "/attacker/package-root",
+          THINKINGMACH_ACPX_PROVIDER_PACKAGE_MANIFEST:
             "/attacker/package-root/package.json",
-          PAPERCLIP_API_KEY: "must-not-reach-provider",
+          THINKINGMACH_API_KEY: "must-not-reach-provider",
           DATABASE_URL: "must-not-reach-provider",
         },
       },
@@ -557,18 +557,18 @@ it.each([
 
     expect(environment).toMatchObject({
       PATH: "/bin",
-      PAPERCLIP_RUNNER_INSTANCE_ID: "runner-1",
-      PAPERCLIP_RUN_ID: "run-1",
-      PAPERCLIP_NORMALIZED_SESSION_ID: "session-1",
-      PAPERCLIP_NATIVE_RUNTIME_CONTEXT_PATH: "/isolated/runtime-context.json",
-      PAPERCLIP_ACPX_PROVIDER_PACKAGE_ROOT: "/verified/provider-pack",
-      PAPERCLIP_ACPX_PROVIDER_PACKAGE_MANIFEST:
+      THINKINGMACH_RUNNER_INSTANCE_ID: "runner-1",
+      THINKINGMACH_RUN_ID: "run-1",
+      THINKINGMACH_NORMALIZED_SESSION_ID: "session-1",
+      THINKINGMACH_NATIVE_RUNTIME_CONTEXT_PATH: "/isolated/runtime-context.json",
+      THINKINGMACH_ACPX_PROVIDER_PACKAGE_ROOT: "/verified/provider-pack",
+      THINKINGMACH_ACPX_PROVIDER_PACKAGE_MANIFEST:
         "/verified/provider-pack/package.json",
     });
     for (const key of allowed)
       expect(environment[key]).toBe(credentialEnvironment[key]);
     for (const key of denied) expect(environment[key]).toBeUndefined();
-    expect(environment.PAPERCLIP_API_KEY).toBeUndefined();
+    expect(environment.THINKINGMACH_API_KEY).toBeUndefined();
     expect(environment.DATABASE_URL).toBeUndefined();
   },
 );
@@ -921,8 +921,8 @@ function assignedRuntimeContext(
   const digest = "0".repeat(64);
   const value = {
     prompt: {
-      revision: PAPERCLIP_EXECUTION_PROMPT_REVISION,
-      text: PAPERCLIP_EXECUTION_PROMPT,
+      revision: THINKINGMACH_EXECUTION_PROMPT_REVISION,
+      text: THINKINGMACH_EXECUTION_PROMPT,
       digest: nativeRuntimePromptDigest(),
     },
     instructions: {
@@ -1105,7 +1105,7 @@ it("binds an immediately failed durable turn before exposing its terminal", asyn
     environment: {
       PATH: process.env.PATH,
       HOME: join(tmpdir(), "runnerd-fast-terminal-host-home"),
-      PAPERCLIP_WORKSPACE_CWD: stateDirectory,
+      THINKINGMACH_WORKSPACE_CWD: stateDirectory,
     },
     approvalPolicy: "never",
     transportFactory: () => bundle.transport,
@@ -1297,8 +1297,8 @@ it("captures exact provider frames and correlates Rust and TypeScript interpreta
     codexArgs: fakeCodexArgs(traceDirectory, "--structured-activity"),
     stateDirectory: join(traceDirectory, "state"),
     environment: {
-      PAPERCLIP_PROVIDER_TRACE_PATH: tracePath,
-      PAPERCLIP_PROVIDER_TRACE_MAX_BYTES: String(64 * 1024 * 1024),
+      THINKINGMACH_PROVIDER_TRACE_PATH: tracePath,
+      THINKINGMACH_PROVIDER_TRACE_MAX_BYTES: String(64 * 1024 * 1024),
     },
   });
   const driver = new CodexAppServerDriver({
@@ -1308,7 +1308,7 @@ it("captures exact provider frames and correlates Rust and TypeScript interpreta
     environment: {
       PATH: process.env.PATH,
       HOME: hostHome,
-      PAPERCLIP_WORKSPACE_CWD: traceDirectory,
+      THINKINGMACH_WORKSPACE_CWD: traceDirectory,
     },
     approvalPolicy: "never",
     transportFactory: () => bundle.transport,
@@ -1766,8 +1766,8 @@ it("cold-restores a suspended provider session under its durable run binding", a
     ),
     stateDirectory,
     environment: {
-      PAPERCLIP_PROVIDER_TRACE_PATH: tracePath,
-      PAPERCLIP_PROVIDER_TRACE_MAX_BYTES: String(64 * 1024 * 1024),
+      THINKINGMACH_PROVIDER_TRACE_PATH: tracePath,
+      THINKINGMACH_PROVIDER_TRACE_MAX_BYTES: String(64 * 1024 * 1024),
     },
     lifecyclePolicy: { mode: "per_turn" as const, idleTimeoutMs: null },
     runtimeContext: assignedRuntimeContext(skillRoot, instructionRoot),

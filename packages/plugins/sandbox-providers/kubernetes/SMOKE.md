@@ -1,4 +1,4 @@
-# Manual smoke test — `@paperclipai/plugin-kubernetes`
+# Manual smoke test — `@thinkingmach/plugin-kubernetes`
 
 Manual sanity check that the plugin works end-to-end against a real
 paperclip-server instance and a real Kubernetes cluster (kind for local
@@ -30,10 +30,10 @@ In a separate terminal:
 
 ```bash
 cd /path/to/paperclip
-export PAPERCLIP_HOME=/tmp/paperclip-smoke
-export PAPERCLIP_INSTANCE_ID=smoke
-export PAPERCLIP_DEPLOYMENT_MODE=local_trusted
-pnpm --filter @paperclipai/server dev
+export THINKINGMACH_HOME=/tmp/paperclip-smoke
+export THINKINGMACH_INSTANCE_ID=smoke
+export THINKINGMACH_DEPLOYMENT_MODE=local_trusted
+pnpm --filter @thinkingmach/server dev
 ```
 
 Wait for `Server listening on 127.0.0.1:3100`.
@@ -41,7 +41,7 @@ Wait for `Server listening on 127.0.0.1:3100`.
 ### 3. Install the plugin via the CLI
 
 ```bash
-npx paperclipai plugin install \
+npx thinkingmach plugin install \
   --local /path/to/paperclip/packages/plugins/sandbox-providers/kubernetes \
   --api-base http://127.0.0.1:3100
 ```
@@ -66,7 +66,7 @@ curl -s -X POST -H "Content-Type: application/json" \
       \"kubeconfig\": $KUBECONFIG_CONTENT,
       \"companySlug\": \"smoke\",
       \"adapterType\": \"claude_local\",
-      \"imageAllowList\": [\"ghcr.io/paperclipai/agent-runtime-claude:v1\"]
+      \"imageAllowList\": [\"ghcr.io/thinkingmach/agent-runtime-claude:v1\"]
     }
   }" \
   http://127.0.0.1:3100/api/companies/$CO_ID/environments | jq

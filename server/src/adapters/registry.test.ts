@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertValidAdapterLoginCapability } from "@paperclipai/adapter-utils";
+import { assertValidAdapterLoginCapability } from "@thinkingmach/adapter-utils";
 import { listServerAdapters, requireServerAdapter } from "./registry.js";
 import { BUILTIN_ADAPTER_TYPES } from "./builtin-adapter-types.js";
 

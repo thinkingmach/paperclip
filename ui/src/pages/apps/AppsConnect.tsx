@@ -1,6 +1,6 @@
 import { ConnectionSetupFlow } from "@/features/connections/ConnectionSetupFlow";
 import { useSearchParams } from "@/lib/router";
-import type { ToolConnectionCredentialSource } from "@paperclipai/shared";
+import type { ToolConnectionCredentialSource } from "@thinkingmach/shared";
 
 export {
   AccessStep,

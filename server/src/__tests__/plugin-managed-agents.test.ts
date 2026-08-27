@@ -15,8 +15,8 @@ import {
   pluginCompanySettings,
   pluginManagedResources,
   plugins,
-} from "@paperclipai/db";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -42,14 +42,14 @@ function issuePrefix(id: string) {
   return `T${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 }
 
-function manifest(): PaperclipPluginManifestV1 {
+function manifest(): ThinkingMachPluginManifestV1 {
   return {
     id: "paperclip.managed-agents-test",
     apiVersion: 1,
     version: "0.1.0",
     displayName: "Managed Agents Test",
     description: "Test plugin",
-    author: "Paperclip",
+    author: "ThinkingMach",
     categories: ["automation"],
     capabilities: ["agents.managed"],
     entrypoints: { worker: "./dist/worker.js" },
@@ -70,7 +70,7 @@ function manifest(): PaperclipPluginManifestV1 {
   };
 }
 
-function pausedManifest(): PaperclipPluginManifestV1 {
+function pausedManifest(): ThinkingMachPluginManifestV1 {
   const pluginManifest = manifest();
   pluginManifest.agents![0] = {
     ...pluginManifest.agents![0]!,
@@ -110,20 +110,20 @@ describeEmbeddedPostgres("plugin-managed agents", () => {
     await tempDb?.cleanup();
   });
 
-  async function seedCompanyAndPlugin(options: { requireApproval?: boolean; manifest?: PaperclipPluginManifestV1 } = {}) {
+  async function seedCompanyAndPlugin(options: { requireApproval?: boolean; manifest?: ThinkingMachPluginManifestV1 } = {}) {
     const companyId = randomUUID();
     const pluginId = randomUUID();
     const pluginManifest = options.manifest ?? manifest();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: issuePrefix(companyId),
       requireBoardApprovalForNewAgents: options.requireApproval ?? false,
     });
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: pluginManifest.id,
-      packageName: "@paperclipai/plugin-managed-agents-test",
+      packageName: "@thinkingmach/plugin-managed-agents-test",
       version: pluginManifest.version,
       apiVersion: pluginManifest.apiVersion,
       categories: pluginManifest.categories,
@@ -310,12 +310,12 @@ describeEmbeddedPostgres("plugin-managed agents", () => {
   });
 
   it("materializes declared managed agent instructions with local folder paths", async () => {
-    const previousHome = process.env.PAPERCLIP_HOME;
-    const previousInstance = process.env.PAPERCLIP_INSTANCE_ID;
+    const previousHome = process.env.THINKINGMACH_HOME;
+    const previousInstance = process.env.THINKINGMACH_INSTANCE_ID;
     const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-managed-agent-home-"));
     const wikiRoot = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-managed-agent-wiki-")));
-    process.env.PAPERCLIP_HOME = tempHome;
-    process.env.PAPERCLIP_INSTANCE_ID = "test";
+    process.env.THINKINGMACH_HOME = tempHome;
+    process.env.THINKINGMACH_INSTANCE_ID = "test";
     try {
       const pluginManifest = manifest();
       pluginManifest.localFolders = [
@@ -370,10 +370,10 @@ describeEmbeddedPostgres("plugin-managed agents", () => {
       expect(content).toContain(`Wiki root: \`${wikiRoot}\``);
       expect(content).toContain(`Wiki schema: \`${path.join(wikiRoot, "AGENTS.md")}\``);
     } finally {
-      if (previousHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousHome;
-      if (previousInstance === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousInstance;
+      if (previousHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousHome;
+      if (previousInstance === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousInstance;
       await fs.rm(tempHome, { recursive: true, force: true });
       await fs.rm(wikiRoot, { recursive: true, force: true });
     }

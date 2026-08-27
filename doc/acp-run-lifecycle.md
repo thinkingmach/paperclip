@@ -83,7 +83,7 @@ a `finally`, so an earlier teardown fault never strands the lease.
 ## Per-phase run-log events
 
 The run writes one [run-log event](run-log-events.md) per named lifecycle
-phase, to the `heartbeat_run_events` table. This event is not a Paperclip
+phase, to the `heartbeat_run_events` table. This event is not a ThinkingMach
 Telemetry event and not an OpenTelemetry export. Each event carries only the
 phase name, the wall-time duration, and the outcome (`ok` or `failed`). The
 phase name is one member of a closed allowlist. An event never carries a

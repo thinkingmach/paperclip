@@ -27,7 +27,7 @@ after(() => {
 function createSite(name = "paperclip-page-test") {
   const siteDir = mkdtempSync(join(tmpdir(), `${name}-`));
   tempDirs.add(siteDir);
-  writeFileSync(join(siteDir, "index.html"), "<!doctype html><title>Paperclip</title>\n");
+  writeFileSync(join(siteDir, "index.html"), "<!doctype html><title>ThinkingMach</title>\n");
   return siteDir;
 }
 
@@ -48,8 +48,8 @@ function runPublish(args, env = {}) {
         encoding: "utf8",
         env: {
           ...process.env,
-          PAPERCLIP_PAGE_BUCKET: "paperclip-pages-test",
-          PAPERCLIP_PAGE_BASE_URL: "https://pages.example.test/",
+          THINKINGMACH_PAGE_BUCKET: "paperclip-pages-test",
+          THINKINGMACH_PAGE_BASE_URL: "https://pages.example.test/",
           ...env,
         },
         stdio: ["ignore", "pipe", "pipe"],
@@ -87,7 +87,7 @@ test("dry run validates and prints the planned target without requiring AWS", ()
 test("dry run normalizes a safe default prefix", () => {
   const result = runPublish(
     [createSite(), "--slug", "demo-page", "--dry-run"],
-    { PAPERCLIP_PAGE_DEFAULT_PREFIX: "/reports/launches/" },
+    { THINKINGMACH_PAGE_DEFAULT_PREFIX: "/reports/launches/" },
   );
 
   assert.equal(result.status, 0);
@@ -134,7 +134,7 @@ test("rejects hidden files in the source tree", () => {
 test("namespaced page keys require both halves of the pair", () => {
   const result = runPublish(
     [createSite(), "--slug", "demo-page", "--dry-run"],
-    { PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER" },
+    { THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER" },
   );
 
   assert.notEqual(result.status, 0);
@@ -144,20 +144,20 @@ test("namespaced page keys require both halves of the pair", () => {
 test("namespaced session token requires the namespaced key pair", () => {
   const result = runPublish(
     [createSite(), "--slug", "demo-page", "--dry-run"],
-    { PAPERCLIP_PAGE_AWS_SESSION_TOKEN: "page-session-token" },
+    { THINKINGMACH_PAGE_AWS_SESSION_TOKEN: "page-session-token" },
   );
 
   assert.notEqual(result.status, 0);
-  assert.match(result.output, /requires the PAPERCLIP_PAGE_AWS_\* key pair/);
+  assert.match(result.output, /requires the THINKINGMACH_PAGE_AWS_\* key pair/);
 });
 
-test("namespaced page keys conflict with PAPERCLIP_PAGE_AWS_PROFILE", () => {
+test("namespaced page keys conflict with THINKINGMACH_PAGE_AWS_PROFILE", () => {
   const result = runPublish(
     [createSite(), "--slug", "demo-page", "--dry-run"],
     {
-      PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER",
-      PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY: "page-secret",
-      PAPERCLIP_PAGE_AWS_PROFILE: "paperclip-page-uploader",
+      THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER",
+      THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY: "page-secret",
+      THINKINGMACH_PAGE_AWS_PROFILE: "paperclip-page-uploader",
     },
   );
 
@@ -209,8 +209,8 @@ exit 0
     AWS_SECRET_ACCESS_KEY: "ambient-secret",
     AWS_SESSION_TOKEN: "ambient-session-token",
     AWS_PROFILE: "ambient-profile",
-    PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER",
-    PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY: "page-secret",
+    THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER",
+    THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY: "page-secret",
   });
 
   assert.equal(result.status, 0);
@@ -265,9 +265,9 @@ exec /usr/bin/env "$@"
   const result = runPublish([siteDir, "--slug", "demo-page"], {
     AWS_REGION: "us-east-1",
     PATH: `${binDir}:${process.env.PATH}`,
-    PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER",
-    PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY: "page-secret-argv-canary",
-    PAPERCLIP_PAGE_AWS_SESSION_TOKEN: "page-session-argv-canary",
+    THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID: "AKIAPAGEUPLOADER",
+    THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY: "page-secret-argv-canary",
+    THINKINGMACH_PAGE_AWS_SESSION_TOKEN: "page-session-argv-canary",
   });
 
   assert.equal(result.status, 0);
@@ -278,7 +278,7 @@ exec /usr/bin/env "$@"
   assert.doesNotMatch(argvSeen, /AKIAPAGEUPLOADER/);
 });
 
-test("PAPERCLIP_PAGE_AWS_PROFILE strips ambient static credentials", () => {
+test("THINKINGMACH_PAGE_AWS_PROFILE strips ambient static credentials", () => {
   const siteDir = createSite();
   const binDir = mkdtempSync(join(tmpdir(), "paperclip-page-bin-"));
   tempDirs.add(binDir);
@@ -327,7 +327,7 @@ exit 0
     AWS_SECRET_ACCESS_KEY: "ambient-secret",
     AWS_SESSION_TOKEN: "ambient-session-token",
     AWS_PROFILE: "ambient-profile",
-    PAPERCLIP_PAGE_AWS_PROFILE: "paperclip-page-uploader",
+    THINKINGMACH_PAGE_AWS_PROFILE: "paperclip-page-uploader",
   });
 
   assert.equal(result.status, 0);

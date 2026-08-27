@@ -1,5 +1,5 @@
 import { and, eq, inArray, isNull, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   authUsers,
@@ -11,7 +11,7 @@ import {
   principalPermissionGrants,
   projects,
   userInboxAgentPolicies,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AgentApiKeyScope,
   InboxAgentPolicyMode,
@@ -19,8 +19,8 @@ import type {
   PrincipalType,
   SkillTestAgentKeyScope,
   TaskBridgeAgentKeyScope,
-} from "@paperclipai/shared";
-import { LOW_TRUST_REVIEW_PRESET, extractAgentMentionIds, type LowTrustBoundary } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { LOW_TRUST_REVIEW_PRESET, extractAgentMentionIds, type LowTrustBoundary } from "@thinkingmach/shared";
 import {
   LOW_TRUST_ISSUE_ANCESTRY_MAX_DEPTH,
   isIssueWithinLowTrustBoundary,
@@ -479,8 +479,8 @@ type ResponsibleUserActorWithMemo = AuthorizationActor & {
 };
 
 export function responsibleUserAuthzShadowMode() {
-  const mode = process.env.PAPERCLIP_RESPONSIBLE_USER_AUTHZ_MODE?.trim().toLowerCase();
-  const shadow = process.env.PAPERCLIP_RESPONSIBLE_USER_AUTHZ_SHADOW?.trim().toLowerCase();
+  const mode = process.env.THINKINGMACH_RESPONSIBLE_USER_AUTHZ_MODE?.trim().toLowerCase();
+  const shadow = process.env.THINKINGMACH_RESPONSIBLE_USER_AUTHZ_SHADOW?.trim().toLowerCase();
   return mode === "shadow" || shadow === "1" || shadow === "true" || shadow === "yes";
 }
 

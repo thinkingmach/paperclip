@@ -14,7 +14,7 @@ import type {
   LiveEvent,
   SummarySlot,
   SummarySlotIssueRef,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { __liveUpdatesTestUtils } from "@/context/LiveUpdatesProvider";
 import { SummarySlotCard, resolveGenerationStatusLine } from "./SummarySlotCard";

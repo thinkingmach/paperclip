@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { asBoolean } from "@paperclipai/adapter-utils/server-utils";
+import { asBoolean } from "@thinkingmach/adapter-utils/server-utils";
 
 type PreparedOpenCodeRuntimeConfig = {
   env: Record<string, string>;
@@ -59,12 +59,12 @@ function parseProviderConfig(
   } catch {
     // Surface the misconfiguration instead of silently dropping the provider
     // block; an unparseable value would otherwise be undiagnosable.
-    notes.push("PAPERCLIP_OPENCODE_PROVIDERS contains invalid JSON; custom providers ignored.");
+    notes.push("THINKINGMACH_OPENCODE_PROVIDERS contains invalid JSON; custom providers ignored.");
     return null;
   }
   if (!isPlainObject(parsed)) {
     notes.push(
-      "PAPERCLIP_OPENCODE_PROVIDERS is set but is not a JSON object; custom providers ignored.",
+      "THINKINGMACH_OPENCODE_PROVIDERS is set but is not a JSON object; custom providers ignored.",
     );
     return null;
   }
@@ -78,7 +78,7 @@ function parseProviderConfig(
   }
   if (skipped.length > 0) {
     notes.push(
-      `PAPERCLIP_OPENCODE_PROVIDERS: skipped provider(s) with non-object values: ${skipped.join(", ")}.`,
+      `THINKINGMACH_OPENCODE_PROVIDERS: skipped provider(s) with non-object values: ${skipped.join(", ")}.`,
     );
   }
   return Object.keys(providers).length > 0 ? providers : null;
@@ -156,7 +156,7 @@ export async function prepareOpenCodeRuntimeConfig(input: {
     "Injected runtime OpenCode config with permission.external_directory=allow to avoid headless approval prompts.",
   ];
 
-  // Merge gateway/custom provider definitions supplied via PAPERCLIP_OPENCODE_PROVIDERS
+  // Merge gateway/custom provider definitions supplied via THINKINGMACH_OPENCODE_PROVIDERS
   // (a JSON object in OpenCode's `provider` shape). OpenCode resolves a `--model
   // provider/model` only when that model exists in a provider's `models` map, and
   // OPENCODE_ALLOW_ALL_MODELS does NOT bypass its internal getModel(). So routing a
@@ -165,7 +165,7 @@ export async function prepareOpenCodeRuntimeConfig(input: {
   // hard-coded) so the gateway URL, key env, and model list stay declarative.
   const resolveEnv = (name: string): string | undefined => input.env[name] ?? process.env[name];
   const gatewayProviders = parseProviderConfig(
-    input.env.PAPERCLIP_OPENCODE_PROVIDERS ?? process.env.PAPERCLIP_OPENCODE_PROVIDERS,
+    input.env.THINKINGMACH_OPENCODE_PROVIDERS ?? process.env.THINKINGMACH_OPENCODE_PROVIDERS,
     resolveEnv,
     notes,
   );
@@ -175,7 +175,7 @@ export async function prepareOpenCodeRuntimeConfig(input: {
     : existingProvider;
   if (gatewayProviders) {
     notes.push(
-      `Injected ${Object.keys(gatewayProviders).length} custom OpenCode provider(s) from PAPERCLIP_OPENCODE_PROVIDERS: ${Object.keys(gatewayProviders).join(", ")}.`,
+      `Injected ${Object.keys(gatewayProviders).length} custom OpenCode provider(s) from THINKINGMACH_OPENCODE_PROVIDERS: ${Object.keys(gatewayProviders).join(", ")}.`,
     );
   }
 
@@ -186,7 +186,7 @@ export async function prepareOpenCodeRuntimeConfig(input: {
   // otherwise rejected with "Model not found" even though the provider serves them.
   // An empty entry deep-merges with catalog metadata, so this is a no-op for models
   // the catalog already knows, and we never clobber an explicit definition from the
-  // user config or PAPERCLIP_OPENCODE_PROVIDERS.
+  // user config or THINKINGMACH_OPENCODE_PROVIDERS.
   const configuredModel = parseConfiguredModelRef(input.config.model);
   if (configuredModel) {
     const providerEntry = isPlainObject(nextProvider[configuredModel.provider])
@@ -217,12 +217,12 @@ export async function prepareOpenCodeRuntimeConfig(input: {
   }
 
   // Pin OpenCode's auxiliary "small" model (used for session-title generation and
-  // other helper tasks) via PAPERCLIP_OPENCODE_SMALL_MODEL. OpenCode otherwise
+  // other helper tasks) via THINKINGMACH_OPENCODE_SMALL_MODEL. OpenCode otherwise
   // defaults the small model to a built-in provider default (e.g. a claude-* model
   // for the anthropic provider); when that provider is repointed at a gateway that
   // does not serve that exact model, the title-gen call fails and aborts the run.
   // Setting small_model to a gateway-served model keeps every call on supported models.
-  const smallModel = (input.env.PAPERCLIP_OPENCODE_SMALL_MODEL ?? process.env.PAPERCLIP_OPENCODE_SMALL_MODEL)?.trim();
+  const smallModel = (input.env.THINKINGMACH_OPENCODE_SMALL_MODEL ?? process.env.THINKINGMACH_OPENCODE_SMALL_MODEL)?.trim();
   if (smallModel) {
     nextConfig.small_model = smallModel;
     notes.push(`Pinned OpenCode small_model to ${smallModel}.`);

@@ -5,9 +5,9 @@ import { errorHandler } from "../middleware/index.js";
 import { cloudRoutes } from "../routes/cloud.js";
 
 const cloudEnv = {
-  PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN: "tenant-secret",
-  PAPERCLIP_CLOUD_STACK_ID: "stack-current",
-  PAPERCLIP_CLOUD_API_ORIGIN: "https://cloud.example.test/control-plane",
+  THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN: "tenant-secret",
+  THINKINGMACH_CLOUD_STACK_ID: "stack-current",
+  THINKINGMACH_CLOUD_API_ORIGIN: "https://cloud.example.test/control-plane",
 };
 
 function cloudActor(userId: string) {

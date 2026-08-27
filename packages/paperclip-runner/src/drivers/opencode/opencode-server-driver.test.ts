@@ -15,8 +15,8 @@ import { afterAll, afterEach, describe, expect, it } from "vitest";
 
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   nativeRuntimePromptDigest,
   type NativeRuntimeContextSnapshot,
@@ -37,8 +37,8 @@ function runtimeContext(
   const digest = "0".repeat(64);
   const value = {
     prompt: {
-      revision: PAPERCLIP_EXECUTION_PROMPT_REVISION,
-      text: PAPERCLIP_EXECUTION_PROMPT,
+      revision: THINKINGMACH_EXECUTION_PROMPT_REVISION,
+      text: THINKINGMACH_EXECUTION_PROMPT,
       digest: nativeRuntimePromptDigest(),
     },
     instructions: {
@@ -358,7 +358,7 @@ describe("OpenCodeServerDriver", () => {
       environment: {
         PATH: process.env.PATH,
         OPENROUTER_API_KEY: "fixture-key",
-        PAPERCLIP_PROVIDER_TRACE_PATH: tracePath,
+        THINKINGMACH_PROVIDER_TRACE_PATH: tracePath,
       },
     });
     const session = await driver.openSession({
@@ -602,10 +602,10 @@ describe("OpenCodeServerDriver", () => {
       environment: {
         PATH: process.env.PATH,
         OPENROUTER_API_KEY: "test-openrouter-key",
-        PAPERCLIP_API_KEY: "must-not-leak",
+        THINKINGMACH_API_KEY: "must-not-leak",
         UNRELATED_SECRET: "must-not-leak",
-        PAPERCLIP_PROVIDER_TRACE_PATH: tracePath,
-        PAPERCLIP_PROVIDER_TRACE_MAX_BYTES: String(64 * 1024 * 1024),
+        THINKINGMACH_PROVIDER_TRACE_PATH: tracePath,
+        THINKINGMACH_PROVIDER_TRACE_MAX_BYTES: String(64 * 1024 * 1024),
       },
       onSpawn: async (meta) => {
         spawns.push(meta);
@@ -747,9 +747,9 @@ describe("OpenCodeServerDriver", () => {
       ),
     );
     expect(environment.keys).toContain("OPENROUTER_API_KEY");
-    expect(environment.keys).not.toContain("PAPERCLIP_API_KEY");
+    expect(environment.keys).not.toContain("THINKINGMACH_API_KEY");
     expect(environment.keys).not.toContain("UNRELATED_SECRET");
-    expect(environment.keys).not.toContain("PAPERCLIP_PROVIDER_TRACE_PATH");
+    expect(environment.keys).not.toContain("THINKINGMACH_PROVIDER_TRACE_PATH");
     expect(environment.projectConfigDisabled).toBe("true");
     expect(mcpEvidence.tools).toEqual(
       expect.arrayContaining(["paperclip_finish", "paperclip_block"]),
@@ -851,7 +851,7 @@ describe("OpenCodeServerDriver", () => {
       writeFile(join(instructionRoot, "AGENTS.md"), "Read sibling.md\n"),
       writeFile(join(instructionRoot, "sibling.md"), "instruction sibling\n"),
     ]);
-    const systemInstructions = `${PAPERCLIP_EXECUTION_PROMPT}\n\nRead sibling.md\n\nRead-only instruction sibling root: ${instructionRoot}`;
+    const systemInstructions = `${THINKINGMACH_EXECUTION_PROMPT}\n\nRead sibling.md\n\nRead-only instruction sibling root: ${instructionRoot}`;
     let submittedPrompt: Record<string, unknown> | null = null;
     const driver = new OpenCodeServerDriver({
       model: "openrouter/deepseek/deepseek-v4-flash-0731",
@@ -862,9 +862,9 @@ describe("OpenCodeServerDriver", () => {
       environment: {
         PATH: process.env.PATH,
         OPENROUTER_API_KEY: "fixture-key",
-        PAPERCLIP_NATIVE_MCP_NAME: "paperclip-assigned",
-        PAPERCLIP_NATIVE_MCP_URL: "https://paperclip.example/mcp",
-        PAPERCLIP_NATIVE_MCP_TOKEN: "x".repeat(40),
+        THINKINGMACH_NATIVE_MCP_NAME: "paperclip-assigned",
+        THINKINGMACH_NATIVE_MCP_URL: "https://paperclip.example/mcp",
+        THINKINGMACH_NATIVE_MCP_TOKEN: "x".repeat(40),
       },
       fetch: async (input, init) => {
         if (String(input).endsWith("/prompt_async"))
@@ -886,7 +886,7 @@ describe("OpenCodeServerDriver", () => {
       tools: { question: true },
     });
     expect(JSON.stringify(submittedPrompt?.parts ?? null)).not.toContain(
-      PAPERCLIP_EXECUTION_PROMPT,
+      THINKINGMACH_EXECUTION_PROMPT,
     );
     const sessionRoot = join(root, "context");
     const isolatedHomes = (await readdir(sessionRoot)).filter((entry) =>

@@ -3,7 +3,7 @@
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { FolderListResult } from "@paperclipai/shared";
+import type { FolderListResult } from "@thinkingmach/shared";
 import { SkillFolderRail } from "./SkillFolderTree";
 
 function pointerEvent(type: string, clientX: number) {

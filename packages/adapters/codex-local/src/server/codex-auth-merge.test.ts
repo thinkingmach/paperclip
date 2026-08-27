@@ -10,7 +10,7 @@ import {
   prepareSandboxManagedRuntime,
   type SandboxManagedRuntimeClient,
   type SandboxSyncOperation,
-} from "@paperclipai/adapter-utils/sandbox-managed-runtime";
+} from "@thinkingmach/adapter-utils/sandbox-managed-runtime";
 import { buildCodexAuthInboundProvision } from "./codex-auth-merge-scripts.js";
 
 const execFile = promisify(execFileCallback);

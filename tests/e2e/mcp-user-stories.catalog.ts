@@ -70,7 +70,7 @@ export const mcpUserStories: McpUserStory[] = [
     title: "OAuth connector",
     personas: ["Casey"],
     status: "dependency_gated",
-    gate: "Phase 4a/4b Paperclip-owned OAuth app registrations.",
+    gate: "Phase 4a/4b ThinkingMach-owned OAuth app registrations.",
     assertions: [
       "OAuth state round trip completes without token leakage.",
       "Reconnect-after-revoke restores health.",

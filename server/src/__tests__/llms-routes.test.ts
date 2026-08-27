@@ -100,7 +100,7 @@ describe("llm routes", () => {
     expect(res.text).toContain("agentDefaultsPayload.apiBaseUrl");
     expect(res.text).toContain("agentDefaultsPayload.paperclipApiUrl");
     expect(res.text).toContain("hermes_local");
-    expect(res.text).toContain("Hermes-originated Paperclip API usage");
+    expect(res.text).toContain("Hermes-originated ThinkingMach API usage");
     expect(res.text).toContain("http://127.0.0.1:8642");
     expect(res.text).toContain("http://192.168.1.25:8642");
     expect(res.text).toContain("tailnet-name.ts.net:8642");

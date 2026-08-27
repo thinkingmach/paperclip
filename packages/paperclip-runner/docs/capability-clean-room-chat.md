@@ -2,7 +2,7 @@
 
 Capability adds a second primary path beside the preset scenario explorer. A board
 user opens a blank chat, sends a free-form message, and watches real Codex work
-a mock Paperclip issue through real runnerd. There is no scenario to pick, no
+a mock ThinkingMach issue through real runnerd. There is no scenario to pick, no
 recorded transcript, and no scripted tool tour.
 
 Both paths ship in the same app and share one view contract. What separates them
@@ -96,14 +96,14 @@ scenario session can never be handed to the chat route or the reverse.
 
 ## Real-API block
 
-`CapabilityLiveSession` routes every Paperclip operation through the in-process mock
-`ControlPlanePort`; no code path reaches a Paperclip URL. The projection turns
+`CapabilityLiveSession` routes every ThinkingMach operation through the in-process mock
+`ControlPlanePort`; no code path reaches a ThinkingMach URL. The projection turns
 that into a record rather than a claim: the Control plane section of the
 Evidence drawer carries a `network-guard-<sessionId>` row reading
-`Real Paperclip API requests: 0. Child PAPERCLIP_* environment keys: none.`
+`Real ThinkingMach API requests: 0. Child THINKINGMACH_* environment keys: none.`
 
 The child environment is allowlisted by `createSanitizedCodexEnvironment`, so no
-`PAPERCLIP_*` value reaches runnerd or Codex, and the browser receives no
+`THINKINGMACH_*` value reaches runnerd or Codex, and the browser receives no
 provider, runner, or control-plane credential.
 
 ## DevTools state inspector
@@ -133,7 +133,7 @@ browser projection.
 
 While a turn runs, a live status rail appears immediately after send and tracks
 the newest safe Codex activity. Reasoning, planning, shell-command, file-change,
-MCP/dynamic-tool, assistant-stream, and Paperclip semantic-tool lifecycle events
+MCP/dynamic-tool, assistant-stream, and ThinkingMach semantic-tool lifecycle events
 each trigger an interim frame. Discrete tools remain separate rows; only noisy
 text deltas are grouped. Structured shell items show a bounded,
 credential-redacted command preview; raw command output, other provider
@@ -157,11 +157,11 @@ without weakening the explicit cross-site denial.
 
 | Surface | Command |
 | --- | --- |
-| Seed, exposure profile, and identity rotation | `pnpm --filter @paperclipai/paperclip-runner test:scenarios` |
+| Seed, exposure profile, and identity rotation | `pnpm --filter @thinkingmach/paperclip-runner test:scenarios` |
 | Clean-room HTTP routes end to end (stub provider) | included in `test:scenarios` |
-| Browser entry, blank state, evidence-on-demand, narrow layout, axe | `pnpm --filter @paperclipai/paperclip-runner test:browser:issue-thread` |
-| Real Codex through real runnerd | `pnpm --filter @paperclipai/paperclip-runner smoke:capability:cleanroom` |
-| Live screenshots | `pnpm --filter @paperclipai/paperclip-runner recorded-evidence campaign (deferred)` |
+| Browser entry, blank state, evidence-on-demand, narrow layout, axe | `pnpm --filter @thinkingmach/paperclip-runner test:browser:issue-thread` |
+| Real Codex through real runnerd | `pnpm --filter @thinkingmach/paperclip-runner smoke:capability:cleanroom` |
+| Live screenshots | `pnpm --filter @thinkingmach/paperclip-runner recorded-evidence campaign (deferred)` |
 
 See the [clean-room chat tutorial](tutorials/capability-clean-room-chat.md) for the
 clean-start walkthrough, [execution modes and identity](capability-execution-modes.md)

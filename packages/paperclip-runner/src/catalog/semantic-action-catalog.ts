@@ -1,8 +1,8 @@
 import type {
-  PaperclipJsonSchema,
-  PaperclipSemanticActionDescriptor,
-  PaperclipSemanticActionId,
-  PaperclipSemanticActionMode,
+  ThinkingMachJsonSchema,
+  ThinkingMachSemanticActionDescriptor,
+  ThinkingMachSemanticActionId,
+  ThinkingMachSemanticActionMode,
 } from "./semantic-action-types.js";
 
 const ALL_MODES = ["standard", "ask", "planning", "skill_test"] as const;
@@ -12,7 +12,7 @@ const STANDARD_MODE = ["standard", "skill_test"] as const;
 const text = (
   description: string,
   maxLength = 20_000,
-): PaperclipJsonSchema => ({
+): ThinkingMachJsonSchema => ({
   type: "string",
   description,
   minLength: 1,
@@ -22,13 +22,13 @@ const text = (
 const nullableText = (
   description: string,
   maxLength = 20_000,
-): PaperclipJsonSchema => ({
+): ThinkingMachJsonSchema => ({
   type: ["string", "null"],
   description,
   maxLength,
 });
 
-const stringArray = (description: string): PaperclipJsonSchema => ({
+const stringArray = (description: string): ThinkingMachJsonSchema => ({
   type: "array",
   description,
   items: { type: "string", minLength: 1 },
@@ -37,16 +37,16 @@ const stringArray = (description: string): PaperclipJsonSchema => ({
 });
 
 const object = (
-  properties: Readonly<Record<string, PaperclipJsonSchema>> = {},
+  properties: Readonly<Record<string, ThinkingMachJsonSchema>> = {},
   required: readonly string[] = [],
-): PaperclipJsonSchema => ({
+): ThinkingMachJsonSchema => ({
   type: "object",
   properties,
   required,
   additionalProperties: false,
 });
 
-const openObject: PaperclipJsonSchema = {
+const openObject: ThinkingMachJsonSchema = {
   type: "object",
   additionalProperties: true,
 };
@@ -73,19 +73,19 @@ const operationReceipt = object(
 );
 
 interface DescriptorInput {
-  readonly operationId: PaperclipSemanticActionId;
+  readonly operationId: ThinkingMachSemanticActionId;
   readonly title: string;
   readonly description: string;
   readonly placement?: "always" | "optional";
   readonly effect?: "read" | "write" | "governance";
   readonly requiredClaims?: readonly string[];
-  readonly allowedModes?: readonly PaperclipSemanticActionMode[];
+  readonly allowedModes?: readonly ThinkingMachSemanticActionMode[];
   readonly allowedRoles?: readonly string[];
-  readonly inputSchema?: PaperclipJsonSchema;
-  readonly outputSchema?: PaperclipJsonSchema;
+  readonly inputSchema?: ThinkingMachJsonSchema;
+  readonly outputSchema?: ThinkingMachJsonSchema;
 }
 
-function descriptor(input: DescriptorInput): PaperclipSemanticActionDescriptor {
+function descriptor(input: DescriptorInput): ThinkingMachSemanticActionDescriptor {
   return {
     schema: "paperclip.semantic-action.v1",
     operationId: input.operationId,
@@ -104,7 +104,7 @@ function descriptor(input: DescriptorInput): PaperclipSemanticActionDescriptor {
   };
 }
 
-const descriptors: readonly PaperclipSemanticActionDescriptor[] = [
+const descriptors: readonly ThinkingMachSemanticActionDescriptor[] = [
   descriptor({
     operationId: "get_task_context",
     title: "Get active task context",
@@ -532,18 +532,18 @@ if (byId.size !== descriptors.length)
  * Canonical declarations only. Consumers must not treat membership as
  * permission to expose or invoke an action.
  */
-export const PAPERCLIP_SEMANTIC_ACTION_CATALOG = Object.freeze([
+export const THINKINGMACH_SEMANTIC_ACTION_CATALOG = Object.freeze([
   ...byId.values(),
 ]);
 
 export function paperclipSemanticAction(
   operationId: string,
-): PaperclipSemanticActionDescriptor | undefined {
-  return byId.get(operationId as PaperclipSemanticActionId);
+): ThinkingMachSemanticActionDescriptor | undefined {
+  return byId.get(operationId as ThinkingMachSemanticActionId);
 }
 
-export function canonicalPaperclipSemanticActionCatalog(): string {
-  return `${JSON.stringify(sortKeys(PAPERCLIP_SEMANTIC_ACTION_CATALOG), null, 2)}\n`;
+export function canonicalThinkingMachSemanticActionCatalog(): string {
+  return `${JSON.stringify(sortKeys(THINKINGMACH_SEMANTIC_ACTION_CATALOG), null, 2)}\n`;
 }
 
 function deepFreeze<T>(value: T): T {

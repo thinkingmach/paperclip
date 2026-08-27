@@ -3,7 +3,7 @@ import { executionWorkspacesApi } from "@/api/execution-workspaces";
 import { useCompany } from "@/context/CompanyContext";
 import { queryKeys } from "@/lib/queryKeys";
 import { Navigate, Outlet, useLocation, useParams } from "@/lib/router";
-import { PaperclipLoading } from "./AnimatedPaperclipIcon";
+import { ThinkingMachLoading } from "./AnimatedThinkingMachIcon";
 import { NotFoundPage } from "../pages/NotFound";
 
 /** Resolve a prefix-free workspace URL from the resource, not browsing state. */
@@ -19,7 +19,7 @@ export function UnprefixedExecutionWorkspaceRedirect() {
   });
 
   if (!workspaceId) return <NotFoundPage scope="global" />;
-  if (companiesLoading || workspaceQuery.isPending) return <PaperclipLoading />;
+  if (companiesLoading || workspaceQuery.isPending) return <ThinkingMachLoading />;
   if (workspaceQuery.isError) return <NotFoundPage scope="global" />;
 
   const targetCompany = companies.find(
@@ -50,7 +50,7 @@ export function ExecutionWorkspaceCompanyGate() {
   });
 
   if (!workspaceId || !companyPrefix) return <NotFoundPage scope="global" />;
-  if (companiesLoading || workspaceQuery.isPending) return <PaperclipLoading />;
+  if (companiesLoading || workspaceQuery.isPending) return <ThinkingMachLoading />;
   if (workspaceQuery.isError) return <NotFoundPage scope="global" />;
 
   const routeCompany = companies.find(

@@ -29,7 +29,7 @@ export async function resolveTailscaleDnsName(input?: {
   tailscaleBinPath?: string;
   timeoutMs?: number;
 }): Promise<string> {
-  const configured = process.env.PAPERCLIP_TAILSCALE_DNS_NAME?.trim();
+  const configured = process.env.THINKINGMACH_TAILSCALE_DNS_NAME?.trim();
   if (configured) return parseTailscaleDnsName({ Self: { DNSName: configured } });
 
   const tailscaleBinPath = input?.tailscaleBinPath ?? DEFAULT_TAILSCALE_BIN;

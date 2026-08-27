@@ -4,30 +4,30 @@ The Runner workflow eval system turns the `STRESS-001`–`STRESS-044` campaign
 into complementary deterministic, live, and chaos lanes. It is additive to the
 capability inventory, capability cases, and existing scoring/report readers.
 
-The workspace-private `@paperclipai/paperclip-eval-kernel` package owns only
+The workspace-private `@thinkingmach/paperclip-eval-kernel` package owns only
 structural scenario-by-candidate orchestration. Runner-specific cases,
 observations, scoring, traceability, and report rendering remain package-local.
 
 ## Lanes
 
-- `pnpm --filter @paperclipai/paperclip-runner test:runner-workflow-evals`
+- `pnpm --filter @thinkingmach/paperclip-runner test:runner-workflow-evals`
   runs the credential-free PR gate over sanitized Codex, OpenCode, and ACPX
   normalization fixtures.
-- `pnpm --filter @paperclipai/paperclip-runner report:runner-workflow-evals`
+- `pnpm --filter @thinkingmach/paperclip-runner report:runner-workflow-evals`
   validates the deterministic report and writes JSON, Markdown, JUnit, and
   GitHub-safe artifacts under `.paperclip-local/evals/workflows/` only when all
   scoreable fixture results pass. It makes no network requests.
-- `pnpm --filter @paperclipai/paperclip-runner report:runner-live-evals` runs
+- `pnpm --filter @thinkingmach/paperclip-runner report:runner-live-evals` runs
   the balanced forty-execution schedule against real provider sessions. Live
   candidate failures are trend-only; missing credentials, qualification
   failures, and provider outages remain unscored.
-- `pnpm --filter @paperclipai/paperclip-runner report:runner-chaos-evals`
+- `pnpm --filter @thinkingmach/paperclip-runner report:runner-chaos-evals`
   writes the eight-scenario fault schedule consumed by weekly and pre-release
   restart, replay, trace, finalization, interaction, and wake-race suites.
 
 The checked-in live manifest contains only adapter/model settings,
 qualification variable names, and budgets. Credentials remain in the
-environment. `PAPERCLIP_EVAL_MAX_CAMPAIGN_COST_USD` must be a positive finite
+environment. `THINKINGMACH_EVAL_MAX_CAMPAIGN_COST_USD` must be a positive finite
 number and defaults to 12 USD for scheduled runs.
 
 The hosted live workflow is default-branch-only and requires an allowlisted

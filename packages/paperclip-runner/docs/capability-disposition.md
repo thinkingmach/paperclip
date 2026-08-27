@@ -1,6 +1,6 @@
 # Capability Capability Disposition
 
-This page explains how Capability classifies every Paperclip capability. The
+This page explains how Capability classifies every ThinkingMach capability. The
 classification itself lives in a generated file,
 [the Capability contract](capability-contract.md), which
 carries a "DO NOT EDIT" header and is rewritten by `generate:capability-inventory`.
@@ -11,11 +11,11 @@ the authoritative rows.
 
 Only two sources are normative:
 
-1. The Paperclip skill and its seven references (`SKILL.md` plus
+1. The ThinkingMach skill and its seven references (`SKILL.md` plus
    `references/*.md`), contributing **152 headings**.
-2. The Paperclip Evals corpus, contributing **106 cases across 16 groups**.
+2. The ThinkingMach Evals corpus, contributing **106 cases across 16 groups**.
 
-Together these produce **258 normative rows**. The legacy Paperclip MCP tool
+Together these produce **258 normative rows**. The legacy ThinkingMach MCP tool
 surface (**41 tools**) is not a production capability surface; each MCP name is
 folded one-to-one into a normative eval row as a traceability alias and inherits
 that row's disposition. The contract prints the alias index only so the
@@ -55,22 +55,22 @@ The contract has three parts:
 ## Regenerating and checking
 
 Generation reads the live in-repo skill/reference sources, the legacy MCP tool
-source, and the Paperclip Evals corpus, so it **requires** the external eval
-repository (via `PAPERCLIP_EVALS_ROOT` or a known local path) and is not part of
+source, and the ThinkingMach Evals corpus, so it **requires** the external eval
+repository (via `THINKINGMACH_EVALS_ROOT` or a known local path) and is not part of
 the offline path. Checking and testing read only the checked-in derivatives
 under `spec/capability/` and need no external repository.
 
 ```sh
-# Rewrite every generated file. Requires the external Paperclip Evals corpus.
-pnpm --filter @paperclipai/paperclip-runner generate:capability-inventory
+# Rewrite every generated file. Requires the external ThinkingMach Evals corpus.
+pnpm --filter @thinkingmach/paperclip-runner generate:capability-inventory
 
 # Validate counts, uniqueness, normative dispositions, one-to-one MCP folds,
 # required fields, and generated-file drift. Offline; no external eval repo.
-pnpm --filter @paperclipai/paperclip-runner check:capability-inventory
+pnpm --filter @thinkingmach/paperclip-runner check:capability-inventory
 
 # Prove the validator rejects an independent MCP classification and rejects
 # missing, duplicate, or unknown MCP folds. Offline.
-pnpm --filter @paperclipai/paperclip-runner test:capability-inventory
+pnpm --filter @thinkingmach/paperclip-runner test:capability-inventory
 ```
 
 `check:capability-inventory` diffs the checked-in generated files against what the

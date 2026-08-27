@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { IssueWorkProduct } from "@paperclipai/shared";
+import type { IssueWorkProduct } from "@thinkingmach/shared";
 import { reconcileRuntimeServiceWorkProducts } from "../services/work-products.js";
 
 function workProduct(overrides: Partial<IssueWorkProduct> = {}): IssueWorkProduct {

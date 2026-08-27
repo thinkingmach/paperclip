@@ -10,7 +10,7 @@ describe("buildOnboardingGreeting", () => {
     });
 
     expect(greeting).toContain(
-      "Welcome! I'm Nova, your first agent teammate on Paperclip.",
+      "Welcome! I'm Nova, your first agent teammate on ThinkingMach.",
     );
     expect(greeting).toContain("Here's what I understand you're aiming for:");
     expect(greeting).toContain("> Launch a marketplace for local makers.");
@@ -22,7 +22,7 @@ describe("buildOnboardingGreeting", () => {
     const greeting = buildOnboardingGreeting({ agentName: null, goals: null });
 
     expect(greeting).toContain(
-      "Welcome! I'm your first agent teammate on Paperclip.",
+      "Welcome! I'm your first agent teammate on ThinkingMach.",
     );
   });
 

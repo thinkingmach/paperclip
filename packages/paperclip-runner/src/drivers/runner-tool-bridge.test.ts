@@ -214,7 +214,7 @@ describe("runner semantic MCP bridge", () => {
     ).toMatchObject({
       result: {
         isError: true,
-        content: [{ text: "Paperclip tool call timed out" }],
+        content: [{ text: "ThinkingMach tool call timed out" }],
       },
     });
     const pending = rpc(bridge, {
@@ -237,7 +237,7 @@ describe("runner semantic MCP bridge", () => {
     expect(await (await pending).json()).toMatchObject({
       result: {
         isError: true,
-        content: [{ text: "Paperclip tool call cancelled" }],
+        content: [{ text: "ThinkingMach tool call cancelled" }],
       },
     });
   });

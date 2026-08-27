@@ -1,16 +1,16 @@
-import type { PaperclipPluginManifestV1 } from "@paperclipai/plugin-sdk";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/plugin-sdk";
 
 const PLUGIN_ID = "paperclip.kubernetes-sandbox-provider";
 const PLUGIN_VERSION = "0.1.0-alpha.1";
 
-const manifest: PaperclipPluginManifestV1 = {
+const manifest: ThinkingMachPluginManifestV1 = {
   id: PLUGIN_ID,
   apiVersion: 1,
   version: PLUGIN_VERSION,
   displayName: "Kubernetes Sandbox (alpha)",
   description:
-    "Built on kubernetes-sigs/agent-sandbox (v1alpha1). ALPHA — expect breaking changes as the upstream CRD evolves. Falls back to stable batch/v1 Job mode for clusters without agent-sandbox installed. First-party Paperclip sandbox-provider plugin for Kubernetes.",
-  author: "Paperclip",
+    "Built on kubernetes-sigs/agent-sandbox (v1alpha1). ALPHA — expect breaking changes as the upstream CRD evolves. Falls back to stable batch/v1 Job mode for clusters without agent-sandbox installed. First-party ThinkingMach sandbox-provider plugin for Kubernetes.",
+  author: "ThinkingMach",
   categories: ["automation"],
   capabilities: ["environment.drivers.register"],
   entrypoints: {
@@ -35,7 +35,7 @@ const manifest: PaperclipPluginManifestV1 = {
             type: "string",
             format: "secret-ref",
             description:
-              "Inline kubeconfig YAML. Paste a kubeconfig or an existing Paperclip secret reference; pasted values are stored as company secrets.",
+              "Inline kubeconfig YAML. Paste a kubeconfig or an existing ThinkingMach secret reference; pasted values are stored as company secrets.",
           },
           namespacePrefix: {
             type: "string",
@@ -47,7 +47,7 @@ const manifest: PaperclipPluginManifestV1 = {
           },
           imageRegistry: {
             type: "string",
-            description: "Override the default registry for agent runtime images (default: ghcr.io/paperclipai).",
+            description: "Override the default registry for agent runtime images (default: ghcr.io/thinkingmach).",
           },
           imageAllowList: {
             type: "array",

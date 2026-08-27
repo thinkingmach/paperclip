@@ -171,7 +171,7 @@ describe("live workflow executor infrastructure failures", () => {
     vi.stubEnv("CODEX_API_KEY", "unqualified-codex-secret");
     vi.stubEnv("CLAUDE_CODE_OAUTH_TOKEN", "unqualified-claude-secret");
     vi.stubEnv("GITHUB_TOKEN", "unrelated-host-secret");
-    vi.stubEnv("PAPERCLIP_AUTH_HEADER", "Bearer unrelated-control-secret");
+    vi.stubEnv("THINKINGMACH_AUTH_HEADER", "Bearer unrelated-control-secret");
     vi.stubEnv("RUNNER_EVAL_CANARY", "preserved-nonsecret-value");
     const candidates = [
       RUNNER_LIVE_CANDIDATE_SLOTS[0]!.candidates[0]!,
@@ -198,7 +198,7 @@ describe("live workflow executor infrastructure failures", () => {
       const environment =
         liveSessionMocks.createOptions.at(-1)?.transportOptions?.environment;
       expect(environment?.RUNNER_EVAL_CANARY).toBe("preserved-nonsecret-value");
-      expect(environment?.PAPERCLIP_PROVIDER_TRACE_PATH).toMatch(
+      expect(environment?.THINKINGMACH_PROVIDER_TRACE_PATH).toMatch(
         /provider-trace\.ndjson$/,
       );
       for (const credential of [
@@ -208,7 +208,7 @@ describe("live workflow executor infrastructure failures", () => {
         "CODEX_API_KEY",
         "CLAUDE_CODE_OAUTH_TOKEN",
         "GITHUB_TOKEN",
-        "PAPERCLIP_AUTH_HEADER",
+        "THINKINGMACH_AUTH_HEADER",
       ]) {
         if (candidate.qualification.requiredEnvironment.includes(credential)) {
           expect(environment?.[credential]).toBe(process.env[credential]);
@@ -254,7 +254,7 @@ describe("live workflow executor infrastructure failures", () => {
       candidate,
       evalCase: runnerWorkflowCase(entry.caseId),
       allowMissingUsage: true,
-      expectedAssistantText: "PAPERCLIP_LOCAL_PROVIDER_SMOKE_OK",
+      expectedAssistantText: "THINKINGMACH_LOCAL_PROVIDER_SMOKE_OK",
       promptOverride: "Return the smoke marker.",
     });
 

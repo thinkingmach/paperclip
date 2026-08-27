@@ -3,7 +3,7 @@ title: The Skills Store
 summary: Browse, install, import, fork, and share the reusable skills your agents use
 ---
 
-The **Skills Store** is Paperclip's library of reusable skills. A skill is a markdown
+The **Skills Store** is ThinkingMach's library of reusable skills. A skill is a markdown
 playbook that teaches an agent how to do a specific kind of work — triage an issue,
 write a wireframe, run QA acceptance, draft a release announcement. The Store is where
 people (and agents) discover those skills, install them into a company, and manage them
@@ -19,7 +19,7 @@ There are two distinct things people loosely call "the skills store":
 
 | Layer | What it is | Lives in |
 |---|---|---|
-| **The catalog** | A curated, read-only set of skills that ships with Paperclip | The `@paperclipai/skills-catalog` package |
+| **The catalog** | A curated, read-only set of skills that ships with ThinkingMach | The `@thinkingmach/skills-catalog` package |
 | **Your company library** | The skills actually installed in *your* company, which agents can run | The `company_skills` database table |
 
 The catalog is the shelf you browse. Your company library is the cart you've checked
@@ -35,9 +35,9 @@ directory containing a `SKILL.md` plus any supporting `references/`, `scripts/`,
 
 The catalog splits skills into two **kinds**:
 
-- **`bundled`** — first-party Paperclip skills (e.g. `issue-triage`, `task-planning`,
+- **`bundled`** — first-party ThinkingMach skills (e.g. `issue-triage`, `task-planning`,
   `qa-acceptance`, `wireframe`, `github-pr-workflow`, `doc-maintenance`). These carry the
-  reserved `paperclipai/paperclip/...` key namespace.
+  reserved `thinkingmach/paperclip/...` key namespace.
 - **`optional`** — additional curated skills you opt into (e.g. `agent-browser`,
   `design-critique`, `release-announcement`, `last30days`, `ramp`).
 
@@ -75,7 +75,7 @@ A skill in your company library records where it originated. The Store shows thi
 
 | Source type | Badge | Meaning |
 |---|---|---|
-| `catalog` | Paperclip / catalog | Installed from the bundled catalog |
+| `catalog` | ThinkingMach / catalog | Installed from the bundled catalog |
 | `github` | GitHub | Imported from a GitHub repo (pinned to a commit) |
 | `skills_sh` | skills.sh | Imported via the [skills.sh](https://skills.sh) registry (resolves to GitHub) |
 | `url` | URL | Imported from a raw markdown URL |
@@ -89,14 +89,14 @@ change what your agents run.
 ### Thin wrappers for external live playbooks
 
 Some optional catalog skills intentionally do not vendor a third-party playbook. The
-`ramp` skill is the model: Paperclip ships the stable governance wrapper, source
+`ramp` skill is the model: ThinkingMach ships the stable governance wrapper, source
 allowlist, and approval gates, then tells the agent to fetch Ramp's current published
 instructions from `agents.ramp.com` when the task starts.
 
 Use this pattern only when the external provider's setup flow changes often enough that
-a vendored snapshot would go stale, and when Paperclip can keep the safety boundary in
+a vendored snapshot would go stale, and when ThinkingMach can keep the safety boundary in
 the wrapper. For financial, legal, or account-control domains, the wrapper must require
-Paperclip approvals before spend, incorporation, account authorization, card issuance,
+ThinkingMach approvals before spend, incorporation, account authorization, card issuance,
 data sharing, or other irreversible actions. The tradeoff should be documented in the
 skill or PR so reviewers can evaluate freshness against external-instruction risk. If
 the provider mixes official and community playbooks on the same host, the wrapper must
@@ -121,7 +121,7 @@ upstream catalog skill has changed.
 
 ### Import from an external source
 
-Paste a source and Paperclip fetches and imports it. Accepted forms include:
+Paste a source and ThinkingMach fetches and imports it. Accepted forms include:
 
 - A GitHub repo or subfolder URL (`https://github.com/owner/repo/tree/<ref>/skills/foo`)
 - A short `owner/repo` or `owner/repo/skill` reference
@@ -266,7 +266,7 @@ in the company activity log.
 
 ## Reference: the catalog package
 
-The catalog is its own publishable package, `@paperclipai/skills-catalog`:
+The catalog is its own publishable package, `@thinkingmach/skills-catalog`:
 
 - `catalog/bundled/**` and `catalog/optional/**` — the source skill directories
 - `scripts/build-catalog-manifest.ts` — compiles the directories into `generated/catalog.json`

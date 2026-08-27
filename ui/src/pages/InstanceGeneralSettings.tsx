@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { PatchInstanceGeneralSettings, BackupRetentionPolicy } from "@paperclipai/shared";
+import type { PatchInstanceGeneralSettings, BackupRetentionPolicy } from "@thinkingmach/shared";
 import {
   DAILY_RETENTION_PRESETS,
   WEEKLY_RETENTION_PRESETS,
   MONTHLY_RETENTION_PRESETS,
   DEFAULT_BACKUP_RETENTION,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { LogOut, SlidersHorizontal } from "lucide-react";
 import { healthApi } from "@/api/health";
 import { instanceSettingsApi } from "@/api/instanceSettings";
@@ -18,7 +18,7 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { cn } from "../lib/utils";
 import { useSignOut } from "@/hooks/useSignOut";
 
-const FEEDBACK_TERMS_URL = import.meta.env.VITE_FEEDBACK_TERMS_URL?.trim() || "https://paperclip.ing/tos";
+const FEEDBACK_TERMS_URL = import.meta.env.VITE_FEEDBACK_TERMS_URL?.trim() || "https://thinkingmach.com/tos";
 
 export function InstanceGeneralSettings({ embedded = false }: { embedded?: boolean }) {
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -309,7 +309,7 @@ export function InstanceGeneralSettings({ embedded = false }: { embedded?: boole
             <h2 className="text-sm font-semibold">AI feedback sharing</h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
               Control whether thumbs up and thumbs down votes can send the voted AI output to
-              Paperclip Labs. Votes are always saved locally.
+              ThinkingMach Labs. Votes are always saved locally.
             </p>
             {FEEDBACK_TERMS_URL ? (
               <a
@@ -387,7 +387,7 @@ export function InstanceGeneralSettings({ embedded = false }: { embedded?: boole
           <div className="space-y-1.5">
             <h2 className="text-sm font-semibold">Sign out</h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Sign out of this Paperclip instance. You will be redirected to the login page.
+              Sign out of this ThinkingMach instance. You will be redirected to the login page.
             </p>
           </div>
           <Button

@@ -15,7 +15,7 @@ import { betterAuth } from "better-auth";
 import { memoryAdapter } from "better-auth/adapters/memory";
 import { toNodeHandler } from "better-auth/node";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   deriveWorkspaceHandoffKey,
   issueWorkspaceHandoffTicket,

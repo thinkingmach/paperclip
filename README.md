@@ -1,20 +1,20 @@
 <p align="center">
-  <img src="doc/assets/banner.jpg" alt="Paperclip is the app people use to manage AI agents for work." width="720" />
+  <img src="https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/banner.jpg" alt="ThinkingMach is the app people use to manage AI agents for work." width="720" />
 </p>
 
 <p align="center">
   <a href="#quickstart"><strong>Quickstart</strong></a> &middot;
-  <a href="https://docs.paperclip.ing"><strong>Docs</strong></a> &middot;
-  <a href="https://github.com/paperclipai/paperclip"><strong>GitHub</strong></a> &middot;
+  <a href="https://docs.thinkingmach.com"><strong>Docs</strong></a> &middot;
+  <a href="https://github.com/thinkingmach/paperclip"><strong>GitHub</strong></a> &middot;
   <a href="https://discord.gg/m4HZY7xNG3"><strong>Discord</strong></a> &middot;
   <a href="https://x.com/papercliping"><strong>Twitter</strong></a> &middot;
-  <a href="https://paperclip.ing"><strong>Website</strong></a>
+  <a href="https://thinkingmach.com"><strong>Website</strong></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/paperclipai/paperclip/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a>
-  <a href="https://github.com/paperclipai/paperclip/stargazers"><img src="https://img.shields.io/github/stars/paperclipai/paperclip?style=flat" alt="Stars" /></a>
-  <a href="https://www.star-history.com/paperclipai/paperclip"><img src="https://api.star-history.com/badge?repo=paperclipai/paperclip" alt="Star History Rank" /></a>
+  <a href="https://github.com/thinkingmach/paperclip/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a>
+  <a href="https://github.com/thinkingmach/paperclip/stargazers"><img src="https://img.shields.io/github/stars/thinkingmach/paperclip?style=flat" alt="Stars" /></a>
+  <a href="https://www.star-history.com/thinkingmach/paperclip"><img src="https://api.star-history.com/badge?repo=thinkingmach/paperclip" alt="Star History Rank" /></a>
   <a href="https://discord.gg/m4HZY7xNG3"><img src="https://img.shields.io/badge/discord-join-7289da" alt="Discord" /></a>
 </p>
 
@@ -26,13 +26,13 @@
 
 <br/>
 
-# Paperclip is the app people use to manage AI agents for work.
+# ThinkingMach is the app people use to manage AI agents for work.
 
 Open-source orchestration for teams of AI agents.
 
-**If OpenClaw is an _employee_, Paperclip is the _company_.**
+**If OpenClaw is an _employee_, ThinkingMach is the _company_.**
 
-Paperclip is a Node.js server and React UI that orchestrates a team of AI agents to run a business. Bring your own agents, assign goals, and track work and costs from one dashboard.
+ThinkingMach is a Node.js server and React UI that orchestrates a team of AI agents to run a business. Bring your own agents, assign goals, and track work and costs from one dashboard.
 
 It looks like a task manager. Under the hood: org charts, budgets, governance, goal alignment, and agent coordination.
 
@@ -50,12 +50,12 @@ It looks like a task manager. Under the hood: org charts, budgets, governance, g
 <table>
   <tr>
     <td align="center"><strong>Works<br/>with</strong></td>
-    <td align="center"><img src="doc/assets/logos/openclaw.svg" width="32" alt="OpenClaw" /><br/><sub>OpenClaw</sub></td>
-    <td align="center"><img src="doc/assets/logos/claude.svg" width="32" alt="Claude" /><br/><sub>Claude Code</sub></td>
-    <td align="center"><img src="doc/assets/logos/codex.svg" width="32" alt="Codex" /><br/><sub>Codex</sub></td>
-    <td align="center"><img src="doc/assets/logos/cursor.svg" width="32" alt="Cursor" /><br/><sub>Cursor</sub></td>
-    <td align="center"><img src="doc/assets/logos/bash.svg" width="32" alt="Bash" /><br/><sub>Bash</sub></td>
-    <td align="center"><img src="doc/assets/logos/http.svg" width="32" alt="HTTP" /><br/><sub>HTTP</sub></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/logos/openclaw.svg" width="32" alt="OpenClaw" /><br/><sub>OpenClaw</sub></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/logos/claude.svg" width="32" alt="Claude" /><br/><sub>Claude Code</sub></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/logos/codex.svg" width="32" alt="Codex" /><br/><sub>Codex</sub></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/logos/cursor.svg" width="32" alt="Cursor" /><br/><sub>Cursor</sub></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/logos/bash.svg" width="32" alt="Bash" /><br/><sub>Bash</sub></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/logos/http.svg" width="32" alt="HTTP" /><br/><sub>HTTP</sub></td>
   </tr>
 </table>
 
@@ -65,7 +65,7 @@ It looks like a task manager. Under the hood: org charts, budgets, governance, g
 
 <br/>
 
-## Paperclip is right for you if
+## ThinkingMach is right for you if
 
 - ✅ You want to build **autonomous AI organizations**
 - ✅ You **coordinate many different agents** (OpenClaw, Codex, Claude, Cursor) toward a common goal
@@ -79,12 +79,12 @@ It looks like a task manager. Under the hood: org charts, budgets, governance, g
 
 ## The four pillars
 
-Four things have to work for an organization of AI agents to actually produce: the tasks, the org, the training, and the infrastructure. Paperclip is built around exactly those four pillars.
+Four things have to work for an organization of AI agents to actually produce: the tasks, the org, the training, and the infrastructure. ThinkingMach is built around exactly those four pillars.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/paperclipai/paperclip/1ec33ffd8b597f7e36aac3e2fbb4665b8c42dc3c/doc/assets/four-pillars-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/paperclipai/paperclip/1ec33ffd8b597f7e36aac3e2fbb4665b8c42dc3c/doc/assets/four-pillars-light.png">
-  <img src="https://raw.githubusercontent.com/paperclipai/paperclip/1ec33ffd8b597f7e36aac3e2fbb4665b8c42dc3c/doc/assets/four-pillars-light.png" alt="The four pillars of Paperclip">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/thinkingmach/paperclip/1ec33ffd8b597f7e36aac3e2fbb4665b8c42dc3c/doc/assets/four-pillars-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/thinkingmach/paperclip/1ec33ffd8b597f7e36aac3e2fbb4665b8c42dc3c/doc/assets/four-pillars-light.png">
+  <img src="https://raw.githubusercontent.com/thinkingmach/paperclip/1ec33ffd8b597f7e36aac3e2fbb4665b8c42dc3c/doc/assets/four-pillars-light.png" alt="The four pillars of ThinkingMach">
 </picture>
 
 | Pillar | Built for | What it covers |
@@ -145,28 +145,28 @@ Monitor and manage your autonomous businesses from anywhere.
 
 <br/>
 
-## Problems Paperclip solves
+## Problems ThinkingMach solves
 
-| Without Paperclip                                                                                                                     | With Paperclip                                                                                                                         |
+| Without ThinkingMach                                                                                                                     | With ThinkingMach                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | ❌ You have 20 Claude Code tabs open and can't track which one does what. On reboot you lose everything.                              | ✅ Tasks are ticket-based, conversations are threaded, sessions persist across reboots.                                                |
 | ❌ You manually gather context from several places to remind your bot what you're actually doing.                                     | ✅ Context flows from the task up through the project and company goals — your agent always knows what to do and why.                  |
-| ❌ Folders of agent configs are disorganized and you're re-inventing task management, communication, and coordination between agents. | ✅ Paperclip gives you org charts, ticketing, delegation, and governance out of the box — so you run a company, not a pile of scripts. |
+| ❌ Folders of agent configs are disorganized and you're re-inventing task management, communication, and coordination between agents. | ✅ ThinkingMach gives you org charts, ticketing, delegation, and governance out of the box — so you run a company, not a pile of scripts. |
 | ❌ Runaway loops waste hundreds of dollars of tokens and max your quota before you even know what happened.                           | ✅ Cost tracking surfaces token budgets and throttles agents when they're out. Management prioritizes with budgets.                    |
 | ❌ You have recurring jobs (customer support, social, reports) and have to remember to manually kick them off.                        | ✅ Heartbeats handle regular work on a schedule. Management supervises.                                                                |
-| ❌ You have an idea, you have to find your repo, fire up Claude Code, keep a tab open, and babysit it.                                | ✅ Add a task in Paperclip. Your coding agent works on it until it's done. Management reviews their work.                              |
+| ❌ You have an idea, you have to find your repo, fire up Claude Code, keep a tab open, and babysit it.                                | ✅ Add a task in ThinkingMach. Your coding agent works on it until it's done. Management reviews their work.                              |
 
 <br/>
 
-## Why Paperclip is special
+## Why ThinkingMach is special
 
-Paperclip handles the hard orchestration details correctly.
+ThinkingMach handles the hard orchestration details correctly.
 
 |                                   |                                                                                                               |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | **Atomic execution.**             | Task checkout and budget enforcement are atomic, so no double-work and no runaway spend.                      |
 | **Persistent agent state.**       | Agents resume the same task context across heartbeats instead of restarting from scratch.                     |
-| **Runtime skill injection.**      | Agents can learn Paperclip workflows and project context at runtime, without retraining.                      |
+| **Runtime skill injection.**      | Agents can learn ThinkingMach workflows and project context at runtime, without retraining.                      |
 | **Governance with rollback.**     | Approval gates are enforced, config changes are revisioned, and bad changes can be rolled back safely.        |
 | **Goal-aware execution.**         | Tasks carry full goal ancestry so agents consistently see the "why," not just a title.                        |
 | **Portable company templates.**   | Export/import orgs, agents, and skills with secret scrubbing and collision handling.                          |
@@ -176,11 +176,11 @@ Paperclip handles the hard orchestration details correctly.
 
 ## What's Under the Hood
 
-Paperclip is a full control plane, not a wrapper. Before you build any of this yourself, know that it already exists:
+ThinkingMach is a full control plane, not a wrapper. Before you build any of this yourself, know that it already exists:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                       PAPERCLIP SERVER                       │
+│                       THINKINGMACH SERVER                       │
 │                                                              │
 │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  │
 │  │Identity & │  │  Work &   │  │ Heartbeat │  │Governance │  │
@@ -258,7 +258,7 @@ Paperclip is a full control plane, not a wrapper. Before you build any of this y
 <tr>
 <td>
 
-**Plugins** — Instance-wide plugin system with out-of-process workers, capability-gated host services, job scheduling, tool exposure, and UI contributions. Extend Paperclip without forking it.
+**Plugins** — Instance-wide plugin system with out-of-process workers, capability-gated host services, job scheduling, tool exposure, and UI contributions. Extend ThinkingMach without forking it.
 
 </td>
 <td>
@@ -283,26 +283,26 @@ Paperclip is a full control plane, not a wrapper. Before you build any of this y
 
 <br/>
 
-## What Paperclip is not
+## What ThinkingMach is not
 
 |                              |                                                                                                                      |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | **Not a chatbot.**           | Agents have jobs, not chat windows.                                                                                  |
 | **Not an agent framework.**  | We don't tell you how to build agents. We tell you how to run a company made of them.                                |
-| **Not a workflow builder.**  | No drag-and-drop pipelines. Paperclip models companies — with org charts, goals, budgets, and governance.            |
-| **Not a prompt manager.**    | Agents bring their own prompts, models, and runtimes. Paperclip manages the organization they work in.               |
-| **Not a single-agent tool.** | This is for teams. If you have one agent, you probably don't need Paperclip. If you have twenty — you definitely do. |
-| **Not a code review tool.**  | Paperclip orchestrates work, not pull requests. Bring your own review process.                                       |
+| **Not a workflow builder.**  | No drag-and-drop pipelines. ThinkingMach models companies — with org charts, goals, budgets, and governance.            |
+| **Not a prompt manager.**    | Agents bring their own prompts, models, and runtimes. ThinkingMach manages the organization they work in.               |
+| **Not a single-agent tool.** | This is for teams. If you have one agent, you probably don't need ThinkingMach. If you have twenty — you definitely do. |
+| **Not a code review tool.**  | ThinkingMach orchestrates work, not pull requests. Bring your own review process.                                       |
 
 <br/>
 
 ## Quickstart
 
-Open source. Self-hosted. No Paperclip account required.
+Open source. Self-hosted. No ThinkingMach account required.
 
 ```bash
-curl -fsSLO https://paperclip.ing/install.sh
-curl -fsSLO https://paperclip.ing/install.sh.sha256
+curl -fsSLO https://thinkingmach.com/install.sh
+curl -fsSLO https://thinkingmach.com/install.sh.sha256
 if command -v sha256sum >/dev/null 2>&1; then
   sha256sum -c install.sh.sha256
 else
@@ -312,8 +312,8 @@ bash install.sh
 ```
 
 The installer ensures Node.js 24.11 or newer is available, installs a managed
-Paperclip CLI under `~/.paperclip/cli`, and starts interactive onboarding. It
-can also install Paperclip as a background service on supported Linux and
+ThinkingMach CLI under `~/.paperclip/cli`, and starts interactive onboarding. It
+can also install ThinkingMach as a background service on supported Linux and
 macOS systems. The checksum detects transfer or publishing mistakes, but it is
 served from the same origin as the script; use a release-tag or commit-pinned
 GitHub copy when you need an independently hosted source.
@@ -321,8 +321,8 @@ GitHub copy when you need an independently hosted source.
 For a non-interactive managed install:
 
 ```bash
-curl -fsSL https://paperclip.ing/install.sh | bash -s -- --no-prompt --no-onboard
-paperclipai onboard --yes
+curl -fsSL https://thinkingmach.com/install.sh | bash -s -- --no-prompt --no-onboard
+thinkingmach onboard --yes
 ```
 
 The piped form requires supported Node.js, npm, and npx to already be present.
@@ -330,15 +330,15 @@ If Node.js bootstrap is required, download and review `install.sh` before
 running it so no privileged dependency-install command is accepted through a
 pipe.
 
-To try Paperclip without installing anything permanently:
+To try ThinkingMach without installing anything permanently:
 
 ```bash
-npx --registry https://registry.npmjs.org paperclipai onboard --yes
+npx --registry https://registry.npmjs.org thinkingmach onboard --yes
 ```
 
 > **Troubleshooting: private npm registry `.npmrc`**
 >
-> If this fails with an `E404` for `paperclipai` (or similar) and you use a private npm registry (for example GitHub Packages) via a global `~/.npmrc`, `npx` may be resolving `paperclipai` against that private registry instead of the public npm registry.
+> If this fails with an `E404` for `thinkingmach` (or similar) and you use a private npm registry (for example GitHub Packages) via a global `~/.npmrc`, `npx` may be resolving `thinkingmach` against that private registry instead of the public npm registry.
 >
 > Diagnostic:
 >
@@ -349,18 +349,18 @@ npx --registry https://registry.npmjs.org paperclipai onboard --yes
 > Workaround (cross-platform; force the public npm registry for this command):
 >
 > ```bash
-> npx --registry https://registry.npmjs.org paperclipai onboard --yes
+> npx --registry https://registry.npmjs.org thinkingmach onboard --yes
 > ```
 
 That quickstart path now defaults to trusted local loopback mode for the fastest first run. To start in authenticated/private mode instead, choose a bind preset explicitly:
 
 ```bash
-paperclipai onboard --yes --bind lan
+thinkingmach onboard --yes --bind lan
 # or:
-paperclipai onboard --yes --bind tailnet
+thinkingmach onboard --yes --bind tailnet
 ```
 
-If you already have Paperclip configured, rerunning `onboard` keeps the existing config in place. Use `paperclipai configure` to edit settings.
+If you already have ThinkingMach configured, rerunning `onboard` keeps the existing config in place. Use `thinkingmach configure` to edit settings.
 
 See [`doc/INSTALLING.md`](doc/INSTALLING.md) for pinned versions, canary and
 git-ref installs, updates, rollback, service management, and uninstalling.
@@ -368,7 +368,7 @@ git-ref installs, updates, rollback, service management, and uninstalling.
 Or manually:
 
 ```bash
-git clone https://github.com/paperclipai/paperclip.git
+git clone https://github.com/thinkingmach/paperclip.git
 cd paperclip
 pnpm install
 pnpm dev
@@ -385,21 +385,21 @@ This starts the API server at `http://localhost:3100`. An embedded PostgreSQL da
 **What does a typical setup look like?**
 Locally, a single Node.js process manages an embedded Postgres and local file storage. For production, point it at your own Postgres and deploy however you like. Configure projects, agents, and goals — the agents take care of the rest.
 
-If you're a solo entrepreneur you can use Tailscale to access Paperclip on the go. Then later you can deploy to e.g. Vercel when you need it.
+If you're a solo entrepreneur you can use Tailscale to access ThinkingMach on the go. Then later you can deploy to e.g. Vercel when you need it.
 
 **Can I run multiple companies?**
 Yes. A single deployment can run an unlimited number of companies with complete data isolation.
 
-**How is Paperclip different from agents like OpenClaw or Claude Code?**
-Paperclip _uses_ those agents. It orchestrates them into a company — with org charts, budgets, goals, governance, and accountability.
+**How is ThinkingMach different from agents like OpenClaw or Claude Code?**
+ThinkingMach _uses_ those agents. It orchestrates them into a company — with org charts, budgets, goals, governance, and accountability.
 
-**Why should I use Paperclip instead of just pointing my OpenClaw to Asana or Trello?**
-Agent orchestration has subtleties in how you coordinate who has work checked out, how to maintain sessions, monitoring costs, establishing governance - Paperclip does this for you.
+**Why should I use ThinkingMach instead of just pointing my OpenClaw to Asana or Trello?**
+Agent orchestration has subtleties in how you coordinate who has work checked out, how to maintain sessions, monitoring costs, establishing governance - ThinkingMach does this for you.
 
 (Bring-your-own-ticket-system is on the Roadmap)
 
 **Do agents run continuously?**
-By default, agents run on scheduled heartbeats and event-based triggers (task assignment, @-mentions). You can also hook in continuous agents like OpenClaw. You bring your agent and Paperclip coordinates.
+By default, agents run on scheduled heartbeats and event-based triggers (task assignment, @-mentions). You can also hook in continuous agents like OpenClaw. You bring your agent and ThinkingMach coordinates.
 
 <br/>
 
@@ -467,13 +467,13 @@ Find Plugins and more at [awesome-paperclip](https://github.com/gsxdsm/awesome-p
 
 ## Observability
 
-Paperclip ships with opt-in OpenTelemetry auto-instrumentation for the server (traces only). It activates when `OTEL_EXPORTER_OTLP_ENDPOINT` is set and supports `grpc`, `http/protobuf`, and `http/json` via the standard `OTEL_EXPORTER_OTLP_PROTOCOL` env var. `@opentelemetry/api` is a normal server dependency; the SDK, auto-instrumentation, and exporter packages are optional peer dependencies — install them only if you want tracing. See [doc/observability.md](doc/observability.md) for install commands and the full env-var reference.
+ThinkingMach ships with opt-in OpenTelemetry auto-instrumentation for the server (traces only). It activates when `OTEL_EXPORTER_OTLP_ENDPOINT` is set and supports `grpc`, `http/protobuf`, and `http/json` via the standard `OTEL_EXPORTER_OTLP_PROTOCOL` env var. `@opentelemetry/api` is a normal server dependency; the SDK, auto-instrumentation, and exporter packages are optional peer dependencies — install them only if you want tracing. See [doc/observability.md](doc/observability.md) for install commands and the full env-var reference.
 
-Paperclip also ships with opt-in Sentry error monitoring for the server and the browser. Set `SENTRY_DSN_FRONTEND` to activate it for the browser and `SENTRY_DSN_BACKEND` to activate it for the server — each variable is optional, and the legacy `SENTRY_DSN` variable still works as a fallback for either component. The supported server SDK version is `@sentry/node@10.71.0`; it is an optional peer dependency for the server, so install it only if you want error monitoring. The browser SDK, `@sentry/browser`, is pinned to the same exact version. See [doc/observability.md](doc/observability.md#sentry-error-monitoring) for the install command, the privacy settings, and the full default capture set.
+ThinkingMach also ships with opt-in Sentry error monitoring for the server and the browser. Set `SENTRY_DSN_FRONTEND` to activate it for the browser and `SENTRY_DSN_BACKEND` to activate it for the server — each variable is optional, and the legacy `SENTRY_DSN` variable still works as a fallback for either component. The supported server SDK version is `@sentry/node@10.71.0`; it is an optional peer dependency for the server, so install it only if you want error monitoring. The browser SDK, `@sentry/browser`, is pinned to the same exact version. See [doc/observability.md](doc/observability.md#sentry-error-monitoring) for the install command, the privacy settings, and the full default capture set.
 
 ## Telemetry
 
-Paperclip collects anonymous usage telemetry to help us understand how the product is used and improve it. No personal information, issue content, prompts, file paths, or secrets are ever collected. Private repository references are hashed with a per-install salt before being sent.
+ThinkingMach collects anonymous usage telemetry to help us understand how the product is used and improve it. No personal information, issue content, prompts, file paths, or secrets are ever collected. Private repository references are hashed with a per-install salt before being sent.
 
 Contributors changing emitted telemetry events should follow the [Telemetry Data Contract](packages/shared/src/telemetry/README.md).
 For proposed first-party events that are not in the generated contract yet, follow [Telemetry Workflow](doc/TELEMETRY_WORKFLOW.md).
@@ -482,10 +482,10 @@ Telemetry is **enabled by default** and can be disabled with any of the followin
 
 | Method               | How                                                     |
 | -------------------- | ------------------------------------------------------- |
-| Environment variable | `PAPERCLIP_TELEMETRY_DISABLED=1`                        |
+| Environment variable | `THINKINGMACH_TELEMETRY_DISABLED=1`                        |
 | Standard convention  | `DO_NOT_TRACK=1`                                        |
 | CI environments      | Automatically disabled when `CI=true`                   |
-| Config file          | Set `telemetry.enabled: false` in your Paperclip config |
+| Config file          | Set `telemetry.enabled: false` in your ThinkingMach config |
 
 ## Contributing
 
@@ -497,22 +497,22 @@ We welcome contributions. See the [contributing guide](CONTRIBUTING.md) for deta
 
 - [Discord](https://discord.gg/m4HZY7xNG3) — Join the community
 - [Twitter / X](https://x.com/papercliping) — Follow updates and announcements
-- [GitHub Issues](https://github.com/paperclipai/paperclip/issues) — bugs and feature requests
-- [GitHub Discussions](https://github.com/paperclipai/paperclip/discussions) — ideas and RFC
+- [GitHub Issues](https://github.com/thinkingmach/paperclip/issues) — bugs and feature requests
+- [GitHub Discussions](https://github.com/thinkingmach/paperclip/discussions) — ideas and RFC
 
 <br/>
 
 ## License
 
-MIT &copy; 2026 [Paperclip Labs, Inc](https://paperclip.ing)
+MIT &copy; 2026 [ThinkingMach Labs, Inc](https://thinkingmach.com)
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=paperclipai%2Fpaperclip&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=thinkingmach%2Fpaperclip&type=date&legend=top-left">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=paperclipai/paperclip&type=date&theme=dark&legend=top-left&sealed_token=hFjuwFq41bQD5cevvXVv5cTru2swWRZujwJYKlHhtBh6n0H5-VvJZW2SAlcQKB8u4KxhyEB9JqFg1yccJ8WLv9wPBcoWpWcak4gx0MYTWu_pOs2jKOaDluH7KsLeTKt6DHGkHiN3LsqV9s--MTDQcC6Xl7zV51W0-YezQXo-pVPgoFDFAGf2CY5fiP5Q" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=paperclipai/paperclip&type=date&legend=top-left&sealed_token=hFjuwFq41bQD5cevvXVv5cTru2swWRZujwJYKlHhtBh6n0H5-VvJZW2SAlcQKB8u4KxhyEB9JqFg1yccJ8WLv9wPBcoWpWcak4gx0MYTWu_pOs2jKOaDluH7KsLeTKt6DHGkHiN3LsqV9s--MTDQcC6Xl7zV51W0-YezQXo-pVPgoFDFAGf2CY5fiP5Q" />
-    <img src="https://api.star-history.com/chart?repos=paperclipai/paperclip&type=date&legend=top-left&sealed_token=hFjuwFq41bQD5cevvXVv5cTru2swWRZujwJYKlHhtBh6n0H5-VvJZW2SAlcQKB8u4KxhyEB9JqFg1yccJ8WLv9wPBcoWpWcak4gx0MYTWu_pOs2jKOaDluH7KsLeTKt6DHGkHiN3LsqV9s--MTDQcC6Xl7zV51W0-YezQXo-pVPgoFDFAGf2CY5fiP5Q" alt="Star History Chart" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=thinkingmach/paperclip&type=date&theme=dark&legend=top-left&sealed_token=hFjuwFq41bQD5cevvXVv5cTru2swWRZujwJYKlHhtBh6n0H5-VvJZW2SAlcQKB8u4KxhyEB9JqFg1yccJ8WLv9wPBcoWpWcak4gx0MYTWu_pOs2jKOaDluH7KsLeTKt6DHGkHiN3LsqV9s--MTDQcC6Xl7zV51W0-YezQXo-pVPgoFDFAGf2CY5fiP5Q" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=thinkingmach/paperclip&type=date&legend=top-left&sealed_token=hFjuwFq41bQD5cevvXVv5cTru2swWRZujwJYKlHhtBh6n0H5-VvJZW2SAlcQKB8u4KxhyEB9JqFg1yccJ8WLv9wPBcoWpWcak4gx0MYTWu_pOs2jKOaDluH7KsLeTKt6DHGkHiN3LsqV9s--MTDQcC6Xl7zV51W0-YezQXo-pVPgoFDFAGf2CY5fiP5Q" />
+    <img src="https://api.star-history.com/chart?repos=thinkingmach/paperclip&type=date&legend=top-left&sealed_token=hFjuwFq41bQD5cevvXVv5cTru2swWRZujwJYKlHhtBh6n0H5-VvJZW2SAlcQKB8u4KxhyEB9JqFg1yccJ8WLv9wPBcoWpWcak4gx0MYTWu_pOs2jKOaDluH7KsLeTKt6DHGkHiN3LsqV9s--MTDQcC6Xl7zV51W0-YezQXo-pVPgoFDFAGf2CY5fiP5Q" alt="Star History Chart" />
   </picture>
 </a>
 

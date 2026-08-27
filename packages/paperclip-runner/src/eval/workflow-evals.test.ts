@@ -245,7 +245,7 @@ describe("balanced live Runner workflow matrix", () => {
     expect(parseRunnerLiveCampaignCostLimit("0.25")).toBe(0.25);
     for (const value of ["", " ", "0", "-1", "NaN", "Infinity", "1e309"]) {
       expect(() => parseRunnerLiveCampaignCostLimit(value)).toThrow(
-        "PAPERCLIP_EVAL_MAX_CAMPAIGN_COST_USD must be a positive finite number",
+        "THINKINGMACH_EVAL_MAX_CAMPAIGN_COST_USD must be a positive finite number",
       );
     }
   });

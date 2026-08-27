@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Tabs, type TabDefinition } from "@paperclipai/paperclip-runner/react";
+import { Tabs, type TabDefinition } from "@thinkingmach/paperclip-runner/react";
 import {
   capabilityRunScenario,
   type CapabilityChatSessionArtifact,
@@ -431,7 +431,7 @@ export function ExplorerApp({
               {artifact === null ? (
                 <EmptyState title="Run to produce the deterministic timeline.">
                   <p className="pcr7-muted">
-                    Fake mode runs entirely in this page against checked-in fixtures. No Paperclip
+                    Fake mode runs entirely in this page against checked-in fixtures. No ThinkingMach
                     service is contacted and no credential is held.
                   </p>
                 </EmptyState>

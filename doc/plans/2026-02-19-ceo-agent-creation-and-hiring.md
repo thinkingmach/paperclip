@@ -204,7 +204,7 @@ Add plain-text reflection routes:
 
 Index file includes:
 
-- installed adapter list for this Paperclip instance
+- installed adapter list for this ThinkingMach instance
 - per-adapter doc URLs
 - brief "how to hire" API sequence links
 

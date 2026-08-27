@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AdapterExecutionContext, AdapterExecutionResult } from "@paperclipai/adapter-utils";
-import type { RunProcessResult } from "@paperclipai/adapter-utils/server-utils";
+import type { AdapterExecutionContext, AdapterExecutionResult } from "@thinkingmach/adapter-utils";
+import type { RunProcessResult } from "@thinkingmach/adapter-utils/server-utils";
 import {
   adapterExecutionTargetIsRemote,
   adapterExecutionTargetRemoteCwd,
@@ -10,7 +10,7 @@ import {
   adapterExecutionTargetSessionIdentity,
   adapterExecutionTargetSessionMatches,
   adapterExecutionTargetUsesManagedHome,
-  adapterExecutionTargetUsesPaperclipBridge,
+  adapterExecutionTargetUsesThinkingMachBridge,
   describeAdapterExecutionTarget,
   ensureAdapterExecutionTargetCommandResolvable,
   ensureAdapterExecutionTargetRuntimeCommandInstalled,
@@ -21,8 +21,8 @@ import {
   resolveAdapterExecutionTargetTimeoutSec,
   resolveAdapterExecutionTargetCommandForLogs,
   runAdapterExecutionTargetProcess,
-  startAdapterExecutionTargetPaperclipBridge,
-} from "@paperclipai/adapter-utils/execution-target";
+  startAdapterExecutionTargetThinkingMachBridge,
+} from "@thinkingmach/adapter-utils/execution-target";
 import {
   asString,
   asNumber,
@@ -30,35 +30,35 @@ import {
   asStringArray,
   parseObject,
   parseJson,
-  applyPaperclipWorkspaceEnv,
-  buildPaperclipEnv,
-  isPaperclipSkillSourceMissing,
-  readPaperclipRuntimeSkillEntries,
-  readPaperclipIssueWorkModeFromContext,
+  applyThinkingMachWorkspaceEnv,
+  buildThinkingMachEnv,
+  isThinkingMachSkillSourceMissing,
+  readThinkingMachRuntimeSkillEntries,
+  readThinkingMachIssueWorkModeFromContext,
   joinPromptSections,
   buildInvocationEnvForLogs,
   ensureAbsoluteDirectory,
   ensurePathInEnv,
   isForbiddenConfigEnvKey,
-  isPaperclipRuntimeEnvKey,
-  refreshPaperclipWorkspaceEnvForExecution,
+  isThinkingMachRuntimeEnvKey,
+  refreshThinkingMachWorkspaceEnvForExecution,
   renderTemplate,
-  renderPaperclipWakePrompt,
-  isPaperclipRecoveryWakePayload,
-  selectPaperclipTaskMarkdown,
+  renderThinkingMachWakePrompt,
+  isThinkingMachRecoveryWakePayload,
+  selectThinkingMachTaskMarkdown,
   rewriteWorkspaceCwdEnvVarsForExecution,
-  shapePaperclipWorkspaceEnvForExecution,
-  stringifyPaperclipWakePayload,
-  DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
-} from "@paperclipai/adapter-utils/server-utils";
-import { buildSkillLibraryManifestMarkdown } from "@paperclipai/adapter-utils/skill-library-manifest";
+  shapeThinkingMachWorkspaceEnvForExecution,
+  stringifyThinkingMachWakePayload,
+  DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
+} from "@thinkingmach/adapter-utils/server-utils";
+import { buildSkillLibraryManifestMarkdown } from "@thinkingmach/adapter-utils/skill-library-manifest";
 import {
   parseLocalProcessFilesystemScope,
   parseLocalProcessSandboxExtraPaths,
   parseLocalProcessNetworkAllowlist,
   parseLocalProcessNetworkScope,
   type LocalProcessSandboxOptions,
-} from "@paperclipai/adapter-utils/local-process-sandbox";
+} from "@thinkingmach/adapter-utils/local-process-sandbox";
 import {
   claudeModelUsageTotals,
   parseClaudeStreamJson,
@@ -79,7 +79,7 @@ import {
   prepareClaudeConfigSeed,
   resolveManagedClaudeRuntimeStateDir,
   resolveSharedClaudeConfigDir,
-  writePaperclipClaudeMcpConfig,
+  writeThinkingMachClaudeMcpConfig,
 } from "./claude-config.js";
 import {
   claudeCliVersionAtLeast,
@@ -205,7 +205,7 @@ async function buildClaudeRuntimeConfig(input: ClaudeExecutionInput): Promise<Cl
   const cwd = effectiveWorkspaceCwd || configuredCwd || process.cwd();
   const executionTargetIsRemote = adapterExecutionTargetIsRemote(executionTarget);
   let effectiveExecutionCwd = adapterExecutionTargetRemoteCwd(executionTarget, cwd);
-  const shapedWorkspaceEnv = shapePaperclipWorkspaceEnvForExecution({
+  const shapedWorkspaceEnv = shapeThinkingMachWorkspaceEnvForExecution({
     workspaceCwd: effectiveWorkspaceCwd,
     workspaceWorktreePath,
     workspaceHints,
@@ -215,8 +215,8 @@ async function buildClaudeRuntimeConfig(input: ClaudeExecutionInput): Promise<Cl
   await ensureAbsoluteDirectory(cwd, { createIfMissing: true });
 
   const envConfig = parseObject(config.env);
-  const env: Record<string, string> = { ...buildPaperclipEnv(agent) };
-  env.PAPERCLIP_RUN_ID = runId;
+  const env: Record<string, string> = { ...buildThinkingMachEnv(agent) };
+  env.THINKINGMACH_RUN_ID = runId;
 
   const wakeTaskId =
     (typeof context.taskId === "string" && context.taskId.trim().length > 0 && context.taskId.trim()) ||
@@ -241,34 +241,34 @@ async function buildClaudeRuntimeConfig(input: ClaudeExecutionInput): Promise<Cl
   const linkedIssueIds = Array.isArray(context.issueIds)
     ? context.issueIds.filter((value): value is string => typeof value === "string" && value.trim().length > 0)
     : [];
-  const wakePayloadJson = stringifyPaperclipWakePayload(context.paperclipWake);
-  const issueWorkMode = readPaperclipIssueWorkModeFromContext(context);
+  const wakePayloadJson = stringifyThinkingMachWakePayload(context.thinkingmachWake);
+  const issueWorkMode = readThinkingMachIssueWorkModeFromContext(context);
 
   if (wakeTaskId) {
-    env.PAPERCLIP_TASK_ID = wakeTaskId;
+    env.THINKINGMACH_TASK_ID = wakeTaskId;
   }
   if (issueWorkMode) {
-    env.PAPERCLIP_ISSUE_WORK_MODE = issueWorkMode;
+    env.THINKINGMACH_ISSUE_WORK_MODE = issueWorkMode;
   }
   if (wakeReason) {
-    env.PAPERCLIP_WAKE_REASON = wakeReason;
+    env.THINKINGMACH_WAKE_REASON = wakeReason;
   }
   if (wakeCommentId) {
-    env.PAPERCLIP_WAKE_COMMENT_ID = wakeCommentId;
+    env.THINKINGMACH_WAKE_COMMENT_ID = wakeCommentId;
   }
   if (approvalId) {
-    env.PAPERCLIP_APPROVAL_ID = approvalId;
+    env.THINKINGMACH_APPROVAL_ID = approvalId;
   }
   if (approvalStatus) {
-    env.PAPERCLIP_APPROVAL_STATUS = approvalStatus;
+    env.THINKINGMACH_APPROVAL_STATUS = approvalStatus;
   }
   if (linkedIssueIds.length > 0) {
-    env.PAPERCLIP_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
+    env.THINKINGMACH_LINKED_ISSUE_IDS = linkedIssueIds.join(",");
   }
   if (wakePayloadJson) {
-    env.PAPERCLIP_WAKE_PAYLOAD_JSON = wakePayloadJson;
+    env.THINKINGMACH_WAKE_PAYLOAD_JSON = wakePayloadJson;
   }
-  applyPaperclipWorkspaceEnv(env, {
+  applyThinkingMachWorkspaceEnv(env, {
     workspaceCwd: shapedWorkspaceEnv.workspaceCwd,
     workspaceSource,
     workspaceStrategy,
@@ -280,16 +280,16 @@ async function buildClaudeRuntimeConfig(input: ClaudeExecutionInput): Promise<Cl
     agentHome,
   });
   if (shapedWorkspaceEnv.workspaceHints.length > 0) {
-    env.PAPERCLIP_WORKSPACES_JSON = JSON.stringify(shapedWorkspaceEnv.workspaceHints);
+    env.THINKINGMACH_WORKSPACES_JSON = JSON.stringify(shapedWorkspaceEnv.workspaceHints);
   }
   if (runtimeServiceIntents.length > 0) {
-    env.PAPERCLIP_RUNTIME_SERVICE_INTENTS_JSON = JSON.stringify(runtimeServiceIntents);
+    env.THINKINGMACH_RUNTIME_SERVICE_INTENTS_JSON = JSON.stringify(runtimeServiceIntents);
   }
   if (runtimeServices.length > 0) {
-    env.PAPERCLIP_RUNTIME_SERVICES_JSON = JSON.stringify(runtimeServices);
+    env.THINKINGMACH_RUNTIME_SERVICES_JSON = JSON.stringify(runtimeServices);
   }
   if (runtimePrimaryUrl) {
-    env.PAPERCLIP_RUNTIME_PRIMARY_URL = runtimePrimaryUrl;
+    env.THINKINGMACH_RUNTIME_PRIMARY_URL = runtimePrimaryUrl;
   }
   const shapedEnvConfig = rewriteWorkspaceCwdEnvVarsForExecution({
     env: envConfig,
@@ -299,16 +299,16 @@ async function buildClaudeRuntimeConfig(input: ClaudeExecutionInput): Promise<Cl
   });
   for (const [key, value] of Object.entries(shapedEnvConfig)) {
     if (typeof value !== "string") continue;
-    // Runtime PAPERCLIP_* always wins over config, and PAPERCLIP_API_KEY is
+    // Runtime THINKINGMACH_* always wins over config, and THINKINGMACH_API_KEY is
     // never accepted from config — the harness-minted run token is the only
-    // source. Other PAPERCLIP_* keys Paperclip did not assign flow through.
+    // source. Other THINKINGMACH_* keys ThinkingMach did not assign flow through.
     if (isForbiddenConfigEnvKey(key)) continue;
-    if (isPaperclipRuntimeEnvKey(key) && key in env) continue;
+    if (isThinkingMachRuntimeEnvKey(key) && key in env) continue;
     env[key] = value;
   }
 
   if (authToken) {
-    env.PAPERCLIP_API_KEY = authToken;
+    env.THINKINGMACH_API_KEY = authToken;
   }
 
   const runtimeEnv = Object.fromEntries(
@@ -429,7 +429,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
 
   const promptTemplate = asString(
     config.promptTemplate,
-    DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE,
+    DEFAULT_THINKINGMACH_AGENT_PROMPT_TEMPLATE,
   );
   const model = asString(config.model, "");
   const effort = asString(config.effort, "");
@@ -491,7 +491,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     ),
   );
   const billingType = resolveClaudeBillingType(effectiveEnv);
-  const claudeSkillEntries = await readPaperclipRuntimeSkillEntries(config, __moduleDir);
+  const claudeSkillEntries = await readThinkingMachRuntimeSkillEntries(config, __moduleDir);
   const desiredSkillNames = new Set(resolveClaudeDesiredSkillNames(config, claudeSkillEntries));
   // When instructionsFilePath is configured, build a stable content-addressed
   // file that includes both the file content and the path directive, so we only
@@ -533,9 +533,9 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   // exist, so the bundle hasher would throw and fail the whole run over one
   // broken skill. Log each one instead so the cause lands in the run output.
   const desiredSkillEntries = claudeSkillEntries.filter((entry) => desiredSkillNames.has(entry.key));
-  const mountableSkillEntries = desiredSkillEntries.filter((entry) => !isPaperclipSkillSourceMissing(entry));
+  const mountableSkillEntries = desiredSkillEntries.filter((entry) => !isThinkingMachSkillSourceMissing(entry));
   for (const entry of desiredSkillEntries) {
-    if (!isPaperclipSkillSourceMissing(entry)) continue;
+    if (!isThinkingMachSkillSourceMissing(entry)) continue;
     await onLog(
       "stderr",
       `[paperclip] Warning: skill "${entry.key}" is enabled for this agent but its files are unavailable and it was not mounted${entry.missingDetail ? `: ${entry.missingDetail}` : "."}\n`,
@@ -556,7 +556,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     agent.companyId,
     agent.id,
   );
-  const localMcpConfigPath = await writePaperclipClaudeMcpConfig({
+  const localMcpConfigPath = await writeThinkingMachClaudeMcpConfig({
     stateDir: claudeRuntimeStateDir,
     runId,
     servers: runtimeMcpServers,
@@ -581,7 +581,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
           networkScope,
           networkAllowlist: parseLocalProcessNetworkAllowlist(config.networkAllowlist),
           networkTrustedUrls: [
-            env.PAPERCLIP_API_URL,
+            env.THINKINGMACH_API_URL,
             ...runtimeMcpServers.map((server) => server.url),
           ].filter((value): value is string => typeof value === "string" && value.length > 0),
           command: asString(config.filesystemSandboxCommand, "bwrap"),
@@ -646,7 +646,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     effectiveExecutionCwd = preparedExecutionTargetRuntime.workspaceRemoteDir;
   }
   const runtimeExecutionTarget = overrideAdapterExecutionTargetRemoteCwd(executionTarget, effectiveExecutionCwd);
-  refreshPaperclipWorkspaceEnvForExecution({
+  refreshThinkingMachWorkspaceEnvForExecution({
     env,
     envConfig: configEnv,
     workspaceCwd: effectiveWorkspaceCwd,
@@ -713,9 +713,9 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       },
     });
   }
-  let paperclipBridge: Awaited<ReturnType<typeof startAdapterExecutionTargetPaperclipBridge>> = null;
-  if (executionTargetIsRemote && adapterExecutionTargetUsesPaperclipBridge(runtimeExecutionTarget)) {
-    paperclipBridge = await startAdapterExecutionTargetPaperclipBridge({
+  let thinkingmachBridge: Awaited<ReturnType<typeof startAdapterExecutionTargetThinkingMachBridge>> = null;
+  if (executionTargetIsRemote && adapterExecutionTargetUsesThinkingMachBridge(runtimeExecutionTarget)) {
+    thinkingmachBridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId,
       target: runtimeExecutionTarget,
       enableSandboxDuplexBridge: adapterExecutionTargetEnablesSandboxDuplexBridge(runtimeExecutionTarget),
@@ -723,11 +723,11 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       runtimeRootDir: preparedExecutionTargetRuntime?.runtimeRootDir,
       adapterKey: "claude",
       timeoutSec,
-      hostApiToken: env.PAPERCLIP_API_KEY,
+      hostApiToken: env.THINKINGMACH_API_KEY,
       onLog,
     });
-    if (paperclipBridge) {
-      Object.assign(env, paperclipBridge.env);
+    if (thinkingmachBridge) {
+      Object.assign(env, thinkingmachBridge.env);
       const runtimeEnv = ensurePathInEnv({ ...process.env, ...env });
       loggedEnv = buildInvocationEnvForLogs(env, {
         runtimeEnv,
@@ -842,15 +842,15 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     !sessionId && bootstrapPromptTemplate.trim().length > 0
       ? renderTemplate(bootstrapPromptTemplate, templateData).trim()
       : "";
-  const taskContextNote = selectPaperclipTaskMarkdown(context, { resumedSession: Boolean(sessionId) });
-  const wakePrompt = renderPaperclipWakePrompt(context.paperclipWake, {
+  const taskContextNote = selectThinkingMachTaskMarkdown(context, { resumedSession: Boolean(sessionId) });
+  const wakePrompt = renderThinkingMachWakePrompt(context.thinkingmachWake, {
     resumedSession: Boolean(sessionId),
     // The task-context markdown is the authoritative brief on this lane; keep
     // the wake prompt's description copy out so the prompt carries it once.
     suppressIssueDescription: taskContextNote.length > 0,
   });
   const shouldUseResumeDeltaPrompt = Boolean(sessionId) && wakePrompt.length > 0;
-  const renderedPrompt = shouldUseResumeDeltaPrompt || isPaperclipRecoveryWakePayload(context.paperclipWake)
+  const renderedPrompt = shouldUseResumeDeltaPrompt || isThinkingMachRecoveryWakePayload(context.thinkingmachWake)
     ? ""
     : renderTemplate(promptTemplate, templateData);
   const sessionHandoffNote = asString(context.paperclipSessionHandoffMarkdown, "").trim();
@@ -942,7 +942,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     }
     if (runtimeMcpServers.length > 0) {
       commandNotes.push(
-        `Using ${runtimeMcpServers.length} Paperclip-managed MCP server(s) from strict config ${effectiveMcpConfigPath}.`,
+        `Using ${runtimeMcpServers.length} ThinkingMach-managed MCP server(s) from strict config ${effectiveMcpConfigPath}.`,
       );
     }
     if (onMeta) {
@@ -968,8 +968,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       onSpawn,
       onRuntimeProgress: ctx.onRuntimeProgress,
       onLog,
-      runLogTail: paperclipBridge?.runLogTail,
-      settleRunDisposition: paperclipBridge?.settleRunDisposition,
+      runLogTail: thinkingmachBridge?.runLogTail,
+      settleRunDisposition: thinkingmachBridge?.settleRunDisposition,
       terminalResultCleanup: {
         graceMs: terminalResultCleanupGraceMs,
         hasTerminalResult: ({ stdout }) => parseClaudeStreamJson(stdout).resultJson !== null,
@@ -1118,7 +1118,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     const poisonedPreviousMessageId = isClaudePoisonedPreviousMessageIdError(parsed);
     // Fable 5 policy refusals exit cleanly (exitCode=0, is_error=false), so this
     // is intentionally independent of `failed` — otherwise a refusal looks like a
-    // successful run to Paperclip and the heartbeat stalls silently. See RY-604.
+    // successful run to ThinkingMach and the heartbeat stalls silently. See RY-604.
     const claudeRefusal = isClaudeRefusalResult(parsed);
     const parsedIsError = asBoolean(parsed.is_error, false);
     const parsedSubtype = asString(parsed.subtype, "").trim().toLowerCase();
@@ -1354,8 +1354,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
 
     return toAdapterResult(initial, { fallbackSessionId: runtimeSessionId || runtime.sessionId });
   } finally {
-    if (paperclipBridge) {
-      await paperclipBridge.stop();
+    if (thinkingmachBridge) {
+      await thinkingmachBridge.stop();
     }
     if (restoreRemoteWorkspace) {
       await onLog(

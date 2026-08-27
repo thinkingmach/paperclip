@@ -13,9 +13,9 @@ describe("env file editor", () => {
       "# operator comment",
       "UNKNOWN='keep this encoding'",
       "",
-      "export PAPERCLIP_HOME = '/old path'  # managed path",
-      "PAPERCLIP_DUPLICATE=stale",
-      'PAPERCLIP_DUPLICATE="current"',
+      "export THINKINGMACH_HOME = '/old path'  # managed path",
+      "THINKINGMACH_DUPLICATE=stale",
+      'THINKINGMACH_DUPLICATE="current"',
       "TRAILING=untouched",
       "",
     ].join("\r\n");
@@ -23,9 +23,9 @@ describe("env file editor", () => {
     const updated = updateEnvFileContents(
       original,
       {
-        PAPERCLIP_HOME: "/new path",
-        PAPERCLIP_DUPLICATE: "current",
-        PAPERCLIP_WORKTREE_COLOR: "#439edb",
+        THINKINGMACH_HOME: "/new path",
+        THINKINGMACH_DUPLICATE: "current",
+        THINKINGMACH_WORKTREE_COLOR: "#439edb",
       },
       { valueEncoding: "minimal" },
     );
@@ -34,11 +34,11 @@ describe("env file editor", () => {
       "# operator comment",
       "UNKNOWN='keep this encoding'",
       "",
-      'export PAPERCLIP_HOME = "/new path"  # managed path',
-      "PAPERCLIP_DUPLICATE=current",
-      'PAPERCLIP_DUPLICATE="current"',
+      'export THINKINGMACH_HOME = "/new path"  # managed path',
+      "THINKINGMACH_DUPLICATE=current",
+      'THINKINGMACH_DUPLICATE="current"',
       "TRAILING=untouched",
-      'PAPERCLIP_WORKTREE_COLOR="#439edb"',
+      'THINKINGMACH_WORKTREE_COLOR="#439edb"',
       "",
     ].join("\r\n"));
     expect(updated.replaceAll("\r\n", "")).not.toContain("\n");
@@ -46,8 +46,8 @@ describe("env file editor", () => {
 
   it("uses JSON encoding for changed values without re-encoding current assignments", () => {
     const original = [
-      "PAPERCLIP_CURRENT=plain-value",
-      "PAPERCLIP_CHANGED=old",
+      "THINKINGMACH_CURRENT=plain-value",
+      "THINKINGMACH_CHANGED=old",
       "UNKNOWN=\"operator value\"",
       "",
     ].join("\n");
@@ -56,17 +56,17 @@ describe("env file editor", () => {
       updateEnvFileContents(
         original,
         {
-          PAPERCLIP_CURRENT: "plain-value",
-          PAPERCLIP_CHANGED: "new",
-          PAPERCLIP_ADDED: "added",
+          THINKINGMACH_CURRENT: "plain-value",
+          THINKINGMACH_CHANGED: "new",
+          THINKINGMACH_ADDED: "added",
         },
         { valueEncoding: "json" },
       ),
     ).toBe([
-      "PAPERCLIP_CURRENT=plain-value",
-      'PAPERCLIP_CHANGED="new"',
+      "THINKINGMACH_CURRENT=plain-value",
+      'THINKINGMACH_CHANGED="new"',
       'UNKNOWN="operator value"',
-      'PAPERCLIP_ADDED="added"',
+      'THINKINGMACH_ADDED="added"',
       "",
     ].join("\n"));
   });
@@ -74,25 +74,25 @@ describe("env file editor", () => {
   it("does not treat an unquoted dotenv comment as the managed value", () => {
     expect(
       updateEnvFileContents(
-        ["PAPERCLIP_COLOR=#439edb", "PAPERCLIP_HOME=old# keep this comment"].join("\n"),
+        ["THINKINGMACH_COLOR=#439edb", "THINKINGMACH_HOME=old# keep this comment"].join("\n"),
         {
-          PAPERCLIP_COLOR: "#439edb",
-          PAPERCLIP_HOME: "new",
+          THINKINGMACH_COLOR: "#439edb",
+          THINKINGMACH_HOME: "new",
         },
         { valueEncoding: "minimal" },
       ),
     ).toBe(
-      ['PAPERCLIP_COLOR="#439edb"#439edb', "PAPERCLIP_HOME=new# keep this comment"].join("\n"),
+      ['THINKINGMACH_COLOR="#439edb"#439edb', "THINKINGMACH_HOME=new# keep this comment"].join("\n"),
     );
   });
 
   it("is a no-op when every managed duplicate is already current", () => {
     const original = [
-      "export PAPERCLIP_HOME = '/same path' # first",
-      'PAPERCLIP_HOME="/same path"',
+      "export THINKINGMACH_HOME = '/same path' # first",
+      'THINKINGMACH_HOME="/same path"',
       "UNKNOWN=value",
     ].join("\n");
 
-    expect(updateEnvFileContents(original, { PAPERCLIP_HOME: "/same path" })).toBe(original);
+    expect(updateEnvFileContents(original, { THINKINGMACH_HOME: "/same path" })).toBe(original);
   });
 });

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   createFolderSchema,
   ensureMySkillFolderSchema,
@@ -7,7 +7,7 @@ import {
   moveFolderItemSchema,
   moveFolderSchema,
   updateFolderSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { validate } from "../middleware/validate.js";
 import { badRequest, forbidden } from "../errors.js";
 import { folderService, logActivity } from "../services/index.js";

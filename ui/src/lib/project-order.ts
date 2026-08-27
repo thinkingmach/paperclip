@@ -1,4 +1,4 @@
-import type { Project } from "@paperclipai/shared";
+import type { Project } from "@thinkingmach/shared";
 
 export const PROJECT_ORDER_UPDATED_EVENT = "paperclip:project-order-updated";
 export const PROJECT_SORT_MODE_UPDATED_EVENT = "paperclip:project-sort-mode-updated";

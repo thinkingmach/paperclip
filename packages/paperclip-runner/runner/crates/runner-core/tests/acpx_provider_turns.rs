@@ -71,7 +71,7 @@ fn starts_interrupts_and_settles_one_scoped_turn() {
             if event.event_type == "item.delta" && event.payload["text"] == "hello"
     ));
     session
-        .interrupt_turn("turn-1", "Paperclip interruption")
+        .interrupt_turn("turn-1", "ThinkingMach interruption")
         .unwrap();
     assert_eq!(session.state().active_turn_id(), Some("turn-1"));
     let terminal = session.poll_event(Duration::from_secs(1)).unwrap().unwrap();
@@ -120,7 +120,7 @@ fn preserves_the_durable_turn_identity_boundary_through_the_sidecar() {
             if event.event_type == "item.delta" && event.payload["text"] == "hello"
     ));
     session
-        .interrupt_turn(&turn_id, "Paperclip interruption")
+        .interrupt_turn(&turn_id, "ThinkingMach interruption")
         .unwrap();
     let terminal = session.poll_event(Duration::from_secs(1)).unwrap().unwrap();
     assert!(matches!(
@@ -610,7 +610,7 @@ fn fails_closed_before_returning_a_malformed_reserved_result() {
         .unwrap_err()
         .to_string();
     assert!(
-        error.contains("failed the Paperclip result schema"),
+        error.contains("failed the ThinkingMach result schema"),
         "{error}"
     );
     assert!(session.shutdown("already closed").is_ok());

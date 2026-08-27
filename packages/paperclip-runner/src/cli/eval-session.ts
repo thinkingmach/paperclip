@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { projectCapabilityDevtools } from "../devtools/index.js";
 import { resolveQualifiedAcpxProfile } from "../drivers/acpx/qualified-profiles.js";
-import { PAPERCLIP_RUNNER_BUILD_METADATA } from "../evals/build-metadata.js";
+import { THINKINGMACH_RUNNER_BUILD_METADATA } from "../evals/build-metadata.js";
 import { projectCapabilityIssueThread } from "../issue-thread/live-projection.js";
 import {
   CapabilityLiveSessionService,
@@ -223,7 +223,7 @@ export async function runEvalSessionCli(
     await writeFile(cli.outputPath, `${JSON.stringify({
       schema: "paperclip-runner/eval-session-artifact/v1",
       attemptId: request.attemptId,
-      build: PAPERCLIP_RUNNER_BUILD_METADATA,
+      build: THINKINGMACH_RUNNER_BUILD_METADATA,
       runnerd: { path: "[withheld]", sha256: `sha256:${actualDigest}` },
       requestedModel: request.model,
       provider: requestedProvider,
@@ -296,7 +296,7 @@ export async function runEvalSessionCli(
       attemptId: request.attemptId,
       infrastructureError: error instanceof Error ? error.message : String(error),
       infrastructureFailure: failureClass(error),
-      build: PAPERCLIP_RUNNER_BUILD_METADATA,
+      build: THINKINGMACH_RUNNER_BUILD_METADATA,
       runnerd: { path: "[withheld]", sha256: `sha256:${actualDigest}` },
       requestedModel: request.model,
       provider: requestedProvider,

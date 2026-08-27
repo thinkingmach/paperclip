@@ -4,13 +4,13 @@ Status: Current implementation guide
 Date: 2026-08-18
 Audience: Product and engineering
 
-This document explains how Paperclip interprets issue assignment, issue status, execution runs, wakeups, parent/sub-issue structure, and blocker relationships.
+This document explains how ThinkingMach interprets issue assignment, issue status, execution runs, wakeups, parent/sub-issue structure, and blocker relationships.
 
 `doc/SPEC-implementation.md` remains the V1 contract. This document is the detailed execution model behind that contract.
 
 ## 1. Core Model
 
-Paperclip separates four concepts that are easy to blur together:
+ThinkingMach separates four concepts that are easy to blur together:
 
 1. structure: parent/sub-issue relationships
 2. dependency: blocker relationships
@@ -27,11 +27,11 @@ An issue has at most one assignee.
 - `assigneeUserId` means the issue is owned by a human board user
 - both cannot be set at the same time
 
-This is a hard invariant. Paperclip is single-assignee by design.
+This is a hard invariant. ThinkingMach is single-assignee by design.
 
 ## 3. Status Semantics
 
-Paperclip issue statuses are not just UI labels. They imply different expectations about ownership and execution.
+ThinkingMach issue statuses are not just UI labels. They imply different expectations about ownership and execution.
 
 ### `backlog`
 
@@ -47,7 +47,7 @@ The issue is actionable but not actively claimed.
 
 - it may be assigned or unassigned
 - no checkout/execution lock is required yet
-- for agent-assigned work, Paperclip may still need a wake path to ensure the assignee actually sees it
+- for agent-assigned work, ThinkingMach may still need a wake path to ensure the assignee actually sees it
 
 ### `in_progress`
 
@@ -67,7 +67,7 @@ This is the right state for:
 
 - waiting on another issue
 - waiting on a human decision
-- waiting on an external dependency or system when Paperclip does not own a scheduled re-check
+- waiting on an external dependency or system when ThinkingMach does not own a scheduled re-check
 - work that automatic recovery could not safely continue
 
 Entering `blocked` requires a routable waiting path. An issue may transition into `blocked` only with at least one of:
@@ -76,7 +76,7 @@ Entering `blocked` requires a routable waiting path. An issue may transition int
 - a pending issue-thread interaction or linked approval that names the responder
 - a structured unblock descriptor naming `{owner, action}`, where `owner` is an agent id, user id, or the board, and `action` is the concrete step that unblocks the issue
 
-When a structured unblock descriptor is the waiting path, Paperclip immediately notifies the named owner: an agent owner gets a wake, a user or board owner gets an inbox notification. Prose-only blocked — free-text that names an owner or action in a comment without any of the paths above — routes to nobody. It is rejected at the API or auto-classified as `needs_attention` with a board notification, never silently accepted as a healthy waiting state.
+When a structured unblock descriptor is the waiting path, ThinkingMach immediately notifies the named owner: an agent owner gets a wake, a user or board owner gets an inbox notification. Prose-only blocked — free-text that names an owner or action in a comment without any of the paths above — routes to nobody. It is rejected at the API or auto-classified as `needs_attention` with a board notification, never silently accepted as a healthy waiting state.
 
 A permission denial is not, by itself, a blocker. If an instructed step is denied at an authorization boundary but the issue's own deliverable is complete, the right disposition is `done`, not `blocked` (see the review-delegation rules in §6).
 
@@ -104,16 +104,16 @@ The execution model differs depending on assignee type.
 
 Agent-owned issues are part of the control plane's execution loop.
 
-- Paperclip can wake the assignee
-- Paperclip can track runs linked to the issue
-- Paperclip can recover some lost execution state after crashes/restarts
+- ThinkingMach can wake the assignee
+- ThinkingMach can track runs linked to the issue
+- ThinkingMach can recover some lost execution state after crashes/restarts
 
 ### User-owned issues
 
 User-owned issues are not executed by the heartbeat scheduler.
 
-- Paperclip can track the ownership and status
-- Paperclip cannot rely on heartbeat/run semantics to keep them moving
+- ThinkingMach can track the ownership and status
+- ThinkingMach cannot rely on heartbeat/run semantics to keep them moving
 - stranded-work reconciliation does not apply to them
 
 This is why `in_progress` can be strict for agents without forcing the same runtime rules onto human-held work.
@@ -131,7 +131,7 @@ These are related but not identical:
 - `checkoutRunId` answers who currently owns execution rights for the issue
 - `executionRunId` answers which run is actually live right now
 
-Paperclip already clears stale execution locks and can adopt some stale checkout locks when the original run is gone.
+ThinkingMach already clears stale execution locks and can adopt some stale checkout locks when the original run is gone.
 
 The active-lock lifecycle is part of the checkout contract:
 
@@ -142,7 +142,7 @@ The active-lock lifecycle is part of the checkout contract:
 - checkout and checkout-owner checks may self-heal lock columns that point at terminal or missing runs before evaluating conflicts
 - the recovery sweeper may clear rows whose checkout and execution locks all point at terminal or missing runs
 
-Stale-lock recovery is crash recovery, not a retry loop. Paperclip must not clear or adopt locks held by non-terminal runs. After stale cleanup, a checkout `409` should mean a real live owner, status/assignee mismatch, unresolved blocker, or active gate still prevents checkout. Agents must treat that `409` as an ownership conflict and stop rather than retrying the same checkout.
+Stale-lock recovery is crash recovery, not a retry loop. ThinkingMach must not clear or adopt locks held by non-terminal runs. After stale cleanup, a checkout `409` should mean a real live owner, status/assignee mismatch, unresolved blocker, or active gate still prevents checkout. Agents must treat that `409` as an ownership conflict and stop rather than retrying the same checkout.
 
 ### Pre-dispatch configuration validation
 
@@ -152,11 +152,11 @@ Pre-dispatch configuration validation is a distinct gate that runs after ownersh
 
 A configuration-incomplete result is a gate outcome, not a runtime failure. It is one of the active gates that a checkout-time or dispatch-time check can surface instead of starting a run, and it leaves the issue in an explicit waiting state that names the missing binding. Surfacing the blocker keeps the issue healthy under the liveness contract while preventing a run that is guaranteed to fail once it cannot resolve its required secret/env bindings. A dispatched-then-failed run is the wrong shape for missing configuration: the missing binding is a known pre-dispatch condition, so the control plane must surface it as a configuration-incomplete blocker rather than letting the run start and then fail.
 
-An unresolved workspace base ref is another configuration-incomplete condition. A `git_worktree` workspace bases a fresh worktree on a configured base ref. Paperclip first fetches a remote-only ref before dispatch: it maps an unqualified name (for example `fix/foo`) or a remote-tracking name (for example `origin/fix/foo`) to `origin/<branch>`, runs the authenticated fetch, and re-checks the commit. A ref that resolves lets work continue on the resolved commit. A ref that is still unresolvable after the fetch produces a configuration-incomplete blocker that names the requested ref, rather than a dispatched-then-failed run. Because the adapter never started, Paperclip queues no missing-comment retry. The recovery action dedupes by the canonical remote ref (`origin/<branch>`), not the operator spelling. Two equivalent spellings of one remote branch, for example `fix/foo` and `origin/fix/foo`, share one recovery identity, so a repeated failure reuses the active action and does not reset the attempt count or post a second notice. A different remote branch is a distinct blocker. Paperclip resolves the prior recovery action, creates a new action for the new ref, and notifies the operator with the new ref instead of overwriting the active action of the prior ref.
+An unresolved workspace base ref is another configuration-incomplete condition. A `git_worktree` workspace bases a fresh worktree on a configured base ref. ThinkingMach first fetches a remote-only ref before dispatch: it maps an unqualified name (for example `fix/foo`) or a remote-tracking name (for example `origin/fix/foo`) to `origin/<branch>`, runs the authenticated fetch, and re-checks the commit. A ref that resolves lets work continue on the resolved commit. A ref that is still unresolvable after the fetch produces a configuration-incomplete blocker that names the requested ref, rather than a dispatched-then-failed run. Because the adapter never started, ThinkingMach queues no missing-comment retry. The recovery action dedupes by the canonical remote ref (`origin/<branch>`), not the operator spelling. Two equivalent spellings of one remote branch, for example `fix/foo` and `origin/fix/foo`, share one recovery identity, so a repeated failure reuses the active action and does not reset the attempt count or post a second notice. A different remote branch is a distinct blocker. ThinkingMach resolves the prior recovery action, creates a new action for the new ref, and notifies the operator with the new ref instead of overwriting the active action of the prior ref.
 
 ## 6. Parent/Sub-Issue vs Blockers
 
-Paperclip uses two different relationships for different jobs.
+ThinkingMach uses two different relationships for different jobs.
 
 ### Parent/Sub-Issue (`parentId`)
 
@@ -181,9 +181,9 @@ Use it for:
 - explicit waiting relationships
 - automatic wakeups when all blockers resolve
 
-Blocked issues should stay idle while blockers remain unresolved. Paperclip should not create a queued heartbeat run for that issue until the final blocker is done and the `issue_blockers_resolved` wake can start real work.
+Blocked issues should stay idle while blockers remain unresolved. ThinkingMach should not create a queued heartbeat run for that issue until the final blocker is done and the `issue_blockers_resolved` wake can start real work.
 
-`cancelled` is terminal for the blocker issue itself, but it does not satisfy the dependency. A cancelled blocker edge remains unresolved until the edge is removed or replaced, and Paperclip must surface blocker attention on the dependent regardless of whether that dependent is currently displayed as `blocked`, `todo`, `backlog`, or another non-terminal agent-owned status.
+`cancelled` is terminal for the blocker issue itself, but it does not satisfy the dependency. A cancelled blocker edge remains unresolved until the edge is removed or replaced, and ThinkingMach must surface blocker attention on the dependent regardless of whether that dependent is currently displayed as `blocked`, `todo`, `backlog`, or another non-terminal agent-owned status.
 
 If a parent is truly waiting on a child, model that with blockers. Do not rely on the parent/child relationship alone.
 
@@ -213,7 +213,7 @@ The default is to implement on the source issue. The run-scoped `paperclip-conve
 
 `create_task` and `set_dependencies` are ordinary authorized `standard`-run capabilities. `create_task` creates a standard child under the active issue, with durable idempotency scoped by source issue and caller key; blocker-free children start `todo`, children with unresolved blockers start `blocked`, and only assigned dependency-ready children wake. `set_dependencies` changes the active source issue's first-class blockers and is used only when the source genuinely waits for delegated results.
 
-The accepted-plan decomposition API and records remain as an optional compatibility surface. When that API is explicitly used, Paperclip treats it as an exact-once control-plane primitive, not as the runner's ordinary child-creation binding.
+The accepted-plan decomposition API and records remain as an optional compatibility surface. When that API is explicitly used, ThinkingMach treats it as an exact-once control-plane primitive, not as the runner's ordinary child-creation binding.
 
 ### Exact-once fingerprint
 
@@ -241,7 +241,7 @@ That durable record must be able to answer, without reconstructing the thread fr
 - which child issues, if any, have already been created under that fingerprint
 - which final child issue ids belong to the completed result
 
-Paperclip does not need to mandate a specific storage shape in this document. The record may live in a dedicated table, source-issue execution state, interaction metadata, or another durable product surface. What matters is the contract:
+ThinkingMach does not need to mandate a specific storage shape in this document. The record may live in a dedicated table, source-issue execution state, interaction metadata, or another durable product surface. What matters is the contract:
 
 - the claim is durable before fan-out starts
 - partial progress is durable while fan-out is underway
@@ -260,7 +260,7 @@ The accepted interaction by itself is only evidence that the plan was approved. 
 - a monitor or explicit recovery action tied to the same decomposition claim
 - a blocked state that names the real blocker for finishing that claimed decomposition
 
-If the live run disappears, Paperclip must repair, resume, or visibly block the existing claim. It must not leave the source issue in a state where a second run can interpret the same acceptance as fresh permission to create sibling issues again.
+If the live run disappears, ThinkingMach must repair, resume, or visibly block the existing claim. It must not leave the source issue in a state where a second run can interpret the same acceptance as fresh permission to create sibling issues again.
 
 When the source retains implementation, integration, or verification responsibility and genuinely must wait for children, it must hold a first-class blocker path rather than relying on `parentId` rollup. If it can continue independently, it stays open without child blockers. If its sole deliverable was planning and all remaining work is fully delegated, it may finish after verifying the graph.
 
@@ -277,9 +277,9 @@ Concurrent compatibility decomposition attempts are therefore idempotent relativ
 
 ## 8. Non-Terminal Issue Liveness Contract
 
-For agent-owned, non-terminal issues, Paperclip should never leave work in a state where nobody is responsible for the next move and nothing will wake or surface it.
+For agent-owned, non-terminal issues, ThinkingMach should never leave work in a state where nobody is responsible for the next move and nothing will wake or surface it.
 
-This is a visibility contract, not an auto-completion contract. If Paperclip cannot safely infer the next action, it should surface the ambiguity with a blocked state, a visible notice, or an explicit recovery action. It must not silently mark work done from prose comments or guess that a dependency is complete.
+This is a visibility contract, not an auto-completion contract. If ThinkingMach cannot safely infer the next action, it should surface the ambiguity with a blocked state, a visible notice, or an explicit recovery action. It must not silently mark work done from prose comments or guess that a dependency is complete.
 
 An issue is healthy when the product can answer "what moves this forward next?" without requiring a human to reconstruct intent from the whole thread. An issue is stalled when it is non-terminal but has no live execution path, no explicit waiting path, and no recovery path.
 
@@ -296,17 +296,17 @@ The valid action-path primitives are:
 
 ### Durable external waits and heartbeat finalization
 
-An external wait counts as a live or waiting path only when the next move survives the current heartbeat and is represented in Paperclip's durable control-plane state. Valid external-wait shapes are:
+An external wait counts as a live or waiting path only when the next move survives the current heartbeat and is represented in ThinkingMach's durable control-plane state. Valid external-wait shapes are:
 
 - a one-shot issue monitor or other persisted scheduled wake that names the responsible assignee, next check time, and bounded timeout/attempt policy
 - a first-class blocker or `blocked` disposition that names the external owner and concrete action required to unblock the issue
 - a delegated child issue with a responsible owner and its own healthy action path, plus a blocker edge when the source issue must wait for that child; `parentId` alone is not a dependency
 
-A one-shot issue monitor consumes its persisted `nextCheckAt` when it dispatches the assignee wake. If that monitor-consuming run is lost before it records a new disposition or future monitor, Paperclip restores exactly one bounded continuation using the existing process-loss retry limit; if that continuation is also lost, the normal recovery-action escalation owns the next step instead of creating another monitor loop.
+A one-shot issue monitor consumes its persisted `nextCheckAt` when it dispatches the assignee wake. If that monitor-consuming run is lost before it records a new disposition or future monitor, ThinkingMach restores exactly one bounded continuation using the existing process-loss retry limit; if that continuation is also lost, the normal recovery-action escalation owns the next step instead of creating another monitor loop.
 
-An unmanaged local process is not a durable action path. Shell jobs started with `&`, `nohup`, local polling loops, detached PTY sessions, adapter child processes, or similar background watchers do not keep an issue live unless Paperclip persists them as a run or pairs a managed runtime service with a monitor, scheduled wake, blocker, or delegated issue that owns the next check. A PID, session id, log file, comment, or promise to check later is evidence only. The process may be killed when the adapter invocation or heartbeat exits and cannot be assumed observable or recoverable by another worker.
+An unmanaged local process is not a durable action path. Shell jobs started with `&`, `nohup`, local polling loops, detached PTY sessions, adapter child processes, or similar background watchers do not keep an issue live unless ThinkingMach persists them as a run or pairs a managed runtime service with a monitor, scheduled wake, blocker, or delegated issue that owns the next check. A PID, session id, log file, comment, or promise to check later is evidence only. The process may be killed when the adapter invocation or heartbeat exits and cannot be assumed observable or recoverable by another worker.
 
-Before a heartbeat finalizes, its issue disposition must therefore be evaluated from durable Paperclip state, not from processes still visible only to that heartbeat. An agent-owned issue may remain `in_progress` after the heartbeat only when another valid action-path primitive already exists. If the only claimed continuation is a local/background watcher, finalization treats the issue as having no live path even when the process has not yet been observed exiting.
+Before a heartbeat finalizes, its issue disposition must therefore be evaluated from durable ThinkingMach state, not from processes still visible only to that heartbeat. An agent-owned issue may remain `in_progress` after the heartbeat only when another valid action-path primitive already exists. If the only claimed continuation is a local/background watcher, finalization treats the issue as having no live path even when the process has not yet been observed exiting.
 
 If useful deliverable work can continue without the external result, the agent should continue that work or delegate it rather than parking the issue. Use `blocked` only for a real dependency that prevents productive progress. Use a monitor when the assignee owns a bounded future check, and use delegated child work when another owner can make progress independently.
 
@@ -338,7 +338,7 @@ Freeform document approval text is not auto-acceptance. Plan approval, implement
 
 ### Comment interrupts and ownership handoffs
 
-A board comment can be an interrupt, an ownership change, both, or neither. Paperclip must keep those concepts separate in the product contract.
+A board comment can be an interrupt, an ownership change, both, or neither. ThinkingMach must keep those concepts separate in the product contract.
 
 An interrupt stops the current live execution path for the issue. It does not, by itself, select the next owner. If an active run is interrupted by the board, the run may still terminate with the underlying `cancelled` status, but the issue activity and wake context should make the operator intent visible as an interruption rather than an unexplained runtime failure.
 
@@ -348,9 +348,9 @@ An ownership change selects who owns the issue after the comment is committed:
 - setting `assigneeUserId`, or clearing `assigneeAgentId`, makes the issue human-owned or unassigned
 - leaving assignee fields unchanged preserves the current owner
 
-A wake is the delivery path for a selected agent owner. If an interrupting update also assigns a non-terminal, non-backlog issue to an agent, Paperclip should enqueue one wake for the new assignee and include the interrupting comment and interrupted run id in the wake payload/context when available. Stale scheduled retries for the previous owner must not run after ownership changes away from that owner.
+A wake is the delivery path for a selected agent owner. If an interrupting update also assigns a non-terminal, non-backlog issue to an agent, ThinkingMach should enqueue one wake for the new assignee and include the interrupting comment and interrupted run id in the wake payload/context when available. Stale scheduled retries for the previous owner must not run after ownership changes away from that owner.
 
-If the committed update assigns the issue to a user, clears the agent assignee, or leaves the issue without an agent owner, Paperclip must not imply that an agent handoff happened. The issue is then waiting on the human owner or on a future explicit assignment, blocker, approval, interaction, monitor, or recovery action.
+If the committed update assigns the issue to a user, clears the agent assignee, or leaves the issue without an agent owner, ThinkingMach must not imply that an agent handoff happened. The issue is then waiting on the human owner or on a future explicit assignment, blocker, approval, interaction, monitor, or recovery action.
 
 Plain text is not assignment. Writing an agent's name, role, or team label in a comment does not change ownership and does not create an agent wake. Agent routing from comment text requires a structured agent mention that resolves inside the company, an explicit `assigneeAgentId` mutation, or an existing current agent assignee receiving normal issue-thread feedback.
 
@@ -358,21 +358,21 @@ Pause and tree-control previews should make the same distinction visible. They s
 
 ### Adapter-backed workspace coherence
 
-For adapter-backed execution, an active run or queued wake counts as a live path only when Paperclip can also prove that the selected workspace is coherent for that adapter invocation. A wake that cannot start in the intended workspace is only a failed delivery attempt, not a healthy liveness path.
+For adapter-backed execution, an active run or queued wake counts as a live path only when ThinkingMach can also prove that the selected workspace is coherent for that adapter invocation. A wake that cannot start in the intended workspace is only a failed delivery attempt, not a healthy liveness path.
 
 A workspace-coherent adapter path means:
 
 - the selected `executionWorkspaceId`, `projectWorkspaceId`, `projectId`, source issue, and company all refer to the same company-scoped work context
 - any `projectWorkspaceId` is accompanied by the owning `projectId`, and that project relationship is unambiguous
-- the adapter will receive the same effective workspace/cwd that Paperclip resolved for the run, including the same workspace ids and `PAPERCLIP_WORKSPACE_*` environment values
+- the adapter will receive the same effective workspace/cwd that ThinkingMach resolved for the run, including the same workspace ids and `THINKINGMACH_WORKSPACE_*` environment values
 - the effective cwd exists or is provider-reachable, according to the workspace provider
 - when the adapter or workspace strategy relies on git state, the cwd is git-valid for the selected workspace: it resolves to the expected repository root, required base refs or branch metadata can be resolved, and runtime-created worktrees are still registered or explicitly recoverable
 
-Adapter-backed liveness also requires control-plane reachability from the agent's actual mutation surface, not just from the host adapter process. If the agent is expected to use Bash, shell tools, runtime helpers, or in-sandbox command execution to update issues, create comments, upload artifacts, or submit review decisions, the `PAPERCLIP_API_URL` and `PAPERCLIP_API_KEY` visible to that surface must route to Paperclip successfully.
+Adapter-backed liveness also requires control-plane reachability from the agent's actual mutation surface, not just from the host adapter process. If the agent is expected to use Bash, shell tools, runtime helpers, or in-sandbox command execution to update issues, create comments, upload artifacts, or submit review decisions, the `THINKINGMACH_API_URL` and `THINKINGMACH_API_KEY` visible to that surface must route to ThinkingMach successfully.
 
-For sandbox-backed local adapters, Paperclip may satisfy that contract with a run-scoped in-sandbox bridge. The host adapter keeps the real run JWT on the host side, injects only the bridge URL/token into the sandbox tool environment, and forwards allowed Paperclip API requests with the run id attached. The bridge credentials are execution plumbing, not user-facing context: they must not be written into prompts, visible comments, issue documents, restored workspace files, or durable logs. Agents and skills must use the env vars available in Bash/curl rather than assuming that the host's localhost API URL is reachable from browser or web-extraction tools inside the sandbox.
+For sandbox-backed local adapters, ThinkingMach may satisfy that contract with a run-scoped in-sandbox bridge. The host adapter keeps the real run JWT on the host side, injects only the bridge URL/token into the sandbox tool environment, and forwards allowed ThinkingMach API requests with the run id attached. The bridge credentials are execution plumbing, not user-facing context: they must not be written into prompts, visible comments, issue documents, restored workspace files, or durable logs. Agents and skills must use the env vars available in Bash/curl rather than assuming that the host's localhost API URL is reachable from browser or web-extraction tools inside the sandbox.
 
-The state `projectWorkspaceId` plus `executionWorkspaceId` without `projectId` is invalid for project-scoped execution. Paperclip may treat it as recoverable only when it can derive exactly one owning project from the execution workspace, project workspace, or source issue in the same company and then repair the persisted state before delivery. If the owning project is missing, ambiguous, or cross-company, the queued adapter run must not be counted as a live path.
+The state `projectWorkspaceId` plus `executionWorkspaceId` without `projectId` is invalid for project-scoped execution. ThinkingMach may treat it as recoverable only when it can derive exactly one owning project from the execution workspace, project workspace, or source issue in the same company and then repair the persisted state before delivery. If the owning project is missing, ambiguous, or cross-company, the queued adapter run must not be counted as a live path.
 
 Workspace incoherence feeds into the same non-terminal liveness and stranded assigned-work model as a disappeared run. The recovery path should first fail or reject the incoherent wake, then either repair and requeue one bounded continuation for the same assignee or surface an explicit recovery action. It must not leave an agent-owned `in_progress` issue healthy solely because a wake record exists that would invoke the adapter in the wrong cwd, a non-git directory where git is required, an unrelated project workspace, or an unrecoverable missing worktree.
 
@@ -435,9 +435,9 @@ An assigned `todo` issue is stalled when dispatch was interrupted, no wake remai
 
 This is parked state, not dispatch state.
 
-Assigning an issue normally implies executable intent. When create APIs receive an assignee and no explicit status, Paperclip defaults the issue to `todo` so the assignee has a wake path instead of silently inheriting the unassigned `backlog` default.
+Assigning an issue normally implies executable intent. When create APIs receive an assignee and no explicit status, ThinkingMach defaults the issue to `todo` so the assignee has a wake path instead of silently inheriting the unassigned `backlog` default.
 
-An explicit assigned `backlog` issue remains valid when the creator is deliberately parking the work. It must not wake the assignee just because it has an assignee. Paperclip should make that choice visible in activity and UI so operators can distinguish intentional parking from a missed handoff.
+An explicit assigned `backlog` issue remains valid when the creator is deliberately parking the work. It must not wake the assignee just because it has an assignee. ThinkingMach should make that choice visible in activity and UI so operators can distinguish intentional parking from a missed handoff.
 
 An assigned `backlog` issue becomes a liveness problem when another issue is blocked on it and there is no explicit waiting path such as a human owner, active run, queued wake, pending interaction or approval, monitor, or open recovery action. In that case the blocked parent should surface "blocked by parked work" rather than treating the dependency chain as healthy.
 
@@ -452,7 +452,7 @@ A healthy active-work state means at least one of these is true:
 - there is an active one-shot monitor that will wake the assignee for a future check
 - there is an open explicit recovery action for the lost execution path
 
-An agent-owned `in_progress` issue is stalled when it has no active run, no queued continuation, no persisted monitor, and no explicit recovery surface. An unmanaged local/background watcher does not satisfy any of those conditions. A Paperclip-tracked run that is still running but silent is not automatically stalled; it is handled by the active-run watchdog contract.
+An agent-owned `in_progress` issue is stalled when it has no active run, no queued continuation, no persisted monitor, and no explicit recovery surface. An unmanaged local/background watcher does not satisfy any of those conditions. A ThinkingMach-tracked run that is still running but silent is not automatically stalled; it is handled by the active-run watchdog contract.
 
 ### `in_review`
 
@@ -469,9 +469,9 @@ A healthy `in_review` issue has at least one valid action path:
 
 Agent-assigned `in_review` with no typed participant is only healthy when one of the other paths exists. Assignment to the same agent that produced the handoff is not, by itself, a review path.
 
-An `in_review` issue is stalled when it has no typed participant, no pending interaction or approval, no user owner, no active monitor, no active run, no queued wake, and no explicit recovery action. Paperclip should surface that state as recovery work rather than silently completing the issue or leaving blocker chains parked indefinitely.
+An `in_review` issue is stalled when it has no typed participant, no pending interaction or approval, no user owner, no active monitor, no active run, no queued wake, and no explicit recovery action. ThinkingMach should surface that state as recovery work rather than silently completing the issue or leaving blocker chains parked indefinitely.
 
-When an execution-policy review stage has a pending agent participant, the participant's run is part of the review path only while it is live or queued. If that participant run reaches a terminal state while `executionState.status` remains `pending`, no decision has been recorded. Paperclip should queue one bounded normal-model recovery wake for the same participant when the agent is invokable and no other review path exists. If that recovery run also finishes while the stage remains pending, or the participant cannot be invoked, Paperclip must move the source issue to an explicit blocked/recovery path instead of leaving `in_review` to drift silently.
+When an execution-policy review stage has a pending agent participant, the participant's run is part of the review path only while it is live or queued. If that participant run reaches a terminal state while `executionState.status` remains `pending`, no decision has been recorded. ThinkingMach should queue one bounded normal-model recovery wake for the same participant when the agent is invokable and no other review path exists. If that recovery run also finishes while the stage remains pending, or the participant cannot be invoked, ThinkingMach must move the source issue to an explicit blocked/recovery path instead of leaving `in_review` to drift silently.
 
 ### Issue monitors
 
@@ -481,19 +481,19 @@ Use a monitor when the current assignee owns a future check against an async sys
 
 Monitor policy lives under `executionPolicy.monitor` and includes:
 
-- `nextCheckAt`: when Paperclip should wake the assignee
+- `nextCheckAt`: when ThinkingMach should wake the assignee
 - `notes`: non-secret instructions for what the assignee should check
 - `serviceName`: optional non-secret external-service context
-- `externalRef`: optional external-service reference input; Paperclip treats it as secret-adjacent, redacts it before persistence/visibility, and omits it from activity and wake payloads
+- `externalRef`: optional external-service reference input; ThinkingMach treats it as secret-adjacent, redacts it before persistence/visibility, and omits it from activity and wake payloads
 - `timeoutAt`, `maxAttempts`, and `recoveryPolicy`: optional recovery hints for bounded waits
 
-Monitors are not recurring intervals. When a monitor fires, Paperclip clears the scheduled monitor and queues an `issue_monitor_due` wake for the assignee. If the external service is still pending, the assignee must explicitly re-arm the monitor with a new `nextCheckAt`. If the issue moves to `done`, `cancelled`, an invalid status, or a human/unassigned owner, the monitor is cleared.
+Monitors are not recurring intervals. When a monitor fires, ThinkingMach clears the scheduled monitor and queues an `issue_monitor_due` wake for the assignee. If the external service is still pending, the assignee must explicitly re-arm the monitor with a new `nextCheckAt`. If the issue moves to `done`, `cancelled`, an invalid status, or a human/unassigned owner, the monitor is cleared.
 
 Because `serviceName` and `notes` remain visible in issue activity and wake context, operators should keep them short and non-secret. Put enough context for the assignee to know what to inspect, but do not include signed URLs, bearer tokens, customer secrets, tenant-private identifiers, or provider links with embedded credentials.
 
-Monitor bounds are enforced. Paperclip rejects attempts to re-arm a monitor whose `timeoutAt` or `maxAttempts` is already exhausted. When a scheduled monitor reaches an exhausted bound at trigger time, Paperclip clears it and follows `recoveryPolicy`: `wake_owner` queues a bounded recovery wake for the assignee, `create_recovery_issue` opens visible issue-backed recovery work, and `escalate_to_board` records a board-visible escalation comment/activity.
+Monitor bounds are enforced. ThinkingMach rejects attempts to re-arm a monitor whose `timeoutAt` or `maxAttempts` is already exhausted. When a scheduled monitor reaches an exhausted bound at trigger time, ThinkingMach clears it and follows `recoveryPolicy`: `wake_owner` queues a bounded recovery wake for the assignee, `create_recovery_issue` opens visible issue-backed recovery work, and `escalate_to_board` records a board-visible escalation comment/activity.
 
-Use `blocked` instead of a monitor when no Paperclip assignee owns a responsible polling path. In that case, name the external owner/action or create first-class recovery/blocker work.
+Use `blocked` instead of a monitor when no ThinkingMach assignee owns a responsible polling path. In that case, name the external owner/action or create first-class recovery/blocker work.
 
 ### `blocked`
 
@@ -511,7 +511,7 @@ A `blocked` issue is stalled when the unresolved blocker leaf has no active run,
 
 ## 9. Crash and Restart Recovery
 
-Paperclip now treats crash/restart recovery as a stranded-assigned-work problem, not just a stranded-run problem.
+ThinkingMach now treats crash/restart recovery as a stranded-assigned-work problem, not just a stranded-run problem.
 
 There are two distinct failure modes.
 
@@ -526,8 +526,8 @@ Example:
 
 Recovery rule:
 
-- if the latest issue-linked run failed/timed out/cancelled and no live execution path remains, Paperclip queues one automatic assignment recovery wake
-- if that recovery wake also finishes and the issue is still stranded, Paperclip moves the issue to `blocked` and opens or updates a board-owned recovery action without changing the source assignee or waking a substitute agent; the visible comment is evidence, not the recovery path by itself
+- if the latest issue-linked run failed/timed out/cancelled and no live execution path remains, ThinkingMach queues one automatic assignment recovery wake
+- if that recovery wake also finishes and the issue is still stranded, ThinkingMach moves the issue to `blocked` and opens or updates a board-owned recovery action without changing the source assignee or waking a substitute agent; the visible comment is evidence, not the recovery path by itself
 
 This is a dispatch recovery, not a continuation recovery.
 
@@ -547,12 +547,12 @@ Example:
 
 Recovery rule:
 
-- Paperclip queues one automatic continuation wake
-- if that continuation wake also finishes and the issue is still stranded, Paperclip moves the issue to `blocked` and opens or updates a board-owned recovery action without changing the source assignee or waking a substitute agent; the visible comment is evidence, not the recovery path by itself
+- ThinkingMach queues one automatic continuation wake
+- if that continuation wake also finishes and the issue is still stranded, ThinkingMach moves the issue to `blocked` and opens or updates a board-owned recovery action without changing the source assignee or waking a substitute agent; the visible comment is evidence, not the recovery path by itself
 
 This is an active-work continuity recovery.
 
-The same bounded rule applies when the previous heartbeat reported waiting on a local/background watcher and that watcher was killed, disappeared, or was never represented by a durable Paperclip primitive. Paperclip queues at most one continuation for the same recovery fingerprint. If the continuation also leaves only local watcher evidence, Paperclip must surface a real blocker or explicit recovery action instead of repeating continuation recovery. A new monitor, scheduled wake, healthy delegated blocker issue, or other durable source mutation resolves that recovery fingerprint normally.
+The same bounded rule applies when the previous heartbeat reported waiting on a local/background watcher and that watcher was killed, disappeared, or was never represented by a durable ThinkingMach primitive. ThinkingMach queues at most one continuation for the same recovery fingerprint. If the continuation also leaves only local watcher evidence, ThinkingMach must surface a real blocker or explicit recovery action instead of repeating continuation recovery. A new monitor, scheduled wake, healthy delegated blocker issue, or other durable source mutation resolves that recovery fingerprint normally.
 
 #### Deliberate wait is not a lost run
 
@@ -560,13 +560,13 @@ A continuation that the staleness gate cancelled with `issue_continuation_waitin
 
 Recovery rule for a parked-for-review continuation:
 
-- if the issue has a real waiting target — open (non-terminal) sub-tasks or existing unresolved blockers — Paperclip converts the deliberate wait into a first-class dependency wait: it sets the issue `blocked` by those issues, keeps the original assignee, and posts a plain-language comment explaining that the task will resume automatically when its dependencies finish. The issue then self-resumes through the normal `issue_blockers_resolved` path; no recovery action or escalation owner is involved
-- if the issue has no current typed waiting target and the original owner is invokable, Paperclip classifies it as `deliberate_wait_without_target` and gives that owner five normal-model disposition-repair attempts: immediate, then after 60, 120, 240, and 480 seconds, with up to 10 percent jitter on delayed attempts
-- before every attempt, Paperclip revalidates unresolved blockers and children, interactions, linked approvals, monitors, execution stages, queued wakes, active runs, work products, owner invokability, and budget or governance gates. Any real live or waiting path suppresses the retry
+- if the issue has a real waiting target — open (non-terminal) sub-tasks or existing unresolved blockers — ThinkingMach converts the deliberate wait into a first-class dependency wait: it sets the issue `blocked` by those issues, keeps the original assignee, and posts a plain-language comment explaining that the task will resume automatically when its dependencies finish. The issue then self-resumes through the normal `issue_blockers_resolved` path; no recovery action or escalation owner is involved
+- if the issue has no current typed waiting target and the original owner is invokable, ThinkingMach classifies it as `deliberate_wait_without_target` and gives that owner five normal-model disposition-repair attempts: immediate, then after 60, 120, 240, and 480 seconds, with up to 10 percent jitter on delayed attempts
+- before every attempt, ThinkingMach revalidates unresolved blockers and children, interactions, linked approvals, monitors, execution stages, queued wakes, active runs, work products, owner invokability, and budget or governance gates. Any real live or waiting path suppresses the retry
 - the retry bound is keyed by an idempotent durable source-state fingerprint. Comments, repeated parked summaries, and equivalent prose do not reset it. Durable changes such as source status or assignee changes, dependency or interaction changes, approval or execution-policy changes, monitor changes, or work-product changes may create a new fingerprint
 - on upgrade, consecutive historical `issue_continuation_waiting_on_review` cancellations for the same accepted interaction and still-unchanged durable source state seed this same counter. Five applicable pre-upgrade parks therefore exhaust the ceiling immediately; the absence of a historical `deliberate_wait_without_target` recovery-action row does not grant five new attempts
 - the action persists the unchanged fingerprint, source-attempt count, due time, source owner, and return owner. Startup and periodic reconciliation reuse that state, fold the action when a current typed wait appears, and reschedule or escalate an expired attempt that has no live scheduled run. Idempotency keys prevent a restart from creating duplicate wakes or scheduled runs
-- after five attempts with the same fingerprint, Paperclip opens one board-owned source-scoped recovery action. The source assignee remains unchanged, no manager/creator/executive substitute is woken, and the board chooses whether to repair, retry the original owner, explicitly reassign, or resolve
+- after five attempts with the same fingerprint, ThinkingMach opens one board-owned source-scoped recovery action. The source assignee remains unchanged, no manager/creator/executive substitute is woken, and the board chooses whether to repair, retry the original owner, explicitly reassign, or resolve
 - a recovery action is a healthy wait only while its owner has a live run, queued wake, scheduled retry, typed wait, or explicit board escalation. Source liveness and every blocker-chain projection use that same nested result
 
 An accepted interaction supersedes a continuation park recorded before that acceptance. A queued continuation carrying a parseable `interactionResolvedAt` must not be cancelled solely because an older continuation summary says to wait for review or approval. Interaction-continuation recovery is bounded: after three consecutive continuation wakes are cancelled without a run starting, recovery converts a real dependency wait when one exists or escalates the missing execution path visibly instead of requeueing forever.
@@ -583,7 +583,7 @@ Automatic retries that can continue source work use the agent's configured model
 
 Startup recovery and periodic recovery are different from normal wakeup delivery.
 
-On startup and on the periodic recovery loop, Paperclip now does five things in sequence:
+On startup and on the periodic recovery loop, ThinkingMach now does five things in sequence:
 
 1. reap orphaned `running` runs
 2. resume persisted `queued` runs
@@ -642,7 +642,7 @@ The reusable watchdog issue is a child of the watched source issue for audit and
 
 Task watchdog evaluation is conservative. If any included issue has a live run, queued wake, or scheduled retry that should fire without intervention, the subtree is live and the task watchdog does not run.
 
-If no included issue has a live path, Paperclip computes a stop fingerprint from durable subtree state, including at least:
+If no included issue has a live path, ThinkingMach computes a stop fingerprint from durable subtree state, including at least:
 
 - included leaf issue ids, statuses, assignees, and latest durable update timestamps
 - first-class blockers and unresolved blocker leaf summaries
@@ -651,7 +651,7 @@ If no included issue has a live path, Paperclip computes a stop fingerprint from
 - terminal or cancelled leaf evidence
 - the watchdog configuration revision, including watchdog agent and instructions changes
 
-If the fingerprint equals the watchdog's last reviewed fingerprint, Paperclip suppresses another watchdog wake. If the fingerprint is new, Paperclip creates or reopens the reusable watchdog issue and wakes the configured watchdog agent with the source issue, watchdog config, stop fingerprint, leaf summary, default mandate, custom instructions, and server-derived capability metadata that names the allowed operations, denied operations, reusable watchdog issue, and non-watchdog target scope.
+If the fingerprint equals the watchdog's last reviewed fingerprint, ThinkingMach suppresses another watchdog wake. If the fingerprint is new, ThinkingMach creates or reopens the reusable watchdog issue and wakes the configured watchdog agent with the source issue, watchdog config, stop fingerprint, leaf summary, default mandate, custom instructions, and server-derived capability metadata that names the allowed operations, denied operations, reusable watchdog issue, and non-watchdog target scope.
 
 Changing the watchdog agent or custom instructions invalidates the reviewed fingerprint and forces a fresh evaluation even if the subtree state did not otherwise change.
 
@@ -700,7 +700,7 @@ The watchdog's reviewed fingerprint should update only after the watchdog issue 
 - `blocked` with first-class blockers or a named external owner/action
 - a watchdog mutation that restores live work, where the subsequent source-subtree mutation naturally changes the stop fingerprint
 
-If the watchdog moved work forward, Paperclip should not mark the old fingerprint as permanently acceptable just because the watchdog issue completed. The next scan should observe the changed subtree state and either suppress because work is live or compute a new stopped fingerprint later.
+If the watchdog moved work forward, ThinkingMach should not mark the old fingerprint as permanently acceptable just because the watchdog issue completed. The next scan should observe the changed subtree state and either suppress because work is live or compute a new stopped fingerprint later.
 
 ### Restoration verification and escalation
 
@@ -720,7 +720,7 @@ Task watchdogs must not silently mark source work done from prose comments, must
 
 ## 12. Silent Active-Run Watchdog
 
-An active run can still be unhealthy even when its process is `running`. Paperclip treats prolonged output silence as a watchdog signal, not as proof that the run is failed.
+An active run can still be unhealthy even when its process is `running`. ThinkingMach treats prolonged output silence as a watchdog signal, not as proof that the run is failed.
 
 The recovery service owns this contract:
 
@@ -767,11 +767,11 @@ In the normal non-terminal case, critical silence remains a UI signal and does n
 
 This is distinct from productivity review. Productivity review asks whether an assigned source issue has unusual progression patterns, such as no-comment terminal-run streaks, long active duration, or high churn. Source-resolved watchdog folding asks whether a stale active-run signal outlived a source issue that already reached a valid terminal disposition. One does not substitute for the other.
 
-Detached process cleanup is operational hygiene, not source issue liveness. Cleanup should be best-effort and auditable. If cleanup fails but the source issue is already terminal with same-run durable evidence, Paperclip should preserve the cleanup failure on the run/watchdog audit trail and route only the cleanup concern to bounded recovery when a real owner/action remains.
+Detached process cleanup is operational hygiene, not source issue liveness. Cleanup should be best-effort and auditable. If cleanup fails but the source issue is already terminal with same-run durable evidence, ThinkingMach should preserve the cleanup failure on the run/watchdog audit trail and route only the cleanup concern to bounded recovery when a real owner/action remains.
 
 ## 13. Auto-Recover vs Explicit Recovery vs Human Escalation
 
-Paperclip uses three different recovery outcomes, depending on how much it can safely infer.
+ThinkingMach uses three different recovery outcomes, depending on how much it can safely infer.
 
 ### Auto-Recover
 
@@ -787,7 +787,7 @@ Auto-recovery preserves the existing owner. It does not choose a replacement age
 
 ### Explicit Recovery Action
 
-Paperclip opens an explicit recovery action when the system can identify a problem but cannot safely complete the work itself.
+ThinkingMach opens an explicit recovery action when the system can identify a problem but cannot safely complete the work itself.
 
 Examples:
 
@@ -798,7 +798,7 @@ The recovery action stays source-scoped by default. Stranded-task escalation is 
 
 The board owns the recovery decision, not the source deliverable. Automatic recovery must preserve both source assignee fields. Only an explicit operator decision or applicable serious-failure policy may transfer the deliverable.
 
-An upgrade may encounter an already-active agent-owned recovery action. Paperclip keeps that record readable and resolvable for compatibility, but periodic reconciliation does not enqueue another takeover wake from it.
+An upgrade may encounter an already-active agent-owned recovery action. ThinkingMach keeps that record readable and resolvable for compatibility, but periodic reconciliation does not enqueue another takeover wake from it.
 
 Create an issue-backed recovery action only when a separate issue is the right execution object. In that fallback form, the source issue remains visible and is blocked on the recovery issue when blocking is necessary for correctness. The recovery owner must restore a live path, resolve the source issue manually, delegate real follow-up work, or record the reason the signal is a false positive.
 
@@ -812,13 +812,13 @@ Examples:
 - the issue is human-owned rather than agent-owned
 - the run is intentionally quiet but needs an operator decision before cancellation or continuation
 
-In these cases Paperclip should leave a visible issue/comment trail instead of silently retrying.
+In these cases ThinkingMach should leave a visible issue/comment trail instead of silently retrying.
 
 ## 14. What This Does Not Mean
 
 These semantics do not change V1 into an auto-reassignment system.
 
-Paperclip still does not:
+ThinkingMach still does not:
 
 - automatically reassign work to a different agent
 - infer dependency semantics from `parentId` alone
@@ -840,4 +840,4 @@ For a board operator, the intended meaning is:
 - parent/sub-issue explains structure
 - blockers explain waiting
 
-That is the execution contract Paperclip should present to operators.
+That is the execution contract ThinkingMach should present to operators.

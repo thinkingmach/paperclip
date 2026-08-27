@@ -3,7 +3,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
-import type { CatalogSkill, CompanySkillDetail, CompanySkillListItem, CompanySkillVersion, FolderListResult } from "@paperclipai/shared";
+import type { CatalogSkill, CompanySkillDetail, CompanySkillListItem, CompanySkillVersion, FolderListResult } from "@thinkingmach/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   DiscoveryGrid,
@@ -397,7 +397,7 @@ describe("DiscoveryGrid IA presentation", () => {
       catalogRef: null,
       name: "Installed Skill",
       slug: "installed",
-      author: "Paperclip",
+      author: "ThinkingMach",
       version: null,
       tagline: null,
       description: null,
@@ -423,7 +423,7 @@ describe("DiscoveryGrid IA presentation", () => {
       slug: "available",
       installed: false,
       sourceBadge: "catalog" as const,
-      sourceLabel: "Paperclip catalog",
+      sourceLabel: "ThinkingMach catalog",
     };
     const node = await renderDiscoveryGrid({
       tab: "discover",
@@ -434,7 +434,7 @@ describe("DiscoveryGrid IA presentation", () => {
     expect(node.textContent).toContain("Not enabled for any agents");
     expect(node.textContent).toContain("Available to install");
     expect(node.textContent).toContain("Local workspace");
-    expect(node.textContent).toContain("Paperclip catalog");
+    expect(node.textContent).toContain("ThinkingMach catalog");
   });
 
   it("uses the create callback from the New menu and empty state", async () => {
@@ -539,7 +539,7 @@ describe("DiscoveryGrid IA presentation", () => {
       catalogRef: null,
       name: "Demo Skill",
       slug: "demo-skill",
-      author: "Paperclip",
+      author: "ThinkingMach",
       version: null,
       tagline: null,
       description: null,
@@ -579,7 +579,7 @@ describe("DiscoveryGrid IA presentation", () => {
       catalogRef: null,
       name: "Bundled Skill",
       slug: "bundled-skill",
-      author: "Paperclip",
+      author: "ThinkingMach",
       version: null,
       tagline: null,
       description: null,
@@ -651,12 +651,12 @@ describe("skills discovery card reconciliation", () => {
   it("renders one installed card when installed and catalog data share a key", () => {
     const installed = {
       id: "installed-new",
-      key: "PaperclipAI/Review",
+      key: "ThinkingMachAI/Review",
       name: "Review",
       slug: "review",
       updatedAt: new Date("2026-08-30T00:00:00Z"),
       folderId: null,
-      authorName: "Paperclip",
+      authorName: "ThinkingMach",
       packageVersion: "2.0.0",
       sourceRef: null,
       tagline: null,
@@ -670,23 +670,23 @@ describe("skills discovery card reconciliation", () => {
       catalogKind: "optional",
       forkedFromSkillId: null,
       sourceBadge: "catalog",
-      sourceLabel: "Paperclip",
+      sourceLabel: "ThinkingMach",
     } as unknown as CompanySkillListItem;
     const olderDuplicate = {
       ...installed,
       id: "installed-old",
-      key: "paperclipai/review",
+      key: "thinkingmach/review",
       updatedAt: new Date("2026-08-01T00:00:00Z"),
     } as CompanySkillListItem;
     const catalog = {
       id: "catalog-review",
-      key: "paperclipai/review",
+      key: "thinkingmach/review",
       name: "Review",
       slug: "review",
       kind: "optional",
       category: "quality",
       description: "Catalog copy",
-      packageName: "Paperclip",
+      packageName: "ThinkingMach",
       packageVersion: "2.0.0",
       tags: [],
     } as unknown as CatalogSkill;
@@ -829,7 +829,7 @@ describe("SkillDetailPage settings", () => {
 
   it("renders long source paths in full so they can wrap inside the sidebar", async () => {
     const v1 = makeVersion(1, "# Demo Skill");
-    const longSourcePath = "/srv/paperclip/home/paperclipai/paperclip/.agents/skills/prepare-pr/SKILL.md";
+    const longSourcePath = "/srv/paperclip/home/thinkingmach/paperclip/.agents/skills/prepare-pr/SKILL.md";
     const node = await renderSkillDetail([v1], {
       activeTab: "agents",
       detail: makeDetail(v1, {
@@ -995,7 +995,7 @@ describe("install-time agent enablement", () => {
   function makeCatalogSkill(): CatalogSkill {
     return {
       id: "catalog-1",
-      key: "paperclipai/bundled/product/wireframe",
+      key: "thinkingmach/bundled/product/wireframe",
       kind: "bundled",
       category: "product",
       slug: "wireframe",

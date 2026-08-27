@@ -14,7 +14,7 @@ vi.mock("@/lib/router", () => ({
   useNavigate: () => vi.fn(),
 }));
 vi.mock("@/context/CompanyContext", () => ({
-  useCompany: () => ({ selectedCompany: { name: "Paperclip", issuePrefix: "PAP" } }),
+  useCompany: () => ({ selectedCompany: { name: "ThinkingMach", issuePrefix: "PAP" } }),
 }));
 vi.mock("@/context/SidebarContext", () => ({
   useSidebar: () => ({ isMobile: false, setSidebarOpen: vi.fn() }),
@@ -58,7 +58,7 @@ describe("SkillsContextualSidebar", () => {
     expect(container.textContent).toContain("Discover");
     expect(container.textContent).toContain("My Skills");
     expect(container.textContent).toContain("Skills you create, edit, and test.");
-    expect(container.textContent).not.toContain("Paperclip");
+    expect(container.textContent).not.toContain("ThinkingMach");
     expect(container.querySelector('[aria-label="Back from Skills"]')).toBeNull();
     expect(container.querySelector('[aria-current="page"]')?.textContent).toBe("Installed");
 

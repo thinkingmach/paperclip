@@ -4,7 +4,7 @@ import { resolveAuthorizationTarget } from "./authorizationUrl";
 
 /**
  * PAP-17099 — the board's own copy of the endpoint gate. The shared validator is
- * tested exhaustively in `@paperclipai/shared`; what matters here is that the
+ * tested exhaustively in `@thinkingmach/shared`; what matters here is that the
  * board applies it, and that its loopback exception follows how the board itself
  * is served rather than being unconditional.
  */

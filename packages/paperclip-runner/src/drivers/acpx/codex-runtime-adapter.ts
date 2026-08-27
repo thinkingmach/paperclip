@@ -103,7 +103,7 @@ export interface QualifiedAcpxRuntimeDependencies {
 export type CodexAcpxRuntimeDependencies = QualifiedAcpxRuntimeDependencies;
 
 /**
- * Adapt the pinned ACPX library to Paperclip's admitted runtime port. The
+ * Adapt the pinned ACPX library to ThinkingMach's admitted runtime port. The
  * executable, launch environment, and spawn cwd stay host-owned and are never
  * persisted in ACPX's session options.
  */
@@ -265,7 +265,7 @@ export async function openQualifiedAcpxRuntime(
     spawnEnvironment: () => ({
       ...definedEnvironment(options.launchEnvironment),
       ...(options.profile.agent === "claude"
-        ? { PAPERCLIP_ACPX_ISOLATED_CONTEXT: "1" }
+        ? { THINKINGMACH_ACPX_ISOLATED_CONTEXT: "1" }
         : {}),
     }),
     spawnCwd: options.cwd,
@@ -1601,7 +1601,7 @@ function requireIdentity(handle: AcpRuntimeHandle): AcpxRuntimePortIdentity {
     backendSessionId,
     // ACPX agents do not all advertise a distinct native thread identity.
     // In that case the backend ID is the real ACP protocol session, so retain
-    // it explicitly rather than inventing a Paperclip-owned identifier.
+    // it explicitly rather than inventing a ThinkingMach-owned identifier.
     agentSessionId:
       nonEmptyRuntimeIdentity(handle.agentSessionId) ?? backendSessionId,
   };

@@ -743,7 +743,7 @@ describe("run phase timing telemetry", () => {
     // label (a command, a path, an environment value, or a raw identifier) can
     // never reach the stream.
     await emitRunPhaseTiming(ctx, "/usr/bin/node --flag /secret/path", 5, "ok");
-    await emitRunPhaseTiming(ctx, "PAPERCLIP_API_KEY=abc123", 5, "ok");
+    await emitRunPhaseTiming(ctx, "THINKINGMACH_API_KEY=abc123", 5, "ok");
     await emitRunPhaseTiming(ctx, "run-7f3a-agent-42", 5, "ok");
 
     expect(events).toHaveLength(RUN_PHASE_NAMES.length);
@@ -754,7 +754,7 @@ describe("run phase timing telemetry", () => {
       const serialized = JSON.stringify(event);
       expect(serialized).not.toContain("/usr/bin/node");
       expect(serialized).not.toContain("/secret/path");
-      expect(serialized).not.toContain("PAPERCLIP_API_KEY");
+      expect(serialized).not.toContain("THINKINGMACH_API_KEY");
       expect(serialized).not.toContain("abc123");
       expect(serialized).not.toContain("run-7f3a-agent-42");
     }

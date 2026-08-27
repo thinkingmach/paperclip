@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { readZipArchive } from "@paperclipai/shared/portability-zip";
+import { readZipArchive } from "@thinkingmach/shared/portability-zip";
 import {
   CHUNKED_IMPORT_THRESHOLD_BYTES,
   IMPORT_TRANSFER_PART_SIZE_BYTES,
@@ -329,12 +329,12 @@ describe("uploadCompanyImportTransfer", () => {
         alreadyCompleted: true,
         totalParts: 2,
         missingParts: [],
-        company: { id: "company-2", name: "Paperclip", issuePrefix: "PAPA" },
+        company: { id: "company-2", name: "ThinkingMach", issuePrefix: "PAPA" },
       }),
     });
 
     await expect(uploadCompanyImportTransfer(api, zipBytes)).rejects.toThrow(
-      /landed in the company "Paperclip" \(PAPA\)/,
+      /landed in the company "ThinkingMach" \(PAPA\)/,
     );
     expect(putRaw).not.toHaveBeenCalled();
   });
@@ -346,9 +346,9 @@ describe("company import command over the chunked transfer path", () => {
 
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    delete process.env.PAPERCLIP_API_URL;
-    delete process.env.PAPERCLIP_API_KEY;
-    delete process.env.PAPERCLIP_COMPANY_ID;
+    delete process.env.THINKINGMACH_API_URL;
+    delete process.env.THINKINGMACH_API_KEY;
+    delete process.env.THINKINGMACH_COMPANY_ID;
     fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
     logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);

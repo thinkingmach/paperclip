@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Agent } from "@paperclipai/shared";
+import type { Agent } from "@thinkingmach/shared";
 
 import { Button } from "@/components/ui/button";
 import { EntityRow } from "@/components/EntityRow";
@@ -53,7 +53,7 @@ const definition = {
   displayName: "Briefs Agent",
   featureKeys: ["briefs"],
   shortPurpose: "Prepares concise operational briefs for the board and agent company.",
-  defaultInstructions: "You are Paperclip's built-in Briefs agent.",
+  defaultInstructions: "You are ThinkingMach's built-in Briefs agent.",
   defaultRole: "general",
   allowedAdapterTypes: ["codex_local", "claude_local", "gemini_local", "opencode_local", "process"],
   defaultBudgetMonthlyCents: 0,
@@ -143,7 +143,7 @@ export const SurfaceGallery: Story = {
           title="Built-in agent"
           actions={<Button variant="outline" size="sm">Reset to defaults</Button>}
         >
-          Ships with Paperclip and powers <strong>Briefs</strong>. Configure it like any agent —
+          Ships with ThinkingMach and powers <strong>Briefs</strong>. Configure it like any agent —
           model, instructions, budget. It can be paused but not deleted; pausing it pauses Briefs.
         </InlineBanner>
       </div>
@@ -275,7 +275,7 @@ const reflectionBundle = {
     skillKey: "reflection-coach",
     displayName: "reflection-coach",
     slug: "reflection-coach",
-    canonicalKey: "paperclipai/bundled/paperclip-operations/reflection-coach",
+    canonicalKey: "thinkingmach/bundled/paperclip-operations/reflection-coach",
     files: ["reflection-coach/SKILL.md"],
   },
   routine: {
@@ -291,7 +291,7 @@ const reflectionDefinition = {
   displayName: "Reflection Coach",
   featureKeys: ["reflection"],
   shortPurpose: "Reviews recent agents and coaches them.",
-  defaultInstructions: "You are Paperclip's built-in Reflection Coach.",
+  defaultInstructions: "You are ThinkingMach's built-in Reflection Coach.",
   defaultRole: "general",
   allowedAdapterTypes: ["codex_local", "claude_local"],
   defaultBudgetMonthlyCents: 0,

@@ -8,7 +8,7 @@ import type {
   PluginLocalFolderListing,
   PluginLocalFolderProblem,
   PluginLocalFolderStatus,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import { badRequest, forbidden, notFound } from "../errors.js";
 
 export interface StoredPluginLocalFolderConfig {

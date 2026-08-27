@@ -3,7 +3,7 @@
  * Broker host entrypoint. Wires the tested BrokerCore to the live Tailscale
  * CLI, /proc listener-ownership check, file registry, file audit sink, and the
  * unix-socket transport. Runs as a dedicated, Tailscale-operator service
- * account — NOT as the Paperclip app/agent account.
+ * account — NOT as the ThinkingMach app/agent account.
  *
  * Usage:
  *   paperclip-tailscale-https-broker            # run the broker

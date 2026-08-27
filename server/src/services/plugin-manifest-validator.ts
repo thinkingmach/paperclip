@@ -9,9 +9,9 @@
  * @see PLUGIN_SPEC.md §10 — Plugin Manifest
  * @see packages/shared/src/validators/plugin.ts — Zod schema definition
  */
-import { pluginManifestV1Schema } from "@paperclipai/shared";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
-import { PLUGIN_API_VERSION } from "@paperclipai/shared";
+import { pluginManifestV1Schema } from "@thinkingmach/shared";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
+import { PLUGIN_API_VERSION } from "@thinkingmach/shared";
 import { badRequest } from "../errors.js";
 
 // ---------------------------------------------------------------------------
@@ -34,7 +34,7 @@ const SUPPORTED_VERSIONS = [PLUGIN_API_VERSION] as const;
  */
 export interface ManifestParseSuccess {
   success: true;
-  manifest: PaperclipPluginManifestV1;
+  manifest: ThinkingMachPluginManifestV1;
 }
 
 /**
@@ -79,7 +79,7 @@ export interface PluginManifestValidator {
    *
    * @throws {HttpError} 400 Bad Request if the manifest is invalid.
    */
-  parseOrThrow(input: unknown): PaperclipPluginManifestV1;
+  parseOrThrow(input: unknown): ThinkingMachPluginManifestV1;
 
   /**
    * Return the list of plugin API versions supported by this host.
@@ -124,7 +124,7 @@ export function pluginManifestValidator(): PluginManifestValidator {
       if (result.success) {
         return {
           success: true,
-          manifest: result.data as PaperclipPluginManifestV1,
+          manifest: result.data as ThinkingMachPluginManifestV1,
         };
       }
 
@@ -151,7 +151,7 @@ export function pluginManifestValidator(): PluginManifestValidator {
       };
     },
 
-    parseOrThrow(input: unknown): PaperclipPluginManifestV1 {
+    parseOrThrow(input: unknown): ThinkingMachPluginManifestV1 {
       const result = this.parse(input);
 
       if (!result.success) {

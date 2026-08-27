@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
 import { PassThrough } from "node:stream";
 
-import type { DurablePrpControlPlane } from "@paperclipai/paperclip-runner";
+import type { DurablePrpControlPlane } from "@thinkingmach/paperclip-runner";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {

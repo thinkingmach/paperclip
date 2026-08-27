@@ -26,7 +26,7 @@ use sha2::{Digest, Sha256};
 use crate::local_runner::LocalRunnerError;
 
 const PROCESS_OUTPUT_QUEUE_CAPACITY: usize = 256;
-const VERIFIED_RUNTIME_EXECUTABLE_ENV: &str = "PAPERCLIP_VERIFIED_RUNTIME_EXECUTABLE";
+const VERIFIED_RUNTIME_EXECUTABLE_ENV: &str = "THINKINGMACH_VERIFIED_RUNTIME_EXECUTABLE";
 const VERIFIED_COMMONJS_ARTIFACT_LOADER: &str = r#"const fs=require("node:fs");const Module=require("node:module");const filename=process.argv[1];const source=fs.readFileSync(filename,"utf8").replace(/^#![^\r\n]*(?:\r?\n|$)/,"");const artifact=new Module(filename);artifact.filename=filename;artifact.paths=[];artifact._compile(source,filename);"#;
 
 pub(crate) fn is_node_interpreter(path: &Path) -> bool {

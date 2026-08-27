@@ -1,11 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const ADMIN_EMAIL =
-  process.env.PAPERCLIP_RELEASE_SMOKE_EMAIL ??
+  process.env.THINKINGMACH_RELEASE_SMOKE_EMAIL ??
   process.env.SMOKE_ADMIN_EMAIL ??
   "smoke-admin@paperclip.local";
 const ADMIN_PASSWORD =
-  process.env.PAPERCLIP_RELEASE_SMOKE_PASSWORD ??
+  process.env.THINKINGMACH_RELEASE_SMOKE_PASSWORD ??
   process.env.SMOKE_ADMIN_PASSWORD ??
   "paperclip-smoke-password";
 
@@ -16,7 +16,7 @@ const AGENT_NAME = "Release Smoke Lead";
 const AGENT_ROLE = "general";
 // Seeded by the wizard's launch step (DEFAULT_TASK_TITLE in
 // ui/src/components/OnboardingWizard.tsx).
-const FIRST_TASK_TITLE = "Paperclip onboarding";
+const FIRST_TASK_TITLE = "ThinkingMach onboarding";
 
 async function signIn(page: Page) {
   await page.goto("/");

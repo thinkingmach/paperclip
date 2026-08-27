@@ -50,9 +50,9 @@ describe("ACPX runtime sandbox", () => {
           [credentialName]: "provider-secret",
           UNRELATED_SECRET: "must-not-enter",
           HTTPS_PROXY: "https://proxy-user:proxy-password@example.test",
-          PAPERCLIP_NATIVE_MCP_URL:
+          THINKINGMACH_NATIVE_MCP_URL:
             "https://mcp.example.test/connect?ticket=secret",
-          PAPERCLIP_NATIVE_MCP_TOKEN: "native-secret",
+          THINKINGMACH_NATIVE_MCP_TOKEN: "native-secret",
         },
       });
 
@@ -61,7 +61,7 @@ describe("ACPX runtime sandbox", () => {
       expect(sandbox.launchEnvironment.HTTPS_PROXY).toContain("proxy-password");
       expect(sandbox.launchEnvironment.UNRELATED_SECRET).toBeUndefined();
       expect(
-        sandbox.launchEnvironment.PAPERCLIP_NATIVE_MCP_TOKEN,
+        sandbox.launchEnvironment.THINKINGMACH_NATIVE_MCP_TOKEN,
       ).toBeUndefined();
       expect(sandbox.launchEnvironment.HOME).toBe(sandbox.homeDirectory);
       expect(sandbox.launchEnvironment.XDG_CONFIG_HOME).toBe(
@@ -77,10 +77,10 @@ describe("ACPX runtime sandbox", () => {
       expect(sandbox.persistedEnvironment[credentialName]).toBeUndefined();
       expect(sandbox.persistedEnvironment.HTTPS_PROXY).toBeUndefined();
       expect(
-        sandbox.persistedEnvironment.PAPERCLIP_NATIVE_MCP_URL,
+        sandbox.persistedEnvironment.THINKINGMACH_NATIVE_MCP_URL,
       ).toBeUndefined();
       expect(
-        sandbox.persistedEnvironment.PAPERCLIP_NATIVE_MCP_TOKEN,
+        sandbox.persistedEnvironment.THINKINGMACH_NATIVE_MCP_TOKEN,
       ).toBeUndefined();
       expect(sandbox.persistedEnvironment.HOME).toBe(sandbox.homeDirectory);
       if (agent === "codex") {

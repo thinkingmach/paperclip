@@ -2,7 +2,7 @@ import { useState } from "react";
 import type {
   FeedbackDataSharingPreference,
   FeedbackVoteValue,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { IssueChatFeedbackButtons } from "@/components/AgentBubbleActionRow";
 import { Check, Copy } from "lucide-react";

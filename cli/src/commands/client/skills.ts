@@ -14,7 +14,7 @@ import {
   type CompanySkillListItem,
   type CompanySkillProjectScanResult,
   type CompanySkillUpdateStatus,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { readFile } from "node:fs/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
@@ -817,7 +817,7 @@ function printCatalogInstallResult(result: CompanySkillInstallCatalogResult | nu
     `Catalog skill ${result.action}: ${result.skill.name} (${result.skill.key}) in company skill library.`,
   );
   console.log(
-    "This does not attach the skill to an agent. Use `paperclipai skills agent sync <agent> --skill <skill>` when you want an agent to use it.",
+    "This does not attach the skill to an agent. Use `thinkingmach skills agent sync <agent> --skill <skill>` when you want an agent to use it.",
   );
   for (const warning of result.warnings) {
     console.log(`warning=${warning}`);

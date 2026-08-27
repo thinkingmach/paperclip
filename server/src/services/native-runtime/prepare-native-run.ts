@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 
 import { and, eq } from "drizzle-orm";
 
-import type { Db } from "@paperclipai/db";
-import { completionContracts, heartbeatRuns } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { completionContracts, heartbeatRuns } from "@thinkingmach/db";
 
 import { ensureNativeCompletionContract } from "./completion-contracts.js";
 import { NATIVE_RUNTIME_RESOLVER_VERSION } from "./runtime-mode.js";

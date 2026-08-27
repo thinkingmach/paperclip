@@ -1,4 +1,4 @@
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { issueTreeControlService } from "../issue-tree-control.js";
 
 type IssueTreeControlService = ReturnType<typeof issueTreeControlService>;

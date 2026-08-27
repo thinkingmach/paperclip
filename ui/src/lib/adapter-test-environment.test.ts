@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Environment } from "@paperclipai/shared";
+import type { Environment } from "@thinkingmach/shared";
 
 import {
   ManagedSandboxUnavailableForTestError,
@@ -38,7 +38,7 @@ describe("resolveAdapterTestEnvironmentId", () => {
   it("falls back to the instance default when the agent has none", () => {
     // The regression this pins: an agent relying on the instance default
     // (e.g. a managed sandbox with extra CLIs baked into its image) must be
-    // tested inside that environment, not on the Paperclip host where the
+    // tested inside that environment, not on the ThinkingMach host where the
     // CLI does not exist.
     expect(
       resolveAdapterTestEnvironmentId({
@@ -205,12 +205,12 @@ describe("resolveManagedSandboxEnvironmentId", () => {
       makeEnvironment({
         id: "local-1",
         driver: "local",
-        metadata: { managedByPaperclip: true, defaultForInstance: true },
+        metadata: { managedByThinkingMach: true, defaultForInstance: true },
       }),
       makeEnvironment({
         id: "sandbox-1",
         driver: "sandbox",
-        metadata: { managedByPaperclip: true },
+        metadata: { managedByThinkingMach: true },
       }),
     ];
     // The local-default row also carries the managed stamp, so the resolver must
@@ -224,7 +224,7 @@ describe("resolveManagedSandboxEnvironmentId", () => {
       makeEnvironment({
         id: "local-1",
         driver: "local",
-        metadata: { managedByPaperclip: true, defaultForInstance: true },
+        metadata: { managedByThinkingMach: true, defaultForInstance: true },
       }),
     ];
     expect(resolveManagedSandboxEnvironmentId(environments)).toBeNull();
@@ -243,12 +243,12 @@ describe("resolveManagedSandboxEnvironmentId", () => {
         id: "sandbox-archived",
         driver: "sandbox",
         status: "archived",
-        metadata: { managedByPaperclip: true },
+        metadata: { managedByThinkingMach: true },
       }),
       makeEnvironment({
         id: "local-1",
         driver: "local",
-        metadata: { managedByPaperclip: true, defaultForInstance: true },
+        metadata: { managedByThinkingMach: true, defaultForInstance: true },
       }),
     ];
     expect(resolveManagedSandboxEnvironmentId(environments)).toBeNull();
@@ -262,13 +262,13 @@ describe("resolveManagedSandboxEnvironmentId", () => {
         id: "sandbox-archived",
         driver: "sandbox",
         status: "archived",
-        metadata: { managedByPaperclip: true },
+        metadata: { managedByThinkingMach: true },
       }),
       makeEnvironment({
         id: "sandbox-active",
         driver: "sandbox",
         status: "active",
-        metadata: { managedByPaperclip: true },
+        metadata: { managedByThinkingMach: true },
       }),
     ];
     expect(resolveManagedSandboxEnvironmentId(environments)).toBe("sandbox-active");
@@ -282,7 +282,7 @@ describe("resolveLocalDefaultEnvironmentId", () => {
       makeEnvironment({
         id: "local-1",
         driver: "local",
-        metadata: { managedByPaperclip: true, defaultForInstance: true },
+        metadata: { managedByThinkingMach: true, defaultForInstance: true },
       }),
     ];
     expect(resolveLocalDefaultEnvironmentId(environments)).toBe("local-1");

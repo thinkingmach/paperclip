@@ -1,4 +1,4 @@
-import type { IssueWriteDenialCode, IssueWriteDenialContext } from "@paperclipai/shared";
+import type { IssueWriteDenialCode, IssueWriteDenialContext } from "@thinkingmach/shared";
 
 /**
  * Map the activity events the server writes when it refuses an issue write onto

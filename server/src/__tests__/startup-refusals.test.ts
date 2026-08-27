@@ -44,7 +44,7 @@ describe("shouldReportStartupFailure", () => {
     expect(shouldReportStartupFailure(new Error("boom"), {})).toBe(true);
     expect(
       shouldReportStartupFailure(new Error("boom"), {
-        PAPERCLIP_CLOUD_API_ORIGIN: "https://cloud.example.com",
+        THINKINGMACH_CLOUD_API_ORIGIN: "https://cloud.example.com",
       }),
     ).toBe(true);
   });
@@ -56,19 +56,19 @@ describe("shouldReportStartupFailure", () => {
   it("suppresses supervised-transient refusals when a cloud supervisor owns the deployment", () => {
     expect(
       shouldReportStartupFailure(refusal, {
-        PAPERCLIP_CLOUD_API_ORIGIN: "https://cloud.example.com",
+        THINKINGMACH_CLOUD_API_ORIGIN: "https://cloud.example.com",
       }),
     ).toBe(false);
   });
 
   it("treats a blank cloud origin as unset", () => {
-    expect(shouldReportStartupFailure(refusal, { PAPERCLIP_CLOUD_API_ORIGIN: "   " })).toBe(true);
+    expect(shouldReportStartupFailure(refusal, { THINKINGMACH_CLOUD_API_ORIGIN: "   " })).toBe(true);
   });
 
   it("reports non-Error throwables unconditionally", () => {
     expect(
       shouldReportStartupFailure("string failure", {
-        PAPERCLIP_CLOUD_API_ORIGIN: "https://cloud.example.com",
+        THINKINGMACH_CLOUD_API_ORIGIN: "https://cloud.example.com",
       }),
     ).toBe(true);
   });

@@ -8,8 +8,8 @@ import type {
   CompanyPortabilityPreviewRequest,
   CompanyPortabilityPreviewResult,
   UpdateCompanyBranding,
-} from "@paperclipai/shared";
-import type { ExportFidelityReport } from "@paperclipai/shared/portability-fidelity";
+} from "@thinkingmach/shared";
+import type { ExportFidelityReport } from "@thinkingmach/shared/portability-fidelity";
 import {
   companyImportTransferApplyPath,
   companyImportTransferPartPath,
@@ -20,7 +20,7 @@ import {
   type CompanyImportTransferDeclaration,
   type CompanyImportTransferPartUploadResult,
   type CompanyImportTransferStatus,
-} from "@paperclipai/shared/company-import-transfer";
+} from "@thinkingmach/shared/company-import-transfer";
 import { api, detachInflightGet, type RequestOptions } from "./client";
 
 const COMPANIES_LIST_PATH = "/companies";

@@ -1,7 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
 import { FileCode2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { WorkspaceFileRef } from "@paperclipai/shared";
+import type { WorkspaceFileRef } from "@thinkingmach/shared";
 import { useFileViewer } from "@/context/FileViewerContext";
 
 export interface ArtifactFileChipProps {

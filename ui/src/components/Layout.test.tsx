@@ -19,8 +19,8 @@ const mockNavigate = vi.hoisted(() => vi.fn());
 const mockSetSelectedCompanyId = vi.hoisted(() => vi.fn());
 const mockSetSidebarOpen = vi.hoisted(() => vi.fn());
 const mockCompanyState = vi.hoisted(() => ({
-  companies: [{ id: "company-1", issuePrefix: "PAP", name: "Paperclip" }],
-  selectedCompany: { id: "company-1", issuePrefix: "PAP", name: "Paperclip" },
+  companies: [{ id: "company-1", issuePrefix: "PAP", name: "ThinkingMach" }],
+  selectedCompany: { id: "company-1", issuePrefix: "PAP", name: "ThinkingMach" },
   selectedCompanyId: "company-1",
 }));
 const mockPluginSlots = vi.hoisted(() => ({
@@ -266,8 +266,8 @@ describe("Layout", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     currentPathname = "/PAP/dashboard";
-    mockCompanyState.companies = [{ id: "company-1", issuePrefix: "PAP", name: "Paperclip" }];
-    mockCompanyState.selectedCompany = { id: "company-1", issuePrefix: "PAP", name: "Paperclip" };
+    mockCompanyState.companies = [{ id: "company-1", issuePrefix: "PAP", name: "ThinkingMach" }];
+    mockCompanyState.selectedCompany = { id: "company-1", issuePrefix: "PAP", name: "ThinkingMach" };
     mockCompanyState.selectedCompanyId = "company-1";
     mockHealthApi.get.mockResolvedValue({
       status: "ok",
@@ -1070,10 +1070,10 @@ describe("Layout", () => {
   it("uses the route company context for plugin route sidebars on the first render", async () => {
     currentPathname = "/ALT/wiki";
     mockCompanyState.companies = [
-      { id: "company-1", issuePrefix: "PAP", name: "Paperclip" },
+      { id: "company-1", issuePrefix: "PAP", name: "ThinkingMach" },
       { id: "company-2", issuePrefix: "ALT", name: "Alternate" },
     ];
-    mockCompanyState.selectedCompany = { id: "company-1", issuePrefix: "PAP", name: "Paperclip" };
+    mockCompanyState.selectedCompany = { id: "company-1", issuePrefix: "PAP", name: "ThinkingMach" };
     mockCompanyState.selectedCompanyId = "company-1";
     mockPluginSlots.slots = [
       {

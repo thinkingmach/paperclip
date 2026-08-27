@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type {
   ExternalObjectLivenessState,
   ExternalObjectStatusCategory,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { ExternalObjectStatusIcon } from "./ExternalObjectStatusIcon";
 import {
   externalObjectStatusIcon,

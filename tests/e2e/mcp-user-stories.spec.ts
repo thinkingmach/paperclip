@@ -45,22 +45,22 @@ async function createScout(request: APIRequestContext, companyId: string): Promi
 
 function buildGatewayCallScript(connectionId: string, toolName: string, parameters: Json = {}) {
   return `
-const required = ["PAPERCLIP_API_URL", "PAPERCLIP_API_KEY", "PAPERCLIP_RUN_ID"];
+const required = ["THINKINGMACH_API_URL", "THINKINGMACH_API_KEY", "THINKINGMACH_RUN_ID"];
 for (const key of required) {
   if (!process.env[key]) throw new Error(\`Missing \${key}\`);
 }
 const headers = {
-  "authorization": \`Bearer \${process.env.PAPERCLIP_API_KEY}\`,
+  "authorization": \`Bearer \${process.env.THINKINGMACH_API_KEY}\`,
   "content-type": "application/json"
 };
-const sessionRes = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/sessions\`, {
+const sessionRes = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/sessions\`, {
   method: "POST",
   headers,
-  body: JSON.stringify({ runId: process.env.PAPERCLIP_RUN_ID, ttlMs: 60000 })
+  body: JSON.stringify({ runId: process.env.THINKINGMACH_RUN_ID, ttlMs: 60000 })
 });
 if (!sessionRes.ok) throw new Error(\`session \${sessionRes.status}: \${await sessionRes.text()}\`);
 const session = await sessionRes.json();
-const toolsRes = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/tools\`, {
+const toolsRes = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/tools\`, {
   headers: { "x-paperclip-tool-gateway-token": session.token }
 });
 if (!toolsRes.ok) throw new Error(\`tools \${toolsRes.status}: \${await toolsRes.text()}\`);
@@ -70,7 +70,7 @@ const tool = tools.find((entry) =>
   && (entry.upstreamToolName === ${JSON.stringify(toolName)} || entry.name === ${JSON.stringify(toolName)})
 );
 if (!tool) throw new Error(\`Missing gateway tool for ${toolName}\`);
-const callRes = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/tools/call\`, {
+const callRes = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/tools/call\`, {
   method: "POST",
   headers: {
     "content-type": "application/json",

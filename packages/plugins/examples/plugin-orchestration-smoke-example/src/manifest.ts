@@ -1,12 +1,12 @@
-import type { PaperclipPluginManifestV1 } from "@paperclipai/plugin-sdk";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/plugin-sdk";
 
-const manifest: PaperclipPluginManifestV1 = {
-  id: "paperclipai.plugin-orchestration-smoke-example",
+const manifest: ThinkingMachPluginManifestV1 = {
+  id: "thinkingmach.plugin-orchestration-smoke-example",
   apiVersion: 1,
   version: "0.1.0",
   displayName: "Plugin Orchestration Smoke Example",
-  description: "First-party smoke plugin that exercises Paperclip orchestration-grade plugin APIs.",
-  author: "Paperclip",
+  description: "First-party smoke plugin that exercises ThinkingMach orchestration-grade plugin APIs.",
+  author: "ThinkingMach",
   categories: ["automation", "ui"],
   capabilities: [
     "api.routes.register",

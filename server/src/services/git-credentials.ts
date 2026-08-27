@@ -1,4 +1,4 @@
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { isGitHubDotCom } from "./github-fetch.js";
 import { secretService } from "./secrets.js";
 
@@ -14,10 +14,10 @@ import { secretService } from "./secrets.js";
  */
 
 /** Company-secret names probed for a GitHub token, in priority order. */
-export const DEFAULT_GITHUB_TOKEN_SECRET_NAMES = ["GITHUB_TOKEN", "GH_TOKEN", "PAPERCLIP_GITHUB_TOKEN"] as const;
+export const DEFAULT_GITHUB_TOKEN_SECRET_NAMES = ["GITHUB_TOKEN", "GH_TOKEN", "THINKINGMACH_GITHUB_TOKEN"] as const;
 
 /** Env var the credential helper reads the token from; never appears in argv. */
-export const GIT_CREDENTIAL_TOKEN_ENV_KEY = "PAPERCLIP_GIT_TOKEN";
+export const GIT_CREDENTIAL_TOKEN_ENV_KEY = "THINKINGMACH_GIT_TOKEN";
 
 // `!`-prefixed helpers run via `sh -c` with the credential action appended as "$1". Only the
 // `get` action answers; store/erase drain stdin and exit 0 silently. `x-access-token`
@@ -30,7 +30,7 @@ export const GIT_CREDENTIAL_TOKEN_ENV_KEY = "PAPERCLIP_GIT_TOKEN";
 // The helper is additionally installed URL-scoped (`credential.https://github.com.helper`)
 // so git does not consult it for other hosts in the first place — two independent gates.
 const GIT_CREDENTIAL_HELPER =
-  `!f() { ok=; proto=; while IFS= read -r l && [ -n "$l" ]; do case "$l" in host=github.com|host=www.github.com) ok=1;; protocol=https) proto=1;; esac; done; if [ "$1" = get ] && [ -n "$ok" ] && [ -n "$proto" ]; then printf 'username=x-access-token\\npassword=%s\\n' "$PAPERCLIP_GIT_TOKEN"; fi; }; f`;
+  `!f() { ok=; proto=; while IFS= read -r l && [ -n "$l" ]; do case "$l" in host=github.com|host=www.github.com) ok=1;; protocol=https) proto=1;; esac; done; if [ "$1" = get ] && [ -n "$ok" ] && [ -n "$proto" ]; then printf 'username=x-access-token\\npassword=%s\\n' "$THINKINGMACH_GIT_TOKEN"; fi; }; f`;
 
 export type GitCredential = {
   token: string;

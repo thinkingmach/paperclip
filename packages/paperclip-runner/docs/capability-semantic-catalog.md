@@ -1,7 +1,7 @@
 # Capability semantic catalog and authorization
 
 Capability adds a transport-neutral tool boundary over the deterministic mock
-`ControlPlanePort`. It does not contain Paperclip REST routes, authentication
+`ControlPlanePort`. It does not contain ThinkingMach REST routes, authentication
 headers, credentials, ACPX code, or a real control-plane binding.
 
 ## Public boundary
@@ -13,7 +13,7 @@ root:
 import {
   CapabilitySemanticDispatcher,
   createCapabilityProviderNeutralBinding,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 
 const dispatcher = new CapabilitySemanticDispatcher(mockPort, {
   scenario: {

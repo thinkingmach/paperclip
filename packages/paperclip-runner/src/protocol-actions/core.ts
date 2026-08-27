@@ -15,7 +15,7 @@ import { writeDocumentAction } from "./write-document.js";
 import { deepFreezeProtocolAction } from "./freeze.js";
 
 /** Core actions that are always present in an authorized runner projection. */
-export const PAPERCLIP_CORE_PROTOCOL_ACTIONS = deepFreezeProtocolAction([
+export const THINKINGMACH_CORE_PROTOCOL_ACTIONS = deepFreezeProtocolAction([
   answerStatusQuestionAction,
   blockTaskAction,
   finishTaskAction,

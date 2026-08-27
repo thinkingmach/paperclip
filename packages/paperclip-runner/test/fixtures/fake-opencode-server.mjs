@@ -11,7 +11,7 @@ const port = Number(args[args.indexOf("--port") + 1]);
 const username = process.env.OPENCODE_SERVER_USERNAME ?? "opencode";
 const password = process.env.OPENCODE_SERVER_PASSWORD ?? "";
 const expectedAuth = `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
-const session = { id: "ses_fake_1", title: "Paperclip fake" };
+const session = { id: "ses_fake_1", title: "ThinkingMach fake" };
 const clients = new Set();
 let eventConnections = 0;
 const runtimeConfig = JSON.parse(
@@ -131,7 +131,7 @@ async function mcpRequest(method, params) {
   return response.json();
 }
 
-async function callFirstPaperclipTool() {
+async function callFirstThinkingMachTool() {
   if (!mcp?.url) return;
   await mcpRequest("initialize", {
     protocolVersion: "2025-03-26",
@@ -365,7 +365,7 @@ const server = createServer(async (request, response) => {
       }
       json(response, 204, null);
       setTimeout(async () => {
-        await callFirstPaperclipTool();
+        await callFirstThinkingMachTool();
         const parsedPrompt = JSON.parse(promptPayload.parts?.[0]?.text ?? "{}");
         if (String(parsedPrompt.message ?? "").includes("native-question")) {
           pendingQuestion = nativeQuestion();

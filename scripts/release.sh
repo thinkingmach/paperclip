@@ -266,7 +266,7 @@ set_cleanup_trap
 
 # The release flow already prepares ui/dist before packaging. Reuse that output
 # so server prepack does not rebuild the UI a second time during preview/publish.
-export PAPERCLIP_RELEASE_REUSE_UI_DIST=1
+export THINKINGMACH_RELEASE_REUSE_UI_DIST=1
 
 if [ "$skip_verify" = false ]; then
   release_info ""
@@ -396,9 +396,9 @@ else
     release_fail "publish completed, but npm dist-tags or registry metadata never converged for ${TARGET_PUBLISH_VERSION}"
   fi
 
-  release_info "  Installing paperclipai@$DIST_TAG into a clean prefix..."
-  if ! verify_npm_installable "paperclipai@$DIST_TAG" "$TARGET_PUBLISH_VERSION"; then
-    release_fail "paperclipai@$DIST_TAG did not install cleanly at expected version ${TARGET_PUBLISH_VERSION}"
+  release_info "  Installing thinkingmach@$DIST_TAG into a clean prefix..."
+  if ! verify_npm_installable "thinkingmach@$DIST_TAG" "$TARGET_PUBLISH_VERSION"; then
+    release_fail "thinkingmach@$DIST_TAG did not install cleanly at expected version ${TARGET_PUBLISH_VERSION}"
   fi
   release_info "    ✓ Clean-prefix install resolved ${TARGET_PUBLISH_VERSION}"
 fi
@@ -419,7 +419,7 @@ else
   case "$channel" in
     canary|nightly|beta)
       release_info "Published $channel ${TARGET_PUBLISH_VERSION}."
-      release_info "Install with: npx paperclipai@$channel onboard"
+      release_info "Install with: npx thinkingmach@$channel onboard"
       release_info "Next step: git push ${PUBLISH_REMOTE} refs/tags/${tag_name}"
       ;;
     *)

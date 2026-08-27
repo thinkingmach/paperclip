@@ -3,7 +3,7 @@ const HONEYCOMB_QUERY_URL =
 
 export const HONEYCOMB_RUN_HASH_ATTRIBUTE = "paperclip.task.run.run_id";
 
-export async function hashPaperclipRunId(
+export async function hashThinkingMachRunId(
   runId: string,
   subtle: SubtleCrypto = globalThis.crypto.subtle,
 ): Promise<string> {
@@ -43,5 +43,5 @@ export async function buildHoneycombRunUrl(
   runId: string,
   subtle: SubtleCrypto = globalThis.crypto.subtle,
 ): Promise<string> {
-  return buildHoneycombRunQueryUrl(await hashPaperclipRunId(runId, subtle));
+  return buildHoneycombRunQueryUrl(await hashThinkingMachRunId(runId, subtle));
 }

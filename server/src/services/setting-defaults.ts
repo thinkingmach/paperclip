@@ -2,7 +2,7 @@ import {
   SETTING_DEFAULTS_ENV_KEY,
   parseSettingDefaults,
   type OperatorSettingDefaults,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { logger } from "../middleware/logger.js";
 
 export { SETTING_DEFAULTS_ENV_KEY };
@@ -12,7 +12,7 @@ export type SettingDefaultsEnv = Record<string, string | undefined>;
 let cache: { raw: string | undefined; defaults: OperatorSettingDefaults | null } | null = null;
 
 /**
- * Operator setting defaults from the `PAPERCLIP_SETTING_DEFAULTS` env var
+ * Operator setting defaults from the `THINKINGMACH_SETTING_DEFAULTS` env var
  * (JSON object validated against the shared registry). Parse-once accessor
  * keyed on the raw value, mirroring settings-visibility.ts: tests passing a
  * custom env re-parse when the raw value differs; process.env callers share

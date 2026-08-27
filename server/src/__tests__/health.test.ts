@@ -4,7 +4,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import express from "express";
 import request from "supertest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { healthRoutes } from "../routes/health.js";
 import * as devServerStatus from "../dev-server-status.js";
 import { serverVersion } from "../version.js";
@@ -97,12 +97,12 @@ describe("GET /health", () => {
 
   it("exposes public stack metadata on cloud-simulated health", async () => {
     const app = createApp(undefined, testServerInfo, undefined, {
-      PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN: "tenant-token",
-      PAPERCLIP_CLOUD_STACK_ID: "stack-1",
-      PAPERCLIP_STACK_SLUG: "acme",
-      PAPERCLIP_CLOUD_ACCOUNT_GROUP_ID: "account-group-1",
-      PAPERCLIP_PRIMARY_HOST: "acme.paperclip.app",
-      PAPERCLIP_CLOUD_API_ORIGIN: "https://app.paperclip.app",
+      THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN: "tenant-token",
+      THINKINGMACH_CLOUD_STACK_ID: "stack-1",
+      THINKINGMACH_STACK_SLUG: "acme",
+      THINKINGMACH_CLOUD_ACCOUNT_GROUP_ID: "account-group-1",
+      THINKINGMACH_PRIMARY_HOST: "acme.paperclip.app",
+      THINKINGMACH_CLOUD_API_ORIGIN: "https://app.paperclip.app",
     });
 
     const res = await request(app).get("/health");
@@ -118,7 +118,7 @@ describe("GET /health", () => {
 
   it("lists operator-hidden settings and drops unknown keys", async () => {
     const app = createApp(undefined, testServerInfo, undefined, {
-      PAPERCLIP_HIDDEN_SETTINGS: "instance.plugins,instance.adapters,instance.bogus",
+      THINKINGMACH_HIDDEN_SETTINGS: "instance.plugins,instance.adapters,instance.bogus",
     });
 
     const res = await request(app).get("/health");
@@ -529,7 +529,7 @@ describe("GET /health", () => {
   });
 
   it("reports bootstrapStatus ready for cloud-managed instances regardless of instance admin count", async () => {
-    vi.stubEnv("PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN", "test-tenant-server-token");
+    vi.stubEnv("THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN", "test-tenant-server-token");
     const { healthRoutes } = await import("../routes/health.js");
     const db = {
       execute: vi.fn().mockResolvedValue([{ "?column?": 1 }]),

@@ -34,7 +34,7 @@ function projectedView(): CapabilityIssueThreadSnapshot {
       agentLabel: "Real Codex",
       runnerLabel: "Real runnerd",
       runnerAttached: true,
-      controlPlaneLabel: "Mock Paperclip",
+      controlPlaneLabel: "Mock ThinkingMach",
       controlPlaneTooltip: "All issue records are mock.",
       replaySource: null,
     },
@@ -315,7 +315,7 @@ describe("Capability evidence redaction", () => {
   });
 
   it("withholds provider diagnostics and provider thread identity", () => {
-    expect(redactCapabilityEvidenceData("diagnostic", { message: `PAPERCLIP_API_KEY=${CANARY}` })).toEqual({
+    expect(redactCapabilityEvidenceData("diagnostic", { message: `THINKINGMACH_API_KEY=${CANARY}` })).toEqual({
       diagnostic: "withheld",
     });
     expect(

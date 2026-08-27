@@ -18,7 +18,7 @@
 // Session home: the module revalidates the descriptor and the home shape, then
 // creates the session home directory with one `mkdir -p` command. The command
 // runs inside the sandbox, so it holds no authority over a host file and no
-// authority to call the Paperclip API. The sandbox contract in
+// authority to call the ThinkingMach API. The sandbox contract in
 // `SANDBOX-REQUIREMENTS.md` treats a check that only inspects state inside the
 // sandbox as a non-boundary control, so this module keeps no owner check, no
 // mode check, and no link-type check for the session home.
@@ -27,7 +27,7 @@
 // excludes `packages/plugins/sandbox-providers/**`). So the module imports no
 // workspace package. It declares the small session shape locally through
 // {@link LoginPtySession}. The shape matches the `LoginPtySession` interface in
-// `@paperclipai/adapter-utils`, so the transport factory `createLoginPtyTransport`
+// `@thinkingmach/adapter-utils`, so the transport factory `createLoginPtyTransport`
 // accepts the session opener from this module with no adapter. The runner drives
 // the transport; the transport drives this session.
 //
@@ -138,7 +138,7 @@ export function composeLaunchLine(descriptor: LoginPtyLaunchDescriptor): string 
  * A live pseudo-terminal session for one login command. The session allocates a
  * real pseudo-terminal, streams the raw terminal output, accepts delayed input,
  * and stops the child. The shape matches the `LoginPtySession` interface in
- * `@paperclipai/adapter-utils`, so the transport factory there accepts a session
+ * `@thinkingmach/adapter-utils`, so the transport factory there accepts a session
  * opener that returns this session.
  */
 export interface LoginPtySession {
@@ -381,7 +381,7 @@ function composeLoginProfileCommand(command: string): string {
  * Creates a {@link DaytonaLoginHomeFs} bound to a Daytona `process`. It runs one
  * `mkdir -p` command on the sandbox to create the session home. The command runs
  * inside the sandbox, so it holds no authority over a host file and no authority
- * to call the Paperclip API. The real command lands against a live sandbox; a
+ * to call the ThinkingMach API. The real command lands against a live sandbox; a
  * unit test injects a fake surface instead.
  */
 export function createDaytonaLoginHomeFs(exec: DaytonaSandboxExec): DaytonaLoginHomeFs {

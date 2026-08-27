@@ -53,7 +53,7 @@ test("drafts grouped notes from the newest stable tag to the beta source", () =>
 
   const { body } = runDraft(dir, "2026.101.0-beta.0");
 
-  assert.match(body, /^# Paperclip stable draft — from beta 2026\.101\.0-beta\.0/);
+  assert.match(body, /^# ThinkingMach stable draft — from beta 2026\.101\.0-beta\.0/);
   assert.match(body, /## Features\n\n- feat\(api\)!: breaking widget API \(#5\)\n- feat: add widgets \(#2\)/);
   assert.match(body, /## Fixes\n\n- fix\(ui\): unbreak widget list \(#3\)/);
   assert.match(body, /## Other changes\n\n- chore: bump deps \(#4\)/);

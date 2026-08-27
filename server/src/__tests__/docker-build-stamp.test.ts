@@ -8,9 +8,9 @@ import { describe, expect, it } from "vitest";
  *
  * The server build runs scripts/write-build-stamp.mjs, which stamps the built
  * commit into dist/build-info.json. The build context has no .git, so the
- * script reads PAPERCLIP_BUILD_COMMIT instead. Docker exposes an ARG to the
+ * script reads THINKINGMACH_BUILD_COMMIT instead. Docker exposes an ARG to the
  * next RUN as an environment variable, but an ARG goes out of scope at the end
- * of its stage. So the build stage must declare `ARG PAPERCLIP_BUILD_COMMIT`
+ * of its stage. So the build stage must declare `ARG THINKINGMACH_BUILD_COMMIT`
  * before the server build; the production ARG alone stamps nothing, because
  * the server build already ran in the earlier stage.
  *
@@ -36,23 +36,23 @@ function stageBody(source: string, stageName: string): string {
 }
 
 describe("docker build-stamp wiring", () => {
-  it("declares PAPERCLIP_BUILD_COMMIT in the build stage before the server build", () => {
+  it("declares THINKINGMACH_BUILD_COMMIT in the build stage before the server build", () => {
     const build = stageBody(dockerfile, "build");
-    const argIdx = build.search(/^ARG PAPERCLIP_BUILD_COMMIT\b/m);
-    const serverBuildIdx = build.search(/^RUN pnpm --filter @paperclipai\/server build\b/m);
-    expect(argIdx, "build stage must declare ARG PAPERCLIP_BUILD_COMMIT").toBeGreaterThanOrEqual(0);
+    const argIdx = build.search(/^ARG THINKINGMACH_BUILD_COMMIT\b/m);
+    const serverBuildIdx = build.search(/^RUN pnpm --filter @thinkingmach\/server build\b/m);
+    expect(argIdx, "build stage must declare ARG THINKINGMACH_BUILD_COMMIT").toBeGreaterThanOrEqual(0);
     expect(serverBuildIdx, "build stage must run the server build").toBeGreaterThanOrEqual(0);
     expect(
       argIdx,
-      "ARG PAPERCLIP_BUILD_COMMIT must precede the server build so the stamp script reads it",
+      "ARG THINKINGMACH_BUILD_COMMIT must precede the server build so the stamp script reads it",
     ).toBeLessThan(serverBuildIdx);
   });
 
-  it("passes PAPERCLIP_BUILD_COMMIT as a build-arg for both image targets", () => {
-    const argLines = [...workflow.matchAll(/^\s*PAPERCLIP_BUILD_COMMIT=.*$/gm)];
+  it("passes THINKINGMACH_BUILD_COMMIT as a build-arg for both image targets", () => {
+    const argLines = [...workflow.matchAll(/^\s*THINKINGMACH_BUILD_COMMIT=.*$/gm)];
     expect(
       argLines.length,
-      "the docker workflow must pass PAPERCLIP_BUILD_COMMIT for the production and cloud builds",
+      "the docker workflow must pass THINKINGMACH_BUILD_COMMIT for the production and cloud builds",
     ).toBeGreaterThanOrEqual(2);
   });
 });

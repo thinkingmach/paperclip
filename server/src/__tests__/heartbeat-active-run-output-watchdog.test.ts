@@ -14,7 +14,7 @@ import {
   issueRecoveryActions,
   issueRelations,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

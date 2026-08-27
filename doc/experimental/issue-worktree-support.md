@@ -30,7 +30,7 @@ Projects and individual issues can set `sharedWorkspaceConcurrency` in their exe
 - `serialize`: defer a run while another live run holds the same project workspace, using the `workspace_busy` retry path.
 - `allow`: dispatch alongside a live holder on every environment.
 
-Issue settings override the project policy, which overrides the default `auto`. When concurrency is allowed and a live holder exists, Paperclip adds the holder run and issue to the dispatched task context so agents can coordinate concurrent mutations through commits. The setting is optional JSON policy data, so existing databases require no migration.
+Issue settings override the project policy, which overrides the default `auto`. When concurrency is allowed and a live holder exists, ThinkingMach adds the holder run and issue to the dispatched task context so agents can coordinate concurrent mutations through commits. The setting is optional JSON policy data, so existing databases require no migration.
 
 ## Hidden UI entrypoints
 

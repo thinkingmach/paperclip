@@ -39,7 +39,7 @@ describe("device-login credential export", () => {
   }
 
   function envFor(instanceHome: string, extra: Record<string, string> = {}): NodeJS.ProcessEnv {
-    return { PAPERCLIP_HOME: instanceHome, PAPERCLIP_INSTANCE_ID: "default", ...extra };
+    return { THINKINGMACH_HOME: instanceHome, THINKINGMACH_INSTANCE_ID: "default", ...extra };
   }
 
   function subscriptionAuth(input: { accountId: string; lastRefresh?: string; marker?: string }): Buffer {

@@ -5,7 +5,7 @@ import type {
   ConnectionGrant,
   ConnectionGrantsResponse,
   ToolConnectionCredentialPolicy,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { Identity } from "@/components/Identity";
 import { Skeleton } from "@/components/ui/skeleton";

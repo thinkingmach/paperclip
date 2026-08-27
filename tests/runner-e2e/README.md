@@ -1,9 +1,9 @@
 # Paid runner full-stack E2E
 
-This is the billable browser acceptance campaign system for Paperclip runner
+This is the billable browser acceptance campaign system for ThinkingMach runner
 profiles. It is deliberately separate from `tests/e2e`: every independently
 scheduled execution gets
-a fresh Paperclip home, embedded Postgres database, instance configuration,
+a fresh ThinkingMach home, embedded Postgres database, instance configuration,
 port, workspace, company, encrypted secrets, environment, and agent.
 
 The vocabulary is: a **campaign** is one workflow invocation against one SHA; a
@@ -30,14 +30,14 @@ Shell variables take precedence over the local file. The recognized names are:
 - `ANTHROPIC_API_KEY`
 - `OPENROUTER_API_KEY`
 - `DAYTONA_API_KEY`
-- `PAPERCLIP_E2E_DAYTONA_IMAGE` (Daytona only)
+- `THINKINGMACH_E2E_DAYTONA_IMAGE` (Daytona only)
 
 The image must be an immutable `image@sha256:...` reference. The launcher
 reports missing variable names but never prints values. It passes raw provider
 keys only to Playwright, which posts each value once to the company-secrets API.
-Paperclip receives secret references in agent/environment payloads. Provider
+ThinkingMach receives secret references in agent/environment payloads. Provider
 keys, Daytona keys, `DATABASE_URL`, and `DATABASE_MIGRATION_URL` are removed
-from the Paperclip child process.
+from the ThinkingMach child process.
 
 Never put credentials in `catalog.ts`, screenshots, fixture metadata, workflow
 inputs, or a tracked env file.
@@ -50,10 +50,10 @@ runner binaries:
 ```bash
 pnpm install
 pnpm exec playwright install chromium
-pnpm --filter @paperclipai/paperclip-runner build:runner-binaries
+pnpm --filter @thinkingmach/paperclip-runner build:runner-binaries
 ```
 
-List cells without loading credentials or starting Paperclip:
+List cells without loading credentials or starting ThinkingMach:
 
 ```bash
 pnpm test:e2e:runner -- --list
@@ -104,7 +104,7 @@ local native and direct-adapter profiles × two two-run structured-question
 workflows: 14 cells. Both prove that a required structured interaction is
 rendered, answered in the browser, and resumed once on the same task without
 duplicating the final response. The second workflow restarts the isolated
-Paperclip server while the interaction is waiting, reloads that state, and
+ThinkingMach server while the interaction is waiting, reloads that state, and
 then resumes it. The suite has no Daytona cells.
 
 The complete catalog is 66 cells (45 local and 21 Daytona) and 114 expected
@@ -117,15 +117,15 @@ values in one dimension use OR semantics; dimensions and repeated groups use
 AND semantics. `--id` is exclusive with dimension selectors and `--all`.
 `--headed`, `--ui`, and `--debug` are forwarded to Playwright. An unknown
 selector, an empty selection, or a run with no explicit selector exits before
-Paperclip starts. `--max-parallel <n>` controls the number of isolated
+ThinkingMach starts. `--max-parallel <n>` controls the number of isolated
 profile/environment/case harnesses that can overlap (default 1, also configurable
-with `PAPERCLIP_E2E_MAX_PARALLEL`). Headed/UI/debug runs are forced to one worker.
+with `THINKINGMACH_E2E_MAX_PARALLEL`). Headed/UI/debug runs are forced to one worker.
 The Plan case is still sequential internally because its turns share one task;
 it runs in parallel with unrelated scenarios.
 
 Use a single `--id` smoke test for routine local verification. Full-matrix
 parallelism is intended for GitHub Actions; raising local parallelism starts
-multiple Paperclip/Postgres/Chromium stacks and can consume substantial CPU and
+multiple ThinkingMach/Postgres/Chromium stacks and can consume substantial CPU and
 memory.
 
 Credential-free checks are:
@@ -151,12 +151,12 @@ or publish the current source locally:
 ```bash
 content_id="$(pnpm --silent test:e2e:runner:image-id)"
 source_revision="$(git rev-parse HEAD)"
-image="ghcr.io/paperclipai/paperclip-daytona-runner:e2e-content-${content_id}"
+image="ghcr.io/thinkingmach/paperclip-daytona-runner:e2e-content-${content_id}"
 if ! docker buildx imagetools inspect "$image" >/dev/null 2>&1; then
   docker buildx build \
     --platform linux/amd64 \
-    --build-arg "PAPERCLIP_RUNNER_CONTENT_ID=${content_id}" \
-    --build-arg "PAPERCLIP_RUNNER_SOURCE_REVISION=${source_revision}" \
+    --build-arg "THINKINGMACH_RUNNER_CONTENT_ID=${content_id}" \
+    --build-arg "THINKINGMACH_RUNNER_SOURCE_REVISION=${source_revision}" \
     --file docker/daytona-runner/Dockerfile \
     --tag "$image" \
     --push \
@@ -173,8 +173,8 @@ stored separately as image provenance. CI reads that provenance back from a
 reused image when it builds the controller-side provider pack, preserving the
 exact manifest match required to avoid restaging the pack into Daytona.
 
-Resolve the manifest digest and set `PAPERCLIP_E2E_DAYTONA_IMAGE` to
-`ghcr.io/paperclipai/paperclip-daytona-runner@sha256:...`. The repository
+Resolve the manifest digest and set `THINKINGMACH_E2E_DAYTONA_IMAGE` to
+`ghcr.io/thinkingmach/paperclip-daytona-runner@sha256:...`. The repository
 workflow signs that digest with Cosign/OIDC and verifies that it is publicly
 pullable, includes the provider pack, and advertises `dial_ws_loopback`,
 `dial_wss`, and `listen_ws`. The GHCR package must be configured as public;
@@ -188,7 +188,7 @@ Packaged, access-controlled evidence is written beneath
 `final-state.png`, Plan draft/revision screenshots when applicable, matcher
 outcomes, sanitized fixture/API metadata, a result record, JUnit, HTML, and a
 blob report. Failures additionally retain the Playwright trace/video, browser
-diagnostics, failure screenshot, and sanitized Paperclip/run logs when
+diagnostics, failure screenshot, and sanitized ThinkingMach/run logs when
 produced. PNG and WebM files are not pixel-inspected, so they are suitable only
 for the local results directory and access-controlled GitHub Actions artifacts.
 SVG is active content and is rejected from the packaged evidence entirely.
@@ -246,7 +246,7 @@ public structured evidence files. The Pages artifact has already had private
 visual and generated report evidence removed:
 
 ```bash
-gh run download <run-id> --repo paperclipai/paperclip --name github-pages --dir /tmp/runner-e2e-pages
+gh run download <run-id> --repo thinkingmach/paperclip --name github-pages --dir /tmp/runner-e2e-pages
 mkdir /tmp/runner-e2e-site
 tar -xf /tmp/runner-e2e-pages/artifact.tar -C /tmp/runner-e2e-site
 pnpm test:e2e:runner:dashboard -- /tmp/runner-e2e-site
@@ -255,20 +255,20 @@ pnpm test:e2e:runner:dashboard -- /tmp/runner-e2e-site --history /tmp/history.js
 ```
 
 Serve that directory with any static file server. This path does not start
-Paperclip, invoke an agent, create a Daytona lease, or consume provider tokens.
+ThinkingMach, invoke an agent, create a Daytona lease, or consume provider tokens.
 
 Before an access-controlled evidence artifact is uploaded, the launcher:
 
 1. copies only allowlisted file types;
 2. scans raw API snapshots before sanitizing them;
-3. scans the closed Paperclip home/database and workspace as streams;
+3. scans the closed ThinkingMach home/database and workspace as streams;
 4. redacts loaded exact values and known provider-key shapes from text;
 5. expands ZIP reports for secret scanning;
 6. rejects SVG and other unsafe files and fails the cell if a leak is detected;
    and
 7. verifies that a passing attempt has its final-state screenshot.
 
-The temporary Paperclip home, embedded database, raw workspace, master key,
+The temporary ThinkingMach home, embedded database, raw workspace, master key,
 and unredacted logs are removed after each attempt. Daytona teardown destroys
 the environment and any reusable leases through the public API; provider-side
 auto-stop/archive/delete values remain as cancellation backstops.
@@ -278,7 +278,7 @@ auto-stop/archive/delete values remain as cancellation backstops.
 `Runner Full-Stack E2E` has only `schedule` and `workflow_dispatch` triggers; it
 never runs for a pull request or ordinary push. Start the trusted workflow from
 the default branch. A CODEOWNER can set the optional `target_branch` input to
-any branch in `paperclipai/paperclip`. The authorization job resolves that
+any branch in `thinkingmach/paperclip`. The authorization job resolves that
 branch to one immutable commit before any checkout. A separate credential-free
 job checks out the resolved commit and regenerates `pnpm-lock.yaml` once with
 `--ignore-scripts --no-frozen-lockfile --lockfile-only`. It uploads that exact
@@ -370,7 +370,7 @@ administrators, then configure these repository variables:
 
 The job exchanges GitHub OIDC for short-lived AWS credentials; never add AWS
 access-key secrets. Its IAM role must trust only
-`repo:paperclipai/paperclip:environment:runner-e2e-history`, and permit only
+`repo:thinkingmach/paperclip:environment:runner-e2e-history`, and permit only
 Get/List/Put under the configured prefix—never Delete. Enable S3 versioning and
 Block Public Access. CloudFront reads the private bucket through Origin Access
 Control. Immutable campaign bundles live under `campaigns/<run-id>-<attempt>/`;
@@ -383,12 +383,12 @@ Actions as its source and set `RUNNER_FULL_STACK_E2E_PUBLISH_PAGES=true`.
 The publisher prunes screenshots, video, archives, and generated report trees,
 then regenerates the public dashboard before either the CloudFront-backed S3
 history or optional Pages artifact is created. Public per-attempt evidence is
-limited to allowlisted inert structured text. Databases, Paperclip homes,
+limited to allowlisted inert structured text. Databases, ThinkingMach homes,
 workspaces, raw/unredacted logs, credentials, and visual evidence are never
 published. Sanitized allowlisted `.log` copies may be public only after
 exact-value/key-shape scanning and redaction.
 
 See [FIXTURES.md](./FIXTURES.md) before adding or changing a profile,
-environment, task, matcher, or future Paperclip object fixture.
+environment, task, matcher, or future ThinkingMach object fixture.
 See [SECURITY.md](./SECURITY.md) before enabling paid dispatch, the runner
 group, or permanent public history in this public repository.

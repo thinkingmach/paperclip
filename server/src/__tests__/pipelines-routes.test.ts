@@ -30,7 +30,7 @@ import {
   projects,
   routineRuns,
   routines,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

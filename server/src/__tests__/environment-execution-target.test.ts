@@ -12,7 +12,7 @@ import {
   measureStartupStep,
   runWithoutActiveStep,
   SANDBOX_STARTUP_SPAN_ATTRS,
-} from "@paperclipai/adapter-utils/acpx-engine/startup-timing";
+} from "@thinkingmach/adapter-utils/acpx-engine/startup-timing";
 import {
   DEFAULT_SANDBOX_REMOTE_CWD,
   resolveEnvironmentExecutionTarget,
@@ -98,8 +98,8 @@ function recordParentContext() {
 describe("resolveEnvironmentExecutionTarget", () => {
   beforeEach(() => {
     mockResolveEnvironmentDriverConfigForRuntime.mockReset();
-    delete process.env.PAPERCLIP_API_URL;
-    delete process.env.PAPERCLIP_RUNTIME_API_URL;
+    delete process.env.THINKINGMACH_API_URL;
+    delete process.env.THINKINGMACH_RUNTIME_API_URL;
   });
 
   it("uses a bounded default cwd for sandbox targets when lease metadata omits remoteCwd", async () => {
@@ -140,7 +140,7 @@ describe("resolveEnvironmentExecutionTarget", () => {
     });
   });
 
-  it("keeps sandbox targets on bridge mode even when lease metadata includes a Paperclip API URL", async () => {
+  it("keeps sandbox targets on bridge mode even when lease metadata includes a ThinkingMach API URL", async () => {
     mockResolveEnvironmentDriverConfigForRuntime.mockResolvedValue({
       driver: "sandbox",
       config: {

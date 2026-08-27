@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { boardAuthService } from "./board-auth.js";
 
 describe("boardAuthService touchBoardApiKey", () => {

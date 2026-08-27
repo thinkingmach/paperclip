@@ -10,8 +10,8 @@ import type {
   IssueTreeControlPreview,
   IssueTreeHold,
   IssueWorkProduct,
-} from "@paperclipai/shared";
-import { ONBOARDING_FIRST_TASK_ORIGIN_KIND } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { ONBOARDING_FIRST_TASK_ORIGIN_KIND } from "@thinkingmach/shared";
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
@@ -227,7 +227,7 @@ vi.mock("../context/CompanyContext", () => ({
     companies: [
       {
         id: "company-1",
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix: "PAP",
         status: "active",
       },
@@ -235,7 +235,7 @@ vi.mock("../context/CompanyContext", () => ({
     selectedCompanyId: "company-1",
     selectedCompany: {
       id: "company-1",
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       status: "active",
     },
@@ -5028,7 +5028,7 @@ describe("IssueDetail", () => {
     expect(footer?.className).toContain("bg-background");
   });
 
-  it("keeps the authoritative Paperclip queue mounted after handoff promotion", async () => {
+  it("keeps the authoritative ThinkingMach queue mounted after handoff promotion", async () => {
     mockIssuesApi.get.mockResolvedValue(
       createIssue({
         status: "in_progress",

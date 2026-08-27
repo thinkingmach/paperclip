@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlarmClock, CalendarClock, ChevronDown, Loader2, Plus, UserPlus, X } from "lucide-react";
-import { buildAgentMentionHref, type Agent, type AttentionItem, type AttentionSourceKind } from "@paperclipai/shared";
+import { buildAgentMentionHref, type Agent, type AttentionItem, type AttentionSourceKind } from "@thinkingmach/shared";
 import { decisionQueuesApi } from "../api/decisionQueues";
 import { issuesApi } from "../api/issues";
 import { useToastActions } from "../context/ToastContext";

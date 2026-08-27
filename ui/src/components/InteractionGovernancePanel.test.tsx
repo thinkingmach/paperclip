@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ISSUE_THREAD_INTERACTION_KINDS as INTERACTION_KINDS,
   type InteractionResolverGovernance,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   GOVERNANCE_UNSET,
   InteractionGovernancePanel,

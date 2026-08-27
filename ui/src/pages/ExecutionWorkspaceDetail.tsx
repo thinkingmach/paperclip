@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate, useParams } from "@/lib/router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ExecutionWorkspace, Issue, Project, ProjectWorkspace, RoutineListItem, WorkspaceOperation } from "@paperclipai/shared";
+import type { ExecutionWorkspace, Issue, Project, ProjectWorkspace, RoutineListItem, WorkspaceOperation } from "@thinkingmach/shared";
 import { Copy, ExternalLink, Loader2, Play, Repeat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
@@ -721,7 +721,7 @@ function ExecutionWorkspaceRoutinesList({
       ]);
       pushToast({
         title: "Routine started",
-        body: "Paperclip created a run using this execution workspace.",
+        body: "ThinkingMach created a run using this execution workspace.",
         tone: "success",
       });
     },
@@ -731,7 +731,7 @@ function ExecutionWorkspaceRoutinesList({
     onError: (mutationError) => {
       pushToast({
         title: "Routine run failed",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not start the routine run.",
+        body: mutationError instanceof Error ? mutationError.message : "ThinkingMach could not start the routine run.",
         tone: "error",
       });
     },
@@ -1219,7 +1219,7 @@ export function ExecutionWorkspaceDetail() {
               <CardHeader>
                 <CardTitle>Workspace settings</CardTitle>
                 <CardDescription>
-                  Edit the concrete path, repo, branch, provisioning, teardown, and runtime overrides attached to this execution workspace. Saved changes affect future runs; Paperclip may refresh or replace a reused workspace when config changes.
+                  Edit the concrete path, repo, branch, provisioning, teardown, and runtime overrides attached to this execution workspace. Saved changes affect future runs; ThinkingMach may refresh or replace a reused workspace when config changes.
                 </CardDescription>
                 <CardAction>
                   <Button
@@ -1328,7 +1328,7 @@ export function ExecutionWorkspaceDetail() {
                   <>
                     <div className="space-y-4">
                       <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Lifecycle commands</div>
-                      <Field label="Provision command" hint="Runs when Paperclip prepares this execution workspace">
+                      <Field label="Provision command" hint="Runs when ThinkingMach prepares this execution workspace">
                         <Textarea
                           className="min-h-20 font-mono"
                           value={form.provisionCommand}
@@ -1488,7 +1488,7 @@ export function ExecutionWorkspaceDetail() {
                         </div>
                       ) : null}
                       <p className="text-sm text-muted-foreground">
-                        Paperclip checks fixed ports again when a service starts and rejects cross-workspace conflicts.
+                        ThinkingMach checks fixed ports again when a service starts and rejects cross-workspace conflicts.
                       </p>
                     </div>
                   ) : null}

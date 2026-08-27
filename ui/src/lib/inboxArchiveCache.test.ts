@@ -1,5 +1,5 @@
 import { QueryClient, QueryObserver } from "@tanstack/react-query";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   beginLocalInboxArchive,

@@ -1,5 +1,5 @@
-import { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
-import type { AdapterAuthSignal } from "@paperclipai/shared";
+import { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@thinkingmach/shared";
+import type { AdapterAuthSignal } from "@thinkingmach/shared";
 
 /**
  * The environment and auth state the connect step reads, as something a story
@@ -50,7 +50,7 @@ export function resetOnboardingFixtureState(): void {
 }
 
 /**
- * `managedByPaperclip` and a non-local driver are what `resolveManagedSandbox
+ * `managedByThinkingMach` and a non-local driver are what `resolveManagedSandbox
  * EnvironmentId` looks for; `config.provider` is what the capability lookup keys
  * on. All three have to line up or the environment resolves and the panel still
  * does not appear.
@@ -65,7 +65,7 @@ export function storybookEnvironments(): unknown[] {
       driver: "sandbox",
       status: "active",
       config: { provider: STORYBOOK_SANDBOX_PROVIDER },
-      metadata: { managedByPaperclip: true },
+      metadata: { managedByThinkingMach: true },
     },
   ];
 }

@@ -1,15 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import {
-  Check,
-  ChevronDown,
-  Folder as FolderIcon,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Trash2,
-  X,
-} from "lucide-react";
-import type { FolderKind, FolderListItem, FolderListResult } from "@paperclipai/shared";
+import { Check, ChevronDown, Folder as FolderIcon, MoreHorizontal, Plus, Search, Trash2, X,  } from "lucide-react";
+import type { FolderKind, FolderListItem, FolderListResult } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

@@ -8,30 +8,30 @@ import type {
   AdapterEnvironmentTestResult,
   AdapterExecutionContext,
   AdapterExecutionResult,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   ensureAdapterExecutionTargetCommandResolvable,
   readAdapterExecutionTarget,
   resolveAdapterExecutionTargetCwd,
   runAdapterExecutionTargetShellCommand,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import {
   DEFAULT_ACP_ENGINE_MODE,
   DEFAULT_ACP_ENGINE_NON_INTERACTIVE_PERMISSIONS,
   DEFAULT_ACP_ENGINE_PERMISSION_MODE,
   DEFAULT_ACP_ENGINE_WARM_HANDLE_IDLE_MS,
-} from "@paperclipai/adapter-utils/acpx-engine/constants";
+} from "@thinkingmach/adapter-utils/acpx-engine/constants";
 import type {
   AcpxEngineExecutorOptions,
   AcpxRemoteManagedHomeContext,
   AcpxRemoteManagedHomeResult,
-} from "@paperclipai/adapter-utils/acpx-engine/execute";
+} from "@thinkingmach/adapter-utils/acpx-engine/execute";
 import {
   asNumber,
   asString,
   parseObject,
-} from "@paperclipai/adapter-utils/server-utils";
-import { createWorkspaceRestoreTeardown } from "@paperclipai/adapter-utils/workspace-restore-teardown";
+} from "@thinkingmach/adapter-utils/server-utils";
+import { createWorkspaceRestoreTeardown } from "@thinkingmach/adapter-utils/workspace-restore-teardown";
 import { DEFAULT_GEMINI_LOCAL_MODEL } from "../index.js";
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
@@ -256,7 +256,7 @@ export function createGeminiAcpExecutor(options: GeminiAcpExecutorOptions = {}):
   return async (ctx) => {
     let currentExecutor = executor;
     if (!currentExecutor) {
-      const { createAcpxEngineExecutor } = await import("@paperclipai/adapter-utils/acpx-engine/execute");
+      const { createAcpxEngineExecutor } = await import("@thinkingmach/adapter-utils/acpx-engine/execute");
       currentExecutor = createAcpxEngineExecutor(withGeminiAcpDefaults(options));
       executor = currentExecutor;
     }
@@ -406,7 +406,7 @@ export async function testGeminiAcpEnvironment(
       code: "gemini_acp_remote_target",
       level: "info",
       message: "Gemini ACP will run against the remote execution environment.",
-      hint: "Remote ACP requires a bidirectional process target such as SSH or Paperclip's sandbox process-session bridge.",
+      hint: "Remote ACP requires a bidirectional process target such as SSH or ThinkingMach's sandbox process-session bridge.",
     });
   }
 

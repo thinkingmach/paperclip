@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "packageName": "@paperclipai/skills-catalog",
-  "packageVersion": "0.3.1",
-  "generatedAt": "2026-08-11T15:05:34.526Z",
+  "packageName": "@thinkingmach/skills-catalog",
+  "packageVersion": "0.3.3",
+  "generatedAt": "2026-09-01T18:21:16.046Z",
   "skills": [
     {
-      "id": "paperclipai:bundled:docs:doc-maintenance",
-      "key": "paperclipai/bundled/docs/doc-maintenance",
+      "id": "thinkingmach:bundled:docs:doc-maintenance",
+      "key": "thinkingmach/bundled/docs/doc-maintenance",
       "kind": "bundled",
       "category": "docs",
       "slug": "doc-maintenance",
@@ -32,20 +32,20 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 4478,
-          "sha256": "fb0353386c5e5e5e13bcbb3233f044e3dccecf371f429d6328f26c26d7cb6169"
+          "sizeBytes": 4479,
+          "sha256": "7e08e99775cebab0006ae20bb381132d5926894ab85b9c935920a8d910b937aa"
         }
       ],
-      "contentHash": "sha256:2e02299210fd17c1fe1867b4ee8c144a11b6fe1fe481f83b8268cfbaaf10f9aa"
+      "contentHash": "sha256:57534a5d3154f34ffc53208d50e8351980323550fb792c96a78d807d4369a0e7"
     },
     {
-      "id": "paperclipai:bundled:paperclip-operations:issue-triage",
-      "key": "paperclipai/bundled/paperclip-operations/issue-triage",
+      "id": "thinkingmach:bundled:paperclip-operations:issue-triage",
+      "key": "thinkingmach/bundled/paperclip-operations/issue-triage",
       "kind": "bundled",
       "category": "paperclip-operations",
       "slug": "issue-triage",
       "name": "issue-triage",
-      "description": "Triage Paperclip inbox issues that are stale, blocked, in-review, or assigned-but-not-progressing, and decide a single next action per issue (resume, reassign, unblock, escalate, or close).",
+      "description": "Triage ThinkingMach inbox issues that are stale, blocked, in-review, or assigned-but-not-progressing, and decide a single next action per issue (resume, reassign, unblock, escalate, or close).",
       "path": "catalog/bundled/paperclip-operations/issue-triage",
       "entrypoint": "SKILL.md",
       "trustLevel": "markdown_only",
@@ -67,15 +67,15 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 4042,
-          "sha256": "df5bdc8bf5e017b7ba5f70a4b5323fad51d0c323278f386580f26cf43ad09160"
+          "sizeBytes": 4046,
+          "sha256": "529f296651068847426cc007c951150c5a70907227296a67a9fff8321eef07bb"
         }
       ],
-      "contentHash": "sha256:88dc13560371fb364963782cb4f6eeb4090fcde92ee3774479428ed6b90e11c1"
+      "contentHash": "sha256:6715d20fee33d00a09434f4261982f460f51a06529b0228bb9de09cdbad1b551"
     },
     {
-      "id": "paperclipai:bundled:paperclip-operations:reflection-coach",
-      "key": "paperclipai/bundled/paperclip-operations/reflection-coach",
+      "id": "thinkingmach:bundled:paperclip-operations:reflection-coach",
+      "key": "thinkingmach/bundled/paperclip-operations/reflection-coach",
       "kind": "bundled",
       "category": "paperclip-operations",
       "slug": "reflection-coach",
@@ -102,20 +102,20 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 12028,
-          "sha256": "083d5fa8dc43c3ce7747e89c1afb6f6f42d0603a31808bffc5f8e56735f2d865"
+          "sizeBytes": 12068,
+          "sha256": "2e632b581e16f5f57a590f85abb7a00e34e2a533a815fa260fb1e0490a8bcfa0"
         }
       ],
-      "contentHash": "sha256:f2592d81f616628a3eba92636616424f2eed82ec22bb504240a58f6be115e407"
+      "contentHash": "sha256:7de2b9504b25897582a89882e36f806f428e3b2899e00b817c9dec3027d26a81"
     },
     {
-      "id": "paperclipai:bundled:paperclip-operations:status-card-query",
-      "key": "paperclipai/bundled/paperclip-operations/status-card-query",
+      "id": "thinkingmach:bundled:paperclip-operations:status-card-query",
+      "key": "thinkingmach/bundled/paperclip-operations/status-card-query",
       "kind": "bundled",
       "category": "paperclip-operations",
       "slug": "status-card-query",
       "name": "status-card-query",
-      "description": "Create and maintain agent-authored Paperclip status cards, or compile a prose interest prompt into bounded CompanySearchQuery objects and write the first summary from the assigned Summarizer run.",
+      "description": "Create and maintain agent-authored ThinkingMach status cards, or compile a prose interest prompt into bounded CompanySearchQuery objects and write the first summary from the assigned Summarizer run.",
       "path": "catalog/bundled/paperclip-operations/status-card-query",
       "entrypoint": "SKILL.md",
       "trustLevel": "markdown_only",
@@ -137,20 +137,20 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 6368,
-          "sha256": "0c6140f51d503cbadc98723ce54c0def48e7e31ea159b0935b8ad6369291498a"
+          "sizeBytes": 6408,
+          "sha256": "cdc337799756a2579a80cbfa167ec1d22243f527c33722985b492a44202ddf4d"
         }
       ],
-      "contentHash": "sha256:2b6e53bf8491f027afdbd6961ad84f677cfd385a0a6a73616ea84111ca8886ed"
+      "contentHash": "sha256:fb43c69d54b3a52a38328bdc23f7a12ee39bba86eb8ffdd83c7d895d6d1eaaec"
     },
     {
-      "id": "paperclipai:bundled:paperclip-operations:summarize-status",
-      "key": "paperclipai/bundled/paperclip-operations/summarize-status",
+      "id": "thinkingmach:bundled:paperclip-operations:summarize-status",
+      "key": "thinkingmach/bundled/paperclip-operations/summarize-status",
       "kind": "bundled",
       "category": "paperclip-operations",
       "slug": "summarize-status",
       "name": "summarize-status",
-      "description": "Write a short, colloquial summary for a Paperclip summary slot: open with the 1–3 specific, concrete actions the reader needs to take right now to unblock the work, then a brief plain-language status, streaming progress as it works.",
+      "description": "Write a short, colloquial summary for a ThinkingMach summary slot: open with the 1–3 specific, concrete actions the reader needs to take right now to unblock the work, then a brief plain-language status, streaming progress as it works.",
       "path": "catalog/bundled/paperclip-operations/summarize-status",
       "entrypoint": "SKILL.md",
       "trustLevel": "markdown_only",
@@ -172,20 +172,20 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 8877,
-          "sha256": "4cb3d177f5d16e3cc2052d2f80e7fb245ab95e79c1e947abdc84cd4ee3d8c61e"
+          "sizeBytes": 8896,
+          "sha256": "873dea696cec769a74f0741c0e4aea27a04eb3db6442f78f3cbae7d9e5aea019"
         }
       ],
-      "contentHash": "sha256:3e49ee2b8d83d1371fb0f59197bb96c46b64f722540405f46d4a5a756fbe1b89"
+      "contentHash": "sha256:7956034abcd950ed1005881bb0e42a73359a5e137b92c3509ec8eb680045c4b7"
     },
     {
-      "id": "paperclipai:bundled:paperclip-operations:task-planning",
-      "key": "paperclipai/bundled/paperclip-operations/task-planning",
+      "id": "thinkingmach:bundled:paperclip-operations:task-planning",
+      "key": "thinkingmach/bundled/paperclip-operations/task-planning",
       "kind": "bundled",
       "category": "paperclip-operations",
       "slug": "task-planning",
       "name": "task-planning",
-      "description": "Turn a Paperclip issue or request into a structured implementation plan with child task graph, blockers, owners, and acceptance criteria, then save it as the issue `plan` document.",
+      "description": "Turn a ThinkingMach issue or request into a structured implementation plan with child task graph, blockers, owners, and acceptance criteria, then save it as the issue `plan` document.",
       "path": "catalog/bundled/paperclip-operations/task-planning",
       "entrypoint": "SKILL.md",
       "trustLevel": "markdown_only",
@@ -207,20 +207,20 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 4938,
-          "sha256": "9c52a44a30ec8d306119da51bf298e9e3e6c382a9a9559ffd3054bf5e0c75f36"
+          "sizeBytes": 4951,
+          "sha256": "239833ffed85f7240c2afed9c564f06084c473b2928d7045be4ce4a59ce31b15"
         }
       ],
-      "contentHash": "sha256:487c3116eead89fef4f71c984329c41836bd69951b7ef9ed8736c69435e02438"
+      "contentHash": "sha256:75910b3340af51e43b12a7b4e9858ef5fda6e1925e3c6ac897e3f337b36d8651"
     },
     {
-      "id": "paperclipai:bundled:product:paperclip-capsules",
-      "key": "paperclipai/bundled/product/paperclip-capsules",
+      "id": "thinkingmach:bundled:product:paperclip-capsules",
+      "key": "thinkingmach/bundled/product/paperclip-capsules",
       "kind": "bundled",
       "category": "product",
       "slug": "paperclip-capsules",
       "name": "paperclip-capsules",
-      "description": "Generate, implement, or review Paperclip capsule visuals. Use for capsule art, agent capsules, heartbeat status capsules, identicons, capsule banks, or brand-usage validation.",
+      "description": "Generate, implement, or review ThinkingMach capsule visuals. Use for capsule art, agent capsules, heartbeat status capsules, identicons, capsule banks, or brand-usage validation.",
       "path": "catalog/bundled/product/paperclip-capsules",
       "entrypoint": "SKILL.md",
       "trustLevel": "markdown_only",
@@ -245,39 +245,39 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 5831,
-          "sha256": "dd659ccb46e105336eb00fbe689b1d5531347fc69493c3156390d40ee413c93e"
+          "sizeBytes": 5856,
+          "sha256": "36352a489e006b3fef5aa7b100bebc24e0f9651b921fc83534edc69c1e0d400d"
         },
         {
           "path": "references/generator-workflows.md",
           "kind": "reference",
-          "sizeBytes": 4356,
-          "sha256": "b5f72e5b6683e8f93f2d852e84c2cc19e6ab438b250bf777dfb2480dd4f6e1b6"
+          "sizeBytes": 4377,
+          "sha256": "b446c5d3168ad328da7d66e31d8d11b96debe4e3b8fa300fd5d8c16aab95ae91"
         },
         {
           "path": "references/hero-capsule-bank.md",
           "kind": "reference",
-          "sizeBytes": 5981,
-          "sha256": "ec3d34113aa7bb527560d1eb4d8ab7667c73e18284c85a2019122743a767525a"
+          "sizeBytes": 5987,
+          "sha256": "0cd344f2f9f68da2b5a3aecb619749420878bc23ce6e6e1e82d0e548abb4663b"
         },
         {
           "path": "references/identicon-prototyper.md",
           "kind": "reference",
-          "sizeBytes": 6669,
-          "sha256": "0b19419efa1396a402097decabe24ea9ae649678569449c8ce855e0678df6bfe"
+          "sizeBytes": 6675,
+          "sha256": "e6e6561fe533770880fbdfab9585add844aec037fa5e08390d6dfa6126f4556d"
         },
         {
           "path": "references/individual-status-capsules.md",
           "kind": "reference",
-          "sizeBytes": 5031,
-          "sha256": "be1f2eccf96b4d2deefe45b3bc1dd0a3597278472c2ffedadc43c57161e9103d"
+          "sizeBytes": 5034,
+          "sha256": "07c87af74e7523b5db7c3389507f84833700ed88b31edf4cafcb77d115fd8fa2"
         }
       ],
-      "contentHash": "sha256:a2b26cf6895affeeb70c85567a061094450a59bd3c4fdcf28ee65858599ac12c"
+      "contentHash": "sha256:e4329e984a306858a97c0e36b734e80a8f825decf47e7ddd3a22210d21740ba9"
     },
     {
-      "id": "paperclipai:bundled:product:wireframe",
-      "key": "paperclipai/bundled/product/wireframe",
+      "id": "thinkingmach:bundled:product:wireframe",
+      "key": "thinkingmach/bundled/product/wireframe",
       "kind": "bundled",
       "category": "product",
       "slug": "wireframe",
@@ -305,8 +305,8 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 11509,
-          "sha256": "6992047cc97b67211cc8c1183718ab9aa26b8afc34c70d54d20558c215daaf48"
+          "sizeBytes": 11510,
+          "sha256": "24864cf6c56c58daa5cf54c6ebe2e220811770624176deae6d55e283d6ce82a3"
         },
         {
           "path": "assets/site-template.html",
@@ -345,11 +345,11 @@
           "sha256": "017260d2216859d57e5fa869e0efc6b88c7ed4d8a8a4f5af04fe89a3ef2445bd"
         }
       ],
-      "contentHash": "sha256:7106d84fc9db2053090f692706e41cfc586e7dd85a44f568e3319c4eefbdde46"
+      "contentHash": "sha256:f2bd63a2527738b5b47eed576095b5ac0ba30ad9a2a47699e4185241f3887e23"
     },
     {
-      "id": "paperclipai:bundled:quality:qa-acceptance",
-      "key": "paperclipai/bundled/quality/qa-acceptance",
+      "id": "thinkingmach:bundled:quality:qa-acceptance",
+      "key": "thinkingmach/bundled/quality/qa-acceptance",
       "kind": "bundled",
       "category": "quality",
       "slug": "qa-acceptance",
@@ -376,15 +376,15 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 3861,
-          "sha256": "c631b437ab26d104af6cdb963d8f679a9341439041b3cb3ec8835f4ff551b378"
+          "sizeBytes": 3862,
+          "sha256": "54f684ffa6de8fedaac12973854320ccb115b5207446286dbdd875d6162272bb"
         }
       ],
-      "contentHash": "sha256:32372dacaf62e93454b9855968c4eec96456ba78b509f450b3dfaa48e31ef356"
+      "contentHash": "sha256:f2188e8700a1dd32b47391fa4708e542b979cd0114d88ecf684ff141f2a1aaf1"
     },
     {
-      "id": "paperclipai:bundled:software-development:github-pr-workflow",
-      "key": "paperclipai/bundled/software-development/github-pr-workflow",
+      "id": "thinkingmach:bundled:software-development:github-pr-workflow",
+      "key": "thinkingmach/bundled/software-development/github-pr-workflow",
       "kind": "bundled",
       "category": "software-development",
       "slug": "github-pr-workflow",
@@ -409,15 +409,15 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 3970,
-          "sha256": "f498ec4ebb1779dea37adeb1db8a8b22316282798e35ee02e2fc5ff627d7e261"
+          "sizeBytes": 3971,
+          "sha256": "67c252ab463fb7c55870b66f7b050ba9a5f7af63c21f7a941a0f02f9515b0932"
         }
       ],
-      "contentHash": "sha256:90f278c89aa0711be150c1cd2456ca25620d02f36995b113ca9837d756a37f6c"
+      "contentHash": "sha256:458eb6c886a09775f7b3380adc2b6e7fdc2bc7f8c5c995389e66d2aaf16f4271"
     },
     {
-      "id": "paperclipai:optional:browser:agent-browser",
-      "key": "paperclipai/optional/browser/agent-browser",
+      "id": "thinkingmach:optional:browser:agent-browser",
+      "key": "thinkingmach/optional/browser/agent-browser",
       "kind": "optional",
       "category": "browser",
       "slug": "agent-browser",
@@ -444,15 +444,15 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 5133,
-          "sha256": "362f7b9d02297782bc6f0c093f495b8a0304a75bcf4b42e5c280a42b1f757b7d"
+          "sizeBytes": 5134,
+          "sha256": "2b5332f592cee61880f5038097fe9492a9cfc5b9b667690822f0b631a459b86f"
         }
       ],
-      "contentHash": "sha256:eabb2c9f7b5e1a27ebb1e05a711d61433a266478154cd671a685e99e67aadea2"
+      "contentHash": "sha256:e25d23d82152d130c098fd2fb5a503861ffe8f77156bcb1e2f151aa44cf3265e"
     },
     {
-      "id": "paperclipai:optional:content:release-announcement",
-      "key": "paperclipai/optional/content/release-announcement",
+      "id": "thinkingmach:optional:content:release-announcement",
+      "key": "thinkingmach/optional/content/release-announcement",
       "kind": "optional",
       "category": "content",
       "slug": "release-announcement",
@@ -479,15 +479,15 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 6945,
-          "sha256": "d745cca96350518fabae14f5c407d779e1df2c5d091b5b4a5c55bb888b569e5f"
+          "sizeBytes": 6967,
+          "sha256": "d2350c3a530c8f6393133d0d5962289266cdc4ee9106bff082309ae9d98d3de8"
         }
       ],
-      "contentHash": "sha256:efe8ea89b552df95222609867c9c75f1b40e16f457d34e7e4a124f54daa33efa"
+      "contentHash": "sha256:5859ec9a21384ce4a47c1a615eae2ccec3a06d42231f3618e9e7c8218588d2b7"
     },
     {
-      "id": "paperclipai:optional:content:simplified-english",
-      "key": "paperclipai/optional/content/simplified-english",
+      "id": "thinkingmach:optional:content:simplified-english",
+      "key": "thinkingmach/optional/content/simplified-english",
       "kind": "optional",
       "category": "content",
       "slug": "simplified-english",
@@ -515,20 +515,20 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 1578,
-          "sha256": "a0f7385599873910e2fabf400346016a07dacbc7ece27c0e3616ae8fd94ebfbb"
+          "sizeBytes": 1579,
+          "sha256": "dd06c878a60cdff4c5ed9d4a02db19ce2d2d913359ab0907eb82c7338812c5a8"
         }
       ],
-      "contentHash": "sha256:642321f40d51e0125df05c6fbace49aeb07ec30392058756909c259c9c5eac6a"
+      "contentHash": "sha256:593e3c3b63526db04f9bff22176e99d055c2a226b68e8b106196dabdf4ef3541"
     },
     {
-      "id": "paperclipai:optional:finance:ramp",
-      "key": "paperclipai/optional/finance/ramp",
+      "id": "thinkingmach:optional:finance:ramp",
+      "key": "thinkingmach/optional/finance/ramp",
       "kind": "optional",
       "category": "finance",
       "slug": "ramp",
       "name": "ramp",
-      "description": "Fetch and follow Ramp's published agent playbooks inside Paperclip, with mandatory approval gates for spend, incorporation, cards, account setup, and other financial actions.",
+      "description": "Fetch and follow Ramp's published agent playbooks inside ThinkingMach, with mandatory approval gates for spend, incorporation, cards, account setup, and other financial actions.",
       "path": "catalog/optional/finance/ramp",
       "entrypoint": "SKILL.md",
       "trustLevel": "markdown_only",
@@ -552,15 +552,15 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 7016,
-          "sha256": "698cd69ebf2f2481ed83c8e9477b56ae78288cc4c751d7d35f649ff2483802a3"
+          "sizeBytes": 7068,
+          "sha256": "61afba109ab44fe350f77c561570acc6ad2cfcd7fdd6d1f7d26b7cb0fcdb757b"
         }
       ],
-      "contentHash": "sha256:276d85e98a4732f278204e26438aa95fde158dd2d15c1e427c4c7c7d492e769d"
+      "contentHash": "sha256:887832a51193c7a6a127deb389843eba89072867c6498f73a36c851ef7cf43f3"
     },
     {
-      "id": "paperclipai:optional:product:design-critique",
-      "key": "paperclipai/optional/product/design-critique",
+      "id": "thinkingmach:optional:product:design-critique",
+      "key": "thinkingmach/optional/product/design-critique",
       "kind": "optional",
       "category": "product",
       "slug": "design-critique",
@@ -587,15 +587,15 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 4851,
-          "sha256": "022e619baf6cc25725946279cb8052d22af090dd6cd6dc8c20f17867f71a5d8e"
+          "sizeBytes": 4852,
+          "sha256": "97075d1b5c4e79672623961945f4f51f986fd43a4ea925a8b8d01a41e0c77608"
         }
       ],
-      "contentHash": "sha256:429f94df398a0697042b5bbe4755b1ff1a230aa5f41d99118ad37493ac65d21c"
+      "contentHash": "sha256:88875372167a3ef76a2a17d55910a65d6a1dff8d391982ccc98c823fc69a3fbd"
     },
     {
-      "id": "paperclipai:optional:research:last30days",
-      "key": "paperclipai/optional/research/last30days",
+      "id": "thinkingmach:optional:research:last30days",
+      "key": "thinkingmach/optional/research/last30days",
       "kind": "optional",
       "category": "research",
       "slug": "last30days",
@@ -1115,13 +1115,13 @@
       }
     },
     {
-      "id": "paperclipai:optional:software-development:prepare-mcp-integration",
-      "key": "paperclipai/optional/software-development/prepare-mcp-integration",
+      "id": "thinkingmach:optional:software-development:prepare-mcp-integration",
+      "key": "thinkingmach/optional/software-development/prepare-mcp-integration",
       "kind": "optional",
       "category": "software-development",
       "slug": "prepare-mcp-integration",
       "name": "prepare-mcp-integration",
-      "description": "Prepare MCP/vendor integrations through cited research, a content PR, exact-revision human approval, and one governed Paperclip connector PR per approved connection. Use for new integration research and delivery; not for ad hoc connector coding that bypasses the playbooks.",
+      "description": "Prepare MCP/vendor integrations through cited research, a content PR, exact-revision human approval, and one governed ThinkingMach connector PR per approved connection. Use for new integration research and delivery; not for ad hoc connector coding that bypasses the playbooks.",
       "path": "catalog/optional/software-development/prepare-mcp-integration",
       "entrypoint": "SKILL.md",
       "trustLevel": "markdown_only",
@@ -1149,17 +1149,17 @@
         {
           "path": "SKILL.md",
           "kind": "skill",
-          "sizeBytes": 12409,
-          "sha256": "5278d288a0cbfe10fdda4ef3d99cf61e6ed068f4b6c1282406b0e001c9f45253"
+          "sizeBytes": 12455,
+          "sha256": "157f92bf924e62c161b9123a060fba52102420644775237da2d84d4350250f62"
         },
         {
           "path": "examples/notion-mcp-research-gate.md",
           "kind": "markdown",
-          "sizeBytes": 1900,
-          "sha256": "944b13ac67c06c65643eb236e856f1479106749861535648d29334f84cf1b50b"
+          "sizeBytes": 1910,
+          "sha256": "808d163c24cf669b9b3e7c3a925909242e237c21021e1441a29bfd34a72db133"
         }
       ],
-      "contentHash": "sha256:84f2a28d7d004393719684f2b435e5ee01ddc58591e0dfeb73d72c7605db7f49"
+      "contentHash": "sha256:0847dff8043fb7ca3418b005e23fee66e55e5b72099931e5f0d4c81f7d95a127"
     }
   ]
 }

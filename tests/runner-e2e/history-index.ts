@@ -49,7 +49,7 @@ function sourceCell(campaign: RunnerE2EHistoryCampaign) {
   const sha = campaign.source.sha;
   const shortSha = sha?.slice(0, 8) ?? "Unknown";
   const shaLabel = /^[0-9a-f]{40}$/i.test(sha ?? "")
-    ? `<a href="https://github.com/paperclipai/paperclip/commit/${html(sha)}">${html(shortSha)}</a>`
+    ? `<a href="https://github.com/thinkingmach/paperclip/commit/${html(sha)}">${html(shortSha)}</a>`
     : html(shortSha);
   const workflow = campaign.source.workflowRunUrl
     ? `<a class="secondary-link" href="${html(campaign.source.workflowRunUrl)}">Workflow run</a>`
@@ -128,10 +128,10 @@ export function renderRunnerHistoryIndex(history: RunnerE2EHistoryIndex) {
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <title>Runner E2E Campaigns · Paperclip</title>
+  <title>Runner E2E Campaigns · ThinkingMach</title>
   <style>
-    @font-face { font-family: "Paperclip Inter"; src: url("assets/InterVariable.woff2") format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
-    :root { color-scheme: light dark; --background:#fff; --foreground:#0a0a0a; --muted:#60666a; --border:#e5e5e5; --raised:#fafafa; --pass:#188a3c; --pass-bg:#dcfce7; --fail:#991b1b; --fail-bg:#fee2e2; --font:"Paperclip Inter",Inter,ui-sans-serif,system-ui,-apple-system,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @font-face { font-family: "ThinkingMach Inter"; src: url("assets/InterVariable.woff2") format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
+    :root { color-scheme: light dark; --background:#fff; --foreground:#0a0a0a; --muted:#60666a; --border:#e5e5e5; --raised:#fafafa; --pass:#188a3c; --pass-bg:#dcfce7; --fail:#991b1b; --fail-bg:#fee2e2; --font:"ThinkingMach Inter",Inter,ui-sans-serif,system-ui,-apple-system,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
     @media (prefers-color-scheme: dark) { :root { --background:#141413; --foreground:#fafafa; --muted:#a3a3a3; --border:rgb(255 255 255 / 12%); --raised:#1c1c1b; --pass:#34d06f; --pass-bg:#22c55e1f; --fail:#ef4444; --fail-bg:#dc26262e; } }
     * { box-sizing:border-box; }
     body { margin:0; background:var(--background); color:var(--foreground); font:14px/1.45 var(--font); }
@@ -185,9 +185,9 @@ export function renderRunnerHistoryIndex(history: RunnerE2EHistoryIndex) {
 </head>
 <body>
   <div class="brand-bar">
-    <a class="brand-lockup" href="https://paperclip.ing" aria-label="Paperclip home">
+    <a class="brand-lockup" href="https://thinkingmach.com" aria-label="ThinkingMach home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/></svg>
-      <span>Paperclip</span>
+      <span>ThinkingMach</span>
     </a>
     <span class="brand-context">Quality engineering · Runner acceptance</span>
   </div>
@@ -196,7 +196,7 @@ export function renderRunnerHistoryIndex(history: RunnerE2EHistoryIndex) {
       <div>
         <p class="eyebrow">Historical test reporting</p>
         <h1>Runner E2E campaigns</h1>
-        <p class="lede">Each row is one workflow campaign against a Paperclip revision. Open a report for its configuration matrices, matchers, per-test billing, and sanitized structured evidence. Visual evidence remains in access-controlled workflow artifacts.</p>
+        <p class="lede">Each row is one workflow campaign against a ThinkingMach revision. Open a report for its configuration matrices, matchers, per-test billing, and sanitized structured evidence. Visual evidence remains in access-controlled workflow artifacts.</p>
       </div>
       <div class="summary" aria-label="History summary">
         <div class="metric"><strong>${campaigns.length}</strong><span>Campaigns</span></div>

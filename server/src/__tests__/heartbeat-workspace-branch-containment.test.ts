@@ -30,7 +30,7 @@ import {
   projects,
   projectWorkspaces,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -135,7 +135,7 @@ async function createGitRepo() {
   const repoRoot = await realpath(await mkdtemp(path.join(os.tmpdir(), "paperclip-branch-containment-repo-")));
   await runGit(repoRoot, ["init"]);
   await runGit(repoRoot, ["config", "user.email", "paperclip-test@example.com"]);
-  await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+  await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
   await writeFile(path.join(repoRoot, "README.md"), "branch containment\n", "utf8");
   await runGit(repoRoot, ["add", "README.md"]);
   await runGit(repoRoot, ["commit", "-m", "initial"]);
@@ -290,7 +290,7 @@ function readAdapterWorkspace(input: unknown) {
   if (!cwd || !branchName || !executionWorkspaceId) {
     throw new Error("Adapter input is missing execution workspace context");
   }
-  const wake = context.paperclipWake as { executionWorkspace?: { branchName?: string } } | undefined;
+  const wake = context.thinkingmachWake as { executionWorkspace?: { branchName?: string } } | undefined;
   if (wake?.executionWorkspace?.branchName !== branchName) {
     throw new Error("Adapter wake payload is missing the execution workspace branch pin");
   }

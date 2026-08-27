@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { runChildProcess } from "@paperclipai/adapter-utils/server-utils";
+import { runChildProcess } from "@thinkingmach/adapter-utils/server-utils";
 import { prepareCursorSandboxCommand } from "./remote-command.js";
 
 function createLocalSandboxRunner() {

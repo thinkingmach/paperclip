@@ -21,7 +21,7 @@ export function withoutAmbientOpenCodeCommand(
   environment: NodeJS.ProcessEnv,
 ): NodeJS.ProcessEnv {
   const sanitized = { ...environment };
-  delete sanitized.PAPERCLIP_OPENCODE_COMMAND;
+  delete sanitized.THINKINGMACH_OPENCODE_COMMAND;
   return sanitized;
 }
 
@@ -76,7 +76,7 @@ export function trustedOpenCodeLaunchBinding(
     }
     if (!snapshotIsValid) {
       throw new Error(
-        `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or PAPERCLIP_OPENCODE_COMMAND fallback`,
+        `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or THINKINGMACH_OPENCODE_COMMAND fallback`,
       );
     }
     return metadata!;
@@ -95,7 +95,7 @@ export function trustedOpenCodeLaunchBinding(
       sourceFd = openSync(command, "r");
     } catch {
       throw new Error(
-        `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or PAPERCLIP_OPENCODE_COMMAND fallback`,
+        `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or THINKINGMACH_OPENCODE_COMMAND fallback`,
       );
     }
     const sourceMetadata = fstatSync(sourceFd);
@@ -105,7 +105,7 @@ export function trustedOpenCodeLaunchBinding(
     ) {
       closeSync(sourceFd);
       throw new Error(
-        `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or PAPERCLIP_OPENCODE_COMMAND fallback`,
+        `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or THINKINGMACH_OPENCODE_COMMAND fallback`,
       );
     }
     try {
@@ -197,6 +197,6 @@ export function trustedOpenCodeLaunchBinding(
     };
   }
   throw new Error(
-    `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or PAPERCLIP_OPENCODE_COMMAND fallback`,
+    `OpenCode ${QUALIFIED_OPENCODE_VERSION} runner-owned executable binding is unavailable; refusing ambient PATH or THINKINGMACH_OPENCODE_COMMAND fallback`,
   );
 }

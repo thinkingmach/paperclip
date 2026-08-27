@@ -4,12 +4,12 @@ import type {
   CapabilityRunContext,
 } from "../mock-core/capability-control-plane-types.js";
 import type {
-  PaperclipJsonSchema,
-  PaperclipJsonValue,
-  PaperclipSemanticActionDescriptor,
-  PaperclipSemanticActionEffect,
-  PaperclipSemanticActionId,
-  PaperclipSemanticActionMode,
+  ThinkingMachJsonSchema,
+  ThinkingMachJsonValue,
+  ThinkingMachSemanticActionDescriptor,
+  ThinkingMachSemanticActionEffect,
+  ThinkingMachSemanticActionId,
+  ThinkingMachSemanticActionMode,
 } from "../catalog/semantic-action-types.js";
 import type { PrpSemanticToolEnvelope } from "../protocol/replay-contract.js";
 
@@ -192,7 +192,7 @@ export type CapabilitySemanticToolResult =
   | CapabilitySemanticToolSuccess
   | CapabilitySemanticToolDenial;
 
-export interface PaperclipSemanticRunContext {
+export interface ThinkingMachSemanticRunContext {
   readonly runId: string;
   readonly companyId: string;
   readonly actor: {
@@ -208,45 +208,45 @@ export interface PaperclipSemanticRunContext {
     readonly assigneeActorId: string | null;
     readonly executionRunId: string | null;
     readonly status: string;
-    readonly workMode: PaperclipSemanticActionMode;
+    readonly workMode: ThinkingMachSemanticActionMode;
   };
   /** Claims explicitly delegated to this run. Actor claims can only narrow them. */
   readonly delegatedClaims: readonly string[];
   readonly policy?: {
-    readonly deniedOperationIds?: readonly PaperclipSemanticActionId[];
+    readonly deniedOperationIds?: readonly ThinkingMachSemanticActionId[];
     readonly allowedInteractionKinds?: readonly string[];
   };
 }
 
-export type PaperclipSemanticContextProvider = (
+export type ThinkingMachSemanticContextProvider = (
   runId: string,
-) => PaperclipSemanticRunContext | Promise<PaperclipSemanticRunContext>;
+) => ThinkingMachSemanticRunContext | Promise<ThinkingMachSemanticRunContext>;
 
-export interface PaperclipSemanticToolDefinition {
-  readonly name: PaperclipSemanticActionId;
+export interface ThinkingMachSemanticToolDefinition {
+  readonly name: ThinkingMachSemanticActionId;
   readonly description: string;
-  readonly inputSchema: PaperclipJsonSchema;
-  readonly outputSchema: PaperclipJsonSchema;
+  readonly inputSchema: ThinkingMachJsonSchema;
+  readonly outputSchema: ThinkingMachJsonSchema;
   readonly annotations: {
     readonly semanticContract: "paperclip.semantic-action.v1";
     readonly version: 1;
-    readonly placement: PaperclipSemanticActionDescriptor["placement"];
-    readonly effect: PaperclipSemanticActionEffect;
+    readonly placement: ThinkingMachSemanticActionDescriptor["placement"];
+    readonly effect: ThinkingMachSemanticActionEffect;
     readonly requiredClaims: readonly string[];
   };
 }
 
-export interface PaperclipSemanticDiscoveryResult {
+export interface ThinkingMachSemanticDiscoveryResult {
   readonly schema: "paperclip.semantic-discovery.v1";
   readonly query: string;
   readonly namespace: string | null;
-  readonly operations: readonly PaperclipSemanticToolDefinition[];
+  readonly operations: readonly ThinkingMachSemanticToolDefinition[];
   readonly truncated: boolean;
 }
 
-export type PaperclipSemanticAuthorizationPhase = "exposure" | "invocation";
+export type ThinkingMachSemanticAuthorizationPhase = "exposure" | "invocation";
 
-export type PaperclipSemanticDenialCode =
+export type ThinkingMachSemanticDenialCode =
   | "operation_absent"
   | "authority_context_invalid"
   | "run_mismatch"
@@ -269,16 +269,16 @@ export type PaperclipSemanticDenialCode =
   | "binding_failed"
   | "binding_output_invalid";
 
-export interface PaperclipSemanticAuthorizationDecision {
+export interface ThinkingMachSemanticAuthorizationDecision {
   readonly allowed: boolean;
-  readonly phase: PaperclipSemanticAuthorizationPhase;
-  readonly operationId: PaperclipSemanticActionId;
-  readonly code: "allowed" | PaperclipSemanticDenialCode;
+  readonly phase: ThinkingMachSemanticAuthorizationPhase;
+  readonly operationId: ThinkingMachSemanticActionId;
+  readonly code: "allowed" | ThinkingMachSemanticDenialCode;
   readonly reason: string;
   readonly effectiveClaims: readonly string[];
 }
 
-export interface PaperclipSemanticAuthorizationRecord extends PaperclipSemanticAuthorizationDecision {
+export interface ThinkingMachSemanticAuthorizationRecord extends ThinkingMachSemanticAuthorizationDecision {
   readonly schema: "paperclip.semantic-authorization-record.v1";
   readonly id: string;
   readonly runId: string;
@@ -290,7 +290,7 @@ export interface PaperclipSemanticAuthorizationRecord extends PaperclipSemanticA
   readonly operationReceiptId: string | null;
 }
 
-export interface PaperclipSemanticSafeReference {
+export interface ThinkingMachSemanticSafeReference {
   readonly kind:
     | "task"
     | "document_revision"
@@ -306,32 +306,32 @@ export interface PaperclipSemanticSafeReference {
   readonly id: string;
 }
 
-export interface PaperclipSemanticBindingResult {
-  readonly value: PaperclipJsonValue;
+export interface ThinkingMachSemanticBindingResult {
+  readonly value: ThinkingMachJsonValue;
   readonly code?: string;
   readonly stateRevision?: number;
-  readonly references?: readonly PaperclipSemanticSafeReference[];
+  readonly references?: readonly ThinkingMachSemanticSafeReference[];
   readonly auditReceiptId?: string;
 }
 
-export interface PaperclipAuthorizedSemanticInvocation {
+export interface ThinkingMachAuthorizedSemanticInvocation {
   readonly runId: string;
   readonly companyId: string;
   readonly actorId: string;
   readonly taskId: string;
   readonly callId: string;
-  readonly operationId: PaperclipSemanticActionId;
-  readonly input: Readonly<Record<string, PaperclipJsonValue>>;
+  readonly operationId: ThinkingMachSemanticActionId;
+  readonly input: Readonly<Record<string, ThinkingMachJsonValue>>;
 }
 
-export interface PaperclipSemanticActionBinding {
-  readonly operationId: PaperclipSemanticActionId;
+export interface ThinkingMachSemanticActionBinding {
+  readonly operationId: ThinkingMachSemanticActionId;
   execute(
-    invocation: PaperclipAuthorizedSemanticInvocation,
-  ): PaperclipSemanticBindingResult | Promise<PaperclipSemanticBindingResult>;
+    invocation: ThinkingMachAuthorizedSemanticInvocation,
+  ): ThinkingMachSemanticBindingResult | Promise<ThinkingMachSemanticBindingResult>;
 }
 
-export interface PaperclipSemanticCorrelation {
+export interface ThinkingMachSemanticCorrelation {
   readonly runId: string;
   readonly normalizedSessionId: string;
   readonly turnId: string;
@@ -339,30 +339,30 @@ export interface PaperclipSemanticCorrelation {
   readonly requestId?: string;
 }
 
-export interface PaperclipSemanticToolCall {
+export interface ThinkingMachSemanticToolCall {
   readonly runId: string;
   readonly callId: string;
   readonly operationId: string;
-  readonly correlation: PaperclipSemanticCorrelation;
+  readonly correlation: ThinkingMachSemanticCorrelation;
   readonly input: unknown;
 }
 
-export interface PaperclipSemanticStoredOutcome {
-  readonly operationId: PaperclipSemanticActionId;
+export interface ThinkingMachSemanticStoredOutcome {
+  readonly operationId: ThinkingMachSemanticActionId;
   readonly inputDigest: string;
   readonly operationReceiptId: string;
-  readonly value: PaperclipJsonValue;
+  readonly value: ThinkingMachJsonValue;
   readonly code: string;
   readonly stateRevision?: number;
-  readonly references: readonly PaperclipSemanticSafeReference[];
+  readonly references: readonly ThinkingMachSemanticSafeReference[];
   readonly auditReceiptId?: string;
 }
 
-export type PaperclipSemanticIdempotencyClaim =
+export type ThinkingMachSemanticIdempotencyClaim =
   | { readonly kind: "claimed"; readonly token: string }
   | {
       readonly kind: "duplicate";
-      readonly outcome: PaperclipSemanticStoredOutcome;
+      readonly outcome: ThinkingMachSemanticStoredOutcome;
     }
   | { readonly kind: "conflict" }
   | { readonly kind: "in_progress" };
@@ -375,30 +375,30 @@ export type PaperclipSemanticIdempotencyClaim =
  * transient failure. A store without an independent recovery path cannot be
  * used to expose mutation actions.
  */
-export interface PaperclipSemanticIdempotencyStore {
+export interface ThinkingMachSemanticIdempotencyStore {
   claim(input: {
     readonly scope: string;
-    readonly operationId: PaperclipSemanticActionId;
+    readonly operationId: ThinkingMachSemanticActionId;
     readonly inputDigest: string;
   }):
-    | PaperclipSemanticIdempotencyClaim
-    | Promise<PaperclipSemanticIdempotencyClaim>;
+    | ThinkingMachSemanticIdempotencyClaim
+    | Promise<ThinkingMachSemanticIdempotencyClaim>;
   complete(
     token: string,
-    outcome: PaperclipSemanticStoredOutcome,
+    outcome: ThinkingMachSemanticStoredOutcome,
   ): void | Promise<void>;
   recover(
     token: string,
-    outcome: PaperclipSemanticStoredOutcome,
+    outcome: ThinkingMachSemanticStoredOutcome,
   ): void | Promise<void>;
   release(token: string): void | Promise<void>;
 }
 
-export interface PaperclipSemanticToolSuccess {
+export interface ThinkingMachSemanticToolSuccess {
   readonly ok: true;
-  readonly operationId: PaperclipSemanticActionId;
+  readonly operationId: ThinkingMachSemanticActionId;
   readonly callId: string;
-  readonly value: PaperclipJsonValue;
+  readonly value: ThinkingMachJsonValue;
   readonly code: string;
   readonly duplicate: boolean;
   readonly stateRevision?: number;
@@ -406,12 +406,12 @@ export interface PaperclipSemanticToolSuccess {
   readonly resultReceipt: PrpSemanticToolEnvelope;
 }
 
-export interface PaperclipSemanticToolDenial {
+export interface ThinkingMachSemanticToolDenial {
   readonly ok: false;
   readonly operationId: string;
   readonly callId: string;
   readonly error: {
-    readonly code: PaperclipSemanticDenialCode;
+    readonly code: ThinkingMachSemanticDenialCode;
     readonly message: string;
     readonly retryable: boolean;
   };
@@ -419,5 +419,5 @@ export interface PaperclipSemanticToolDenial {
   readonly resultReceipt: PrpSemanticToolEnvelope | null;
 }
 
-export type PaperclipSemanticToolResult =
-  PaperclipSemanticToolSuccess | PaperclipSemanticToolDenial;
+export type ThinkingMachSemanticToolResult =
+  ThinkingMachSemanticToolSuccess | ThinkingMachSemanticToolDenial;

@@ -16,12 +16,12 @@ If your ask names a *feeling* ("too loud", "cramped", "inconsistent"), that's fi
 ## Pick the session size
 
 **Small (minutes) — a value change.** Colors, sizes, spacing, radius, one component's look.
-> "In the Paperclip repo: make X look like Y. Show me before/after screenshots from the visual suite before you re-baseline anything."
+> "In the ThinkingMach repo: make X look like Y. Show me before/after screenshots from the visual suite before you re-baseline anything."
 
 The agent should: edit token(s) → run `pnpm test:storybook-visual` → show you the diff images → only after your yes, run `test:storybook-visual:update`, publish the packed baseline archive from a trusted maintainer environment, and commit the code change + manifest update together.
 
 **Medium (an afternoon) — a retheme or a component-family restyle.** Ask for a **git worktree** so main stays untouched:
-> "Create a worktree off master, apply shadcn preset `<CODE>` as token values only (values-only — review the CLI's diff, revert scaffolding), reconcile the Paperclip status/agent color tiers, then build me a before/after gallery of the key surfaces."
+> "Create a worktree off master, apply shadcn preset `<CODE>` as token values only (values-only — review the CLI's diff, revert scaffolding), reconcile the ThinkingMach status/agent color tiers, then build me a before/after gallery of the key surfaces."
 
 Review the gallery, iterate ("the dark red is too soft", "two different greens on toggles — one green"), then tell it to re-baseline and merge when you're satisfied.
 
@@ -44,7 +44,7 @@ Hold every session to these five, regardless of size:
 ## Reviewing like a designer
 
 - **Contact sheet**: the diff images under `tests/storybook-visual/test-results/` are your primary review surface; ask the agent to assemble them into a browsable before/after page (or use `npx playwright show-report` from `tests/storybook-visual/`).
-- **Live test drive**: for big changes, ask for a running instance from the worktree — `npx paperclipai worktree init` once, then `PORT=3300 pnpm dev:once` gives an isolated Paperclip (own database, own config; your real instance is untouched). Click around; real use surfaces what screenshots can't.
+- **Live test drive**: for big changes, ask for a running instance from the worktree — `npx thinkingmach worktree init` once, then `PORT=3300 pnpm dev:once` gives an isolated ThinkingMach (own database, own config; your real instance is untouched). Click around; real use surfaces what screenshots can't.
 - **Side-by-side Storybook**: old on one port, new on another (`pnpm storybook` in each checkout), flip tabs.
 - Trust your eyes over the agent's summary. If something looks wrong, say so plainly ("the text in the red boxes is illegible") — vague feedback is fine, the screenshots give the agent the precision.
 

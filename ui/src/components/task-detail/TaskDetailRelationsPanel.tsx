@@ -1,4 +1,4 @@
-import type { Issue, IssueStatus } from "@paperclipai/shared";
+import type { Issue, IssueStatus } from "@thinkingmach/shared";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IssueRow } from "@/components/IssueRow";

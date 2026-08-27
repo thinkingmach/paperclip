@@ -1,5 +1,5 @@
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
-import { runAdapterExecutionTargetProcess } from "@paperclipai/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
+import { runAdapterExecutionTargetProcess } from "@thinkingmach/adapter-utils/execution-target";
 import path from "node:path";
 
 const effortFlagSupportCache = new Map<string, Promise<boolean | null>>();
@@ -107,7 +107,7 @@ export async function readClaudeCommandVersion(input: {
   graceSec: number;
 }): Promise<string | null> {
   // Do not cache this probe: an operator may upgrade Claude Code while the
-  // Paperclip server is running, and the next Test/run should recover without
+  // ThinkingMach server is running, and the next Test/run should recover without
   // requiring a server restart.
   return probeClaudeCommandVersion(input).catch(() => null);
 }

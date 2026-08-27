@@ -735,7 +735,7 @@ impl ProviderToolBridge {
         })?;
         let response = semantic_response_value(&result)?;
         if !result.is_error {
-            // Paperclip semantic dispatchers return an authoritative envelope;
+            // ThinkingMach semantic dispatchers return an authoritative envelope;
             // provider contracts describe the operation-specific value inside
             // `result`. Direct values remain valid for compatibility with v1
             // peers that do not wrap their semantic result.
@@ -983,7 +983,7 @@ fn validate_tool_result_contract(
     })?;
     let response = semantic_response_value(result)?;
     if !result.is_error {
-        // Paperclip semantic dispatchers return an authoritative envelope;
+        // ThinkingMach semantic dispatchers return an authoritative envelope;
         // provider contracts describe the operation-specific value inside
         // `result`. Direct values remain valid for compatibility with v1
         // peers that do not wrap their semantic result.

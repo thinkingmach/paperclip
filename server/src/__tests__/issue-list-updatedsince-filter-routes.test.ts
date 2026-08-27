@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import express from "express";
 import request from "supertest";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { companies, companyMemberships, createDb, issues, principalPermissionGrants } from "@paperclipai/db";
+import { companies, companyMemberships, createDb, issues, principalPermissionGrants } from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -86,7 +86,7 @@ describeEmbeddedPostgres("issue list routes updatedSince filter", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: uniqueIssuePrefix(),
       requireBoardApprovalForNewAgents: false,
     });
@@ -120,7 +120,7 @@ describeEmbeddedPostgres("issue list routes updatedSince filter", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: uniqueIssuePrefix(),
       requireBoardApprovalForNewAgents: false,
     });
@@ -157,7 +157,7 @@ describeEmbeddedPostgres("issue list routes updatedSince filter", () => {
     const companyId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: uniqueIssuePrefix(),
       requireBoardApprovalForNewAgents: false,
     });

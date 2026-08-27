@@ -1,7 +1,7 @@
 import { isAbsolute, resolve } from "node:path";
 
 export const VERIFIED_RUNTIME_EXECUTABLE_ENV =
-  "PAPERCLIP_VERIFIED_RUNTIME_EXECUTABLE";
+  "THINKINGMACH_VERIFIED_RUNTIME_EXECUTABLE";
 
 export interface VerifiedRuntimeExecutableHandoff {
   executable: string;

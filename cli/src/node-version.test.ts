@@ -5,7 +5,7 @@ import {
   MINIMUM_NODE_VERSION,
   NODE_VERSION_INSTALL_GUIDE_URL,
   warnIfUnsupportedNodeVersion,
-} from "@paperclipai/shared/node-version";
+} from "@thinkingmach/shared/node-version";
 
 describe("isSupportedNodeVersion", () => {
   it("accepts the Node 24 LTS floor and newer releases", () => {
@@ -28,7 +28,7 @@ describe("isSupportedNodeVersion", () => {
     expect(warning).toContain("requires Node.js 24.11.0 or newer");
     expect(warning).toContain(NODE_VERSION_INSTALL_GUIDE_URL);
     expect(warning).toContain("piped install.sh form cannot upgrade");
-    expect(warning).toContain("Restart Paperclip after upgrading");
+    expect(warning).toContain("Restart ThinkingMach after upgrading");
   });
 
   it("emits at most one warning when CLI and server boot in the same process", () => {

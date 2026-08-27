@@ -1,5 +1,5 @@
 import { UserCheck, UserMinus, type LucideIcon } from "lucide-react";
-import { ISSUE_REVIEW_POLICIES, type IssueReviewPolicy } from "@paperclipai/shared";
+import { ISSUE_REVIEW_POLICIES, type IssueReviewPolicy } from "@thinkingmach/shared";
 
 /**
  * Copy for an issue's `reviewPolicy` (PAP-16506 P4).

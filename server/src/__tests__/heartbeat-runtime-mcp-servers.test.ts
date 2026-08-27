@@ -16,12 +16,12 @@ import {
   toolProfileBindings,
   toolProfileEntries,
   toolProfiles,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
 } from "./helpers/embedded-postgres.js";
-import { buildPaperclipRuntimeMcpServers, createManagedMcpRunConfig } from "../services/heartbeat.js";
+import { buildThinkingMachRuntimeMcpServers, createManagedMcpRunConfig } from "../services/heartbeat.js";
 
 const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
 const describeEmbeddedPostgres = embeddedPostgresSupport.supported ? describe : describe.skip;
@@ -29,7 +29,7 @@ const describeEmbeddedPostgres = embeddedPostgresSupport.supported ? describe : 
 describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
   let db!: ReturnType<typeof createDb>;
   let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
-  const originalApiUrl = process.env.PAPERCLIP_API_URL;
+  const originalApiUrl = process.env.THINKINGMACH_API_URL;
 
   beforeAll(async () => {
     tempDb = await startEmbeddedPostgresTestDatabase("paperclip-heartbeat-runtime-mcp-");
@@ -37,8 +37,8 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
   }, 20_000);
 
   afterEach(async () => {
-    if (originalApiUrl === undefined) delete process.env.PAPERCLIP_API_URL;
-    else process.env.PAPERCLIP_API_URL = originalApiUrl;
+    if (originalApiUrl === undefined) delete process.env.THINKINGMACH_API_URL;
+    else process.env.THINKINGMACH_API_URL = originalApiUrl;
     await db.delete(toolMcpGatewayTokens);
     await db.delete(activityLog);
     await db.delete(toolAccessAuditEvents);
@@ -59,7 +59,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
   });
 
   it("provisions one aggregate gateway and omits unavailable access without blocking any runtime", async () => {
-    process.env.PAPERCLIP_API_URL = "https://paperclip.example.test";
+    process.env.THINKINGMACH_API_URL = "https://paperclip.example.test";
     const [company] = await db.insert(companies).values({
       name: `Runtime MCP ${randomUUID()}`,
       issuePrefix: `RM${randomUUID().slice(0, 5).toUpperCase()}`,
@@ -128,8 +128,8 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
     });
 
     const before = Date.now();
-    const first = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
-    const second = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
+    const first = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
+    const second = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
 
     expect(first).toHaveLength(1);
     expect(first[0]).toMatchObject({
@@ -159,7 +159,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
     expect(JSON.stringify(tokens)).not.toContain(first[0]!.token);
 
     await expect(
-      buildPaperclipRuntimeMcpServers({
+      buildThinkingMachRuntimeMcpServers({
         db,
         agent: agent!,
         runId: randomUUID(),
@@ -173,7 +173,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
       .where(eq(toolConnections.id, installedConnection!.id));
     const unavailableReports: Array<Array<{ id: string; name: string }>> = [];
     await expect(
-      buildPaperclipRuntimeMcpServers({
+      buildThinkingMachRuntimeMcpServers({
         db,
         agent: agent!,
         runId: randomUUID(),
@@ -257,7 +257,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
       contextSnapshot: {},
     });
 
-    const servers = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId });
+    const servers = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId });
 
     expect(servers).toEqual([]);
     const [activity] = await db

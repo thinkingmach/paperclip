@@ -162,7 +162,7 @@ test.describe.serial("prosumer MCP flow prosumer MCP flow", () => {
     await page.getByRole("button", { name: "Continue" }).click();
 
     // Access is chosen before credentials so the user knows who and which
-    // agents will receive the connection before Paperclip contacts it.
+    // agents will receive the connection before ThinkingMach contacts it.
     await expect(page.getByText("Which humans can use this credential?")).toBeVisible();
     await page.getByRole("button", { name: "Save and continue" }).click();
 

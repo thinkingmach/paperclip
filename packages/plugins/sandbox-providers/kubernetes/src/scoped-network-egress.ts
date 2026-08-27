@@ -102,5 +102,5 @@ export function appendNetworkEgressDenyHint(stderr: string, grant: ScopedNetwork
   }
   const allowed = [...grant.allowFqdns, ...grant.allowCidrs];
   const detail = allowed.length > 0 ? ` Current task grant: ${allowed.join(", ")}.` : " No task-scoped destinations are granted.";
-  return `${stderr.trimEnd()}\nPaperclip network policy denied or could not route this request.${detail} Request access through ${NETWORK_EGRESS_GRANT_PATH}.\n`;
+  return `${stderr.trimEnd()}\nThinkingMach network policy denied or could not route this request.${detail} Request access through ${NETWORK_EGRESS_GRANT_PATH}.\n`;
 }

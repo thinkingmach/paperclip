@@ -2,17 +2,17 @@ import type {
   AdapterExecutionContext,
   AdapterExecutionResult,
   UsageSummary,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   asNumber,
   asString,
   parseObject,
-  readPaperclipIssueWorkModeFromContext,
-  renderPaperclipWakePrompt,
-  isPaperclipRecoveryWakePayload,
-  selectPaperclipTaskMarkdown,
-  stringifyPaperclipWakePayload,
-} from "@paperclipai/adapter-utils/server-utils";
+  readThinkingMachIssueWorkModeFromContext,
+  renderThinkingMachWakePrompt,
+  isThinkingMachRecoveryWakePayload,
+  selectThinkingMachTaskMarkdown,
+  stringifyThinkingMachWakePayload,
+} from "@thinkingmach/adapter-utils/server-utils";
 import {
   ADAPTER_TYPE,
   DEFAULT_EVENT_RECONNECT_MS,
@@ -71,7 +71,7 @@ const SENSITIVE_KEY_PATTERN =
   /(^|[_-])(auth|authorization|token|secret|password|api[_-]?key|private[_-]?key)([_-]|$)/i;
 const BEARER_TOKEN_PATTERN = /Bearer\s+\S+/gi;
 const HERMES_SESSION_KEY_HEADER_PATTERN = /(X-Hermes-Session-Key\s*[:=]\s*)([^\s,;]+)/gi;
-const PAPERCLIP_SESSION_KEY_PATTERN =
+const THINKINGMACH_SESSION_KEY_PATTERN =
   /\bpaperclip:(?:company:[A-Za-z0-9-]+:agent:[A-Za-z0-9-]+(?::(?:issue|run):[A-Za-z0-9-]+)?|run:[A-Za-z0-9-]+)\b/gi;
 
 const TERMINAL_STATUSES = new Set([
@@ -175,7 +175,7 @@ function sanitizeSensitiveText(value: string): string {
   return value
     .replace(BEARER_TOKEN_PATTERN, "Bearer [redacted]")
     .replace(HERMES_SESSION_KEY_HEADER_PATTERN, "$1[redacted]")
-    .replace(PAPERCLIP_SESSION_KEY_PATTERN, "[redacted-session-key]");
+    .replace(THINKINGMACH_SESSION_KEY_PATTERN, "[redacted-session-key]");
 }
 
 function escapeRegExp(value: string): string {
@@ -272,35 +272,35 @@ function buildInput(ctx: AdapterExecutionContext, paperclipApiUrl: string | null
   const resumedSession =
     (sessionKeyStrategy === "issue" || sessionKeyStrategy === "agent") &&
     Boolean(nonEmpty(ctx.runtime?.sessionId));
-  const taskMarkdown = nonEmpty(selectPaperclipTaskMarkdown(ctx.context, { resumedSession }));
-  const wakePrompt = renderPaperclipWakePrompt(ctx.context.paperclipWake, {
+  const taskMarkdown = nonEmpty(selectThinkingMachTaskMarkdown(ctx.context, { resumedSession }));
+  const wakePrompt = renderThinkingMachWakePrompt(ctx.context.thinkingmachWake, {
     // The task-context markdown is the authoritative brief on this lane; keep
     // the wake prompt's description copy out so the prompt carries it once.
     suppressIssueDescription: Boolean(taskMarkdown),
   });
-  const wakePayloadJson = stringifyPaperclipWakePayload(ctx.context.paperclipWake, {
+  const wakePayloadJson = stringifyThinkingMachWakePayload(ctx.context.thinkingmachWake, {
     omitIssueDescription: Boolean(taskMarkdown),
   });
   const sessionHandoff = nonEmpty(ctx.context.paperclipSessionHandoffMarkdown);
-  const issueWorkMode = readPaperclipIssueWorkModeFromContext(ctx.context);
+  const issueWorkMode = readThinkingMachIssueWorkModeFromContext(ctx.context);
   const lines = [
-    `You are ${ctx.agent.name}, an AI agent employee in a Paperclip-managed company.`,
+    `You are ${ctx.agent.name}, an AI agent employee in a ThinkingMach-managed company.`,
     "",
-    "Paperclip runtime identity:",
+    "ThinkingMach runtime identity:",
     `- Agent ID: ${ctx.agent.id}`,
     `- Company ID: ${ctx.agent.companyId}`,
     `- Run ID: ${ctx.runId}`,
-    ...(paperclipApiUrl ? [`- Paperclip API URL: ${paperclipApiUrl}`] : []),
+    ...(paperclipApiUrl ? [`- ThinkingMach API URL: ${paperclipApiUrl}`] : []),
     ...(issueWorkMode ? [`- Issue work mode: ${issueWorkMode}`] : []),
     "",
-    ...(isPaperclipRecoveryWakePayload(ctx.context.paperclipWake)
+    ...(isThinkingMachRecoveryWakePayload(ctx.context.thinkingmachWake)
       ? []
       : [
           "Execution contract:",
           "- Take concrete action in this run when the task is actionable.",
           "- Do not stop at a plan unless the issue asks for planning only.",
           "- Leave durable progress and update the issue to a clear final disposition.",
-          "- Use X-Paperclip-Run-Id on mutating Paperclip API requests when a Paperclip API key is available.",
+          "- Use X-ThinkingMach-Run-Id on mutating ThinkingMach API requests when a ThinkingMach API key is available.",
           "",
         ]),
     wakePrompt,
@@ -326,7 +326,7 @@ function buildRunBody(ctx: AdapterExecutionContext, sessionKey: string | null): 
   const instructions =
     nonEmpty(ctx.config.instructions) ??
     nonEmpty(payloadTemplate.instructions) ??
-    "Follow the Paperclip wake instructions exactly. Do not expose secrets in logs, comments, or final output.";
+    "Follow the ThinkingMach wake instructions exactly. Do not expose secrets in logs, comments, or final output.";
   return {
     ...payloadTemplate,
     input,

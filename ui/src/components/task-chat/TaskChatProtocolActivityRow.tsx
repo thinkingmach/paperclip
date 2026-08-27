@@ -1,12 +1,5 @@
 import { useId, useState, type ReactNode } from "react";
-import {
-  Check,
-  ChevronRight,
-  Circle,
-  ExternalLink,
-  Loader2,
-  X,
-} from "lucide-react";
+import { Check, ChevronRight, Circle, ExternalLink, Loader2, X,  } from "lucide-react";
 import { MarkdownBody } from "@/components/MarkdownBody";
 import { WorkspaceFileLink } from "@/components/WorkspaceFileLink";
 import { cn } from "@/lib/utils";

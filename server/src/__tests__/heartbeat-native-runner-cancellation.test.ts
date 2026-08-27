@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 
 import { cancelHeartbeatNativeRun } from "../services/heartbeat.js";
 import { resolveNativeCancellationStatus } from "../services/native-runtime/native-session-executor.js";

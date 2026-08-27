@@ -1,7 +1,7 @@
 export const MINIMUM_NODE_VERSION = "24.11.0";
 export const NODE_VERSION_INSTALL_GUIDE_URL =
-  "https://github.com/paperclipai/paperclip/blob/master/doc/INSTALLING.md#recommended-install";
-const NODE_VERSION_WARNING_EMITTED = Symbol.for("@paperclipai/node-version-warning-emitted");
+  "https://github.com/thinkingmach/paperclip/blob/master/doc/INSTALLING.md#recommended-install";
+const NODE_VERSION_WARNING_EMITTED = Symbol.for("@thinkingmach/node-version-warning-emitted");
 
 function parseVersion(version: string): [number, number, number] | null {
   const match = /^v?(\d+)\.(\d+)\.(\d+)/.exec(version.trim());
@@ -25,11 +25,11 @@ export function formatNodeVersionWarning(version: string): string | null {
   if (isSupportedNodeVersion(version)) return null;
   const currentVersion = version.trim() || "unknown";
   return [
-    `[paperclip] warning: Node.js ${currentVersion} is unsupported. Paperclip requires Node.js ${MINIMUM_NODE_VERSION} or newer.`,
+    `[paperclip] warning: Node.js ${currentVersion} is unsupported. ThinkingMach requires Node.js ${MINIMUM_NODE_VERSION} or newer.`,
     "Upgrade Node.js with your version manager, or follow the recommended downloaded install.sh workflow:",
     `  ${NODE_VERSION_INSTALL_GUIDE_URL}`,
     "The piped install.sh form cannot upgrade an unsupported Node.js runtime.",
-    "Restart Paperclip after upgrading.",
+    "Restart ThinkingMach after upgrading.",
   ].join("\n");
 }
 

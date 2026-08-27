@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { CompanyPortabilityPreviewResult } from "@paperclipai/shared";
+import type { CompanyPortabilityPreviewResult } from "@thinkingmach/shared";
 import {
   buildCompanyDashboardUrl,
   buildDefaultImportAdapterOverrides,
@@ -42,7 +42,7 @@ function jsonResponse(body: unknown, status = 200): Response {
 function company(overrides: Record<string, unknown> = {}) {
   return {
     id: COMPANY_ID,
-    name: "Paperclip",
+    name: "ThinkingMach",
     description: null,
     status: "active",
     issuePrefix: "PAP",
@@ -69,9 +69,9 @@ describe("company CLI commands", () => {
 
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    delete process.env.PAPERCLIP_API_URL;
-    delete process.env.PAPERCLIP_API_KEY;
-    delete process.env.PAPERCLIP_COMPANY_ID;
+    delete process.env.THINKINGMACH_API_URL;
+    delete process.env.THINKINGMACH_API_KEY;
+    delete process.env.THINKINGMACH_COMPANY_ID;
     fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
     logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
@@ -104,7 +104,7 @@ describe("company CLI commands", () => {
       `http://paperclip.test/api/companies/${COMPANY_ID}`,
       expect.objectContaining({ method: "GET" }),
     );
-    expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toMatchObject({ id: COMPANY_ID, name: "Paperclip" });
+    expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toMatchObject({ id: COMPANY_ID, name: "ThinkingMach" });
   });
 
   it("gets the current company from agent authentication when no company context is set", async () => {
@@ -132,7 +132,7 @@ describe("company CLI commands", () => {
       `http://paperclip.test/api/companies/${COMPANY_ID}`,
       expect.objectContaining({ method: "GET" }),
     );
-    expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toMatchObject({ id: COMPANY_ID, name: "Paperclip" });
+    expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toMatchObject({ id: COMPANY_ID, name: "ThinkingMach" });
   });
 
   it("lists the scoped agent company when board-wide company listing is denied", async () => {
@@ -166,7 +166,7 @@ describe("company CLI commands", () => {
       `http://paperclip.test/api/companies/${COMPANY_ID}`,
       expect.objectContaining({ method: "GET" }),
     );
-    expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toMatchObject([{ id: COMPANY_ID, name: "Paperclip" }]);
+    expect(JSON.parse(String(logSpy.mock.calls[0]?.[0]))).toMatchObject([{ id: COMPANY_ID, name: "ThinkingMach" }]);
   });
 
   it("explains that company creation requires board instance-admin authentication under agent auth", async () => {
@@ -468,7 +468,7 @@ describe("renderCompanyImportPreview", () => {
     };
 
     const rendered = renderCompanyImportPreview(preview, {
-      sourceLabel: "GitHub: https://github.com/paperclipai/companies/demo",
+      sourceLabel: "GitHub: https://github.com/thinkingmach/companies/demo",
       targetLabel: "Imported Co (company-123)",
       infoMessages: ["Using claude-local adapter"],
     });

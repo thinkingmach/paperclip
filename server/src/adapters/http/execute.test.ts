@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { CONNECTION_INTENT_AGENT_GUIDANCE } from "@paperclipai/shared";
+import { CONNECTION_INTENT_AGENT_GUIDANCE } from "@thinkingmach/shared";
 import { execute } from "./execute.js";
 
 const guardedFetchMock = vi.hoisted(() => vi.fn());

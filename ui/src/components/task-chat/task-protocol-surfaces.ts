@@ -1,5 +1,5 @@
 /**
- * Exhaustive product disposition for Paperclip Runner Protocol surfaces.
+ * Exhaustive product disposition for ThinkingMach Runner Protocol surfaces.
  *
  * This is intentionally separate from the renderer: adding a protocol event
  * must be a conscious product decision even when the decision is to fold it

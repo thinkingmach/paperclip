@@ -1,6 +1,6 @@
 /**
  * Fast-upload interceptor for the chunked-shell file transfer protocol used by
- * `@paperclipai/adapter-utils`'s `command-managed-runtime.writeFile()`.
+ * `@thinkingmach/adapter-utils`'s `command-managed-runtime.writeFile()`.
  *
  * The default protocol uploads a binary file by:
  *   1. INIT:     mkdir -p '<DIR>' && rm -f '<B64>' && : > '<B64>'

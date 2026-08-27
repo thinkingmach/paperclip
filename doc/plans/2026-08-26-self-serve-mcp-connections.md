@@ -4,7 +4,7 @@ Date: 2026-08-26
 
 ## Outcome
 
-Paperclip treats a connection method as the capability boundary. A curated MCP method may declare automatic OAuth registration (`dcr`, including CIMD), a customer-owned OAuth client (`customer`), an API key, or a provider-generated MCP URL. Provider tokens and client secrets remain in the instance's encrypted vault. Paperclip ID remains the future broker for `platform_shared` registrations; the self-serve catalog does not depend on it.
+ThinkingMach treats a connection method as the capability boundary. A curated MCP method may declare automatic OAuth registration (`dcr`, including CIMD), a customer-owned OAuth client (`customer`), an API key, or a provider-generated MCP URL. Provider tokens and client secrets remain in the instance's encrypted vault. ThinkingMach ID remains the future broker for `platform_shared` registrations; the self-serve catalog does not depend on it.
 
 The machine-readable evidence ledger is [`packages/shared/src/self-serve-mcp-research.json`](../../packages/shared/src/self-serve-mcp-research.json). It is the source for the generated app definitions and records the documentation URL, current endpoint, authentication mode, prerequisite, risk tier, and verification date for all 46 researched providers.
 
@@ -19,7 +19,7 @@ Store visibility is a separate release gate from having an implemented definitio
 - [x] Support DCR/CIMD browser sign-in for curated remote MCP methods.
 - [x] Accept customer-owned OAuth client IDs and secrets only when a method declares `customer` ownership.
 - [x] Store customer OAuth secrets and provider tokens as encrypted secret references, never inline in connection configuration or API responses.
-- [x] Keep Paperclip ID limited to explicitly brokered `platform_shared` methods such as Gmail.
+- [x] Keep ThinkingMach ID limited to explicitly brokered `platform_shared` methods such as Gmail.
 - [x] Contain curated OAuth scopes to the method's reviewed `scopesHint`; omit scope when the method has no hint and reject caller widening.
 - [x] Reuse the existing connection setup flow for browser sign-in, customer OAuth apps, API keys, tenant fields, and generated URLs.
 - [x] Correct the Jira, Cloudinary, Kernel, Resend, ClickHouse, Postman, PagerDuty, Supabase, PlanetScale, and Zapier connection shapes.
@@ -47,7 +47,7 @@ Store visibility is a separate release gate from having an implemented definitio
 | Provider | Wave | Definition | Live proof | Notes |
 |---|---:|:---:|:---:|---|
 | Jira | 1 | [x] | [ ] | Reference DCR/CIMD flow; `https://mcp.atlassian.com/v1/mcp/authv2`. On 2026-08-27, browser authorization, 26-tool discovery, tenant lookup, a safe project read, JQL search, and reconnect passed against `paperclipteam.atlassian.net`; revocation remains pending because the working connection was retained. Atlassian's `/authv2` rollout requires the reviewed protected-resource scope set to be sent explicitly before consent. |
-| Airtable | 1 | [x] | [ ] | Enterprise client allowlisting may apply. On 2026-08-27, browser authorization was limited to the single `Untitled Base`, tool discovery succeeded, and `List Airtable bases` returned that base through Paperclip; reconnect/revoke and the final log audit remain pending. |
+| Airtable | 1 | [x] | [ ] | Enterprise client allowlisting may apply. On 2026-08-27, browser authorization was limited to the single `Untitled Base`, tool discovery succeeded, and `List Airtable bases` returned that base through ThinkingMach; reconnect/revoke and the final log audit remain pending. |
 | beehiiv | 1 | [x] | [ ] | Plan controls write capabilities. |
 | Bitly | 1 | [x] | [ ] | Browser sign-in and API-token methods. |
 | Candid | 1 | [x] | [ ] | DCR. |
@@ -59,7 +59,7 @@ Store visibility is a separate release gate from having an implemented definitio
 | Local Falcon | 1 | [x] | [ ] | DCR. |
 | Make | 1 | [x] | [ ] | DCR. |
 | Manufact | 1 | [x] | [ ] | DCR. |
-| Miro | 1 | [x] | [ ] | Enterprise client restrictions may apply. On 2026-08-27, the first live exchange found that Paperclip overrode Miro's advertised DCR client-auth order and selected `client_secret_basic`; preserving the provider's `client_secret_post` preference fixed the exchange. Reauthorization, 60-tool discovery, and `Who Am I` then succeeded; reconnect/revoke and the final log audit remain pending. |
+| Miro | 1 | [x] | [ ] | Enterprise client restrictions may apply. On 2026-08-27, the first live exchange found that ThinkingMach overrode Miro's advertised DCR client-auth order and selected `client_secret_basic`; preserving the provider's `client_secret_post` preference fixed the exchange. Reauthorization, 60-tool discovery, and `Who Am I` then succeeded; reconnect/revoke and the final log audit remain pending. |
 | Netlify | 1 | [x] | [ ] | DCR. On 2026-08-27, the saved draft resumed through Netlify consent, nine tools were discovered, and the safe `get-user` read succeeded. The public connection response exposed only a vault secret reference, not the access token; reconnect/refresh, revoke, and the final log audit remain pending. |
 | Notion | 1 | [x] | [ ] | Existing DCR definition hardened by scope containment. |
 | O'Reilly | 1 | [x] | [ ] | Browser sign-in and token methods. |
@@ -90,7 +90,7 @@ Store visibility is a separate release gate from having an implemented definitio
 | Xero | 3 | [x] | Withheld | Browser OAuth and refresh tokens succeeded on 2026-08-27, but `mcp.xero.com/mcp` rejected the valid third-party access token with HTTP 401. Withheld from Browse pending Xero support for customer-created OAuth clients on the hosted endpoint; this matches the unresolved report in [Xero's MCP repository](https://github.com/xeroapi/xero-mcp-server/issues/212). |
 | Zapier | 3 | [x] | [ ] | Existing generated-URL flow; never substitutes a static shared endpoint. |
 | G2 | Blocked | [x] | n/a | Reconsider after a customer-created client works without G2 coordination. |
-| Vercel | Blocked | [x] | n/a | Reconsider when reviewed-client approval is removed or Paperclip is approved. |
+| Vercel | Blocked | [x] | n/a | Reconsider when reviewed-client approval is removed or ThinkingMach is approved. |
 | Zomato | Blocked | [x] | n/a | Reconsider when third-party clients and unallowlisted redirect URIs are supported. |
 
 ## Browser authorization redirect audit
@@ -100,21 +100,21 @@ This is a local, credential-free handoff check performed through the real BOB ca
 - [x] Jira, Airtable, beehiiv, Bitly, Candid, Cloudflare, Cloudinary, Coda, Hugging Face, Kernel, Local Falcon, Make, Manufact, Miro, Netlify, Notion, O'Reilly, PlanetScale, PostHog, Resend, Sentry, TickTick, Todoist, Webflow, and Wix.
 - [x] ClickHouse, Egnyte, Embat, Mixpanel, Postman, Razorpay, Sanity, Stripe, Supabase, and Ticket Tailor.
 - [ ] Brex — the documented `https://api.brex.com/mcp` endpoint did not return discovery or challenge data from this development environment before the guarded network timeout. Brex also requires Developer API access plus its admin/early-access setup. Re-run after those account prerequisites are enabled; do not treat the current timeout as an OAuth compatibility result.
-- [ ] Gmail — intentionally unavailable on this instance because its Paperclip ID connector is not configured; Browse shows the instance-provided configuration notice instead of starting OAuth.
+- [ ] Gmail — intentionally unavailable on this instance because its ThinkingMach ID connector is not configured; Browse shows the instance-provided configuration notice instead of starting OAuth.
 
 The audit found and fixed shared interoperability faults rather than adding provider exceptions: bounded provider-added DCR grants, RFC 7591 zero secret-expiry sentinels for public clients, authorization servers that explicitly omit refresh-token support, guarded HTTP requests that require a stable User-Agent, and numeric-loopback callbacks rejected by DCR servers. Hugging Face now explicitly requests only `read-mcp` instead of allowing the provider's omitted-scope default to request its complete scope set.
 
 ## Tailscale HTTPS OAuth compatibility audit — 2026-08-31
 
-This audit used the isolated `apps-https-qa` full-clone instance on port 3102 at commit `5a988df600ebda30e446496862bf83c76d6d53d6`. The default instance remained on port 3100. Tailscale Serve mapped only `https:443` at `https://dottas-macbook-pro.tail29c1aa.ts.net` to `http://127.0.0.1:3102`; Funnel was not enabled. `PAPERCLIP_PUBLIC_URL` used that HTTPS origin, and no generic or provider-specific `PAPERCLIP_TOOL_OAUTH_*CLIENT*` override was present.
+This audit used the isolated `apps-https-qa` full-clone instance on port 3102 at commit `5a988df600ebda30e446496862bf83c76d6d53d6`. The default instance remained on port 3100. Tailscale Serve mapped only `https:443` at `https://dottas-macbook-pro.tail29c1aa.ts.net` to `http://127.0.0.1:3102`; Funnel was not enabled. `THINKINGMACH_PUBLIC_URL` used that HTTPS origin, and no generic or provider-specific `THINKINGMACH_TOOL_OAUTH_*CLIENT*` override was present.
 
-The dedicated `Apps HTTPS QA 2026-08-31` company had zero agents. Loopback and HTTPS health, bootstrap readiness, cloned source data, and browser access passed. The OAuth client-metadata document exposed exactly one redirect URI: `https://dottas-macbook-pro.tail29c1aa.ts.net/api/tools/oauth/callback`. Successful grants and unsuccessful drafts were retained; no provider grant was revoked and neither Paperclip server was stopped.
+The dedicated `Apps HTTPS QA 2026-08-31` company had zero agents. Loopback and HTTPS health, bootstrap readiness, cloned source data, and browser access passed. The OAuth client-metadata document exposed exactly one redirect URI: `https://dottas-macbook-pro.tail29c1aa.ts.net/api/tools/oauth/callback`. Successful grants and unsuccessful drafts were retained; no provider grant was revoked and neither ThinkingMach server was stopped.
 
 The credential-free preflight reached every one of the 19 automatic-OAuth endpoints, found OAuth metadata for all 19, and found DCR advertised for all 19. CIMD was also advertised by Notion, PostHog, Sentry, Jira, Airtable, Cloudflare, Hugging Face, Resend, and Todoist; the other ten did not advertise CIMD. The Tailscale hostname is tailnet-private and is not a public CIMD client ID. No app in this run was CIMD-only, so none received `public_cimd_retest_needed`.
 
 The matrix has exactly 35 terminal rows: 19 automatic OAuth, 12 customer OAuth, and four non-OAuth. “Exact callback” below means `https://dottas-macbook-pro.tail29c1aa.ts.net/api/tools/oauth/callback`. No provider tool was invoked and no read or write action was run.
 
-| # | App | Method / declared ownership | Credential-free preflight | Callback / registration source | Browser, callback/token, and catalog outcome | Prerequisite / Paperclip error code | Conclusion |
+| # | App | Method / declared ownership | Credential-free preflight | Callback / registration source | Browser, callback/token, and catalog outcome | Prerequisite / ThinkingMach error code | Conclusion |
 |---:|---|---|---|---|---|---|---|
 | 1 | Notion | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD yes | Exact callback / `dcr` | Provider returned through the callback; state and token exchange passed; active/healthy; 37 actions discovered | Sole workspace selected; error code none | `works_out_of_box_dcr` |
 | 2 | PostHog | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD yes | Exact callback / `dcr` | Provider returned through the callback; state and token exchange passed; active/healthy; 684 actions discovered | Default project access; error code none | `works_out_of_box_dcr` |
@@ -130,11 +130,11 @@ The matrix has exactly 35 terminal rows: 19 automatic OAuth, 12 customer OAuth, 
 | 12 | Todoist | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD yes | Exact callback / `dcr` | Provider returned through the callback; state and token exchange passed; active/healthy; 47 actions discovered | Existing account consent; error code none | `works_out_of_box_dcr` |
 | 13 | Webflow | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / `dcr` draft | Callback trust step passed; a provider sign-in route returned HTTP 502 before authorization; no token or catalog | Provider sign-in path; error code none | `provider_error_or_timeout` |
 | 14 | Wix | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / `dcr` draft | Provider sign-in loaded with the exact callback but did not advance through the available account sign-in; no token or catalog | Provider sign-in/anti-automation gate; error code none | `sign_in_mfa_or_captcha_blocked` |
-| 15 | ClickHouse | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / no registration attempted | Paperclip required a ClickHouse Cloud service ID before OAuth; no callback, token, or catalog | Service selection required; error code none | `resource_selection_needed` |
+| 15 | ClickHouse | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / no registration attempted | ThinkingMach required a ClickHouse Cloud service ID before OAuth; no callback, token, or catalog | Service selection required; error code none | `resource_selection_needed` |
 | 16 | Mixpanel | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / `dcr` | Provider returned through the callback; state and token exchange passed; active/healthy; 64 actions discovered | Existing account consent; error code none | `works_out_of_box_dcr` |
 | 17 | Postman | US minimal hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / `dcr` | Provider relay returned through the callback; state and token exchange passed; active/healthy; 41 actions discovered | Minimal catalog selected; error code none | `works_out_of_box_dcr` |
 | 18 | Stripe | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / `dcr` | Provider returned through the callback; state and token exchange passed; active/healthy; ten actions discovered | Visibly labeled test environment and read-only access selected; error code none | `works_out_of_box_dcr` |
-| 19 | Supabase | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / no registration attempted | Paperclip required a project reference before OAuth; no callback, token, or catalog | Development project selection required; error code none | `resource_selection_needed` |
+| 19 | Supabase | Recommended hosted OAuth / `dcr` | Reachable; OAuth metadata yes; DCR yes; CIMD no | Exact callback / no registration attempted | ThinkingMach required a project reference before OAuth; no callback, token, or catalog | Development project selection required; error code none | `resource_selection_needed` |
 | 20 | Linear | Customer-created OAuth app / `customer` | Not applicable; UI contract inspected | Exact callback / customer client | UI requires preregistering the callback and a client ID; client secret is optional for a public client; OAuth not started | Customer-created Linear app; error code none | `preregistration_required_by_design` |
 | 21 | Asana | Customer-created OAuth app / `customer` | Not applicable; UI contract inspected | Exact callback / customer client | UI states DCR is unsupported and requires preregistering the callback and a client ID; client secret is optional for a public client; OAuth not started | Customer-created Asana MCP app; error code none | `preregistration_required_by_design` |
 | 22 | Box | Customer-created OAuth app / `customer` | Not applicable; UI contract inspected | Exact callback / customer client | UI requires preregistering the callback and a client ID; client secret is optional for a public client; OAuth not started | Box administrator, AI access, and customer-created app; error code none | `preregistration_required_by_design` |
@@ -165,20 +165,20 @@ Summary counts:
 
 The evidence supports arbitrary HTTPS callbacks through DCR for the 13 passing apps. Jira is the only automatic-OAuth app in this run that produced direct callback-domain allowlist evidence. The five inconclusive automatic-OAuth results are resource- or sign-in/provider-path blockers, not evidence that they require a shared stable callback. The 12 customer-client apps already require preregistration by design and are not newly discovered stable-callback candidates.
 
-## Paperclip Cloud managed OAuth broker — 2026-08-31
+## ThinkingMach Cloud managed OAuth broker — 2026-08-31
 
-The managed-callback P2 is part of the existing Paperclip Cloud application at
+The managed-callback P2 is part of the existing ThinkingMach Cloud application at
 `my.paperclip.app`. It does not add a service, hostname, repository, login
-system, or provider route to Paperclip ID. Paperclip ID authenticates the user
+system, or provider route to ThinkingMach ID. ThinkingMach ID authenticates the user
 for the existing Cloud customer session. Cloud owns fixed provider callbacks,
 provider client credentials, enrollment, explicit destination confirmation,
-code exchange, refresh, and revocation. The originating Paperclip instance is
+code exchange, refresh, and revocation. The originating ThinkingMach instance is
 the only durable provider-token vault and continues to execute provider tools
 directly.
 
 The production Google callback is fixed at
 `https://my.paperclip.app/v1/connector/oauth/google/callback`; the reserved Box
-path remains dark until Paperclip owns a distributable, provider-approved Box
+path remains dark until ThinkingMach owns a distributable, provider-approved Box
 application. Provider endpoints, clients, profiles, exact scope sets, resource
 servers, eligibility, approval state, and kill switches come from a closed
 Cloud registry. A caller cannot supply any of them.
@@ -188,11 +188,11 @@ Cloud registry. A caller cannot supply any of them.
 ```mermaid
 sequenceDiagram
     actor U as Self-hosted administrator
-    participant P as Self-hosted Paperclip
-    participant C as Paperclip Cloud
-    participant I as Paperclip ID
+    participant P as Self-hosted ThinkingMach
+    participant C as ThinkingMach Cloud
+    participant I as ThinkingMach ID
 
-    U->>P: Enable Paperclip-managed connections
+    U->>P: Enable ThinkingMach-managed connections
     P->>P: Generate Ed25519 signing and X25519 sealing keys
     P->>C: Create enrollment draft with public keys and exact origin
     C-->>P: Short-lived verification URL
@@ -228,9 +228,9 @@ return trip; Cloud does not need to reach the private hostname.
 ```mermaid
 sequenceDiagram
     actor U as Connecting user
-    participant P as Originating Paperclip instance
+    participant P as Originating ThinkingMach instance
     participant C as my.paperclip.app
-    participant I as Paperclip ID
+    participant I as ThinkingMach ID
     participant O as Provider OAuth
     participant V as Instance vault
 
@@ -271,8 +271,8 @@ memory only for the bounded exchange, refresh, or supported revocation request.
 
 ```mermaid
 sequenceDiagram
-    participant P as Paperclip instance
-    participant C as Paperclip Cloud
+    participant P as ThinkingMach instance
+    participant C as ThinkingMach Cloud
     participant O as Provider OAuth
 
     P->>C: Signed refresh with hash-bound refresh token
@@ -341,7 +341,7 @@ The code paths and catalog definitions are complete. The unchecked work is delib
 
 ## Operating rules
 
-- “Self-serve” allows normal accounts, subscriptions, tenant-admin policies, and OAuth consent, but excludes a Paperclip/provider partnership.
+- “Self-serve” allows normal accounts, subscriptions, tenant-admin policies, and OAuth consent, but excludes a ThinkingMach/provider partnership.
 - Provider documentation and working live OAuth metadata are both required for production verification.
 - Preview and early-access providers retain warnings until their live proof passes.
-- This program covers hosted remote MCP connections and credential custody. Generic REST execution and Paperclip-ID-managed shared OAuth registrations remain separate follow-up programs.
+- This program covers hosted remote MCP connections and credential custody. Generic REST execution and ThinkingMach-ID-managed shared OAuth registrations remain separate follow-up programs.

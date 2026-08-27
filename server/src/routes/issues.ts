@@ -3,7 +3,7 @@ import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import { z } from "zod";
 import { and, asc, desc, eq, inArray, isNull, notInArray } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   activityLog,
   agentWakeupRequests,
@@ -26,7 +26,7 @@ import {
   pipelineStages,
   pipelines,
   projectWorkspaces,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   addIssueCommentSchema,
   acceptIssueThreadInteractionSchema,
@@ -107,8 +107,8 @@ import {
   issueWriteDenialResponse,
   type IssueWriteDenialCode,
   type IssueWriteDenialContext,
-} from "@paperclipai/shared";
-import { trackAgentTaskCompleted } from "@paperclipai/shared/telemetry";
+} from "@thinkingmach/shared";
+import { trackAgentTaskCompleted } from "@thinkingmach/shared/telemetry";
 import { getTelemetryClient } from "../telemetry.js";
 import { isUniqueViolation } from "../db-errors.js";
 import type { StorageService } from "../storage/types.js";
@@ -487,7 +487,7 @@ function resolveAttachmentResponseContentType(input: {
   return inferVideoContentTypeFromFilename(input.originalFilename) ?? storedContentType;
 }
 
-function requiresPaperclipAttachmentMetadata(input: {
+function requiresThinkingMachAttachmentMetadata(input: {
   type?: unknown;
   provider?: unknown;
 }, fallback?: {
@@ -3570,7 +3570,7 @@ export function issueRoutes(
     };
   }
 
-  async function canonicalizePaperclipArtifactMetadata(input: {
+  async function canonicalizeThinkingMachArtifactMetadata(input: {
     issue: { id: string; companyId: string };
     metadata: Record<string, unknown> | null | undefined;
   }) {
@@ -4984,12 +4984,12 @@ export function issueRoutes(
     if (!run) return null;
 
     const context = readObject(run.contextSnapshot);
-    const paperclipWake = readObject(context.paperclipWake);
-    const recovery = readObject(paperclipWake.recovery);
+    const thinkingmachWake = readObject(context.thinkingmachWake);
+    const recovery = readObject(thinkingmachWake.recovery);
     const wakeReason = typeof context.wakeReason === "string"
       ? context.wakeReason
-      : typeof paperclipWake.reason === "string"
-        ? paperclipWake.reason
+      : typeof thinkingmachWake.reason === "string"
+        ? thinkingmachWake.reason
         : null;
     if (wakeReason !== "source_scoped_recovery_action") return null;
 
@@ -6687,7 +6687,7 @@ export function issueRoutes(
       },
     });
 
-    res.setHeader("X-Paperclip-Request-Cache", coordinated.cacheStatus);
+    res.setHeader("X-ThinkingMach-Request-Cache", coordinated.cacheStatus);
     if (!coordinated.response) {
       const body = {
         error: "Too many concurrent issue-list requests for this actor/client",
@@ -8409,8 +8409,8 @@ export function issueRoutes(
           : null),
       );
     }
-    if (requiresPaperclipAttachmentMetadata(createInput)) {
-      createInput.metadata = await canonicalizePaperclipArtifactMetadata({
+    if (requiresThinkingMachAttachmentMetadata(createInput)) {
+      createInput.metadata = await canonicalizeThinkingMachArtifactMetadata({
         issue,
         metadata: req.body.metadata ?? null,
       });
@@ -8720,13 +8720,13 @@ export function issueRoutes(
     const createdByRunId = await resolveWorkProductCreatedByRunId(req, res, existing.companyId, req.body, "update");
     if (createdByRunId === undefined && Object.prototype.hasOwnProperty.call(req.body, "createdByRunId")) return;
     if (createdByRunId !== undefined) patch.createdByRunId = createdByRunId;
-    if (requiresPaperclipAttachmentMetadata(patch, existing)) {
+    if (requiresThinkingMachAttachmentMetadata(patch, existing)) {
       if (patch.metadata !== undefined) {
-        patch.metadata = await canonicalizePaperclipArtifactMetadata({
+        patch.metadata = await canonicalizeThinkingMachArtifactMetadata({
           issue,
           metadata: patch.metadata ?? null,
         });
-      } else if (!requiresPaperclipAttachmentMetadata(existing)) {
+      } else if (!requiresThinkingMachAttachmentMetadata(existing)) {
         res.status(422).json({ error: "Attachment-backed artifact metadata is required" });
         return;
       }

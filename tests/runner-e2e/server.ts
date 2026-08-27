@@ -4,7 +4,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   assertIsolatedServerEnvironment,
-  buildPaperclipServerEnvironment,
+  buildThinkingMachServerEnvironment,
   runnerE2EServerControlPaths,
 } from "./harness-env.js";
 
@@ -14,11 +14,11 @@ function required(name: string) {
   return value;
 }
 
-const logPath = required("PAPERCLIP_RUNNER_E2E_SERVER_LOG");
-const temporaryRoot = required("PAPERCLIP_RUNNER_E2E_TEMP_ROOT");
-const paperclipHome = required("PAPERCLIP_HOME");
-const configPath = required("PAPERCLIP_CONFIG");
-const port = required("PAPERCLIP_RUNNER_E2E_PORT");
+const logPath = required("THINKINGMACH_RUNNER_E2E_SERVER_LOG");
+const temporaryRoot = required("THINKINGMACH_RUNNER_E2E_TEMP_ROOT");
+const paperclipHome = required("THINKINGMACH_HOME");
+const configPath = required("THINKINGMACH_CONFIG");
+const port = required("THINKINGMACH_RUNNER_E2E_PORT");
 const repositoryRoot = path.resolve(import.meta.dirname, "../..");
 const tsxCli = path.join(repositoryRoot, "cli/node_modules/tsx/dist/cli.mjs");
 const paperclipCli = path.join(repositoryRoot, "cli/src/index.ts");
@@ -29,37 +29,37 @@ const {
 } = runnerE2EServerControlPaths(temporaryRoot);
 const restartTimeoutMs = 180_000;
 const gracefulStopTimeoutMs = 30_000;
-const serverEnvironment = buildPaperclipServerEnvironment(process.env, {
+const serverEnvironment = buildThinkingMachServerEnvironment(process.env, {
   NODE_ENV: "test",
   PORT: port,
   // Keep provider caches attempt-private without changing Playwright's browser
   // cache lookup in the parent process.
   XDG_CACHE_HOME: path.join(temporaryRoot, "xdg-cache"),
-  PAPERCLIP_HOME: paperclipHome,
-  PAPERCLIP_CONFIG: configPath,
-  PAPERCLIP_INSTANCE_ID: required("PAPERCLIP_INSTANCE_ID"),
-  PAPERCLIP_AGENT_JWT_SECRET: required("PAPERCLIP_AGENT_JWT_SECRET"),
-  PAPERCLIP_DECISION_SIGNING_SECRET: required(
-    "PAPERCLIP_DECISION_SIGNING_SECRET",
+  THINKINGMACH_HOME: paperclipHome,
+  THINKINGMACH_CONFIG: configPath,
+  THINKINGMACH_INSTANCE_ID: required("THINKINGMACH_INSTANCE_ID"),
+  THINKINGMACH_AGENT_JWT_SECRET: required("THINKINGMACH_AGENT_JWT_SECRET"),
+  THINKINGMACH_DECISION_SIGNING_SECRET: required(
+    "THINKINGMACH_DECISION_SIGNING_SECRET",
   ),
-  PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: required(
-    "PAPERCLIP_TOOL_ACTION_SIGNING_SECRET",
+  THINKINGMACH_TOOL_ACTION_SIGNING_SECRET: required(
+    "THINKINGMACH_TOOL_ACTION_SIGNING_SECRET",
   ),
   BETTER_AUTH_SECRET: required("BETTER_AUTH_SECRET"),
-  PAPERCLIP_BIND: "loopback",
-  PAPERCLIP_BIND_HOST: "127.0.0.1",
-  PAPERCLIP_DEPLOYMENT_MODE: "local_trusted",
-  PAPERCLIP_DEPLOYMENT_EXPOSURE: "private",
+  THINKINGMACH_BIND: "loopback",
+  THINKINGMACH_BIND_HOST: "127.0.0.1",
+  THINKINGMACH_DEPLOYMENT_MODE: "local_trusted",
+  THINKINGMACH_DEPLOYMENT_EXPOSURE: "private",
   SERVE_UI: "true",
-  PAPERCLIP_STORAGE_PROVIDER: "local_disk",
-  PAPERCLIP_STORAGE_LOCAL_DIR: path.join(temporaryRoot, "storage"),
-  PAPERCLIP_SECRETS_PROVIDER: "local_encrypted",
-  PAPERCLIP_SECRETS_STRICT_MODE: "true",
-  PAPERCLIP_DB_BACKUP_ENABLED: "false",
-  PAPERCLIP_DB_BACKUP_DIR: path.join(temporaryRoot, "backups"),
+  THINKINGMACH_STORAGE_PROVIDER: "local_disk",
+  THINKINGMACH_STORAGE_LOCAL_DIR: path.join(temporaryRoot, "storage"),
+  THINKINGMACH_SECRETS_PROVIDER: "local_encrypted",
+  THINKINGMACH_SECRETS_STRICT_MODE: "true",
+  THINKINGMACH_DB_BACKUP_ENABLED: "false",
+  THINKINGMACH_DB_BACKUP_DIR: path.join(temporaryRoot, "backups"),
   // Onboarding normally opens the app after listen. Browser ownership belongs
   // to Playwright in this harness, so never create a developer desktop tab.
-  PAPERCLIP_OPEN_ON_LISTEN: "false",
+  THINKINGMACH_OPEN_ON_LISTEN: "false",
 });
 assertIsolatedServerEnvironment(serverEnvironment, {
   temporaryRoot,
@@ -105,7 +105,7 @@ function describeChildExit(candidate: ChildProcess) {
 
 function startServer() {
   if (shutdownRequested()) {
-    throw new Error("Refusing to start Paperclip after wrapper shutdown");
+    throw new Error("Refusing to start ThinkingMach after wrapper shutdown");
   }
   const candidate = spawn(
     process.execPath,
@@ -115,7 +115,7 @@ function startServer() {
       env: definedServerEnvironment,
       stdio: ["ignore", "pipe", "pipe"],
       // Stay in the launcher-created process group. That lets the launcher stop
-      // Playwright, this wrapper, Paperclip, embedded Postgres, and runner children
+      // Playwright, this wrapper, ThinkingMach, embedded Postgres, and runner children
       // as one verified tree even if graceful web-server shutdown stalls.
       detached: false,
     },
@@ -134,7 +134,7 @@ function startServer() {
     childErrors.set(candidate, error);
     if (!expectedStops.has(candidate) && !shutdownRequested()) {
       unexpectedChildFailure = new Error(
-        `Paperclip server spawn failed: ${error.message}`,
+        `ThinkingMach server spawn failed: ${error.message}`,
       );
     }
   });
@@ -142,7 +142,7 @@ function startServer() {
     appendLog(`\n${describeChildExit(candidate)}\n`);
     if (!expectedStops.has(candidate) && !shutdownRequested()) {
       unexpectedChildFailure = new Error(
-        `Paperclip server stopped unexpectedly: ${describeChildExit(candidate)}`,
+        `ThinkingMach server stopped unexpectedly: ${describeChildExit(candidate)}`,
       );
     }
   });
@@ -194,21 +194,21 @@ async function stopServer(
     candidate.kill(signal);
   } catch {
     if (childExited(candidate) || childErrors.has(candidate)) return;
-    throw new Error("Could not signal the Paperclip server to stop");
+    throw new Error("Could not signal the ThinkingMach server to stop");
   }
   if (await waitForExit(candidate, gracefulStopTimeoutMs)) return;
 
   appendLog(
-    `\nPaperclip did not stop within ${gracefulStopTimeoutMs}ms; sending SIGKILL\n`,
+    `\nThinkingMach did not stop within ${gracefulStopTimeoutMs}ms; sending SIGKILL\n`,
   );
   try {
     candidate.kill("SIGKILL");
   } catch {
     if (childExited(candidate) || childErrors.has(candidate)) return;
-    throw new Error("Could not force the Paperclip server to stop");
+    throw new Error("Could not force the ThinkingMach server to stop");
   }
   if (!(await waitForExit(candidate, 5_000))) {
-    throw new Error("Paperclip server did not exit after SIGKILL");
+    throw new Error("ThinkingMach server did not exit after SIGKILL");
   }
 }
 
@@ -217,11 +217,11 @@ async function waitForHealth(candidate: ChildProcess) {
   const healthUrl = `http://127.0.0.1:${port}/api/health`;
   while (Date.now() < deadline) {
     if (shutdownRequested()) {
-      throw new Error("Wrapper shutdown interrupted the Paperclip restart");
+      throw new Error("Wrapper shutdown interrupted the ThinkingMach restart");
     }
     if (childErrors.has(candidate) || childExited(candidate)) {
       throw new Error(
-        `Replacement Paperclip server could not start: ${describeChildExit(candidate)}`,
+        `Replacement ThinkingMach server could not start: ${describeChildExit(candidate)}`,
       );
     }
     try {
@@ -235,7 +235,7 @@ async function waitForHealth(candidate: ChildProcess) {
     await delay(250);
   }
   throw new Error(
-    `Replacement Paperclip server did not become healthy within ${restartTimeoutMs}ms`,
+    `Replacement ThinkingMach server did not become healthy within ${restartTimeoutMs}ms`,
   );
 }
 
@@ -244,7 +244,7 @@ async function waitForHealthToStop() {
   const deadline = Date.now() + gracefulStopTimeoutMs;
   while (Date.now() < deadline) {
     if (shutdownRequested()) {
-      throw new Error("Wrapper shutdown interrupted the Paperclip restart");
+      throw new Error("Wrapper shutdown interrupted the ThinkingMach restart");
     }
     try {
       await fetch(healthUrl, { signal: AbortSignal.timeout(500) });
@@ -254,7 +254,7 @@ async function waitForHealthToStop() {
     await delay(100);
   }
   throw new Error(
-    "The old Paperclip server remained healthy after its launcher exited",
+    "The old ThinkingMach server remained healthy after its launcher exited",
   );
 }
 
@@ -309,26 +309,26 @@ async function writeRestartAck(
 
 async function restartServer(requestId: string) {
   activeRestartRequestId = requestId;
-  appendLog(`\nRestart request ${requestId}: stopping Paperclip\n`);
+  appendLog(`\nRestart request ${requestId}: stopping ThinkingMach\n`);
   const previous = child;
-  if (!previous) throw new Error("No Paperclip server is available to restart");
+  if (!previous) throw new Error("No ThinkingMach server is available to restart");
   await stopServer(previous);
   if (child === previous) child = null;
   // Do not mistake an orphaned old server for a healthy replacement. The port
   // must stop answering before the next launcher is allowed to start.
   await waitForHealthToStop();
   if (shutdownRequested()) {
-    throw new Error("Wrapper shutdown interrupted the Paperclip restart");
+    throw new Error("Wrapper shutdown interrupted the ThinkingMach restart");
   }
 
-  appendLog(`Restart request ${requestId}: starting Paperclip\n`);
+  appendLog(`Restart request ${requestId}: starting ThinkingMach\n`);
   const replacement = startServer();
   await waitForHealth(replacement);
   if (shutdownRequested()) {
-    throw new Error("Wrapper shutdown interrupted the Paperclip restart");
+    throw new Error("Wrapper shutdown interrupted the ThinkingMach restart");
   }
   await writeRestartAck(requestId, "ready");
-  appendLog(`Restart request ${requestId}: Paperclip is healthy\n`);
+  appendLog(`Restart request ${requestId}: ThinkingMach is healthy\n`);
   activeRestartRequestId = null;
 }
 
@@ -341,7 +341,7 @@ for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"] as const) {
     try {
       child.kill(signal);
     } catch {
-      // The Paperclip process may already have exited.
+      // The ThinkingMach process may already have exited.
     }
   });
 }
@@ -369,7 +369,7 @@ try {
 } catch (error) {
   exitCode = 1;
   const message = error instanceof Error ? error.message : String(error);
-  appendLog(`\nPaperclip E2E server supervisor failed: ${message}\n`);
+  appendLog(`\nThinkingMach E2E server supervisor failed: ${message}\n`);
   if (activeRestartRequestId) {
     try {
       await writeRestartAck(activeRestartRequestId, "failed", message);
@@ -385,7 +385,7 @@ try {
       await stopServer(running);
     } catch (stopError) {
       appendLog(
-        `Failed to stop Paperclip after supervisor failure: ${stopError instanceof Error ? stopError.message : String(stopError)}\n`,
+        `Failed to stop ThinkingMach after supervisor failure: ${stopError instanceof Error ? stopError.message : String(stopError)}\n`,
       );
     }
   }

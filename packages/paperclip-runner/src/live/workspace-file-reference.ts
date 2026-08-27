@@ -2,10 +2,10 @@ import { createHash } from "node:crypto";
 import { realpath } from "node:fs/promises";
 import { basename, extname, isAbsolute, relative, resolve, sep } from "node:path";
 
-export const PAPERCLIP_WORKSPACE_FILE_REFERENCE_SCHEMA = "paperclip.workspace.file_reference.v1" as const;
+export const THINKINGMACH_WORKSPACE_FILE_REFERENCE_SCHEMA = "paperclip.workspace.file_reference.v1" as const;
 
-export interface PaperclipWorkspaceFileReference {
-  schema: typeof PAPERCLIP_WORKSPACE_FILE_REFERENCE_SCHEMA;
+export interface ThinkingMachWorkspaceFileReference {
+  schema: typeof THINKINGMACH_WORKSPACE_FILE_REFERENCE_SCHEMA;
   referenceId: string;
   source: "harness_reported" | "runner_verified";
   path: string;
@@ -21,7 +21,7 @@ export interface PaperclipWorkspaceFileReference {
 const MAX_REFERENCES = 32;
 const MAX_LINE_NUMBER = 1_000_000;
 
-function media(path: string): Pick<PaperclipWorkspaceFileReference, "mediaType" | "presentation"> {
+function media(path: string): Pick<ThinkingMachWorkspaceFileReference, "mediaType" | "presentation"> {
   const extension = extname(path).toLowerCase();
   if ([".md", ".mdx", ".txt", ".rst"].includes(extension)) {
     return { mediaType: extension === ".md" || extension === ".mdx" ? "text/markdown" : "text/plain", presentation: "document" };
@@ -82,10 +82,10 @@ export function paperclipWorkspaceFileReferencesFromText(
   workspace: string,
   assistantText: string,
   turnId: string,
-  source: PaperclipWorkspaceFileReference["source"] = "harness_reported",
-): PaperclipWorkspaceFileReference[] {
+  source: ThinkingMachWorkspaceFileReference["source"] = "harness_reported",
+): ThinkingMachWorkspaceFileReference[] {
   const root = resolve(workspace);
-  const references: PaperclipWorkspaceFileReference[] = [];
+  const references: ThinkingMachWorkspaceFileReference[] = [];
   const seen = new Set<string>();
   const links = assistantText.matchAll(/\[([^\]]+)]\((<[^>]+>|[^)\s]+)(?:\s+["'][^"']*["'])?\)/g);
   for (const match of links) {
@@ -99,7 +99,7 @@ export function paperclipWorkspaceFileReferencesFromText(
     seen.add(key);
     const identity = createHash("sha256").update(`${turnId}\0${key}`).digest("hex").slice(0, 24);
     references.push({
-      schema: PAPERCLIP_WORKSPACE_FILE_REFERENCE_SCHEMA,
+      schema: THINKINGMACH_WORKSPACE_FILE_REFERENCE_SCHEMA,
       referenceId: `${turnId}:file:${identity}`,
       source,
       path: relativePath,
@@ -114,18 +114,18 @@ export function paperclipWorkspaceFileReferencesFromText(
   return references;
 }
 
-export async function discoverPaperclipWorkspaceFileReferences(
+export async function discoverThinkingMachWorkspaceFileReferences(
   workspace: string,
   assistantText: string,
   turnId: string,
-): Promise<PaperclipWorkspaceFileReference[]> {
+): Promise<ThinkingMachWorkspaceFileReference[]> {
   let canonicalRoot: string;
   try { canonicalRoot = await realpath(workspace); } catch { return []; }
   // Resolve references from the same canonical root used for the containment
   // check. Do not consult a caller-controlled workspace symlink again after
   // canonicalizing it above.
   const references = paperclipWorkspaceFileReferencesFromText(canonicalRoot, assistantText, turnId, "runner_verified");
-  const verified: PaperclipWorkspaceFileReference[] = [];
+  const verified: ThinkingMachWorkspaceFileReference[] = [];
   for (const reference of references) {
     let canonicalPath: string;
     try { canonicalPath = await realpath(resolve(canonicalRoot, reference.path)); } catch { continue; }

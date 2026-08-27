@@ -7,7 +7,7 @@ import type {
   AgentRuntimeState,
   BudgetOverview,
   HeartbeatRun,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { AgentDetail } from "@/pages/AgentDetail";
 import { useCompany } from "@/context/CompanyContext";
 import { queryKeys } from "@/lib/queryKeys";

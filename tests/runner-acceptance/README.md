@@ -2,7 +2,7 @@
 
 This directory defines the reviewable, deterministic foundation for Runner
 acceptance checks. It contains no launcher and grants no authority to start
-Paperclip, a provider process, a browser, a remote environment, or a billable
+ThinkingMach, a provider process, a browser, a remote environment, or a billable
 model request.
 
 The catalog covers:
@@ -10,9 +10,9 @@ The catalog covers:
 - every current built-in direct adapter except the explicitly deferred Pi
   adapter;
 - the external-plugin direct-adapter compatibility contract;
-- Paperclip Runner with Codex;
-- Paperclip Runner with the qualified OpenCode model; and
-- Paperclip Runner with the qualified ACPX Claude and Codex profiles.
+- ThinkingMach Runner with Codex;
+- ThinkingMach Runner with the qualified OpenCode model; and
+- ThinkingMach Runner with the qualified ACPX Claude and Codex profiles.
 
 The direct-adapter cells assert the legacy boundary: runnerd does not start,
 native records are not created, direct finalization remains authoritative, and

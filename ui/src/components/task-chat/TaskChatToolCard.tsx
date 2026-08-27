@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  Check,
-  ChevronRight,
-  Loader2,
-  ShieldCheck,
-  ShieldX,
-  X,
-} from "lucide-react";
+import { Check, ChevronRight, Loader2, ShieldCheck, ShieldX, X,  } from "lucide-react";
 import type { TaskChatToolItem } from "./task-chat-model";
 import { toolTaxonomy } from "./tool-taxonomy";
 

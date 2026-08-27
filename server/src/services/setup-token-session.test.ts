@@ -8,7 +8,7 @@ import {
   environments,
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   createDbSetupTokenCleanupStore,
   SetupTokenSessionService,

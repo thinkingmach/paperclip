@@ -31,7 +31,7 @@ import {
   type SetupTokenLoginProcessFactory,
   type SetupTokenSecretWriter,
 } from "../services/setup-token-session.js";
-import { SETUP_TOKEN_TRANSPORT_ADVISORY_CODE } from "@paperclipai/shared";
+import { SETUP_TOKEN_TRANSPORT_ADVISORY_CODE } from "@thinkingmach/shared";
 
 // --- Test fixtures -----------------------------------------------------------
 

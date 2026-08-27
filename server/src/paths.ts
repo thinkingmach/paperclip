@@ -2,15 +2,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { resolveDefaultConfigPath } from "./home-paths.js";
 
-const PAPERCLIP_CONFIG_BASENAME = "config.json";
-const PAPERCLIP_ENV_FILENAME = ".env";
+const THINKINGMACH_CONFIG_BASENAME = "config.json";
+const THINKINGMACH_ENV_FILENAME = ".env";
 
 function findConfigFileFromAncestors(startDir: string): string | null {
   const absoluteStartDir = path.resolve(startDir);
   let currentDir = absoluteStartDir;
 
   while (true) {
-    const candidate = path.resolve(currentDir, ".paperclip", PAPERCLIP_CONFIG_BASENAME);
+    const candidate = path.resolve(currentDir, ".paperclip", THINKINGMACH_CONFIG_BASENAME);
     if (fs.existsSync(candidate)) {
       return candidate;
     }
@@ -23,12 +23,12 @@ function findConfigFileFromAncestors(startDir: string): string | null {
   return null;
 }
 
-export function resolvePaperclipConfigPath(overridePath?: string): string {
+export function resolveThinkingMachConfigPath(overridePath?: string): string {
   if (overridePath) return path.resolve(overridePath);
-  if (process.env.PAPERCLIP_CONFIG) return path.resolve(process.env.PAPERCLIP_CONFIG);
+  if (process.env.THINKINGMACH_CONFIG) return path.resolve(process.env.THINKINGMACH_CONFIG);
   return findConfigFileFromAncestors(process.cwd()) ?? resolveDefaultConfigPath();
 }
 
-export function resolvePaperclipEnvPath(overrideConfigPath?: string): string {
-  return path.resolve(path.dirname(resolvePaperclipConfigPath(overrideConfigPath)), PAPERCLIP_ENV_FILENAME);
+export function resolveThinkingMachEnvPath(overrideConfigPath?: string): string {
+  return path.resolve(path.dirname(resolveThinkingMachConfigPath(overrideConfigPath)), THINKINGMACH_ENV_FILENAME);
 }

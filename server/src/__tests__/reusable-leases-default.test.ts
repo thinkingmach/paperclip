@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getEnvironmentCapabilities } from "@paperclipai/shared";
+import { getEnvironmentCapabilities } from "@thinkingmach/shared";
 import { getSandboxProvider } from "../services/sandbox-provider-runtime.ts";
 
 // The execution guard in environment-runtime.ts admits a reusable lease only

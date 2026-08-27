@@ -50,14 +50,14 @@ function trustedOriginsForRequest(req: Request) {
   // Behind some reverse proxies the Host / X-Forwarded-Host header may
   // not match the public URL (for example when TLS terminates at the
   // edge and the inbound Host is an internal service name). Trust the
-  // explicitly-configured PAPERCLIP_PUBLIC_URL when it's set.
-  const publicUrl = parseOrigin(process.env.PAPERCLIP_PUBLIC_URL?.trim());
+  // explicitly-configured THINKINGMACH_PUBLIC_URL when it's set.
+  const publicUrl = parseOrigin(process.env.THINKINGMACH_PUBLIC_URL?.trim());
   if (publicUrl) origins.add(publicUrl);
   return origins;
 }
 
 /**
- * Return the browser origin only when it is the same origin Paperclip's CSRF
+ * Return the browser origin only when it is the same origin ThinkingMach's CSRF
  * guard accepts for this request. Callers may use this as browser-reachability
  * evidence, but must still apply any protocol-specific constraints (for
  * example OAuth requiring HTTPS outside loopback).

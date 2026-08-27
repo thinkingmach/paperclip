@@ -1,5 +1,5 @@
-import type { TranscriptEntry } from "@paperclipai/adapter-utils";
-import { parseAcpxStdoutLine } from "@paperclipai/adapter-utils/acpx-engine/ui";
+import type { TranscriptEntry } from "@thinkingmach/adapter-utils";
+import { parseAcpxStdoutLine } from "@thinkingmach/adapter-utils/acpx-engine/ui";
 
 function safeJsonParse(text: string): unknown {
   try {

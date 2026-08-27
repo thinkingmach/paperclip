@@ -1,6 +1,6 @@
 /** Stable aggregate API over the per-action definitions in `src/protocol-actions/`. */
 import type { CapabilitySideEffectClass, CapabilityToolDisposition, CapabilityOptionalCatalogGroup, CapabilityToolTaskMode, ScenarioChatdempotencyBehavior } from "../tools/capability-semantic-tool-types.js";
-import { PAPERCLIP_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
+import { THINKINGMACH_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
 
 export type CapabilityCatalogSurface = "scenario" | "live";
 export type CapabilityRealBindingStatus = "live_codex" | "scenario_mock" | "test_only";
@@ -16,7 +16,7 @@ export interface CapabilityCanonicalOperation {
 }
 
 export const CAPABILITY_CANONICAL_OPERATIONS: readonly CapabilityCanonicalOperation[] = Object.freeze(
-  PAPERCLIP_PROTOCOL_ACTIONS
+  THINKINGMACH_PROTOCOL_ACTIONS
     .map((action) => action.canonical as unknown as CapabilityCanonicalOperation)
     .sort((left, right) => left.operationId.localeCompare(right.operationId)),
 );

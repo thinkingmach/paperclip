@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
-  discoverPaperclipWorkspaceFileReferences,
+  discoverThinkingMachWorkspaceFileReferences,
   paperclipWorkspaceFileReferencesFromText,
 } from "./workspace-file-reference.js";
 
@@ -15,7 +15,7 @@ describe("workspace file references", () => {
     try {
       await writeFile(join(root, "guide.md"), "# Guide\n\nSafe content.\n");
       const canonicalRoot = await realpath(root);
-      const references = await discoverPaperclipWorkspaceFileReferences(
+      const references = await discoverThinkingMachWorkspaceFileReferences(
         root,
         `Read [the guide](${join(canonicalRoot, "guide.md")}:2).`,
         "turn-1",
@@ -53,7 +53,7 @@ describe("workspace file references", () => {
       await writeFile(protectedPath, "must not be disclosed");
       await symlink(protectedPath, join(root, "linked.md"));
 
-      await expect(discoverPaperclipWorkspaceFileReferences(
+      await expect(discoverThinkingMachWorkspaceFileReferences(
         root,
         "[linked](linked.md)",
         "turn-1",
@@ -76,7 +76,7 @@ describe("workspace file references", () => {
       await symlink(root, alias);
       const canonicalRoot = await realpath(root);
 
-      await expect(discoverPaperclipWorkspaceFileReferences(
+      await expect(discoverThinkingMachWorkspaceFileReferences(
         alias,
         `[guide](${join(canonicalRoot, "guide.md")})`,
         "turn-1",
@@ -99,7 +99,7 @@ describe("workspace file references", () => {
       await writeFile(protectedPath, "must not be disclosed");
       await link(protectedPath, join(root, "linked.md"));
 
-      await expect(discoverPaperclipWorkspaceFileReferences(
+      await expect(discoverThinkingMachWorkspaceFileReferences(
         root,
         "[linked](linked.md)",
         "turn-1",
@@ -127,7 +127,7 @@ describe("workspace file references", () => {
       await link(protectedPath, join(root, "linked.md"));
       await unlink(protectedPath);
 
-      await expect(discoverPaperclipWorkspaceFileReferences(
+      await expect(discoverThinkingMachWorkspaceFileReferences(
         root,
         "[linked](linked.md)",
         "turn-1",

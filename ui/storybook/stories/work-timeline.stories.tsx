@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { WorkTimelineResult } from "@paperclipai/shared";
+import type { WorkTimelineResult } from "@thinkingmach/shared";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 import { Timeline } from "@/pages/Timeline";
 import {

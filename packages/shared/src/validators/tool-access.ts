@@ -234,7 +234,7 @@ export const connectionGrantSchema = z.object({
     ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["subjectUserId"], message: "User grants require a subject user; organization grants must not have one" });
   }
   if (grant.externalCredential && grant.credentialSecretRefs.length > 0) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["credentialSecretRefs"], message: "External grants cannot also contain Paperclip secret references" });
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["credentialSecretRefs"], message: "External grants cannot also contain ThinkingMach secret references" });
   }
 });
 
@@ -317,7 +317,7 @@ export type DisableToolStdioCommandTemplate = z.infer<typeof disableToolStdioCom
 /**
  * How an operator says a generic remote MCP endpoint authenticates (PAP-17087).
  *
- * `auto` is the default and the only value the simple path sends: Paperclip
+ * `auto` is the default and the only value the simple path sends: ThinkingMach
  * probes the endpoint and branches on what it finds. The rest are the explicit
  * choices behind "Advanced authentication", where the operator already knows.
  */
@@ -330,7 +330,7 @@ export type GenericMcpAuthMode = z.infer<typeof genericMcpAuthModeSchema>;
 /**
  * A preregistered OAuth client an operator pasted in because the authorization
  * server supports neither CIMD nor dynamic registration. The secret is write-only:
- * it becomes a Paperclip secret ref and is never read back.
+ * it becomes a ThinkingMach secret ref and is never read back.
  */
 export const genericMcpOAuthClientSchema = z.object({
   clientId: z.string().trim().min(1).max(4096),
@@ -340,7 +340,7 @@ export const genericMcpOAuthClientSchema = z.object({
 export type GenericMcpOAuthClient = z.infer<typeof genericMcpOAuthClientSchema>;
 
 /**
- * Reject `headers.*` credential paths whose header name Paperclip refuses to
+ * Reject `headers.*` credential paths whose header name ThinkingMach refuses to
  * send, and any value that could split the outbound request. This runs at the
  * API boundary so both the guided wizard and normalized paste-config go through
  * exactly one gate; the service re-checks when it projects the headers.

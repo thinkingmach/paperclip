@@ -1,14 +1,14 @@
 {
-  "name": "@paperclipai/db",
-  "version": "0.3.1",
+  "name": "@thinkingmach/db",
+  "version": "0.3.3",
   "license": "MIT",
-  "homepage": "https://github.com/paperclipai/paperclip",
+  "homepage": "https://github.com/thinkingmach/paperclip",
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/db"
   },
   "type": "module",
@@ -47,7 +47,7 @@
     "seed": "tsx src/seed.ts"
   },
   "dependencies": {
-    "@paperclipai/shared": "workspace:*",
+    "@thinkingmach/shared": "workspace:*",
     "drizzle-orm": "^0.45.2",
     "embedded-postgres": "^18.1.0-beta.16",
     "postgres": "^3.4.9"

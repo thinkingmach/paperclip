@@ -53,9 +53,9 @@ function buildHeaders(config: CloudflareDriverConfig, extra: BridgeClientHeaders
   const headers = new Headers();
   headers.set("Authorization", `Bearer ${config.bridgeAuthToken}`);
   headers.set("Content-Type", "application/json");
-  if (extra.environmentId) headers.set("X-Paperclip-Environment-Id", extra.environmentId);
-  if (extra.runId) headers.set("X-Paperclip-Run-Id", extra.runId);
-  if (extra.issueId) headers.set("X-Paperclip-Issue-Id", extra.issueId);
+  if (extra.environmentId) headers.set("X-ThinkingMach-Environment-Id", extra.environmentId);
+  if (extra.runId) headers.set("X-ThinkingMach-Run-Id", extra.runId);
+  if (extra.issueId) headers.set("X-ThinkingMach-Issue-Id", extra.issueId);
   return headers;
 }
 

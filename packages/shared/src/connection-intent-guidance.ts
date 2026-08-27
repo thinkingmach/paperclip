@@ -18,7 +18,7 @@ export const CONNECTION_INTENT_AGENT_GUIDANCE = [
 ].join("\n");
 
 export const CONNECTIONS_SEARCH_TOOL_DESCRIPTION = [
-  "Search Paperclip's known connectable services and report this run's agent-relative access state.",
+  "Search ThinkingMach's known connectable services and report this run's agent-relative access state.",
   "Use it when work requires a known external service and usable access is uncertain; do not use it for arbitrary MCP URLs or unrelated work.",
 ].join(" ");
 

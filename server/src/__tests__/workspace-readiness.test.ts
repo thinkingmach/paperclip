@@ -2,8 +2,8 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
-import type { WorkspaceReadinessProbeResult } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import type { WorkspaceReadinessProbeResult } from "@thinkingmach/shared";
 import {
   isManagedWorkspaceInstance,
   resetManagedWorkspaceInstanceCacheForTests,
@@ -90,7 +90,7 @@ function handoffSubjectDb(rows: Array<{ userId: string; email: string | null }>)
 
 function readyGuestEnv(configPath: string, overrides: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
   return {
-    PAPERCLIP_CONFIG: configPath,
+    THINKINGMACH_CONFIG: configPath,
     [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "key",
     [WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY]: "ews-1",
     [WORKSPACE_EXECUTION_WORKSPACE_COMPANY_ID_ENV_KEY]: "company-1",
@@ -257,12 +257,12 @@ describe("resolveWorkspaceReadiness", () => {
 
   it("resolves the marker directory from the configured config path", () => {
     const { dir, configPath } = createMarkerDir();
-    expect(resolveWorkspaceSeedMarkerDir({ PAPERCLIP_CONFIG: configPath })).toBe(dir);
+    expect(resolveWorkspaceSeedMarkerDir({ THINKINGMACH_CONFIG: configPath })).toBe(dir);
   });
 
   it("does not re-stat marker files on every health request", () => {
     const { configPath } = createMarkerDir({ "seed-manifest.json": verifiedManifest() });
-    const env = { PAPERCLIP_CONFIG: configPath };
+    const env = { THINKINGMACH_CONFIG: configPath };
     let clock = 0;
     expect(isManagedWorkspaceInstance(env, () => clock)).toBe(true);
 
@@ -277,12 +277,12 @@ describe("resolveWorkspaceReadiness", () => {
 
   it("only treats a process with clone evidence as a managed workspace", () => {
     const { configPath } = createMarkerDir();
-    expect(isManagedWorkspaceInstance({ PAPERCLIP_CONFIG: configPath })).toBe(false);
+    expect(isManagedWorkspaceInstance({ THINKINGMACH_CONFIG: configPath })).toBe(false);
     expect(
-      isManagedWorkspaceInstance({ PAPERCLIP_CONFIG: configPath, [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "key" }),
+      isManagedWorkspaceInstance({ THINKINGMACH_CONFIG: configPath, [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "key" }),
     ).toBe(true);
     const seeded = createMarkerDir({ "seed-manifest.json": verifiedManifest() });
-    expect(isManagedWorkspaceInstance({ PAPERCLIP_CONFIG: seeded.configPath })).toBe(true);
+    expect(isManagedWorkspaceInstance({ THINKINGMACH_CONFIG: seeded.configPath })).toBe(true);
   });
 });
 
@@ -509,7 +509,7 @@ describe("probeManagedWorkspaceReadiness", () => {
       workspaceCwd: "/srv/worktree",
       executionWorkspaceId: "ews-1",
       companyId: "company-1",
-      env: { PAPERCLIP_WORKSPACE_HANDOFF_SECRET: "root" },
+      env: { THINKINGMACH_WORKSPACE_HANDOFF_SECRET: "root" },
     };
     expect(resolveManagedWorkspaceIdentity(complete)).not.toBeNull();
     expect(resolveManagedWorkspaceIdentity({ ...complete, companyId: null })).toBeNull();
@@ -522,7 +522,7 @@ describe("probeManagedWorkspaceReadiness", () => {
     const base = {
       workspaceCwd: "/srv/worktree",
       executionWorkspaceId: "ews-1",
-      env: { PAPERCLIP_WORKSPACE_HANDOFF_SECRET: "root" },
+      env: { THINKINGMACH_WORKSPACE_HANDOFF_SECRET: "root" },
     };
     const first = resolveManagedWorkspaceIdentity({ ...base, companyId: "company-1" });
     const second = resolveManagedWorkspaceIdentity({ ...base, companyId: "company-2" });
@@ -539,7 +539,7 @@ describe("probeManagedWorkspaceReadiness", () => {
       [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "handoff-key",
       [WORKSPACE_READINESS_TOKEN_ENV_KEY]: "probe-token",
       [WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY]: "ews-1",
-      PAPERCLIP_EXECUTION_WORKSPACE_COMPANY_ID: "company-1",
+      THINKINGMACH_EXECUTION_WORKSPACE_COMPANY_ID: "company-1",
     });
   });
 });
@@ -563,8 +563,8 @@ describe("shouldBlockPublicationOnReadiness", () => {
 
   it("reads the deployment-level mode from the environment", () => {
     expect(resolveWorkspaceReadinessGateMode({})).toBe("auto");
-    expect(resolveWorkspaceReadinessGateMode({ PAPERCLIP_WORKSPACE_READINESS_GATE: "STRICT" })).toBe("strict");
-    expect(resolveWorkspaceReadinessGateMode({ PAPERCLIP_WORKSPACE_READINESS_GATE: "anything-else" })).toBe("auto");
+    expect(resolveWorkspaceReadinessGateMode({ THINKINGMACH_WORKSPACE_READINESS_GATE: "STRICT" })).toBe("strict");
+    expect(resolveWorkspaceReadinessGateMode({ THINKINGMACH_WORKSPACE_READINESS_GATE: "anything-else" })).toBe("auto");
   });
 });
 

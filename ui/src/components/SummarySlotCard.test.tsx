@@ -12,7 +12,7 @@ import type {
   SummarySlotDocument,
   SummarySlotIssueRef,
   SummarySlotRevision,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SummarySlotCard } from "./SummarySlotCard";
 

@@ -23,7 +23,7 @@
         "completionClaim": { "contractRevision": "semantic-receipts-v1", "objectiveSatisfied": false, "criteria": [], "remainingWork": [{ "description": "The budget owner must raise the limit or wait for reset.", "blocksCompletion": true }] },
         "evidence": [{ "decisionId": "budget_decision_stop" }],
         "verification": [{ "commandOrCheck": "budget aggregate receipt", "status": "passed" }],
-        "blocker": { "reasonCode": "budget_hard_stop", "owner": { "kind": "system", "name": "Paperclip budget policy" }, "unblockAction": "Raise the actor budget or wait for the monthly reset.", "scope": "task_wide" },
+        "blocker": { "reasonCode": "budget_hard_stop", "owner": { "kind": "system", "name": "ThinkingMach budget policy" }, "unblockAction": "Raise the actor budget or wait for the monthly reset.", "scope": "task_wide" },
         "attentionRequests": [], "artifacts": []
       }
     },
@@ -49,7 +49,7 @@
     "completionClaim": { "contractRevision": "semantic-receipts-v1", "objectiveSatisfied": false, "criteria": [], "remainingWork": [{ "description": "The budget owner must raise the limit or wait for reset.", "blocksCompletion": true }] },
     "evidence": [{ "decisionId": "budget_decision_stop" }],
     "verification": [{ "commandOrCheck": "budget aggregate receipt", "status": "passed" }],
-    "blocker": { "reasonCode": "budget_hard_stop", "owner": { "kind": "system", "name": "Paperclip budget policy" }, "unblockAction": "Raise the actor budget or wait for the monthly reset.", "scope": "task_wide" },
+    "blocker": { "reasonCode": "budget_hard_stop", "owner": { "kind": "system", "name": "ThinkingMach budget policy" }, "unblockAction": "Raise the actor budget or wait for the monthly reset.", "scope": "task_wide" },
     "attentionRequests": [], "artifacts": []
   }
 }

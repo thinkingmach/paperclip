@@ -1,7 +1,7 @@
 import { and, eq, isNull } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { statusCards, statusCardUpdates } from "@paperclipai/db";
-import type { IssueStatus } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { statusCards, statusCardUpdates } from "@thinkingmach/db";
+import type { IssueStatus } from "@thinkingmach/shared";
 
 // A status-card generation run stops making progress when its task reaches one
 // of these statuses. `done`/`cancelled` are terminal; `blocked` is not, but a

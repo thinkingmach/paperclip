@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { ensureCursorSkillsInjected } from "@paperclipai/adapter-cursor-local/server";
+import { ensureCursorSkillsInjected } from "@thinkingmach/adapter-cursor-local/server";
 
 async function makeTempDir(prefix: string): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
@@ -20,7 +20,7 @@ describe("cursor local adapter skill injection", () => {
     cleanupDirs.clear();
   });
 
-  it("links missing Paperclip skills into Cursor skills home", async () => {
+  it("links missing ThinkingMach skills into Cursor skills home", async () => {
     const skillsDir = await makeTempDir("paperclip-cursor-skills-src-");
     const skillsHome = await makeTempDir("paperclip-cursor-skills-home-");
     cleanupDirs.add(skillsDir);

@@ -3,9 +3,9 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  listPaperclipSkillEntries,
+  listThinkingMachSkillEntries,
   removeMaintainerOnlySkillSymlinks,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 
 async function makeTempDir(prefix: string): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
@@ -32,11 +32,11 @@ describe("paperclip skill utils", () => {
     await fs.mkdir(path.join(root, ".agents", "skills", "release"), { recursive: true });
     await fs.mkdir(path.join(root, ".agents", "skills", "terminal-bench-loop"), { recursive: true });
 
-    const entries = await listPaperclipSkillEntries(moduleDir);
+    const entries = await listThinkingMachSkillEntries(moduleDir);
 
     expect(entries.map((entry) => entry.key)).toEqual([
-      "paperclipai/paperclip/paperclip",
-      "paperclipai/paperclip/paperclip-create-agent",
+      "thinkingmach/paperclip/paperclip",
+      "thinkingmach/paperclip/paperclip-create-agent",
     ]);
     expect(entries.map((entry) => entry.runtimeName)).toEqual([
       "paperclip",
@@ -46,18 +46,18 @@ describe("paperclip skill utils", () => {
     expect(entries[1]?.source).toBe(path.join(root, "skills", "paperclip-create-agent"));
   });
 
-  it("documents artifact uploads in the installed Paperclip skill", async () => {
+  it("documents artifact uploads in the installed ThinkingMach skill", async () => {
     const skillBody = await fs.readFile(path.resolve("skills/paperclip/SKILL.md"), "utf8");
     const referenceBody = await fs.readFile(path.resolve("skills/paperclip/references/artifacts.md"), "utf8");
 
     expect(skillBody).toContain("Generated Artifacts and Work Products");
     expect(skillBody).toContain("references/artifacts.md");
-    expect(skillBody).not.toContain("/api/companies/$PAPERCLIP_COMPANY_ID/issues/$PAPERCLIP_TASK_ID/attachments");
+    expect(skillBody).not.toContain("/api/companies/$THINKINGMACH_COMPANY_ID/issues/$THINKINGMACH_TASK_ID/attachments");
     expect(referenceBody).toContain("Generated Artifacts and Work Products");
     expect(referenceBody).toContain("scripts/paperclip-upload-artifact.sh");
     expect(referenceBody).toContain("POST");
-    expect(referenceBody).toContain("/api/companies/$PAPERCLIP_COMPANY_ID/issues/$PAPERCLIP_TASK_ID/attachments");
-    expect(referenceBody).toContain("/api/issues/$PAPERCLIP_TASK_ID/work-products");
+    expect(referenceBody).toContain("/api/companies/$THINKINGMACH_COMPANY_ID/issues/$THINKINGMACH_TASK_ID/attachments");
+    expect(referenceBody).toContain("/api/issues/$THINKINGMACH_TASK_ID/work-products");
     await expect(
       fs.access(path.resolve("skills/paperclip/scripts/paperclip-upload-artifact.sh")),
     ).resolves.toBeUndefined();
@@ -110,7 +110,7 @@ describe("paperclip skill utils", () => {
     expect(skillBody).toContain("name: create-issue-interaction-ui");
     expect(normalizedLowerSkillBody).toContain("developer/maintainer skill");
     expect(normalizedLowerSkillBody).toContain(
-      "not the operational agents that run inside a deployed paperclip company",
+      "not the operational agents that run inside a deployed thinkingmach company",
     );
     expect(skillBody).toContain("packages/shared/src/constants.ts");
     expect(skillBody).toContain("server/src/services/issue-thread-interactions.ts");

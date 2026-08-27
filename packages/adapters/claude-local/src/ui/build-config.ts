@@ -1,4 +1,4 @@
-import { buildAdapterEnvConfig, type CreateConfigValues } from "@paperclipai/adapter-utils";
+import { buildAdapterEnvConfig, type CreateConfigValues } from "@thinkingmach/adapter-utils";
 
 function parseCommaArgs(value: string): string[] {
   return value

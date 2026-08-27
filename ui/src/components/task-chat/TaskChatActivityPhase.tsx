@@ -41,7 +41,7 @@ export function TaskChatActivityPhase({
   childrenClassName?: string;
   /** Draws a nested-activity rail aligned beneath the summary disclosure. */
   showChildRail?: boolean;
-  /** Codex-style summary treatment used only by the new Paperclip task UI. */
+  /** Codex-style summary treatment used only by the new ThinkingMach task UI. */
   appearance?: "classic" | "runner";
 }) {
   const shouldAutoOpen =

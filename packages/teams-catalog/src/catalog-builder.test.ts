@@ -11,13 +11,13 @@ import {
 const tempDirs: string[] = [];
 const catalogSkills = [
   {
-    id: "paperclipai:bundled:software-development:github-pr-workflow",
-    key: "paperclipai/bundled/software-development/github-pr-workflow",
+    id: "thinkingmach:bundled:software-development:github-pr-workflow",
+    key: "thinkingmach/bundled/software-development/github-pr-workflow",
     slug: "github-pr-workflow",
   },
   {
-    id: "paperclipai:bundled:paperclip-operations:task-planning",
-    key: "paperclipai/bundled/paperclip-operations/task-planning",
+    id: "thinkingmach:bundled:paperclip-operations:task-planning",
+    key: "thinkingmach/bundled/paperclip-operations/task-planning",
     slug: "task-planning",
   },
 ];
@@ -34,7 +34,7 @@ describe("teams catalog manifest", () => {
         "name: Product Engineering",
         "description: Product engineering team for implementation and review work.",
         "schema: agentcompanies/v1",
-        "key: paperclipai/bundled/software-development/product-engineering",
+        "key: thinkingmach/bundled/software-development/product-engineering",
         "manager: agents/cto/AGENTS.md",
         "recommendedForCompanyTypes:",
         "  - software",
@@ -84,8 +84,8 @@ describe("teams catalog manifest", () => {
     expect(result.errors).toEqual([]);
     expect(result.manifest.teams).toHaveLength(1);
     expect(result.manifest.teams[0]).toMatchObject({
-      id: "paperclipai:bundled:software-development:product-engineering",
-      key: "paperclipai/bundled/software-development/product-engineering",
+      id: "thinkingmach:bundled:software-development:product-engineering",
+      key: "thinkingmach/bundled/software-development/product-engineering",
       kind: "bundled",
       category: "software-development",
       slug: "product-engineering",
@@ -113,7 +113,7 @@ describe("teams catalog manifest", () => {
         type: "catalog",
         ref: "github-pr-workflow",
         resolved: true,
-        catalogSkillKey: "paperclipai/bundled/software-development/github-pr-workflow",
+        catalogSkillKey: "thinkingmach/bundled/software-development/github-pr-workflow",
         agentSlugs: ["cto"],
       }),
     ]);
@@ -132,7 +132,7 @@ describe("teams catalog manifest", () => {
       frontmatter: [
         "name: Duplicate",
         "schema: agentcompanies/v1",
-        "key: paperclipai/bundled/software-development/other",
+        "key: thinkingmach/bundled/software-development/other",
         "manager: agents/missing/AGENTS.md",
         "recommendedForCompanyTypes: software",
       ],
@@ -189,7 +189,7 @@ describe("teams catalog manifest", () => {
         expect.stringContaining("catalog/bundled/software-development/missing-team is missing TEAM.md"),
         expect.stringContaining("has invalid category"),
         expect.stringContaining("frontmatter must include description"),
-        expect.stringContaining("key must be paperclipai/bundled/Bad_Category/duplicate"),
+        expect.stringContaining("key must be thinkingmach/bundled/Bad_Category/duplicate"),
         expect.stringContaining("field recommendedForCompanyTypes must be an array of strings"),
         expect.stringContaining("manager must resolve to an AGENTS.md file"),
         expect.stringContaining("reportsTo references unknown agent slug"),
@@ -219,7 +219,7 @@ describe("teams catalog manifest", () => {
       path.join(packageDir, "generated", "catalog.json"),
       formatCatalogManifest({
         schemaVersion: 1,
-        packageName: "@paperclipai/teams-catalog",
+        packageName: "@thinkingmach/teams-catalog",
         packageVersion: "0.1.0",
         generatedAt: "2026-06-03T00:00:00.000Z",
         teams: [],
@@ -241,7 +241,7 @@ describe("teams catalog manifest", () => {
     const result = await validateCatalog(packageDir);
 
     expect(result.errors).toContain(
-      "generated/catalog.json is stale. Run pnpm --filter @paperclipai/teams-catalog build:manifest.",
+      "generated/catalog.json is stale. Run pnpm --filter @thinkingmach/teams-catalog build:manifest.",
     );
   });
 });

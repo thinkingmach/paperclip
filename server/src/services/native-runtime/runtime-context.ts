@@ -1,24 +1,24 @@
 import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { Db } from "@paperclipai/db";
-import type { PaperclipSkillEntry } from "@paperclipai/adapter-utils/server-utils";
-import { isToolConnectionAttentionHealth } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import type { ThinkingMachSkillEntry } from "@thinkingmach/adapter-utils/server-utils";
+import { isToolConnectionAttentionHealth } from "@thinkingmach/shared";
 import {
-  PAPERCLIP_OPERATIONAL_SKILL_KEY,
-  resolvePaperclipDesiredSkillNames,
-} from "@paperclipai/adapter-utils/server-utils";
+  THINKINGMACH_OPERATIONAL_SKILL_KEY,
+  resolveThinkingMachDesiredSkillNames,
+} from "@thinkingmach/adapter-utils/server-utils";
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   nativeRuntimePromptDigest,
   parseNativeRuntimeContext,
   type NativeRuntimeAssetReference,
   type NativeRuntimeContextSnapshot,
 } from "../../vendor/paperclip-runner/index.js";
-import { resolvePaperclipInstanceRoot } from "../../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../../home-paths.js";
 import { agentInstructionsService } from "../agent-instructions.js";
 import { toolAccessService } from "../tool-access.js";
 
@@ -93,7 +93,7 @@ async function materializeAsset(files: AssetFile[]): Promise<NativeRuntimeAssetR
   const assetDigest = sha256(JSON.stringify(manifestFiles));
   const manifestText = `${JSON.stringify({ schema: "paperclip.runtime-asset-manifest.v1", digest: assetDigest, fileCount: manifestFiles.length, totalBytes, files: manifestFiles })}\n`;
   const manifestDigest = sha256(manifestText);
-  const assetsRoot = path.join(resolvePaperclipInstanceRoot(), "runtime-context-assets");
+  const assetsRoot = path.join(resolveThinkingMachInstanceRoot(), "runtime-context-assets");
   const rootPath = path.join(assetsRoot, "bundles", assetDigest);
   const manifestPath = path.join(assetsRoot, "manifests", `${assetDigest}.json`);
   const existing = await fs.readFile(manifestPath, "utf8").catch(() => null);
@@ -150,9 +150,9 @@ async function materializeInstructionBundle(agent: RuntimeAgent) {
   return { entryPath, bundle: await materializeAsset(files) };
 }
 
-async function materializeSelectedSkills(runtimeConfig: Record<string, unknown>, entries: PaperclipSkillEntry[], omitLegacy: boolean) {
-  const desiredKeys = resolvePaperclipDesiredSkillNames(runtimeConfig, entries).filter(
-    (key) => !omitLegacy || key !== PAPERCLIP_OPERATIONAL_SKILL_KEY,
+async function materializeSelectedSkills(runtimeConfig: Record<string, unknown>, entries: ThinkingMachSkillEntry[], omitLegacy: boolean) {
+  const desiredKeys = resolveThinkingMachDesiredSkillNames(runtimeConfig, entries).filter(
+    (key) => !omitLegacy || key !== THINKINGMACH_OPERATIONAL_SKILL_KEY,
   );
   const byKey = new Map(entries.map((entry) => [entry.key, entry]));
   return Promise.all(desiredKeys.sort().map(async (key) => {
@@ -188,12 +188,12 @@ export async function resolveNativeRuntimeMcpSnapshot(input: { db: Db; agent: Pi
   return { assignmentSetId: `sha256:${assignmentDigest}`, digest: assignmentDigest, bindingId: assignment.connections.length ? `native-mcp:${input.runId}` : null };
 }
 
-export async function buildNativeRuntimeContext(input: { db: Db; agent: RuntimeAgent; runId: string; runtimeConfig: Record<string, unknown>; runtimeSkillEntries: PaperclipSkillEntry[] }): Promise<NativeRuntimeContextSnapshot> {
+export async function buildNativeRuntimeContext(input: { db: Db; agent: RuntimeAgent; runId: string; runtimeConfig: Record<string, unknown>; runtimeSkillEntries: ThinkingMachSkillEntry[] }): Promise<NativeRuntimeContextSnapshot> {
   const [instructions, skills, mcp] = await Promise.all([
     materializeInstructionBundle(input.agent),
     materializeSelectedSkills(input.runtimeConfig, input.runtimeSkillEntries, input.agent.adapterType === "paperclip_runner"),
     resolveNativeRuntimeMcpSnapshot({ db: input.db, agent: input.agent, runId: input.runId }),
   ]);
-  const snapshot = { prompt: { revision: PAPERCLIP_EXECUTION_PROMPT_REVISION, text: PAPERCLIP_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() }, instructions, skills, mcp };
+  const snapshot = { prompt: { revision: THINKINGMACH_EXECUTION_PROMPT_REVISION, text: THINKINGMACH_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() }, instructions, skills, mcp };
   return parseNativeRuntimeContext({ ...snapshot, aggregateDigest: canonicalNativeRuntimeContextDigest(snapshot) });
 }

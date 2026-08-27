@@ -1,4 +1,4 @@
-import type { ToolConnection } from "@paperclipai/shared";
+import type { ToolConnection } from "@thinkingmach/shared";
 
 /**
  * Reading Composio's service endpoints for the Services tab (PAP-17865).
@@ -87,7 +87,7 @@ export interface ComposioServiceRow {
   state: ComposioServiceState;
   /** Raw Composio account status (`ACTIVE`, `INITIALIZING`, `EXPIRED`, …), for the detail line. */
   connectedAccountStatus: string | null;
-  /** The Paperclip child connection for this toolkit, once one exists. */
+  /** The ThinkingMach child connection for this toolkit, once one exists. */
   childConnectionId: string | null;
   /** Number of tools the toolkit exposes, when Composio reports it. */
   toolCount: number | null;

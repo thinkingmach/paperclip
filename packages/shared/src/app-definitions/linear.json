@@ -31,7 +31,7 @@
           "write"
         ]
       },
-      "guidanceMd": "Register a Linear OAuth app and add Paperclip's redirect URI before connecting.",
+      "guidanceMd": "Register a Linear OAuth app and add ThinkingMach's redirect URI before connecting.",
       "riskTier": "S2",
       "requiredResourceFilters": [
         "workspace",

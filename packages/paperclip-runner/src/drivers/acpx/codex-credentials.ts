@@ -253,7 +253,7 @@ async function stageClaimedManagedCodexCredential(
   const hasApiKey = Boolean(
     environment.CODEX_API_KEY || environment.OPENAI_API_KEY,
   );
-  const inlineJson = environment.PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET;
+  const inlineJson = environment.THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET;
   const hasInlineJson = typeof inlineJson === "string" && inlineJson.length > 0;
   const hasManagedFile =
     typeof input.sourcePath === "string" && input.sourcePath.length > 0;

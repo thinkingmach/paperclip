@@ -1,5 +1,5 @@
 /**
- * @fileoverview Frontend API client for the Paperclip plugin system.
+ * @fileoverview Frontend API client for the ThinkingMach plugin system.
  *
  * All functions in `pluginsApi` map 1:1 to REST endpoints on
  * `server/src/routes/plugins.ts`. Call sites should consume these functions
@@ -18,7 +18,7 @@ import type {
   PluginRecord,
   PluginConfig,
   PluginStatus,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { api } from "./client";
 
 /**

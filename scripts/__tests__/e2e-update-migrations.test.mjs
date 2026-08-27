@@ -9,7 +9,7 @@ import test from "node:test";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const script = path.join(repoRoot, "scripts", "e2e-update-migrations.sh");
 const cleanEnv = Object.fromEntries(
-  Object.entries(process.env).filter(([name]) => !name.startsWith("PAPERCLIP_") && !name.startsWith("E2E_UPDATE_")),
+  Object.entries(process.env).filter(([name]) => !name.startsWith("THINKINGMACH_") && !name.startsWith("E2E_UPDATE_")),
 );
 
 test("cross-version migration harness has valid shell syntax", () => {

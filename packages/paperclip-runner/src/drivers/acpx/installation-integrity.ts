@@ -41,7 +41,7 @@ const MAX_DEPENDENCY_ANCESTORS = 64;
 const PROVIDER_WATCHDOG_HANDSHAKE_TIMEOUT_MS = 2_000;
 const PROVIDER_GUARDIAN_HANDSHAKE_TIMEOUT_MS = 5_000;
 const VERIFIED_PROVIDER_RUNTIME_TARGET_ENV =
-  "PAPERCLIP_ACPX_VERIFIED_PROVIDER_RUNTIME_TARGET";
+  "THINKINGMACH_ACPX_VERIFIED_PROVIDER_RUNTIME_TARGET";
 
 const QUALIFIED_CLAUDE_LINUX_X64_RUNTIME = Object.freeze({
   runtimePackageName: "@anthropic-ai/claude-agent-sdk",
@@ -756,11 +756,11 @@ function defaultPackageJsonResolver(
   packageName: string,
   issuerPackageJsonPath?: string,
 ): string {
-  const providerPackageRoot = process.env.PAPERCLIP_ACPX_PROVIDER_PACKAGE_ROOT;
+  const providerPackageRoot = process.env.THINKINGMACH_ACPX_PROVIDER_PACKAGE_ROOT;
   if (providerPackageRoot !== undefined) {
     return createAcpxPackageJsonResolver(
       providerPackageRoot,
-      process.env.PAPERCLIP_ACPX_PROVIDER_PACKAGE_MANIFEST,
+      process.env.THINKINGMACH_ACPX_PROVIDER_PACKAGE_MANIFEST,
     )(packageName, issuerPackageJsonPath);
   }
   // Source-mode and direct runtimes still have a stable module URL. The

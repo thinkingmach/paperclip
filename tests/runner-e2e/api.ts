@@ -13,8 +13,8 @@ export class RunnerApi {
   readonly baseURL: string;
 
   constructor(readonly request: APIRequestContext) {
-    const port = process.env.PAPERCLIP_RUNNER_E2E_PORT?.trim();
-    if (!port) throw new Error("PAPERCLIP_RUNNER_E2E_PORT is required");
+    const port = process.env.THINKINGMACH_RUNNER_E2E_PORT?.trim();
+    if (!port) throw new Error("THINKINGMACH_RUNNER_E2E_PORT is required");
     this.baseURL = `http://127.0.0.1:${port}`;
   }
 
@@ -33,7 +33,7 @@ export class RunnerApi {
   /**
    * Playwright traces APIRequestContext request bodies. Secret creation must
    * still use the public API, but it goes through Node fetch so plaintext is
-   * never serialized into trace/blob evidence before Paperclip encrypts it.
+   * never serialized into trace/blob evidence before ThinkingMach encrypts it.
    */
   async postSensitive<T>(path: string, data: unknown): Promise<T> {
     const response = await fetch(new URL(path, this.baseURL), {

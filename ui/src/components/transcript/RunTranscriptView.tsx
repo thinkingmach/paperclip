@@ -1,18 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { TranscriptEntry } from "../../adapters";
-import type { ToolRunDecision } from "@paperclipai/shared";
+import type { ToolRunDecision } from "@thinkingmach/shared";
 import { MarkdownBody, type MarkdownExternalReferenceMap } from "../MarkdownBody";
 import { cn, formatTokens } from "../../lib/utils";
 import { runningLabelText } from "../../lib/status-colors";
-import {
-  Check,
-  ChevronDown,
-  ChevronRight,
-  CircleAlert,
-  GitCompare,
-  TerminalSquare,
-  User,
-} from "lucide-react";
+import { Check, ChevronDown, ChevronRight, CircleAlert, GitCompare, TerminalSquare, User,  } from "lucide-react";
 import { toolTaxonomy } from "../task-chat/tool-taxonomy";
 
 /** Family glyph for a tool block/row; the taxonomy falls back to Wrench. */

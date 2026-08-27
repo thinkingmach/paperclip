@@ -1,6 +1,6 @@
 import {
-  PAPERCLIP_RUNNER_DEFAULT_MODELS,
-} from "@paperclipai/adapter-utils";
+  THINKINGMACH_RUNNER_DEFAULT_MODELS,
+} from "@thinkingmach/adapter-utils";
 
 export const type = "codex_local";
 export const label = "Codex";
@@ -10,7 +10,7 @@ export const SANDBOX_INSTALL_COMMAND = "npm install -g @openai/codex";
 // Use the concrete `gpt-5.6-sol` slug (Codex's own default for the 5.6 family) rather than the
 // bare `gpt-5.6` alias: OpenAI ships no model metadata for the bare slug, so passing it makes the
 // Codex CLI warn ("Model metadata for `gpt-5.6` not found") and fall back to generic context limits.
-export const DEFAULT_CODEX_LOCAL_MODEL = PAPERCLIP_RUNNER_DEFAULT_MODELS.codex;
+export const DEFAULT_CODEX_LOCAL_MODEL = THINKINGMACH_RUNNER_DEFAULT_MODELS.codex;
 export const DEFAULT_CODEX_LOCAL_BYPASS_APPROVALS_AND_SANDBOX = true;
 export const CODEX_LOCAL_FAST_MODE_SUPPORTED_MODELS = [
   "gpt-6-astra",
@@ -129,7 +129,7 @@ Core fields:
 - filesystemScope (string, optional): set to "workspace" to confine local CLI filesystem access with Bubblewrap. Off by default. The workspace and managed CODEX_HOME remain writable; other host paths are hidden.
 - filesystemExtraPaths (array, optional): additional absolute host paths exposed inside the workspace sandbox. String entries are read-only; object entries use { path: "/absolute/path", access: "ro" | "rw" }.
 - filesystemSandboxCommand (string, optional): Bubblewrap executable name or absolute path; defaults to "bwrap". Linux only.
-- networkScope (string, optional): "deny" blocks all network egress; "allowlist" permits only networkAllowlist targets through Paperclip's HTTP(S) proxy. Off by default.
+- networkScope (string, optional): "deny" blocks all network egress; "allowlist" permits only networkAllowlist targets through ThinkingMach's HTTP(S) proxy. Off by default.
 - networkAllowlist (string[], optional): exact hostnames, hostname:port entries, or origin URLs. Include the configured Codex provider origin, such as "api.openai.com" or a custom model provider gateway.
 
 Operational fields:
@@ -145,12 +145,12 @@ Operational fields:
 Notes:
 - filesystemScope and networkScope are spawn-level confinement and are orthogonal to Codex approval/sandbox flags. Both require Bubblewrap on the host and select the CLI engine in auto mode; engine="acp" is rejected because ACP confinement is not yet supported. networkScope="allowlist" injects HTTP_PROXY/HTTPS_PROXY for the CLI while its private network namespace blocks direct sockets, so every required provider/API hostname must be listed explicitly.
 - Prompts are piped via stdin (Codex receives "-" prompt argument).
-- If instructionsFilePath is configured, Paperclip prepends that file's contents to the stdin prompt on every run.
-- Codex exec automatically applies repo-scoped AGENTS.md instructions from the active workspace. Paperclip cannot suppress that discovery in exec mode, so repo AGENTS.md files may still apply even when you only configured an explicit instructionsFilePath.
-- Paperclip injects desired local skills into the effective CODEX_HOME/skills/ directory at execution time so Codex can discover "$paperclip" and related skills without polluting the project working directory. For new and updated agents, Paperclip assigns an isolated managed home at ~/.paperclip/instances/<id>/companies/<companyId>/agents/<agentId>/codex-home/skills/; when CODEX_HOME is explicitly overridden in adapter config, that override is used instead.
+- If instructionsFilePath is configured, ThinkingMach prepends that file's contents to the stdin prompt on every run.
+- Codex exec automatically applies repo-scoped AGENTS.md instructions from the active workspace. ThinkingMach cannot suppress that discovery in exec mode, so repo AGENTS.md files may still apply even when you only configured an explicit instructionsFilePath.
+- ThinkingMach injects desired local skills into the effective CODEX_HOME/skills/ directory at execution time so Codex can discover "$paperclip" and related skills without polluting the project working directory. For new and updated agents, ThinkingMach assigns an isolated managed home at ~/.paperclip/instances/<id>/companies/<companyId>/agents/<agentId>/codex-home/skills/; when CODEX_HOME is explicitly overridden in adapter config, that override is used instead.
 - New and updated codex_local agents persist an empty OPENAI_API_KEY override by default so a host-level OPENAI_API_KEY cannot leak into Codex runs through process inheritance. Explicit CODEX_HOME overrides must not point at the shared company codex-home, $CODEX_HOME, or ~/.codex.
 - Some model/tool combinations reject certain effort levels (for example minimal with web search enabled).
-- Fast mode is supported on GPT-6 Astra, GPT-5.6 (sol/terra/luna), GPT-5.5, GPT-5.4 and manual model IDs. When enabled for those models, Paperclip applies \`service_tier="fast"\` and \`features.fast_mode=true\`.
-- When Paperclip realizes a workspace/runtime for a run, it injects PAPERCLIP_WORKSPACE_* and PAPERCLIP_RUNTIME_* env vars for agent-side tooling.
+- Fast mode is supported on GPT-6 Astra, GPT-5.6 (sol/terra/luna), GPT-5.5, GPT-5.4 and manual model IDs. When enabled for those models, ThinkingMach applies \`service_tier="fast"\` and \`features.fast_mode=true\`.
+- When ThinkingMach realizes a workspace/runtime for a run, it injects THINKINGMACH_WORKSPACE_* and THINKINGMACH_RUNTIME_* env vars for agent-side tooling.
 - Codex ACP is the preferred auto lane when Node >=24.11.0 and the Codex ACP server are available. It reuses shared ACP prompt/runtime guidance, selected skill materialization into CODEX_HOME/skills, model/reasoning/fast-mode session config, and existing quota-window reporting. Auto selection falls back to CLI when ACP prerequisites are unavailable; explicit engine="acp" fails loudly.
 `;

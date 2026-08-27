@@ -19,7 +19,7 @@ import {
   statusDecisionEffects,
   statusDecisions,
   workAssessments,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   executeNativeSession,
   parseNativeExecutionInput,
@@ -35,13 +35,13 @@ import {
   runControlPlanePortConformance,
 } from "../../vendor/paperclip-runner/testing.js";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
-import { PaperclipControlPlanePort } from "./paperclip-control-plane-port.js";
+import { ThinkingMachControlPlanePort } from "./paperclip-control-plane-port.js";
 import { finalizeNativeRun } from "./native-run-finalizer.js";
 import { nativeRuntimeContextFixture } from "./runtime-context.test-fixture.js";
 import { issueThreadInteractionService } from "../issue-thread-interactions.js";
 import { materializeRuntimeQuestionFallback } from "./native-session-executor.js";
 
-describe("PaperclipControlPlanePort conformance", () => {
+describe("ThinkingMachControlPlanePort conformance", () => {
   let temporary: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
   let db: ReturnType<typeof createDb>;
   const contractId = "00000000-0000-4000-8000-000000000004";
@@ -277,11 +277,11 @@ describe("PaperclipControlPlanePort conformance", () => {
     }
   });
 
-  it("runs the unchanged package conformance suite against Paperclip persistence", async () => {
+  it("runs the unchanged package conformance suite against ThinkingMach persistence", async () => {
     const identity = CONTROL_PLANE_CONFORMANCE_OPEN.identity;
     const committedEventIds: string[] = [];
     const duplicateEventIds: string[] = [];
-    const port = new PaperclipControlPlanePort(
+    const port = new ThinkingMachControlPlanePort(
       db,
       {
         companyId: identity.companyId,
@@ -453,7 +453,7 @@ describe("PaperclipControlPlanePort conformance", () => {
         },
       },
     };
-    const port = new PaperclipControlPlanePort(db, binding, {
+    const port = new ThinkingMachControlPlanePort(db, binding, {
       onCommittedEvent: async () => {
         throw new Error("simulated_post_commit_crash");
       },
@@ -495,7 +495,7 @@ describe("PaperclipControlPlanePort conformance", () => {
     ]);
   });
 
-  it("completes one selected Paperclip task through the public package session contract", async () => {
+  it("completes one selected ThinkingMach task through the public package session contract", async () => {
     const identity = CONTROL_PLANE_CONFORMANCE_OPEN.identity;
     const sessionId = taskSessionId;
     const evidenceRef = `work_product:${taskWorkProductId}`;
@@ -587,7 +587,7 @@ describe("PaperclipControlPlanePort conformance", () => {
       credentialBindings: [],
       runtimeContext: nativeRuntimeContextFixture(),
     });
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: identity.companyId,
       issueId: taskIssueId,
       runId: taskRunId,
@@ -635,7 +635,7 @@ describe("PaperclipControlPlanePort conformance", () => {
 
   it("fails closed when the bound company does not own the run", async () => {
     const identity = CONTROL_PLANE_CONFORMANCE_OPEN.identity;
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: "00000000-0000-4000-8000-000000000099",
       issueId: identity.issueId,
       runId: identity.runId,
@@ -697,7 +697,7 @@ describe("PaperclipControlPlanePort conformance", () => {
       completionContractSha256: contractSha256,
       contextSnapshot: { issueId },
     });
-    const createPort = () => new PaperclipControlPlanePort(db, {
+    const createPort = () => new ThinkingMachControlPlanePort(db, {
       companyId: identity.companyId,
       issueId,
       runId,
@@ -742,7 +742,7 @@ describe("PaperclipControlPlanePort conformance", () => {
 
   it("does not let native completion bypass a pending issue interaction", async () => {
     const identity = CONTROL_PLANE_CONFORMANCE_OPEN.identity;
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: identity.companyId,
       issueId: governanceIssueId,
       runId: governanceRunId,
@@ -815,7 +815,7 @@ describe("PaperclipControlPlanePort conformance", () => {
       completionContractSha256: "native-review-contract",
       contextSnapshot: { issueId },
     });
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: identity.companyId,
       issueId,
       runId,
@@ -911,7 +911,7 @@ describe("PaperclipControlPlanePort conformance", () => {
       completionContractSha256: "dot-29-contract",
       contextSnapshot: { issueId },
     });
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: identity.companyId,
       issueId,
       runId,
@@ -1041,7 +1041,7 @@ describe("PaperclipControlPlanePort conformance", () => {
       completionContractSha256: "child-wake-contract",
       contextSnapshot: { issueId: childIssueId },
     });
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: identity.companyId,
       issueId: childIssueId,
       runId,
@@ -1093,7 +1093,7 @@ describe("PaperclipControlPlanePort conformance", () => {
           summary: "Implemented the accepted plan and passed 44/44 tests.",
         }],
         childIssueSummaryTruncated: false,
-        _paperclipWakeContext: {
+        _thinkingmachWakeContext: {
           wakeReason: "issue_children_completed",
           childIssueSummaries: [{
             id: childIssueId,
@@ -1154,7 +1154,7 @@ describe("PaperclipControlPlanePort conformance", () => {
 
   it("preserves the result and issue status when workspace finalization fails", async () => {
     const identity = CONTROL_PLANE_CONFORMANCE_OPEN.identity;
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: identity.companyId,
       issueId: workspaceFailureIssueId,
       runId: workspaceFailureRunId,
@@ -1293,7 +1293,7 @@ describe("PaperclipControlPlanePort conformance", () => {
         runTerminalState: entry.terminalState ?? "succeeded",
         reportedWorkDisposition: entry.result.reportedWorkDisposition,
       };
-      const port = new PaperclipControlPlanePort(db, {
+      const port = new ThinkingMachControlPlanePort(db, {
         companyId: identity.companyId,
         issueId,
         runId,

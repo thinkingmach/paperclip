@@ -5,7 +5,7 @@ import {
   getAvailableConnectionMethods,
   getAppStoreDefinition,
   getConnectableAppDefinition,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export const MCP_DIRECT_OAUTH_CONNECT_SLUGS = APP_STORE_DEFINITIONS
   .filter((app) => getAvailableConnectionMethods(app).some((method) =>

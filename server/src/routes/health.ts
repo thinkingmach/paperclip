@@ -1,9 +1,9 @@
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import { Router } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { and, count, eq, gt, inArray, isNull, sql } from "drizzle-orm";
-import { heartbeatRuns, instanceUserRoles, invites } from "@paperclipai/db";
-import type { DeploymentExposure, DeploymentMode } from "@paperclipai/shared";
+import { heartbeatRuns, instanceUserRoles, invites } from "@thinkingmach/db";
+import type { DeploymentExposure, DeploymentMode } from "@thinkingmach/shared";
 import {
   readPersistedDevServerStatus,
   removeDevServerRestartRequest,
@@ -61,7 +61,7 @@ function matchesSharedToken(expectedToken: string | undefined | null, providedTo
 }
 
 function hasDevServerStatusToken(providedToken: string | undefined) {
-  return matchesSharedToken(process.env.PAPERCLIP_DEV_SERVER_STATUS_TOKEN, providedToken);
+  return matchesSharedToken(process.env.THINKINGMACH_DEV_SERVER_STATUS_TOKEN, providedToken);
 }
 
 /**

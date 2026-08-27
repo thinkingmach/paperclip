@@ -2,7 +2,7 @@
 
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
-import type { LiveEvent } from "@paperclipai/shared";
+import type { LiveEvent } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   __liveUpdatesTestUtils,

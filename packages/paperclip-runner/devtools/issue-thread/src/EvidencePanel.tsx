@@ -383,7 +383,7 @@ export function EvidencePanel(props: EvidencePanelProps) {
     >
       <div className="pit-panel-chrome">
         <h2 className="pit-visually-hidden" tabIndex={-1} ref={headingRef}>Developer tools</h2>
-        <span className="pit-panel-kicker"><Icon name="activity" /> Paperclip DevTools</span>
+        <span className="pit-panel-kicker"><Icon name="activity" /> ThinkingMach DevTools</span>
         <button type="button" className="pit-icon-button" onClick={onClose} aria-label="Close DevTools" title="Close DevTools">
           <Icon name="close" />
         </button>

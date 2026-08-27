@@ -1,6 +1,6 @@
 import { randomInt } from "node:crypto";
 import path from "node:path";
-import type { PaperclipConfig } from "../config/schema.js";
+import type { ThinkingMachConfig } from "../config/schema.js";
 import { expandHomePrefix } from "../config/home.js";
 
 export const DEFAULT_WORKTREE_HOME = "~/.paperclip-worktrees";
@@ -233,12 +233,12 @@ export function rewriteLocalUrlPort(rawUrl: string | undefined, port: number): s
 }
 
 export function buildWorktreeConfig(input: {
-  sourceConfig: PaperclipConfig | null;
+  sourceConfig: ThinkingMachConfig | null;
   paths: WorktreeLocalPaths;
   serverPort: number;
   databasePort: number;
   now?: Date;
-}): PaperclipConfig {
+}): ThinkingMachConfig {
   const { sourceConfig, paths, serverPort, databasePort } = input;
   const nowIso = (input.now ?? new Date()).toISOString();
 
@@ -313,14 +313,14 @@ export function buildWorktreeEnvEntries(
   branding?: WorktreeUiBranding,
 ): Record<string, string> {
   return {
-    PAPERCLIP_HOME: paths.homeDir,
-    PAPERCLIP_INSTANCE_ID: paths.instanceId,
-    PAPERCLIP_CONFIG: paths.configPath,
-    PAPERCLIP_CONTEXT: paths.contextPath,
-    PAPERCLIP_IN_WORKTREE: "true",
-    PAPERCLIP_DB_BACKUP_ENABLED: "false",
-    ...(branding?.name ? { PAPERCLIP_WORKTREE_NAME: branding.name } : {}),
-    ...(branding?.color ? { PAPERCLIP_WORKTREE_COLOR: branding.color } : {}),
+    THINKINGMACH_HOME: paths.homeDir,
+    THINKINGMACH_INSTANCE_ID: paths.instanceId,
+    THINKINGMACH_CONFIG: paths.configPath,
+    THINKINGMACH_CONTEXT: paths.contextPath,
+    THINKINGMACH_IN_WORKTREE: "true",
+    THINKINGMACH_DB_BACKUP_ENABLED: "false",
+    ...(branding?.name ? { THINKINGMACH_WORKTREE_NAME: branding.name } : {}),
+    ...(branding?.color ? { THINKINGMACH_WORKTREE_COLOR: branding.color } : {}),
   };
 }
 

@@ -24,7 +24,7 @@ import type {
   WorkspaceFileListFileItem,
   WorkspaceFileListMode,
   WorkspaceFileSelector,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 type BrowserSource = "current" | "other";
 
@@ -1035,7 +1035,7 @@ export function WorkspaceFileBrowser({
         title={changedFilesTemporarilyUnavailable ? "Changed files temporarily unavailable" : "Couldn't load files"}
         body={
           changedFilesTemporarilyUnavailable
-            ? "Paperclip is limiting workspace scans to keep the server responsive. Try again in a moment."
+            ? "ThinkingMach is limiting workspace scans to keep the server responsive. Try again in a moment."
             : status === 404
             ? "Workspace browsing isn't available for this issue."
             : "Something went wrong loading workspace files."

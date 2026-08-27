@@ -9,12 +9,12 @@ approved [interaction map](design/live-console-interaction-map.md) and
 [component decision record](design/live-console-component-decisions.md).
 
 Every file lives under `packages/paperclip-runner/`. The console does not
-import or change Paperclip server, UI, database, or control-plane code.
+import or change ThinkingMach server, UI, database, or control-plane code.
 
 ## Start it
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner console:live-console
+pnpm --filter @thinkingmach/paperclip-runner console:live-console
 ```
 
 Then open `http://127.0.0.1:4180/` and choose **Live console**.
@@ -27,8 +27,8 @@ Two environment variables change the driver behind the console:
 
 | Variable | Default | Effect |
 | --- | --- | --- |
-| `PAPERCLIP_LIVE_CONSOLE_DRIVER` | `demo` | `codex` starts the real `codex app-server` driver behind the same routes |
-| `PAPERCLIP_LIVE_CONSOLE_CHUNK_DELAY_MS` | `45` | Milliseconds between streamed chunks in the demo driver |
+| `THINKINGMACH_LIVE_CONSOLE_DRIVER` | `demo` | `codex` starts the real `codex app-server` driver behind the same routes |
+| `THINKINGMACH_LIVE_CONSOLE_CHUNK_DELAY_MS` | `45` | Milliseconds between streamed chunks in the demo driver |
 
 ## Where state comes from
 
@@ -100,7 +100,7 @@ discards and leaves recorded evidence files untouched.
 
 ## Credentials
 
-No provider or Paperclip credential reaches the browser. The Node process owns
+No provider or ThinkingMach credential reaches the browser. The Node process owns
 the driver, the working directory, and any provider login. Every JSON and event
 frame passes the demo server's redaction layer, and the inspector renders
 redaction markers verbatim without attempting to reconstruct them.
@@ -130,13 +130,13 @@ component file carries a raw colour, pixel, or font value.
 ## Verification
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/mock-core/live-console-scripted-driver.test.ts \
   src/mock-core/live-console-demo-server.test.ts \
   devtools/browser/src/live/transcript-model.test.ts
-pnpm --filter @paperclipai/paperclip-runner test:browser
-pnpm --filter @paperclipai/paperclip-runner check:browser-tokens
-pnpm --filter @paperclipai/paperclip-runner check:forbidden-imports
+pnpm --filter @thinkingmach/paperclip-runner test:browser
+pnpm --filter @thinkingmach/paperclip-runner check:browser-tokens
+pnpm --filter @thinkingmach/paperclip-runner check:forbidden-imports
 ```
 
 See the [tutorial](tutorials/live-console.md).

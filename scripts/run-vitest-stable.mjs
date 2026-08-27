@@ -18,20 +18,20 @@ const serverRoot = path.join(repoRoot, "server");
 const serverSrcDir = path.join(repoRoot, "server", "src");
 const serverTestsDir = path.join(repoRoot, "server", "src", "__tests__");
 const nonServerProjects = [
-  "@paperclipai/shared",
-  "@paperclipai/skills-catalog",
-  "@paperclipai/db",
-  "@paperclipai/adapter-utils",
-  "@paperclipai/adapter-claude-local",
-  "@paperclipai/adapter-codex-local",
-  "@paperclipai/adapter-grok-local",
-  "@paperclipai/adapter-openclaw-gateway",
-  "@paperclipai/adapter-opencode-local",
-  "@paperclipai/plugin-daytona",
-  "@paperclipai/plugin-sdk",
-  "@paperclipai/create-paperclip-plugin",
-  "@paperclipai/ui",
-  "paperclipai",
+  "@thinkingmach/shared",
+  "@thinkingmach/skills-catalog",
+  "@thinkingmach/db",
+  "@thinkingmach/adapter-utils",
+  "@thinkingmach/adapter-claude-local",
+  "@thinkingmach/adapter-codex-local",
+  "@thinkingmach/adapter-grok-local",
+  "@thinkingmach/adapter-openclaw-gateway",
+  "@thinkingmach/adapter-opencode-local",
+  "@thinkingmach/plugin-daytona",
+  "@thinkingmach/plugin-sdk",
+  "@thinkingmach/create-paperclip-plugin",
+  "@thinkingmach/ui",
+  "thinkingmach",
 ];
 const routeTestPattern = /[^/]*(?:route|routes|authz)[^/]*\.test\.ts$/;
 const additionalSerializedServerTests = new Set([
@@ -68,7 +68,7 @@ const allModeName = "all";
 const generalServerGroupName = "general-server";
 const generalWorkspacesAGroupName = "general-workspaces-a";
 const generalWorkspacesBGroupName = "general-workspaces-b";
-const generalWorkspacesAProjects = ["@paperclipai/ui", "paperclipai"];
+const generalWorkspacesAProjects = ["@thinkingmach/ui", "thinkingmach"];
 const generalWorkspacesBProjects = nonServerProjects.filter((project) => !generalWorkspacesAProjects.includes(project));
 const generalGroupNames = [generalServerGroupName, generalWorkspacesAGroupName, generalWorkspacesBGroupName];
 const serializedServerVitestArgs = [
@@ -280,11 +280,11 @@ function runVitest(args, label) {
   const env = {
     ...process.env,
     NODE_ENV: "test",
-    PAPERCLIP_HOME: path.join(testRoot, "h"),
-    PAPERCLIP_INSTANCE_ID: `vt-${process.pid}-${invocationIndex}`,
+    THINKINGMACH_HOME: path.join(testRoot, "h"),
+    THINKINGMACH_INSTANCE_ID: `vt-${process.pid}-${invocationIndex}`,
     TMPDIR: path.join(testRoot, "t"),
   };
-  mkdirSync(env.PAPERCLIP_HOME, { recursive: true });
+  mkdirSync(env.THINKINGMACH_HOME, { recursive: true });
   mkdirSync(env.TMPDIR, { recursive: true });
   const result = spawnSync("pnpm", ["exec", "vitest", "run", ...sourceOnlyVitestArgs, ...args], {
     cwd: repoRoot,
@@ -338,7 +338,7 @@ function runGeneralGroup(routeTests, groupName, shardIndex = null, shardCount = 
       runVitest(
         [
           "--project",
-          "@paperclipai/server",
+          "@thinkingmach/server",
           ...serializedServerVitestArgs,
           ...shardFiles,
         ],
@@ -351,7 +351,7 @@ function runGeneralGroup(routeTests, groupName, shardIndex = null, shardCount = 
     runVitest(
       [
         "--project",
-        "@paperclipai/server",
+        "@thinkingmach/server",
         ...serializedServerVitestArgs,
         ...excludeRouteArgs,
       ],
@@ -387,7 +387,7 @@ function runSerializedSuites(routeTests, shardIndex, shardCount) {
     runVitest(
       [
         "--project",
-        "@paperclipai/server",
+        "@thinkingmach/server",
         routeTest.repoPath,
         "--pool=forks",
         "--isolate",

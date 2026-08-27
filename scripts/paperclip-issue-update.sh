@@ -11,14 +11,14 @@ Reads a multiline markdown comment from stdin when stdin is piped. This preserve
 newlines when building the JSON payload for PATCH /api/issues/{issueId}.
 
 Examples:
-  scripts/paperclip-issue-update.sh --issue-id "$PAPERCLIP_TASK_ID" --status in_progress <<'MD'
+  scripts/paperclip-issue-update.sh --issue-id "$THINKINGMACH_TASK_ID" --status in_progress <<'MD'
   Investigating formatting
 
   - Pulled the raw comment body
   - Comparing it with the run transcript
   MD
 
-  scripts/paperclip-issue-update.sh --issue-id "$PAPERCLIP_TASK_ID" --status done --dry-run <<'MD'
+  scripts/paperclip-issue-update.sh --issue-id "$THINKINGMACH_TASK_ID" --status done --dry-run <<'MD'
   Done
 
   - Fixed the issue update helper
@@ -33,7 +33,7 @@ require_command() {
   fi
 }
 
-issue_id="${PAPERCLIP_TASK_ID:-}"
+issue_id="${THINKINGMACH_TASK_ID:-}"
 status=""
 comment_arg=""
 dry_run=0
@@ -69,7 +69,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$issue_id" ]]; then
-  printf 'Missing issue id. Pass --issue-id or set PAPERCLIP_TASK_ID.\n' >&2
+  printf 'Missing issue id. Pass --issue-id or set THINKINGMACH_TASK_ID.\n' >&2
   exit 1
 fi
 
@@ -97,8 +97,8 @@ if [[ "$dry_run" == "1" ]]; then
   exit 0
 fi
 
-if [[ -z "${PAPERCLIP_API_URL:-}" || -z "${PAPERCLIP_API_KEY:-}" || -z "${PAPERCLIP_RUN_ID:-}" ]]; then
-  printf 'Missing PAPERCLIP_API_URL, PAPERCLIP_API_KEY, or PAPERCLIP_RUN_ID.\n' >&2
+if [[ -z "${THINKINGMACH_API_URL:-}" || -z "${THINKINGMACH_API_KEY:-}" || -z "${THINKINGMACH_RUN_ID:-}" ]]; then
+  printf 'Missing THINKINGMACH_API_URL, THINKINGMACH_API_KEY, or THINKINGMACH_RUN_ID.\n' >&2
   exit 1
 fi
 
@@ -115,9 +115,9 @@ while :; do
   set +e
   response="$(
     curl -sS -m 30 -X PATCH \
-      "$PAPERCLIP_API_URL/api/issues/$issue_id" \
-      -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
-      -H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID" \
+      "$THINKINGMACH_API_URL/api/issues/$issue_id" \
+      -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
+      -H "X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID" \
       -H 'Content-Type: application/json' \
       --data-binary "$payload" \
       -w '\n%{http_code}'

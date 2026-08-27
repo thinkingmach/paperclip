@@ -195,7 +195,7 @@ async function git(cwd: string, args: string[]): Promise<string> {
 async function initGitRepo(repoDir: string): Promise<void> {
   await mkdir(repoDir, { recursive: true });
   await git(repoDir, ["init", "-q"]);
-  await git(repoDir, ["config", "user.name", "Paperclip Test"]);
+  await git(repoDir, ["config", "user.name", "ThinkingMach Test"]);
   await git(repoDir, ["config", "user.email", "test@paperclip.dev"]);
   await writeFile(path.join(repoDir, "README.md"), "root\n", "utf8");
   await git(repoDir, ["add", "README.md"]);
@@ -655,7 +655,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, ".gitignore"), "node_modules/\n", "utf8");
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "base\n", "utf8");
@@ -749,7 +749,7 @@ describe("sandbox managed runtime", () => {
     expect(workspaceMembers).not.toContain("clean.txt");
     expect(workspaceMembers.some((entry) => entry === "node_modules" || entry.startsWith("node_modules/"))).toBe(false);
 
-    await git(remoteWorkspaceDir, ["config", "user.name", "Paperclip Sandbox"]);
+    await git(remoteWorkspaceDir, ["config", "user.name", "ThinkingMach Sandbox"]);
     await git(remoteWorkspaceDir, ["config", "user.email", "sandbox@paperclip.dev"]);
     await git(remoteWorkspaceDir, ["add", "-A"]);
     await git(remoteWorkspaceDir, ["commit", "-m", "sandbox update"]);
@@ -800,7 +800,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "kept.txt"), "kept\n", "utf8");
     await writeFile(path.join(sourceRepoDir, "restored.txt"), "restored\n", "utf8");
@@ -874,7 +874,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "kept.txt"), "base\n", "utf8");
     await git(sourceRepoDir, ["add", "kept.txt"]);
@@ -911,7 +911,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await mkdir(path.join(sourceRepoDir, "src"), { recursive: true });
     await writeFile(path.join(sourceRepoDir, "src", "tracked.ts"), "export const tracked = true;\n", "utf8");
@@ -1698,7 +1698,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "tracked\n", "utf8");
     await git(sourceRepoDir, ["add", "tracked.txt"]);
@@ -1782,7 +1782,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "tracked\n", "utf8");
     await git(sourceRepoDir, ["add", "tracked.txt"]);
@@ -1839,7 +1839,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "tracked\n", "utf8");
     await git(sourceRepoDir, ["add", "tracked.txt"]);
@@ -1905,7 +1905,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "tracked\n", "utf8");
     await git(sourceRepoDir, ["add", "tracked.txt"]);
@@ -2069,7 +2069,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "tracked\n", "utf8");
     await git(sourceRepoDir, ["add", "tracked.txt"]);
@@ -2181,7 +2181,7 @@ describe("sandbox managed runtime", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "tracked\n", "utf8");
     await git(sourceRepoDir, ["add", "tracked.txt"]);
@@ -2243,7 +2243,7 @@ describe("sandbox managed runtime", () => {
   });
 
   it("authors the advisory access intent ro on referenced-project inbound mappings", async () => {
-    const flagKey = "PAPERCLIP_MULTI_PROJECT_WORKSPACE_SYNC";
+    const flagKey = "THINKINGMACH_MULTI_PROJECT_WORKSPACE_SYNC";
     const priorFlag = process.env[flagKey];
     process.env[flagKey] = "1";
     try {
@@ -2301,7 +2301,7 @@ describe("sandbox managed runtime", () => {
   });
 
   it("reports the real transferred bytes for a referenced project's inbound staging", async () => {
-    const flagKey = "PAPERCLIP_MULTI_PROJECT_WORKSPACE_SYNC";
+    const flagKey = "THINKINGMACH_MULTI_PROJECT_WORKSPACE_SYNC";
     const priorFlag = process.env[flagKey];
     process.env[flagKey] = "1";
     try {
@@ -2378,12 +2378,12 @@ describe("sandbox managed runtime", () => {
   // host filesystem (host FS stands in for the sandbox FS). The runner exposes no
   // native syncIn, so staging rides the base64/tar fallback, the same transport a
   // provider without native sync uses. In production the kill-switch
-  // `PAPERCLIP_MULTI_PROJECT_WORKSPACE_SYNC` gates whether run prep resolves any
+  // `THINKINGMACH_MULTI_PROJECT_WORKSPACE_SYNC` gates whether run prep resolves any
   // referenced projects (OFF ⇒ none reach this layer). Enable it in-test only to
   // model the ON scenario, and prove multi-project isolation plus one-failure
   // isolation end-to-end.
   it("stages multiple referenced projects into isolated sandbox dirs end-to-end, skipping a failing source", async () => {
-    const flagKey = "PAPERCLIP_MULTI_PROJECT_WORKSPACE_SYNC";
+    const flagKey = "THINKINGMACH_MULTI_PROJECT_WORKSPACE_SYNC";
     const priorFlag = process.env[flagKey];
     process.env[flagKey] = "1";
     try {
@@ -3998,7 +3998,7 @@ describe("sandbox git-bundle export transport", () => {
     await mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(sourceRepoDir, ".gitignore"), "node_modules/\n", "utf8");
     await writeFile(path.join(sourceRepoDir, "tracked.txt"), "base\n", "utf8");
@@ -4011,7 +4011,7 @@ describe("sandbox git-bundle export transport", () => {
   // Advance the sandbox history by one commit that also adds a new file. The
   // caller runs the restore after this, so the export moves this new history.
   async function commitInSandbox(remoteWorkspaceDir: string): Promise<void> {
-    await git(remoteWorkspaceDir, ["config", "user.name", "Paperclip Sandbox"]);
+    await git(remoteWorkspaceDir, ["config", "user.name", "ThinkingMach Sandbox"]);
     await git(remoteWorkspaceDir, ["config", "user.email", "sandbox@paperclip.dev"]);
     await writeFile(path.join(remoteWorkspaceDir, "remote-only.txt"), "from sandbox\n", "utf8");
     await git(remoteWorkspaceDir, ["add", "-A"]);
@@ -4090,7 +4090,7 @@ describe("sandbox git-bundle export transport", () => {
     await mkdir(localWorkspaceDir, { recursive: true });
     await git(localWorkspaceDir, ["init"]);
     await git(localWorkspaceDir, ["checkout", "-b", "work"]);
-    await git(localWorkspaceDir, ["config", "user.name", "Paperclip Test"]);
+    await git(localWorkspaceDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(localWorkspaceDir, ["config", "user.email", "test@paperclip.dev"]);
     await writeFile(path.join(localWorkspaceDir, "tracked.txt"), "base\n", "utf8");
     await git(localWorkspaceDir, ["add", "-A"]);

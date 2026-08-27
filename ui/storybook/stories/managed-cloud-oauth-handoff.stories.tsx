@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ManagedOAuthHandoffState } from "@/pages/apps/PaperclipCloudOAuthHandoff";
+import { ManagedOAuthHandoffState } from "@/pages/apps/ThinkingMachCloudOAuthHandoff";
 
 const meta: Meta<typeof ManagedOAuthHandoffState> = {
   title: "Apps/Managed Cloud OAuth handoff",
@@ -25,13 +25,13 @@ export const ResumingAfterReauthentication: Story = {
 export const RetryAfterInfrastructureFailure: Story = {
   args: {
     phase: "error",
-    error: "Paperclip Cloud couldn’t prepare secure sign-in. Try again.",
+    error: "ThinkingMach Cloud couldn’t prepare secure sign-in. Try again.",
   },
 };
 
 export const TerminalExpiredSession: Story = {
   args: {
     phase: "error",
-    error: "This sign-in expired. Return to Paperclip and start the connection again.",
+    error: "This sign-in expired. Return to ThinkingMach and start the connection again.",
   },
 };

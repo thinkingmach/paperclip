@@ -3,7 +3,7 @@ import { createReadStream } from "node:fs";
 import { constants as fsConstants, promises as fs } from "node:fs";
 import path from "node:path";
 import { shouldExcludePath } from "./exclude-patterns.js";
-import { resolvePaperclipInstanceRootForAdapter } from "./server-utils.js";
+import { resolveThinkingMachInstanceRootForAdapter } from "./server-utils.js";
 
 type SnapshotEntry =
   | { kind: "dir" }
@@ -190,7 +190,7 @@ async function isLockStale(lockDir: string): Promise<boolean> {
     // this exact state, briefly, between its own `fs.mkdir(lockDir)` and its
     // `fs.writeFile(owner.json)` below. Reading "missing" as "stale" here would
     // let a concurrent acquirer delete a live holder's lock directory during
-    // that window. Mirror the materializePaperclipSkillCopy lock pattern: fall
+    // that window. Mirror the materializeThinkingMachSkillCopy lock pattern: fall
     // back to the lock directory's own mtime, and only call it stale once the
     // directory itself has outlived the stale threshold.
     const stat = await fs.stat(lockDir).catch(() => null);
@@ -216,7 +216,7 @@ async function acquireDirectoryMergeLock(lockDir: string): Promise<() => Promise
       if (code !== "EEXIST") throw error;
       // Stale-lock detection: if the owner PID is dead (SIGKILL / OOM / crash),
       // the lockDir would otherwise persist forever and stall restores. Mirror
-      // the materializePaperclipSkillCopy lock pattern — remove and retry.
+      // the materializeThinkingMachSkillCopy lock pattern — remove and retry.
       if (await isLockStale(lockDir)) {
         await fs.rm(lockDir, { recursive: true, force: true }).catch(() => undefined);
         continue;
@@ -242,8 +242,8 @@ function nonEmpty(value: string | undefined): string | null {
 /**
  * Resolves the private, instance-scoped root for every directory-merge lock:
  * `<instance root>/locks/directory-merge`. Every process that can mutate one
- * target directory must resolve to the same `PAPERCLIP_HOME` and
- * `PAPERCLIP_INSTANCE_ID`. That shared resolution is what keeps mutual
+ * target directory must resolve to the same `THINKINGMACH_HOME` and
+ * `THINKINGMACH_INSTANCE_ID`. That shared resolution is what keeps mutual
  * exclusion true for all five callers of `withDirectoryMergeLock`, including
  * the three Codex credential call sites that never touch a workspace.
  *
@@ -252,7 +252,7 @@ function nonEmpty(value: string | undefined): string | null {
  * so a read-only target parent (the workspace-restore bug) cannot block a
  * lock acquisition.
  *
- * The root reads `PAPERCLIP_HOME` and `PAPERCLIP_INSTANCE_ID` from `env`, so an
+ * The root reads `THINKINGMACH_HOME` and `THINKINGMACH_INSTANCE_ID` from `env`, so an
  * environment-parameterized caller (a Codex credential call site that builds
  * its own `env` object instead of reading `process.env`) resolves its lock
  * root under the same instance root as the directory it protects. This never
@@ -276,9 +276,9 @@ function nonEmpty(value: string | undefined): string | null {
  * would follow the symlink) before any caller treats it as the lock root.
  */
 async function resolveDirectoryMergeLockRoot(env: NodeJS.ProcessEnv = process.env): Promise<string> {
-  const instanceRoot = resolvePaperclipInstanceRootForAdapter({
-    homeDir: nonEmpty(env.PAPERCLIP_HOME) ?? undefined,
-    instanceId: nonEmpty(env.PAPERCLIP_INSTANCE_ID) ?? undefined,
+  const instanceRoot = resolveThinkingMachInstanceRootForAdapter({
+    homeDir: nonEmpty(env.THINKINGMACH_HOME) ?? undefined,
+    instanceId: nonEmpty(env.THINKINGMACH_INSTANCE_ID) ?? undefined,
     env,
   });
   const lockRoot = path.join(instanceRoot, "locks", "directory-merge");

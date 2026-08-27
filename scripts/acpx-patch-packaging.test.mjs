@@ -64,7 +64,7 @@ test("published packages preserve the patched ACPX runtime", () => {
   assert.equal(cliEsbuildConfig.external.includes("acpx"), false);
 });
 
-test("Paperclip Runner pins the qualified ACPX host callbacks", () => {
+test("ThinkingMach Runner pins the qualified ACPX host callbacks", () => {
   assert.equal(rootPackage.pnpm.patchedDependencies["acpx@0.13.1"], "patches/acpx@0.13.1.patch");
   assert.equal(
     rootPackage.pnpm.patchedDependencies["@agentclientprotocol/claude-agent-acp@0.70.0"],
@@ -103,7 +103,7 @@ test("bundled package staging materializes publishConfig entrypoints", () => {
 
 test("bundled package staging materializes workspace dependency versions", () => {
   const staged = materializePublishManifest({
-    name: "@paperclipai/example",
+    name: "@thinkingmach/example",
     version: "2026.723.0",
     dependencies: { exact: "workspace:*", caret: "workspace:^", tilde: "workspace:~" },
   });
@@ -117,15 +117,15 @@ test("bundled package staging materializes workspace dependency versions", () =>
 
 test("bundled package staging installs only dependencies included in the tarball", () => {
   const publishManifest = {
-    name: "@paperclipai/db",
+    name: "@thinkingmach/db",
     version: "2026.723.0-canary.8",
     dependencies: {
-      "@paperclipai/shared": "2026.723.0-canary.8",
+      "@thinkingmach/shared": "2026.723.0-canary.8",
       "drizzle-orm": "^0.45.2",
       "embedded-postgres": "^18.1.0-beta.16",
     },
     devDependencies: {
-      "@paperclipai/paperclip-runner": "2026.723.0-canary.8",
+      "@thinkingmach/paperclip-runner": "2026.723.0-canary.8",
     },
     bundleDependencies: ["embedded-postgres"],
   };
@@ -136,7 +136,7 @@ test("bundled package staging installs only dependencies included in the tarball
   });
   assert.equal(installManifest.devDependencies, undefined);
   assert.deepEqual(publishManifest.devDependencies, {
-    "@paperclipai/paperclip-runner": "2026.723.0-canary.8",
+    "@thinkingmach/paperclip-runner": "2026.723.0-canary.8",
   });
   assert.deepEqual(installManifest.bundleDependencies, ["embedded-postgres"]);
 });

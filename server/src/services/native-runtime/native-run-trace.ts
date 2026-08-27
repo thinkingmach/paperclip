@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { createHash } from "node:crypto";
 
-import { runWithRuntimeParent } from "@paperclipai/adapter-utils/acpx-engine/startup-timing";
+import { runWithRuntimeParent } from "@thinkingmach/adapter-utils/acpx-engine/startup-timing";
 import type { AdapterRuntimeEvent } from "../../adapters/index.js";
 import {
   getStartupTraceContext,
@@ -91,7 +91,7 @@ function safeAttributes(
 }
 
 /**
- * Run-scoped tracing for the native Paperclip runner path.
+ * Run-scoped tracing for the native ThinkingMach runner path.
  *
  * A scope owns a real OpenTelemetry parent context. While work runs inside a
  * scope, nested native measurements and the existing sandbox/provider tracing

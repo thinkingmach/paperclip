@@ -169,7 +169,7 @@ test("the ACPX patch fails closed on an invalid spawn environment", () => {
 
 test("the Codex patch enforces isolated instructions, tools, and skills", () => {
   for (const token of [
-    "PAPERCLIP_ACPX_ISOLATED_CONTEXT",
+    "THINKINGMACH_ACPX_ISOLATED_CONTEXT",
     "baseInstructions",
     "rawInput: { serverName: params.serverName }",
     '"features.apps": false',
@@ -191,7 +191,7 @@ test("the Codex patch keeps MCP tool approvals on the governed permission channe
 
 test("the Claude patch removes ambient project and local configuration", () => {
   for (const token of [
-    "PAPERCLIP_ACPX_ISOLATED_CONTEXT",
+    "THINKINGMACH_ACPX_ISOLATED_CONTEXT",
     'settingSources: ["user"]',
     "userProvidedOptions?.mcpServers",
   ]) {

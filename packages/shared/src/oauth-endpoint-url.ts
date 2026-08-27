@@ -1,10 +1,10 @@
 /**
- * Scheme/transport safety for OAuth endpoints Paperclip learned from a remote
+ * Scheme/transport safety for OAuth endpoints ThinkingMach learned from a remote
  * server (PAP-17099).
  *
  * A generic remote MCP connection can point at any endpoint, and that endpoint
  * gets to advertise its own authorization-server metadata. The
- * `authorization_endpoint` it names is not just fetched server-side — Paperclip
+ * `authorization_endpoint` it names is not just fetched server-side — ThinkingMach
  * hands it to the operator's browser as a top-level navigation, so an arbitrary
  * string there is a code-execution and open-redirect primitive:
  * `javascript:` / `data:` would run in the board's origin, and plain `http:`
@@ -20,7 +20,7 @@
  *   local-development policy (the server passes its private-network policy, the
  *   board passes "am I myself served over plaintext HTTP");
  * - free of embedded credentials, because `https://evil.test@real.test/...`
- *   reads as the wrong origin to a human and Paperclip must not help;
+ *   reads as the wrong origin to a human and ThinkingMach must not help;
  * - free of a fragment, which never survives an authorization request usefully
  *   and is a classic way to hide the effective target from a reader.
  *
@@ -46,9 +46,9 @@ export interface OAuthEndpointUrlOptions {
   allowInsecureLoopback?: boolean;
   /**
    * Origins whose `http:` is already the operator's own trust boundary —
-   * in practice just Paperclip's own deployment origin. A deployment served over
+   * in practice just ThinkingMach's own deployment origin. A deployment served over
    * plaintext HTTP on a LAN address can still run its own authorization
-   * endpoints (the smoke-lab fixture does), and opening Paperclip from Paperclip
+   * endpoints (the smoke-lab fixture does), and opening ThinkingMach from ThinkingMach
    * adds no exposure the board does not already have.
    */
   allowInsecureOrigins?: string[];
@@ -90,7 +90,7 @@ function insecureTransportAllowed(parsed: URL, options: OAuthEndpointUrlOptions)
 }
 
 /**
- * Is `value` an OAuth endpoint Paperclip is willing to use — and, for the
+ * Is `value` an OAuth endpoint ThinkingMach is willing to use — and, for the
  * authorization endpoint, to navigate a browser to? Returns the normalized URL
  * and its host on success, or the specific rejection reason so callers can
  * produce an actionable message.
@@ -146,15 +146,15 @@ export function oauthEndpointUrlRejectionMessage(
     case "missing":
       return `This server did not provide a ${label} address.`;
     case "malformed":
-      return `This server's ${label} address is not a valid URL, so Paperclip stopped.`;
+      return `This server's ${label} address is not a valid URL, so ThinkingMach stopped.`;
     case "unsupported_scheme":
-      return `This server's ${label} address does not use https, so Paperclip stopped.`;
+      return `This server's ${label} address does not use https, so ThinkingMach stopped.`;
     case "insecure_transport":
-      return `This server's ${label} address is not secure (https), so Paperclip stopped.`;
+      return `This server's ${label} address is not secure (https), so ThinkingMach stopped.`;
     case "embedded_credentials":
-      return `This server's ${label} address hides a different site behind a username, so Paperclip stopped.`;
+      return `This server's ${label} address hides a different site behind a username, so ThinkingMach stopped.`;
     case "fragment":
-      return `This server's ${label} address is malformed for sign-in, so Paperclip stopped.`;
+      return `This server's ${label} address is malformed for sign-in, so ThinkingMach stopped.`;
   }
 }
 

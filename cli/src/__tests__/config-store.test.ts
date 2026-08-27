@@ -7,7 +7,7 @@ import {
   readConfig,
   writeConfig,
 } from "../config/store.js";
-import { paperclipConfigSchema, type PaperclipConfig } from "../config/schema.js";
+import { paperclipConfigSchema, type ThinkingMachConfig } from "../config/schema.js";
 
 const roots: string[] = [];
 
@@ -24,7 +24,7 @@ function createConfigPath(): string {
   return path.join(root, "config.json");
 }
 
-function defaultConfig(): PaperclipConfig {
+function defaultConfig(): ThinkingMachConfig {
   return paperclipConfigSchema.parse({
     $meta: {
       version: 1,
@@ -60,7 +60,7 @@ describe("config store", () => {
     const { topLevelExtension: _topLevelExtension, ...knownConfig } = source;
     const { serverExtension: _serverExtension, ...knownServer } = source.server;
     const { driverExtension: _driverExtension, ...knownLocalDisk } = source.storage.localDisk;
-    const update: PaperclipConfig = {
+    const update: ThinkingMachConfig = {
       ...knownConfig,
       server: {
         ...knownServer,

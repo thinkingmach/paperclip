@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { IssueWorkProduct } from "@paperclipai/shared";
+import type { IssueWorkProduct } from "@thinkingmach/shared";
 import {
   ExternalLink,
   File,

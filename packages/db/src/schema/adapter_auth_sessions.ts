@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { index, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
-import type { AdapterAuthSessionInternalStatus, AgentAdapterType } from "@paperclipai/shared";
+import type { AdapterAuthSessionInternalStatus, AgentAdapterType } from "@thinkingmach/shared";
 import { companies } from "./companies.js";
 import { environments } from "./environments.js";
 

@@ -193,7 +193,7 @@ export async function recoverSidecarHostCleanup(
       // AcpxRuntimeHost releases its failed close promise before propagating
       // the rejection, so this starts a new sequential cleanup attempt rather
       // than reusing or overlapping the rejected operation.
-      cleanup = host.close({ reason: "Paperclip cleanup recovery" });
+      cleanup = host.close({ reason: "ThinkingMach cleanup recovery" });
     }
   }
 }

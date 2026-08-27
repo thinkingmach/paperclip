@@ -28,13 +28,13 @@
  * pair there under an open lease with no listener bound, which is the exact
  * incident this file reproduces, so a scan that starts there could seize a
  * pair a live instance still owns. The scan also rejects a port that any
- * local Paperclip instance's on-disk service registry still names, even with
+ * local ThinkingMach instance's on-disk service registry still names, even with
  * no listener bound — the same open-lease shape, for a real instance instead
  * of this suite's own fixture, which a listener-only probe cannot see. Guests
  * do bind the two selected pairs on loopback, so the readiness and exposure
  * lifecycle is exercised for real; they are reaped in `afterEach`. A pair
  * that reads free at discovery can still be taken by another process before
- * the guest binds it; this suite does not close that window. `PAPERCLIP_HOME`
+ * the guest binds it; this suite does not close that window. `THINKINGMACH_HOME`
  * is redirected to a temp dir so the local-service registry never touches the
  * real instance on this host.
  */
@@ -53,14 +53,14 @@ import {
   projects,
   workspaceRuntimeServices,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { eq } from "drizzle-orm";
 import {
   deriveViteHmrPort,
   RUNTIME_EXPOSURE_APP_PORT_MAX,
   RUNTIME_EXPOSURE_APP_PORT_MIN,
   RUNTIME_EXPOSURE_HMR_PORT_OFFSET,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 import type { BrokerClient, BrokerListenerRequest } from "../services/runtime-exposure/broker-client.js";
 import { readListenerBindFacts } from "../services/runtime-exposure/loopback-listener.js";
@@ -96,16 +96,16 @@ let NEXT_APP_PORT: number;
 let NEXT_HMR_PORT: number;
 
 /**
- * The real, unredirected Paperclip home directory. `beforeEach` later points
- * `PAPERCLIP_HOME` at a throwaway temp dir for the suite under test, so this
+ * The real, unredirected ThinkingMach home directory. `beforeEach` later points
+ * `THINKINGMACH_HOME` at a throwaway temp dir for the suite under test, so this
  * must be read before that happens. Mirrors the default in
- * `resolvePaperclipHomeDir`.
+ * `resolveThinkingMachHomeDir`.
  */
-const REAL_PAPERCLIP_HOME = process.env.PAPERCLIP_HOME?.trim() || path.join(os.homedir(), ".paperclip");
+const REAL_THINKINGMACH_HOME = process.env.THINKINGMACH_HOME?.trim() || path.join(os.homedir(), ".paperclip");
 
 /**
- * Every port a local Paperclip instance's on-disk service registry currently
- * records, read once per case from the real, unredirected Paperclip home. A
+ * Every port a local ThinkingMach instance's on-disk service registry currently
+ * records, read once per case from the real, unredirected ThinkingMach home. A
  * registry record survives a stopped process with no listener, so it can
  * still name the port even after the exact "listener-free lease" condition
  * this suite reproduces. A listener-only scan cannot see that: it would treat
@@ -114,7 +114,7 @@ const REAL_PAPERCLIP_HOME = process.env.PAPERCLIP_HOME?.trim() || path.join(os.h
  */
 async function readLocallyLeasedPorts(): Promise<Set<number>> {
   const leased = new Set<number>();
-  const instancesDir = path.join(REAL_PAPERCLIP_HOME, "instances");
+  const instancesDir = path.join(REAL_THINKINGMACH_HOME, "instances");
   let instanceEntries: Awaited<ReturnType<typeof fs.readdir>>;
   try {
     instanceEntries = await fs.readdir(instancesDir, { withFileTypes: true });
@@ -260,7 +260,7 @@ const DECLARED_EXPOSE = {
   type: "tailscale_https",
   hostname: "auto",
   publicPort: "same",
-  includePaperclipViteHmr: true,
+  includeThinkingMachViteHmr: true,
   failurePolicy: "fail_closed",
 } as const;
 
@@ -280,7 +280,7 @@ const GUEST_COMMAND =
     let db: Db;
     let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>>;
     let previousHttpsMode: string | undefined;
-    let previousPaperclipHome: string | undefined;
+    let previousThinkingMachHome: string | undefined;
     let previousInstanceId: string | undefined;
     /**
      * An EMPTY workspace root, never the repo checkout.
@@ -295,8 +295,8 @@ const GUEST_COMMAND =
     beforeAll(async () => {
       tempDb = await startEmbeddedPostgresTestDatabase("pap17419-reservation-");
       db = createDb(tempDb.connectionString);
-      previousHttpsMode = process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS;
-      process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS = "auto";
+      previousHttpsMode = process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS;
+      process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS = "auto";
     }, 60_000);
 
     beforeEach(async () => {
@@ -313,26 +313,26 @@ const GUEST_COMMAND =
       paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "pap17419-home-"));
       // Redirect the local-service registry into a throwaway instance. Without
       // this the suite would write runtime-service records into the real
-      // Paperclip instance on this host and could confuse a live server.
-      previousPaperclipHome = process.env.PAPERCLIP_HOME;
-      previousInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
-      process.env.PAPERCLIP_HOME = paperclipHome;
-      process.env.PAPERCLIP_INSTANCE_ID = `pap17419-${randomUUID()}`;
+      // ThinkingMach instance on this host and could confuse a live server.
+      previousThinkingMachHome = process.env.THINKINGMACH_HOME;
+      previousInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
+      process.env.THINKINGMACH_HOME = paperclipHome;
+      process.env.THINKINGMACH_INSTANCE_ID = `pap17419-${randomUUID()}`;
     });
 
     afterAll(async () => {
-      if (previousHttpsMode === undefined) delete process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS;
-      else process.env.PAPERCLIP_MANAGED_RUNTIME_HTTPS = previousHttpsMode;
+      if (previousHttpsMode === undefined) delete process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS;
+      else process.env.THINKINGMACH_MANAGED_RUNTIME_HTTPS = previousHttpsMode;
       await tempDb?.cleanup();
     });
 
     afterEach(async () => {
       // Terminate first, while the suite's fake broker is still installed.
       await resetRuntimeServicesForTests({ terminateProcesses: true });
-      if (previousPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-      else process.env.PAPERCLIP_HOME = previousPaperclipHome;
-      if (previousInstanceId === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-      else process.env.PAPERCLIP_INSTANCE_ID = previousInstanceId;
+      if (previousThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+      else process.env.THINKINGMACH_HOME = previousThinkingMachHome;
+      if (previousInstanceId === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+      else process.env.THINKINGMACH_INSTANCE_ID = previousInstanceId;
       await fs.rm(workspaceRoot, { recursive: true, force: true });
       await fs.rm(paperclipHome, { recursive: true, force: true });
       await db.delete(workspaceRuntimeServices);
@@ -359,11 +359,11 @@ const GUEST_COMMAND =
 
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix: `Q${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
         requireBoardApprovalForNewAgents: false,
       });
-      await db.insert(projects).values({ id: projectId, companyId, name: "Paperclip App", status: "in_progress" });
+      await db.insert(projects).values({ id: projectId, companyId, name: "ThinkingMach App", status: "in_progress" });
       await db.insert(projectWorkspaces).values({
         id: projectWorkspaceId,
         companyId,
@@ -428,7 +428,7 @@ const GUEST_COMMAND =
     function startInput(seed: Awaited<ReturnType<typeof seedIncident>>, executionWorkspaceId: string) {
       return {
         invocationId: "pap-17419-reservation",
-        actor: { id: null, name: "Paperclip", companyId: seed.companyId },
+        actor: { id: null, name: "ThinkingMach", companyId: seed.companyId },
         issue: null,
         db,
         workspace: {

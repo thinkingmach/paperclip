@@ -1,4 +1,4 @@
-import type { CompanySearchHighlight } from "@paperclipai/shared";
+import type { CompanySearchHighlight } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 
 export interface HighlightedTextProps {

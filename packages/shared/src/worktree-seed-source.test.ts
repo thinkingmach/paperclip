@@ -13,7 +13,7 @@ function makeInstance(prefix: string, instanceId: string) {
   const configPath = path.join(configDir, "config.json");
   fs.mkdirSync(configDir, { recursive: true });
   fs.writeFileSync(configPath, "{}\n");
-  fs.writeFileSync(path.join(configDir, ".env"), `PAPERCLIP_INSTANCE_ID=${instanceId}\n`);
+  fs.writeFileSync(path.join(configDir, ".env"), `THINKINGMACH_INSTANCE_ID=${instanceId}\n`);
   return { cwd, configPath, instanceId };
 }
 
@@ -93,7 +93,7 @@ describe("resolveCanonicalWorktreeSeedSource", () => {
       expectedTargetInstanceId: target.instanceId,
       manifestSource: { configPath: source.configPath, instanceId: source.instanceId },
       manifestTargetInstanceId: target.instanceId,
-    })).toThrow(/Registered source Paperclip config does not exist/);
+    })).toThrow(/Registered source ThinkingMach config does not exist/);
   });
 
   it("fails closed when the declared config cannot be inspected", () => {
@@ -162,7 +162,7 @@ describe("resolveCanonicalWorktreeSeedSource", () => {
       expectedTargetInstanceId: target.instanceId,
       manifestSource: { configPath: target.configPath, instanceId: target.instanceId },
       manifestTargetInstanceId: target.instanceId,
-    })).toThrow(/no Paperclip config of its own/);
+    })).toThrow(/no ThinkingMach config of its own/);
   });
 
   it("fails closed without registration and when source equals target", () => {
