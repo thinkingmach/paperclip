@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { IssueDocument } from "@paperclipai/shared";
+import type { IssueDocument } from "@thinkingmach/shared";
 import { ApiError } from "@/api/client";
 import { issuesApi } from "@/api/issues";
 import { queryKeys } from "@/lib/queryKeys";

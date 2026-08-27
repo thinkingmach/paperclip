@@ -2,19 +2,19 @@ import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 
-export const PAPERCLIP_WORKSPACE_DIFF_SCHEMA = "paperclip.workspace.diff.v1" as const;
+export const THINKINGMACH_WORKSPACE_DIFF_SCHEMA = "paperclip.workspace.diff.v1" as const;
 
-export type PaperclipWorkspaceChangeSource = "harness_reported" | "runner_verified";
-export type PaperclipWorkspaceFileOperation =
+export type ThinkingMachWorkspaceChangeSource = "harness_reported" | "runner_verified";
+export type ThinkingMachWorkspaceFileOperation =
   | "create"
   | "modify"
   | "delete"
   | "rename"
   | "mode_change";
 
-export interface PaperclipWorkspaceFileChange {
+export interface ThinkingMachWorkspaceFileChange {
   path: string;
-  operation: PaperclipWorkspaceFileOperation;
+  operation: ThinkingMachWorkspaceFileOperation;
   previousPath: string | null;
   additions: number | null;
   deletions: number | null;
@@ -22,13 +22,13 @@ export interface PaperclipWorkspaceFileChange {
   diff: string | null;
 }
 
-export interface PaperclipWorkspaceDiff {
-  schema: typeof PAPERCLIP_WORKSPACE_DIFF_SCHEMA;
+export interface ThinkingMachWorkspaceDiff {
+  schema: typeof THINKINGMACH_WORKSPACE_DIFF_SCHEMA;
   changeSetId: string;
   revision: number;
-  source: PaperclipWorkspaceChangeSource;
+  source: ThinkingMachWorkspaceChangeSource;
   complete: boolean;
-  files: PaperclipWorkspaceFileChange[];
+  files: ThinkingMachWorkspaceFileChange[];
   totals: { files: number; additions: number | null; deletions: number | null };
   patchArtifactRef: string | null;
 }
@@ -39,7 +39,7 @@ interface WorkspaceFileSnapshot {
   binary: boolean;
 }
 
-export type PaperclipWorkspaceSnapshot = Map<string, WorkspaceFileSnapshot>;
+export type ThinkingMachWorkspaceSnapshot = Map<string, WorkspaceFileSnapshot>;
 
 const IGNORED_DIRECTORY_NAMES = new Set([
   ".git",
@@ -72,11 +72,11 @@ function appearsBinary(content: Buffer): boolean {
  * dependency/VCS directories are excluded, symlinks are never followed, and
  * hard limits make this safe to run around an interactive turn.
  */
-export async function capturePaperclipWorkspace(
+export async function captureThinkingMachWorkspace(
   root: string,
   options: { signal?: AbortSignal } = {},
-): Promise<PaperclipWorkspaceSnapshot> {
-  const result: PaperclipWorkspaceSnapshot = new Map();
+): Promise<ThinkingMachWorkspaceSnapshot> {
+  const result: ThinkingMachWorkspaceSnapshot = new Map();
   let retainedBytes = 0;
   let visitedDirectories = 0;
   const throwIfAborted = () => options.signal?.throwIfAborted();
@@ -170,12 +170,12 @@ function unifiedDiff(path: string, before: Buffer | null, after: Buffer | null):
   };
 }
 
-export function diffPaperclipWorkspace(
-  before: PaperclipWorkspaceSnapshot,
-  after: PaperclipWorkspaceSnapshot,
+export function diffThinkingMachWorkspace(
+  before: ThinkingMachWorkspaceSnapshot,
+  after: ThinkingMachWorkspaceSnapshot,
   changeSetId: string,
-): PaperclipWorkspaceDiff | null {
-  const files: PaperclipWorkspaceFileChange[] = [];
+): ThinkingMachWorkspaceDiff | null {
+  const files: ThinkingMachWorkspaceFileChange[] = [];
   const paths = [...new Set([...before.keys(), ...after.keys()])].sort();
   for (const path of paths) {
     const prior = before.get(path);
@@ -192,7 +192,7 @@ export function diffPaperclipWorkspace(
 
   // Exact-content delete/create pairs are represented as a rename. This keeps
   // the protocol semantic even when the harness only used shell commands.
-  const deletedByHash = new Map<string, PaperclipWorkspaceFileChange>();
+  const deletedByHash = new Map<string, ThinkingMachWorkspaceFileChange>();
   for (const file of files) {
     if (file.operation === "delete") deletedByHash.set(before.get(file.path)!.hash, file);
   }
@@ -212,7 +212,7 @@ export function diffPaperclipWorkspace(
 
   const hasUnknownStats = files.some((file) => file.additions === null || file.deletions === null);
   return {
-    schema: PAPERCLIP_WORKSPACE_DIFF_SCHEMA,
+    schema: THINKINGMACH_WORKSPACE_DIFF_SCHEMA,
     changeSetId,
     revision: 1,
     source: "runner_verified",

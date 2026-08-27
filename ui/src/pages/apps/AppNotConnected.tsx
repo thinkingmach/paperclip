@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { ToolConnection } from "@paperclipai/shared";
-import { isConnectableAppSlug } from "@paperclipai/shared";
+import type { ToolConnection } from "@thinkingmach/shared";
+import { isConnectableAppSlug } from "@thinkingmach/shared";
 import { Navigate, useNavigate, useParams } from "@/lib/router";
 import { useCompany } from "@/context/CompanyContext";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";

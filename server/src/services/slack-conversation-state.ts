@@ -1,4 +1,4 @@
-import { chatConversations, issues, type Db } from "@paperclipai/db";
+import { chatConversations, issues, type Db } from "@thinkingmach/db";
 import { and, eq, sql } from "drizzle-orm";
 
 /** Read-only projection; Slack threads do not acquire Agent Chat identities. */

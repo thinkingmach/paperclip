@@ -15,7 +15,7 @@ for (const action of ["task_retry", "thread_retry", "inbox_retry", "message", "q
   test(`legacy startup hold: ${action} reaches a new agent response`, async ({ page, request }) => {
     test.setTimeout(120_000);
     const root = await mkdtemp(path.join(os.tmpdir(), "legacy-recovery-browser-"));
-    const config = JSON.parse(await readFile(process.env.PAPERCLIP_E2E_SERVER_CONFIG!, "utf8"));
+    const config = JSON.parse(await readFile(process.env.THINKINGMACH_E2E_SERVER_CONFIG!, "utf8"));
     // Use the running test server's actual port, including fallback allocation.
     const pid = await readFile(path.join(config.database.embeddedPostgresDataDir, "postmaster.pid"), "utf8");
     const url = `postgres://paperclip:paperclip@127.0.0.1:${pid.split("\n")[3]}/paperclip`;
@@ -27,7 +27,7 @@ for (const action of ["task_retry", "thread_retry", "inbox_retry", "message", "q
         name: "Recovery fixture", role: "engineer", adapterType: "claude_local",
         adapterConfig: { engine: "acp", cwd: root, stateDir: path.join(root, "state"),
           agentCommand: `${JSON.stringify(process.execPath)} ${JSON.stringify(path.resolve("scripts/mcp-fixtures/servers/acp-stop-agent.mjs"))}`,
-          env: { PAPERCLIP_STOP_FIXTURE_ROOT: root, PAPERCLIP_STOP_FIXTURE_FINISH_TASK: "1" } },
+          env: { THINKINGMACH_STOP_FIXTURE_ROOT: root, THINKINGMACH_STOP_FIXTURE_FINISH_TASK: "1" } },
         runtimeConfig: { heartbeat: { enabled: false, wakeOnDemand: true } },
       } }));
       const issue = await json(await request.post(`/api/companies/${company.id}/issues`, { data: {

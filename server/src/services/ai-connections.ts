@@ -16,7 +16,7 @@ import {
   toolApplications,
   toolConnections,
   toolConnectionInstalls,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   AI_CONNECTION_CAPABILITIES,
   aiConnectionMetadataSchema,
@@ -28,7 +28,7 @@ import {
   type AiManagedConnectionSummary,
   type CreateAiConnection,
   type AiConnectionLoginIntent,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { forbidden, notFound, unprocessable } from "../errors.js";
 import { logActivity } from "./activity-log.js";
 import { secretService } from "./secrets.js";

@@ -3,8 +3,8 @@
  *
  * Two related protections for `POST /api/plugins/install`:
  *
- * 1. **Cloud install floor.** Instances managed by the Paperclip Cloud
- *    harness receive a `PAPERCLIP_MANAGED_CONFIG` environment document that
+ * 1. **Cloud install floor.** Instances managed by the ThinkingMach Cloud
+ *    harness receive a `THINKINGMACH_MANAGED_CONFIG` environment document that
  *    only the harness can inject. On such instances, plugin installation is
  *    a remote-code-execution surface on shared infrastructure, so the route
  *    enforces a positive allowlist: only install sources that canonicalize

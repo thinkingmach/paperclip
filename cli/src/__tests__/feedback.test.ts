@@ -3,7 +3,7 @@ import path from "node:path";
 import { mkdtemp, readFile } from "node:fs/promises";
 import { Command } from "commander";
 import { describe, expect, it } from "vitest";
-import type { FeedbackTrace } from "@paperclipai/shared";
+import type { FeedbackTrace } from "@thinkingmach/shared";
 import { readZipArchive } from "../commands/client/zip.js";
 import {
   buildFeedbackTraceQuery,
@@ -119,7 +119,7 @@ describe("renderFeedbackReport", () => {
       includePayloads: false,
     });
 
-    expect(report).toContain("Paperclip Feedback Report");
+    expect(report).toContain("ThinkingMach Feedback Report");
     expect(report).toContain("thumbs up");
     expect(report).toContain("thumbs down");
     expect(report).toContain("Needed more detail");

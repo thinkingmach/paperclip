@@ -18,7 +18,7 @@ import type {
   GitHubReviewEventContext,
   GitHubReviewPolicy,
   GitHubTaskReview,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { chatEndpoints } from "./chat_channels.js";
 import { issues } from "./issues.js";
 import { heartbeatRuns } from "./heartbeat_runs.js";

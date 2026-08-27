@@ -21,7 +21,7 @@ describe("ClientAdmissionController", () => {
     expect(controller.tryAcquire(999)).toBe(true);
   });
 
-  it("reserves global headroom for the Paperclip service UID", () => {
+  it("reserves global headroom for the ThinkingMach service UID", () => {
     const controller = admission({ maxClients: 6, maxClientsPerUid: 3, reservedServiceClients: 2 });
 
     expect(controller.tryAcquire(1000)).toBe(true);

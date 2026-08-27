@@ -27,7 +27,7 @@ import {
   issueWorkProducts,
   toolApplications,
   toolConnections,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { createLocalDiskStorageProvider } from "../../storage/local-disk-provider.js";
@@ -40,7 +40,7 @@ import {
   resolveExternalChatResponseWaitAuthorization,
   type ChatAttachmentReuseSource,
 } from "./chat-attachment-reuse.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 import { validateNativeDeliverableEvidence } from "./native-deliverable-feedback.js";
 
 describe("native same-conversation chat attachment reuse", () => {
@@ -297,7 +297,7 @@ describe("native same-conversation chat attachment reuse", () => {
   });
 
   function authority() {
-    return new PaperclipRunnerToolAuthority(db, {
+    return new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,

@@ -1,6 +1,6 @@
 import { applyConnectorSkills, prepareConnectorSkillDelivery, resolveConnectorAssignments, annotateConnectorSkills } from "../services/connector-runtime.js";
-import { PaperclipRunnerToolAuthority } from "../services/native-runtime/paperclip-runner-tool-authority.js";
-import { renderPaperclipWakePrompt, resolvePaperclipDesiredSkillNames, resolveLegacyPaperclipDesiredSkillNames } from "@paperclipai/adapter-utils/server-utils";
+import { ThinkingMachRunnerToolAuthority } from "../services/native-runtime/paperclip-runner-tool-authority.js";
+import { renderThinkingMachWakePrompt, resolveThinkingMachDesiredSkillNames, resolveLegacyThinkingMachDesiredSkillNames } from "@thinkingmach/adapter-utils/server-utils";
 import express from "express";
 import type WebSocket from "ws";
 import request from "supertest";
@@ -47,7 +47,7 @@ import {
   toolConnectionInstalls,
   connectionGrants,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import {
   emailChannelService,
@@ -61,17 +61,17 @@ import {
 } from "../services/agentmail-api.js";
 import { emailConnectionService } from "../services/email-connections.js";
 import { toolAccessService } from "../services/tool-access.js";
-import { emailSendSchema } from "@paperclipai/shared";
+import { emailSendSchema } from "@thinkingmach/shared";
 import { chatChannelService } from "../services/chat-channels.js";
 
 describe("AgentMail durable email pipeline", () => {
   let database: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>>;
   let db: ReturnType<typeof createDb>;
   const folder = mkdtempSync(path.join(os.tmpdir(), "paperclip-email-"));
-  const previous = process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+  const previous = process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
   const services: EmailChannelService[] = [];
   beforeAll(async () => {
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = path.join(
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = path.join(
       folder,
       "master.key",
     );
@@ -105,8 +105,8 @@ describe("AgentMail durable email pipeline", () => {
   afterAll(async () => {
     await database?.cleanup();
     if (previous === undefined)
-      delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
-    else process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = previous;
+      delete process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
+    else process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = previous;
     rmSync(folder, { recursive: true, force: true });
   });
   it("installs one connector skill and provider tools only for the assigned agent", async () => {
@@ -118,8 +118,8 @@ describe("AgentMail durable email pipeline", () => {
     const base = { paperclipSkillSync: { desiredSkills: [] } };
     const configured = await applyConnectorSkills(base, [], assignments);
     expect(base.paperclipSkillSync.desiredSkills).toEqual([]);
-    expect(resolvePaperclipDesiredSkillNames(configured, configured.paperclipRuntimeSkills)).toEqual(["paperclipai/paperclip/agentmail"]);
-    expect(resolveLegacyPaperclipDesiredSkillNames(configured, configured.paperclipRuntimeSkills)).toContain("paperclipai/paperclip/agentmail");
+    expect(resolveThinkingMachDesiredSkillNames(configured, configured.paperclipRuntimeSkills)).toEqual(["thinkingmach/paperclip/agentmail"]);
+    expect(resolveLegacyThinkingMachDesiredSkillNames(configured, configured.paperclipRuntimeSkills)).toContain("thinkingmach/paperclip/agentmail");
     const markdown = readFileSync(path.join(configured.paperclipRuntimeSkills[0].source, "SKILL.md"), "utf8");
     expect(markdown).toContain(f.endpointId);
     expect(markdown).toContain("agentmail_send");
@@ -129,13 +129,13 @@ describe("AgentMail durable email pipeline", () => {
       expect(delivery.config.paperclipRuntimeSkills).toEqual([]);
       expect(delivery.config.paperclipConnectorSkillDigest).toBe(configured.paperclipConnectorSkillDigest);
       for (const resumedSession of [false, true]) {
-        expect(renderPaperclipWakePrompt({ connectorSkillInstructions: delivery.instructions }, { resumedSession })).toContain(f.endpointId);
+        expect(renderThinkingMachWakePrompt({ connectorSkillInstructions: delivery.instructions }, { resumedSession })).toContain(f.endpointId);
       }
     }
     const nativeDelivery = await prepareConnectorSkillDelivery(configured, "paperclip_runner");
     expect(nativeDelivery.instructions).toBe("");
     expect(nativeDelivery.config.paperclipRuntimeSkills).toHaveLength(1);
-    const authority = new PaperclipRunnerToolAuthority(db, { ...binding, issueId: randomUUID(), runId: randomUUID(), connectorAssignments: assignments });
+    const authority = new ThinkingMachRunnerToolAuthority(db, { ...binding, issueId: randomUUID(), runId: randomUUID(), connectorAssignments: assignments });
     expect(authority.definitions().filter((tool) => String(tool.name).startsWith("agentmail_")).map((tool) => tool.name)).toEqual([
       "agentmail_inboxes", "agentmail_read_thread", "agentmail_send", "agentmail_delivery",
     ]);
@@ -145,8 +145,8 @@ describe("AgentMail durable email pipeline", () => {
     const disconnected = await applyConnectorSkills(configured, configured.paperclipRuntimeSkills, []);
     expect(disconnected.paperclipRuntimeSkills).toEqual([]);
     expect(disconnected.paperclipConnectorSkillDigest).toBeNull();
-    expect(resolvePaperclipDesiredSkillNames(disconnected, [])).toEqual([]);
-    expect(new PaperclipRunnerToolAuthority(db, { ...binding, issueId: randomUUID(), runId: randomUUID() }).definitions().some((tool) => String(tool.name).startsWith("agentmail_"))).toBe(false);
+    expect(resolveThinkingMachDesiredSkillNames(disconnected, [])).toEqual([]);
+    expect(new ThinkingMachRunnerToolAuthority(db, { ...binding, issueId: randomUUID(), runId: randomUUID() }).definitions().some((tool) => String(tool.name).startsWith("agentmail_"))).toBe(false);
     const snapshot = annotateConnectorSkills({ adapterType: "codex_local", supported: true, mode: "ephemeral", desiredSkills: [assignments[0].skillKey], entries: [{ key: assignments[0].skillKey, runtimeName: "agentmail", desired: true, managed: true, state: "configured" }], warnings: [] }, assignments);
     expect(snapshot.entries[0]).toMatchObject({ readOnly: true, originLabel: "AgentMail assignment" });
     expect(snapshot.entries[0].detail).toContain(assignments[0].resources[0].label);
@@ -910,7 +910,7 @@ describe("AgentMail durable email pipeline", () => {
       text: "Explicit agent reply",
       idempotencyKey: randomUUID(),
     });
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       ...binding, workMode: "standard", connectorAssignments: await resolveConnectorAssignments(db, binding),
     });
     const queued = (await authority.execute({ tool: "agentmail_send", callId: randomUUID(), arguments: { request } })) as { id: string; outcome: string };

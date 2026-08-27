@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Webhook } from "svix";
-import type { EmailEnvelope } from "@paperclipai/shared";
+import type { EmailEnvelope } from "@thinkingmach/shared";
 
 const strings = z.array(z.string());
 export const agentmailMessageSchema = z.object({
@@ -225,7 +225,7 @@ export function agentmailApi(apiKey: string, fetchImpl: typeof fetch = fetch) {
       request<{ api_key: string; api_key_id: string }>(
         `${inboxPath(id)}/api-keys`,
         "POST",
-        { name: "Paperclip email runtime" },
+        { name: "ThinkingMach email runtime" },
       ),
     deleteInboxKey: (id: string, keyId: string) =>
       request<void>(

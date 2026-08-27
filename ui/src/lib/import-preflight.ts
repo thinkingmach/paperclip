@@ -1,4 +1,4 @@
-import type { CompanyPortabilityFileEntry } from "@paperclipai/shared";
+import type { CompanyPortabilityFileEntry } from "@thinkingmach/shared";
 
 // Inline imports post the whole parsed package as one JSON body, so oversized
 // packages must be blocked before the request is built. Packages past this

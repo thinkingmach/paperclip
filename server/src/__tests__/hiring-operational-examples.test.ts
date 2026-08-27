@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { createAgentHireSchema, createIssueThreadInteractionSchema, updateIssueSchema } from "@paperclipai/shared";
+import { createAgentHireSchema, createIssueThreadInteractionSchema, updateIssueSchema } from "@thinkingmach/shared";
 import { runnerApiReference } from "../services/native-runtime/runner-api-reference.js";
 
 const reference = readFileSync(new URL("../../../skills/paperclip/references/api-reference.md", import.meta.url), "utf8");

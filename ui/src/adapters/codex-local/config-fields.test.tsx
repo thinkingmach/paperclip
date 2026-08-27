@@ -24,7 +24,7 @@ function renderRunner(config: Record<string, unknown>): string {
   );
 }
 
-describe("Paperclip Runner Codex configuration", () => {
+describe("ThinkingMach Runner Codex configuration", () => {
   it("exposes all qualified provider choices", () => {
     const html = renderRunner({ provider: "codex" });
 
@@ -66,14 +66,14 @@ describe("Paperclip Runner Codex configuration", () => {
     expect(html).not.toContain("Codex via ACPX");
     expect(html).not.toContain("ACPX Codex");
     expect(html).not.toContain("Pi via ACPX");
-    expect(html).toContain("Allow Paperclip reads");
+    expect(html).toContain("Allow ThinkingMach reads");
   });
 
   it("falls back to the fail-closed Codex permission mode", () => {
     const html = renderRunner({ codexPermissionMode: "unrestricted" });
 
     expect(html).toContain("Unsupported saved mode — select a qualified mode");
-    expect(html).toContain("cannot start or recover a Paperclip Runner run");
+    expect(html).toContain("cannot start or recover a ThinkingMach Runner run");
     expect(html).toContain("Select Automatic (isolated) to remediate it");
     expect(html).not.toContain("Full auto (never ask)");
   });

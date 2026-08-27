@@ -1,7 +1,7 @@
 import {
   codexLocalReasoningEffortsForModel,
   type CodexLocalReasoningEffort,
-} from "@paperclipai/adapter-codex-local";
+} from "@thinkingmach/adapter-codex-local";
 
 const CODEX_REASONING_EFFORT_LABELS: Record<CodexLocalReasoningEffort, string> = {
   minimal: "Minimal",

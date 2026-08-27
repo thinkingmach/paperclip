@@ -1,22 +1,22 @@
-# @paperclipai/adapter-utils
+# @thinkingmach/adapter-utils
 
 ## Unreleased
 
 ### Patch Changes
 
-- Allow the Paperclip host to route adapter sandbox-sync full-tree Git enumeration through its process-wide bounded scheduler.
+- Allow the ThinkingMach host to route adapter sandbox-sync full-tree Git enumeration through its process-wide bounded scheduler.
 
-## 0.3.1
+## 0.3.3
 
 ### Patch Changes
 
-- Stable release preparation for 0.3.1
+- Stable release preparation for 0.3.3
 
-## 0.3.0
+## 0.3.3
 
 ### Minor Changes
 
-- Stable release preparation for 0.3.0
+- Stable release preparation for 0.3.3
 
 ## 0.2.7
 

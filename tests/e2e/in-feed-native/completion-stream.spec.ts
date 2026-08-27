@@ -43,8 +43,8 @@ test('a completion tool does not cut off a delayed final answer', async ({ page 
     { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
     child.stdout!.on('data', (chunk) => { logs += chunk.toString(); });
     child.stderr!.on('data', (chunk) => { logs += chunk.toString(); });
-    await expect.poll(() => logs.match(/Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/)?.[1], { timeout: 100_000 }).toBeTruthy();
-    const base = logs.match(/Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
+    await expect.poll(() => logs.match(/ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/)?.[1], { timeout: 100_000 }).toBeTruthy();
+    const base = logs.match(/ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
     const api = async (path: string) => {
       const response = await page.request.get(`${base}/api${path}`);
       expect(response.ok(), await response.text()).toBeTruthy();
@@ -61,12 +61,12 @@ test('a completion tool does not cut off a delayed final answer', async ({ page 
     await page.goto(base + prefix + '/dashboard');
     await page.goto(base + prefix + '/company/settings/instance/experimental');
     if (!(await api('/instance/settings/experimental')).enableNativeRunner) {
-      await page.getByRole('switch', { name: 'Toggle Paperclip Runner experimental setting' }).click();
+      await page.getByRole('switch', { name: 'Toggle ThinkingMach Runner experimental setting' }).click();
     }
     await expect.poll(async () => (await api('/instance/settings/experimental')).enableNativeRunner).toBe(true);
     await page.goto(base + prefix + `/agents/${agent.id}/configuration`);
     await page.getByRole('button', { name: 'Codex', exact: true }).click();
-    await page.getByRole('button', { name: /Paperclip Runner/ }).click();
+    await page.getByRole('button', { name: /ThinkingMach Runner/ }).click();
     await page.getByRole('button', { name: 'Save changes', exact: true }).click();
     await expect.poll(async () => (await api(`/agents/${agent.id}`)).adapterType).toBe('paperclip_runner');
     await page.getByRole('link', { name: 'Tasks', exact: true }).click();

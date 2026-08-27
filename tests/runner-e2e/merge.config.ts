@@ -1,7 +1,7 @@
 import path from "node:path";
 
 const output = path.resolve(
-  process.env.PAPERCLIP_RUNNER_E2E_MERGED_REPORT_DIR ??
+  process.env.THINKINGMACH_RUNNER_E2E_MERGED_REPORT_DIR ??
     "runner-e2e-merged-report",
 );
 

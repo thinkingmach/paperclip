@@ -5,7 +5,7 @@
 // caller a `LockedQueuedCommentState` plus a `QueuedCommentQueueTransaction`
 // bound to that same transaction for every further read and write.
 
-import type { IssueComment, IssueQueuedCommentEntry, IssueQueuedCommentQueue } from "@paperclipai/shared";
+import type { IssueComment, IssueQueuedCommentEntry, IssueQueuedCommentQueue } from "@thinkingmach/shared";
 
 export type QueuedCommentActor = {
   actorType: "agent" | "user";

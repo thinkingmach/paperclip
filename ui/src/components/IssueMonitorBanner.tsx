@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Clock } from "lucide-react";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 
 import { Button } from "@/components/ui/button";
 import { InlineBanner } from "@/components/InlineBanner";

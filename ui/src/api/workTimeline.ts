@@ -1,4 +1,4 @@
-import type { WorkTimelineResult } from "@paperclipai/shared";
+import type { WorkTimelineResult } from "@thinkingmach/shared";
 import { api, type RequestOptions } from "./client";
 
 export interface WorkTimelineParams {

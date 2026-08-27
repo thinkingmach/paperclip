@@ -3,7 +3,7 @@ import { nativeSha256 } from "./canonical.js";
 import { randomUUID } from "node:crypto";
 import os from "node:os";
 import { and, eq, sql } from "drizzle-orm";
-import { heartbeatRuns, workspaceOperations, withDedicatedDbConnection, type Db } from "@paperclipai/db";
+import { heartbeatRuns, workspaceOperations, withDedicatedDbConnection, type Db } from "@thinkingmach/db";
 import {
   currentNativeControllerIdentity,
   evaluateNativeControllerTakeover,

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { ExecutionContinuationEnvelope, AskUserQuestionsInteraction } from "@paperclipai/shared";
+import type { ExecutionContinuationEnvelope, AskUserQuestionsInteraction } from "@thinkingmach/shared";
 
 import { formatDurableQuestionResponseSummary } from "../question-response-delivery.js";
 import { buildNativeCompletionContract } from "./completion-contracts.js";
-import { renderPaperclipWakePrompt } from "@paperclipai/adapter-utils/server-utils";
+import { renderThinkingMachWakePrompt } from "@thinkingmach/adapter-utils/server-utils";
 import { buildNativeExecutionInput } from "./native-execution-input.js";
 import { nativeRuntimeContextFixture } from "./runtime-context.test-fixture.js";
 
@@ -293,7 +293,7 @@ describe("native execution input external-chat framing", () => {
           description: "Started from Discord.",
           workMode: "standard",
         },
-        taskPrompt: `Paperclip task context:\n- Title: ${JSON.stringify(staleRootTitle)}`,
+        taskPrompt: `ThinkingMach task context:\n- Title: ${JSON.stringify(staleRootTitle)}`,
         resumedSession,
         wakePayload: {
           reason: "External chat message received",
@@ -434,7 +434,7 @@ describe("native execution input external-chat framing", () => {
         "Preparation does not confirm provider delivery",
       );
       expect(input.task.prompt).toContain(
-        "Paperclip owns recovery navigation for unavailable GitHub attachments",
+        "ThinkingMach owns recovery navigation for unavailable GitHub attachments",
       );
       expect(input.task.prompt).toContain(
         "after an accepted response, only when the current source remains authorized and a safe configured Board URL is available",
@@ -446,7 +446,7 @@ describe("native execution input external-chat framing", () => {
         "Do not invent a URL or promise that a link will appear",
       );
       expect(input.task.prompt).toContain(
-        "Briefly explain the unavailable input and ask the user to attach it directly to this Paperclip task or paste the needed text",
+        "Briefly explain the unavailable input and ask the user to attach it directly to this ThinkingMach task or paste the needed text",
       );
       expect(input.task.prompt).toContain(
         "Never infer the file's contents or substitute an older file",
@@ -467,7 +467,7 @@ describe("native execution input external-chat framing", () => {
           wakePayload: { ...wake, ...patch },
         });
         expect(unrelated.task.prompt).not.toContain(
-          "Paperclip owns recovery navigation for unavailable GitHub attachments",
+          "ThinkingMach owns recovery navigation for unavailable GitHub attachments",
         );
       }
     },
@@ -502,7 +502,7 @@ describe("native execution input external-chat framing", () => {
       : provider === "opencode" ? { kind: "opencode", permissionMode: "allow" }
       : { kind: "codex", approvalPolicy: "never" });
     expect(input.task.prompt).not.toContain("## Questions that need a user response");
-    expect(input.task.prompt).toContain("Use Paperclip's request_human_input for durable task questions.");
+    expect(input.task.prompt).toContain("Use ThinkingMach's request_human_input for durable task questions.");
     expect(input.task.prompt).not.toContain("payload.questionSet");
   });
 
@@ -530,8 +530,8 @@ describe("follow-up context size", () => {
       coverage: { kind: "full_task_history", throughCommentId: "new", summaryThroughCommentId: null },
     };
     const wake = { executionContinuation: continuation };
-    const fresh = renderPaperclipWakePrompt(wake);
-    const resumed = renderPaperclipWakePrompt(wake, { resumedSession: true });
+    const fresh = renderThinkingMachWakePrompt(wake);
+    const resumed = renderThinkingMachWakePrompt(wake, { resumedSession: true });
     const contract = buildNativeCompletionContract({ title: "Welcome", description: oldBody }, {
       immediateRequest: newBody, humanResponseId: "answer-id",
     });

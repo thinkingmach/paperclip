@@ -1,6 +1,6 @@
 import { Router, type NextFunction, type Request, type Response } from "express";
-import type { Db } from "@paperclipai/db";
-import { evaluateSkillPolicySchema, replaceSkillPolicySchema } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { evaluateSkillPolicySchema, replaceSkillPolicySchema } from "@thinkingmach/shared";
 import { ZodError, type ZodSchema } from "zod";
 import { forbidden, HttpError, unprocessable } from "../errors.js";
 import { accessService } from "../services/access.js";

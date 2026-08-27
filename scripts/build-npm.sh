@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# build-npm.sh — Build the paperclipai CLI package for npm publishing.
+# build-npm.sh — Build the thinkingmach CLI package for npm publishing.
 #
 # Uses esbuild to bundle all workspace code into a single file,
 # keeping external npm dependencies as regular package dependencies.
@@ -23,7 +23,7 @@ for arg in "$@"; do
   esac
 done
 
-echo "==> Building paperclipai for npm"
+echo "==> Building thinkingmach for npm"
 
 # ── Step 1: Forbidden token check ──────────────────────────────────────────────
 if [ "$skip_checks" = false ]; then
@@ -67,7 +67,7 @@ node "$REPO_ROOT/scripts/generate-npm-package-json.mjs"
 # Copy the root README so npm shows the repo README on the package page, but
 # rewrite repository-relative image assets because npm resolves README links
 # under the package's `repository.directory` (`cli`), not the repository root.
-README_ASSET_REF="${PAPERCLIP_README_ASSET_REF:-}"
+README_ASSET_REF="${THINKINGMACH_README_ASSET_REF:-}"
 if [ -z "$README_ASSET_REF" ]; then
   README_ASSET_REF="$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
 fi

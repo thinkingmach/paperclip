@@ -1,1 +1,1 @@
-export const BOOTSTRAP_FALLBACK_COMMAND = "npx paperclipai auth bootstrap-ceo";
+export const BOOTSTRAP_FALLBACK_COMMAND = "npx thinkingmach auth bootstrap-ceo";

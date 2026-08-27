@@ -1,16 +1,16 @@
 // GENERATED — DO NOT EDIT.
 
-export interface PaperclipAgentCreatedDimensions {
+export interface ThinkingMachAgentCreatedDimensions {
 agent_id: string
 agent_role: ("ceo" | "cto" | "cmo" | "cfo" | "security" | "engineer" | "designer" | "pm" | "qa" | "devops" | "researcher" | "general" | "other")
 }
 
-export interface PaperclipAgentFirstHeartbeatDimensions {
+export interface ThinkingMachAgentFirstHeartbeatDimensions {
 agent_id: string
 agent_role: ("ceo" | "cto" | "cmo" | "cfo" | "security" | "engineer" | "designer" | "pm" | "qa" | "devops" | "researcher" | "general" | "other")
 }
 
-export interface PaperclipAgentTaskCompletedDimensions {
+export interface ThinkingMachAgentTaskCompletedDimensions {
 adapter_type: ("process" | "http" | "acpx_local" | "claude_local" | "codex_local" | "cursor_cloud" | "gemini_local" | "hermes_gateway" | "hermes_local" | "opencode_local" | "pi_local" | "cursor" | "openclaw_gateway" | "grok_local" | "kimi_local" | "other")
 agent_id: string
 agent_role: ("ceo" | "cto" | "cmo" | "cfo" | "security" | "engineer" | "designer" | "pm" | "qa" | "devops" | "researcher" | "general" | "other")
@@ -18,7 +18,7 @@ model?: string
 task_id?: string
 }
 
-export interface PaperclipAgentTaskRunDimensions {
+export interface ThinkingMachAgentTaskRunDimensions {
 adapter_type?: ("process" | "http" | "acpx_local" | "claude_local" | "codex_local" | "cursor_cloud" | "gemini_local" | "hermes_gateway" | "hermes_local" | "opencode_local" | "pi_local" | "cursor" | "openclaw_gateway" | "grok_local" | "kimi_local" | "other")
 agent_id: string
 agent_role?: ("ceo" | "cto" | "cmo" | "cfo" | "security" | "engineer" | "designer" | "pm" | "qa" | "devops" | "researcher" | "general" | "other")
@@ -31,34 +31,34 @@ cached_tokens?: number
 task_id?: string
 }
 
-export interface PaperclipCompanyImportedDimensions {
+export interface ThinkingMachCompanyImportedDimensions {
 source_type: ("local_path" | "github" | "url" | "catalog" | "skills_sh" | "unknown")
 source_ref?: string
 source_ref_hashed?: boolean
 }
 
-export interface PaperclipErrorHandlerCrashDimensions {
+export interface ThinkingMachErrorHandlerCrashDimensions {
 error_code: string
 }
 
-export interface PaperclipGoalCreatedDimensions {
+export interface ThinkingMachGoalCreatedDimensions {
 goal_level: ("company" | "team" | "agent" | "task" | "other")
 }
 
-export interface PaperclipInstallCompletedDimensions {
+export interface ThinkingMachInstallCompletedDimensions {
 adapter_type: ("process" | "http" | "acpx_local" | "claude_local" | "codex_local" | "cursor_cloud" | "gemini_local" | "hermes_gateway" | "hermes_local" | "opencode_local" | "pi_local" | "cursor" | "openclaw_gateway" | "grok_local" | "kimi_local" | "other")
 }
 
-export interface PaperclipInstallStartedDimensions {
+export interface ThinkingMachInstallStartedDimensions {
 
 }
 
-export interface PaperclipInteractionCreatedDimensions {
+export interface ThinkingMachInteractionCreatedDimensions {
 interaction_kind: ("suggest_tasks" | "ask_user_questions" | "request_confirmation" | "request_checkbox_confirmation" | "request_item_verdicts" | "other")
 used_deprecated_resolver_policy_alias: boolean
 }
 
-export interface PaperclipInteractionResolvedDimensions {
+export interface ThinkingMachInteractionResolvedDimensions {
 interaction_kind: ("suggest_tasks" | "ask_user_questions" | "request_confirmation" | "request_checkbox_confirmation" | "request_item_verdicts" | "other")
 status: ("accepted" | "rejected" | "answered" | "cancelled" | "expired" | "failed" | "other")
 resolution_reason?: ("accepted" | "rejected" | "stale_target" | "superseded_by_comment" | "superseded_by_newer_request" | "expired" | "cancelled" | "skipped" | "other")
@@ -81,25 +81,25 @@ source_run_id?: string
 legacy_inherited_restriction: boolean
 }
 
-export interface PaperclipProjectCreatedDimensions {
+export interface ThinkingMachProjectCreatedDimensions {
 
 }
 
-export interface PaperclipRoutineCreatedDimensions {
+export interface ThinkingMachRoutineCreatedDimensions {
 
 }
 
-export interface PaperclipRoutineRunDimensions {
+export interface ThinkingMachRoutineRunDimensions {
 source: ("schedule" | "manual" | "api" | "webhook" | "other")
 status: ("received" | "coalesced" | "skipped" | "issue_created" | "completed" | "failed" | "other")
 }
 
-export interface PaperclipSkillImportedDimensions {
+export interface ThinkingMachSkillImportedDimensions {
 source_type: ("local_path" | "github" | "url" | "catalog" | "skills_sh" | "unknown")
 skill_ref?: string
 }
 
-export type PaperclipEventName =
+export type ThinkingMachEventName =
   | "agent.created"
   | "agent.first_heartbeat"
   | "agent.task_completed"
@@ -117,24 +117,24 @@ export type PaperclipEventName =
   | "skill.imported";
 
 export interface EventDimensionsMap {
-  "agent.created": PaperclipAgentCreatedDimensions;
-  "agent.first_heartbeat": PaperclipAgentFirstHeartbeatDimensions;
-  "agent.task_completed": PaperclipAgentTaskCompletedDimensions;
-  "agent.task_run": PaperclipAgentTaskRunDimensions;
-  "company.imported": PaperclipCompanyImportedDimensions;
-  "error.handler_crash": PaperclipErrorHandlerCrashDimensions;
-  "goal.created": PaperclipGoalCreatedDimensions;
-  "install.completed": PaperclipInstallCompletedDimensions;
-  "install.started": PaperclipInstallStartedDimensions;
-  "interaction.created": PaperclipInteractionCreatedDimensions;
-  "interaction.resolved": PaperclipInteractionResolvedDimensions;
-  "project.created": PaperclipProjectCreatedDimensions;
-  "routine.created": PaperclipRoutineCreatedDimensions;
-  "routine.run": PaperclipRoutineRunDimensions;
-  "skill.imported": PaperclipSkillImportedDimensions;
+  "agent.created": ThinkingMachAgentCreatedDimensions;
+  "agent.first_heartbeat": ThinkingMachAgentFirstHeartbeatDimensions;
+  "agent.task_completed": ThinkingMachAgentTaskCompletedDimensions;
+  "agent.task_run": ThinkingMachAgentTaskRunDimensions;
+  "company.imported": ThinkingMachCompanyImportedDimensions;
+  "error.handler_crash": ThinkingMachErrorHandlerCrashDimensions;
+  "goal.created": ThinkingMachGoalCreatedDimensions;
+  "install.completed": ThinkingMachInstallCompletedDimensions;
+  "install.started": ThinkingMachInstallStartedDimensions;
+  "interaction.created": ThinkingMachInteractionCreatedDimensions;
+  "interaction.resolved": ThinkingMachInteractionResolvedDimensions;
+  "project.created": ThinkingMachProjectCreatedDimensions;
+  "routine.created": ThinkingMachRoutineCreatedDimensions;
+  "routine.run": ThinkingMachRoutineRunDimensions;
+  "skill.imported": ThinkingMachSkillImportedDimensions;
 }
 
-export const PAPERCLIP_EVENTS = {
+export const THINKINGMACH_EVENTS = {
   "agent.created": "agent.created",
   "agent.first_heartbeat": "agent.first_heartbeat",
   "agent.task_completed": "agent.task_completed",
@@ -152,7 +152,7 @@ export const PAPERCLIP_EVENTS = {
   "skill.imported": "skill.imported",
 } as const;
 
-export const PAPERCLIP_ENUM_DESCRIPTIONS = {
+export const THINKINGMACH_ENUM_DESCRIPTIONS = {
   "agent.created": {
     "agent_role": {
       "ceo": "Agent configured for company leadership and board coordination work.",
@@ -269,7 +269,7 @@ export const PAPERCLIP_ENUM_DESCRIPTIONS = {
       "local_path": "Import source came from a filesystem path on the operator's machine.",
       "github": "Import source came from a GitHub repository or GitHub-backed reference.",
       "url": "Import source came from a direct URL.",
-      "catalog": "Import source came from a Paperclip catalog entry.",
+      "catalog": "Import source came from a ThinkingMach catalog entry.",
       "skills_sh": "Import source came from a Skills.sh-compatible source.",
       "unknown": "Source type could not be classified."
     }
@@ -345,7 +345,7 @@ export const PAPERCLIP_ENUM_DESCRIPTIONS = {
     "resolved_by_kind": {
       "user": "A board or human user resolved the interaction.",
       "agent": "An agent resolved the interaction.",
-      "system": "Paperclip resolved the interaction automatically.",
+      "system": "ThinkingMach resolved the interaction automatically.",
       "other": "Fallback when the resolver kind is unknown or not represented by the tracked enum."
     },
     "created_by_kind": {
@@ -404,7 +404,7 @@ export const PAPERCLIP_ENUM_DESCRIPTIONS = {
       "local_path": "Import source came from a filesystem path on the operator's machine.",
       "github": "Import source came from a GitHub repository or GitHub-backed reference.",
       "url": "Import source came from a direct URL.",
-      "catalog": "Import source came from a Paperclip catalog entry.",
+      "catalog": "Import source came from a ThinkingMach catalog entry.",
       "skills_sh": "Import source came from a Skills.sh-compatible source.",
       "unknown": "Source type could not be classified."
     }
@@ -413,49 +413,49 @@ export const PAPERCLIP_ENUM_DESCRIPTIONS = {
 
 export const SCHEMA_VERSION = "1" as const;
 
-export interface PaperclipTelemetryEvent<K extends PaperclipEventName = PaperclipEventName> {
+export interface ThinkingMachTelemetryEvent<K extends ThinkingMachEventName = ThinkingMachEventName> {
 name: K
 occurredAt: string
 dimensions: EventDimensionsMap[K]
 }
 
-export type AnyPaperclipTelemetryEvent = {
-  [K in PaperclipEventName]: PaperclipTelemetryEvent<K>
-}[PaperclipEventName];
+export type AnyThinkingMachTelemetryEvent = {
+  [K in ThinkingMachEventName]: ThinkingMachTelemetryEvent<K>
+}[ThinkingMachEventName];
 
-export interface PaperclipTelemetryBatch {
+export interface ThinkingMachTelemetryBatch {
 app: "paperclip"
 schemaVersion: typeof SCHEMA_VERSION
 installId: string
 /**
- * Optional client application build version. Paperclip clients report PEP 440
+ * Optional client application build version. ThinkingMach clients report PEP 440
  * local versions such as <nearest-tag>+<commits-since-tag>.git.<abbrev-sha>;
  * nearest tags are usually CalVer, but legacy SemVer tags such as 0.3.1 can
  * appear. Ingest documents this shape but does not strictly enforce PEP 440.
  */
 version?: string
-events: AnyPaperclipTelemetryEvent[]
+events: AnyThinkingMachTelemetryEvent[]
 }
 
-export function makeEvent<K extends PaperclipEventName>(
+export function makeEvent<K extends ThinkingMachEventName>(
   name: K,
   dimensions: EventDimensionsMap[K],
   occurredAt: string
-): PaperclipTelemetryEvent<K> {
+): ThinkingMachTelemetryEvent<K> {
   return { name, occurredAt, dimensions };
 }
 
 export function makeBatch(
   installId: string,
-  events: readonly AnyPaperclipTelemetryEvent[],
+  events: readonly AnyThinkingMachTelemetryEvent[],
   /**
-   * Optional client application build version. Paperclip clients report PEP 440
+   * Optional client application build version. ThinkingMach clients report PEP 440
    * local versions such as <nearest-tag>+<commits-since-tag>.git.<abbrev-sha>;
    * nearest tags are usually CalVer, but legacy SemVer tags such as 0.3.1 can
    * appear. Ingest documents this shape but does not strictly enforce PEP 440.
    */
   version?: string
-): PaperclipTelemetryBatch {
+): ThinkingMachTelemetryBatch {
   return {
     app: "paperclip",
     schemaVersion: SCHEMA_VERSION,

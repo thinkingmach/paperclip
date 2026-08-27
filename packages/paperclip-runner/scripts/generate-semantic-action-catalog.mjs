@@ -2,14 +2,14 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { canonicalPaperclipSemanticActionCatalog } from "../dist/catalog/semantic-action-catalog.js";
+import { canonicalThinkingMachSemanticActionCatalog } from "../dist/catalog/semantic-action-catalog.js";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = resolve(
   packageRoot,
   "generated/semantic-action-catalog.json",
 );
-const generated = canonicalPaperclipSemanticActionCatalog();
+const generated = canonicalThinkingMachSemanticActionCatalog();
 
 if (process.argv.includes("--check")) {
   const current = await readFile(outputPath, "utf8").catch(() => "");

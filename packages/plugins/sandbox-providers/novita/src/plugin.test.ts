@@ -83,10 +83,10 @@ describe("Novita sandbox provider plugin", () => {
   it("does not use a heredoc delimiter for stdin", () => {
     const command = buildShellCommand({
       command: "cat",
-      stdin: "before\nPAPERCLIP_STDIN\nafter",
+      stdin: "before\nTHINKINGMACH_STDIN\nafter",
     });
 
-    expect(command).toContain("before\nPAPERCLIP_STDIN\nafter");
+    expect(command).toContain("before\nTHINKINGMACH_STDIN\nafter");
     expect(command).not.toContain("<<");
   });
 

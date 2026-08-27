@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Project, ProjectCodebase } from "@paperclipai/shared";
+import type { Project, ProjectCodebase } from "@thinkingmach/shared";
 import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
@@ -39,10 +39,10 @@ const MANAGED_FOLDER = "/var/paperclip/checkouts/test-project";
 function makeCodebase(overrides: Partial<ProjectCodebase> = {}): ProjectCodebase {
   return {
     workspaceId: "workspace-1",
-    repoUrl: "https://github.com/paperclipai/paperclip",
+    repoUrl: "https://github.com/thinkingmach/paperclip",
     repoRef: "master",
     defaultRef: "origin/master",
-    repoName: "paperclipai/paperclip",
+    repoName: "thinkingmach/paperclip",
     localFolder: LOCAL_FOLDER,
     managedFolder: MANAGED_FOLDER,
     effectiveLocalFolder: LOCAL_FOLDER,

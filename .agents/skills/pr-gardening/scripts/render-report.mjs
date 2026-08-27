@@ -21,7 +21,7 @@ function reasonText(entry) {
 
 function scopeText(readiness) {
   const authors = readiness.authors?.length
-    ? `PRs authored by ${readiness.authors.map((author) => `\`${author}\``).join(", ")} (this Paperclip instance)`
+    ? `PRs authored by ${readiness.authors.map((author) => `\`${author}\``).join(", ")} (this ThinkingMach instance)`
     : "PRs by any author (community included)";
   const window = readiness.windowDays ? ` referenced by issues active in the last ${readiness.windowDays} day(s)` : "";
   return `${authors}${window}`;

@@ -32,7 +32,7 @@ describe("HoneycombRunLink", () => {
     vi.unstubAllGlobals();
   });
 
-  it("stays hidden when Paperclip developer mode is off", async () => {
+  it("stays hidden when ThinkingMach developer mode is off", async () => {
     flushSync(() => {
       root.render(<HoneycombRunLink runId="run-123" enabled={false} />);
     });
@@ -41,7 +41,7 @@ describe("HoneycombRunLink", () => {
     expect(container.textContent).not.toContain("View in Honeycomb");
   });
 
-  it("links the run hash query when Paperclip developer mode is on", async () => {
+  it("links the run hash query when ThinkingMach developer mode is on", async () => {
     flushSync(() => {
       root.render(<HoneycombRunLink runId="abc" enabled />);
     });

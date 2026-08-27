@@ -3,7 +3,7 @@ import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { companies, companySkills, createDb, projects, projectWorkspaces } from "@paperclipai/db";
+import { companies, companySkills, createDb, projects, projectWorkspaces } from "@thinkingmach/db";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { companySkillService } from "../services/company-skills.js";
 

@@ -15,15 +15,15 @@ import {
   resolveQualifiedAcpxProfile,
 } from "../../vendor/paperclip-runner/index.js";
 import {
-  isPaperclipExternalChatContractTurn,
-  isPaperclipExternalChatQuestionResponseTurn,
-  renderPaperclipWakePrompt,
-} from "@paperclipai/adapter-utils/server-utils";
+  isThinkingMachExternalChatContractTurn,
+  isThinkingMachExternalChatQuestionResponseTurn,
+  renderThinkingMachWakePrompt,
+} from "@thinkingmach/adapter-utils/server-utils";
 
 const NATIVE_GITHUB_ATTACHMENT_RECOVERY_GUIDANCE = [
   "## GitHub attachment recovery navigation",
-  "Paperclip owns recovery navigation for unavailable GitHub attachments. It may append an authenticated task link after an accepted response, only when the current source remains authorized and a safe configured Board URL is available. The model does not select or authorize that link.",
-  "A task URL missing from your prompt or tool results is not evidence that no task link can be provided; do not claim that a link is unavailable merely because you cannot see its URL. Do not invent a URL or promise that a link will appear. Briefly explain the unavailable input and ask the user to attach it directly to this Paperclip task or paste the needed text. Never infer the file's contents or substitute an older file.",
+  "ThinkingMach owns recovery navigation for unavailable GitHub attachments. It may append an authenticated task link after an accepted response, only when the current source remains authorized and a safe configured Board URL is available. The model does not select or authorize that link.",
+  "A task URL missing from your prompt or tool results is not evidence that no task link can be provided; do not claim that a link is unavailable merely because you cannot see its URL. Do not invent a URL or promise that a link will appear. Briefly explain the unavailable input and ask the user to attach it directly to this ThinkingMach task or paste the needed text. Never infer the file's contents or substitute an older file.",
 ].join("\n");
 
 /** Closed constructor: callers cannot spread legacy context or environment data. */
@@ -40,7 +40,7 @@ export function buildNativeExecutionInput(input: {
   taskPrompt: string;
   initialCommunicationGuidance?: string | null;
   /**
-   * The already-sanitized Paperclip wake envelope for this run. Native drivers
+   * The already-sanitized ThinkingMach wake envelope for this run. Native drivers
    * receive a closed execution input rather than the legacy adapter context,
    * so the constructor must deliberately project the same bounded wake delta
    * that legacy adapters place in their provider prompt.
@@ -148,20 +148,20 @@ export function buildNativeExecutionInput(input: {
           },
         }
       : input.wakePayload;
-  const wakePrompt = renderPaperclipWakePrompt(wakePayload, {
+  const wakePrompt = renderThinkingMachWakePrompt(wakePayload, {
     resumedSession: false,
     conversationMode: input.conversationMode === true,
     suppressIssueDescription: input.taskPrompt.trim().length > 0,
     nativeWakeReaderAvailable: true,
   });
   const externalChatTurn =
-    isPaperclipExternalChatContractTurn(wakePayload) ||
-    isPaperclipExternalChatQuestionResponseTurn(wakePayload);
+    isThinkingMachExternalChatContractTurn(wakePayload) ||
+    isThinkingMachExternalChatQuestionResponseTurn(wakePayload);
   const taskPrompt = [
     wakePrompt,
     // Durable task questions must survive the current provider turn.
     // Keep routing visible before deferred tool discovery; usage belongs in the tool schema.
-    "Use Paperclip's request_human_input for durable task questions.",
+    "Use ThinkingMach's request_human_input for durable task questions.",
     externalChatTurn && wake?.externalChatProvider === "github"
       ? NATIVE_GITHUB_ATTACHMENT_RECOVERY_GUIDANCE
       : "",

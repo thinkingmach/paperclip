@@ -15,12 +15,12 @@ const evalCandidates = [
   resolve(repoRoot, "../paperclip-evals/paperclip-skill-optimization"),
   resolve(repoRoot, "../../../../paperclip-evals/paperclip-skill-optimization"),
 ];
-const evalRoot = process.env.PAPERCLIP_EVALS_ROOT
+const evalRoot = process.env.THINKINGMACH_EVALS_ROOT
   ?? (await (async () => {
     for (const candidate of evalCandidates) {
       if (await access(candidate).then(() => true, () => false)) return candidate;
     }
-    throw new Error(`Paperclip eval corpus not found. Set PAPERCLIP_EVALS_ROOT. Checked:\n${evalCandidates.join("\n")}`);
+    throw new Error(`ThinkingMach eval corpus not found. Set THINKINGMACH_EVALS_ROOT. Checked:\n${evalCandidates.join("\n")}`);
   })());
 const outputPaths = {
   capabilities: resolve(packageRoot, "spec/capability/capabilities.yaml"),

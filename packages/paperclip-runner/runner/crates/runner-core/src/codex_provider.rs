@@ -33,15 +33,15 @@ const WARM_ATTACHMENT_QUIET_WINDOW: Duration = Duration::from_millis(10);
 const WARM_ATTACHMENT_DRAIN_DEADLINE: Duration = Duration::from_millis(100);
 const OPENCODE_PROVIDER_ENVIRONMENT_KEYS: &[&str] = &[
     "OPENROUTER_API_KEY",
-    "PAPERCLIP_NATIVE_MCP_NAME",
-    "PAPERCLIP_NATIVE_MCP_URL",
-    "PAPERCLIP_NATIVE_MCP_TOKEN",
-    "PAPERCLIP_OPENCODE_PERMISSION_MODE",
-    "PAPERCLIP_OPENCODE_RUNTIME_DIR",
-    "PAPERCLIP_RUNNER_INSTANCE_ID",
-    "PAPERCLIP_RUN_ID",
-    "PAPERCLIP_NORMALIZED_SESSION_ID",
-    "PAPERCLIP_NATIVE_RUNTIME_CONTEXT_PATH",
+    "THINKINGMACH_NATIVE_MCP_NAME",
+    "THINKINGMACH_NATIVE_MCP_URL",
+    "THINKINGMACH_NATIVE_MCP_TOKEN",
+    "THINKINGMACH_OPENCODE_PERMISSION_MODE",
+    "THINKINGMACH_OPENCODE_RUNTIME_DIR",
+    "THINKINGMACH_RUNNER_INSTANCE_ID",
+    "THINKINGMACH_RUN_ID",
+    "THINKINGMACH_NORMALIZED_SESSION_ID",
+    "THINKINGMACH_NATIVE_RUNTIME_CONTEXT_PATH",
 ];
 const TRUSTED_OPENCODE_EXECUTABLE_ARG: &str = "--paperclip-trusted-opencode-executable";
 const MAX_PROVIDER_STDERR_LINES: usize = 32;
@@ -166,8 +166,8 @@ struct ProviderTraceSink {
 
 impl ProviderTraceSink {
     fn from_environment() -> Option<Self> {
-        let trace_path = std::env::var_os("PAPERCLIP_PROVIDER_TRACE_PATH")?;
-        let max_bytes = std::env::var("PAPERCLIP_PROVIDER_TRACE_MAX_BYTES")
+        let trace_path = std::env::var_os("THINKINGMACH_PROVIDER_TRACE_PATH")?;
+        let max_bytes = std::env::var("THINKINGMACH_PROVIDER_TRACE_MAX_BYTES")
             .ok()
             .and_then(|value| value.parse::<usize>().ok())
             .filter(|value| *value > 0)
@@ -683,17 +683,17 @@ struct ProviderExitDrain {
 // entry from this static ceiling, but cannot introduce another environment
 // variable by changing GIT_CONFIG_COUNT.
 const GITHUB_CREDENTIAL_ENVIRONMENT_KEYS: &[&str] = &[
-    "PAPERCLIP_RUNNER_NETWORK_ACCESS",
-    "PAPERCLIP_RUNNER_NETWORK_ROOTS",
-    "PAPERCLIP_GITHUB_AUTH_MODE",
-    "PAPERCLIP_GITHUB_HOST_HOME",
-    "PAPERCLIP_GIT_METADATA_ROOTS",
+    "THINKINGMACH_RUNNER_NETWORK_ACCESS",
+    "THINKINGMACH_RUNNER_NETWORK_ROOTS",
+    "THINKINGMACH_GITHUB_AUTH_MODE",
+    "THINKINGMACH_GITHUB_HOST_HOME",
+    "THINKINGMACH_GIT_METADATA_ROOTS",
     "GIT_SSH",
     "ZDOTDIR",
     "BASH_ENV",
-    "PAPERCLIP_GITHUB_BROKER_URL",
-    "PAPERCLIP_GITHUB_BROKER_TOKEN",
-    "PAPERCLIP_GITHUB_LAUNCHER_DIR",
+    "THINKINGMACH_GITHUB_BROKER_URL",
+    "THINKINGMACH_GITHUB_BROKER_TOKEN",
+    "THINKINGMACH_GITHUB_LAUNCHER_DIR",
     "GH_CONFIG_DIR",
     "GH_ENTERPRISE_TOKEN",
     "GITHUB_ENTERPRISE_TOKEN",
@@ -704,10 +704,10 @@ const GITHUB_CREDENTIAL_ENVIRONMENT_KEYS: &[&str] = &[
     "SSH_ASKPASS",
     "SSH_AUTH_SOCK",
     "GIT_SSH_COMMAND",
-    "PAPERCLIP_GITHUB_BRIDGE_TOKEN",
+    "THINKINGMACH_GITHUB_BRIDGE_TOKEN",
     "GH_TOKEN",
     "GITHUB_TOKEN",
-    "PAPERCLIP_GIT_TOKEN",
+    "THINKINGMACH_GIT_TOKEN",
     "GIT_TERMINAL_PROMPT",
     "GIT_CONFIG_COUNT",
     "GIT_AUTHOR_NAME",
@@ -784,7 +784,7 @@ const CODEX_PROVIDER_ENVIRONMENT_KEYS: &[&str] = &[
     "CODEX_HOME",
     "OPENAI_API_KEY",
     "CODEX_API_KEY",
-    "PAPERCLIP_RUNNER_EXTERNAL_SANDBOX",
+    "THINKINGMACH_RUNNER_EXTERNAL_SANDBOX",
 ];
 
 fn codex_permission_profile(provider: &str, external_sandbox: bool) -> &'static str {
@@ -871,7 +871,7 @@ impl CodexProvider {
         let permission_profile = codex_permission_profile(
             &config.provider,
             config.externally_sandboxed
-                || std::env::var("PAPERCLIP_RUNNER_EXTERNAL_SANDBOX").as_deref() == Ok("1"),
+                || std::env::var("THINKINGMACH_RUNNER_EXTERNAL_SANDBOX").as_deref() == Ok("1"),
         );
         let (dynamic_tools, authorized_tool_ids) =
             codex_dynamic_tools(authorized_tools.iter().cloned())?;
@@ -1011,7 +1011,7 @@ impl CodexProvider {
                 json!({
                     "clientInfo": {
                         "name": "paperclip-runnerd",
-                        "title": "Paperclip Runner",
+                        "title": "ThinkingMach Runner",
                         "version": "1",
                     },
                     "capabilities": {
@@ -1482,7 +1482,7 @@ impl CodexProvider {
         replacement.durable_tool_call_replays = durable_tool_call_replays;
         if replacement.active_provider_turn_id.is_some() {
             // A terminal can race the provider's own durable idle-state write.
-            // This process has work Paperclip never dispatched in the new
+            // This process has work ThinkingMach never dispatched in the new
             // epoch, so revoke its request authority and reap it. Retain the
             // exact ledger for diagnostics, but never expose the unexpected
             // turn as ordinary active work or admit a replacement.
@@ -1987,9 +1987,9 @@ impl CodexProvider {
         method: &str,
     ) -> Result<Option<CodexProviderEvent>, LocalRunnerError> {
         // A recognized helper is part of the provider conversation, but has no
-        // Paperclip task binding. Reject its RPC without borrowing root authority
+        // ThinkingMach task binding. Reject its RPC without borrowing root authority
         // or quarantining the root run. Unknown foreign threads still fail closed.
-        let message = "Paperclip tools are authorized only for the parent task. Return your findings to the parent agent; it must perform Paperclip coordination and ask the user questions.";
+        let message = "ThinkingMach tools are authorized only for the parent task. Return your findings to the parent agent; it must perform ThinkingMach coordination and ask the user questions.";
         let response = if method == "item/tool/call" {
             json!({"id": rpc_id, "result": codex_tool_failure(message)})
         } else {
@@ -2344,7 +2344,7 @@ impl CodexProvider {
                 if !self.authorized_tool_ids.contains(&operation_id) {
                     self.send_frame(&json!({
                         "id": rpc_id,
-                        "result": codex_tool_failure("Paperclip did not authorize this tool for the run"),
+                        "result": codex_tool_failure("ThinkingMach did not authorize this tool for the run"),
                     }))?;
                     return Err(LocalRunnerError::invalid(format!(
                         "Codex requested unauthorized tool {}",
@@ -2510,7 +2510,7 @@ impl CodexProvider {
                         "id": rpc_id,
                         "error": {
                             "code": -32000,
-                            "message": "Paperclip rejected this runtime request because the pending input capacity was reached",
+                            "message": "ThinkingMach rejected this runtime request because the pending input capacity was reached",
                         },
                     }))?;
                     return Ok(Some(CodexProviderEvent::Notification {
@@ -2867,7 +2867,7 @@ impl CodexProvider {
         for request in pending.into_values() {
             if let Err(error) = self.send_frame(&json!({
                 "id": request.rpc_id,
-                "result": codex_tool_failure("Paperclip stopped the active provider turn"),
+                "result": codex_tool_failure("ThinkingMach stopped the active provider turn"),
             })) {
                 first_error.get_or_insert(error);
             }
@@ -3649,7 +3649,7 @@ fn validate_opencode_question_set(question_set: &Value) -> Result<(), LocalRunne
         .map_err(|_| LocalRunnerError::invalid("embedded question-set schema cannot compile"))?;
     if !validator.is_valid(question_set) {
         return Err(LocalRunnerError::invalid(
-            "OpenCode runtime request input failed the Paperclip question-set schema",
+            "OpenCode runtime request input failed the ThinkingMach question-set schema",
         ));
     }
     let questions = question_set
@@ -4537,27 +4537,27 @@ done
 
     #[test]
     fn does_not_forward_an_ambient_opencode_command_override() {
-        assert!(!OPENCODE_PROVIDER_ENVIRONMENT_KEYS.contains(&"PAPERCLIP_OPENCODE_COMMAND"));
+        assert!(!OPENCODE_PROVIDER_ENVIRONMENT_KEYS.contains(&"THINKINGMACH_OPENCODE_COMMAND"));
     }
 
     #[test]
     fn github_credentials_cross_only_the_bounded_provider_environment() {
         assert_eq!(GITHUB_CREDENTIAL_ENVIRONMENT_KEYS.len(), 95);
         for key in [
-            "PAPERCLIP_RUNNER_NETWORK_ACCESS",
-            "PAPERCLIP_RUNNER_NETWORK_ROOTS",
-            "PAPERCLIP_GITHUB_AUTH_MODE",
-            "PAPERCLIP_GITHUB_HOST_HOME",
-            "PAPERCLIP_GIT_METADATA_ROOTS",
+            "THINKINGMACH_RUNNER_NETWORK_ACCESS",
+            "THINKINGMACH_RUNNER_NETWORK_ROOTS",
+            "THINKINGMACH_GITHUB_AUTH_MODE",
+            "THINKINGMACH_GITHUB_HOST_HOME",
+            "THINKINGMACH_GIT_METADATA_ROOTS",
             "GIT_SSH",
-            "PAPERCLIP_GITHUB_BROKER_URL",
-            "PAPERCLIP_GITHUB_BROKER_TOKEN",
-            "PAPERCLIP_GITHUB_LAUNCHER_DIR",
+            "THINKINGMACH_GITHUB_BROKER_URL",
+            "THINKINGMACH_GITHUB_BROKER_TOKEN",
+            "THINKINGMACH_GITHUB_LAUNCHER_DIR",
             "GH_CONFIG_DIR",
-            "PAPERCLIP_GITHUB_BRIDGE_TOKEN",
+            "THINKINGMACH_GITHUB_BRIDGE_TOKEN",
             "GH_TOKEN",
             "GITHUB_TOKEN",
-            "PAPERCLIP_GIT_TOKEN",
+            "THINKINGMACH_GIT_TOKEN",
             "GIT_TERMINAL_PROMPT",
             "GIT_CONFIG_COUNT",
             "GIT_AUTHOR_NAME",
@@ -4577,8 +4577,8 @@ done
 
     #[test]
     fn codex_provider_accepts_only_the_controller_derived_external_sandbox_bit() {
-        assert!(CODEX_PROVIDER_ENVIRONMENT_KEYS.contains(&"PAPERCLIP_RUNNER_EXTERNAL_SANDBOX"));
-        assert!(!CODEX_PROVIDER_ENVIRONMENT_KEYS.contains(&"PAPERCLIP_SANDBOX_MODE"));
+        assert!(CODEX_PROVIDER_ENVIRONMENT_KEYS.contains(&"THINKINGMACH_RUNNER_EXTERNAL_SANDBOX"));
+        assert!(!CODEX_PROVIDER_ENVIRONMENT_KEYS.contains(&"THINKINGMACH_SANDBOX_MODE"));
         assert_eq!(
             codex_permission_profile("codex", true),
             "paperclip-runner-external-sandbox"

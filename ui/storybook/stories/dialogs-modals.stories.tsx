@@ -6,7 +6,7 @@ import type {
   ExecutionWorkspaceCloseReadiness,
   Goal,
   IssueAttachment,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { DocumentDiffModal } from "@/components/DocumentDiffModal";
@@ -20,7 +20,7 @@ import { PathInstructionsModal } from "@/components/PathInstructionsModal";
 import { useCompany } from "@/context/CompanyContext";
 import { useDialog } from "@/context/DialogContext";
 import { queryKeys } from "@/lib/queryKeys";
-import type { Agent } from "@paperclipai/shared";
+import type { Agent } from "@thinkingmach/shared";
 import {
   storybookAgents,
   storybookAuthSession,
@@ -40,7 +40,7 @@ const storybookGoals: Goal[] = [
   {
     id: "goal-company",
     companyId: COMPANY_ID,
-    title: "Build Paperclip",
+    title: "Build ThinkingMach",
     description: "Make autonomous companies easier to run and govern.",
     level: "company",
     status: "active",
@@ -577,7 +577,7 @@ function ProjectDialogOpener({ populated }: { populated?: boolean }) {
     if (!populated) return undefined;
     const timer = window.setTimeout(() => {
       fillFirstField("input[placeholder='Project name']", "Storybook review workspace");
-      fillFirstField("input[placeholder='https://github.com/org/repo']", "https://github.com/paperclipai/paperclip");
+      fillFirstField("input[placeholder='https://github.com/org/repo']", "https://github.com/thinkingmach/paperclip");
       fillFirstField("input[placeholder='/absolute/path/to/workspace']", "/Users/dotta/paperclip/ui");
       fillFirstField("input[type='date']", "2026-04-30");
     }, 250);
@@ -679,7 +679,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Open-state stories for Paperclip creation dialogs, workspace confirmations, document diffing, image attachments, and path helper modals.",
+          "Open-state stories for ThinkingMach creation dialogs, workspace confirmations, document diffing, image attachments, and path helper modals.",
       },
     },
   },

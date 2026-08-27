@@ -16,18 +16,11 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  CornerDownRight,
-  GripVertical,
-  Loader2,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { CornerDownRight, GripVertical, Loader2, MoreHorizontal, Pencil, Trash2,  } from "lucide-react";
 import type {
   IssueQueuedCommentEntry,
   IssueQueuedCommentQueue,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,

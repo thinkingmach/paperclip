@@ -151,7 +151,7 @@ export interface DatabaseClientOptions {
   maxLifetimeSeconds?: number;
   /**
    * postgres.js `connection.application_name`, shown in
-   * `pg_stat_activity.application_name`. Lets an operator tell Paperclip's
+   * `pg_stat_activity.application_name`. Lets an operator tell ThinkingMach's
    * pool apart from other clients of the same database (driver default:
    * `postgres.js`).
    */
@@ -206,7 +206,7 @@ function envNonEmptyString(env: NodeJS.ProcessEnv, name: string): string | undef
  * adapt to their connection topology (pooled endpoints, network latency)
  * without editing source. Every variable is optional. This function returns
  * only the values the environment sets; `resolveDatabaseClientOptions` adds
- * Paperclip's own defaults on top, and the driver defaults apply to the rest
+ * ThinkingMach's own defaults on top, and the driver defaults apply to the rest
  * — self-hosted setups need none of these.
  */
 export function databaseClientOptionsFromEnv(env: NodeJS.ProcessEnv = process.env): DatabaseClientOptions {
@@ -228,7 +228,7 @@ export function databaseClientOptionsFromEnv(env: NodeJS.ProcessEnv = process.en
 }
 
 /**
- * Fills in Paperclip's defaults for the options the caller left unset: idle
+ * Fills in ThinkingMach's defaults for the options the caller left unset: idle
  * connections are reaped after `DEFAULT_DATABASE_IDLE_TIMEOUT_SECONDS`, and the
  * pool identifies itself as `DEFAULT_DATABASE_APPLICATION_NAME`. Everything
  * else stays at the driver default. An explicit value (including

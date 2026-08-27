@@ -7,7 +7,7 @@ describe("runner E2E summary links", () => {
       runnerE2ESummaryLinks({
         campaignId: "gha-34026735033-1",
         workflowRunUrl:
-          "https://github.com/paperclipai/paperclip/actions/runs/34026735033",
+          "https://github.com/thinkingmach/paperclip/actions/runs/34026735033",
         historyPublicBaseUrl: "https://reports.example.test///",
         historyPrefix: "/runner-e2e/",
       }),
@@ -21,12 +21,12 @@ describe("runner E2E summary links", () => {
       {
         kind: "workflow",
         label: "Open the workflow run and per-cell job logs",
-        url: "https://github.com/paperclipai/paperclip/actions/runs/34026735033",
+        url: "https://github.com/thinkingmach/paperclip/actions/runs/34026735033",
       },
       {
         kind: "artifacts",
         label: "Download the merged report and per-cell evidence",
-        url: "https://github.com/paperclipai/paperclip/actions/runs/34026735033#artifacts",
+        url: "https://github.com/thinkingmach/paperclip/actions/runs/34026735033#artifacts",
         note: "GitHub access required; retained for 30 days",
       },
     ]);

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
 
 const {
   ensureAdapterExecutionTargetDirectory,
@@ -32,9 +32,9 @@ const {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,

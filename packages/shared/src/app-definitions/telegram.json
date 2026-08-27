@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "telegram",
   "name": "Telegram",
-  "description": "Let people start and continue Paperclip work with an agent from Telegram.",
+  "description": "Let people start and continue ThinkingMach work with an agent from Telegram.",
   "categories": [
     "communication"
   ],
@@ -26,7 +26,7 @@
       "ownershipModes": [
         "customer"
       ],
-      "whenToUse": "Let people in Telegram start and continue work with one Paperclip agent.",
+      "whenToUse": "Let people in Telegram start and continue work with one ThinkingMach agent.",
       "credentialFields": [
         {
           "key": "botToken",
@@ -37,7 +37,7 @@
           "secret": true
         }
       ],
-      "guidanceMd": "Create one dedicated bot with BotFather, then connect its token to the public Paperclip webhook endpoint.",
+      "guidanceMd": "Create one dedicated bot with BotFather, then connect its token to the public ThinkingMach webhook endpoint.",
       "consoleLinks": {
         "register": "https://t.me/BotFather",
         "docs": "https://core.telegram.org/bots/tutorial"

@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { heartbeatRuns, type Db } from "@paperclipai/db";
+import { heartbeatRuns, type Db } from "@thinkingmach/db";
 import { forbidden } from "./errors.js";
 
 /** Stop revokes write authority before waiting for the executor to settle. */

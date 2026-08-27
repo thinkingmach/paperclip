@@ -2,7 +2,7 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ConnectionGrantsResponse, ToolConnection } from "@paperclipai/shared";
+import type { ConnectionGrantsResponse, ToolConnection } from "@thinkingmach/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { RailwayAccessPanel } from "./RailwayAccessPanel";
 const { configure } = vi.hoisted(() => ({ configure: vi.fn(async () => null) }));

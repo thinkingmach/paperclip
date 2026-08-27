@@ -6,7 +6,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { StatusCard } from "@paperclipai/shared";
+import type { StatusCard } from "@thinkingmach/shared";
 import { StatusCardTile } from "./StatusCardTile";
 import type { StatusCardView } from "./types";
 

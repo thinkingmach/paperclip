@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { createServer, type Server } from "node:http";
 import { readFile } from "node:fs/promises";
 
-// Real browser/module-cache behavior without a Paperclip instance or LLM.
+// Real browser/module-cache behavior without a ThinkingMach instance or LLM.
 test("development module revalidation bypasses the offline worker across reloads", async ({ page }) => {
   const worker = await readFile(new URL("../../ui/public/sw.js", import.meta.url), "utf8");
   let revalidations = 0;

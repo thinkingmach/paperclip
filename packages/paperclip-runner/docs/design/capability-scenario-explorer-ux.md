@@ -15,7 +15,7 @@ produced**. It renders scenario metadata from the generated 7A traceability
 manifest, run artifacts from the 7C mock control-plane adapter, and parity
 results from the 7E conformance suite. The UI never owns state, policy,
 credentials, or execution decisions: it does not compute tool exposure, does
-not evaluate claims, does not apply redaction, and holds no Paperclip or
+not evaluate claims, does not apply redaction, and holds no ThinkingMach or
 provider credential. Every allow/deny, redaction, and state transition shown
 on screen must arrive as a record emitted by the mock core.
 
@@ -44,9 +44,9 @@ on screen must arrive as a record emitted by the mock core.
 
 Package-local Vite entry `examples/scenario-explorer/` with script
 `demo:scenarios` (default port 4183; 4182 belongs to the Standalone demo). It runs
-from static assets plus checked-in fixtures with **no Paperclip services and
+from static assets plus checked-in fixtures with **no ThinkingMach services and
 no network dependency** in fake-agent mode. Reuse the frozen `0.1.2` SDK
-surface (`@paperclipai/paperclip-runner/react` + `./styles.css`) through its
+surface (`@thinkingmach/paperclip-runner/react` + `./styles.css`) through its
 five approved extension points; do not fork the token layer.
 
 Desktop layout (≥ 64rem), one React tree (SDK finding — never render two
@@ -246,7 +246,7 @@ The eval acceptance surface:
 ## 5. Credentials, redaction, and denial rendering
 
 - Fake mode performs zero network I/O; Codex mode talks only to the local
-  relay; no route, storage key, or bundle string may contain a Paperclip or
+  relay; no route, storage key, or bundle string may contain a ThinkingMach or
   provider credential. `localStorage` may hold UI preferences only
   (inspector tab, filter collapse state) — never run artifacts, grants, or
   anything from a fixture.
@@ -340,7 +340,7 @@ Determinism contract for screenshot/CI use:
   `RunnerConsoleApp` is *not* the shell (this is not a chat console);
   compose `conversation`, `message`, `tool-item`, `tabs`, `card`, `badge`,
   `banner`, `menu`, `dialog`, `tooltip`, `replay-controls` from
-  `@paperclipai/paperclip-runner/react`. Semantic call detail uses the
+  `@thinkingmach/paperclip-runner/react`. Semantic call detail uses the
   item-body renderer (ext point 1); control-plane detail uses the
   request-detail renderer contract (ext point 2); theming via scoped
   `--pcr-*` overrides (ext point 4). Do not add SDK exports or break the
@@ -428,7 +428,7 @@ fails the gate.
   in-browser demo run.
 - No parity “re-judging” in the UI: the Parity tab renders 7E output; it
   never recomputes assertions.
-- No live-Paperclip or ACPX affordances; the future binding boundary stays a
+- No live-ThinkingMach or ACPX affordances; the future binding boundary stays a
   docs note, not a UI surface.
 
 ## 11. Revisions recorded during 7F implementation

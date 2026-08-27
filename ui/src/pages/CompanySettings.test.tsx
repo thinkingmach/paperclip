@@ -4,7 +4,7 @@ import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { AGENT_ADAPTER_TYPES, getEnvironmentCapabilities } from "@paperclipai/shared";
+import { AGENT_ADAPTER_TYPES, getEnvironmentCapabilities } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CompanyEnvironments } from "./CompanyEnvironments";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -85,7 +85,7 @@ vi.mock("../context/ToastContext", () => ({
 
 vi.mock("../context/CompanyContext", () => ({
   useCompany: () => ({
-    companies: [{ id: "company-1", name: "Paperclip", issuePrefix: "PAP" }],
+    companies: [{ id: "company-1", name: "ThinkingMach", issuePrefix: "PAP" }],
     selectedCompany: null,
     selectedCompanyId: "company-1",
     setSelectedCompanyId: mockSetSelectedCompanyId,
@@ -179,7 +179,7 @@ describe("CompanyEnvironments", () => {
     mockSecretsApi.list.mockResolvedValue([]);
     mockCompaniesApi.update.mockResolvedValue({
       id: "company-1",
-      name: "Paperclip",
+      name: "ThinkingMach",
       description: null,
       logoUrl: null,
       issuePrefix: "PAP",

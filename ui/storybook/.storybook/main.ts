@@ -8,7 +8,7 @@ import { storybookAgentAvatarAssets } from "../../../scripts/storybook-agent-ava
 const storybookConfigDir = path.dirname(fileURLToPath(import.meta.url));
 const paperclipInstanceOrigin = (() => {
   try {
-    const url = new URL(process.env.PAPERCLIP_STORYBOOK_API_URL ?? "");
+    const url = new URL(process.env.THINKINGMACH_STORYBOOK_API_URL ?? "");
     return url.protocol === "http:" || url.protocol === "https:" ? url.origin : "";
   } catch {
     return "";
@@ -29,10 +29,10 @@ const config: StorybookConfig = {
   viteFinal: async (baseConfig, { configType }) =>
     mergeConfig(baseConfig, {
       define: {
-        "import.meta.env.VITE_PAPERCLIP_INSTANCE_URL": JSON.stringify(paperclipInstanceOrigin),
+        "import.meta.env.VITE_THINKINGMACH_INSTANCE_URL": JSON.stringify(paperclipInstanceOrigin),
       },
       plugins: [tailwindcss(), storybookAgentAvatarAssets()],
-      server: { proxy: { "/api/agent-avatars": { target: process.env.PAPERCLIP_STORYBOOK_API_URL ?? "http://localhost:3100", changeOrigin: true } } },
+      server: { proxy: { "/api/agent-avatars": { target: process.env.THINKINGMACH_STORYBOOK_API_URL ?? "http://localhost:3100", changeOrigin: true } } },
       optimizeDeps: { include: ["motion/react", "react", "react-dom"] },
       resolve: {
         // Storybook's core and the react-vite builder each resolve their own
@@ -48,7 +48,7 @@ const config: StorybookConfig = {
           "@": path.resolve(storybookConfigDir, "../../src"),
           lexical: path.resolve(storybookConfigDir, "../../node_modules/lexical/dist/Lexical.mjs"),
           // Vite's bundled `node:crypto` polyfill omits `createHash`, which
-          // `@paperclipai/shared/external-objects.ts` imports server-side. Use
+          // `@thinkingmach/shared/external-objects.ts` imports server-side. Use
           // a no-op browser shim so the import resolves; the canonicalizer
           // only runs server-side.
           "node:crypto": path.resolve(storybookConfigDir, "node-crypto-browser-shim.ts"),

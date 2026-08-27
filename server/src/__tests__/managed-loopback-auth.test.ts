@@ -1,4 +1,4 @@
-import { createDb } from "@paperclipai/db";
+import { createDb } from "@thinkingmach/db";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { Config } from "../config.js";
 import { createBetterAuthInstance } from "../auth/better-auth.js";
@@ -51,8 +51,8 @@ describeEmbeddedPostgres("managed runtime loopback auth cookies", () => {
 
   it("uses a loopback sign-in cookie on the next request while keeping the public cookie secure", async () => {
     vi.stubEnv("BETTER_AUTH_SECRET", "managed-loopback-auth-test-secret");
-    vi.stubEnv("PAPERCLIP_MANAGED_RUNTIME_PUBLIC_URL", publicOrigin);
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "");
+    vi.stubEnv("THINKINGMACH_MANAGED_RUNTIME_PUBLIC_URL", publicOrigin);
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "");
 
     const db = createDb(tempDb!.connectionString);
     const config = {

@@ -29,10 +29,10 @@ index 0214a509eb5e7b777a69e4e34637941c275d27b1..403be02df66e25eee29e7d5bef146270
              settingSources: ["user", "project", "local"],
              ...(thinking !== undefined && { thinking }),
              ...userProvidedOptions,
-+            // Paperclip Runner owns the complete session context. Its isolated
++            // ThinkingMach Runner owns the complete session context. Its isolated
 +            // user root contains only assigned skills; project/local settings
 +            // would reintroduce host prompts, plugins, skills, and MCP servers.
-+            ...(process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT === "1" && { settingSources: ["user"] }),
++            ...(process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT === "1" && { settingSources: ["user"] }),
              ...(settings && { settings }),
              env,
              // Override certain fields that must be controlled by ACP
@@ -41,7 +41,7 @@ index 0214a509eb5e7b777a69e4e34637941c275d27b1..403be02df66e25eee29e7d5bef146270
              forwardSubagentText,
              mcpServers: {
 -                ...(userProvidedOptions?.mcpServers || {}),
-+                ...(process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT === "1"
++                ...(process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT === "1"
 +                    ? {}
 +                    : (userProvidedOptions?.mcpServers || {})),
                  ...mcpServers,
@@ -54,9 +54,9 @@ index 0214a509eb5e7b777a69e4e34637941c275d27b1..403be02df66e25eee29e7d5bef146270
 +            // The runner pins this actual MCP endpoint before provider launch.
 +            // Exempt only task delivery/control tools at the SDK dispatch boundary,
 +            // not arbitrary provider permission metadata or MCP name prefixes.
-+            ...(process.env.PAPERCLIP_ACPX_ISOLATED_CONTEXT === "1" && {
++            ...(process.env.THINKINGMACH_ACPX_ISOLATED_CONTEXT === "1" && {
 +                allowedTools: mcpServers.paperclip?.type === "http"
-+                    && mcpServers.paperclip.url === process.env.PAPERCLIP_ACPX_TASK_TOOL_BRIDGE_URL
++                    && mcpServers.paperclip.url === process.env.THINKINGMACH_ACPX_TASK_TOOL_BRIDGE_URL
 +                    ? ["paperclip_finish", "paperclip_block", "read_current_wake_comments", "request_human_input"]
 +                        .map((tool) => `mcp__paperclip__${tool}`)
 +                    : [],

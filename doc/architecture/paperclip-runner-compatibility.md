@@ -1,13 +1,13 @@
-# Paperclip Runner compatibility and rollout
+# ThinkingMach Runner compatibility and rollout
 
 - Status: Proposed
 - Date: 2026-08-24
-- Parent decision: [Paperclip Runner architecture](paperclip-runner.md)
+- Parent decision: [ThinkingMach Runner architecture](paperclip-runner.md)
 
 ## Purpose
 
 This document defines compatibility rules for introducing the experimental
-Paperclip Runner. These rules are acceptance criteria for each implementation
+ThinkingMach Runner. These rules are acceptance criteria for each implementation
 change. They are not a migration plan for existing adapters.
 
 ## Compatibility invariants
@@ -65,7 +65,7 @@ release follows a backward-compatible protocol.
 - The same check applies to discovered, explicitly staged, and npm-installed
   remote Codex executables, including the final executable after linking.
 - For an incompatible image, the existing
-  `PAPERCLIP_RUNNER_REMOTE_CODEX_NPM_SPEC=@openai/codex@0.156.0` configuration
+  `THINKINGMACH_RUNNER_REMOTE_CODEX_NPM_SPEC=@openai/codex@0.156.0` configuration
   allows installation of the pinned runtime. Without that configuration,
   startup reports the supported range and the remediation.
 - Runner binary contracts, required runner capabilities, artifact digests,
@@ -100,7 +100,7 @@ This rule applies to every built-in and plugin direct adapter. It includes:
 - gateway adapters; and
 - external adapter plugins.
 
-Adding Paperclip Runner must not add runner imports or runner branches inside a
+Adding ThinkingMach Runner must not add runner imports or runner branches inside a
 direct adapter implementation. The heartbeat coordinator may select the
 explicit runner adapter at one narrow seam. All other adapters continue through
 their existing code.

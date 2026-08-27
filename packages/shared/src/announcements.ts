@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const DEFAULT_ANNOUNCEMENT_FEED_URL = "https://pages.paperclip.ing/announcements/v1/current.json";
+export const DEFAULT_ANNOUNCEMENT_FEED_URL = "https://pages.thinkingmach.com/announcements/v1/current.json";
 export const ANNOUNCEMENT_MANIFEST_MAX_BYTES = 64 * 1024;
 export const ANNOUNCEMENT_IMAGE_MAX_BYTES = 2 * 1024 * 1024;
 export const ANNOUNCEMENT_ANIMATION_MAX_BYTES = 128 * 1024;
@@ -46,7 +46,7 @@ export const announcementSchema = z.object({
   secondaryLink: announcementActionSchema.optional(),
   primaryAction: announcementActionSchema,
   expiresAt: z.string().datetime({ offset: true }).optional(),
-  minimumPaperclipVersion: z.string().regex(/^\d+\.\d+\.\d+$/).optional(),
+  minimumThinkingMachVersion: z.string().regex(/^\d+\.\d+\.\d+$/).optional(),
 }).strict().refine((value) => !value.animation || Boolean(value.image), {
   message: "An animation requires a static fallback image", path: ["image"],
 });
@@ -62,10 +62,10 @@ export type AnnouncementManifest = z.infer<typeof announcementManifestSchema>;
 
 export function isAnnouncementEligible(announcement: Announcement, version: string, now = Date.now()): boolean {
   if (announcement.expiresAt && Date.parse(announcement.expiresAt) <= now) return false;
-  if (!announcement.minimumPaperclipVersion) return true;
+  if (!announcement.minimumThinkingMachVersion) return true;
   const installed = /^(\d+)\.(\d+)\.(\d+)(-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.exec(version);
   if (!installed) return false;
-  const minimum = announcement.minimumPaperclipVersion.split(".").map(Number);
+  const minimum = announcement.minimumThinkingMachVersion.split(".").map(Number);
   for (let i = 0; i < 3; i++) {
     const difference = Number(installed[i + 1]) - minimum[i]!;
     if (difference !== 0) return difference > 0;

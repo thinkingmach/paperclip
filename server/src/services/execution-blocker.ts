@@ -1,8 +1,8 @@
 import { and, desc, eq, gt, inArray, not, or, sql } from "drizzle-orm";
 import { conversationRecoveryActionPredicate, getConversationOwnershipBlocker } from "./conversation-continuation.js";
 import { z } from "zod";
-import { heartbeatRuns, issueComments, issues, issueRecoveryActions, type Db } from "@paperclipai/db";
-import { EXECUTION_RECONCILIATION_CAUSES, type ExecutionBlocker } from "@paperclipai/shared";
+import { heartbeatRuns, issueComments, issues, issueRecoveryActions, type Db } from "@thinkingmach/db";
+import { EXECUTION_RECONCILIATION_CAUSES, type ExecutionBlocker } from "@thinkingmach/shared";
 
 /** Resolved recovery bookkeeping can still carry an effective no-replay hold. */
 export function executionBlockerPredicate() {

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { and, eq, gt, lte, sql } from "drizzle-orm";
-import { chatEndpointLeases, type Db } from "@paperclipai/db";
+import { chatEndpointLeases, type Db } from "@thinkingmach/db";
 
 type Transaction = Parameters<Parameters<Db["transaction"]>[0]>[0];
 const TTL_SECONDS = 90;

@@ -101,8 +101,8 @@ if (args.length === 0 || (args.length === 1 && args[0] === "--help")) {
       `#!/bin/sh\nset -eu\nprintf '%s\\n' "$$" >> ${quote(ledger)}\nLC_ALL=C /bin/ps -p "$$" -o pid= -o pgid= -o lstart= >> ${quote(identityLedger)}\nexec ${quote(codexBinary)} "$@"\n`,
       { flag: "wx", mode: 0o700 },
     );
-    environment.PAPERCLIP_PROVIDER_TRACE_PATH = trace;
-    environment.PAPERCLIP_PROVIDER_TRACE_MAX_BYTES = "1048576";
+    environment.THINKINGMACH_PROVIDER_TRACE_PATH = trace;
+    environment.THINKINGMACH_PROVIDER_TRACE_MAX_BYTES = "1048576";
     const identity = {
       runnerInstanceId: `runner-${randomUUID()}`,
       environmentLeaseId: `lease-${randomUUID()}`,

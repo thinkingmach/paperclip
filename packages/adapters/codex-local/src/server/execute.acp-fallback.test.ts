@@ -5,7 +5,7 @@ const {
   ensureAdapterExecutionTargetRuntimeCommandInstalled,
   executeCodexAcp,
   prepareCodexRuntimeConfig,
-  readPaperclipRuntimeSkillEntries,
+  readThinkingMachRuntimeSkillEntries,
   resolveAdapterExecutionTargetCommandForLogs,
   runAdapterExecutionTargetProcess,
   tempCodexHome,
@@ -16,7 +16,7 @@ const {
     throw new Error('Transform failed with 1 error: execute.ts:818:0: ERROR: Unexpected "<<"');
   }),
   prepareCodexRuntimeConfig: vi.fn(async () => ({ cleanup: vi.fn(async () => undefined), notes: [] })),
-  readPaperclipRuntimeSkillEntries: vi.fn(async () => []),
+  readThinkingMachRuntimeSkillEntries: vi.fn(async () => []),
   resolveAdapterExecutionTargetCommandForLogs: vi.fn(async () => "codex"),
   runAdapterExecutionTargetProcess: vi.fn(async () => ({
     exitCode: 0,
@@ -50,9 +50,9 @@ vi.mock("./acp.js", () => ({
       : { engine: "acp", explicit: false },
 }));
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
@@ -63,13 +63,13 @@ vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/server-utils", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/server-utils")>(
-    "@paperclipai/adapter-utils/server-utils",
+vi.mock("@thinkingmach/adapter-utils/server-utils", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/server-utils")>(
+    "@thinkingmach/adapter-utils/server-utils",
   );
   return {
     ...actual,
-    readPaperclipRuntimeSkillEntries,
+    readThinkingMachRuntimeSkillEntries,
   };
 });
 

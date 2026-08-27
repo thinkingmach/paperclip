@@ -3,8 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import { defineConfig } from "@playwright/test";
 
-const PORT = Number(process.env.PAPERCLIP_ISSUE_PERF_PORT ?? 3201);
-const EXTERNAL_URL = process.env.PAPERCLIP_ISSUE_PERF_BASE_URL;
+const PORT = Number(process.env.THINKINGMACH_ISSUE_PERF_PORT ?? 3201);
+const EXTERNAL_URL = process.env.THINKINGMACH_ISSUE_PERF_BASE_URL;
 if (EXTERNAL_URL) {
   const target = new URL(EXTERNAL_URL);
   if (
@@ -12,16 +12,16 @@ if (EXTERNAL_URL) {
     !["localhost", "127.0.0.1", "[::1]"].includes(target.hostname) ||
     target.username || target.password || target.search || target.hash || target.pathname !== "/"
   ) {
-    throw new Error("PAPERCLIP_ISSUE_PERF_BASE_URL must be a loopback origin for a disposable local instance; these tests create fixtures.");
+    throw new Error("THINKINGMACH_ISSUE_PERF_BASE_URL must be a loopback origin for a disposable local instance; these tests create fixtures.");
   }
 }
 const BASE_URL = EXTERNAL_URL ?? `http://127.0.0.1:${PORT}`;
-const PAPERCLIP_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-issue-perf-home-"));
-const PAPERCLIP_INSTANCE_ID = "playwright-issue-perf";
-const PAPERCLIP_CONFIG = path.join(PAPERCLIP_HOME, "instances", PAPERCLIP_INSTANCE_ID, "config.json");
+const THINKINGMACH_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-issue-perf-home-"));
+const THINKINGMACH_INSTANCE_ID = "playwright-issue-perf";
+const THINKINGMACH_CONFIG = path.join(THINKINGMACH_HOME, "instances", THINKINGMACH_INSTANCE_ID, "config.json");
 
-process.env.PAPERCLIP_HOME = PAPERCLIP_HOME;
-process.env.PAPERCLIP_CONFIG = PAPERCLIP_CONFIG;
+process.env.THINKINGMACH_HOME = THINKINGMACH_HOME;
+process.env.THINKINGMACH_CONFIG = THINKINGMACH_CONFIG;
 
 export default defineConfig({
   testDir: ".",
@@ -35,7 +35,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: EXTERNAL_URL ? undefined : {
-    command: "pnpm paperclipai onboard --yes --run",
+    command: "pnpm thinkingmach onboard --yes --run",
     url: `${BASE_URL}/api/health`,
     reuseExistingServer: false,
     timeout: 120_000,
@@ -45,15 +45,15 @@ export default defineConfig({
       ...process.env,
       NODE_ENV: "development",
       PORT: String(PORT),
-      PAPERCLIP_OPEN_ON_LISTEN: "false",
-      PAPERCLIP_HOME,
-      PAPERCLIP_INSTANCE_ID,
-      PAPERCLIP_CONFIG,
-      PAPERCLIP_AGENT_JWT_SECRET: "playwright-issue-perf-agent-jwt-secret",
-      PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: "playwright-issue-perf-tool-action-signing-secret",
-      PAPERCLIP_BIND: "loopback",
-      PAPERCLIP_DEPLOYMENT_MODE: "local_trusted",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private",
+      THINKINGMACH_OPEN_ON_LISTEN: "false",
+      THINKINGMACH_HOME,
+      THINKINGMACH_INSTANCE_ID,
+      THINKINGMACH_CONFIG,
+      THINKINGMACH_AGENT_JWT_SECRET: "playwright-issue-perf-agent-jwt-secret",
+      THINKINGMACH_TOOL_ACTION_SIGNING_SECRET: "playwright-issue-perf-tool-action-signing-secret",
+      THINKINGMACH_BIND: "loopback",
+      THINKINGMACH_DEPLOYMENT_MODE: "local_trusted",
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "private",
     },
   },
   outputDir: "../../../test-results/issue-detail-perf/playwright",

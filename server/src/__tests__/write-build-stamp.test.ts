@@ -17,7 +17,7 @@ it("packages a full source commit without a Docker build argument", () => {
     git("init", "--quiet");
     git("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "--allow-empty", "--no-gpg-sign", "-m", "fixture");
     const env = { ...process.env };
-    delete env.PAPERCLIP_BUILD_COMMIT;
+    delete env.THINKINGMACH_BUILD_COMMIT;
     execFileSync(process.execPath, [script], { cwd: root, env, stdio: "pipe" });
     const stamp = JSON.parse(readFileSync(join(root, "server", "dist", "build-info.json"), "utf8"));
     expect(stamp.commit).toBe(git("rev-parse", "HEAD"));
@@ -32,7 +32,7 @@ describe("resolveBuildCommit", () => {
     expect(resolveBuildCommit("aaaaaaa", "bbbbbbb")).toBe("aaaaaaa");
   });
 
-  it("falls back to PAPERCLIP_BUILD_COMMIT when git gives no commit", () => {
+  it("falls back to THINKINGMACH_BUILD_COMMIT when git gives no commit", () => {
     // A Docker image build excludes `.git`, so the git lookup returns null. The
     // image build passes the commit in the environment instead.
     expect(resolveBuildCommit(null, "bbbbbbb")).toBe("bbbbbbb");

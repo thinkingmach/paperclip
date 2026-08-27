@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 
 export const TELEGRAM_EPHEMERAL_WINDOW_MS = 15_000;
 export const TELEGRAM_PRIVATE_ACTION_UNAVAILABLE =
-  "This Paperclip action is no longer available. Open the linked task or ask an operator to link this account.";
+  "This ThinkingMach action is no longer available. Open the linked task or ask an operator to link this account.";
 
 export interface TelegramCallbackReceipt {
   version: 1;

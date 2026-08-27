@@ -19,7 +19,7 @@ const originalNotice: TaskChatMessageItem = {
   id: "recovery-before",
   kind: "message",
   author: "system",
-  text: "Paperclip exhausted the bounded original-owner disposition repair without a durable source-state change.\n\n- Attempts: 2/2\n- Terminal reason: `unchanged_source_state_exhausted`\n- Recovery owner: board\n- Source ownership: unchanged\n\nNext action: repair the liveness disposition or request an explicit source-owner decision.",
+  text: "ThinkingMach exhausted the bounded original-owner disposition repair without a durable source-state change.\n\n- Attempts: 2/2\n- Terminal reason: `unchanged_source_state_exhausted`\n- Recovery owner: board\n- Source ownership: unchanged\n\nNext action: repair the liveness disposition or request an explicit source-owner decision.",
   presentation: {
     kind: "system_notice",
     title: "Recovery: disposition repair escalated — source owner preserved",

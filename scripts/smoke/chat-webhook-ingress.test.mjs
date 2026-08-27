@@ -630,8 +630,8 @@ test("CLI child and real comparator ignore proxy/auth environments and redact ba
     https_proxy: proxyUrl,
     NO_PROXY: "",
     no_proxy: "",
-    PAPERCLIP_AUTH_HEADER: `Bearer ${secret}`,
-    PAPERCLIP_COOKIE: secret,
+    THINKINGMACH_AUTH_HEADER: `Bearer ${secret}`,
+    THINKINGMACH_COOKIE: secret,
     SLACK_BOT_TOKEN: secret,
   };
   for (const argv of [

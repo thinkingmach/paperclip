@@ -1,11 +1,11 @@
 export const fixedBehavior = [
   [
     "Channel activation",
-    "A root mention creates a provider-native thread and one Paperclip task on Slack and Teams. Replies in that thread continue the same task without another mention."
+    "A root mention creates a provider-native thread and one ThinkingMach task on Slack and Teams. Replies in that thread continue the same task without another mention."
   ],
   [
     "Existing provider thread",
-    "The first mention inside an unbound Slack or Teams thread binds that existing thread to one new Paperclip task. Earlier messages are not imported automatically."
+    "The first mention inside an unbound Slack or Teams thread binds that existing thread to one new ThinkingMach task. Earlier messages are not imported automatically."
   ],
   [
     "Direct messages",
@@ -13,7 +13,7 @@ export const fixedBehavior = [
   ],
   [
     "GitHub conversations",
-    "A mention binds the addressed issue, pull-request conversation, or inline review thread to one Paperclip task."
+    "A mention binds the addressed issue, pull-request conversation, or inline review thread to one ThinkingMach task."
   ],
   [
     "Telegram conversations",
@@ -21,7 +21,7 @@ export const fixedBehavior = [
   ],
   [
     "Delivery",
-    "Paperclip chooses direct verified webhooks when reachable and the instance relay when private. This is deployment configuration, not an endpoint preference."
+    "ThinkingMach chooses direct verified webhooks when reachable and the instance relay when private. This is deployment configuration, not an endpoint preference."
   ],
   [
     "Credentials and drift",
@@ -73,7 +73,7 @@ export const providerSettings = {
       {
         kind: "resources",
         title: "Allowed repositories",
-        intro: "Paperclip can narrow, but not exceed, the GitHub App installation.",
+        intro: "ThinkingMach can narrow, but not exceed, the GitHub App installation.",
         items: [
           ["acme/api · GitHub", "Installed and allowed"],
           ["acme/web · GitHub", "Installed and allowed"]

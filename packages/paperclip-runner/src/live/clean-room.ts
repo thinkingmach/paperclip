@@ -117,7 +117,7 @@ export function createCapabilityCleanRoomSeed(
     ...(options.epochMs === undefined ? {} : { epochMs: options.epochMs }),
     company: {
       id: identity.companyId,
-      name: "Mock Paperclip (clean room)",
+      name: "Mock ThinkingMach (clean room)",
       issuePrefix: "MCK",
       status: "active",
       budgetId: `budget-${identity.companyId}`,

@@ -59,7 +59,7 @@ const mockGoalsApi = vi.hoisted(() => ({
 const mockAgentsApi = vi.hoisted(() => ({
   adapterModels: vi.fn(async () => [] as Array<{ id: string; label: string }>),
   testEnvironment: vi.fn(
-    async (): Promise<import("@paperclipai/shared").AdapterEnvironmentTestResult> => ({
+    async (): Promise<import("@thinkingmach/shared").AdapterEnvironmentTestResult> => ({
       adapterType: "claude_local",
       status: "pass",
       checks: [],
@@ -78,7 +78,7 @@ const mockAgentsApi = vi.hoisted(() => ({
   // under test checks with `instanceof`.
   getClaudeOAuthTokenStatus: vi.fn(),
   getAdapterAuthSignal: vi.fn(
-    async (): Promise<import("@paperclipai/shared").AdapterAuthSignalResponse> => ({
+    async (): Promise<import("@thinkingmach/shared").AdapterAuthSignalResponse> => ({
       status: "present",
     }),
   ),
@@ -130,8 +130,8 @@ const mockAdapterBuild = vi.hoisted(() => ({
 const mockEnvironmentsApi = vi.hoisted(() => ({
   list: vi.fn(async () => [] as Array<Record<string, unknown>>),
   capabilities: vi.fn(
-    async (): Promise<import("@paperclipai/shared").EnvironmentCapabilities> =>
-      (await import("@paperclipai/shared")).getEnvironmentCapabilities([]),
+    async (): Promise<import("@thinkingmach/shared").EnvironmentCapabilities> =>
+      (await import("@thinkingmach/shared")).getEnvironmentCapabilities([]),
   ),
 }));
 const mockInstanceSettingsApi = vi.hoisted(() => ({
@@ -246,7 +246,7 @@ vi.mock("./AgentCapsule", () => ({ AgentCapsule: () => null }));
 
 import { ApiError } from "../api/client";
 import { queryKeys } from "../lib/queryKeys";
-import { ADAPTER_AUTH_MISSING_CHECK_CODE, getEnvironmentCapabilities } from "@paperclipai/shared";
+import { ADAPTER_AUTH_MISSING_CHECK_CODE, getEnvironmentCapabilities } from "@thinkingmach/shared";
 import { CLAUDE_OAUTH_TOKEN_ENV_KEY } from "./environment-variables-editor/model";
 import { ONBOARDING_STORAGE_KEY, OnboardingWizard } from "./OnboardingWizard";
 import { CONNECTED_HOLD_MS } from "./onboarding/onboarding-motion";
@@ -1222,7 +1222,7 @@ describe("OnboardingWizard restore-gate (stale localStorage across accounts)", (
                 testedAt: new Date().toISOString(),
               };
         }) as unknown as () => Promise<
-          import("@paperclipai/shared").AdapterEnvironmentTestResult
+          import("@thinkingmach/shared").AdapterEnvironmentTestResult
         >,
       );
       const { root } = await openConnectStep();
@@ -2742,7 +2742,7 @@ describe("OnboardingWizard restore-gate (stale localStorage across accounts)", (
           {
             code: "environment_identity",
             level: "info",
-            message: 'Environment test identity for "Paperclip Computer".',
+            message: 'Environment test identity for "ThinkingMach Computer".',
             detail: "paperclipLeaseId=ff9e58e9; provider=daytona",
           },
         ],
@@ -3343,7 +3343,7 @@ describe("OnboardingWizard restore-gate (stale localStorage across accounts)", (
       const { root } = await openStep4({ adapterType: "claude_local" });
       await pickSource(/Claude/);
       expect(document.body.textContent).toContain("claude auth login");
-      expect(document.body.textContent).toContain("machine running Paperclip");
+      expect(document.body.textContent).toContain("machine running ThinkingMach");
       expect(document.body.textContent).not.toContain("No managed sandbox");
       expect(mockAgentsApi.startClaudeSetupTokenLogin).not.toHaveBeenCalled();
       const connect = [...document.body.querySelectorAll("button")].find(b => b.textContent?.trim().startsWith("Connect"));

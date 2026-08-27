@@ -34,7 +34,7 @@ jobs:
       # Compile the real target, then change source in a disposable context.
       # A fresh builder must import dependencies and produce changed binary metadata.
       # The baseline build anonymously seeds from the public BuildKit cache at
-      # ghcr.io/paperclipai/paperclip:buildcache-{amd64,arm64}; the verification
+      # ghcr.io/thinkingmach/paperclip:buildcache-{amd64,arm64}; the verification
       # build imports only this run's locally exported cache on a fresh builder.
       # No registry credentials or image publication.
       - name: Verify native build and dependency cache reuse

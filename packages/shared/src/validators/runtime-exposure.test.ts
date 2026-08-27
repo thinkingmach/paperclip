@@ -50,7 +50,7 @@ describe("runtimeExposureConfigSchema", () => {
 
 describe("readRuntimeExposureIntent", () => {
   it("treats a legacy expose block with no exposure fields as unset", () => {
-    // The pre-feature Paperclip App template shape: an `expose` block that only
+    // The pre-feature ThinkingMach App template shape: an `expose` block that only
     // describes the backend URL. This must be defaultable, not opted out.
     expect(readRuntimeExposureIntent({ urlTemplate: "http://paperclip-dev:{{port}}" })).toBe("unset");
     expect(readRuntimeExposureIntent(undefined)).toBe("unset");
@@ -104,8 +104,8 @@ describe("resolveDeclaredRuntimeExposureConfig", () => {
 
   it("honors an explicit sub-field override", () => {
     expect(
-      resolveDeclaredRuntimeExposureConfig({ type: "tailscale_https", includePaperclipViteHmr: false }),
-    ).toEqual({ ...DEFAULT_TAILSCALE_HTTPS_EXPOSURE, includePaperclipViteHmr: false });
+      resolveDeclaredRuntimeExposureConfig({ type: "tailscale_https", includeThinkingMachViteHmr: false }),
+    ).toEqual({ ...DEFAULT_TAILSCALE_HTTPS_EXPOSURE, includeThinkingMachViteHmr: false });
   });
 
   it("still rejects smuggled fields and invalid sub-field values", () => {

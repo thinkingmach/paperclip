@@ -9,7 +9,7 @@ import type {
   RemoteSecretImportCandidate,
   RemoteSecretImportPreviewResult,
   RemoteSecretImportResult,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../api/client";
 
@@ -269,7 +269,7 @@ describe("ImportFromVaultDialog", () => {
     });
   });
 
-  it("blocks import when a review row collides with an existing Paperclip secret", async () => {
+  it("blocks import when a review row collides with an existing ThinkingMach secret", async () => {
     const conflictCandidate = makeCandidate({
       externalRef: "arn:aws:secretsmanager:us-east-1:1:secret:prod/openai-XYZ",
       remoteName: "prod/openai",
@@ -728,7 +728,7 @@ describe("ImportFromVaultDialog", () => {
 
   it("renders sanitized preview provider errors without raw AWS exception text", async () => {
     const rawProviderMessage =
-      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized";
+      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized";
     mockSecretsApi.remoteImportPreview.mockRejectedValueOnce(
       new ApiError(
         "AWS Secrets Manager denied the request. Check IAM permissions for this provider vault.",

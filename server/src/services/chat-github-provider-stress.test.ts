@@ -84,7 +84,7 @@ function commentPayload(input: {
       body: input.body,
       created_at: "2026-09-05T12:00:00Z",
       updated_at: "2026-09-05T12:00:00Z",
-      html_url: `https://github.com/paperclipai/chat-e2e/issues/${input.number}#issuecomment-${input.commentId}`,
+      html_url: `https://github.com/thinkingmach/chat-e2e/issues/${input.number}#issuecomment-${input.commentId}`,
       user: {
         id: userId,
         login: userId === 9001 ? "maya-paperclip[bot]" : "alex-e2e",
@@ -100,8 +100,8 @@ function commentPayload(input: {
     repository: {
       id: 97531,
       name: "chat-e2e",
-      full_name: "paperclipai/chat-e2e",
-      owner: { id: 1357, login: "paperclipai" },
+      full_name: "thinkingmach/chat-e2e",
+      owner: { id: 1357, login: "thinkingmach" },
     },
     sender: {
       id: userId,
@@ -259,32 +259,32 @@ describe("GitHub published adapter stress contract", () => {
     ).toEqual([
       {
         id: "4201",
-        threadId: "github:paperclipai/chat-e2e:issue:42",
+        threadId: "github:thinkingmach/chat-e2e:issue:42",
         trigger: "mention",
       },
       {
         id: "4301",
-        threadId: "github:paperclipai/chat-e2e:43",
+        threadId: "github:thinkingmach/chat-e2e:43",
         trigger: "mention",
       },
       {
         id: "4401",
-        threadId: "github:paperclipai/chat-e2e:43:rc:4401",
+        threadId: "github:thinkingmach/chat-e2e:43:rc:4401",
         trigger: "mention",
       },
       {
         id: "4202",
-        threadId: "github:paperclipai/chat-e2e:issue:42",
+        threadId: "github:thinkingmach/chat-e2e:issue:42",
         trigger: "subscribed_message",
       },
       {
         id: "4302",
-        threadId: "github:paperclipai/chat-e2e:43",
+        threadId: "github:thinkingmach/chat-e2e:43",
         trigger: "subscribed_message",
       },
       {
         id: "4402",
-        threadId: "github:paperclipai/chat-e2e:43:rc:4401",
+        threadId: "github:thinkingmach/chat-e2e:43:rc:4401",
         trigger: "subscribed_message",
       },
     ]);
@@ -330,7 +330,7 @@ describe("GitHub published adapter stress contract", () => {
         if (
           method === "POST" &&
           url.endsWith(
-            "/repos/paperclipai/chat-e2e/pulls/43/comments/4401/replies",
+            "/repos/thinkingmach/chat-e2e/pulls/43/comments/4401/replies",
           )
         ) {
           return Response.json(
@@ -350,7 +350,7 @@ describe("GitHub published adapter stress contract", () => {
         }
         if (
           method === "PATCH" &&
-          url.endsWith("/repos/paperclipai/chat-e2e/pulls/comments/9901")
+          url.endsWith("/repos/thinkingmach/chat-e2e/pulls/comments/9901")
         ) {
           return Response.json({
             id: 9901,
@@ -386,7 +386,7 @@ describe("GitHub published adapter stress contract", () => {
 
     try {
       const sent = await runtime
-        .thread("github:paperclipai/chat-e2e:43:rc:4401")
+        .thread("github:thinkingmach/chat-e2e:43:rc:4401")
         .post({ markdown: "inline result" });
       expect(sent.id).toBe("9901");
       const edited = await sent.edit({ markdown: "final inline result" });
@@ -394,11 +394,11 @@ describe("GitHub published adapter stress contract", () => {
       expect(providerRequests).toEqual([
         {
           method: "POST",
-          url: "https://api.github.com/repos/paperclipai/chat-e2e/pulls/43/comments/4401/replies",
+          url: "https://api.github.com/repos/thinkingmach/chat-e2e/pulls/43/comments/4401/replies",
         },
         {
           method: "PATCH",
-          url: "https://api.github.com/repos/paperclipai/chat-e2e/pulls/comments/9901",
+          url: "https://api.github.com/repos/thinkingmach/chat-e2e/pulls/comments/9901",
         },
       ]);
     } finally {
@@ -456,15 +456,15 @@ describe("GitHub published adapter stress contract", () => {
       ).toEqual([
         {
           id: "5102",
-          threadId: "github:paperclipai/chat-e2e:issue:51",
+          threadId: "github:thinkingmach/chat-e2e:issue:51",
         },
         {
           id: "5101",
-          threadId: "github:paperclipai/chat-e2e:issue:51",
+          threadId: "github:thinkingmach/chat-e2e:issue:51",
         },
         {
           id: "5101",
-          threadId: "github:paperclipai/chat-e2e:issue:51",
+          threadId: "github:thinkingmach/chat-e2e:issue:51",
         },
       ]);
     } finally {

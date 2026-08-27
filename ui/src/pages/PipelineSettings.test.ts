@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PIPELINE_AUTOMATION_DEFAULT_TITLE_TEMPLATE } from "@paperclipai/shared";
+import { PIPELINE_AUTOMATION_DEFAULT_TITLE_TEMPLATE } from "@thinkingmach/shared";
 import {
   buildStageAutomationForSave,
   isPipelineSettingsStageSectionAvailable,

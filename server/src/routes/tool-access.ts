@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
-import type { Db } from "@paperclipai/db";
-import { agents, companies, connectionGrants, issueThreadInteractions, toolConnectionInstalls } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { agents, companies, connectionGrants, issueThreadInteractions, toolConnectionInstalls } from "@thinkingmach/db";
 import { and, eq, or } from "drizzle-orm";
 import {
   APP_STORE_DEFINITIONS,
@@ -51,7 +51,7 @@ import {
   updateToolPolicySchema,
   updateToolProfileEntrySchema,
   updateToolProfileWithEntriesSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { validate } from "../middleware/validate.js";
 import { getActorInfo, assertBoard, assertCompanyAccess, assertInstanceAdmin, getAccessibleResource, hasCompanyAccess } from "./authz.js";
 import { badRequest, forbidden, HttpError, notFound, unprocessable } from "../errors.js";
@@ -60,20 +60,20 @@ import { ToolGatewayHttpError, type ToolGatewayService } from "../services/tool-
 import { RailwayError } from "../services/railway.js";
 import type { VercelConnectClient } from "../services/vercel-connect.js";
 import {
-  appWithPaperclipCloudConnectorAvailability,
-  isPaperclipCloudConnectorStrategy,
-  invalidatePaperclipCloudConnectorCapabilities,
-  type PaperclipCloudConnector,
+  appWithThinkingMachCloudConnectorAvailability,
+  isThinkingMachCloudConnectorStrategy,
+  invalidateThinkingMachCloudConnectorCapabilities,
+  type ThinkingMachCloudConnector,
   paperclipCloudConnectorCapabilitiesFromEnv,
 } from "../services/paperclip-cloud-connector.js";
 import { runtimeCanonicalOrigin } from "../services/cloud-runtime-identity.js";
 import { instanceSettingsService } from "../services/instance-settings.js";
 import {
-  completePaperclipCloudConnectorEnrollment,
-  loadPaperclipCloudConnectorIdentity,
-  startPaperclipCloudConnectorEnrollment,
+  completeThinkingMachCloudConnectorEnrollment,
+  loadThinkingMachCloudConnectorIdentity,
+  startThinkingMachCloudConnectorEnrollment,
 } from "../services/paperclip-cloud-connector-enrollment.js";
-import { reconcilePaperclipCloudConnectorEnrollmentStatus } from "../services/paperclip-cloud-connector-status.js";
+import { reconcileThinkingMachCloudConnectorEnrollmentStatus } from "../services/paperclip-cloud-connector-status.js";
 import {
   OAUTH_CLIENT_ID_METADATA_DOCUMENT_PATH,
   oauthClientIdMetadataDocument,
@@ -188,7 +188,7 @@ export function connectionIntentOAuthOutcomeHtml(input: {
     }
   })();
   const targetOrigin = JSON.stringify(openerOrigin ?? "");
-  return `<!doctype html><html><head><meta charset="utf-8"><title>Connection authorization</title></head><body><p>Returning to Paperclip…</p><script>const message=${message};const targetOrigin=${targetOrigin}||window.location.origin;if(window.opener&&window.opener!==window){window.opener.postMessage(message,targetOrigin);window.close();}else{window.location.replace(${fallback});}</script></body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Connection authorization</title></head><body><p>Returning to ThinkingMach…</p><script>const message=${message};const targetOrigin=${targetOrigin}||window.location.origin;if(window.opener&&window.opener!==window){window.opener.postMessage(message,targetOrigin);window.close();}else{window.location.replace(${fallback});}</script></body></html>`;
 }
 
 function normalizeCloudConnectorEnrollmentReturnTo(returnTo?: string | null): string | null {
@@ -214,7 +214,7 @@ export function cloudConnectorEnrollmentOutcomeHtml(issuePrefix: string, returnT
   const fallback = JSON.stringify(fallbackPath).replaceAll("<", "\\u003c");
   // This document is served only after server-verified enrollment. The parent
   // independently re-reads enrollment status; browser messages grant no access.
-  return `<!doctype html><html><head><meta charset="utf-8"><title>Paperclip connected</title></head><body><p>Paperclip is connected. Return to your task to finish connecting the app.</p><script>if(window.opener&&window.opener!==window){window.close();}else{const link=document.createElement("a");link.href=${fallback};link.textContent=${JSON.stringify(issueId ? "Return to task" : "Continue setup")};document.body.append(link);}</script></body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><title>ThinkingMach connected</title></head><body><p>ThinkingMach is connected. Return to your task to finish connecting the app.</p><script>if(window.opener&&window.opener!==window){window.close();}else{const link=document.createElement("a");link.href=${fallback};link.textContent=${JSON.stringify(issueId ? "Return to task" : "Continue setup")};document.body.append(link);}</script></body></html>`;
 }
 
 export function cloudConnectorEnrollmentReturnPath(issuePrefix: string, returnTo?: string | null): string {
@@ -240,7 +240,7 @@ export function toolAccessRoutes(
     remoteHttpEndpointLookup?: NonNullable<Parameters<typeof toolAccessService>[1]>["remoteHttpEndpointLookup"];
     remoteHttpRequest?: NonNullable<Parameters<typeof toolAccessService>[1]>["remoteHttpRequest"];
     vercelConnectClient?: VercelConnectClient | null;
-    paperclipCloudConnector?: PaperclipCloudConnector | null;
+    paperclipCloudConnector?: ThinkingMachCloudConnector | null;
     connectionIntentHeartbeat?: Pick<Heartbeat, "wakeup">;
   } = {},
 ) {
@@ -307,12 +307,12 @@ export function toolAccessRoutes(
     const runtimeOrigin = runtimeCanonicalOrigin();
     if (runtimeOrigin) return runtimeOrigin;
     const raw = (
-      process.env.PAPERCLIP_AUTH_PUBLIC_BASE_URL?.trim()
+      process.env.THINKINGMACH_AUTH_PUBLIC_BASE_URL?.trim()
       || process.env.BETTER_AUTH_URL?.trim()
       || process.env.BETTER_AUTH_BASE_URL?.trim()
       || options.authPublicBaseUrl?.trim()
-      || process.env.PAPERCLIP_PUBLIC_URL?.trim()
-      || process.env.PAPERCLIP_MANAGED_RUNTIME_PUBLIC_URL?.trim()
+      || process.env.THINKINGMACH_PUBLIC_URL?.trim()
+      || process.env.THINKINGMACH_MANAGED_RUNTIME_PUBLIC_URL?.trim()
     );
     if (!raw) return null;
     try {
@@ -386,7 +386,7 @@ export function toolAccessRoutes(
     // request. The durable binding is only a callback/metadata fallback for
     // provider GETs, which do not carry the initiating browser's Origin.
     if (req.method !== "GET" && req.method !== "HEAD") return null;
-    const identity = loadPaperclipCloudConnectorIdentity();
+    const identity = loadThinkingMachCloudConnectorIdentity();
     if (identity?.status !== "active") return null;
     const forwardedHost = req.header("x-forwarded-host")?.split(",")[0]?.trim();
     const requestHost = (forwardedHost || req.header("host")?.trim())?.toLowerCase();
@@ -416,7 +416,7 @@ export function toolAccessRoutes(
       ?? requestLoopbackBaseUrl(req);
     if (!baseUrl) {
       throw unprocessable(
-        "This Paperclip needs a browser-reachable HTTPS address (or loopback HTTP) before browser sign-in can start.",
+        "This ThinkingMach needs a browser-reachable HTTPS address (or loopback HTTP) before browser sign-in can start.",
         { code: "oauth_redirect_origin_unsupported" },
       );
     }
@@ -786,7 +786,7 @@ function connectorEnrollmentPrincipal(req: Request): string {
       res.status(401).json({ error: "Agent run id required", code: "run_id_required" });
       return;
     }
-    const headerRunId = req.get("X-Paperclip-Run-Id")?.trim();
+    const headerRunId = req.get("X-ThinkingMach-Run-Id")?.trim();
     if (headerRunId && headerRunId !== req.actor.runId) {
       res.status(403).json({ error: "Run id header does not match agent token", code: "run_id_mismatch" });
       return;
@@ -827,12 +827,12 @@ function connectorEnrollmentPrincipal(req: Request): string {
           reason: vercelConnect.enabled
             ? vercelConnect.configured
               ? null
-              : "Vercel Connect needs workload OIDC or PAPERCLIP_VERCEL_CONNECT_ACCESS_TOKEN."
-            : "Vercel Connect setup is disabled on this Paperclip instance.",
+              : "Vercel Connect needs workload OIDC or THINKINGMACH_VERCEL_CONNECT_ACCESS_TOKEN."
+            : "Vercel Connect setup is disabled on this ThinkingMach instance.",
         },
       },
       apps: APP_STORE_DEFINITIONS.filter((app) => (enableMemoryConnectors || !isMemoryConnectorId(app.slug))).map((app) =>
-        appWithPaperclipCloudConnectorAvailability(app, advertisedProfiles)
+        appWithThinkingMachCloudConnectorAvailability(app, advertisedProfiles)
       ),
     });
   });
@@ -846,13 +846,13 @@ function connectorEnrollmentPrincipal(req: Request): string {
   });
 
   /**
-   * Paperclip's Client ID Metadata Document (PAP-17087).
+   * ThinkingMach's Client ID Metadata Document (PAP-17087).
    *
-   * The document's own URL is the `client_id` Paperclip presents to an
+   * The document's own URL is the `client_id` ThinkingMach presents to an
    * authorization server that supports CIMD, so this endpoint has to be publicly
    * readable — an authorization server fetches it server-to-server with no
-   * Paperclip session. It contains only this deployment's callback and the
-   * grant/response/auth methods Paperclip uses: no company, connection or secret
+   * ThinkingMach session. It contains only this deployment's callback and the
+   * grant/response/auth methods ThinkingMach uses: no company, connection or secret
    * data of any kind.
    */
   router.get(OAUTH_CLIENT_ID_METADATA_DOCUMENT_PATH.replace(/^\/api/, ""), (_req, res) => {
@@ -1000,13 +1000,13 @@ function connectorEnrollmentPrincipal(req: Request): string {
 
   router.get("/tools/oauth/cloud-connector/enrollment", async (req, res) => {
     assertBoard(req);
-    res.json(await reconcilePaperclipCloudConnectorEnrollmentStatus());
+    res.json(await reconcileThinkingMachCloudConnectorEnrollmentStatus());
   });
 
   router.post("/tools/oauth/cloud-connector/enrollment", async (req, res) => {
     assertInstanceAdmin(req);
     const companyId = typeof req.body?.companyId === "string" ? req.body.companyId : "";
-    if (!companyId) throw badRequest("Paperclip Cloud enrollment requires a company");
+    if (!companyId) throw badRequest("ThinkingMach Cloud enrollment requires a company");
     assertCompanyAccess(req, companyId);
     const origin = new URL(oauthRedirectUri(req)).origin;
     const returnTo = normalizeCloudConnectorEnrollmentReturnTo(
@@ -1014,7 +1014,7 @@ function connectorEnrollmentPrincipal(req: Request): string {
     ) ?? undefined;
     let status;
     try {
-      status = await startPaperclipCloudConnectorEnrollment({
+      status = await startThinkingMachCloudConnectorEnrollment({
         origin,
         companyId,
         initiatedBy: connectorEnrollmentPrincipal(req),
@@ -1022,7 +1022,7 @@ function connectorEnrollmentPrincipal(req: Request): string {
         returnTo,
       });
     } catch {
-      throw unprocessable("Paperclip Cloud enrollment could not be started", {
+      throw unprocessable("ThinkingMach Cloud enrollment could not be started", {
         code: "paperclip_cloud_connector_enrollment_failed",
       });
     }
@@ -1043,13 +1043,13 @@ function connectorEnrollmentPrincipal(req: Request): string {
     const enrollmentId = typeof req.query.enrollment_id === "string" ? req.query.enrollment_id : "";
     const approvalCode = typeof req.query.approval_code === "string" ? req.query.approval_code : "";
     const state = typeof req.query.state === "string" ? req.query.state : "";
-    if (!enrollmentId || !approvalCode || !state) throw badRequest("Invalid Paperclip Cloud enrollment callback");
-    const pending = loadPaperclipCloudConnectorIdentity()?.pending;
+    if (!enrollmentId || !approvalCode || !state) throw badRequest("Invalid ThinkingMach Cloud enrollment callback");
+    const pending = loadThinkingMachCloudConnectorIdentity()?.pending;
     if (pending?.companyId && !hasCompanyAccess(req, pending.companyId)) {
-      throw notFound("Paperclip Cloud enrollment not found");
+      throw notFound("ThinkingMach Cloud enrollment not found");
     }
     if (pending?.initiatedBy && pending.initiatedBy !== connectorEnrollmentPrincipal(req)) {
-      throw notFound("Paperclip Cloud enrollment not found");
+      throw notFound("ThinkingMach Cloud enrollment not found");
     }
     const [company] = pending?.companyId
       ? await db
@@ -1058,13 +1058,13 @@ function connectorEnrollmentPrincipal(req: Request): string {
         .where(eq(companies.id, pending.companyId))
         .limit(1)
       : [];
-    if (!company) throw notFound("Paperclip Cloud enrollment not found");
+    if (!company) throw notFound("ThinkingMach Cloud enrollment not found");
     let status;
     try {
-      status = await completePaperclipCloudConnectorEnrollment({ enrollmentId, approvalCode, state });
-      invalidatePaperclipCloudConnectorCapabilities();
+      status = await completeThinkingMachCloudConnectorEnrollment({ enrollmentId, approvalCode, state });
+      invalidateThinkingMachCloudConnectorCapabilities();
     } catch {
-      throw badRequest("Invalid or expired Paperclip Cloud enrollment callback");
+      throw badRequest("Invalid or expired ThinkingMach Cloud enrollment callback");
     }
     if (pending?.companyId) {
       await logActivity(db, {
@@ -1097,7 +1097,7 @@ function connectorEnrollmentPrincipal(req: Request): string {
     res.redirect(303, cloudConnectorEnrollmentReturnPath(company.issuePrefix, returnTo));
   });
 
-  const handlePaperclipCloudConnectorCallback = async (req: Request, res: Response) => {
+  const handleThinkingMachCloudConnectorCallback = async (req: Request, res: Response) => {
     assertBoard(req);
     const state = typeof req.query.state === "string" ? req.query.state : "";
     const claimId = typeof req.query.claim_id === "string" ? req.query.claim_id : null;
@@ -1115,7 +1115,7 @@ function connectorEnrollmentPrincipal(req: Request): string {
     }
     const acceptsHtml = req.get("accept")?.includes("text/html") === true;
     try {
-      const result = await svc.completePaperclipCloudConnectorCallback({
+      const result = await svc.completeThinkingMachCloudConnectorCallback({
         state,
         claimId,
         error,
@@ -1209,8 +1209,8 @@ function connectorEnrollmentPrincipal(req: Request): string {
       ));
     }
   };
-  router.get("/tools/oauth/cloud-connector/callback", handlePaperclipCloudConnectorCallback);
-  router.get("/tools/oauth/paperclip-id/callback", handlePaperclipCloudConnectorCallback);
+  router.get("/tools/oauth/cloud-connector/callback", handleThinkingMachCloudConnectorCallback);
+  router.get("/tools/oauth/paperclip-id/callback", handleThinkingMachCloudConnectorCallback);
 
   router.get("/tools/vercel-connect/callback", async (req, res) => {
     assertBoard(req);
@@ -1312,7 +1312,7 @@ function connectorEnrollmentPrincipal(req: Request): string {
     const code = typeof req.query.code === "string" ? req.query.code : null;
     const error = typeof req.query.error === "string" ? req.query.error : null;
     // `error_description` / `error_uri` are read from neither the query nor the
-    // provider's body: they are provider-authored prose, and Paperclip maps the
+    // provider's body: they are provider-authored prose, and ThinkingMach maps the
     // `error` code to its own copy instead of reflecting them (PAP-17108).
     const iss = typeof req.query.iss === "string" ? req.query.iss : null;
     const pendingState = state ? await svc.peekOAuthState(state) : null;
@@ -1365,7 +1365,7 @@ function connectorEnrollmentPrincipal(req: Request): string {
         details: {
           code: callbackFailureCode,
           status: callbackError instanceof HttpError ? callbackError.status : 500,
-          // HttpError messages are Paperclip-authored. Provider-authored
+          // HttpError messages are ThinkingMach-authored. Provider-authored
           // error_description/error_uri values are never read above and cannot
           // be reflected into the activity stream.
           message: callbackError instanceof HttpError

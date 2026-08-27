@@ -53,7 +53,7 @@ export const remoteMcpProviders: Record<RemoteMcpProviderId, RemoteMcpProvider> 
     setupUrl: "https://executor.sh/docs/mcp-proxy",
     dashboardUrl: "https://executor.sh",
     defaultUrl: "", placeholder: "Paste your Executor workspace MCP URL",
-    urlHelp: "Use the hosted workspace URL or a self-hosted HTTP endpoint reachable from Paperclip. The server’s endpoint policy also applies.",
+    urlHelp: "Use the hosted workspace URL or a self-hosted HTTP endpoint reachable from ThinkingMach. The server’s endpoint policy also applies.",
     authHelp: "Keep any options in the copied URL. If using an API key, use a user key; workspace and organization keys cannot open an MCP session.",
   },
 };

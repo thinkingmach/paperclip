@@ -11,7 +11,7 @@ import {
   normalizeAgentmailEvent,
   verifyAgentmailWebhook,
 } from "../services/agentmail-api.js";
-import { emailSendSchema } from "@paperclipai/shared";
+import { emailSendSchema } from "@thinkingmach/shared";
 import { buildRunnerApiCatalog } from "../services/native-runtime/runner-api-catalog.js";
 
 const message = (extra = {}) =>

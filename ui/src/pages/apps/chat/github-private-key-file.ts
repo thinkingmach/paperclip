@@ -35,7 +35,7 @@ export async function readGitHubPrivateKeyFile(
     value = await file.text();
   } catch {
     throw new Error(
-      "Paperclip couldn't read that file. Choose the .pem file again or paste the private key.",
+      "ThinkingMach couldn't read that file. Choose the .pem file again or paste the private key.",
     );
   }
   if (!value.trim()) {

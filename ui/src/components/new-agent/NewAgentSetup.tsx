@@ -1,8 +1,8 @@
 import { AgentCharacter } from "../AgentCharacter";
 import { useAgentAppearanceDraft } from "../../hooks/useAgentAppearanceDraft";
 import { AiConnectionField, aiProviderForAdapter } from "../ai-connections/AiConnectionField";
-import type { AiConnectionBinding } from "@paperclipai/shared";
-import { DEFAULT_CODEX_LOCAL_MODEL } from "@paperclipai/adapter-codex-local";
+import type { AiConnectionBinding } from "@thinkingmach/shared";
+import { DEFAULT_CODEX_LOCAL_MODEL } from "@thinkingmach/adapter-codex-local";
 import {
   SETUP_CREDENTIAL_KEYS,
   SETUP_LOGIN_HINTS,
@@ -20,8 +20,8 @@ import type {
   AdapterEnvironmentTestResult,
   Agent,
   EnvBinding,
-} from "@paperclipai/shared";
-import { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@thinkingmach/shared";
 import { useNavigate, useSearchParams } from "@/lib/router";
 import { agentsApi } from "@/api/agents";
 import { adaptersApi } from "@/api/adapters";
@@ -641,7 +641,7 @@ function Setup({
                   ·{" "}
                   {runnerProvider === "codex"
                     ? "Native app server runner"
-                    : "Paperclip Runner"}
+                    : "ThinkingMach Runner"}
                 </span>
               )}
             </div>

@@ -1,8 +1,8 @@
 import { logActivity } from "./activity-log.js";
 import { aiConnectionService } from "./ai-connections.js";
-import { aiConnectionBindingSchema } from "@paperclipai/shared";
+import { aiConnectionBindingSchema } from "@thinkingmach/shared";
 import { and, eq, desc, isNull } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   toolConnections,
@@ -12,7 +12,7 @@ import {
   issueThreadInteractions,
   issueComments,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   APP_STORE_DEFINITIONS,
   AGGREGATOR_PRIORITY, AGGREGATOR_NAMES, AGGREGATOR_CATALOG_SOURCES,
@@ -30,7 +30,7 @@ import {
   type ConnectionsSearchResult,
   type ToolApplication,
   type ToolConnection,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { conflict, forbidden, notFound, unprocessable } from "../errors.js";
 import type { RuntimeToolsTokenClaims } from "../runtime-tools-token.js";
 import { issueThreadInteractionService } from "./issue-thread-interactions.js";
@@ -462,7 +462,7 @@ export function connectionIntentService(db: Db) {
     const offered = explicit ? alternatives.filter(item => item.aggregator?.provider === explicit.provider) : alternatives;
     if (!offered.length) return { version: 1, query, results: [], instruction: "The requested external provider is unavailable. Do not switch providers automatically." };
     return { version: 1, query, results: offered, providerQuestion: aggregatorProviderQuestion(targetService, targetName, offered),
-      instruction: "No matching built-in Paperclip connection was found. Ask the responsible user with providerQuestion exactly as returned (including its id, full prompt, and options). With native request_human_input, use interactionKind questions, continuationPolicy wake_assignee, and payload {version:1, questions:[providerQuestion]}; do not add questionSet. Otherwise use ask_user_questions with the same questions payload. These are external services. Wait for the saved answer; then call connection_request with the selected service identifier and selectionInteractionId set to the answered question interaction ID. None for now means do not connect. Do not claim app access yet." };
+      instruction: "No matching built-in ThinkingMach connection was found. Ask the responsible user with providerQuestion exactly as returned (including its id, full prompt, and options). With native request_human_input, use interactionKind questions, continuationPolicy wake_assignee, and payload {version:1, questions:[providerQuestion]}; do not add questionSet. Otherwise use ask_user_questions with the same questions payload. These are external services. Wait for the saved answer; then call connection_request with the selected service identifier and selectionInteractionId set to the answered question interaction ID. None for now means do not connect. Do not claim app access yet." };
   }
 
   function directSearchResult(query: string, results: ConnectionSearchResultItem[], suggestions = false): ConnectionsSearchResult {
@@ -470,7 +470,7 @@ export function connectionIntentService(db: Db) {
       ? "No verified connection route was found. Explain that support could not be verified; do not invent a provider route or request unsupported services."
       : !suggestions && isRemoteMcpConnectorId(results[0]!.service) && results[0]!.state !== "unavailable"
         ? `${results[0]!.name} is an external service. When the user explicitly names this provider, disclose that it handles the connection and requests to the requested app; no additional provider-choice question is necessary. ${results[0]!.state === "ready" ? aggregatorContinuationInstruction(results[0]!.service, "The requested app") : "Call connection_request with the returned service identifier and follow its instruction. Provider setup does not yet verify underlying app access."}`
-      : suggestions ? "These are possible Paperclip matches, not an exact service match. Clarify the service if ambiguous, then search its exact name. Do not treat unrelated matches as support."
+      : suggestions ? "These are possible ThinkingMach matches, not an exact service match. Clarify the service if ambiguous, then search its exact name. Do not treat unrelated matches as support."
       : results[0]!.state === "ready" ? "Use the installed connection. Do not create another connection request."
       : results[0]!.state === "unavailable" ? "This connection is unavailable or administratively restricted. Explain the reason. Do not bypass it using another provider."
       : "Call connection_request with the returned service identifier. The user already asked to connect: do not ask a generic confirmation or imitate the setup card. Follow the returned instruction." };

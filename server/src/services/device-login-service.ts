@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray, isNotNull, isNull, lte, ne, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { adapterAuthSessions } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { adapterAuthSessions } from "@thinkingmach/db";
 import type {
   AdapterAuthSessionFailure,
   AdapterAuthSessionInternalStatus,
@@ -11,8 +11,8 @@ import type {
   AgentAdapterType,
   Environment,
   EnvironmentLease,
-} from "@paperclipai/shared";
-import { toPublicAdapterAuthSessionStatus } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { toPublicAdapterAuthSessionStatus } from "@thinkingmach/shared";
 import {
   CODEX_DEVICE_LOGIN_COMMAND as DEFAULT_CODEX_LOGIN_COMMAND,
   parseDeviceLoginPrompt,
@@ -20,16 +20,16 @@ import {
   type DeviceLoginOutcome as RunnerDeviceLoginOutcome,
   type DeviceLoginPrompt,
   type SandboxLoginDriver,
-} from "@paperclipai/adapter-codex-local/server";
+} from "@thinkingmach/adapter-codex-local/server";
 import {
   GROK_DEVICE_LOGIN_COMMAND as DEFAULT_GROK_LOGIN_COMMAND,
   parseGrokDeviceLoginPrompt,
-} from "@paperclipai/adapter-grok-local/server";
-import type { AdapterLoginPrompt } from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-grok-local/server";
+import type { AdapterLoginPrompt } from "@thinkingmach/adapter-utils";
 import {
   createLoginPtyTransport,
   type LoginPtySessionOpener,
-} from "@paperclipai/adapter-utils/login-pty-transport";
+} from "@thinkingmach/adapter-utils/login-pty-transport";
 import type { EnvironmentRuntimeService } from "./environment-runtime.js";
 import { buildLoginLeaseAcquireArgs } from "./adapter-login-lease.js";
 import { environmentService } from "./environments.js";
@@ -208,7 +208,7 @@ export interface LoginSessionActivityEvent {
 export type LoginSessionActivityRecorder = (event: LoginSessionActivityEvent) => void;
 
 export interface StartDeviceLoginInput {
-  aiConnection?: import("@paperclipai/shared").AiConnectionLoginIntent;
+  aiConnection?: import("@thinkingmach/shared").AiConnectionLoginIntent;
   companyId: string;
   environmentId: string;
   adapterType: AgentAdapterType;
@@ -263,7 +263,7 @@ export class AdapterAuthSessionConflictError extends Error {
 // ---------------------------------------------------------------------------
 
 export interface AdapterAuthSessionRow {
-  aiConnection?: import("@paperclipai/shared").AiConnectionLoginIntent;
+  aiConnection?: import("@thinkingmach/shared").AiConnectionLoginIntent;
   id: string;
   /** The public, CSPRNG session identifier. The API returns and looks up this
    *  value. It never equals the internal primary-key `id`, so a caller cannot
@@ -288,7 +288,7 @@ export interface AdapterAuthSessionRow {
 }
 
 export interface InsertAdapterAuthSessionInput {
-  aiConnection?: import("@paperclipai/shared").AiConnectionLoginIntent;
+  aiConnection?: import("@thinkingmach/shared").AiConnectionLoginIntent;
   id: string;
   /** The public, CSPRNG session identifier. The service builds it and returns it
    *  to the client; the store persists it in `public_session_id`. */

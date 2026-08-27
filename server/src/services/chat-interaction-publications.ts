@@ -1,7 +1,7 @@
 import { nativePhotonInteraction } from "./photon/interactions.js";
 import { randomBytes } from "node:crypto";
 import { and, eq, inArray, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   chatActions,
   chatConversations,
@@ -9,14 +9,14 @@ import {
   chatPublications,
   heartbeatRuns,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AskUserQuestionsInteraction,
   AskUserQuestionsQuestion,
   IssueThreadInteraction,
   RequestConfirmationInteraction,
   SafeExternalChatCardAction,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { projectSafeChatPublication } from "./chat-publication-projection.js";
 import { publicChatTaskUrl } from "./chat-task-url.js";
 import {
@@ -44,12 +44,12 @@ function terminalNativeInteractionCopy(
       const outcome = interaction.result?.outcome;
       const body =
         outcome === "skipped"
-          ? "Skipped in Paperclip"
+          ? "Skipped in ThinkingMach"
           : outcome === "withdrawn"
-            ? "Withdrawn in Paperclip"
+            ? "Withdrawn in ThinkingMach"
             : outcome === "addressee_deleted"
               ? "Cancelled: addressed agent was removed"
-              : "Cancelled in Paperclip";
+              : "Cancelled in ThinkingMach";
       return { body, text: `${body}.` };
     }
     if (interaction.status === "expired") {
@@ -62,7 +62,7 @@ function terminalNativeInteractionCopy(
               ? "Expired: target is no longer current"
               : interaction.result?.outcome === "issue_closed"
                 ? "Expired: task is closed"
-                : "Expired in Paperclip";
+                : "Expired in ThinkingMach";
       return { body, text: `${body}.` };
     }
     return null;
@@ -88,10 +88,10 @@ function terminalNativeInteractionCopy(
     const outcome = interaction.result?.outcome;
     const body =
       outcome === "skipped"
-        ? "Skipped in Paperclip."
+        ? "Skipped in ThinkingMach."
         : outcome === "withdrawn"
-          ? "Withdrawn in Paperclip."
-          : "Cancelled in Paperclip.";
+          ? "Withdrawn in ThinkingMach."
+          : "Cancelled in ThinkingMach.";
     return { body, text: body };
   }
   if (interaction.status === "expired") {
@@ -103,7 +103,7 @@ function terminalNativeInteractionCopy(
           ? "Expired: replaced by a newer request"
           : interaction.result?.outcome === "issue_closed"
             ? "Expired: task is closed"
-            : "Expired in Paperclip";
+            : "Expired in ThinkingMach";
     return { body, text: `${body}.` };
   }
   return null;
@@ -165,7 +165,7 @@ export function nativeChatQuestion(
 /**
  * Telegram can safely render ordinary binary confirmations as inline buttons.
  * Confirmations that collect a rejection reason or authorize a credential,
- * connection, or tool side effect stay in Paperclip, where the complete
+ * connection, or tool side effect stay in ThinkingMach, where the complete
  * governed review UI and permission checks are available.
  */
 export function nativeTelegramConfirmation(
@@ -199,18 +199,18 @@ function textForQuestionInteraction(
   }
   lines.push(
     taskUrl
-      ? `Open the task in Paperclip to respond: ${taskUrl}`
-      : "Open the task in Paperclip to respond.",
+      ? `Open the task in ThinkingMach to respond: ${taskUrl}`
+      : "Open the task in ThinkingMach to respond.",
   );
   return lines.join("\n");
 }
 
 function genericInteractionText(taskUrl: string | null): string {
   return [
-    "This task needs an authorized response in Paperclip.",
+    "This task needs an authorized response in ThinkingMach.",
     taskUrl
-      ? `Open the task in Paperclip to respond: ${taskUrl}`
-      : "Open the task in Paperclip to respond.",
+      ? `Open the task in ThinkingMach to respond: ${taskUrl}`
+      : "Open the task in ThinkingMach to respond.",
   ]
     .filter((value): value is string => Boolean(value))
     .join("\n\n");
@@ -229,7 +229,7 @@ export async function enqueueIssueInteractionChatPublications(
   if (interaction.status !== "pending") return [];
   // The first native-chat wave intentionally externalizes only questions and
   // confirmations. Other governance interactions have richer partial and
-  // terminal semantics that are authoritative in Paperclip; projecting a
+  // terminal semantics that are authoritative in ThinkingMach; projecting a
   // generic link card without complete settlement/recovery would leave stale
   // provider prompts after a board decision.
   if (
@@ -366,7 +366,7 @@ export async function enqueueIssueInteractionChatPublications(
             ? [
                 {
                   type: "link" as const,
-                  label: "Open in Paperclip",
+                  label: "Open in ThinkingMach",
                   url: taskUrl,
                 },
               ]
@@ -397,13 +397,13 @@ export async function enqueueIssueInteractionChatPublications(
                 "Input needed")
               : interaction.kind === "request_confirmation"
                 ? interaction.payload.prompt
-                : "Response needed in Paperclip",
+                : "Response needed in ThinkingMach",
           body:
             interaction.kind === "ask_user_questions"
               ? (question?.helpText ?? undefined)
               : interaction.kind === "request_confirmation"
                 ? (interaction.payload.detailsMarkdown ?? undefined)
-                : "Open the task in Paperclip to review and respond.",
+                : "Open the task in ThinkingMach to review and respond.",
           actions,
         },
       },
@@ -493,12 +493,12 @@ export async function enqueueIssueInteractionChatPublications(
 /**
  * Settles every delivered question or confirmation card. Providers without a
  * native callback receive the same actionless terminal edit/follow-up as
- * providers with buttons, so an "Open in Paperclip" prompt never remains
+ * providers with buttons, so an "Open in ThinkingMach" prompt never remains
  * visibly pending after the authoritative board decision.
  *
  * The terminal publication shares the provider callback idempotency key. If a
  * provider click wins the race, its handler converges on the same row; if the
- * Paperclip UI wins, all still-issued callback tokens expire in this same
+ * ThinkingMach UI wins, all still-issued callback tokens expire in this same
  * authoritative resolution transaction.
  */
 export async function enqueueTerminalIssueInteractionChatPublications(

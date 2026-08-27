@@ -82,7 +82,7 @@ describe("checkOAuthEndpointUrl", () => {
     }
   });
 
-  it("allows plaintext http for Paperclip's own origin only", () => {
+  it("allows plaintext http for ThinkingMach's own origin only", () => {
     const options = { allowInsecureOrigins: ["http://paperclip.test"] };
     expect(checkOAuthEndpointUrl("http://paperclip.test/api/smoke-lab/oauth/authorize", options).ok).toBe(true);
     // Port and scheme are part of the origin, so a neighbour is not exempt.

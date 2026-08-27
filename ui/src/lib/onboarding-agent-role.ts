@@ -1,4 +1,4 @@
-import { AGENT_ROLE_LABELS, type AgentRole } from "@paperclipai/shared";
+import { AGENT_ROLE_LABELS, type AgentRole } from "@thinkingmach/shared";
 
 /**
  * The name the wizard offers before the customer picks a role. It is a job

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { CompanySecret, UserSecretDefinition } from "@paperclipai/shared";
+import type { CompanySecret, UserSecretDefinition } from "@thinkingmach/shared";
 import {
   Dialog,
   DialogContent,
@@ -136,7 +136,7 @@ export function SetMyUserSecretDialog({
                   autoFocus
                 />
                 <p className="text-(length:--text-micro) text-muted-foreground">
-                  Points at your own credential in the configured provider. Paperclip stores the
+                  Points at your own credential in the configured provider. ThinkingMach stores the
                   reference, not the value.
                 </p>
               </div>

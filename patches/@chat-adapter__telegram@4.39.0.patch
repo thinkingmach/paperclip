@@ -22,7 +22,7 @@ diff --git a/dist/index.d.ts b/dist/index.d.ts
      private pollingTask;
      private pollingActive;
      private nextDraftId;
-+    /** Paperclip durable private-draft stop handshake; not task cancellation. */
++    /** ThinkingMach durable private-draft stop handshake; not task cancellation. */
 +    readonly paperclipDraftStopVersion: 1;
      private richMessagesAvailable;
      get botUserId(): string | undefined;

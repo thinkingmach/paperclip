@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { announcementIdSchema, type Announcement } from "@paperclipai/shared";
+import { announcementIdSchema, type Announcement } from "@thinkingmach/shared";
 import { announcementsApi } from "@/api/announcements";
 import { announcementStoragePrefix, readAnnouncementDismissals, saveAnnouncementDismissal } from "@/lib/announcement-dismissals";
 

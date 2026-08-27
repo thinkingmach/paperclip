@@ -91,7 +91,7 @@ export function SlackAvatarStep({
                   {exited
                     ? "Preview only: Save & exit would save your place and return to Connectors."
                     : step === 5
-                      ? "Next, link your personal Slack account to Paperclip. This preview stops at the handoff to that step."
+                      ? "Next, link your personal Slack account to ThinkingMach. This preview stops at the handoff to that step."
                       : "This preview focuses on the new avatar step. Existing setup steps keep their current behavior."}
                 </p>
                 <Button

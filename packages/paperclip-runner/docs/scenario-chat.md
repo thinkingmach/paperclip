@@ -3,8 +3,8 @@
 The scenario chat is an interactive surface over the same package-local Capability
 runner and [mock control plane](capability-mock-control-plane-port.md) that the
 [scenario explorer](capability-scenario-explorer.md) reads. You pick a scenario,
-send prompts, and watch the mock Paperclip activity for every turn instead of
-having it hidden behind the conversation. It contacts no Paperclip service,
+send prompts, and watch the mock ThinkingMach activity for every turn instead of
+having it hidden behind the conversation. It contacts no ThinkingMach service,
 holds no credential, and introduces no ACPX implementation.
 
 Sources: `src/scenarios/chat-session.ts`, `src/scenarios/chat-script.ts`,
@@ -96,9 +96,9 @@ session** returns to the seeded turn 0 and stays there.
 ## Commands
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner run demo:scenarios       # open the surface
-pnpm --filter @paperclipai/paperclip-runner run test:scenarios       # runtime + component tests
-pnpm --filter @paperclipai/paperclip-runner run test:browser:scenarios
+pnpm --filter @thinkingmach/paperclip-runner run demo:scenarios       # open the surface
+pnpm --filter @thinkingmach/paperclip-runner run test:scenarios       # runtime + component tests
+pnpm --filter @thinkingmach/paperclip-runner run test:browser:scenarios
 # Recorded evidence generation is deferred from this release.
 ```
 

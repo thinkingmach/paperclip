@@ -18,10 +18,10 @@ import {
   createDb,
   heartbeatRuns,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 import { stageNativeRunnerAttachmentBytes } from "./native-runner-file-handoff.js";
 import {
   findNativeChatWorkspaceScope,
@@ -188,7 +188,7 @@ describe("native external chat workspace boundary", () => {
         readFile(path.join(rootB, stages[0]!.workspaceRelativePath)),
       ).rejects.toMatchObject({ code: "ENOENT" });
       await writeFile(path.join(rootA, "private-output.txt"), body);
-      const authority = new PaperclipRunnerToolAuthority(db, {
+      const authority = new ThinkingMachRunnerToolAuthority(db, {
         companyId,
         agentId,
         issueId: issueB,

@@ -13,7 +13,7 @@ import { Dashboard } from "@/pages/Dashboard";
 import { NewAgent } from "@/pages/NewAgent";
 import { AgentBasicsDialog } from "@/components/new-agent/AgentBasicsDialog";
 import { queryKeys } from "@/lib/queryKeys";
-import { resolveAgentAppearance } from "@paperclipai/shared";
+import { resolveAgentAppearance } from "@thinkingmach/shared";
 import { storybookAgents, storybookIssues, storybookActivityEvents, storybookLiveRuns, storybookDashboardSummary } from "../fixtures/paperclipData";
 
 const companyId = "company-storybook";

@@ -1,13 +1,13 @@
 # Plugins supplied by an application distribution
 
-A downstream image can add prebuilt plugins without changing Paperclip's
+A downstream image can add prebuilt plugins without changing ThinkingMach's
 built-in catalog. The operator owns the image and trusts its plugin code.
 This is packaging and activation policy, not a sandbox or entitlement system.
 Ordinary self-hosted images need no catalog and keep their existing behavior.
 
 ## Image layout
 
-Use `distribution/catalog.json` beneath `PAPERCLIP_BUNDLED_PLUGIN_ROOT`
+Use `distribution/catalog.json` beneath `THINKINGMACH_BUNDLED_PLUGIN_ROOT`
 (default `/app/packages/plugins`). Each plugin has a stable directory below
 `distribution/`, containing its `package.json`, compiled manifest, worker and
 optional UI. Bundle runtime dependencies; startup never installs them.

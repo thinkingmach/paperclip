@@ -1,10 +1,10 @@
 import { and, eq } from "drizzle-orm";
-import { chatEndpoints, toolConnections, type Db } from "@paperclipai/db";
+import { chatEndpoints, toolConnections, type Db } from "@thinkingmach/db";
 import {
   SLACK_TOOLS,
   SLACK_BOT_TOOL_SCOPES,
   type SlackToolCapabilities,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { notFound } from "../../errors.js";
 import { secretService } from "../secrets.js";
 import { slackClient } from "./slack-client.js";

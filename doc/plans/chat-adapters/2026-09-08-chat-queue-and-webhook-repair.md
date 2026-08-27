@@ -107,9 +107,9 @@ deployment candidate but has not yet passed its fresh live qualification.
 
 The first source message `1788868365.043179` was sent at 11:52:45.043, but the
 first matching local HTTP request arrived at 11:53:45.946: **60.903 seconds
-before Paperclip received it**. The request carried retry 2 / `http_error`
+before ThinkingMach received it**. The request carried retry 2 / `http_error`
 hints; those hints are diagnostic, not authenticated authority. No earlier
-matching request appears in this server log. Paperclip acknowledged the
+matching request appears in this server log. ThinkingMach acknowledged the
 received request in 22.738 ms. Run `e007b44a-a6d9-4f17-92ba-19ee10c44552`
 took 22.542 seconds and its actual answer was published at 11:54:09.815:
 84.772 seconds from source to answer. All publications used one attempt and
@@ -197,7 +197,7 @@ round trips remain to be verified after this correction.
 
 The failed Slack session is retained in quarantine; an audited task-scoped
 session reset after deployment will create a new provider session, not recover
-or replay the failed accepted answer. Paperclip issue, message, file, and run
+or replay the failed accepted answer. ThinkingMach issue, message, file, and run
 history will remain. No reset has been performed yet.
 
 The ignored, local webhook-only qualification proxy now has closed timing
@@ -329,13 +329,13 @@ native execution profile. No Terra substitution or legacy adapter was used.
 - **GitHub native question:** new PR comment `5585485583`, submitted at
   12:56:45.673, started run `1ac82077-478b-444a-a459-efa52aaf9d4d` at
   12:56:49.409. It succeeded in 12.884 seconds and visibly published
-  “Choose Quartz or Jade” with its normal Paperclip link. Opening that link
+  “Choose Quartz or Jade” with its normal ThinkingMach link. Opening that link
   reached the actual pending Board question. Its answer is intentionally
   pending deployment of the separately reproduced native Board-answer
   continuation correction; question creation is not a completed round trip.
 
 These are individual live samples, not latency percentiles. Private reasoning
-and raw tool/diagnostic events stay in Paperclip; external progress uses the
+and raw tool/diagnostic events stay in ThinkingMach; external progress uses the
 closed, safe phase projection. Teams still lacks a qualified Microsoft 365
 tenant and is not counted among these four active live endpoints.
 
@@ -501,7 +501,7 @@ and provider lifecycles were unchanged.
 
 ## Landing CI and fresh native shutdown regression
 
-PR [#13038](https://github.com/paperclipai/paperclip/pull/13038) is open as one
+PR [#13038](https://github.com/thinkingmach/paperclip/pull/13038) is open as one
 review, currently 473 changed files. Merge `1a442f5a0` also incorporates
 upstream `b97101893`; a later fetch found no further master commits.
 Workspace typecheck and build passed after that merge. The corrected browser
@@ -573,7 +573,7 @@ is an operator-recovery UX gap, not a reason to bypass identity checks.
 After verifying that retention and the absence of the old processes, root
 submitted `TG-AFTER-RETIRED-CHECKPOINT-0908` at 14:00:46.314. Run
 `a4938fcc-dc2c-4146-a776-12512cf4b613` started at 14:00:47.771 using
-Paperclip Runner, Codex app-server, and Luna. The configured low-effort field
+ThinkingMach Runner, Codex app-server, and Luna. The configured low-effort field
 was later found not to reach this native path; effective effort is unverified.
 The provider produced `paperclip_finish` at 14:01:26.348, but the run stayed
 active without delivering its answer. Working/progress publications each
@@ -840,7 +840,7 @@ errors and objects that merely resemble its code stay on their existing
 paths. A database-confirmed replay conflict now uses the typed class after
 the existing authorization and exact-run lock. The server's recovery decision
 is permanent/operator-owned, and external chat receives only a safe request
-to have a Paperclip admin review the run.
+to have a ThinkingMach admin review the run.
 
 Initial verification passed **130/130** controller/staged-transport tests,
 **238/238** Codex-driver/backend tests, **78/78** runtime tests, and **183/183**
@@ -863,7 +863,7 @@ claim that all subsequent edits have completed verification.
 ## Composed damaged-session replacement proof
 
 A new **35/35** resume cohort includes a real PostgreSQL, runnerd, driver,
-native runtime and Paperclip control-plane path. Only the Codex provider
+native runtime and ThinkingMach control-plane path. Only the Codex provider
 process and a generated historical corruption seed are synthetic. A normally
 suspended disposable root receives an invalid pending semantic event. A
 nonterminal prior database owner prevents rotation without changing its bytes.
@@ -964,7 +964,7 @@ Slack `1788884841.421029`, GitHub `5588442165`, Telegram `417200359:132`.
 No duplicate final reply was observed. Slack's browser initially retained an
 older scrolled thread and needed a reload to restore its composer; the new
 message then sent normally. This is provider-browser navigation friction,
-not evidence of a failed Paperclip delivery.
+not evidence of a failed ThinkingMach delivery.
 
 Discord's Eigenjoy browser login had expired, so no new Discord live send is
 claimed. Its login tab was left open and the user notified; the bot connection
@@ -1297,7 +1297,7 @@ current-task cluster remained to clean up; no further unchanged retry was run.
 
 ### Reasoning-effort evidence correction
 
-The live runs demonstrably use native Paperclip Runner, Codex app-server and
+The live runs demonstrably use native ThinkingMach Runner, Codex app-server and
 `gpt-5.6-luna`. Earlier notes also called them low reasoning because Maya's
 agent configuration contains `modelReasoningEffort: "low"`. A final audit
 found that this legacy field is **not projected by the native execution path**.
@@ -1332,7 +1332,7 @@ App webhook API then redelivered only the exact original created event once.
 The [attachment authority record](2026-09-08-github-private-attachment-authority.md)
 records the exact source hashes and bounded proof.
 
-Paperclip rejected the canonical body mismatch before selecting a signed image
+ThinkingMach rejected the canonical body mismatch before selecting a signed image
 target. The current input had one unavailable omission and no attachment or
 view event. Native Luna took **14.881 seconds**; one final publication arrived
 **17.755 seconds after ingress** and truthfully said the exact image could not
@@ -1342,8 +1342,8 @@ not deleted-source or in-flight revocation qualification.
 The test also exposed a separate callback failure: GitHub reported a bot-created
 event **502 in 0.1 seconds**, with an empty response and no headers. Its
 destination exactly matched the current App webhook and successful neighboring
-deliveries. No matching request reached the local proxy or Paperclip. The later
-bot-edit callback reached Paperclip and was correctly filtered, but that does
+deliveries. No matching request reached the local proxy or ThinkingMach. The later
+bot-edit callback reached ThinkingMach and was correctly filtered, but that does
 not explain the missing created callback. A bounded Tailscale/system-log query
 found no matching failure diagnostic. Its pre-proxy cause remains open.
 
@@ -1553,7 +1553,7 @@ catalog, without an error banner or sign-in redirect.
 One `DISPATCH-MERGE-0908` continuation was sent through each signed-in provider
 UI. Slack, GitHub and Telegram returned exactly `DISPATCH-MERGE-READY` in
 **16.188 / 17.441 / 14.776 seconds**; native Luna execution used
-**13.622 / 12.898 / 11.510 seconds**. All used Paperclip Runner with Codex
+**13.622 / 12.898 / 11.510 seconds**. All used ThinkingMach Runner with Codex
 app-server, one current wake comment, one succeeded run and one accepted
 native result. Each retained its existing task/current conversation generation
 and used one provider message for working→final, with one attempt per update.
@@ -1566,7 +1566,7 @@ screenshot was taken because its unrelated chat list was outside this check.
 Only sampled transitions were inspected; this is not an exhaustive flicker test.
 
 The first Slack follow-up pair, `QUEUE-MERGE-0908`, produced correct ordered
-replies but did **not** exercise queuing: B's webhook reached Paperclip
+replies but did **not** exercise queuing: B's webhook reached ThinkingMach
 **1.073 seconds after A finished**. It remains sequential-continuation proof.
 The next pair, `QUEUE-INFLIGHT-0908`, submitted B immediately after the current
 working indicator appeared: A at **18:26:29.050**, B at **18:26:31.781 UTC**.
@@ -1652,7 +1652,7 @@ The proxy was restarted without fault injection and a public Board health
 request remained **404**. Existing local Board access stayed available.
 
 Functionally, this specific lost-callback journey succeeded. It remains slower
-than normal chat, since Paperclip cannot acknowledge an input it never received.
+than normal chat, since ThinkingMach cannot acknowledge an input it never received.
 The intermittent upstream/Funnel 502 cause remains unproven. Automatic recovery
 does not retroactively restore message order after later requests have run,
 recover edited/deleted/lifecycle events, or scan unbounded high-volume history.
@@ -1755,7 +1755,7 @@ current design, production code and test coverage are retained.
 Full merged workspace typecheck and build passed. Root reloaded the live Board
 after a transient `useCompany` error during merge editing; the normal reload
 restored Activity, agent overview and Channels. The overview identifies
-Paperclip Runner and `gpt-5.6-luna`. The new upstream section heading duplicated
+ThinkingMach Runner and `gpt-5.6-luna`. The new upstream section heading duplicated
 the Channels panel's own heading. A browser regression reproduced **two**
 headings where one was expected. The parent now leaves this title to its
 existing panel. Root inspected before/after screenshots and verified one
@@ -1828,7 +1828,7 @@ that the separate Discord restart crash was fixed.
 
 The existing 115-reply Slack thread remained at **Loading replies…** without a
 reply composer after normal refresh/reopen attempts. No continuation was sent
-there; this is not a Paperclip ingress failure. A fresh root mention in the
+there; this is not a ThinkingMach ingress failure. A fresh root mention in the
 same authorized QA channel is the bounded post-patch alternate journey.
 
 Server 56 loaded the frozen patch at **20:13:21.244 UTC**, became ready at
@@ -1843,7 +1843,7 @@ Root opened the actual thread and inspected the reply, eyes reaction and usable
 continuation composer. The initial mention autocomplete incorrectly labeled the
 existing bot as not in the channel; actual mention resolution, ingress and
 delivery succeeded without changing membership. The old long-thread stall and
-this provider autocomplete inconsistency are not claimed fixed by Paperclip.
+this provider autocomplete inconsistency are not claimed fixed by ThinkingMach.
 
 The final fresh PostgreSQL integration run passed **421/421**, with no skips,
 in **91.49 seconds**. Its database was absent before creation and held zero
@@ -1910,7 +1910,7 @@ These live journeys used server 58, started at **20:27:40.584 UTC** and ready
 at **20:27:45.773** on September 8. Its server baseline is `63c8b5d8d`; the
 subsequent wireframe-only commit changes no runtime bytes. The runner SHA-256
 remains `e758b7cdb6ba7c9f176d89cbd17b98dc4c42975326012582d6a7cdf230fb0373`.
-Both journeys used Maya E2E, native Paperclip Runner, Codex app-server and
+Both journeys used Maya E2E, native ThinkingMach Runner, Codex app-server and
 `gpt-5.6-luna`. They do not qualify the uncommitted exact-retry implementation.
 
 ### Slack: edited-source reuse is refused without leaking a file
@@ -1990,7 +1990,7 @@ to native session `ce94db0c-3aec-40be-8caa-c80d008fcbbb`.
 
 Five publication records, each with one attempt, updated two Telegram messages
 (`417200359:150` and `417200359:152`). Both ended with **Maya E2E stopped before
-completing this turn. Open the task in Paperclip:** and the correct task URL.
+completing this turn. Open the task in ThinkingMach:** and the correct task URL.
 There were zero generated attachments, work products or file publications;
 B never executed a file reuse/register action. Its actual file consumption,
 returned bytes and output isolation therefore remain unqualified. This is a
@@ -2083,7 +2083,7 @@ binary's presence alone is not live proof of its control-first repair.
 Each input produced one published failure notice in one attempt (GitHub
 `5592126063` and `5592127485`), respectively 1.812 and 2.274 seconds after local
 receipt. Root read both actual rendered messages: **Maya E2E stopped before
-completing this turn. Open the task in Paperclip:** with the correct CHA-9 URL.
+completing this turn. Open the task in ThinkingMach:** with the correct CHA-9 URL.
 There was no plan or requested short answer. The functional outcome failed;
 the experience needs improvement because identical generic notices conceal
 different setup/recovery causes and provide no usable in-channel recovery.
@@ -2093,7 +2093,7 @@ The shared external milestone copy now recognizes only the typed cleanup
 quarantine code. It explains that an earlier session needs admin recovery,
 the request is saved, and resending will not repair it. Unknown errors remain
 generic, and neither checkpoint/process details nor private error text leave
-Paperclip. Two exact-copy regressions failed against the old projection;
+ThinkingMach. Two exact-copy regressions failed against the old projection;
 the final milestone/task-link/safe-projection cohort passed **43/43**. This
 copy change is not deployed or visually retested yet, and it is not the
 session recovery implementation itself.
@@ -2213,7 +2213,7 @@ log in again” in Discord. No new Discord message or account switch was made.
 GitHub's recently released CLI media upload was checked as a potential native
 file-delivery improvement, but its official implementation explicitly accepts
 OAuth/PAT credentials, not App installation tokens. It is not a supported
-substitute for the bot's existing authenticated Paperclip download links:
+substitute for the bot's existing authenticated ThinkingMach download links:
 [GitHub CLI upload implementation](https://github.com/cli/cli/blob/v2.99.0/internal/attachments/client.go).
 
 ### Already-ended provider shutdown and recovery qualification
@@ -2531,7 +2531,7 @@ ownership-barrier verification.
 From the live Board dashboard, root opened original failed run
 `38dfc3ec-4fa7-4ed4-8563-7650dfce3d47` and used its Retry control once. New run
 `7c4827a6-705a-4295-8196-f51a821a4af3` retained the exact latest wake comment and
-source-run link. The Board showed Paperclip Runner / Codex / `gpt-5.6-luna`,
+source-run link. The Board showed ThinkingMach Runner / Codex / `gpt-5.6-luna`,
 then success in 15 seconds. In the private disposable GitHub QA repository,
 comment `5593571969` changed from working feedback to exactly
 `CONTROL-FIRST-B-READY`. Refresh and screenshot inspection confirmed persistence
@@ -2547,7 +2547,7 @@ no provider credential or permission change was needed for this retry.
 ### Revoked-editor source invalidation
 
 A provider-authenticated edit of an already-admitted source now records a
-content-free invalidation even when its actor no longer has Paperclip admission
+content-free invalidation even when its actor no longer has ThinkingMach admission
 rights. Regranting that actor cannot resurrect the stale file or make an exact
 old-source retry admissible. GitHub bot edits can invalidate only an exact linked
 inbound source; unknown, self and outbound echoes remain suppressed. New edited
@@ -2695,7 +2695,7 @@ remote byte hashes; exact-byte checks here are deterministic local API tests.
 
 Server 64 runs `58de1c105` on loopback 3137 with the normally built runner
 `4acf2d1dbe99a6202d07b6d0be73b469ebf153103cda2bbd097e5e4233fcd57a`.
-Maya uses Paperclip Runner / Codex app-server / `gpt-5.6-luna`, not a legacy
+Maya uses ThinkingMach Runner / Codex app-server / `gpt-5.6-luna`, not a legacy
 adapter. Signed-in provider UI created Discord thread `1547043763581358111`
 (CHA-32) and Slack thread `1788914422.188869` (CHA-33). Initial checklist and
 short follow-up turns succeeded; these first pairs were sequential, not a
@@ -2816,7 +2816,7 @@ anchor, no signed download target. Anonymous retrieval returned 404 without a
 redirect; the body was not consumed. The image comparison `5589001728` exposes
 an exact same-asset signed image target through the equivalent App read.
 Removing the generic-file guard alone cannot fix this fixture. Preserve the
-safe omission and offer direct Paperclip attachment or pasted text; never
+safe omission and offer direct ThinkingMach attachment or pasted text; never
 borrow browser cookies or send App credentials to upload/CDN URLs. The focused
 attachment suite passed 96/96. This is evidence for these fixtures and the
 supported App-read route, not a claim that GitHub can never add another route.
@@ -2843,7 +2843,7 @@ The opt-in actual-provider regression is now reproducible:
 node --import ./server/node_modules/tsx/dist/loader.mjs scripts/tests/native-cleanup-paginated-codex.mjs
 ```
 
-It requires exact Codex CLI 0.153.4 (`PAPERCLIP_TEST_CODEX_BINARY` may select it),
+It requires exact Codex CLI 0.153.4 (`THINKINGMACH_TEST_CODEX_BINARY` may select it),
 uses only fresh synthetic homes, and makes no `turn/start` or model request.
 It proves the real stale-path failure, successful same-thread paginated resume
 after staging relocation, and successful resume after canonical activation.
@@ -3064,12 +3064,12 @@ TXT matches throughout. Remote downloaded bytes were not independently hashed.
 GitHub's new private-file fallback request was sent through the dedicated QA
 PR's comment UI, not the implementation PR. Source comment `5594742103` yielded
 one native Luna run and one reply, `5594742965`, stating that the exact file
-could not be imported and offering direct Paperclip attachment or pasted text.
+could not be imported and offering direct ThinkingMach attachment or pasted text.
 No file content was guessed and no browser credential was borrowed. Root then
 followed the paste suggestion with the complete synthetic original text and
 visually verified reply `5594755807`: “Shape: hexagon. Color: teal. Count: 47.”
 The paste recovery is functional. Experience still needs improvement: the
-direct-attachment advice names “this Paperclip task” without a clickable task
+direct-attachment advice names “this ThinkingMach task” without a clickable task
 link. A focused fix is under investigation; unavailable GitHub private generic
 file import itself is not claimed to work.
 
@@ -3313,7 +3313,7 @@ provider message.
 ### September 9: actual Discord button-denial boundary
 
 The new standalone test joins the installed patched Discord adapter, actual
-Chat SDK and Paperclip runtime instead of stopping at a mocked SDK callback.
+Chat SDK and ThinkingMach runtime instead of stopping at a mocked SDK callback.
 It showed that Gateway normalization produces plain JSON: the raw
 `deferUpdate` and `isMessageComponent` functions used by the service's denial
 check do not survive. A real service/database composition then reproduced the
@@ -3396,7 +3396,7 @@ parsed denial case, in **5.31 seconds** on
 socket remain simulated; this is not a native model turn or live click proof.
 This coverage addition did not reproduce another product defect.
 
-The new Slack modal bridge uses real Paperclip form construction, signed
+The new Slack modal bridge uses real ThinkingMach form construction, signed
 synthetic envelopes, the installed adapter/Chat SDK and runtime, with a local
 fake Web API. It verifies opaque field IDs and wrapped private metadata,
 canonical answer validation, inline field errors, corrected retries after
@@ -3420,7 +3420,7 @@ two text blocks. Original inputs and Submit disappeared, and the visible error
 label exposed an opaque field ID. The first focused run passed 12/13, with
 this missing-correction path as the genuine failure.
 
-Paperclip now rebuilds an invalid-but-current Teams form after the existing
+ThinkingMach now rebuilds an invalid-but-current Teams form after the existing
 source, actor, destination, publication and pending-interaction checks. The
 replacement preserves the original durable callback token and known choices,
 uses canonical question labels for errors, and retains text up to the existing
@@ -3645,7 +3645,7 @@ remains outstanding. No provider request or server restart occurred here.
 ### September 9: Discord native form workflow and concurrency qualification
 
 The v6 pinned adapter implements native text/select modal opening and submission,
-with closed rendering limits and opaque Paperclip action IDs. Discord interaction
+with closed rendering limits and opaque ThinkingMach action IDs. Discord interaction
 tokens are kept out of persisted Chat SDK context. A failed or ambiguous modal
 open cannot receive a second success acknowledgment or automatic resend.
 Duplicate open attempts remain unconfirmed rather than fabricating success.
@@ -4161,7 +4161,7 @@ attachment ceiling. The pinned attachment-factory seam is checked at startup.
 The final Telegram cohort passes **21/21** (14 new, six video-note and one
 existing media case) on fresh `chat_telegram_optional_media_20260909_final01`;
 helper/runtime checks pass **85/85**, and plain server TypeScript passes.
-A separate fresh process with `PAPERCLIP_ATTACHMENT_MAX_BYTES=2097152`
+A separate fresh process with `THINKINGMACH_ATTACHMENT_MAX_BYTES=2097152`
 passes its service rejection case with 2 MB guidance. Logs are
 `telegram-optional-media-{red01,final01,units-final,types-final,cap01}-0909.log`.
 Independent review found no remaining code blocker. Provider HTTP is simulated;
@@ -4817,7 +4817,7 @@ used the production bundle helper and materialized publish manifests only in
 scratch with one synthetic sibling version. npm **10.9.7** packed all 17 and
 installed **340 packages** in a fresh consumer/cache. No package was published.
 
-The local registry trap rejected every Paperclip sibling metadata request
+The local registry trap rejected every ThinkingMach sibling metadata request
 (18 probes, HTTP 409). The initial harness incorrectly required zero probes
 and therefore failed after the install itself succeeded. Subsequent inspection
 verified all 17 installed sibling lock entries point to the exact local
@@ -4854,11 +4854,11 @@ fixture code changed; no product or packed artifact was altered.
 Earlier assembly/validation guards also needed fixture-only correction: absent
 optional declared `files` entries are now recorded rather than invented, and
 the sibling-path matcher distinguishes nested third-party packages from
-Paperclip siblings. Those failed attempts remain separate from final proof.
+ThinkingMach siblings. Those failed attempts remain separate from final proof.
 
 Root's packaged static-UI qualification uses a separate owned port **3221**,
 fresh migrated database `chat_current_consumer_browser_20260909_root01`, and a
-fresh temporary Paperclip home. Source CLI onboarding is used only to create
+fresh temporary ThinkingMach home. Source CLI onboarding is used only to create
 fixture configuration (`invokedByRun: true`, no service installation); the
 server process runs the actual installed compiled entry with a resolution
 guard denying outside-consumer and TypeScript-module fallback. It does not
@@ -4878,7 +4878,7 @@ The packaged browser suite passes **31/31** in **2.0 minutes**, exit 0, without
 retries. It covers the default-off experiment gate preserving GitHub tool
 setup, all five provider setup/management UIs, task-bound uploads, pending
 consent and file-batch state across reload, uncertain delivery and exact failed
-run retry feedback. Its `page.route('**/api/**')` fixtures mock Paperclip's
+run retry feedback. Its `page.route('**/api/**')` fixtures mock ThinkingMach's
 chat-control-plane routes, not just remote provider requests. The compiled
 server handles unmocked bootstrap/company/agent/catalog requests and serves
 the current built UI. This does **not** establish compiled chat-backend or
@@ -4952,7 +4952,7 @@ proved both output files match the **Slack-stored input** bytes:
 
 - PNG source `F0C0NHCVBL1`, output `F0C0QA0G5FW`: 2,088,249 bytes,
   SHA256 `005f8dabdb19ef786c0e2e76695596d22c1d0bb53de374e0be209cc6d89851c9`.
-  Slack changed the uploaded local PNG before Paperclip received it; the local
+  Slack changed the uploaded local PNG before ThinkingMach received it; the local
   file was 2,111,878 bytes / `7693966f…`. Do not claim original-local byte identity.
 - TXT source `F0C0NHDCA81`, output `F0C0593M2R5`: 152 bytes,
   SHA256 `e5ea1c89ad69c0ae9dffea0599c730e5d284816dbcd9dae44746c7a29f790293`.
@@ -4982,7 +4982,7 @@ Each progress/final pair used one provider message, one attempt.
 C (`5602115684`) attached the fresh TXT through GitHub's real chooser. The
 native run correctly refused to guess unavailable attachment contents, but
 its 12:51:08.147 final said that no task link could be provided immediately
-before Paperclip appended the correct task link. Root verified the actual
+before ThinkingMach appended the correct task link. Root verified the actual
 DOM and screenshot. Native-only guidance fix **`d399d7a41`** is committed and
 pushed: explain service-owned navigation, conditional on current-source
 authorization and a safe configured Board URL; do not invent or promise a
@@ -5109,9 +5109,9 @@ All provider actions used the already signed-in in-app browser, Eigenjoy's
 account and the existing Maya bot. The live process still loaded server 78
 (`ea528f44c`), with `paperclip_runner` / Codex / `gpt-5.6-luna`.
 
-DM command attempts at 13:20 and 13:25 were rejected before Paperclip because
+DM command attempts at 13:20 and 13:25 were rejected before ThinkingMach because
 Discord required a shared guild with DMs enabled. They later appeared as
-“The application did not respond”; no corresponding Paperclip action existed.
+“The application did not respond”; no corresponding ThinkingMach action existed.
 Clawd's original Direct Messages setting was off. Root temporarily enabled
 that server's switch for the DM test, verified the checked state, then restored
 it off after the test. Message requests became disabled again; activity
@@ -5213,7 +5213,7 @@ Stop/restart group passed 34/34; do not combine these partial suites into a
 fictional full green result. All databases were newly created per attempt.
 
 `e67df56fa` also corrects close wording and provider command descriptions:
-closing a chat conversation does not claim a Paperclip task status change,
+closing a chat conversation does not claim a ThinkingMach task status change,
 nor does it imply physical Discord-thread or Telegram-topic archival. Six
 fresh-database control tests and 62 focused unit tests passed; task status is
 explicitly checked unchanged. These words are not yet deployed. The causal
@@ -5348,7 +5348,7 @@ ran 15:10:03.589–15:10:19.840 and returned exactly
 <https://github.com/cryppadotta/paperclip-chat-e2e-enabled/issues/5> and comment
 `5603841952` admitted CHA-45. The final replaced progress comment `5603843439`
 after 21.701 seconds from ingress, truthfully reported the private upload
-unavailable, and exposed a working stable “Open this Paperclip task” link.
+unavailable, and exposed a working stable “Open this ThinkingMach task” link.
 Root clicked it and uploaded the original 152-byte TXT through the actual Board
 composer. Attachment `398ed177-8316-4cf3-8ed5-4d5e6ce7fd82` remained bound to
 comment `4da2353e-1888-411e-b931-39c1563cbb06`; stored SHA256 was exactly
@@ -5495,7 +5495,7 @@ comments [text](https://github.com/cryppadotta/paperclip-chat-e2e-enabled/issues
 and [file fallback](https://github.com/cryppadotta/paperclip-chat-e2e-enabled/issues/5#issuecomment-5604427382)
 were visible after refresh. Both publications succeeded on attempt 1 by
 15:29:35.618. The file fallback truthfully links to the stable authenticated
-Paperclip task; it does not claim GitHub App comment-file upload support.
+ThinkingMach task; it does not claim GitHub App comment-file upload support.
 
 **Discord close: PASS; fresh-after-close publication: FAIL.** The old cached
 Discord client initially did not show current command suggestions. Reloading
@@ -5847,7 +5847,7 @@ Close `ea6960ee…` published as `417200359:180` at 16:24:17.645 and the
 actual Telegram chat confirmed that the next message starts a new task.
 The launched run continued internally and succeeded at 16:24:52.599;
 there was no later final publication into the closed conversation. This is
-the intended conversation-only closure, not cancellation of Paperclip work.
+the intended conversation-only closure, not cancellation of ThinkingMach work.
 
 The exact already-published working message `417200359:178` nonetheless
 remained "Maya E2E is working…" after the run finished. Independent code
@@ -5937,7 +5937,7 @@ closing Telegram, Slack, Discord or Teams. It requires the current outbound link
 current publication ownership and historical same-run milestone proof. It refuses
 multiple lanes, cards, authored finals and possibly delivered consuming questions.
 After a confirmed close commit it removes only that run's owned receipt reactions;
-the Paperclip run continues internally under the existing close semantics.
+the ThinkingMach run continues internally under the existing close semantics.
 
 Independent review reproduced four pending/unknown question or confirmation
 consumer cases that the initial final-only veto missed. A second root review then
@@ -6066,7 +6066,7 @@ rule; this is not a claim that all historical tasks were exempted. Resume was
 audited at 17:10:18.426. Six quarantined historical owners remain untouched.
 
 The untouched CHA-40 Board page now actually shows Open Telegram pointing to
-`https://t.me/MayaPaperclipQA1234bot`. Independent database inspection confirms
+`https://t.me/MayaThinkingMachQA1234bot`. Independent database inspection confirms
 its stored historical URL is still `https://t.me/cryppadotta/162`; the successful
 projection was not manufactured by rewriting that conversation.
 
@@ -6220,7 +6220,7 @@ redelivery or configuration change. Source D `5605906590`, GUID
   failure classification, not proof an upstream HTTP server emitted a 502 body.
 - `3841793250094514176`, 17:19:50.434: successful 202 redelivery, 0.54s duration.
 
-Paperclip recovery action `050f9df7…` began its scan at 17:19:48.249, requested
+ThinkingMach recovery action `050f9df7…` began its scan at 17:19:48.249, requested
 the exact redelivery at 17:19:49.491, and confirmed that request at 17:19:49.688.
 The callback reached the proxy at 17:19:50.296. Thus the existing scheduled
 repair genuinely recovered this failed callback. The normal 60-second scan
@@ -7304,7 +7304,7 @@ bootstrap. Log: physical `integration-base-verify-YAhDBQ/official-lock-frozen-in
 Its complete tree matches the current CI merge tree `aed58114…`; the successor
 still requires its own exact-head checks after publication.
 
-CI run [34405038082](https://github.com/paperclipai/paperclip/actions/runs/34405038082)
+CI run [34405038082](https://github.com/thinkingmach/paperclip/actions/runs/34405038082)
 ended **cancelled**, with required `ci / verify` failed. Neither root nor the
 landing owner cancelled it. GitHub's annotation for general-server shard four,
 job `102646337040`, states that its 20-minute maximum elapsed. The test step
@@ -7398,11 +7398,11 @@ interaction. No artificial producer delay or repeated blind sends are justified.
 ## Completed CI and post-login live qualification — September 9, 22:16 UTC
 
 Integration PR #13038 head `2148ea2f50cdc547cc33456b91c7ad2095bfa676` contains
-386 files. [CI run 34407804049](https://github.com/paperclipai/paperclip/actions/runs/34407804049)
+386 files. [CI run 34407804049](https://github.com/thinkingmach/paperclip/actions/runs/34407804049)
 completed successfully at 21:53:03 UTC, all 24 jobs green. The isolated chat
 suite passes 985/985 with no skips, 591.97s test time / 604.32s total, within
 its 10m55s job. The slowest general shard takes 14m53s with unchanged limits.
-Exact-head [Greptile review](https://github.com/paperclipai/paperclip/pull/13038#issuecomment-5587250594)
+Exact-head [Greptile review](https://github.com/thinkingmach/paperclip/pull/13038#issuecomment-5587250594)
 completed 5/5 at 21:41:57 UTC, accepting the official lock and measured shard
 allocation. Human CODEOWNER approval remains missing. This supersedes the
 earlier cancelled run, not its recorded outcome. No bypass, self-approval or
@@ -7503,7 +7503,7 @@ real native command picker to invoke `/paperclip status` at 22:02:30.612 UTC;
 the private reply identified CHA-43 / in_progress. Root disabled only
 **Enable #general** at 22:03:52.783, verified OFF after reload at 22:04:11.181,
 and invoked a fresh native status at 22:04:18.858. The actual private response
-was: “This command is not available here. Open the Paperclip task or ask an
+was: “This command is not available here. Open the ThinkingMach task or ask an
 operator to link this account.” It showed **Only you can see this**.
 
 Root restored #general at 22:06:55.237 (persisted at 55.261), reloaded and
@@ -7759,7 +7759,7 @@ Greptile 5/5 and actual human CODEOWNER approval before normal merge.
 ## September 10 — passing CI and subsequent master reconciliation
 
 Published head `3e4e1c1cee05737fd5193e141ccd52f8815c7854` passes every PR
-workflow job in [run 34415826820](https://github.com/paperclipai/paperclip/actions/runs/34415826820),
+workflow job in [run 34415826820](https://github.com/thinkingmach/paperclip/actions/runs/34415826820),
 completed September 9, 23:28:50 UTC. Required `ci / verify` and `ci / e2e`
 are green. The Build log independently confirms both the originally failing
 ambiguous-replacement test and the descendant-lineage test pass; its Codex
@@ -7824,7 +7824,7 @@ qualification. The next exact published head still needs fresh CI and review.
 
 The master reconciliation is published as
 `a95d42e58afa35cf4ecf1a39cbd96f06523b90ec`. Its
-[CI run](https://github.com/paperclipai/paperclip/actions/runs/34433249742)
+[CI run](https://github.com/thinkingmach/paperclip/actions/runs/34433249742)
 passes all 24 PR jobs and both required aggregates. UI CI passes 2,768 cases;
 browser shards pass 104 with four explicitly skipped optional cases. Those
 skips are not live or native-runner qualification.
@@ -7883,7 +7883,7 @@ review. Normal GitHub policy remains authoritative; no bypass or self-approval.
 ## September 10, 04:03 UTC — final gates passed; new master conflict
 
 Published `7c6d36e0d7d343709f10b533a0c29dc2409f7b2b` passes all 24 jobs in
-[CI 34434501548](https://github.com/paperclipai/paperclip/actions/runs/34434501548),
+[CI 34434501548](https://github.com/thinkingmach/paperclip/actions/runs/34434501548),
 including both required aggregates. Full UI is 2,768/2,768; browser shards are
 104 passed with four existing optional skips. No retry or deadline change.
 The one exact-head Greptile review completes **5/5** at 03:48:23 UTC, explicitly
@@ -7936,7 +7936,7 @@ successor has 397 changed files and still needs fresh exact-head CI and review.
 
 The preceding composition was published as
 `e02a63d462ce5d47433b0aeb632bb6fd20aab1ba`. Its
-[CI run](https://github.com/paperclipai/paperclip/actions/runs/34436462958)
+[CI run](https://github.com/thinkingmach/paperclip/actions/runs/34436462958)
 passed all 24 PR jobs, and its exact-head Greptile review completed 5/5.
 Normal merge remained blocked by required CODEOWNER review; no bypass or
 self-approval occurred. Master then advanced to
@@ -7992,7 +7992,7 @@ the normal server and UI typechecks passed as reported above.
 The reconciliation is published as `102fa25b87b70d6346d569a5bef7553a4b980185`.
 GitHub reports it conflict-free, with 398 files. Exact-head Greptile review
 completes **5/5** at 12:34:58 UTC without actionable findings. Fresh
-[CI 34477184777](https://github.com/paperclipai/paperclip/actions/runs/34477184777)
+[CI 34477184777](https://github.com/thinkingmach/paperclip/actions/runs/34477184777)
 then fails the chat shard: **993 passed, two failed**, in 693.19 seconds total.
 The failures are the replaced-runtime and changed-credentials variants of the
 Discord modal connection-lock race, at the pre-mutation waiting assertion.
@@ -8040,7 +8040,7 @@ and Greptile review before normal merge, without bypass or self-approval.
 The Discord fixture successor is published as
 `a8a32c60d2034e7b0efb4eb7d1dde585a75c509b`. Exact-head Greptile review completes
 **5/5** at 13:00:16 UTC without actionable findings. Fresh
-[CI 34479680858](https://github.com/paperclipai/paperclip/actions/runs/34479680858)
+[CI 34479680858](https://github.com/thinkingmach/paperclip/actions/runs/34479680858)
 fails serialized server shard 1 on the first agent-skills route case, which
 exceeds its explicit ten-second body timeout. The following **35 cases pass**.
 The first app-construction log arrives more than eleven seconds after the

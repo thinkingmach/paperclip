@@ -56,7 +56,7 @@ it("refuses new manifests and fails ongoing writes when the disk reserve is exha
 it("admits each snapshot against current disk capacity and rejects growth at its page allowance", async () => {
   const available = nodeFs.statfsSync(os.tmpdir(), { bigint: true });
   const reserve = 256 * 1024 * 1024;
-  vi.stubEnv("PAPERCLIP_WORKSPACE_MANIFEST_MIN_FREE_BYTES", String(reserve));
+  vi.stubEnv("THINKINGMACH_WORKSPACE_MANIFEST_MIN_FREE_BYTES", String(reserve));
   const capacity = reserve + 128 * 1024;
   vi.spyOn(nodeFs, "statfsSync").mockReturnValue({ ...available, bsize: 1n, bavail: BigInt(capacity) } as never);
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -81,7 +81,7 @@ it("fails a real Git scan at its disk allowance and removes the incomplete manif
   for (let index = 0; index < 500; index++) await fs.writeFile(path.join(repo, `${index}-${"x".repeat(200)}`), "");
   const available = nodeFs.statfsSync(os.tmpdir(), { bigint: true });
   const reserve = 256 * 1024 * 1024;
-  vi.stubEnv("PAPERCLIP_WORKSPACE_MANIFEST_MIN_FREE_BYTES", String(reserve));
+  vi.stubEnv("THINKINGMACH_WORKSPACE_MANIFEST_MIN_FREE_BYTES", String(reserve));
   vi.spyOn(nodeFs, "statfsSync").mockReturnValue({ ...available, bsize: 1n, bavail: BigInt(reserve + 128 * 1024) } as never);
   const temporary: string[] = [];
   const mkdtemp = fs.mkdtemp.bind(fs);

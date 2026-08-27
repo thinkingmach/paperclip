@@ -13,7 +13,7 @@ import {
   heartbeatRuns,
   issueThreadInteractions,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { errorHandler } from "../middleware/index.js";
 import { issueRoutes } from "../routes/issues.js";
 import { CROSS_ISSUE_INFLUENCE_LIMIT } from "../services/cross-issue-influence-limit.js";

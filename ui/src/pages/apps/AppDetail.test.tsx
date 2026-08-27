@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getAppStoreDefinition } from "@paperclipai/shared";
+import { getAppStoreDefinition } from "@thinkingmach/shared";
 import { AppDetail } from "./AppDetail";
 import { APP_TABS } from "./app-tabs";
 
@@ -154,7 +154,7 @@ vi.mock("@/lib/router", () => ({
 vi.mock("@/context/CompanyContext", () => ({
   useCompany: () => ({
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach" },
   }),
 }));
 
@@ -283,8 +283,8 @@ function dedicatedGitHubGrant(
         repositoryCount: 1,
         repositorySelection: "selected",
         installationIds: ["456"],
-        installationOwnerLogins: ["paperclipai"],
-        repositories: [{ id: "789", fullName: "paperclipai/test-repo", installationId: "456" }],
+        installationOwnerLogins: ["thinkingmach"],
+        repositories: [{ id: "789", fullName: "thinkingmach/test-repo", installationId: "456" }],
         installationUrl: "https://github.com/apps/paperclip-test/installations/new",
         managementUrl: "https://github.com/settings/installations/456",
         webhookHealth: "pending",
@@ -1530,8 +1530,8 @@ describe("AppDetail", () => {
       grants: [dedicatedGitHubGrant({ kind: "user", subjectAgentId: null, subjectUserId: "user-1" }, {
         repositoryCount: 2,
         repositories: [
-          { id: "1", fullName: "paperclipai/first", installationId: "456", private: true },
-          { id: "2", fullName: "paperclipai/second", installationId: "456", private: false },
+          { id: "1", fullName: "thinkingmach/first", installationId: "456", private: true },
+          { id: "2", fullName: "thinkingmach/second", installationId: "456", private: false },
         ],
       })],
       capabilities: fullCapabilities(), currentUserId: "user-1", members: [],
@@ -1540,10 +1540,10 @@ describe("AppDetail", () => {
     expect(container.textContent).toContain("@dottabot");
     expect(container.textContent).toContain("2 selected repositories");
     expect(container.querySelectorAll('ul[aria-label="Accessible GitHub repositories"] li')).toHaveLength(2);
-    expect(container.textContent).toContain("paperclipai/first");
-    expect(container.textContent).toContain("paperclipai/second");
-    expect(container.querySelector('a[href="https://github.com/paperclipai/first"] [aria-label="Private repository"]')).toBeTruthy();
-    expect(container.querySelector('a[href="https://github.com/paperclipai/second"] [aria-label="Private repository"]')).toBeNull();
+    expect(container.textContent).toContain("thinkingmach/first");
+    expect(container.textContent).toContain("thinkingmach/second");
+    expect(container.querySelector('a[href="https://github.com/thinkingmach/first"] [aria-label="Private repository"]')).toBeTruthy();
+    expect(container.querySelector('a[href="https://github.com/thinkingmach/second"] [aria-label="Private repository"]')).toBeNull();
     const configureHint = [...container.querySelectorAll("p a")].find((link) => link.textContent === "Configure access on GitHub");
     expect(configureHint?.getAttribute("href")).toBe("https://github.com/apps/paperclip-test/installations/new");
   });
@@ -1581,10 +1581,10 @@ describe("AppDetail", () => {
       connection: { id: "conn-1", uid: "conn-1" },
       grants: [dedicatedGitHubGrant({ kind: "user", subjectAgentId: null, subjectUserId: "user-1" }, {
         repositoryCount: empty ? 0 : 3,
-        installationOwnerLogins: ["paperclipai", "dottabot", "empty-org"],
+        installationOwnerLogins: ["thinkingmach", "dottabot", "empty-org"],
         repositories: empty ? [] : [
-          { id: "1", fullName: "paperclipai/first", installationId: "456" },
-          { id: "2", fullName: "paperclipai/second", installationId: "456" },
+          { id: "1", fullName: "thinkingmach/first", installationId: "456" },
+          { id: "2", fullName: "thinkingmach/second", installationId: "456" },
           { id: "3", fullName: "dottabot/first", installationId: "789" },
         ],
       })],
@@ -1592,7 +1592,7 @@ describe("AppDetail", () => {
     });
     await renderAppDetail();
     const repositoryNames = () => [...container.querySelectorAll('ul[aria-label="Accessible GitHub repositories"] a')].map((link) => link.textContent);
-    expect(repositoryNames()).toEqual(empty ? [] : ["paperclipai/first", "paperclipai/second", "dottabot/first"]);
+    expect(repositoryNames()).toEqual(empty ? [] : ["thinkingmach/first", "thinkingmach/second", "dottabot/first"]);
     if (empty) {
       expect(container.querySelector('p[role="status"]')?.textContent?.trim()).toBe("No accessible repositories.");
       expect(container.textContent).not.toContain("Refresh access to load the current repository list.");
@@ -1623,7 +1623,7 @@ describe("AppDetail", () => {
     expect(container.textContent).toContain("Repositories");
     expect(container.textContent).toContain("1 selected repository");
     expect(container.querySelector('a[href="https://github.com/dottabot"]')?.textContent).toBe("@dottabot");
-    expect(container.querySelector('a[href="https://github.com/paperclipai/test-repo"]')?.textContent).toBe("paperclipai/test-repo");
+    expect(container.querySelector('a[href="https://github.com/thinkingmach/test-repo"]')?.textContent).toBe("thinkingmach/test-repo");
     expect(container.querySelector(
       'a[href="https://github.com/apps/paperclip-test/installations/new"]',
     )?.textContent).toBe("Add More Repos on GitHub");

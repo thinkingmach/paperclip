@@ -1,4 +1,4 @@
-import type { IssueDocument } from "@paperclipai/shared";
+import type { IssueDocument } from "@thinkingmach/shared";
 import { Lightbulb, Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { TaskChatProviderActivityItem } from "./task-chat-model";

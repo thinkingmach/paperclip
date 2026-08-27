@@ -10,7 +10,7 @@ import {
   environmentLeases,
   environments,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -88,7 +88,7 @@ describeEmbeddedPostgres("heartbeat teardown terminalizes the run before releasi
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });

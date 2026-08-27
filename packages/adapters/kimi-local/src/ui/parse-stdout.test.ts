@@ -22,10 +22,10 @@ describe("parseKimiStdoutLine", () => {
   it("renders assistant content as an assistant transcript entry", () => {
     const line = JSON.stringify({
       role: "assistant",
-      content: "PAPERCLIP_ADAPTER_TEST_OK",
+      content: "THINKINGMACH_ADAPTER_TEST_OK",
     });
     expect(parseKimiStdoutLine(line, ts)).toEqual([
-      { kind: "assistant", ts, text: "PAPERCLIP_ADAPTER_TEST_OK" },
+      { kind: "assistant", ts, text: "THINKINGMACH_ADAPTER_TEST_OK" },
     ]);
   });
 

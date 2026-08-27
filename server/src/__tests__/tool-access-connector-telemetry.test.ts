@@ -21,7 +21,7 @@ import {
   toolProfileBindings,
   toolProfileEntries,
   toolProfiles,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -171,7 +171,7 @@ describeEmbeddedPostgres("connector lifecycle telemetry (tool-access)", () => {
 
   beforeAll(async () => {
     keyDir = await mkdtemp(join(tmpdir(), "lifecycle-telemetry-secrets-"));
-    vi.stubEnv("PAPERCLIP_SECRETS_MASTER_KEY_FILE", join(keyDir, "key"));
+    vi.stubEnv("THINKINGMACH_SECRETS_MASTER_KEY_FILE", join(keyDir, "key"));
     tempDb = await startEmbeddedPostgresTestDatabase(
       "paperclip-lifecycle-telemetry-",
     );

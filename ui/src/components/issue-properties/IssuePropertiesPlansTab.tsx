@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { Issue, IssueThreadInteraction } from "@paperclipai/shared";
+import type { Issue, IssueThreadInteraction } from "@thinkingmach/shared";
 import { issuesApi } from "@/api/issues";
 import { queryKeys } from "@/lib/queryKeys";
 import { IssuePlanDecompositionsSection } from "@/components/IssuePlanDecompositionsSection";

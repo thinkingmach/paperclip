@@ -3,7 +3,7 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { IssueLinkQuicklook, QUICKLOOK_CONTENT_CLASS, quicklookAlignOffset } from "./IssueLinkQuicklook";
@@ -235,13 +235,13 @@ describe("IssueLinkQuicklook", () => {
         status: "in_review",
         // The card reads only `name` off the project; the rest of `Project` is
         // irrelevant here, so this stands in for a full record.
-        project: { id: "project-1", name: "Paperclip App" } as unknown as Issue["project"],
+        project: { id: "project-1", name: "ThinkingMach App" } as unknown as Issue["project"],
       }),
     );
     const text = card?.textContent ?? "";
 
     expect(text).toContain("PAP-1");
-    expect(text).toContain("Paperclip App");
+    expect(text).toContain("ThinkingMach App");
     expect(text).toContain("Quicklook title");
     expect(text).toContain("Quicklook description");
     expect(text.indexOf("PAP-1")).toBeLessThan(text.indexOf("Quicklook title"));

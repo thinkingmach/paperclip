@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type {
   CatalogTeam,
   CatalogTeamImportPreviewResult,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   TeamCatalog,
@@ -101,16 +101,16 @@ if (typeof Element !== "undefined" && !Element.prototype.scrollIntoView) {
 
 describe("TeamCatalog routes", () => {
   it("round-trips file paths containing literal tildes", () => {
-    const route = teamRoute("paperclipai/bundled/test/team", "agents/a~b/AGENTS.md");
+    const route = teamRoute("thinkingmach/bundled/test/team", "agents/a~b/AGENTS.md");
 
-    expect(route).toBe("/teams-catalog/paperclipai%2Fbundled%2Ftest%2Fteam/files/agents%7Ea~b%7EAGENTS.md");
+    expect(route).toBe("/teams-catalog/thinkingmach%2Fbundled%2Ftest%2Fteam/files/agents%7Ea~b%7EAGENTS.md");
     expect(parseTeamRoute(route.replace("/teams-catalog/", ""))).toEqual({
-      catalogRef: "paperclipai/bundled/test/team",
+      catalogRef: "thinkingmach/bundled/test/team",
       filePath: "agents/a~b/AGENTS.md",
     });
   });
 
-  it("fails closed for Paperclip Runner until adapter availability is loaded and enabled", () => {
+  it("fails closed for ThinkingMach Runner until adapter availability is loaded and enabled", () => {
     expect(listTeamInstallAdapterTypes(new Set(), false)).not.toContain("paperclip_runner");
     expect(listTeamInstallAdapterTypes(new Set(), false)).not.toContain("process");
     expect(listTeamInstallAdapterTypes(new Set(), false)).not.toContain("http");
@@ -144,7 +144,7 @@ async function flushReact() {
 function makeTeam(overrides: Partial<CatalogTeam> = {}): CatalogTeam {
   return {
     id: "team-no-deps",
-    key: "paperclipai/bundled/company-defaults/team-no-deps",
+    key: "thinkingmach/bundled/company-defaults/team-no-deps",
     kind: "bundled",
     category: "company-defaults",
     slug: "team-no-deps",
@@ -185,7 +185,7 @@ function makePreview(): CatalogTeamImportPreviewResult {
     portabilityPreview: {
       include: { company: false, agents: true, projects: true, issues: false, skills: true },
       targetCompanyId: "company-1",
-      targetCompanyName: "Paperclip",
+      targetCompanyName: "ThinkingMach",
       collisionStrategy: "rename",
       selectedAgentSlugs: ["ceo", "cto"],
       plan: {
@@ -251,7 +251,7 @@ describe("TeamCatalog install preview path", () => {
     mockTeamCatalogApi.install.mockResolvedValue({
       team: makeTeam(),
       portabilityImport: {
-        company: { id: "company-1", name: "Paperclip", action: "unchanged" },
+        company: { id: "company-1", name: "ThinkingMach", action: "unchanged" },
         agents: [],
         projects: [],
         envInputs: [],
@@ -437,7 +437,7 @@ describe("TeamCatalog install preview path", () => {
     mockTeamCatalogApi.installed.mockResolvedValue([
       {
         catalogId: "team-no-deps",
-        catalogKey: "paperclipai/bundled/company-defaults/team-no-deps",
+        catalogKey: "thinkingmach/bundled/company-defaults/team-no-deps",
         present: true,
         currentContentHash: "sha256:deadbeefdeadbeefdeadbeef",
         installedOriginHashes: ["sha256:stale"],
@@ -465,7 +465,7 @@ describe("TeamCatalog install preview path", () => {
     mockTeamCatalogApi.installed.mockResolvedValue([
       {
         catalogId: "team-no-deps",
-        catalogKey: "paperclipai/bundled/company-defaults/team-no-deps",
+        catalogKey: "thinkingmach/bundled/company-defaults/team-no-deps",
         present: true,
         currentContentHash: "sha256:deadbeefdeadbeefdeadbeef",
         installedOriginHashes: ["sha256:deadbeefdeadbeefdeadbeef"],

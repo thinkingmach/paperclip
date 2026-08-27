@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import os from "node:os";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { agents, companies, createDb, heartbeatRuns, type Db } from "@paperclipai/db";
+import { agents, companies, createDb, heartbeatRuns, type Db } from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -55,7 +55,7 @@ describeEmbeddedPostgres("reportRunFailure", () => {
     agentId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",

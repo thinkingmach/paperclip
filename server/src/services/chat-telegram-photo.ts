@@ -3,7 +3,7 @@ import type { Attachment, FileUpload } from "chat";
 import { normalizeContentType } from "../attachment-types.js";
 
 // Telegram documents a 10 MB photo limit. Use decimal MB conservatively,
-// independently of Paperclip's configurable task-attachment byte ceiling.
+// independently of ThinkingMach's configurable task-attachment byte ceiling.
 export const TELEGRAM_PHOTO_MAX_BYTES = 10_000_000;
 const MAX_CONTAINER_PARTS = 4_096;
 const MAX_JPEG_HEADER_BYTES = 256 * 1_024;

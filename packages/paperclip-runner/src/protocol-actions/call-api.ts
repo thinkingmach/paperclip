@@ -21,14 +21,14 @@ export const callApiAction = {
     "idempotency": "none",
     "disabledByDefault": false,
     "realBindingStatus": "live_codex",
-    "realServiceBinding": "PaperclipRunnerToolAuthority",
+    "realServiceBinding": "ThinkingMachRunnerToolAuthority",
     "prpEvidence": "Authenticated PRP tool input/result and existing HTTP route authorization/activity records.",
     "prpBindingStatus": "bound",
     "legacyAliases": []
   },
   "documentation": {
-    "title": "Call the Paperclip API",
-    "description": "Fallback only: call a discovered Paperclip API operation when dedicated tools lack the required operation or parameters. Uses your existing permissions. Prefer dedicated tools; never bypass a denial or runner lifecycle tool. For large text responses, read the returned artifact with GET /api/assets/{assetId}/content and responseText; follow nextOffsetBytes until null.",
+    "title": "Call the ThinkingMach API",
+    "description": "Fallback only: call a discovered ThinkingMach API operation when dedicated tools lack the required operation or parameters. Uses your existing permissions. Prefer dedicated tools; never bypass a denial or runner lifecycle tool. For large text responses, read the returned artifact with GET /api/assets/{assetId}/content and responseText; follow nextOffsetBytes until null.",
     "note": "Production HTTP fallback; does not grant privileges or replace dedicated tools."
   },
   "examples": {
@@ -50,8 +50,8 @@ export const callApiAction = {
       "schema": "paperclip.semantic-tool.v1",
       "operationId": "call_api",
       "version": 1,
-      "title": "Call the Paperclip API",
-      "description": "Fallback only: call a discovered Paperclip API operation when dedicated tools lack the required operation or parameters. Uses your existing permissions. Prefer dedicated tools; never bypass a denial or runner lifecycle tool. For large text responses, read the returned artifact with GET /api/assets/{assetId}/content and responseText; follow nextOffsetBytes until null.",
+      "title": "Call the ThinkingMach API",
+      "description": "Fallback only: call a discovered ThinkingMach API operation when dedicated tools lack the required operation or parameters. Uses your existing permissions. Prefer dedicated tools; never bypass a denial or runner lifecycle tool. For large text responses, read the returned artifact with GET /api/assets/{assetId}/content and responseText; follow nextOffsetBytes until null.",
       "exposure": "optional",
       "requiredClaims": [
         "api:call"

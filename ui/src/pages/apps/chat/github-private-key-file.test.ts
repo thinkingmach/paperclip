@@ -43,7 +43,7 @@ describe("readGitHubPrivateKeyFile", () => {
         },
       }),
     ).rejects.toThrow(
-      "Paperclip couldn't read that file. Choose the .pem file again or paste the private key.",
+      "ThinkingMach couldn't read that file. Choose the .pem file again or paste the private key.",
     );
   });
 

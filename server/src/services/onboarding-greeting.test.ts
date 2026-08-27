@@ -9,7 +9,7 @@ describe("renderOnboardingGreeting", () => {
     });
 
     expect(greeting).toContain(
-      "Welcome to Paperclip! I'm Nova, your first agent teammate.",
+      "Welcome to ThinkingMach! I'm Nova, your first agent teammate.",
     );
     // No goal quote and no "give me one moment" — the agent is not about to run.
     expect(greeting).not.toContain("aiming for");
@@ -26,7 +26,7 @@ describe("renderOnboardingGreeting", () => {
     });
 
     expect(greeting).toContain(
-      "Welcome to Paperclip! I'm your first agent teammate.",
+      "Welcome to ThinkingMach! I'm your first agent teammate.",
     );
     expect(greeting).not.toContain("{{agentName}}");
   });

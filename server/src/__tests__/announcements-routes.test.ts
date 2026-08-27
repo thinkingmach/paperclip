@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import request from "supertest";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { activityLog, announcementDismissals, announcementPublications, companies, createDb, startEmbeddedPostgresTestDatabase, type EmbeddedPostgresTestDatabase } from "@paperclipai/db";
+import { activityLog, announcementDismissals, announcementPublications, companies, createDb, startEmbeddedPostgresTestDatabase, type EmbeddedPostgresTestDatabase } from "@thinkingmach/db";
 import { announcementRoutes } from "../routes/announcements.js";
 import { announcementService } from "../services/announcements.js";
 import { errorHandler } from "../middleware/error-handler.js";

@@ -26,7 +26,7 @@ describe("webhookUrlWarningReason", () => {
     ["https://paperclip.local/fire", "private"],
     ["https://paperclip.home.arpa/fire", "private"],
     ["https://paperclip.example-tailnet.ts.net/fire", "tailscale"],
-    ["http://PAPERCLIP.EXAMPLE-TAILNET.TS.NET./fire", "tailscale"],
+    ["http://THINKINGMACH.EXAMPLE-TAILNET.TS.NET./fire", "tailscale"],
     ["http://paperclip.example.com/fire", "https"],
     ["https://paperclip.example.com/fire", null],
     ["https://172.32.0.1/fire", null],

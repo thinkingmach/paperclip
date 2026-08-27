@@ -4,7 +4,7 @@ import { GitFork, Loader2, Users } from "lucide-react";
 import type {
   CompanySkillDetail,
   CompanySkillForkPrecheckResult,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useNavigate } from "@/lib/router";
 import { companySkillsApi } from "@/api/companySkills";
 import { queryKeys } from "@/lib/queryKeys";

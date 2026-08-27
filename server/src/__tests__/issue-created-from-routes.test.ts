@@ -3,7 +3,7 @@ import express from "express";
 import { eq } from "drizzle-orm";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { activityLog, agents, companies, createDb, heartbeatRuns, issues, projects } from "@paperclipai/db";
+import { activityLog, agents, companies, createDb, heartbeatRuns, issues, projects } from "@thinkingmach/db";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { issueRoutes } from "../routes/issues.js";
 import { issueService } from "../services/issues.js";

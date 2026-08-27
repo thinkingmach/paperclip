@@ -3,7 +3,7 @@ import {
   photonLineIdSchema,
   photonProjectIdSchema,
   type PhotonProjectInspection,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { IMessageError } from "@photon-ai/advanced-imessage";
 
 const CLOUD_ORIGIN = "https://spectrum.photon.codes";

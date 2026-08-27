@@ -32,7 +32,7 @@ function loadServiceWorkerFetchListener(overrides: {
   // Offline fallback belongs to a stamped production build. Development
   // leaves Vite requests to the browser instead of intercepting them.
   const code = readFileSync(resolve(uiRoot, "public/sw.js"), "utf8")
-    .replace("__PAPERCLIP_BUILD_ID__", "fixture-production");
+    .replace("__THINKINGMACH_BUILD_ID__", "fixture-production");
   new Function("self", "caches", "fetch", "Response", "URL", code)(
     swSelf,
     caches,
@@ -79,7 +79,7 @@ describe("sw.js offline fallback", () => {
     expect(response!.headers.get("content-type")).toBe("text/html; charset=utf-8");
     expect(response!.headers.get("cache-control")).toBe("no-store");
     const body = await response!.text();
-    expect(body).toContain("Paperclip is offline");
+    expect(body).toContain("ThinkingMach is offline");
     expect(body).toContain("Reload page");
     expect(body).not.toContain("<html>app shell</html>");
   });
@@ -101,7 +101,7 @@ describe("sw.js offline fallback", () => {
     expect(response!.headers.get("content-type")).toBe("text/html; charset=utf-8");
     expect(response!.headers.get("cache-control")).toBe("no-store");
     const body = await response!.text();
-    expect(body).toContain("Paperclip is offline");
+    expect(body).toContain("ThinkingMach is offline");
     expect(body).toContain("Reload page");
     expect(body).not.toContain("<html>app shell</html>");
   });

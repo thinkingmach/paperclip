@@ -1,7 +1,7 @@
 # Images and files — live qualification, September 7, 2026
 
 This is an incremental evidence log, not a blanket production-readiness claim.
-Live provider actions use the signed-in in-app browser. The isolated Paperclip
+Live provider actions use the signed-in in-app browser. The isolated ThinkingMach
 instance is on loopback port 3103; only verified webhooks are publicly routed.
 
 ## Reproduced user failure
@@ -11,7 +11,7 @@ Discord CHA-4 run `9b90ddaa-6d82-4685-84b1-9483c30de346` generated and uploaded 
 attachment `7abdf671-1eb2-402a-8417-274b048c39ed`, but the attachment had no comment
 binding. The run's final publication contained no attachment IDs. The bot's claim
 that the image was shown was false. Both the npm CLI attempt and a workspace-local
-CLI fallback failed. The image itself was intact in Paperclip storage.
+CLI fallback failed. The image itself was intact in ThinkingMach storage.
 
 The audit also found a second path: a successfully bound, during-run attachment
 could remain internal when a different final presentation comment was published.
@@ -22,7 +22,7 @@ immutable upload provenance, the per-turn file cap, and helper retries.
 ## Native transport checks
 
 One known, non-sensitive orange-cat PNG and a 128-byte text fixture were uploaded
-through Paperclip's Board attachment API and explicitly sent to each existing QA
+through ThinkingMach's Board attachment API and explicitly sent to each existing QA
 conversation. This isolates native transport from agent-generation/handoff logic;
 it does **not** prove the agent handoff fix.
 
@@ -83,7 +83,7 @@ existing task, succeeded, and published both selected attachments.
 
 The Telegram download SHA-256 was
 `a0692bcddade1e6e9e1a15ee975c2c2d501be8bdc34c5e1cbe84b3de4e7b2f7f`.
-Paperclip's outbox independently showed all six attachment publications as
+ThinkingMach's outbox independently showed all six attachment publications as
 `published`, one image and one file per provider, with no duplicate file sends.
 The final prose said the files were **prepared**, not falsely provider-confirmed.
 
@@ -95,7 +95,7 @@ helper and away from provider-tool discovery or fetching a CLI. The final retake
 below measures the improvement; native delivery success does not prove the
 interaction is fast enough.
 
-The Paperclip task transcript also passed a live UI check: inbound images and
+The ThinkingMach task transcript also passed a live UI check: inbound images and
 files appeared even when the comment had no Markdown reference, the image opened
 in the gallery at full size, and the text-file link opened its exact content.
 
@@ -147,18 +147,18 @@ the signed-in provider composers at 15:30:25–27 UTC, without helper instructio
 | Discord | Run `15f7af18-d052-44d3-9698-127433b9e941` succeeded in 163 seconds. Native image `1546543862883946597` visibly rendered the cat; file `1546543864142102529` previewed `DISCORD-MEDIA-FINAL-0907-OK`. |
 | Slack | Run `d5e7b996-1fc0-41e4-92fd-c5522fd23fbb` succeeded in 183 seconds. Native file message `1788795212.198169` previewed `SLACK-MEDIA-FINAL-0907-OK`; image message `1788795215.443269` visibly rendered the cat in the same thread. |
 | Telegram | Run `783a9af6-eefd-4d24-a39b-ce8eac97bdcf` succeeded in 151 seconds. Photo `417200359:18` loaded at 800 pixels wide; document `417200359:19` downloaded through the real UI. |
-| GitHub | Fresh Board file send `4a82fa40-5fc0-42f7-99ac-ddc97c5b2ff8` produced comment `5572840135`: the file is saved on the private Paperclip task and this GitHub App connection cannot upload file bytes into comments. No misleading “Shared” preface or public file URL. |
+| GitHub | Fresh Board file send `4a82fa40-5fc0-42f7-99ac-ddc97c5b2ff8` produced comment `5572840135`: the file is saved on the private ThinkingMach task and this GitHub App connection cannot upload file bytes into comments. No misleading “Shared” preface or public file URL. |
 
 All six native attachment publications were `published` with one attempt each;
 each upload carried the correct immutable originating run. The refreshed
-Paperclip task transcript showed the newly bound images/files, and the native
+ThinkingMach task transcript showed the newly bound images/files, and the native
 provider threads showed one copy of each selected file. GitHub's first fallback
 retake attempted to reuse already comment-bound attachment IDs and correctly
 received 409; a fresh QA upload was used instead, not a forced rebinding.
 
 The downloaded Telegram file was 29 bytes with SHA-256
 `464d31c3110370919f443cfb3576b836812f8590dd3bbf8572352d2cf4ed3136`, exactly matching
-Paperclip's stored asset. It contained the requested marker **plus a trailing
+ThinkingMach's stored asset. It contained the requested marker **plus a trailing
 newline**. The transport preserved the bytes correctly, but this is not an
 exact-byte content-generation success. Discord's text also included a newline;
 Slack's 25-byte marker had none. Do not silently rewrite generated file bytes in

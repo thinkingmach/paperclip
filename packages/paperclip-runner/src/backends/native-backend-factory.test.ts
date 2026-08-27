@@ -301,7 +301,7 @@ describe("native backend factory", () => {
       environment: {
         HOME: remoteWorkspace,
         CODEX_HOME: `${remoteWorkspace}/.codex`,
-        PAPERCLIP_WORKSPACE_CWD: remoteWorkspace,
+        THINKINGMACH_WORKSPACE_CWD: remoteWorkspace,
       },
     });
 
@@ -327,7 +327,7 @@ describe("native backend factory", () => {
       createNativeSessionBackend(execution(), {
         workingDirectoryAuthority: "remote_runner",
         environment: {
-          PAPERCLIP_WORKSPACE_CWD: "/home/daytona/paperclip-workspace",
+          THINKINGMACH_WORKSPACE_CWD: "/home/daytona/paperclip-workspace",
         },
       }),
     ).toThrow("requires a runnerd transport");
@@ -345,7 +345,7 @@ describe("native backend factory", () => {
         codexTransportFactory: () => transport,
         environment: {
           ...process.env,
-          PAPERCLIP_WORKSPACE_CWD: WORKSPACE,
+          THINKINGMACH_WORKSPACE_CWD: WORKSPACE,
         },
       });
 

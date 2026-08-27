@@ -8,7 +8,7 @@ import {
   type ExternalObjectMention,
   type ExternalObjectStatusCategory,
   type ExternalObjectSummary,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { ExternalObjectPill } from "@/components/ExternalObjectPill";
 import { ExternalObjectStatusIcon } from "@/components/ExternalObjectStatusIcon";
 import { ExternalObjectStatusSummary } from "@/components/ExternalObjectStatusSummary";
@@ -405,7 +405,7 @@ function projectsRollupStory() {
   }
 
   const projects = [
-    { name: "Paperclip App", color: "#6366f1", summary: summary({ failed: 3, running: 12 }) },
+    { name: "ThinkingMach App", color: "#6366f1", summary: summary({ failed: 3, running: 12 }) },
     { name: "Marketing site", color: "#22c55e", summary: summary({ waiting: 2 }) },
     { name: "Experimental", color: "#a855f7", summary: summary({ succeeded: 6 }) },
     { name: "Auth provider", color: "#f97316", summary: summary({ auth: 1 }) },
@@ -582,7 +582,7 @@ function SidebarMobileDrawer() {
       <div className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">Projects (mobile drawer)</div>
       <ul className="flex flex-col">
         {[
-          { name: "Paperclip App", color: "#6366f1", summary },
+          { name: "ThinkingMach App", color: "#6366f1", summary },
           { name: "Marketing site", color: "#22c55e", summary: { ...summary, highestSeverity: "warning", byStatusCategory: { waiting: 2 }, total: 2, objects: [] } },
           { name: "Experimental", color: "#a855f7", summary: { ...summary, highestSeverity: "muted", byStatusCategory: {}, total: 0, objects: [] } },
         ].map((project) => (

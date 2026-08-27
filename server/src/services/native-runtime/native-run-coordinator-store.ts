@@ -2,14 +2,14 @@ import { createHash } from "node:crypto";
 
 import { and, desc, eq, inArray, lt } from "drizzle-orm";
 
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   heartbeatRunEvents,
   heartbeatRuns,
   issues,
   nativeRunFinalizations,
   nativeRunResults,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   NativeSessionProtocolIntegrityError,
   type PrpEvent,

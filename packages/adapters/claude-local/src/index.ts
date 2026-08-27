@@ -1,6 +1,6 @@
 export const DEFAULT_CLAUDE_LOCAL_MODEL = "claude-opus-5";
 
-/** Resolve Paperclip's default without replacing an explicit provider model. */
+/** Resolve ThinkingMach's default without replacing an explicit provider model. */
 export function resolveClaudeModel(
   model: unknown,
   env: Record<string, unknown> = {},
@@ -64,7 +64,7 @@ Core fields:
 - chrome (boolean, optional): pass --chrome when running Claude
 - promptTemplate (string, optional): run prompt template
 - maxTurnsPerRun (number, optional): max turns for one run
-- dangerouslySkipPermissions (boolean, optional, default true): allow non-interactive Claude runs to proceed without approval prompts. Local and remote targets receive --dangerously-skip-permissions for all built-in and connected tools. Managed sandbox targets also identify themselves to Claude so root container launches support bypass. Non-sandbox root processes must run Claude as a non-root user; Paperclip does not silently downgrade the requested mode.
+- dangerouslySkipPermissions (boolean, optional, default true): allow non-interactive Claude runs to proceed without approval prompts. Local and remote targets receive --dangerously-skip-permissions for all built-in and connected tools. Managed sandbox targets also identify themselves to Claude so root container launches support bypass. Non-sandbox root processes must run Claude as a non-root user; ThinkingMach does not silently downgrade the requested mode.
 - command (string, optional): defaults to "claude"
 - extraArgs (string[], optional): additional CLI args
 - env (object, optional): KEY=VALUE environment variables
@@ -73,13 +73,13 @@ Core fields:
 - filesystemScope (string, optional): set to "workspace" to confine local CLI filesystem access with Bubblewrap. Off by default. The workspace and Claude config remain writable; other host paths are hidden.
 - filesystemExtraPaths (array, optional): additional absolute host paths exposed inside the workspace sandbox. String entries are read-only; object entries use { path: "/absolute/path", access: "ro" | "rw" }.
 - filesystemSandboxCommand (string, optional): Bubblewrap executable name or absolute path; defaults to "bwrap". Linux only.
-- networkScope (string, optional): "deny" blocks all network egress; "allowlist" permits only networkAllowlist targets through Paperclip's HTTP(S) proxy. Off by default.
+- networkScope (string, optional): "deny" blocks all network egress; "allowlist" permits only networkAllowlist targets through ThinkingMach's HTTP(S) proxy. Off by default.
 - networkAllowlist (string[], optional): exact hostnames, hostname:port entries, or origin URLs. Include the configured Claude provider origin, such as "api.anthropic.com", Bedrock/Vertex endpoints, or a custom gateway.
 
 ACP fields (only when engine="acp"):
 - agentCommand (string, optional): override for the Claude ACP server command; defaults to the package-local claude-agent-acp binary
 - mode (string, optional, default "persistent"): ACP session mode ("persistent" or "oneshot")
-- stateDir (string, optional): ACP session state directory; defaults to Paperclip-managed company/agent scoped storage
+- stateDir (string, optional): ACP session state directory; defaults to ThinkingMach-managed company/agent scoped storage
 - nonInteractivePermissions (string, optional, default "deny"): fallback when the ACP agent asks for input outside an interactive session
 - warmHandleIdleMs (number, optional, default 0): keep the ACP process warm for this many ms after a successful run
 
@@ -91,6 +91,6 @@ Notes:
 - Claude Opus 5.5 uses model ID \`claude-opus-5-5\` and requires Claude Code v2.1.280 or later.
 - filesystemScope and networkScope are spawn-level confinement and are orthogonal to Claude permission flags. Both require Bubblewrap on the host and explicit engine="cli"; default or explicit ACP is rejected because ACP confinement is not yet supported. networkScope="allowlist" injects HTTP_PROXY/HTTPS_PROXY for the CLI while its private network namespace blocks direct sockets, so every required provider/API hostname must be listed explicitly.
 - The Claude ACP lane requires Node >=24.11.0 and @agentclientprotocol/claude-agent-acp to be installed with this adapter package. Missing prerequisites fail both default and explicit ACP runs with an actionable setup error; the adapter never switches engines automatically.
-- For ACP runs, model selection is passed through ANTHROPIC_MODEL at ACP server startup; Paperclip-managed Claude permissions and ephemeral skill materialization are handled by the shared ACP engine.
-- When Paperclip realizes a workspace/runtime for a run, it injects PAPERCLIP_WORKSPACE_* and PAPERCLIP_RUNTIME_* env vars for agent-side tooling.
+- For ACP runs, model selection is passed through ANTHROPIC_MODEL at ACP server startup; ThinkingMach-managed Claude permissions and ephemeral skill materialization are handled by the shared ACP engine.
+- When ThinkingMach realizes a workspace/runtime for a run, it injects THINKINGMACH_WORKSPACE_* and THINKINGMACH_RUNTIME_* env vars for agent-side tooling.
 `;

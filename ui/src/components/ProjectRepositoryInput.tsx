@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { ProjectRepository } from "@paperclipai/shared";
+import type { ProjectRepository } from "@thinkingmach/shared";
 import { projectsApi } from "@/api/projects";
 import { RepositoryEditor } from "./RepositoryEditor";
 import { Button } from "./ui/button";

@@ -17,15 +17,15 @@ import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 const runnerRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const scratchParent = process.env.PAPERCLIP_RUN_SCRATCH_DIR
-  ?? process.env.PAPERCLIP_SCRATCH_DIR
+const scratchParent = process.env.THINKINGMACH_RUN_SCRATCH_DIR
+  ?? process.env.THINKINGMACH_SCRATCH_DIR
   ?? tmpdir();
 await mkdir(scratchParent, { recursive: true });
 const scratchRoot = await mkdtemp(join(scratchParent, "paperclip-package-consumer-"));
 const artifactsRoot = resolve(scratchRoot, "artifacts");
-const publicationRoot = process.env.PAPERCLIP_CLEAN_CONSUMER_OUTPUT_DIR === undefined
+const publicationRoot = process.env.THINKINGMACH_CLEAN_CONSUMER_OUTPUT_DIR === undefined
   ? undefined
-  : resolve(process.env.PAPERCLIP_CLEAN_CONSUMER_OUTPUT_DIR);
+  : resolve(process.env.THINKINGMACH_CLEAN_CONSUMER_OUTPUT_DIR);
 const pnpmInvocation = resolvePnpmInvocation();
 await mkdir(artifactsRoot, { recursive: true });
 
@@ -47,11 +47,11 @@ try {
   const runnerdArtifact = await stageRunnerdArtifact(artifactsRoot);
   const conformanceRecord = resolve(artifactsRoot, "paperclip-runner-consumer-conformance.json");
   const sourceCommit = (
-    process.env.PAPERCLIP_SOURCE_COMMIT
+    process.env.THINKINGMACH_SOURCE_COMMIT
     ?? capture("git", ["rev-parse", "HEAD"], runnerRoot)
   ).trim();
   if (!/^[a-f0-9]{40}$/.test(sourceCommit)) {
-    throw new Error("PAPERCLIP_SOURCE_COMMIT must be a full lowercase Git commit SHA");
+    throw new Error("THINKINGMACH_SOURCE_COMMIT must be a full lowercase Git commit SHA");
   }
 
   await verifyRunnerConsumer({
@@ -69,7 +69,7 @@ try {
   }
   process.stdout.write("Clean-consumer pack/install checks passed for the runner root, evals, and testing exports.\n");
 } finally {
-  if (process.env.PAPERCLIP_KEEP_PACKAGE_CONSUMERS !== "1") {
+  if (process.env.THINKINGMACH_KEEP_PACKAGE_CONSUMERS !== "1") {
     await rm(scratchRoot, { recursive: true, force: true });
   } else {
     process.stdout.write(`Kept clean-consumer scratch at ${scratchRoot}\n`);
@@ -188,7 +188,7 @@ async function verifyRunnerConsumer({
     type: "module",
     packageManager: "pnpm@9.15.4",
     dependencies: {
-      "@paperclipai/paperclip-runner": `file:${runnerTarball}`,
+      "@thinkingmach/paperclip-runner": `file:${runnerTarball}`,
     },
     pnpm: { overrides: localOverrides(runtimeDependencyTarballs) },
   }, null, 2)}\n`);
@@ -197,9 +197,9 @@ import { createHash } from "node:crypto";
 import { readFile, stat, writeFile } from "node:fs/promises";
 import { basename } from "node:path";
 
-import * as runtime from "@paperclipai/paperclip-runner";
-import * as evals from "@paperclipai/paperclip-runner/evals";
-import * as testing from "@paperclipai/paperclip-runner/testing";
+import * as runtime from "@thinkingmach/paperclip-runner";
+import * as evals from "@thinkingmach/paperclip-runner/evals";
+import * as testing from "@thinkingmach/paperclip-runner/testing";
 
 if ("MockControlPlaneAdapter" in runtime || "runControlPlanePortConformance" in runtime) {
   throw new Error("test helpers leaked through the runtime root");
@@ -215,7 +215,7 @@ const report = await testing.runControlPlanePortConformance({
 });
 if (report.eventCount !== 3) throw new Error("packed conformance kit returned the wrong event count");
 
-const nativeBundle = await evals.loadPaperclipNativeExecutionFixture();
+const nativeBundle = await evals.loadThinkingMachNativeExecutionFixture();
 if (nativeBundle.schema !== "paperclip-runner/native-execution/v1") {
   throw new Error("packed native execution fixture is unavailable");
 }
@@ -223,7 +223,7 @@ if (nativeBundle.semanticTools.results[0]?.outcome !== "denied") {
   throw new Error("native execution fixture lost its rejected tool effect");
 }
 
-runtime.assertPaperclipRunnerCompatibility({
+runtime.assertThinkingMachRunnerCompatibility({
   consumer: "paperclip-runner-clean-consumer",
   components: { catalog: 1, protocol: 1, runnerClient: 1, controlPlaneAdapter: 1, testkit: 1 },
   requiredOperationIds: ["finish_task"],
@@ -237,17 +237,17 @@ if (!driverConformance.checks.transcriptCompleteness || driverConformance.semant
   throw new Error("packed harness-driver conformance did not cover transcript/tools");
 }
 
-const runnerd = await evals.resolvePaperclipRunnerdArtifact({
-  executablePath: process.env.PAPERCLIP_RUNNERD_ARTIFACT,
-  expectedSha256: process.env.PAPERCLIP_RUNNERD_SHA256,
+const runnerd = await evals.resolveThinkingMachRunnerdArtifact({
+  executablePath: process.env.THINKINGMACH_RUNNERD_ARTIFACT,
+  expectedSha256: process.env.THINKINGMACH_RUNNERD_SHA256,
 });
-const evalCompatibility = evals.assertPaperclipRunnerEvalCompatibility({
+const evalCompatibility = evals.assertThinkingMachRunnerEvalCompatibility({
   consumer: "paperclip-runner-clean-consumer",
-  packageVersion: evals.PAPERCLIP_RUNNER_BUILD_METADATA.package.version,
+  packageVersion: evals.THINKINGMACH_RUNNER_BUILD_METADATA.package.version,
   runnerd: runnerd.buildMetadata,
   nativeExecutionVersion: 1,
   prp: { minimumVersion: 1, maximumVersion: 1 },
-  catalog: evals.PAPERCLIP_RUNNER_BUILD_METADATA.semanticCatalog,
+  catalog: evals.THINKINGMACH_RUNNER_BUILD_METADATA.semanticCatalog,
   driver: {
     contractVersion: driverConformance.contractVersion,
     descriptor: driverConformance.descriptor,
@@ -259,13 +259,13 @@ if (evalCompatibility.negotiatedPrpVersion !== 1) {
 }
 let mismatchFailedClosed = false;
 try {
-  evals.assertPaperclipRunnerEvalCompatibility({
+  evals.assertThinkingMachRunnerEvalCompatibility({
     consumer: "incompatible-runner-clean-consumer",
-    packageVersion: evals.PAPERCLIP_RUNNER_BUILD_METADATA.package.version,
+    packageVersion: evals.THINKINGMACH_RUNNER_BUILD_METADATA.package.version,
     runnerd: { ...runnerd.buildMetadata, binaryContractVersion: 999 },
     nativeExecutionVersion: 1,
     prp: { minimumVersion: 1, maximumVersion: 1 },
-    catalog: evals.PAPERCLIP_RUNNER_BUILD_METADATA.semanticCatalog,
+    catalog: evals.THINKINGMACH_RUNNER_BUILD_METADATA.semanticCatalog,
     driver: {
       contractVersion: driverConformance.contractVersion,
       descriptor: driverConformance.descriptor,
@@ -294,21 +294,21 @@ const semanticConformance = await testing.runSemanticConformanceKit({
   ],
 });
 
-const packageArtifactPath = process.env.PAPERCLIP_RUNNER_PACKAGE_ARTIFACT;
-const runnerdArtifactPath = process.env.PAPERCLIP_RUNNERD_ARTIFACT;
+const packageArtifactPath = process.env.THINKINGMACH_RUNNER_PACKAGE_ARTIFACT;
+const runnerdArtifactPath = process.env.THINKINGMACH_RUNNERD_ARTIFACT;
 const packageBytes = await readFile(packageArtifactPath);
 const runnerdBytes = await readFile(runnerdArtifactPath);
 const packageStat = await stat(packageArtifactPath);
 const runnerdStat = await stat(runnerdArtifactPath);
 const runnerdDigest = "sha256:" + createHash("sha256").update(runnerdBytes).digest("hex");
-if (runnerdDigest !== process.env.PAPERCLIP_RUNNERD_SHA256) {
+if (runnerdDigest !== process.env.THINKINGMACH_RUNNERD_SHA256) {
   throw new Error("runnerd artifact digest changed after staging");
 }
 
-await writeFile(process.env.PAPERCLIP_CONFORMANCE_RECORD, JSON.stringify({
+await writeFile(process.env.THINKINGMACH_CONFORMANCE_RECORD, JSON.stringify({
   schema: "paperclip-runner/clean-consumer-conformance/v1",
   recordedAt: new Date().toISOString(),
-  sourceCommit: process.env.PAPERCLIP_SOURCE_COMMIT,
+  sourceCommit: process.env.THINKINGMACH_SOURCE_COMMIT,
   platform: { os: process.platform, arch: process.arch },
   artifacts: {
     package: {
@@ -320,15 +320,15 @@ await writeFile(process.env.PAPERCLIP_CONFORMANCE_RECORD, JSON.stringify({
       filename: basename(runnerdArtifactPath),
       sha256: runnerdDigest,
       byteSize: runnerdStat.size,
-      buildProfile: process.env.PAPERCLIP_RUNNERD_BUILD_PROFILE,
+      buildProfile: process.env.THINKINGMACH_RUNNERD_BUILD_PROFILE,
     },
   },
   consumer: {
     installMode: "offline-packed-artifact",
     imports: [
-      "@paperclipai/paperclip-runner",
-      "@paperclipai/paperclip-runner/evals",
-      "@paperclipai/paperclip-runner/testing",
+      "@thinkingmach/paperclip-runner",
+      "@thinkingmach/paperclip-runner/evals",
+      "@thinkingmach/paperclip-runner/testing",
     ],
     appSourceTreeImports: false,
     providerCalls: 0,
@@ -353,12 +353,12 @@ await writeFile(process.env.PAPERCLIP_CONFORMANCE_RECORD, JSON.stringify({
 }, null, 2) + "\\n");
 `);
   installAndRun(consumerRoot, {
-    PAPERCLIP_RUNNERD_ARTIFACT: runnerdArtifact.executablePath,
-    PAPERCLIP_RUNNERD_SHA256: runnerdArtifact.sha256,
-    PAPERCLIP_RUNNERD_BUILD_PROFILE: runnerdArtifact.buildProfile,
-    PAPERCLIP_RUNNER_PACKAGE_ARTIFACT: runnerTarball,
-    PAPERCLIP_CONFORMANCE_RECORD: conformanceRecord,
-    PAPERCLIP_SOURCE_COMMIT: sourceCommit,
+    THINKINGMACH_RUNNERD_ARTIFACT: runnerdArtifact.executablePath,
+    THINKINGMACH_RUNNERD_SHA256: runnerdArtifact.sha256,
+    THINKINGMACH_RUNNERD_BUILD_PROFILE: runnerdArtifact.buildProfile,
+    THINKINGMACH_RUNNER_PACKAGE_ARTIFACT: runnerTarball,
+    THINKINGMACH_CONFORMANCE_RECORD: conformanceRecord,
+    THINKINGMACH_SOURCE_COMMIT: sourceCommit,
   });
 }
 

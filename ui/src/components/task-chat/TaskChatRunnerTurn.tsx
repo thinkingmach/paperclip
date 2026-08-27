@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type { ExecutionProjection } from "@paperclipai/shared";
+import type { ExecutionProjection } from "@thinkingmach/shared";
 import { useSecondTick } from "@/hooks/useSecondTick";
 import { cn } from "@/lib/utils";
 import type {

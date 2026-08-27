@@ -7,7 +7,7 @@ Use Pause / Next to step through the fixture, or Replay to watch the transitions
 From this worktree, start the preview with:
 
 ```sh
-pnpm --filter @paperclipai/ui exec storybook dev --port 6024 --host 127.0.0.1 --no-open -c storybook/.storybook
+pnpm --filter @thinkingmach/ui exec storybook dev --port 6024 --host 127.0.0.1 --no-open -c storybook/.storybook
 ```
 
 - Each commentary message stays on the page and starts a new activity group.

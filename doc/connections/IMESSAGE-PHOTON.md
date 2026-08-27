@@ -4,8 +4,8 @@
 
 This channel connects one agent to Photon Cloud. Pro shared allocation supports
 DMs; dedicated lines also support explicitly enabled groups. A linked
-Paperclip person can send a DM, exchange files, answer questions, and respond to
-ordinary confirmations. Each conversation remains attached to a Paperclip task.
+ThinkingMach person can send a DM, exchange files, answer questions, and respond to
+ordinary confirmations. Each conversation remains attached to a ThinkingMach task.
 The connection is a channel with `chat_sdk` transport, not an MCP tool connection.
 
 ## Prerequisites and setup
@@ -13,10 +13,10 @@ The connection is a channel with `chat_sdk` transport, not an MCP tool connectio
 1. Enable the existing experimental chat-connectors setting. Open **Apps →
    iMessage Photon**, or the agent's **Channels** panel.
 2. In the [Photon dashboard](https://app.photon.codes/), obtain a project ID
-   and project secret. Paperclip checks the project's actual allocation. Pro
+   and project secret. ThinkingMach checks the project's actual allocation. Pro
    shared allocation is eligible for DMs only. Enroll each sender in the Photon
    project's **Users** page and find their assigned number in **Get started**.
-   This enrollment does not authorize them in Paperclip. See Photon's
+   This enrollment does not authorize them in ThinkingMach. See Photon's
    [line model](https://photon.codes/docs/spectrum-ts/providers/imessage/connection-and-routing).
 3. Choose one invokable agent. Enter the project ID and secret, inspect the
    allocation. Connect shared DMs, or select a dedicated line. A single eligible dedicated line is selected
@@ -26,11 +26,11 @@ The connection is a channel with `chat_sdk` transport, not an MCP tool connectio
    assigned numbers may differ by sender and are not represented as owned numbers.
 4. Send a fresh message to the displayed dedicated number, or to the sender's
    assigned number from Photon for shared DMs. Link the discovered Messages
-   identity through Paperclip's identity confirmation flow. Send another fresh
+   identity through ThinkingMach's identity confirmation flow. Send another fresh
    message from that linked person. Setup completes only after a task is created
    and an actual agent response is published successfully.
 5. With a dedicated line, to use a group, add the number in Apple Messages and send a message to discover
-   it. Enable the group in Paperclip's Settings page, then send a fresh request.
+   it. Enable the group in ThinkingMach's Settings page, then send a fresh request.
    Discovery does not enable a group or replay the discovery message as work.
 
 The server needs outbound HTTPS to `spectrum.photon.codes` and TLS gRPC to the
@@ -58,7 +58,7 @@ reject groups at admission, publication, and settings changes. Unlinked people c
 start work unless an operator explicitly enables that setting. Identity links
 use the provider-authenticated sender address and service. A phone number and an
 Apple-account email are separate identities; names and group membership do not
-grant Paperclip authority. Revoked links and inactive/viewer memberships cannot
+grant ThinkingMach authority. Revoked links and inactive/viewer memberships cannot
 answer interactions. Guest work retains the shared channel restrictions.
 
 Enabling a group makes the agent's responses visible to everyone in that group.
@@ -82,7 +82,7 @@ and nonhuman system messages do not start agent work.
 Messages, tasks, assets, publications, identities, and state remain company-scoped.
 Number and shared-project reservations are deliberately instance-wide. Task assignment, budget
 limits, pauses, approvals, and native/legacy execution continue through the
-existing Paperclip services.
+existing ThinkingMach services.
 
 ## Questions and confirmations
 
@@ -96,7 +96,7 @@ Reply to the exact prompt, or use `/answer <reference>[.<question>] <value>`.
 Numbered choices, comma-separated multiple choices, custom text, and optional
 `skip` answers are supported. Questions appear sequentially. Multiple-question
 sets save a separate draft for each person and require `/submit <reference>`.
-Paperclip's canonical validators check required answers and selection/numerical
+ThinkingMach's canonical validators check required answers and selection/numerical
 rules before resolution. Different people cannot contribute to the same draft.
 
 Ordinary `request_confirmation` offers explicit Accept/Reject. A required rejection
@@ -107,12 +107,12 @@ its durable continuation delivery. A terminal acknowledgement is published once.
 Arbitrary “yes” messages and tapbacks never constitute approval.
 
 Credential proposals, connection authorization, governed tool actions, and review
-kinds that need the full review surface remain in Paperclip. The channel supplies
+kinds that need the full review surface remain in ThinkingMach. The channel supplies
 a task link and instructions. No individual-iMessage web permalinks are fabricated.
 
 ## Photos and files
 
-Text, JPEG/PNG/WebP/GIF, allowed documents, audio, and video use Paperclip's existing
+Text, JPEG/PNG/WebP/GIF, allowed documents, audio, and video use ThinkingMach's existing
 attachment policy and byte limits. Provider upload allowances do not raise those
 limits. Attachments are source-bound to the selected line, chat, message, and
 attachment GUID before downloading. The server verifies that ownership again on
@@ -147,7 +147,7 @@ the attachment message is sent. Native edits have a bounded window; ordinary fin
 responses and acknowledgements are separate messages, never token-by-token edits.
 
 A timeout after transmission is **delivery unknown**. Inspect the activity record
-and known Photon receipts, then use Paperclip's operator resolution/retry controls.
+and known Photon receipts, then use ThinkingMach's operator resolution/retry controls.
 Do not retry by creating another publication or changing its key. Explicit retries
 reuse the original key and payload. Similar text is not evidence of delivery. An
 ambiguous upload without a recorded receipt also needs operator review.
@@ -165,7 +165,7 @@ admission succeed. Interrupted or out-of-order replay retains the previous curso
 Shared channels do not subscribe to the unsupported group stream.
 
 The pinned SDK's public catch-up iterator discards sequence-only/unknown-variant
-frames. Paperclip's small authenticated gRPC recovery transport retains their
+frames. ThinkingMach's small authenticated gRPC recovery transport retains their
 sequence while delegating known event decoding to the SDK. This prevents false
 history gaps without silently skipping a frame. A missing/reset cursor or an
 actual history gap stops in Attention. Initial historical messages establish a
@@ -225,7 +225,7 @@ First-party references inspected on 2026-09-11:
 
 The Pro shared gateway has been observed returning gRPC `ALREADY_EXISTS` as SDK
 `internalError`, without a receipt, when an identical `clientMessageId` is repeated.
-Paperclip retains delivery-unknown state if no stored receipt exists. Inspect the
+ThinkingMach retains delivery-unknown state if no stored receipt exists. Inspect the
 original conversation and use the existing operator resolution action. Do not
 create another idempotency key or infer delivery from matching text. Photon’s
 [documented idempotency behavior](https://photon.codes/docs/advanced-kits/imessage/error-handling)

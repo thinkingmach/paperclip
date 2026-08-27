@@ -76,18 +76,18 @@ function commonAgent(
       entryFile: "AGENTS.md",
       files: {
         "AGENTS.md": [
-          "You are running a paid Paperclip end-to-end acceptance fixture.",
-          "Follow the assigned task and its Paperclip work mode literally.",
+          "You are running a paid ThinkingMach end-to-end acceptance fixture.",
+          "Follow the assigned task and its ThinkingMach work mode literally.",
           "In ongoing agent chats, follow the injected production chat directive; keep the conversation available after replying. The completion and implementation instructions below apply only to ordinary execution tasks.",
           "For ordinary standard and ask tasks, publish the requested visible answer and mark the task done.",
           "For ordinary planning tasks, publish or revise the canonical Plan document and its revision-bound request_confirmation, then wait. Only implement after that exact plan is accepted.",
           "Invoke assigned tools only through the runtime's real tool-call channel. Never print XML, DSML, JSON, or other tool-call markup as assistant text.",
-          "Legacy adapters must use the public Paperclip API and the injected PAPERCLIP_API_URL, PAPERCLIP_API_KEY, PAPERCLIP_TASK_ID, and PAPERCLIP_RUN_ID values for comments, documents, interactions, and status changes.",
+          "Legacy adapters must use the public ThinkingMach API and the injected THINKINGMACH_API_URL, THINKINGMACH_API_KEY, THINKINGMACH_TASK_ID, and THINKINGMACH_RUN_ID values for comments, documents, interactions, and status changes.",
           ...(adapterType === "paperclip_runner"
             ? []
             : [
-                "Read the assigned paperclip skill before using the Paperclip API. Use its documented request payloads rather than guessing fields from memory.",
-                'For a planning task, do not inspect the OpenAPI schema. PUT /api/issues/$PAPERCLIP_TASK_ID/documents/plan with {title:"Plan",format:"markdown",body,changeSummary}; read latestRevisionId and latestRevisionNumber from that response. Then POST /api/issues/$PAPERCLIP_TASK_ID/interactions with {kind:"request_confirmation",continuationPolicy:"wake_assignee",payload:{version:1,prompt,acceptLabel:"Approve",rejectLabel:"Reject",rejectRequiresReason:true,target:{type:"issue_document",key:"plan",revisionId,revisionNumber}}}, and PATCH the issue to {status:"in_review"}. Include Authorization and X-Paperclip-Run-Id on every write.',
+                "Read the assigned paperclip skill before using the ThinkingMach API. Use its documented request payloads rather than guessing fields from memory.",
+                'For a planning task, do not inspect the OpenAPI schema. PUT /api/issues/$THINKINGMACH_TASK_ID/documents/plan with {title:"Plan",format:"markdown",body,changeSummary}; read latestRevisionId and latestRevisionNumber from that response. Then POST /api/issues/$THINKINGMACH_TASK_ID/interactions with {kind:"request_confirmation",continuationPolicy:"wake_assignee",payload:{version:1,prompt,acceptLabel:"Approve",rejectLabel:"Reject",rejectRequiresReason:true,target:{type:"issue_document",key:"plan",revisionId,revisionNumber}}}, and PATCH the issue to {status:"in_review"}. Include Authorization and X-ThinkingMach-Run-Id on every write.',
               ]),
           "Never print, persist, or expose credential values, and never create unrelated work.",
         ].join("\n"),
@@ -376,7 +376,7 @@ export const runnerEnvironments: readonly EnvironmentFixture[] = [
     buildEnvironment(input) {
       if (!isImmutableDaytonaImage(input.daytonaImage)) {
         throw new Error(
-          "PAPERCLIP_E2E_DAYTONA_IMAGE must be an immutable image digest",
+          "THINKINGMACH_E2E_DAYTONA_IMAGE must be an immutable image digest",
         );
       }
       return {
@@ -423,7 +423,7 @@ export const daytonaWarmEnvironment: EnvironmentFixture = {
   buildEnvironment(input) {
     if (!isImmutableDaytonaImage(input.daytonaImage)) {
       throw new Error(
-        "PAPERCLIP_E2E_DAYTONA_IMAGE must be an immutable image digest",
+        "THINKINGMACH_E2E_DAYTONA_IMAGE must be an immutable image digest",
       );
     }
     return {
@@ -463,25 +463,25 @@ export const runnerTasks: readonly RunnerTaskFixture[] = [
       daytona: 15 * 60_000,
     },
     expectedTerminalState: { issue: "done", run: "succeeded" },
-    buildTitle: (nonce) => `Runner E2E PAPERCLIP_E2E_OK_${nonce}`,
-    buildVisibleMarker: (nonce) => `PAPERCLIP_E2E_OK_${nonce}`,
+    buildTitle: (nonce) => `Runner E2E THINKINGMACH_E2E_OK_${nonce}`,
+    buildVisibleMarker: (nonce) => `THINKINGMACH_E2E_OK_${nonce}`,
     buildPrompt: (nonce) =>
       [
         "Complete this task in a single run.",
-        `The exact marker also appears unescaped in the task title: PAPERCLIP_E2E_OK_${nonce}`,
-        `Your final visible task-thread response must be exactly this marker: PAPERCLIP_E2E_OK_${nonce}`,
-        `In a native runner, use the current turn completion revision and criterion IDs (CURRENT_TURN_REVISION below is a placeholder, not a literal), then call paperclip_finish exactly once with {reportedWorkDisposition:"done",summary:"PAPERCLIP_E2E_OK_${nonce}",completionClaim:{contractRevision:CURRENT_TURN_REVISION,objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]},evidence:[],verification:[]}. Wait for that tool call to succeed, then emit exactly PAPERCLIP_E2E_OK_${nonce} once as the complete user-facing final response. Do not write a user-facing final response before paperclip_finish succeeds, and do not call another tool.`,
-        `In a legacy runner, make exactly one public-API write containing the marker: PATCH /api/issues/$PAPERCLIP_TASK_ID with {"status":"done","comment":"PAPERCLIP_E2E_OK_${nonce}"}. Do not POST to /comments, and do not include the marker in any other write.`,
+        `The exact marker also appears unescaped in the task title: THINKINGMACH_E2E_OK_${nonce}`,
+        `Your final visible task-thread response must be exactly this marker: THINKINGMACH_E2E_OK_${nonce}`,
+        `In a native runner, use the current turn completion revision and criterion IDs (CURRENT_TURN_REVISION below is a placeholder, not a literal), then call paperclip_finish exactly once with {reportedWorkDisposition:"done",summary:"THINKINGMACH_E2E_OK_${nonce}",completionClaim:{contractRevision:CURRENT_TURN_REVISION,objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]},evidence:[],verification:[]}. Wait for that tool call to succeed, then emit exactly THINKINGMACH_E2E_OK_${nonce} once as the complete user-facing final response. Do not write a user-facing final response before paperclip_finish succeeds, and do not call another tool.`,
+        `In a legacy runner, make exactly one public-API write containing the marker: PATCH /api/issues/$THINKINGMACH_TASK_ID with {"status":"done","comment":"THINKINGMACH_E2E_OK_${nonce}"}. Do not POST to /comments, and do not include the marker in any other write.`,
         "The visible task-thread response is asserted; hidden reasoning or provider terminal output alone does not count.",
         "Use underscore characters exactly as shown and do not insert backslashes.",
         "Do not create files, ask questions, start additional tasks, or include any credentials.",
       ].join("\n"),
     buildMatchers(nonce, execution) {
       return [
-        { kind: "message_exact", expected: `PAPERCLIP_E2E_OK_${nonce}` },
+        { kind: "message_exact", expected: `THINKINGMACH_E2E_OK_${nonce}` },
         {
           kind: "message_occurrences",
-          expected: `PAPERCLIP_E2E_OK_${nonce}`,
+          expected: `THINKINGMACH_E2E_OK_${nonce}`,
           count: 1,
         },
         {
@@ -513,43 +513,43 @@ export const runnerTasks: readonly RunnerTaskFixture[] = [
     },
     expectedTerminalState: { issue: "done", run: "succeeded" },
     buildTitle: (nonce) => `Runner E2E plan lifecycle ${nonce}`,
-    buildVisibleMarker: (nonce) => `PAPERCLIP_E2E_PLAN_DONE_${nonce}`,
+    buildVisibleMarker: (nonce) => `THINKINGMACH_E2E_PLAN_DONE_${nonce}`,
     buildPlanMarkers: (nonce) => ({
-      draft: `PAPERCLIP_E2E_PLAN_DRAFT_${nonce}`,
-      revised: `PAPERCLIP_E2E_PLAN_REVISED_${nonce}`,
+      draft: `THINKINGMACH_E2E_PLAN_DRAFT_${nonce}`,
+      revised: `THINKINGMACH_E2E_PLAN_REVISED_${nonce}`,
     }),
     buildRevisionRequest: (nonce) =>
       [
         "Revise this same plan; do not implement it yet.",
-        `Remove PAPERCLIP_E2E_PLAN_DRAFT_${nonce} and include PAPERCLIP_E2E_PLAN_REVISED_${nonce}.`,
+        `Remove THINKINGMACH_E2E_PLAN_DRAFT_${nonce} and include THINKINGMACH_E2E_PLAN_REVISED_${nonce}.`,
         "Change the plan from two steps to exactly three numbered steps, with verification as step 3.",
         "Publish the revised canonical Plan revision and request confirmation for that new revision.",
         "In a native runner, call write_document for key `plan`, then call request_human_input exactly once with interactionKind `confirmation`, targetRevisionId set to the returned latest Plan revision, and continuationPolicy `wake_assignee`; do not call paperclip_finish while waiting. After write_document succeeds, request_human_input must be your immediate next action using that call's returned latestRevisionId; do not emit assistant text, end the response or heartbeat, or stop after write_document alone.",
-        "In a legacy runner, first GET the current `plan` issue document, then PUT the revised Plan with `baseRevisionId` set to that response's `latestRevisionId`; after the update succeeds, create the equivalent request_confirmation targeting the newly returned `latestRevisionId` through the public Paperclip API.",
+        "In a legacy runner, first GET the current `plan` issue document, then PUT the revised Plan with `baseRevisionId` set to that response's `latestRevisionId`; after the update succeeds, create the equivalent request_confirmation targeting the newly returned `latestRevisionId` through the public ThinkingMach API.",
       ].join(" "),
     buildPrompt: (nonce) =>
       [
         "This is a planning-mode lifecycle acceptance task.",
         "First, create a small canonical Plan with exactly two numbered steps and request approval; do not implement it.",
-        `The initial Plan body must contain PAPERCLIP_E2E_PLAN_DRAFT_${nonce}.`,
+        `The initial Plan body must contain THINKINGMACH_E2E_PLAN_DRAFT_${nonce}.`,
         "If the plan is sent back, revise that same Plan document according to the revision note, publish a new revision-bound confirmation, and still do not implement.",
-        `Before the revised Plan is accepted, do not spell, quote, repeat, announce, or include PAPERCLIP_E2E_PLAN_DONE_${nonce} in any visible response, comment, or tool payload; refer to it only as “the terminal marker.”`,
+        `Before the revised Plan is accepted, do not spell, quote, repeat, announce, or include THINKINGMACH_E2E_PLAN_DONE_${nonce} in any visible response, comment, or tool payload; refer to it only as “the terminal marker.”`,
         "Only after the revised plan is accepted, implement it by posting one final visible task-thread response containing exactly " +
-          `PAPERCLIP_E2E_PLAN_DONE_${nonce}` +
+          `THINKINGMACH_E2E_PLAN_DONE_${nonce}` +
           " and mark the task Done.",
-        `For a native runner, remain in the requested planning collaboration mode. Call write_document for key \`plan\`, then call request_human_input exactly once with interactionKind \`confirmation\`, targetRevisionId set to the returned latest Plan revision, and continuationPolicy \`wake_assignee\`. For both the initial Plan and the revised Plan, those two tool calls form one indivisible response sequence: immediately after write_document succeeds, request_human_input must be your next action using that call's returned latestRevisionId. Do not emit assistant text, end the response or heartbeat, or stop after write_document alone before the matching confirmation request succeeds. Do not call paperclip_finish while waiting for either Plan confirmation. When an acceptance wake arrives, first call get_task_context. Treat the wake as valid only when that control-plane result is for the current task and identifies the exact revised Plan revision used as the confirmation target as accepted; otherwise do not finish and continue waiting for the matching revision-bound confirmation. After that verification succeeds, your immediate next action must be the paperclip_finish tool call. Do not call list_documents or any other tool, and do not emit any assistant text, acknowledgement, progress note, or preamble between verification and paperclip_finish. Use the current turn completion revision and criterion IDs (CURRENT_TURN_REVISION below is a placeholder, not a literal). Call paperclip_finish exactly once with {reportedWorkDisposition:"done",summary:"PAPERCLIP_E2E_PLAN_DONE_${nonce}",completionClaim:{contractRevision:CURRENT_TURN_REVISION,objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]},evidence:[],verification:[]}. Wait for that tool call to succeed, then emit only PAPERCLIP_E2E_PLAN_DONE_${nonce} as the complete final response. Do not write a user-facing final response before paperclip_finish succeeds, and do not call another tool.`,
-        `For a legacy runner, use the public Paperclip API. The first PUT of the \`plan\` issue document creates it. For every later PUT, first GET the current document and set \`baseRevisionId\` to its \`latestRevisionId\`; a 409 means you must GET again and retry with the new latest revision. Create a \`request_confirmation\` targeting the successful PUT response's \`latestRevisionId\` with \`continuationPolicy: wake_assignee\`, and move the issue to \`in_review\` while waiting. After the revised Plan is accepted, write PAPERCLIP_E2E_PLAN_DONE_${nonce} exactly once through one atomic issue PATCH with status \`done\` and that exact comment; do not POST a separate comment or perform a second write.`,
+        `For a native runner, remain in the requested planning collaboration mode. Call write_document for key \`plan\`, then call request_human_input exactly once with interactionKind \`confirmation\`, targetRevisionId set to the returned latest Plan revision, and continuationPolicy \`wake_assignee\`. For both the initial Plan and the revised Plan, those two tool calls form one indivisible response sequence: immediately after write_document succeeds, request_human_input must be your next action using that call's returned latestRevisionId. Do not emit assistant text, end the response or heartbeat, or stop after write_document alone before the matching confirmation request succeeds. Do not call paperclip_finish while waiting for either Plan confirmation. When an acceptance wake arrives, first call get_task_context. Treat the wake as valid only when that control-plane result is for the current task and identifies the exact revised Plan revision used as the confirmation target as accepted; otherwise do not finish and continue waiting for the matching revision-bound confirmation. After that verification succeeds, your immediate next action must be the paperclip_finish tool call. Do not call list_documents or any other tool, and do not emit any assistant text, acknowledgement, progress note, or preamble between verification and paperclip_finish. Use the current turn completion revision and criterion IDs (CURRENT_TURN_REVISION below is a placeholder, not a literal). Call paperclip_finish exactly once with {reportedWorkDisposition:"done",summary:"THINKINGMACH_E2E_PLAN_DONE_${nonce}",completionClaim:{contractRevision:CURRENT_TURN_REVISION,objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]},evidence:[],verification:[]}. Wait for that tool call to succeed, then emit only THINKINGMACH_E2E_PLAN_DONE_${nonce} as the complete final response. Do not write a user-facing final response before paperclip_finish succeeds, and do not call another tool.`,
+        `For a legacy runner, use the public ThinkingMach API. The first PUT of the \`plan\` issue document creates it. For every later PUT, first GET the current document and set \`baseRevisionId\` to its \`latestRevisionId\`; a 409 means you must GET again and retry with the new latest revision. Create a \`request_confirmation\` targeting the successful PUT response's \`latestRevisionId\` with \`continuationPolicy: wake_assignee\`, and move the issue to \`in_review\` while waiting. After the revised Plan is accepted, write THINKINGMACH_E2E_PLAN_DONE_${nonce} exactly once through one atomic issue PATCH with status \`done\` and that exact comment; do not POST a separate comment or perform a second write.`,
         "Do not create files, child tasks, or unrelated work, and do not expose credentials.",
       ].join("\n"),
     buildMatchers(nonce, execution) {
       return [
         {
           kind: "message_exact",
-          expected: `PAPERCLIP_E2E_PLAN_DONE_${nonce}`,
+          expected: `THINKINGMACH_E2E_PLAN_DONE_${nonce}`,
         },
         {
           kind: "message_occurrences",
-          expected: `PAPERCLIP_E2E_PLAN_DONE_${nonce}`,
+          expected: `THINKINGMACH_E2E_PLAN_DONE_${nonce}`,
           count: 1,
         },
         {
@@ -589,7 +589,7 @@ export const runnerTasks: readonly RunnerTaskFixture[] = [
         "Do not create or modify files, do not create a plan or additional work, and do not expose credentials.",
         "After posting the direct answer, mark this task Done.",
         `In a native runner, use the current turn completion revision and criterion IDs (CURRENT_TURN_REVISION below is a placeholder, not a literal), then call paperclip_finish exactly once with {reportedWorkDisposition:"done",summary:"E2E_ASK_12_${nonce}",completionClaim:{contractRevision:CURRENT_TURN_REVISION,objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]},evidence:[],verification:[]}. For the entire run, paperclip_finish must be your only tool call: never call report_progress or any other tool before or after it. Wait for that tool call to succeed, then emit exactly E2E_ASK_12_${nonce} as the complete final response. Do not write a user-facing final response before paperclip_finish succeeds.`,
-        `In a legacy runner, make exactly one public-API write containing the marker: PATCH /api/issues/$PAPERCLIP_TASK_ID with {"status":"done","comment":"E2E_ASK_12_${nonce}"}. Do not POST to /comments, do not PATCH the status separately, and do not include the marker in any other API write.`,
+        `In a legacy runner, make exactly one public-API write containing the marker: PATCH /api/issues/$THINKINGMACH_TASK_ID with {"status":"done","comment":"E2E_ASK_12_${nonce}"}. Do not POST to /comments, do not PATCH the status separately, and do not include the marker in any other API write.`,
       ].join("\n"),
     buildMatchers(nonce, execution) {
       return [
@@ -653,35 +653,35 @@ const structuredQuestionResumeTask = {
   attemptTimeoutMs: { local: 12 * 60_000, daytona: 12 * 60_000 },
   expectedTerminalState: { issue: "done", run: "succeeded" },
   buildTitle: (nonce) => `Runner E2E structured question ${nonce}`,
-  buildVisibleMarker: (nonce) => `PAPERCLIP_E2E_QUESTION_DONE_${nonce}`,
+  buildVisibleMarker: (nonce) => `THINKINGMACH_E2E_QUESTION_DONE_${nonce}`,
   buildQuestionAnswer: (nonce) => ({
     optionLabel: "Cobalt",
-    expectedMarker: `PAPERCLIP_E2E_QUESTION_DONE_${nonce}`,
+    expectedMarker: `THINKINGMACH_E2E_QUESTION_DONE_${nonce}`,
   }),
   buildPrompt: (nonce) =>
     [
       "Ask the user one structured question before completing this task.",
       "The question must be required, single-select, and offer Cobalt and Amber. Do not publish a final answer or mark the task Done while it is pending.",
-      `Before the answer arrives, do not spell, quote, repeat, announce, or include PAPERCLIP_E2E_QUESTION_DONE_${nonce} in any visible response, comment, or tool payload; refer to it only as “the terminal marker.”`,
+      `Before the answer arrives, do not spell, quote, repeat, announce, or include THINKINGMACH_E2E_QUESTION_DONE_${nonce} in any visible response, comment, or tool payload; refer to it only as “the terminal marker.”`,
       `In a native runner, call request_human_input exactly once with idempotencyKey \`question-${nonce}\`, interactionKind \`questions\`, title \`Verification word\`, prompt \`Choose the verification word\`, continuationPolicy \`wake_assignee\`, and payload {version:1,questions:[{id:\`verification-word\`,prompt:\`Choose the verification word.\`,selectionMode:\`single\`,required:true,options:[{id:\`cobalt\`,label:\`Cobalt\`},{id:\`amber\`,label:\`Amber\`}]}]}.`,
-      'In a legacy runner, derive `API_ORIGIN` exactly once with `API_ORIGIN="${PAPERCLIP_API_URL%/}"; API_ORIGIN="${API_ORIGIN%/api}"`. Build every endpoint as `$API_ORIGIN/api/...`; never append `/api` to a base that already ends in `/api`.',
-      `In a legacy runner, create exactly one question interaction: POST $API_ORIGIN/api/issues/$PAPERCLIP_TASK_ID/interactions once with {"kind":"ask_user_questions","idempotencyKey":"question-${nonce}","continuationPolicy":"wake_assignee","payload":{"version":1,"questions":[{"id":"verification-word","prompt":"Choose the verification word.","selectionMode":"single","required":true,"options":[{"id":"cobalt","label":"Cobalt"},{"id":"amber","label":"Amber"}]}]}} using Authorization and X-Paperclip-Run-Id. Do not create a replacement interaction if a later write fails.`,
-      'In a legacy runner, after that POST returns 2xx, PATCH $API_ORIGIN/api/issues/$PAPERCLIP_TASK_ID with exactly {"status":"in_review"}. Do not include `reviewInteractionId`: it only designates confirmation interactions, not `ask_user_questions`. If the PATCH fails, retry only that PATCH and never POST the interaction again.',
+      'In a legacy runner, derive `API_ORIGIN` exactly once with `API_ORIGIN="${THINKINGMACH_API_URL%/}"; API_ORIGIN="${API_ORIGIN%/api}"`. Build every endpoint as `$API_ORIGIN/api/...`; never append `/api` to a base that already ends in `/api`.',
+      `In a legacy runner, create exactly one question interaction: POST $API_ORIGIN/api/issues/$THINKINGMACH_TASK_ID/interactions once with {"kind":"ask_user_questions","idempotencyKey":"question-${nonce}","continuationPolicy":"wake_assignee","payload":{"version":1,"questions":[{"id":"verification-word","prompt":"Choose the verification word.","selectionMode":"single","required":true,"options":[{"id":"cobalt","label":"Cobalt"},{"id":"amber","label":"Amber"}]}]}} using Authorization and X-ThinkingMach-Run-Id. Do not create a replacement interaction if a later write fails.`,
+      'In a legacy runner, after that POST returns 2xx, PATCH $API_ORIGIN/api/issues/$THINKINGMACH_TASK_ID with exactly {"status":"in_review"}. Do not include `reviewInteractionId`: it only designates confirmation interactions, not `ask_user_questions`. If the PATCH fails, retry only that PATCH and never POST the interaction again.',
       "In a legacy runner, after those two writes succeed, end the current response and heartbeat immediately. Do not wait, sleep, poll, or fetch the interaction; `wake_assignee` will start a new heartbeat after the user answers.",
-      `After the answer arrives, if it is Cobalt, publish exactly PAPERCLIP_E2E_QUESTION_DONE_${nonce} once as the complete visible response and mark the task Done.`,
-      `In a native runner, after the answer arrives, use the current turn completion revision and criterion IDs (CURRENT_TURN_REVISION below is a placeholder, not a literal), then call paperclip_finish exactly once with {reportedWorkDisposition:"done",summary:"PAPERCLIP_E2E_QUESTION_DONE_${nonce}",completionClaim:{contractRevision:CURRENT_TURN_REVISION,objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]},evidence:[],verification:[]}. Wait for that tool call to succeed, then emit exactly PAPERCLIP_E2E_QUESTION_DONE_${nonce} as the complete final response. Do not write a user-facing final response before paperclip_finish succeeds, and do not call another tool.`,
-      `In a legacy runner, make exactly one completion write: PATCH $API_ORIGIN/api/issues/$PAPERCLIP_TASK_ID with {"status":"done","comment":"PAPERCLIP_E2E_QUESTION_DONE_${nonce}"}. Do not POST a separate comment or perform a second write containing the marker.`,
+      `After the answer arrives, if it is Cobalt, publish exactly THINKINGMACH_E2E_QUESTION_DONE_${nonce} once as the complete visible response and mark the task Done.`,
+      `In a native runner, after the answer arrives, use the current turn completion revision and criterion IDs (CURRENT_TURN_REVISION below is a placeholder, not a literal), then call paperclip_finish exactly once with {reportedWorkDisposition:"done",summary:"THINKINGMACH_E2E_QUESTION_DONE_${nonce}",completionClaim:{contractRevision:CURRENT_TURN_REVISION,objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]},evidence:[],verification:[]}. Wait for that tool call to succeed, then emit exactly THINKINGMACH_E2E_QUESTION_DONE_${nonce} as the complete final response. Do not write a user-facing final response before paperclip_finish succeeds, and do not call another tool.`,
+      `In a legacy runner, make exactly one completion write: PATCH $API_ORIGIN/api/issues/$THINKINGMACH_TASK_ID with {"status":"done","comment":"THINKINGMACH_E2E_QUESTION_DONE_${nonce}"}. Do not POST a separate comment or perform a second write containing the marker.`,
       "Do not create files, plans, child tasks, or unrelated work, and do not expose credentials.",
     ].join("\n"),
   buildMatchers(nonce, execution) {
     return [
       {
         kind: "message_exact",
-        expected: `PAPERCLIP_E2E_QUESTION_DONE_${nonce}`,
+        expected: `THINKINGMACH_E2E_QUESTION_DONE_${nonce}`,
       },
       {
         kind: "message_occurrences",
-        expected: `PAPERCLIP_E2E_QUESTION_DONE_${nonce}`,
+        expected: `THINKINGMACH_E2E_QUESTION_DONE_${nonce}`,
         count: 1,
       },
       {
@@ -796,7 +796,7 @@ const localEnvironment = runnerEnvironments.find(
 )!;
 
 function warmTurnMarker(turn: 1 | 2 | 3, nonce: string) {
-  return `PAPERCLIP_E2E_WARM_T${turn}_${nonce}`;
+  return `THINKINGMACH_E2E_WARM_T${turn}_${nonce}`;
 }
 
 function warmWorkspaceLine(turn: 1 | 2 | 3, nonce: string) {
@@ -819,8 +819,8 @@ function warmTurnInstructions(turn: 1 | 2 | 3, nonce: string) {
     summary: `Review the verified turn ${turn} workspace file and decide whether this task is ready to complete or needs another revision.`,
   }];
   const legacyCompletion = finalTurn
-    ? `In a legacy runner, make exactly one public-API completion write after verification: PATCH /api/issues/$PAPERCLIP_TASK_ID with {"status":"done","comment":"${marker}"}. Include Authorization and X-Paperclip-Run-Id. Do not POST a separate comment.`
-    : `In a legacy runner, after verification POST exactly one request_confirmation to /api/issues/$PAPERCLIP_TASK_ID/interactions with {"kind":"request_confirmation","idempotencyKey":"daytona-warm-review-T${turn}-${nonce}","resolverPolicy":"human_only","title":"Warm continuity turn ${turn}","summary":"Review completed warm continuity turn ${turn}.","continuationPolicy":"wake_assignee","payload":{"version":1,"prompt":"Is this warm continuity task ready to complete after turn ${turn}?","acceptLabel":"Approve completion","rejectLabel":"Continue work","rejectRequiresReason":true,"allowDeclineReason":true,"supersedeOnUserComment":false,"target":{"type":"custom","key":"daytona_warm_turn_${turn}","revisionId":"${nonce}-T${turn}","label":"Warm continuity turn ${turn}"}}}. Capture the returned interaction id. Then make exactly one issue PATCH with {"status":"in_review","comment":"${marker}","reviewInteractionId":"<returned interaction id>"}. Include Authorization and X-Paperclip-Run-Id on both writes. If the issue PATCH fails, retry only that PATCH and never create another interaction. Do not POST a separate comment. After both writes succeed, end the response and heartbeat immediately; do not wait or poll because the reviewer action will start the next turn.`;
+    ? `In a legacy runner, make exactly one public-API completion write after verification: PATCH /api/issues/$THINKINGMACH_TASK_ID with {"status":"done","comment":"${marker}"}. Include Authorization and X-ThinkingMach-Run-Id. Do not POST a separate comment.`
+    : `In a legacy runner, after verification POST exactly one request_confirmation to /api/issues/$THINKINGMACH_TASK_ID/interactions with {"kind":"request_confirmation","idempotencyKey":"daytona-warm-review-T${turn}-${nonce}","resolverPolicy":"human_only","title":"Warm continuity turn ${turn}","summary":"Review completed warm continuity turn ${turn}.","continuationPolicy":"wake_assignee","payload":{"version":1,"prompt":"Is this warm continuity task ready to complete after turn ${turn}?","acceptLabel":"Approve completion","rejectLabel":"Continue work","rejectRequiresReason":true,"allowDeclineReason":true,"supersedeOnUserComment":false,"target":{"type":"custom","key":"daytona_warm_turn_${turn}","revisionId":"${nonce}-T${turn}","label":"Warm continuity turn ${turn}"}}}. Capture the returned interaction id. Then make exactly one issue PATCH with {"status":"in_review","comment":"${marker}","reviewInteractionId":"<returned interaction id>"}. Include Authorization and X-ThinkingMach-Run-Id on both writes. If the issue PATCH fails, retry only that PATCH and never create another interaction. Do not POST a separate comment. After both writes succeed, end the response and heartbeat immediately; do not wait or poll because the reviewer action will start the next turn.`;
   return [
     `This is warm Daytona continuity turn ${turn} of 3. Work only in the current execution workspace.`,
     turn === 1
@@ -893,16 +893,16 @@ export const connectionReviewSuite: RunnerSuiteFixture = {
     expectedRunCount: 2, attemptTimeoutMs: { local: 12 * 60_000, daytona: 12 * 60_000 },
     expectedTerminalState: { issue: "done", run: "succeeded" },
     buildTitle: nonce => `Runner E2E connection review ${decision} ${nonce}`,
-    buildVisibleMarker: nonce => `PAPERCLIP_E2E_REVIEW_DONE_${nonce}`,
+    buildVisibleMarker: nonce => `THINKINGMACH_E2E_REVIEW_DONE_${nonce}`,
     buildPrompt: nonce => [
       'Use the installed connection action "List fixture pages" with query "recent". Discover it through the runtime tool gateway. Do not simulate or invent its result.',
       'It requires human approval. When approval_required is returned, do not retry and do not create another interaction. End the turn waiting for that existing server-owned review; leave this task in_review. Do not claim completion before the decision arrives.',
       'Approval executes the stored call on the server. Your continuation receives its result; do not repeat that approved call. A decline executes nothing and must be respected.',
       ...(decision === "always" ? ['After the approved result arrives, call the same action once more with query "changed arguments" to verify the remembered permission.'] : []),
-      `After consuming the real result (or the human decline), finish the task and publish exactly PAPERCLIP_E2E_REVIEW_DONE_${nonce} once as your final task response.`,
+      `After consuming the real result (or the human decline), finish the task and publish exactly THINKINGMACH_E2E_REVIEW_DONE_${nonce} once as your final task response.`,
       'For native runners use paperclip_finish. Legacy runners PATCH the task with status done and the final comment. Do not create unrelated work.',
     ].join("\n"),
-    buildMatchers: (nonce, execution) => terminalMatchers(`PAPERCLIP_E2E_REVIEW_DONE_${nonce}`, execution),
+    buildMatchers: (nonce, execution) => terminalMatchers(`THINKINGMACH_E2E_REVIEW_DONE_${nonce}`, execution),
   })),
 };
 
@@ -953,7 +953,7 @@ export const runnerSuites: readonly RunnerSuiteFixture[] = [
     definitionMetadata: { version: 4, grading: "durable-state-and-approval-boundaries", instructions: "production" },
   },
   {
-    id: "everyday-workflows", label: "Everyday Paperclip Work", manualOnly: true,
+    id: "everyday-workflows", label: "Everyday ThinkingMach Work", manualOnly: true,
     description: "Real user requests, useful downloaded work, and durable continuation using production instructions.",
     groups: ["native"], profiles: everydayProfiles, environments: [localEnvironment, daytonaWarmEnvironment],
     tasks: everydayTasks, expectedMatrixSize: 47,
@@ -1019,7 +1019,7 @@ export const runnerSuites: readonly RunnerSuiteFixture[] = [
     expectedMatrixSize: 4,
     definitionMetadata: { version: 6, instructions: "production", idleBoundaryTimeoutMs: 180_000, workerBriefTimeoutMs: 240_000, workerBriefWorkspace: "managed-project", workerBriefEvidence: "released-start-time", grading: "post-completion-reply-and-result-access", semanticReview: "required-separately", chatBoundary: "worker-gated-until-source-idle", observationWindowMs: 120_000, scheduling: "explicit-only" },
   },
-  ...(process.env.PAPERCLIP_RUNNER_E2E_CONNECTION_REVIEWS === "1" ? [connectionReviewSuite] : []),
+  ...(process.env.THINKINGMACH_RUNNER_E2E_CONNECTION_REVIEWS === "1" ? [connectionReviewSuite] : []),
   {
     id: "core-compatibility",
     label: "Core Runner Compatibility",
@@ -1241,7 +1241,7 @@ export function validateRunnerCatalog(): MatrixExecution[] {
     const payload = environment.buildEnvironment({
       secretRefs: sampleRefs,
       daytonaImage:
-        "ghcr.io/paperclipai/paperclip-daytona-runner@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "ghcr.io/thinkingmach/paperclip-daytona-runner@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       executionId: "schema-validation",
     });
     createEnvironmentSchema.parse(payload);

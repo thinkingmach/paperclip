@@ -15,7 +15,7 @@ describe("channelForVersion", () => {
   });
 
   it("treats non-CalVer versions as unknown instead of guessing", () => {
-    expect(channelForVersion("0.3.1")).toBe("unknown");
+    expect(channelForVersion("0.3.3")).toBe("unknown");
     expect(channelForVersion("2026.811.0-rc.1")).toBe("unknown");
     expect(channelForVersion("garbage")).toBe("unknown");
   });
@@ -30,8 +30,8 @@ describe("collectChannelState", () => {
   };
 
   const fakeRunner: CommandRunner = async (_command, args) => {
-    const spec = (args ?? []).find((arg) => arg.startsWith("paperclipai@"));
-    const tag = spec?.slice("paperclipai@".length) ?? "";
+    const spec = (args ?? []).find((arg) => arg.startsWith("thinkingmach@"));
+    const tag = spec?.slice("thinkingmach@".length) ?? "";
     const version = versionsByTag[tag];
     if (!version) throw new Error(`unexpected dist-tag: ${tag}`);
     return { stdout: JSON.stringify(version), stderr: "" };
@@ -56,8 +56,8 @@ describe("collectChannelState", () => {
 
   it("degrades a single unavailable channel to null without failing the rest", async () => {
     const flakyRunner: CommandRunner = async (command, args, options) => {
-      const spec = (args ?? []).find((arg) => arg.startsWith("paperclipai@"));
-      if (spec === "paperclipai@nightly") throw new Error("registry timeout");
+      const spec = (args ?? []).find((arg) => arg.startsWith("thinkingmach@"));
+      if (spec === "thinkingmach@nightly") throw new Error("registry timeout");
       return fakeRunner(command, args, options);
     };
 

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act, type ComponentProps } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import type { IssueAttachment, IssueDocumentSummary, IssueWorkProduct } from "@paperclipai/shared";
+import type { IssueAttachment, IssueDocumentSummary, IssueWorkProduct } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useTaskArtifactArrival } from "./useTaskArtifactArrival";
 

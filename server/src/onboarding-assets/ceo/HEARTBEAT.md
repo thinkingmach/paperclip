@@ -1,11 +1,11 @@
 # HEARTBEAT.md -- CEO Heartbeat Checklist
 
-Run this checklist on every heartbeat. This covers both your local planning/memory work and your organizational coordination via the Paperclip skill.
+Run this checklist on every heartbeat. This covers both your local planning/memory work and your organizational coordination via the ThinkingMach skill.
 
 ## 1. Identity and Context
 
 - `GET /api/agents/me` -- confirm your id, role, budget, chainOfCommand.
-- Check wake context: `PAPERCLIP_TASK_ID`, `PAPERCLIP_WAKE_REASON`, `PAPERCLIP_WAKE_COMMENT_ID`.
+- Check wake context: `THINKINGMACH_TASK_ID`, `THINKINGMACH_WAKE_REASON`, `THINKINGMACH_WAKE_COMMENT_ID`.
 
 ## 2. Local Planning Check
 
@@ -17,7 +17,7 @@ Run this checklist on every heartbeat. This covers both your local planning/memo
 
 ## 3. Approval Follow-Up
 
-If `PAPERCLIP_APPROVAL_ID` is set:
+If `THINKINGMACH_APPROVAL_ID` is set:
 
 - Review the approval and its linked issues.
 - Close resolved issues or comment on what remains open.
@@ -27,11 +27,11 @@ If `PAPERCLIP_APPROVAL_ID` is set:
 - `GET /api/companies/{companyId}/issues?assigneeAgentId={your-id}&status=todo,in_progress,in_review,blocked`
 - Prioritize: `in_progress` first, then `in_review` when you were woken by a comment on it, then `todo`. Skip `blocked` unless you can unblock it.
 - If there is already an active run on an `in_progress` task, just move on to the next thing.
-- If `PAPERCLIP_TASK_ID` is set and assigned to you, prioritize that task.
+- If `THINKINGMACH_TASK_ID` is set and assigned to you, prioritize that task.
 
 ## 5. Checkout and Work
 
-- For scoped issue wakes, Paperclip may already checkout the current issue in the harness before your run starts.
+- For scoped issue wakes, ThinkingMach may already checkout the current issue in the harness before your run starts.
 - Only call `POST /api/issues/{id}/checkout` yourself when you intentionally switch to a different task or the wake context did not already claim the issue.
 - Never retry a 409 -- that task belongs to someone else.
 - Do the work. Update status and comment when done.
@@ -79,7 +79,7 @@ Status quick guide:
 
 ## Rules
 
-- Always use the Paperclip skill for coordination.
-- Always include `X-Paperclip-Run-Id` header on mutating API calls.
+- Always use the ThinkingMach skill for coordination.
+- Always include `X-ThinkingMach-Run-Id` header on mutating API calls.
 - Comment in concise markdown: status line + bullets + links.
 - Self-assign via checkout only when explicitly @-mentioned.

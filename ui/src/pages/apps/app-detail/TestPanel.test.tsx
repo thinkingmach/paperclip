@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ToolCatalogEntry } from "@paperclipai/shared";
+import type { ToolCatalogEntry } from "@thinkingmach/shared";
 import { TestPanel, errorHints } from "./TestPanel";
 
 const listTestAgentsMock = vi.hoisted(() => vi.fn());
@@ -28,7 +28,7 @@ vi.mock("@/api/tools", () => ({
 }));
 
 vi.mock("@/context/CompanyContext", () => ({
-  useCompany: () => ({ selectedCompanyId: "company-1", selectedCompany: { id: "company-1", name: "Paperclip" } }),
+  useCompany: () => ({ selectedCompanyId: "company-1", selectedCompany: { id: "company-1", name: "ThinkingMach" } }),
 }));
 
 vi.mock("@/lib/router", () => ({

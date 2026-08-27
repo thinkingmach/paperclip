@@ -490,8 +490,8 @@ export function AgentChatPrototype({
           name: scenario === "project-multi-repo" ? "First agent handoff across the application, documentation, and onboarding service" : "First agent handoff",
           description: "Help new teams get their first useful result.", sourceIssueId: issue.id,
           repositories: scenario === "project-no-repo" ? [] : [
-            { id: "1", name: "paperclipai/paperclip", url: "https://github.com/paperclipai/paperclip" },
-            ...(scenario === "project-multi-repo" ? [{ id: "2", name: "paperclipai/onboarding", url: "https://github.com/paperclipai/onboarding" }] : []),
+            { id: "1", name: "thinkingmach/paperclip", url: "https://github.com/thinkingmach/paperclip" },
+            ...(scenario === "project-multi-repo" ? [{ id: "2", name: "thinkingmach/onboarding", url: "https://github.com/thinkingmach/onboarding" }] : []),
           ],
         },
       }]);

@@ -8,7 +8,7 @@ import { createInterface } from 'node:readline';
 if (process.argv.includes('--version')) { console.log('codex-cli 0.115.0 (in-feed fixture)'); process.exit(0); }
 let threadId = `fixture-${randomUUID()}`;
 let turnId, toolSequence = 0, declined = false;
-const recoveryFixture = process.env.PAPERCLIP_RECOVERY_FIXTURE === "1";
+const recoveryFixture = process.env.THINKINGMACH_RECOVERY_FIXTURE === "1";
 let currentObjective = "";
 let emitCeoLineage = false;
 let completionContract = { revision: "1", criterionIds: ["objective"] };

@@ -1,5 +1,5 @@
 import { and, desc, eq, inArray, isNull } from "drizzle-orm";
-import { environmentLeases, heartbeatRunEvents, heartbeatRuns, type Db } from "@paperclipai/db";
+import { environmentLeases, heartbeatRunEvents, heartbeatRuns, type Db } from "@thinkingmach/db";
 import { appendHeartbeatRunEvent } from "./heartbeat-run-events.js";
 
 export const PROCESS_START_REQUESTED = "native.process_start_requested";

@@ -2,7 +2,7 @@
 
 For choosing between Runner Evals and full-stack Product E2E Evals, and for
 shared guidance on provenance, history, cost, and failure classification, see
-the [Paperclip evaluation guide](../../../doc/evals.md). This document remains
+the [ThinkingMach evaluation guide](../../../doc/evals.md). This document remains
 the authoritative Runner Evals live protocol runbook.
 
 ## One Evalbook presentation
@@ -17,8 +17,8 @@ the same dark theme. Static site styles live in
 colors and typography come from the Runner Lab token layer.
 Missing recordings show a notice in the same viewer; missing viewer builds
 fail generation. Build with
-`pnpm --filter @paperclipai/paperclip-runner build:issue-thread` and provide
-`--viewer-root` or `PAPERCLIP_EVAL_VIEWER_ROOT` to the canonical Python renderer.
+`pnpm --filter @thinkingmach/paperclip-runner build:issue-thread` and provide
+`--viewer-root` or `THINKINGMACH_EVAL_VIEWER_ROOT` to the canonical Python renderer.
 
 The Actions artifact contains full evidence. S3 uses the same viewer with a
 closed public DTO: only isolated mock-run conversation text, scrubbed private
@@ -31,7 +31,7 @@ Public attempts use inert JSON and one shared viewer asset directory. The
 publisher verifies each shell and asset against the exact same-run viewer build,
 checks the public payload contract and local links, and rejects other scripts.
 The CSP prohibits network calls, forms and external resources. Supply
-`PAPERCLIP_RUNNER_PROTOCOL_EVAL_VIEWER_DIR` to the publisher. The workflow sends
+`THINKINGMACH_RUNNER_PROTOCOL_EVAL_VIEWER_DIR` to the publisher. The workflow sends
 a viewer-only artifact to that job; raw attempts and provider secrets stay out.
 After publication succeeds, the publishing job writes **Open this run's
 Evalbook** and **All eval runs** links to the Actions summary. Its deployment
@@ -85,7 +85,7 @@ Refreshes also recover retry-inclusive estimated and provider-list costs from th
 retained attempt records. They never add another model-cost measurement.
 
 This is the provider-backed, one-turn protocol qualification layer in
-`paperclipai/paperclip-evals/evals/paperclip-runner`. It is intentionally
+`thinkingmach/paperclip-evals/evals/paperclip-runner`. It is intentionally
 separate from both the browser full-stack model E2E and the stress-derived
 workflow schedule in `runner-workflow-evals.md`.
 
@@ -109,9 +109,9 @@ must not replace that runtime identity in a report.
 Use the `Runner Direct Live Protocol Evals` workflow. Dispatch the workflow
 from the default branch and provide:
 
-- `target_branch`: the Paperclip branch to build and test;
+- `target_branch`: the ThinkingMach branch to build and test;
 - `evals_sha`: an exact 40-character commit from
-  `paperclipai/paperclip-evals`;
+  `thinkingmach/paperclip-evals`;
 - `rosters`: `all` for every enabled lane in the canonical
   `live-direct-full.json` campaign, or a comma-separated diagnostic subset.
   Disabled lanes remain available only through an explicit diagnostic
@@ -134,7 +134,7 @@ supports Grok subscription admission and records this summary field. Keep API
 and subscription campaigns separate when interpreting results. Remove temporary
 subscription test secrets after the authorized qualification completes.
 
-The authorization job resolves the Paperclip branch to a commit and verifies
+The authorization job resolves the ThinkingMach branch to a commit and verifies
 the supplied eval commit before any checkout. A short-lived bot token generated
 from `COMMITPERCLIP_KEY` authorizes each checkout of the private eval repository;
 the token is masked and is never forwarded to a provider process. The workflow
@@ -223,17 +223,17 @@ The paid jobs read only the credential selected for each roster:
 - short-lived GitHub OIDC workload identity for AWS AgentCore.
 
 Claude Managed also requires the four nonsecret
-`PAPERCLIP_CLAUDE_MANAGED_*` profile variables. AgentCore requires the
-nonsecret `PAPERCLIP_AWS_AGENTCORE_*` profile variables, including
-`PAPERCLIP_AWS_AGENTCORE_EXECUTION_ROLE_ARN` and the immutable
-`PAPERCLIP_AWS_AGENTCORE_QUALIFICATION_REVISION`; the eval fails closed when
+`THINKINGMACH_CLAUDE_MANAGED_*` profile variables. AgentCore requires the
+nonsecret `THINKINGMACH_AWS_AGENTCORE_*` profile variables, including
+`THINKINGMACH_AWS_AGENTCORE_EXECUTION_ROLE_ARN` and the immutable
+`THINKINGMACH_AWS_AGENTCORE_QUALIFICATION_REVISION`; the eval fails closed when
 that deployed revision differs from the pinned roster config. The currently
 qualified context-aware harness revision is
 `aws-agentcore-harness-context-v2`. The workflow
 writes the GitHub OIDC token to a mode-`0600` file and never forwards long-lived
 AWS access keys.
 Provision the AgentCore stack with `--github-oidc-provider-arn` so that scoped
-role admits only the `paperclipai/paperclip` repository's protected
+role admits only the `thinkingmach/paperclip` repository's protected
 `runner-e2e-paid` environment as its web-identity subject.
 Scheduled runs additionally require `RUNNER_PROTOCOL_EVAL_NIGHTLY_ENABLED=true`
 and the pinned `RUNNER_PROTOCOL_EVALS_SHA` repository variable.
@@ -289,7 +289,7 @@ The history index includes:
   New campaigns include all retained attempts (including retries). Backfilled old
   campaigns with only final-cell usage are labeled **historical final attempts only**.
   Missing usage is unknown, not zero; partial totals use `≥` and display coverage.
-- Exact Paperclip and eval-suite commit links (full SHA on hover), the source ref,
+- Exact ThinkingMach and eval-suite commit links (full SHA on hover), the source ref,
   and the GitHub Actions run. These identify the code **evaluated**, not merely
   the commit used to render an old report.
 - A separate report-refresh list, excluded from trend points and model-spend totals.
@@ -310,14 +310,14 @@ additive writes and reads for that prefix.
 These tests make no provider or AWS calls:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner test:runner-protocol-eval-publish
+pnpm --filter @thinkingmach/paperclip-runner test:runner-protocol-eval-publish
 ```
 
 To inspect the catalog without executing it, point the command at a local
 evals checkout:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner \
+pnpm --filter @thinkingmach/paperclip-runner \
   report:runner-protocol-eval:catalog -- \
   --evals-root /path/to/paperclip-evals \
   --campaign-id gha-1-1 \

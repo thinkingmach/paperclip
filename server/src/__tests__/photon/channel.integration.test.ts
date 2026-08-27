@@ -45,7 +45,7 @@ import {
   chatEndpointResources,
   issueAttachments,
   assets,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "../helpers/embedded-postgres.js";
 import {
   chatChannelService,
@@ -77,14 +77,14 @@ describe.sequential("iMessage Photon channel control plane", () => {
   let database: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>>;
   let db: ReturnType<typeof createDb>;
   let secrets: string;
-  const oldKey = process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+  const oldKey = process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
   const services: ChatChannelService[] = [];
   const companyIds: string[] = [];
   beforeAll(async () => {
     database = await startEmbeddedPostgresTestDatabase("paperclip-photon-");
     db = createDb(database.connectionString);
     secrets = await mkdtemp(path.join(tmpdir(), "photon-secrets-"));
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = path.join(
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = path.join(
       secrets,
       "master.key",
     );
@@ -102,8 +102,8 @@ describe.sequential("iMessage Photon channel control plane", () => {
     await database?.cleanup();
     if (secrets) await rm(secrets, { recursive: true, force: true });
     if (oldKey === undefined)
-      delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
-    else process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = oldKey;
+      delete process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
+    else process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = oldKey;
   });
   async function setup(shared = false) {
     const companyId = randomUUID(),

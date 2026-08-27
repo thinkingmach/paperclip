@@ -1,24 +1,24 @@
 ---
 name: prepare-paperclip-pr
-description: Prepare a Paperclip branch for PR with commits, template body, and checks.
+description: Prepare a ThinkingMach branch for PR with commits, template body, and checks.
 ---
-# Prepare Paperclip PR
+# Prepare ThinkingMach PR
 
-The standard Paperclip procedure for turning branch work into a reviewed,
-green pull request against `paperclipai/paperclip` master. Apply it once per
+The standard ThinkingMach procedure for turning branch work into a reviewed,
+green pull request against `thinkingmach/paperclip` master. Apply it once per
 PR (if a task splits a branch into several PRs, run the whole procedure for
 each one).
 
 ## 0. Preconditions — worktree safety
 
 * Do all PR work in a **git worktree** on a dedicated branch. The main
-  `~/paperclip` checkout typically runs the live Paperclip server — never
+  `~/paperclip` checkout typically runs the live ThinkingMach server — never
   check out branches there. If you are already on a worktree/branch, verify it
   (`git rev-parse --git-dir`, `git branch --show-current`) and proceed.
 * If the main checkout is unexpectedly off `master`, fix that first without
   losing work (usually: move that branch's work into a worktree).
 * Confirm which remote/ref you are targeting (normally `master` on the
-  `paperclipai/paperclip` repo; the task may name a specific remote such as
+  `thinkingmach/paperclip` repo; the task may name a specific remote such as
   `origin` or `public-gh`).
 
 ## 1. Commit everything — lose no work
@@ -27,7 +27,7 @@ each one).
   Do not stash and forget; do not leave files behind. If commits are missing,
   make them.
 * Commit messages must end with exactly:
-  `Co-Authored-By: Paperclip <noreply@paperclip.ing>`
+  `Co-Authored-By: ThinkingMach <noreply@thinkingmach.com>`
 
 ## 2. Get changes cleanly on top of master
 
@@ -53,7 +53,7 @@ each one).
 ## 4. Open the PR
 
 * Follow `CONTRIBUTING.md` (repo root,
-  https://github.com/paperclipai/paperclip/blob/master/CONTRIBUTING.md) for
+  https://github.com/thinkingmach/paperclip/blob/master/CONTRIBUTING.md) for
   the PR title, message format, and issue description.
 * Push the branch and open the PR with `gh`.
 * Record the PR URL immediately — every report must include URLs to every PR.

@@ -15,17 +15,17 @@ import {
   CODEX_LOCAL_FAST_MODE_SUPPORTED_MODELS,
   isCodexLocalFastModeSupported,
   isCodexLocalManualModel,
-} from "@paperclipai/adapter-codex-local";
+} from "@thinkingmach/adapter-codex-local";
 import {
-  PAPERCLIP_RUNNER_IDLE_TIMEOUT_DEFAULT_MS,
-  PAPERCLIP_RUNNER_IDLE_TIMEOUT_MAX_MS,
-  PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES,
-  isPaperclipRunnerProvider,
-  resolvePaperclipRunnerIdleTimeoutMs,
-  resolvePaperclipRunnerPermissionMode,
-  type PaperclipRunnerPermissionMode,
-  type PaperclipRunnerProvider,
-} from "@paperclipai/adapter-utils";
+  THINKINGMACH_RUNNER_IDLE_TIMEOUT_DEFAULT_MS,
+  THINKINGMACH_RUNNER_IDLE_TIMEOUT_MAX_MS,
+  THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES,
+  isThinkingMachRunnerProvider,
+  resolveThinkingMachRunnerIdleTimeoutMs,
+  resolveThinkingMachRunnerPermissionMode,
+  type ThinkingMachRunnerPermissionMode,
+  type ThinkingMachRunnerProvider,
+} from "@thinkingmach/adapter-utils";
 
 const inputClass =
   "w-full rounded-md border border-border px-2.5 py-1.5 bg-transparent outline-none text-sm font-mono placeholder:text-muted-foreground/40";
@@ -54,20 +54,20 @@ export function CodexLocalConfigFields({
   // The execution engine picks which binary runs on the execution host, and the
   // ACP sub-fields below name host paths. The platform-managed environment owns
   // both, so the managed-sandbox-only policy hides them the same way
-  // `runnerManaged` already does for the Paperclip Runner.
+  // `runnerManaged` already does for the ThinkingMach Runner.
   const hideEngineChoice = runnerManaged || managedSandboxOnly === true;
   const configuredRunnerProvider = runnerManaged
     ? isCreate
       ? values!.adapterSchemaValues?.provider
       : eff("adapterConfig", "provider", config.provider === "acpx" && config.acpxAgent === "codex" ? "codex" : config.provider ?? "codex")
     : "codex";
-  const runnerProvider: PaperclipRunnerProvider = isPaperclipRunnerProvider(
+  const runnerProvider: ThinkingMachRunnerProvider = isThinkingMachRunnerProvider(
     configuredRunnerProvider,
   )
     ? configuredRunnerProvider
     : "codex";
   const runnerPermissionCapability =
-    PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES[runnerProvider];
+    THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES[runnerProvider];
   const configuredRunnerPermissionMode =
     runnerManaged && runnerPermissionCapability.configurable
       ? isCreate
@@ -92,7 +92,7 @@ export function CodexLocalConfigFields({
     );
   const runnerPermissionMode =
     runnerManaged && runnerPermissionCapability.configurable
-      ? resolvePaperclipRunnerPermissionMode(
+      ? resolveThinkingMachRunnerPermissionMode(
           runnerProvider,
           configuredRunnerPermissionMode,
         )
@@ -123,12 +123,12 @@ export function CodexLocalConfigFields({
         )
     : "per_turn";
   const runnerIdleTimeoutMs = runnerManaged
-    ? resolvePaperclipRunnerIdleTimeoutMs(
+    ? resolveThinkingMachRunnerIdleTimeoutMs(
         isCreate
           ? values!.paperclipRunnerIdleTimeoutMs
           : eff("adapterConfig", "idleTimeoutMs", config.idleTimeoutMs),
       )
-    : PAPERCLIP_RUNNER_IDLE_TIMEOUT_DEFAULT_MS;
+    : THINKINGMACH_RUNNER_IDLE_TIMEOUT_DEFAULT_MS;
   const rawEngine = runnerManaged
     ? "cli"
     : isCreate
@@ -154,7 +154,7 @@ export function CodexLocalConfigFields({
     ? "Fast mode will be passed through for this manual model. If Codex rejects it, turn the toggle off."
     : fastModeSupported
       ? "Fast mode consumes credits/tokens much faster than standard Codex runs."
-      : `Fast mode currently only works on ${supportedModelsLabel} or manual model IDs. Paperclip will ignore this toggle until the model is switched.`;
+      : `Fast mode currently only works on ${supportedModelsLabel} or manual model IDs. ThinkingMach will ignore this toggle until the model is switched.`;
 
   return configFieldsForSection(section, (
     <>
@@ -197,7 +197,7 @@ export function CodexLocalConfigFields({
             className={inputClass}
             value={runnerProvider}
             onChange={(event) => {
-              const provider = isPaperclipRunnerProvider(event.target.value)
+              const provider = isThinkingMachRunnerProvider(event.target.value)
                 ? event.target.value
                 : "codex";
               const model =
@@ -300,7 +300,7 @@ export function CodexLocalConfigFields({
           </Field>
           <Field
             label="Estimated session ceiling (USD)"
-            hint="Paperclip estimate; AWS does not provide a per-session currency hard stop."
+            hint="ThinkingMach estimate; AWS does not provide a per-session currency hard stop."
           >
             <DraftNumberInput
               value={Number(runnerSchemaValue("maxEstimatedSessionCostUsd", 1))}
@@ -373,7 +373,7 @@ export function CodexLocalConfigFields({
       {runnerManaged && runnerPermissionCapability.configurable && (runnerPermissionCapability.options.length > 1 || runnerPermissionModeUnsupported) && (
         <Field
           label="Permission mode"
-          hint={`${runnerPermissionCapability.description} The selected mode does not widen Paperclip's workspace, network, credential, or planning boundaries.`}
+          hint={`${runnerPermissionCapability.description} The selected mode does not widen ThinkingMach's workspace, network, credential, or planning boundaries.`}
         >
           <Select
             value={
@@ -382,10 +382,10 @@ export function CodexLocalConfigFields({
                 : runnerPermissionMode
             }
             onValueChange={(selectedMode) => {
-              const value = resolvePaperclipRunnerPermissionMode(
+              const value = resolveThinkingMachRunnerPermissionMode(
                 runnerProvider,
                 selectedMode,
-              ) as PaperclipRunnerPermissionMode;
+              ) as ThinkingMachRunnerPermissionMode;
               if (isCreate) {
                 set!({
                   adapterSchemaValues: {
@@ -424,7 +424,7 @@ export function CodexLocalConfigFields({
           </Select>
           {runnerPermissionModeUnsupported && runnerProvider === "codex" && (
             <p className="mt-1 text-xs text-destructive" role="alert">
-              This saved Codex mode cannot start or recover a Paperclip Runner
+              This saved Codex mode cannot start or recover a ThinkingMach Runner
               run. Select Automatic (isolated) to remediate it.
             </p>
           )}
@@ -459,13 +459,13 @@ export function CodexLocalConfigFields({
             <input
               type="number"
               min={1}
-              max={PAPERCLIP_RUNNER_IDLE_TIMEOUT_MAX_MS}
+              max={THINKINGMACH_RUNNER_IDLE_TIMEOUT_MAX_MS}
               className={inputClass}
               value={runnerIdleTimeoutMs}
               onChange={(event) =>
                 set!({
                   paperclipRunnerIdleTimeoutMs:
-                    resolvePaperclipRunnerIdleTimeoutMs(
+                    resolveThinkingMachRunnerIdleTimeoutMs(
                       Number(event.target.value),
                     ),
                 })
@@ -475,12 +475,12 @@ export function CodexLocalConfigFields({
             <DraftNumberInput
               value={runnerIdleTimeoutMs}
               min={1}
-              max={PAPERCLIP_RUNNER_IDLE_TIMEOUT_MAX_MS}
+              max={THINKINGMACH_RUNNER_IDLE_TIMEOUT_MAX_MS}
               onCommit={(value) =>
                 mark(
                   "adapterConfig",
                   "idleTimeoutMs",
-                  resolvePaperclipRunnerIdleTimeoutMs(value),
+                  resolveThinkingMachRunnerIdleTimeoutMs(value),
                 )
               }
               immediate
@@ -573,7 +573,7 @@ export function CodexLocalConfigFields({
           {!managedSandboxOnly && (
             <Field
               label="ACP state directory"
-              hint="Optional ACP session state directory. Defaults to Paperclip-managed organization/agent scoped storage."
+              hint="Optional ACP session state directory. Defaults to ThinkingMach-managed organization/agent scoped storage."
             >
               <div className="flex items-center gap-2">
                 <DraftInput

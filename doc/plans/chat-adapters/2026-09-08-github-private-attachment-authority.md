@@ -61,7 +61,7 @@ omission rather than asserting that every 404 specifically means “private.”
 Outbound is separate: the official
 [GitHub CLI uploader](https://github.com/cli/cli/blob/trunk/internal/attachments/client.go)
 allows OAuth, personal-access, and fine-grained personal-access tokens, not App
-installation tokens. Paperclip keeps the private-task output-file fallback and
+installation tokens. ThinkingMach keeps the private-task output-file fallback and
 does not acquire extra repository permissions or impersonate the browser user.
 
 ## Qualification gate
@@ -154,7 +154,7 @@ the cat, pale green eyes, pink chair and plant. The rendered response persisted
 after a normal browser refresh; the task and conversation remained open.
 
 Independent diagnostics verified the exact new review comment, original review
-root, current Paperclip comment, source-body digest, and new asset UUID. The
+root, current ThinkingMach comment, source-body digest, and new asset UUID. The
 stored attachment again rehashed to the **2,111,878-byte** fixture SHA above.
 The supplied source matches the locator digest after GitHub CRLF normalization.
 There was one wake-associated run, no omission, two artifact-view events, and
@@ -169,7 +169,7 @@ changed/deleted-source test or an interrupted-download/revocation stress test.
 ### Live changed-source rejection
 
 Root uploaded a fresh private image in the authorized PR conversation and
-submitted `PRIVATE-SOURCE-CHANGE-0908` at **17:38:59.379 UTC**. Paperclip was
+submitted `PRIVATE-SOURCE-CHANGE-0908` at **17:38:59.379 UTC**. ThinkingMach was
 deliberately offline after a zero-active-run shutdown, so the original created
 delivery failed without entering the local delivery ledger. Root edited only
 that synthetic source comment at **17:39:33.981 UTC**, preserving its new image
@@ -179,7 +179,7 @@ server was offline. Neither delivery had been admitted before restart.
 After server 50 became ready, root used the existing App identity and GitHub's
 supported [App webhook redelivery API](https://docs.github.com/en/rest/apps/webhooks#redeliver-a-delivery-for-an-app-webhook)
 to redeliver **only the original created event**, once. The new signed
-delivery reached Paperclip and retained the original source digest
+delivery reached ThinkingMach and retained the original source digest
 `1ac24a2833edef198dd4d6dfa6155414f93dff5d6e01902f9ef65b6e7902244b`.
 The current canonical comment instead hashed to
 `6c47240d26bf98e6561479a9c01ac6c5e111766a46ba01182397aea4845c5514`.
@@ -203,7 +203,7 @@ This proves rejection of a **changed body** for a real redelivered event. It
 does not prove deleted-source or in-flight download revocation behavior.
 
 Separately, the bot-created reply callback received a 502 before reaching the
-instrumented local proxy or Paperclip. GitHub reported the exact configured
+instrumented local proxy or ThinkingMach. GitHub reported the exact configured
 destination, a 0.1-second duration, no response headers and an empty body.
 Adjacent original-redelivery and bot-edit callbacks used that same destination
 and received 202. The bot-edit was correctly filtered as outbound/self; the

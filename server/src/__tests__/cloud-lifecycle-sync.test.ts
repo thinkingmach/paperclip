@@ -9,9 +9,9 @@ const STACK_ID = "stack-lifecycle-sync";
 const PRIMARY_ID = cloudTenantPrimaryCompanyId(STACK_ID);
 
 const CLOUD_ENV = {
-  PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN: "tenant-token-test",
-  PAPERCLIP_CLOUD_STACK_ID: STACK_ID,
-  PAPERCLIP_CLOUD_API_ORIGIN: "https://cloud.example.test",
+  THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN: "tenant-token-test",
+  THINKINGMACH_CLOUD_STACK_ID: STACK_ID,
+  THINKINGMACH_CLOUD_API_ORIGIN: "https://cloud.example.test",
 } as NodeJS.ProcessEnv;
 
 describe("isCloudPinnedPrimaryCompany", () => {
@@ -46,7 +46,7 @@ describe("notifyCloudOfPrimaryCompanyLifecycleChange", () => {
       fetchImpl: fetchImpl as unknown as typeof fetch,
     });
     await notifyCloudOfPrimaryCompanyLifecycleChange(PRIMARY_ID, {
-      env: { ...CLOUD_ENV, PAPERCLIP_CLOUD_API_ORIGIN: undefined } as NodeJS.ProcessEnv,
+      env: { ...CLOUD_ENV, THINKINGMACH_CLOUD_API_ORIGIN: undefined } as NodeJS.ProcessEnv,
       fetchImpl: fetchImpl as unknown as typeof fetch,
     });
     await notifyCloudOfPrimaryCompanyLifecycleChange(PRIMARY_ID, {

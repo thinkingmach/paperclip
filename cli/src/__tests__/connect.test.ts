@@ -112,7 +112,7 @@ describe("connect command", () => {
     expect(loginBoardCli).toHaveBeenCalledWith(expect.objectContaining({
       apiBase: API_BASE,
       requestedAccess: "board",
-      command: "paperclipai connect",
+      command: "thinkingmach connect",
     }));
     expect(fetchMock.mock.calls.map((call) => [call[1]?.method ?? "GET", new URL(String(call[0])).pathname])).toEqual([
       ["GET", "/api/health"],

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AGENT_AVATAR_SIZES, AGENT_PALETTE_IDS, CHARACTER_STATES, appearanceForPalette } from "@paperclipai/shared";
+import { AGENT_AVATAR_SIZES, AGENT_PALETTE_IDS, CHARACTER_STATES, appearanceForPalette } from "@thinkingmach/shared";
 import { agentAvatarUrl as productionUrl } from "../../src/lib/agent-avatar-url";
 import { agentAvatarUrl } from "./agent-avatar-url";
 

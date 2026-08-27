@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { REDACTED_EVENT_VALUE } from "../redaction.js";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { PgDialect } from "drizzle-orm/pg-core";
 import { createRunSecretRedactionRegistry, redactRegisteredSecretValues } from "../services/run-secret-redaction.js";
 

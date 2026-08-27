@@ -4,17 +4,17 @@ import { readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import { eq } from "drizzle-orm";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { agents, heartbeatRuns, issueAttachments, issueComments, issues, issueWorkProducts } from "@paperclipai/db";
-import { startAdapterExecutionTargetPaperclipBridge, type AdapterSandboxExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
-import type { CommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/command-managed-runtime";
-import { runChildProcess } from "@paperclipai/adapter-utils/server-utils";
+import { agents, heartbeatRuns, issueAttachments, issueComments, issues, issueWorkProducts } from "@thinkingmach/db";
+import { startAdapterExecutionTargetThinkingMachBridge, type AdapterSandboxExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
+import type { CommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/command-managed-runtime";
+import { runChildProcess } from "@thinkingmach/adapter-utils/server-utils";
 import { createLocalAgentJwt } from "../agent-auth-jwt.js";
-import { PaperclipRunnerToolAuthority } from "../services/native-runtime/paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "../services/native-runtime/paperclip-runner-tool-authority.js";
 import { readVerifiedRemoteWorkspaceFile } from "../services/native-runtime/remote-deliverable-file.js";
 import { startFileDeliveryDaytona } from "./helpers/file-delivery-daytona.js";
 import { startRunnerApiTestServer } from "./helpers/runner-api-server.js";
 
-const liveDaytona = process.env.PAPERCLIP_FILE_DELIVERY_DAYTONA === "1";
+const liveDaytona = process.env.THINKINGMACH_FILE_DELIVERY_DAYTONA === "1";
 const helper = path.resolve(import.meta.dirname, "../../../skills/paperclip/scripts/paperclip-upload-artifact.sh");
 // A real PNG and a PDF with binary bytes in its comment exercise UTF-8 corruption.
 const files = [
@@ -71,7 +71,7 @@ describe(`durable file delivery (${liveDaytona ? "Daytona" : "local processes"})
     return { workspace, runner, close, run, write, fetch: fetchFromWorkspace };
   }
   beforeAll(async () => {
-    vi.stubEnv("PAPERCLIP_AGENT_JWT_SECRET", "isolated-file-delivery-test-secret");
+    vi.stubEnv("THINKINGMACH_AGENT_JWT_SECRET", "isolated-file-delivery-test-secret");
     server = await startRunnerApiTestServer();
   });
   afterAll(async () => { await server?.close(); vi.unstubAllEnvs(); });
@@ -93,16 +93,16 @@ describe(`durable file delivery (${liveDaytona ? "Daytona" : "local processes"})
         duplexCommandStream: true, runnerWebSocketIngress: false,
       },
     };
-    const bridge = await startAdapterExecutionTargetPaperclipBridge({
+    const bridge = await startAdapterExecutionTargetThinkingMachBridge({
       runId: fixture.runId, target, runtimeRootDir: path.join(remote.workspace, ".runtime"),
       adapterKey: "codex", hostApiToken: token, hostApiUrl: server.apiUrl,
       enableSandboxDuplexBridge: duplex,
     });
-    expect(bridge?.env.PAPERCLIP_API_BRIDGE_MODE).toBe(duplex ? "http2_v1" : "queue_v1");
-    const env = { ...bridge!.env, PAPERCLIP_RUN_ID: fixture.runId,
-      PAPERCLIP_COMPANY_ID: fixture.companyId, PAPERCLIP_TASK_ID: fixture.issueId,
-      PAPERCLIP_HELPER_STATE_DIR: path.join(remote.workspace, ".helper-state") };
-    const headers = { authorization: `Bearer ${bridge!.env.PAPERCLIP_API_KEY}` };
+    expect(bridge?.env.THINKINGMACH_API_BRIDGE_MODE).toBe(duplex ? "http2_v1" : "queue_v1");
+    const env = { ...bridge!.env, THINKINGMACH_RUN_ID: fixture.runId,
+      THINKINGMACH_COMPANY_ID: fixture.companyId, THINKINGMACH_TASK_ID: fixture.issueId,
+      THINKINGMACH_HELPER_STATE_DIR: path.join(remote.workspace, ".helper-state") };
+    const headers = { authorization: `Bearer ${bridge!.env.THINKINGMACH_API_KEY}` };
     const receipts: Array<{ attachment: { id: string; contentPath: string; downloadPath: string } }> = [];
     try {
       for (const file of files) {
@@ -115,15 +115,15 @@ describe(`durable file delivery (${liveDaytona ? "Daytona" : "local processes"})
         expect(duplicate.chatComment.id).toBe(receipt.chatComment.id);
         expect(receipt.attachment.originalFilename).toBe(file.name);
         expect(receipt.attachment.originatingRunId).toBe(fixture.runId);
-        const download = await remote.fetch(bridge!.env.PAPERCLIP_API_URL + receipt.attachment.downloadPath, headers);
+        const download = await remote.fetch(bridge!.env.THINKINGMACH_API_URL + receipt.attachment.downloadPath, headers);
         expect(download.status).toBe(200);
         expect(Buffer.from(await download.arrayBuffer())).toEqual(file.body);
         receipts.push(receipt);
       }
       const foreign = await server.fixture();
-      const denied = await remote.fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/issues/${foreign.issueId}/attachments`, headers);
+      const denied = await remote.fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/issues/${foreign.issueId}/attachments`, headers);
       expect(denied.status).toBe(404);
-      const unauthorized = await remote.fetch(`${bridge!.env.PAPERCLIP_API_URL}/api/issues/${fixture.issueId}/attachments`, { authorization: "Bearer wrong-token" });
+      const unauthorized = await remote.fetch(`${bridge!.env.THINKINGMACH_API_URL}/api/issues/${fixture.issueId}/attachments`, { authorization: "Bearer wrong-token" });
       expect(unauthorized.status).toBe(401);
       expect(await server.db.select().from(issueAttachments).where(eq(issueAttachments.issueId, fixture.issueId))).toHaveLength(2);
       expect(await server.db.select().from(issueWorkProducts).where(eq(issueWorkProducts.issueId, fixture.issueId))).toHaveLength(2);
@@ -141,7 +141,7 @@ describe(`durable file delivery (${liveDaytona ? "Daytona" : "local processes"})
   it("registers native files with API tools disabled and returns durable download receipts", async () => {
     const fixture = await server.fixture({ apiToolsEnabled: false });
     const remote = await execution(fixture.workspace);
-    const authority = new PaperclipRunnerToolAuthority(server.db, { ...fixture,
+    const authority = new ThinkingMachRunnerToolAuthority(server.db, { ...fixture,
       workspaceRoot: remote.workspace, executionTargetKind: liveDaytona ? "remote" : "local",
       readRemoteWorkspaceFile: liveDaytona ? request => readVerifiedRemoteWorkspaceFile({ ...request, runner: remote.runner, workspaceRoot: remote.workspace }) : undefined,
     });

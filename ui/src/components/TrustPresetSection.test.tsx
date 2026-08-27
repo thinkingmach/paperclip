@@ -2,7 +2,7 @@
 import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { AgentPermissions } from "@paperclipai/shared";
+import type { AgentPermissions } from "@thinkingmach/shared";
 import { TrustPresetSection } from "./TrustPresetSection";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -24,7 +24,7 @@ function renderSection(permissions: Partial<AgentPermissions>) {
           permissions={permissions}
           onChange={onChange}
           companyId="company-1"
-          projectCandidates={[{ id: "project-1", label: "Paperclip App" }]}
+          projectCandidates={[{ id: "project-1", label: "ThinkingMach App" }]}
           issueCandidates={[{ id: "issue-1", label: "PAP-1 · Review PR" }]}
         />
       </TooltipProvider>,
@@ -48,7 +48,7 @@ describe("TrustPresetSection", () => {
 
     expect(view.text()).toContain("Trust preset");
     expect(view.text()).not.toContain("Boundary type");
-    expect(view.text()).not.toContain("Get Paperclip EE.");
+    expect(view.text()).not.toContain("Get ThinkingMach EE.");
   });
 
   it("shows a selectable CE boundary editor for low-trust review", () => {
@@ -67,8 +67,8 @@ describe("TrustPresetSection", () => {
 
     expect(view.text()).toContain("Containment active");
     expect(view.text()).toContain("Boundary type");
-    expect(view.text()).toContain("Paperclip App");
-    expect(view.text()).toContain("Get Paperclip EE.");
+    expect(view.text()).toContain("ThinkingMach App");
+    expect(view.text()).toContain("Get ThinkingMach EE.");
     expect(view.text()).not.toContain("Managed by EE/API");
   });
 

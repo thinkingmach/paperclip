@@ -8,7 +8,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Bot, Clock3, Coins, GanttChartSquare, Minus, Plus, RotateCcw, type LucideIcon } from "lucide-react";
-import type { WorkTimelineResult } from "@paperclipai/shared";
+import type { WorkTimelineResult } from "@thinkingmach/shared";
 import { workTimelineApi, type WorkTimelineParams } from "@/api/workTimeline";
 import { queryKeys } from "@/lib/queryKeys";
 import { useCompany } from "@/context/CompanyContext";

@@ -1,7 +1,7 @@
 import type {
   FeedbackDataSharingPreference,
   FeedbackVoteValue,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useCopyAction } from "@/lib/use-copy-action";
 import { IssueChatFeedbackButtons } from "@/components/AgentBubbleActionRow";
 import { Check, Copy, X } from "lucide-react";

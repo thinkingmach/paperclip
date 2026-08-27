@@ -1,23 +1,23 @@
 ---
 title: AWS ECS Fargate
-summary: Deploy Paperclip to AWS using ECS Fargate, RDS Postgres, and EFS
+summary: Deploy ThinkingMach to AWS using ECS Fargate, RDS Postgres, and EFS
 ---
 
-Deploy Paperclip to AWS with ECS Fargate (compute), RDS Postgres 17 (database), and EFS (persistent storage). This guide uses the AWS CLI and produces a single-task ECS service behind an ALB with HTTPS.
+Deploy ThinkingMach to AWS with ECS Fargate (compute), RDS Postgres 17 (database), and EFS (persistent storage). This guide uses the AWS CLI and produces a single-task ECS service behind an ALB with HTTPS.
 
 ## Prerequisites
 
 - AWS CLI v2 configured with a profile that has admin-level permissions
 - Docker installed locally (for building and pushing the image)
 - A registered domain with DNS you control (for the TLS certificate)
-- The Paperclip repo cloned locally
+- The ThinkingMach repo cloned locally
 
 Set these shell variables for the rest of the guide:
 
 ```bash
 export AWS_REGION=us-east-1
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export PAPERCLIP_DOMAIN=paperclip.example.com   # your domain
+export THINKINGMACH_DOMAIN=paperclip.example.com   # your domain
 export DB_PASSWORD=$(openssl rand -base64 24 | tr -d '/+=' | head -c 32)
 export AUTH_SECRET=$(openssl rand -base64 32)
 ```
@@ -77,7 +77,7 @@ Create security groups:
 # ALB security group — inbound HTTPS
 ALB_SG=$(aws ec2 create-security-group \
   --group-name paperclip-alb \
-  --description "Paperclip ALB" \
+  --description "ThinkingMach ALB" \
   --vpc-id $VPC_ID \
   --query 'GroupId' --output text)
 
@@ -93,7 +93,7 @@ aws ec2 authorize-security-group-ingress \
 # ECS task security group — inbound from ALB only
 ECS_SG=$(aws ec2 create-security-group \
   --group-name paperclip-ecs \
-  --description "Paperclip ECS tasks" \
+  --description "ThinkingMach ECS tasks" \
   --vpc-id $VPC_ID \
   --query 'GroupId' --output text)
 
@@ -105,7 +105,7 @@ aws ec2 authorize-security-group-ingress \
 # RDS security group — inbound from ECS only
 RDS_SG=$(aws ec2 create-security-group \
   --group-name paperclip-rds \
-  --description "Paperclip RDS" \
+  --description "ThinkingMach RDS" \
   --vpc-id $VPC_ID \
   --query 'GroupId' --output text)
 
@@ -117,7 +117,7 @@ aws ec2 authorize-security-group-ingress \
 # EFS security group — inbound NFS from ECS only
 EFS_SG=$(aws ec2 create-security-group \
   --group-name paperclip-efs \
-  --description "Paperclip EFS" \
+  --description "ThinkingMach EFS" \
   --vpc-id $VPC_ID \
   --query 'GroupId' --output text)
 
@@ -134,7 +134,7 @@ aws ec2 authorize-security-group-ingress \
 # that spans our two subnets so RDS can place the instance.
 aws rds create-db-subnet-group \
   --db-subnet-group-name paperclip-db-subnet \
-  --db-subnet-group-description "Paperclip RDS subnets" \
+  --db-subnet-group-description "ThinkingMach RDS subnets" \
   --subnet-ids $SUBNET_1 $SUBNET_2
 
 aws rds create-db-instance \
@@ -273,7 +273,7 @@ Register the task definition using the template at `docker/ecs-task-definition.j
 sed -e "s|<ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
     -e "s|<REGION>|$AWS_REGION|g" \
     -e "s|<EFS_ID>|$EFS_ID|g" \
-    -e "s|<DOMAIN>|$PAPERCLIP_DOMAIN|g" \
+    -e "s|<DOMAIN>|$THINKINGMACH_DOMAIN|g" \
     docker/ecs-task-definition.json > /tmp/paperclip-task-def.json
 
 aws ecs register-task-definition \
@@ -286,7 +286,7 @@ Request a certificate (you must validate via DNS):
 
 ```bash
 CERT_ARN=$(aws acm request-certificate \
-  --domain-name $PAPERCLIP_DOMAIN \
+  --domain-name $THINKINGMACH_DOMAIN \
   --validation-method DNS \
   --query 'CertificateArn' --output text)
 
@@ -349,7 +349,7 @@ HTTP_LISTENER_ARN=$(aws elbv2 create-listener \
 ```
 
 Point your DNS to the ALB:
-- Create a CNAME or ALIAS record for `$PAPERCLIP_DOMAIN` -> `$ALB_DNS`
+- Create a CNAME or ALIAS record for `$THINKINGMACH_DOMAIN` -> `$ALB_DNS`
 
 ## 10. Create ECS Service
 
@@ -400,7 +400,7 @@ aws ecs describe-tasks --cluster paperclip --tasks $TASK_ARN \
 aws logs tail /ecs/paperclip --since 10m --follow
 
 # Hit the health endpoint
-curl -sf https://$PAPERCLIP_DOMAIN/api/health
+curl -sf https://$THINKINGMACH_DOMAIN/api/health
 ```
 
 **Healthy indicators:**
@@ -415,7 +415,7 @@ After the first user has signed up (which grants admin role), lock down the inst
 ```bash
 # Disable public sign-up (prevents unauthorized users from creating accounts)
 # Add to the task definition environment section, then redeploy:
-#   { "name": "PAPERCLIP_AUTH_DISABLE_SIGN_UP", "value": "true" }
+#   { "name": "THINKINGMACH_AUTH_DISABLE_SIGN_UP", "value": "true" }
 
 # Or update via Secrets Manager / task def override, then force new deployment
 aws ecs update-service \

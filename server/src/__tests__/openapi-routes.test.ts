@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import request from "supertest";
 import { describe, expect, it } from "vitest";
-import { COMPANY_IMPORT_TRANSFERS_ROUTE_PATH } from "@paperclipai/shared/company-import-transfer";
+import { COMPANY_IMPORT_TRANSFERS_ROUTE_PATH } from "@thinkingmach/shared/company-import-transfer";
 import { errorHandler } from "../middleware/index.js";
 import { buildOpenApiSpec, openApiRoutes } from "../routes/openapi.js";
 
@@ -92,7 +92,7 @@ const explicitOpenApiCoverageExclusions = new Set<string>();
 
 const explicitOpenApiOperationCoverageExclusions = new Set([
   // This endpoint is authenticated by the provider signature rather than by a
-  // Paperclip board/agent credential. It intentionally stays out of the public
+  // ThinkingMach board/agent credential. It intentionally stays out of the public
   // board API document, while this exact exclusion keeps route coverage honest.
   "POST /api/chat-webhooks/agentmail/{publicId}",
   "POST /api/chat-webhooks/{publicId}/{provider}",
@@ -262,7 +262,7 @@ describe("openapi routes", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.openapi).toBe("3.0.0");
-    expect(res.body.info.title).toBe("Paperclip API");
+    expect(res.body.info.title).toBe("ThinkingMach API");
     expect(res.body.paths["/api/openapi.json"].get.summary).toBe(
       "Get the generated OpenAPI document",
     );

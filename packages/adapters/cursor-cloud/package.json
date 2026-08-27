@@ -1,14 +1,14 @@
 {
-  "name": "@paperclipai/adapter-cursor-cloud",
-  "version": "0.3.1",
+  "name": "@thinkingmach/adapter-cursor-cloud",
+  "version": "0.3.3",
   "license": "MIT",
-  "homepage": "https://github.com/paperclipai/paperclip",
+  "homepage": "https://github.com/thinkingmach/paperclip",
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/adapters/cursor-cloud"
   },
   "type": "module",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@cursor/sdk": "^1.0.28",
-    "@paperclipai/adapter-utils": "workspace:*",
+    "@thinkingmach/adapter-utils": "workspace:*",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {

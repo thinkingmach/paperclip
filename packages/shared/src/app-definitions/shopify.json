@@ -33,7 +33,7 @@
           }
         }
       },
-      "guidanceMd": "Connect Shopify's current UCP server for shopper-facing catalog and commerce tools. Paperclip supplies the required agent profile automatically.",
+      "guidanceMd": "Connect Shopify's current UCP server for shopper-facing catalog and commerce tools. ThinkingMach supplies the required agent profile automatically.",
       "riskTier": "S3",
       "label": "Shopify UCP commerce",
       "tenantFields": [
@@ -56,7 +56,7 @@
       "warnings": [
         "This is Shopify's shopper-facing UCP server, not Admin API access. It does not manage merchant products or customers.",
         "The storefront must be public. A private or password-protected storefront returns HTTP 401 even when the merchant is signed in to Shopify Admin.",
-        "Paperclip currently uses Shopify's documented hosted agent-profile fixture while Paperclip's production UCP profile is being established."
+        "ThinkingMach currently uses Shopify's documented hosted agent-profile fixture while ThinkingMach's production UCP profile is being established."
       ],
       "requiredResourceFilters": [
         "store"
@@ -105,11 +105,11 @@
   "docsUrl": "https://shopify.dev/docs/apps/build/storefront-mcp/servers/storefront",
   "setupPrerequisite": {
     "title": "Launch the storefront before connecting",
-    "description": "Shopify's Storefront MCP is a public, no-auth endpoint. Paperclip cannot use the merchant's Shopify Admin session to bypass a private storefront.",
+    "description": "Shopify's Storefront MCP is a public, no-auth endpoint. ThinkingMach cannot use the merchant's Shopify Admin session to bypass a private storefront.",
     "steps": [
       "Select a Shopify plan; Shopify keeps trial storefronts private until a plan is selected.",
       "In Shopify Admin, open Online Store → Preferences and set Storefront visibility to Public (remove password protection).",
-      "Use the permanent <store>.myshopify.com domain in Paperclip, even if the store also has a custom domain."
+      "Use the permanent <store>.myshopify.com domain in ThinkingMach, even if the store also has a custom domain."
     ],
     "actionLabel": "Open Shopify Admin",
     "actionUrl": "https://admin.shopify.com/"

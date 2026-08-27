@@ -4,7 +4,7 @@
 // browser install a new worker, which — via skipWaiting + controllerchange —
 // reloads parked tabs onto the fresh bundle. Left as the literal placeholder in
 // dev, where HMR (not the worker) drives refreshes.
-const BUILD_ID = "__PAPERCLIP_BUILD_ID__";
+const BUILD_ID = "__THINKINGMACH_BUILD_ID__";
 // Separate this allowlisted cache from older workers that cached arbitrary URLs.
 const CACHE_NAME = `paperclip-public-assets-${BUILD_ID}`;
 const privateRequests = new Set();
@@ -15,8 +15,8 @@ function offlineNavigationResponse() {
   return new Response(`<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark"><title>Paperclip is offline</title></head>
-<body><main><h1>Paperclip is offline</h1>
+<meta name="color-scheme" content="light dark"><title>ThinkingMach is offline</title></head>
+<body><main><h1>ThinkingMach is offline</h1>
 <p>Check your connection, then reload this page to try again.</p>
 <button type="button" onclick="window.location.reload()">Reload page</button>
 </main></body></html>`, {

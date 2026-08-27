@@ -4,9 +4,9 @@ import {
   type NativeStatusDecision,
 } from "./status-arbiter.js";
 import {
-  PaperclipRunnerProviderProfileError,
-  resolvePaperclipRunnerProviderProfile,
-  type PaperclipRunnerProviderProfile,
+  ThinkingMachRunnerProviderProfileError,
+  resolveThinkingMachRunnerProviderProfile,
+  type ThinkingMachRunnerProviderProfile,
 } from "./provider-profile.js";
 
 /**
@@ -29,7 +29,7 @@ export type HeartbeatRuntimeResolution =
       kind: "native";
       resolverVersion: typeof NATIVE_RUNTIME_RESOLVER_VERSION;
       reason: "explicit_paperclip_runner" | "persisted_native_selection";
-      provider: PaperclipRunnerProviderProfile["provider"];
+      provider: ThinkingMachRunnerProviderProfile["provider"];
     };
 
 export type NativeRuntimeResolution =
@@ -118,14 +118,14 @@ export function resolveNativeRuntimeMode(input: {
   if (!input.enabled) {
     throw ineligible(
       "paperclip_runner_rollout_disabled",
-      "Paperclip Runner is experimental and disabled on this instance.",
+      "ThinkingMach Runner is experimental and disabled on this instance.",
     );
   }
-  let runnerProfile: PaperclipRunnerProviderProfile;
+  let runnerProfile: ThinkingMachRunnerProviderProfile;
   try {
-    runnerProfile = resolvePaperclipRunnerProviderProfile(input.adapterConfig);
+    runnerProfile = resolveThinkingMachRunnerProviderProfile(input.adapterConfig);
   } catch (error) {
-    if (error instanceof PaperclipRunnerProviderProfileError) {
+    if (error instanceof ThinkingMachRunnerProviderProfileError) {
       throw ineligible(error.code, error.message);
     }
     throw error;
@@ -136,14 +136,14 @@ export function resolveNativeRuntimeMode(input: {
   ) {
     throw ineligible(
       "paperclip_runner_agent_ineligible",
-      "Paperclip Runner requires an active agent.",
+      "ThinkingMach Runner requires an active agent.",
     );
   }
   const allowedWorkModes = ["standard", "planning", "ask"];
   if (!input.issue || !allowedWorkModes.includes(input.issue.workMode)) {
     throw ineligible(
       "paperclip_runner_issue_ineligible",
-      "Paperclip Runner requires a standard, planning, or ask task.",
+      "ThinkingMach Runner requires a standard, planning, or ask task.",
     );
   }
   const rollout = resolveNativeMigrationStatus({
@@ -273,7 +273,7 @@ export function resolveHeartbeatNativeRuntimeMode(input: {
       if (input.agent.adapterType !== "paperclip_runner") {
         throw ineligible(
           "paperclip_runner_adapter_binding_mismatch",
-          "A persisted native run must remain bound to the Paperclip Runner adapter.",
+          "A persisted native run must remain bound to the ThinkingMach Runner adapter.",
         );
       }
       if (
@@ -282,7 +282,7 @@ export function resolveHeartbeatNativeRuntimeMode(input: {
       ) {
         throw ineligible(
           "paperclip_runner_agent_ineligible",
-          "A persisted Paperclip Runner run cannot recover through a non-invokable agent.",
+          "A persisted ThinkingMach Runner run cannot recover through a non-invokable agent.",
         );
       }
       const driverKind = input.persisted.driverKind;
@@ -303,7 +303,7 @@ export function resolveHeartbeatNativeRuntimeMode(input: {
       if (backend === null) {
         throw ineligible(
           "paperclip_runner_driver_unsupported",
-          `Persisted Paperclip Runner driver is unsupported: ${driverKind}`,
+          `Persisted ThinkingMach Runner driver is unsupported: ${driverKind}`,
         );
       }
       return {

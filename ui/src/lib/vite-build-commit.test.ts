@@ -36,8 +36,8 @@ describe("browser build attribution", () => {
     const dockerfile = readFileSync(fileURLToPath(new URL("../../../Dockerfile", import.meta.url)), "utf8");
     const stage = dockerfile.split("FROM runner-build AS build")[1]?.split("FROM base AS production")[0];
     expect(stage).toBeDefined();
-    const arg = stage!.indexOf('ARG PAPERCLIP_BUILD_COMMIT=""');
-    const browserBuild = stage!.indexOf("RUN pnpm --filter @paperclipai/ui build");
+    const arg = stage!.indexOf('ARG THINKINGMACH_BUILD_COMMIT=""');
+    const browserBuild = stage!.indexOf("RUN pnpm --filter @thinkingmach/ui build");
     expect(arg).toBeGreaterThanOrEqual(0);
     expect(browserBuild).toBeGreaterThan(arg);
   });

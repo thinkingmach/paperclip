@@ -21,8 +21,8 @@ function artifact() {
     providerSessionId: "private-session-canary",
     snapshot: {
       networkEvidence: {
-        realPaperclipRequests: 0,
-        childPaperclipEnvironmentKeys: [],
+        realThinkingMachRequests: 0,
+        childThinkingMachEnvironmentKeys: [],
       },
     },
     issueThread: {
@@ -91,10 +91,10 @@ test("projects only isolated recorded messages and bounded tool facts", () => {
   validatePublicChatPayload(payload());
   for (const networkEvidence of [
     undefined,
-    { realPaperclipRequests: 1, childPaperclipEnvironmentKeys: [] },
+    { realThinkingMachRequests: 1, childThinkingMachEnvironmentKeys: [] },
     {
-      realPaperclipRequests: 0,
-      childPaperclipEnvironmentKeys: ["PAPERCLIP_API_KEY"],
+      realThinkingMachRequests: 0,
+      childThinkingMachEnvironmentKeys: ["THINKINGMACH_API_KEY"],
     },
   ]) {
     const source = artifact();

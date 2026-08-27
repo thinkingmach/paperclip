@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Agent, DocumentAnnotationThreadWithComments } from "@paperclipai/shared";
+import type { Agent, DocumentAnnotationThreadWithComments } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { DocumentAnnotationTarget } from "@/api/document-annotations";

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { chatActions, type Db } from "@paperclipai/db";
+import { chatActions, type Db } from "@thinkingmach/db";
 import { eq, sql, type SQLWrapper } from "drizzle-orm";
 import { HttpError } from "../errors.js";
 

@@ -20,8 +20,8 @@ import type {
 } from "./protocol/replay-contract.js";
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   nativeRuntimePromptDigest,
 } from "./contracts/runtime-context.js";
@@ -382,7 +382,7 @@ describe("executeNativeSession recovery", () => {
     const appended: PrpEvent[] = [];
     const digest = "0".repeat(64);
     const context = {
-      prompt: { revision: PAPERCLIP_EXECUTION_PROMPT_REVISION, text: PAPERCLIP_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() },
+      prompt: { revision: THINKINGMACH_EXECUTION_PROMPT_REVISION, text: THINKINGMACH_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() },
       instructions: { entryPath: "AGENTS.md", bundle: { schema: NATIVE_RUNTIME_ASSET_SCHEMA, digest, manifestDigest: digest, rootPath: "/runtime/instructions", fileCount: 1, totalBytes: 1 } },
       skills: [], mcp: { assignmentSetId: "none", digest, bindingId: null },
     } as const;
@@ -1947,8 +1947,8 @@ describe("executeNativeSession recovery", () => {
     const digest = "0".repeat(64);
     const context = {
       prompt: {
-        revision: PAPERCLIP_EXECUTION_PROMPT_REVISION,
-        text: PAPERCLIP_EXECUTION_PROMPT,
+        revision: THINKINGMACH_EXECUTION_PROMPT_REVISION,
+        text: THINKINGMACH_EXECUTION_PROMPT,
         digest: nativeRuntimePromptDigest(),
       },
       instructions: {
@@ -6164,7 +6164,7 @@ describe("executeNativeSession recovery", () => {
   it("replaces a provider session that already ended with a failed terminal", async () => {
     const digest = "0".repeat(64);
     const context = {
-      prompt: { revision: PAPERCLIP_EXECUTION_PROMPT_REVISION, text: PAPERCLIP_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() },
+      prompt: { revision: THINKINGMACH_EXECUTION_PROMPT_REVISION, text: THINKINGMACH_EXECUTION_PROMPT, digest: nativeRuntimePromptDigest() },
       instructions: { entryPath: "AGENTS.md", bundle: { schema: NATIVE_RUNTIME_ASSET_SCHEMA, digest, manifestDigest: digest, rootPath: "/runtime/instructions", fileCount: 1, totalBytes: 1 } },
       skills: [],
       mcp: { assignmentSetId: "none", digest, bindingId: null },

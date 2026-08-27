@@ -3,7 +3,7 @@
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getAppStoreDefinition } from "@paperclipai/shared";
+import { getAppStoreDefinition } from "@thinkingmach/shared";
 import { DangerZone } from "./AdvancedPanel";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

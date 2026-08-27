@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { CompanySearchIssueSummary, StatusCardUpdate, SummarySlotIssueRef } from "@paperclipai/shared";
+import type { CompanySearchIssueSummary, StatusCardUpdate, SummarySlotIssueRef } from "@thinkingmach/shared";
 import { AlertTriangle, ChevronDown, ExternalLink, History, Loader2, RefreshCw, Wand2 } from "lucide-react";
 
 import { statusCardsApi, type StatusCardDryRun } from "@/api/statusCards";

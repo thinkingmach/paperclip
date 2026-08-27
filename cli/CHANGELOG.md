@@ -1,43 +1,43 @@
-# paperclipai
+# thinkingmach
 
-## 0.3.1
+## 0.3.3
 
 ### Patch Changes
 
-- Stable release preparation for 0.3.1
+- Stable release preparation for 0.3.3
 - Updated dependencies
-  - @paperclipai/adapter-utils@0.3.1
-  - @paperclipai/adapter-claude-local@0.3.1
-  - @paperclipai/adapter-codex-local@0.3.1
-  - @paperclipai/adapter-cursor-local@0.3.1
-  - @paperclipai/adapter-gemini-local@0.3.1
-  - @paperclipai/adapter-openclaw-gateway@0.3.1
-  - @paperclipai/adapter-opencode-local@0.3.1
-  - @paperclipai/adapter-pi-local@0.3.1
-  - @paperclipai/db@0.3.1
-  - @paperclipai/shared@0.3.1
-  - @paperclipai/server@0.3.1
+  - @thinkingmach/adapter-utils@0.3.3
+  - @thinkingmach/adapter-claude-local@0.3.3
+  - @thinkingmach/adapter-codex-local@0.3.3
+  - @thinkingmach/adapter-cursor-local@0.3.3
+  - @thinkingmach/adapter-gemini-local@0.3.3
+  - @thinkingmach/adapter-openclaw-gateway@0.3.3
+  - @thinkingmach/adapter-opencode-local@0.3.3
+  - @thinkingmach/adapter-pi-local@0.3.3
+  - @thinkingmach/db@0.3.3
+  - @thinkingmach/shared@0.3.3
+  - @thinkingmach/server@0.3.3
 
-## 0.3.0
+## 0.3.3
 
 ### Minor Changes
 
-- Stable release preparation for 0.3.0
+- Stable release preparation for 0.3.3
 
 ### Patch Changes
 
 - Updated dependencies [6077ae6]
 - Updated dependencies
-  - @paperclipai/shared@0.3.0
-  - @paperclipai/adapter-utils@0.3.0
-  - @paperclipai/adapter-claude-local@0.3.0
-  - @paperclipai/adapter-codex-local@0.3.0
-  - @paperclipai/adapter-cursor-local@0.3.0
-  - @paperclipai/adapter-openclaw-gateway@0.3.0
-  - @paperclipai/adapter-opencode-local@0.3.0
-  - @paperclipai/adapter-pi-local@0.3.0
-  - @paperclipai/db@0.3.0
-  - @paperclipai/server@0.3.0
+  - @thinkingmach/shared@0.3.3
+  - @thinkingmach/adapter-utils@0.3.3
+  - @thinkingmach/adapter-claude-local@0.3.3
+  - @thinkingmach/adapter-codex-local@0.3.3
+  - @thinkingmach/adapter-cursor-local@0.3.3
+  - @thinkingmach/adapter-openclaw-gateway@0.3.3
+  - @thinkingmach/adapter-opencode-local@0.3.3
+  - @thinkingmach/adapter-pi-local@0.3.3
+  - @thinkingmach/db@0.3.3
+  - @thinkingmach/server@0.3.3
 
 ## 0.2.7
 
@@ -45,13 +45,13 @@
 
 - Version bump (patch)
 - Updated dependencies
-  - @paperclipai/shared@0.2.7
-  - @paperclipai/adapter-utils@0.2.7
-  - @paperclipai/db@0.2.7
-  - @paperclipai/adapter-claude-local@0.2.7
-  - @paperclipai/adapter-codex-local@0.2.7
-  - @paperclipai/adapter-openclaw@0.2.7
-  - @paperclipai/server@0.2.7
+  - @thinkingmach/shared@0.2.7
+  - @thinkingmach/adapter-utils@0.2.7
+  - @thinkingmach/db@0.2.7
+  - @thinkingmach/adapter-claude-local@0.2.7
+  - @thinkingmach/adapter-codex-local@0.2.7
+  - @thinkingmach/adapter-openclaw@0.2.7
+  - @thinkingmach/server@0.2.7
 
 ## 0.2.6
 
@@ -59,13 +59,13 @@
 
 - Version bump (patch)
 - Updated dependencies
-  - @paperclipai/shared@0.2.6
-  - @paperclipai/adapter-utils@0.2.6
-  - @paperclipai/db@0.2.6
-  - @paperclipai/adapter-claude-local@0.2.6
-  - @paperclipai/adapter-codex-local@0.2.6
-  - @paperclipai/adapter-openclaw@0.2.6
-  - @paperclipai/server@0.2.6
+  - @thinkingmach/shared@0.2.6
+  - @thinkingmach/adapter-utils@0.2.6
+  - @thinkingmach/db@0.2.6
+  - @thinkingmach/adapter-claude-local@0.2.6
+  - @thinkingmach/adapter-codex-local@0.2.6
+  - @thinkingmach/adapter-openclaw@0.2.6
+  - @thinkingmach/server@0.2.6
 
 ## 0.2.5
 
@@ -73,13 +73,13 @@
 
 - Version bump (patch)
 - Updated dependencies
-  - @paperclipai/shared@0.2.5
-  - @paperclipai/adapter-utils@0.2.5
-  - @paperclipai/db@0.2.5
-  - @paperclipai/adapter-claude-local@0.2.5
-  - @paperclipai/adapter-codex-local@0.2.5
-  - @paperclipai/adapter-openclaw@0.2.5
-  - @paperclipai/server@0.2.5
+  - @thinkingmach/shared@0.2.5
+  - @thinkingmach/adapter-utils@0.2.5
+  - @thinkingmach/db@0.2.5
+  - @thinkingmach/adapter-claude-local@0.2.5
+  - @thinkingmach/adapter-codex-local@0.2.5
+  - @thinkingmach/adapter-openclaw@0.2.5
+  - @thinkingmach/server@0.2.5
 
 ## 0.2.4
 
@@ -87,13 +87,13 @@
 
 - Version bump (patch)
 - Updated dependencies
-  - @paperclipai/shared@0.2.4
-  - @paperclipai/adapter-utils@0.2.4
-  - @paperclipai/db@0.2.4
-  - @paperclipai/adapter-claude-local@0.2.4
-  - @paperclipai/adapter-codex-local@0.2.4
-  - @paperclipai/adapter-openclaw@0.2.4
-  - @paperclipai/server@0.2.4
+  - @thinkingmach/shared@0.2.4
+  - @thinkingmach/adapter-utils@0.2.4
+  - @thinkingmach/db@0.2.4
+  - @thinkingmach/adapter-claude-local@0.2.4
+  - @thinkingmach/adapter-codex-local@0.2.4
+  - @thinkingmach/adapter-openclaw@0.2.4
+  - @thinkingmach/server@0.2.4
 
 ## 0.2.3
 
@@ -101,13 +101,13 @@
 
 - Version bump (patch)
 - Updated dependencies
-  - @paperclipai/shared@0.2.3
-  - @paperclipai/adapter-utils@0.2.3
-  - @paperclipai/db@0.2.3
-  - @paperclipai/adapter-claude-local@0.2.3
-  - @paperclipai/adapter-codex-local@0.2.3
-  - @paperclipai/adapter-openclaw@0.2.3
-  - @paperclipai/server@0.2.3
+  - @thinkingmach/shared@0.2.3
+  - @thinkingmach/adapter-utils@0.2.3
+  - @thinkingmach/db@0.2.3
+  - @thinkingmach/adapter-claude-local@0.2.3
+  - @thinkingmach/adapter-codex-local@0.2.3
+  - @thinkingmach/adapter-openclaw@0.2.3
+  - @thinkingmach/server@0.2.3
 
 ## 0.2.2
 
@@ -115,13 +115,13 @@
 
 - Version bump (patch)
 - Updated dependencies
-  - @paperclipai/shared@0.2.2
-  - @paperclipai/adapter-utils@0.2.2
-  - @paperclipai/db@0.2.2
-  - @paperclipai/adapter-claude-local@0.2.2
-  - @paperclipai/adapter-codex-local@0.2.2
-  - @paperclipai/adapter-openclaw@0.2.2
-  - @paperclipai/server@0.2.2
+  - @thinkingmach/shared@0.2.2
+  - @thinkingmach/adapter-utils@0.2.2
+  - @thinkingmach/db@0.2.2
+  - @thinkingmach/adapter-claude-local@0.2.2
+  - @thinkingmach/adapter-codex-local@0.2.2
+  - @thinkingmach/adapter-openclaw@0.2.2
+  - @thinkingmach/server@0.2.2
 
 ## 0.2.1
 
@@ -129,10 +129,10 @@
 
 - Version bump (patch)
 - Updated dependencies
-  - @paperclipai/shared@0.2.1
-  - @paperclipai/adapter-utils@0.2.1
-  - @paperclipai/db@0.2.1
-  - @paperclipai/adapter-claude-local@0.2.1
-  - @paperclipai/adapter-codex-local@0.2.1
-  - @paperclipai/adapter-openclaw@0.2.1
-  - @paperclipai/server@0.2.1
+  - @thinkingmach/shared@0.2.1
+  - @thinkingmach/adapter-utils@0.2.1
+  - @thinkingmach/db@0.2.1
+  - @thinkingmach/adapter-claude-local@0.2.1
+  - @thinkingmach/adapter-codex-local@0.2.1
+  - @thinkingmach/adapter-openclaw@0.2.1
+  - @thinkingmach/server@0.2.1

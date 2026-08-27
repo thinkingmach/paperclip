@@ -4,12 +4,12 @@ export const permissionModel = [
     "Slack, Teams, and Telegram decide where the bot is installed or invited. GitHub decides which repositories belong to the App installation."
   ],
   [
-    "Paperclip enablement",
-    "Paperclip responds only in provider resources that a Paperclip administrator has enabled for this connection. Invitation or installation alone is not permission to create a task."
+    "ThinkingMach enablement",
+    "ThinkingMach responds only in provider resources that a ThinkingMach administrator has enabled for this connection. Invitation or installation alone is not permission to create a task."
   ],
   [
     "Effective reach",
-    "A message is eligible only when the provider delivers it, its resource is enabled in Paperclip, the connection is active, and the sender has authority for the requested action."
+    "A message is eligible only when the provider delivers it, its resource is enabled in ThinkingMach, the connection is active, and the sender has authority for the requested action."
   ],
   [
     "Safe default",

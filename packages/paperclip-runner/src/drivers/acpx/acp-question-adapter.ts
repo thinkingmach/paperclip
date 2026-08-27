@@ -1,13 +1,13 @@
 import { createHash } from "node:crypto";
 
 import {
-  PAPERCLIP_QUESTION_SET_SCHEMA,
-  parsePaperclipQuestionResponse,
-  parsePaperclipQuestionSet,
-  type PaperclipQuestion,
-  type PaperclipQuestionOption,
-  type PaperclipQuestionResponse,
-  type PaperclipQuestionSet,
+  THINKINGMACH_QUESTION_SET_SCHEMA,
+  parseThinkingMachQuestionResponse,
+  parseThinkingMachQuestionSet,
+  type ThinkingMachQuestion,
+  type ThinkingMachQuestionOption,
+  type ThinkingMachQuestionResponse,
+  type ThinkingMachQuestionSet,
 } from "../../contracts/question-set.js";
 
 const MAX_ACP_FORM_FIELDS = 64;
@@ -32,19 +32,19 @@ export interface AcpAcceptElicitationResponse {
 interface AcpFieldBinding {
   propertyName: string;
   property: Record<string, unknown>;
-  question: PaperclipQuestion;
+  question: ThinkingMachQuestion;
   optionValues: Map<string, string>;
 }
 
 export interface NormalizedAcpForm {
-  questionSet: PaperclipQuestionSet;
-  /** Convert a validated Paperclip response back into typed ACP content. */
+  questionSet: ThinkingMachQuestionSet;
+  /** Convert a validated ThinkingMach response back into typed ACP content. */
   accept(response: unknown): AcpAcceptElicitationResponse;
 }
 
 /**
  * ACP remains private to this adapter. Only the normalized question set is
- * allowed to cross the Paperclip runtime-request boundary.
+ * allowed to cross the ThinkingMach runtime-request boundary.
  */
 export function normalizeAcpFormElicitation(
   request: AcpFormElicitationRequest,
@@ -85,8 +85,8 @@ export function normalizeAcpFormElicitation(
       (value, position, all): value is string =>
         Boolean(value) && all.indexOf(value) === position,
     );
-  const questionSet = parsePaperclipQuestionSet({
-    schema: PAPERCLIP_QUESTION_SET_SCHEMA,
+  const questionSet = parseThinkingMachQuestionSet({
+    schema: THINKINGMACH_QUESTION_SET_SCHEMA,
     title,
     ...(descriptions.length > 0
       ? { description: descriptions.join("\n\n") }
@@ -98,7 +98,7 @@ export function normalizeAcpFormElicitation(
   return {
     questionSet,
     accept(response: unknown): AcpAcceptElicitationResponse {
-      const parsed = parsePaperclipQuestionResponse(questionSet, response);
+      const parsed = parseThinkingMachQuestionResponse(questionSet, response);
       return {
         action: "accept",
         content: acpContent(bindings, parsed),
@@ -222,7 +222,7 @@ function normalizeField(
 
 function acpContent(
   bindings: AcpFieldBinding[],
-  response: PaperclipQuestionResponse,
+  response: ThinkingMachQuestionResponse,
 ): AcpFormContent {
   const content: AcpFormContent = {};
   for (const binding of bindings) {
@@ -317,10 +317,10 @@ function normalizeOptions(
     label: string;
     description?: string;
   }>,
-): { options: PaperclipQuestionOption[]; values: Map<string, string> } {
+): { options: ThinkingMachQuestionOption[]; values: Map<string, string> } {
   const values = new Map<string, string>();
   const options = nativeOptions.map(
-    (option, index): PaperclipQuestionOption => {
+    (option, index): ThinkingMachQuestionOption => {
       const id = `option-${index + 1}`;
       values.set(id, option.value);
       return {

@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { HttpError } from "../errors.js";
 import { HTTP_LOG_REDACT_PATHS } from "../middleware/http-log-redaction.js";
 import { errorHandler } from "../middleware/error-handler.js";
-import { testAdapterEnvironmentSchema } from "@paperclipai/shared";
+import { testAdapterEnvironmentSchema } from "@thinkingmach/shared";
 import { createHttpLogger } from "../middleware/logger.js";
 
 describe("HTTP logger redaction", () => {
@@ -416,7 +416,7 @@ describe("HTTP logger redaction", () => {
 
     await request(app)
       .post("/runtime-tools/github/credentials")
-      .set("X-Paperclip-Github-Capability", capability)
+      .set("X-ThinkingMach-Github-Capability", capability)
       .send({})
       .expect(status);
 
@@ -430,10 +430,10 @@ describe("HTTP logger redaction", () => {
 
   it.each([200, 403, 500])("redacts cloud credentials and assertions from HTTP %i logs", async (status) => {
     const headers = {
-      "X-Paperclip-Cloud-Tenant-Token": "cloud-tenant-token-canary",
-      "X-Paperclip-Cloud-Session-Id": "cloud-session-id-canary",
-      "X-Paperclip-Cloud-Runtime-Identity": "cloud-runtime-identity-canary",
-      "X-Paperclip-Cloud-Control": "cloud-control-canary",
+      "X-ThinkingMach-Cloud-Tenant-Token": "cloud-tenant-token-canary",
+      "X-ThinkingMach-Cloud-Session-Id": "cloud-session-id-canary",
+      "X-ThinkingMach-Cloud-Runtime-Identity": "cloud-runtime-identity-canary",
+      "X-ThinkingMach-Cloud-Control": "cloud-control-canary",
     };
     const chunks: string[] = [];
     const stream = new Writable({

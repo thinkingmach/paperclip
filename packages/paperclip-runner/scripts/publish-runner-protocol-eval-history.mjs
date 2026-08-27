@@ -568,9 +568,9 @@ export async function writeProtocolEvalPublicationLinks(result, environment = pr
 
 async function main() {
   const result = await publishProtocolEvalHistory({
-    viewerRoot: process.env.PAPERCLIP_RUNNER_PROTOCOL_EVAL_VIEWER_DIR,
+    viewerRoot: process.env.THINKINGMACH_RUNNER_PROTOCOL_EVAL_VIEWER_DIR,
     reportRoot: resolve(
-      process.env.PAPERCLIP_RUNNER_PROTOCOL_EVAL_PUBLIC_REPORT_DIR ??
+      process.env.THINKINGMACH_RUNNER_PROTOCOL_EVAL_PUBLIC_REPORT_DIR ??
         "runner-protocol-eval-public-report",
     ),
     destination: {

@@ -31,7 +31,7 @@ const mockAccessService = vi.hoisted(() => ({
 const mockLogActivity = vi.hoisted(() => vi.fn(async () => undefined));
 
 function registerRouteMocks() {
-  vi.doMock("@paperclipai/shared/telemetry", () => ({
+  vi.doMock("@thinkingmach/shared/telemetry", () => ({
     trackAgentTaskCompleted: vi.fn(),
     trackErrorHandlerCrash: vi.fn(),
   }));
@@ -206,17 +206,17 @@ function parseBinaryResponse(res: IncomingMessage, callback: (error: Error | nul
 
 describe("MAX_ATTACHMENT_BYTES", () => {
   it("reads the deployment-level attachment cap from the environment", async () => {
-    const previous = process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES;
-    process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES = "5";
+    const previous = process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES;
+    process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES = "5";
     vi.resetModules();
     try {
       const { MAX_ATTACHMENT_BYTES } = await import("../attachment-types.js");
       expect(MAX_ATTACHMENT_BYTES).toBe(5);
     } finally {
       if (previous === undefined) {
-        delete process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES;
+        delete process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES;
       } else {
-        process.env.PAPERCLIP_ATTACHMENT_MAX_BYTES = previous;
+        process.env.THINKINGMACH_ATTACHMENT_MAX_BYTES = previous;
       }
       vi.resetModules();
     }
@@ -226,7 +226,7 @@ describe("MAX_ATTACHMENT_BYTES", () => {
 describe("issue attachment routes", () => {
   beforeEach(() => {
     vi.resetModules();
-    vi.doUnmock("@paperclipai/shared/telemetry");
+    vi.doUnmock("@thinkingmach/shared/telemetry");
     vi.doUnmock("../telemetry.js");
     vi.doUnmock("../services/issues.js");
     vi.doUnmock("../services/index.js");

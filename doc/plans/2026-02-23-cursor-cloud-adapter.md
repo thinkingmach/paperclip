@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines the V1 design for a Paperclip adapter that integrates with
+This document defines the V1 design for a ThinkingMach adapter that integrates with
 Cursor Background Agents via the Cursor REST API.
 
 Primary references:
@@ -17,7 +17,7 @@ It is a remote orchestration adapter with:
 1. launch/follow-up over HTTP
 2. webhook-driven status updates when possible
 3. polling fallback for reliability
-4. synthesized stdout events for Paperclip UI/CLI
+4. synthesized stdout events for ThinkingMach UI/CLI
 
 ## Key V1 Decisions
 
@@ -25,9 +25,9 @@ It is a remote orchestration adapter with:
 2. **Callback URL** must be publicly reachable by Cursor VMs:
    - local: Tailscale URL
    - prod: public server URL
-3. **Agent callback auth to Paperclip** uses a bootstrap exchange flow (no long-lived Paperclip key in prompt).
+3. **Agent callback auth to ThinkingMach** uses a bootstrap exchange flow (no long-lived ThinkingMach key in prompt).
 4. **Webhooks are V1**, polling remains fallback.
-5. **Skill delivery** is fetch-on-demand from Paperclip endpoints, not full SKILL.md prompt injection.
+5. **Skill delivery** is fetch-on-demand from ThinkingMach endpoints, not full SKILL.md prompt injection.
 
 ---
 
@@ -154,7 +154,7 @@ V1 config fields:
 - `pollIntervalSec` (optional, default `10`)
 - `timeoutSec` (optional, default `0`)
 - `graceSec` (optional, default `20`)
-- `paperclipPublicUrl` (optional override; else `PAPERCLIP_PUBLIC_URL` env)
+- `paperclipPublicUrl` (optional override; else `THINKINGMACH_PUBLIC_URL` env)
 - `enableWebhooks` (optional, default `true`)
 - `env.CURSOR_API_KEY` (required, secret_ref preferred)
 - `env.CURSOR_WEBHOOK_SECRET` (required if `enableWebhooks=true`, min 32)
@@ -164,26 +164,26 @@ Use `adapterConfig.env` so secret references are supported by existing secret-re
 
 ---
 
-## Paperclip Callback + Auth Flow (V1)
+## ThinkingMach Callback + Auth Flow (V1)
 
-Cursor agents run remotely, so we cannot inject local env like `PAPERCLIP_API_KEY`.
+Cursor agents run remotely, so we cannot inject local env like `THINKINGMACH_API_KEY`.
 
 ### Public URL
 
 The adapter must resolve a callback base URL in this order:
 
 1. `adapterConfig.paperclipPublicUrl`
-2. `process.env.PAPERCLIP_PUBLIC_URL`
+2. `process.env.THINKINGMACH_PUBLIC_URL`
 
 If empty, fail `testEnvironment` and runtime execution with a clear error.
 
 ### Bootstrap Exchange
 
-Goal: avoid putting long-lived Paperclip credentials in prompt text.
+Goal: avoid putting long-lived ThinkingMach credentials in prompt text.
 
 Flow:
 
-1. Before launch/follow-up, Paperclip mints a one-time bootstrap token bound to:
+1. Before launch/follow-up, ThinkingMach mints a one-time bootstrap token bound to:
    - `agentId`
    - `companyId`
    - `runId`
@@ -194,8 +194,8 @@ Flow:
    - bootstrap token
 3. Cursor agent calls:
    - `POST /api/agent-auth/exchange`
-4. Paperclip validates bootstrap token and returns a run-scoped bearer JWT.
-5. Cursor agent uses returned bearer token for all Paperclip API calls.
+4. ThinkingMach validates bootstrap token and returns a run-scoped bearer JWT.
+5. Cursor agent uses returned bearer token for all ThinkingMach API calls.
 
 This keeps long-lived keys out of prompt and supports clean revocation by TTL.
 
@@ -207,7 +207,7 @@ Do not inline full SKILL.md content into the prompt.
 
 Instead:
 
-1. Prompt includes a compact instruction to fetch skills from Paperclip.
+1. Prompt includes a compact instruction to fetch skills from ThinkingMach.
 2. After auth exchange, agent fetches:
    - `GET /api/skills/index`
    - `GET /api/skills/paperclip`
@@ -240,7 +240,7 @@ Reuse only when repository matches.
 
 Render template as usual, then append a compact callback block:
 
-- public Paperclip URL
+- public ThinkingMach URL
 - bootstrap exchange endpoint
 - bootstrap token
 - skill index endpoint
@@ -293,7 +293,7 @@ Responsibilities:
 1. Verify HMAC signature from `X-Webhook-Signature`.
 2. Deduplicate by `X-Webhook-ID`.
 3. Validate event type (`statusChange`).
-4. Route by Cursor `agentId` to active Paperclip run context.
+4. Route by Cursor `agentId` to active ThinkingMach run context.
 5. Append `heartbeat_run_events` entries for audit/debug.
 6. Update in-memory run signal so execute loop can short-circuit quickly.
 
@@ -406,8 +406,8 @@ Current process-only cancellation maps are insufficient by themselves for Cursor
 | Execution model | local subprocess | remote API |
 | Updates | stream-json stdout | webhook + polling + synthesized stdout |
 | Session id | Claude session id | Cursor agent id |
-| Skill delivery | local skill dir injection | authenticated fetch from Paperclip skill endpoints |
-| Paperclip auth | injected local run JWT env var | bootstrap token exchange -> run JWT |
+| Skill delivery | local skill dir injection | authenticated fetch from ThinkingMach skill endpoints |
+| ThinkingMach auth | injected local run JWT env var | bootstrap token exchange -> run JWT |
 | Cancellation | OS signals | abort polling + Cursor stop endpoint |
 | Usage/cost | rich | not exposed by Cursor API |
 
@@ -425,8 +425,8 @@ Current process-only cancellation maps are insufficient by themselves for Cursor
 ## Future Enhancements
 
 1. Reduce polling frequency further when webhook reliability is high.
-2. Attach image payloads from Paperclip context.
-3. Add richer PR metadata surfacing in Paperclip UI.
+2. Attach image payloads from ThinkingMach context.
+3. Add richer PR metadata surfacing in ThinkingMach UI.
 4. Add webhook replay UI for debugging.
 
 ---

@@ -8,9 +8,9 @@ outcomes. Subsequent fixes and fresh measurements are recorded separately.
 ## Recorded results moved to paperclip-evals
 
 The 16 saved result JSON files and seven dated measurement reports now live in
-[the lifecycle authority archive](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/README.md)
+[the lifecycle authority archive](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/README.md)
 in the private `paperclip-evals` repository. Links below pin the archive commit.
-The [migration manifest](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/manifest.json)
+The [migration manifest](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/manifest.json)
 records original paths and checksums. JSON measurements are unchanged, including
 failed and partial attempts; report edits only repair links to application files.
 
@@ -22,13 +22,13 @@ and coverage, instead of committing result snapshots to the app repository.
 
 | Measurement | Archived report (private) | Published Product E2E report |
 |---|---|---|
-| September 21 — deterministic baseline | [Report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/BASELINE-2026-09-21.md) | Deterministic tests; run locally below |
-| September 21 — initial live baseline | [Report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LIVE-BASELINE-2026-09-21.md) | [Campaign 35672810261](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35672810261-1/index.html) |
-| September 21 — cancellation and fixture fixes | [Report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LIVE-FIXES-2026-09-21.md) | [Campaign 35680906634](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35680906634-1/index.html) |
-| September 22 — continuation authority | [Report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LEGACY-CONTINUATION-2026-09-22.md) | [Campaign 35747200170](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35747200170-1/index.html) |
-| September 22 — explicit work mode | [Report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/EXPLICIT-WORK-MODE-2026-09-22.md) | [Campaign 35806360797](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35806360797-1/index.html) |
-| September 22 — accounting baseline | [Report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md) | [Campaign 35813099816](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35813099816-1/index.html) |
-| September 23 — accounting fixes and PR verification | [Report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-FIXES-2026-09-23.md) | [Campaign 35881382080](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35881382080-1/index.html) |
+| September 21 — deterministic baseline | [Report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/BASELINE-2026-09-21.md) | Deterministic tests; run locally below |
+| September 21 — initial live baseline | [Report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LIVE-BASELINE-2026-09-21.md) | [Campaign 35672810261](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35672810261-1/index.html) |
+| September 21 — cancellation and fixture fixes | [Report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LIVE-FIXES-2026-09-21.md) | [Campaign 35680906634](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35680906634-1/index.html) |
+| September 22 — continuation authority | [Report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LEGACY-CONTINUATION-2026-09-22.md) | [Campaign 35747200170](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35747200170-1/index.html) |
+| September 22 — explicit work mode | [Report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/EXPLICIT-WORK-MODE-2026-09-22.md) | [Campaign 35806360797](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35806360797-1/index.html) |
+| September 22 — accounting baseline | [Report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md) | [Campaign 35813099816](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35813099816-1/index.html) |
+| September 23 — accounting fixes and PR verification | [Report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-FIXES-2026-09-23.md) | [Campaign 35881382080](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-35881382080-1/index.html) |
 
 The public reports remain available without private-repository access. Each
 campaign measures its recorded source and selected cells; this index does not
@@ -37,7 +37,7 @@ videos, and browser reports stay in existing campaign artifact storage.
 
 ## Run and inspect
 
-From an installed Paperclip checkout:
+From an installed ThinkingMach checkout:
 
 ```sh
 pnpm test:lifecycle-baseline --list
@@ -52,7 +52,7 @@ pnpm exec tsc -p tests/lifecycle-baseline/tsconfig.json
 
 All four lanes are credential-free. The integration lane uses disposable embedded
 Postgres and scripted providers. No command above invokes a model, starts a paid
-campaign, or changes an existing Paperclip instance. Tests are outside default
+campaign, or changes an existing ThinkingMach instance. Tests are outside default
 server/workspace discovery; Product E2E matcher calibration remains in its normal
 opt-in support suite. The baseline command returns nonzero on failed assertions,
 missing evidence, or unavailable selected coverage. Ordinary CI is unaffected.
@@ -169,21 +169,21 @@ App/Evals revisions, profile/environment, retries, usage/cost, and artifact IDs.
 See `doc/evals.md`. Do not combine mock-authority Runner Eval scores with Product
 E2E scores, or claim full qualification from a partial selection.
 
-September 22 follow-up: [legacy continuation implementation and verification](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LEGACY-CONTINUATION-2026-09-22.md), including preserved failed campaigns and the remaining backlog.
+September 22 follow-up: [legacy continuation implementation and verification](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/LEGACY-CONTINUATION-2026-09-22.md), including preserved failed campaigns and the remaining backlog.
 
 The [continuation accounting matrix](../../doc/plans/2026-09-22-continuation-accounting-baseline.md) adds ACCT-01 through ACCT-04 for separate allowances, false progress, late gates and restart/replay. Its real-provider companion is the explicit-only `continuation-accounting` Product E2E suite.
-The [September 22 measurement](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md) records the
+The [September 22 measurement](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md) records the
 enabled failures and preserves both initial and corrected live campaigns.
-The [September 23 fixes and fresh verification](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-FIXES-2026-09-23.md)
+The [September 23 fixes and fresh verification](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-FIXES-2026-09-23.md)
 retain the original measurements and cover separate persisted allowances, delayed
 repair promotion and the current native question/response continuation contract.
 
 The inexpensive browser regressions use real Chromium without a provider or
-Paperclip instance. They check screenshot readiness and development service-worker
+ThinkingMach instance. They check screenshot readiness and development service-worker
 module revalidation across repeated reloads:
 
 ```sh
 pnpm exec playwright test --config tests/runner-e2e/playwright-support.config.ts
 ```
 
-Set `PAPERCLIP_PLAYWRIGHT_CHANNEL=chrome` to use an installed Chrome browser.
+Set `THINKINGMACH_PLAYWRIGHT_CHANNEL=chrome` to use an installed Chrome browser.

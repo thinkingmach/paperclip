@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CatalogTeam } from "@paperclipai/shared";
+import type { CatalogTeam } from "@thinkingmach/shared";
 
 const mockAgentService = vi.hoisted(() => ({
   getById: vi.fn(),
@@ -38,7 +38,7 @@ const {
   teamsCatalogService,
 } = await import("../services/teams-catalog.js");
 
-const CORE_EXEC_TEAM_ID = "paperclipai:bundled:company-defaults:core-exec-team";
+const CORE_EXEC_TEAM_ID = "thinkingmach:bundled:company-defaults:core-exec-team";
 const CORE_EXEC_TEAM_HASH = "sha256:0f20e9d56124c1dc90a1e4b128fabd863538bcc935117220f719d9620f7c89f1";
 
 function agentWithCatalogTeam(originHash: string | null, extra: Record<string, unknown> = {}) {
@@ -49,7 +49,7 @@ function agentWithCatalogTeam(originHash: string | null, extra: Record<string, u
       paperclip: {
         catalogTeam: {
           catalogId: CORE_EXEC_TEAM_ID,
-          catalogKey: "paperclipai/bundled/company-defaults/core-exec-team",
+          catalogKey: "thinkingmach/bundled/company-defaults/core-exec-team",
           ...(originHash ? { originHash } : {}),
         },
       },
@@ -69,7 +69,7 @@ describe("teamsCatalogService", () => {
     mockCompanyPortabilityService.previewImport.mockResolvedValue({
       include: { company: false, agents: true, projects: true, issues: true, skills: true },
       targetCompanyId: "company-1",
-      targetCompanyName: "Paperclip",
+      targetCompanyName: "ThinkingMach",
       collisionStrategy: "rename",
       selectedAgentSlugs: ["ceo", "cto"],
       plan: { companyAction: "none", agentPlans: [], projectPlans: [], issuePlans: [] },
@@ -80,7 +80,7 @@ describe("teamsCatalogService", () => {
       errors: [],
     });
     mockCompanyPortabilityService.importBundle.mockResolvedValue({
-      company: { id: "company-1", name: "Paperclip", action: "unchanged" },
+      company: { id: "company-1", name: "ThinkingMach", action: "unchanged" },
       agents: [],
       projects: [],
       envInputs: [],
@@ -88,8 +88,8 @@ describe("teamsCatalogService", () => {
     });
     mockCompanySkillService.installFromCatalog.mockResolvedValue({
       action: "created",
-      skill: { key: "paperclipai/bundled/paperclip-operations/task-planning" },
-      catalogSkill: { id: "paperclipai:bundled:paperclip-operations:task-planning" },
+      skill: { key: "thinkingmach/bundled/paperclip-operations/task-planning" },
+      catalogSkill: { id: "thinkingmach:bundled:paperclip-operations:task-planning" },
       warnings: [],
     });
     mockCompanySkillService.importFromSource.mockResolvedValue({
@@ -107,8 +107,8 @@ describe("teamsCatalogService", () => {
 
     expect(prepared.errors).toEqual([]);
     expect(prepared.source.files["COMPANY.md"]).toEqual(expect.stringContaining("Core Exec Team"));
-    expect(prepared.source.files["agents/ceo/AGENTS.md"]).toEqual(expect.stringContaining("paperclipai/bundled/paperclip-operations/task-planning"));
-    expect(prepared.source.files["agents/cto/AGENTS.md"]).toEqual(expect.stringContaining("paperclipai/bundled/software-development/github-pr-workflow"));
+    expect(prepared.source.files["agents/ceo/AGENTS.md"]).toEqual(expect.stringContaining("thinkingmach/bundled/paperclip-operations/task-planning"));
+    expect(prepared.source.files["agents/cto/AGENTS.md"]).toEqual(expect.stringContaining("thinkingmach/bundled/software-development/github-pr-workflow"));
     expect(prepared.source.files[".paperclip.yaml"]).toEqual(expect.stringContaining("reportsToExistingAgentId: \"manager-1\""));
     expect(prepared.source.files[".paperclip.yaml"]).toEqual(expect.stringContaining("reportsToExistingAgentSlug: \"engineering-manager\""));
   });
@@ -128,7 +128,7 @@ describe("teamsCatalogService", () => {
     expect(prepared.source.files[".paperclip.yaml"]).toEqual(expect.stringContaining("reportsToExistingAgentSlug: \"ceo\""));
   });
 
-  it("preserves package-declared Paperclip sidecar permissions while adding generated catalog provenance", async () => {
+  it("preserves package-declared ThinkingMach sidecar permissions while adding generated catalog provenance", async () => {
     const svc = teamsCatalogService({} as any);
 
     const prepared = await svc.prepareCatalogTeamSource("company-1", "product-engineering");
@@ -208,7 +208,7 @@ describe("teamsCatalogService", () => {
     mockCompanyPortabilityService.previewImport.mockResolvedValueOnce({
       include: { company: false, agents: true, projects: true, issues: true, skills: true },
       targetCompanyId: "company-1",
-      targetCompanyName: "Paperclip",
+      targetCompanyName: "ThinkingMach",
       collisionStrategy: "rename",
       selectedAgentSlugs: ["ceo"],
       plan: { companyAction: "none", agentPlans: [], projectPlans: [], issuePlans: [] },
@@ -264,8 +264,8 @@ describe("teamsCatalogService", () => {
   });
 
   it("uses the configured safe adapter default for bundled agents", async () => {
-    const previousDefault = process.env.PAPERCLIP_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE;
-    process.env.PAPERCLIP_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE = "opencode_local";
+    const previousDefault = process.env.THINKINGMACH_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE;
+    process.env.THINKINGMACH_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE = "opencode_local";
     try {
       const svc = teamsCatalogService({} as any);
 
@@ -279,9 +279,9 @@ describe("teamsCatalogService", () => {
       });
     } finally {
       if (previousDefault === undefined) {
-        delete process.env.PAPERCLIP_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE;
+        delete process.env.THINKINGMACH_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE;
       } else {
-        process.env.PAPERCLIP_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE = previousDefault;
+        process.env.THINKINGMACH_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE = previousDefault;
       }
     }
   });
@@ -426,7 +426,7 @@ describe("teamsCatalogService", () => {
         {
           id: "removed",
           companyId: "company-1",
-          metadata: { paperclip: { catalogTeam: { catalogId: "paperclipai:bundled:gone:removed", originHash: "sha256:x" } } },
+          metadata: { paperclip: { catalogTeam: { catalogId: "thinkingmach:bundled:gone:removed", originHash: "sha256:x" } } },
         },
       ]);
       const svc = teamsCatalogService({} as any);
@@ -448,8 +448,8 @@ describe("teamsCatalogService", () => {
 
   it("classifies unresolved and unsafe external skill requirements as blocked", () => {
     const fakeTeam: CatalogTeam = {
-      id: "paperclipai:optional:test:unsafe",
-      key: "paperclipai/optional/test/unsafe",
+      id: "thinkingmach:optional:test:unsafe",
+      key: "thinkingmach/optional/test/unsafe",
       kind: "optional",
       category: "test",
       slug: "unsafe",

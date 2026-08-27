@@ -9,21 +9,21 @@ import {
 } from "../services/plugin-install-guard.js";
 
 describe("isCloudManagedInstance", () => {
-  it("returns false when PAPERCLIP_MANAGED_CONFIG is absent", () => {
+  it("returns false when THINKINGMACH_MANAGED_CONFIG is absent", () => {
     expect(isCloudManagedInstance({})).toBe(false);
     expect(isCloudManagedInstance({ OTHER_VAR: "x" })).toBe(false);
   });
 
-  it("returns true when PAPERCLIP_MANAGED_CONFIG is set to a cloud document", () => {
+  it("returns true when THINKINGMACH_MANAGED_CONFIG is set to a cloud document", () => {
     const doc = JSON.stringify({ v: 1, mode: "cloud", catalogVersion: "1", features: {}, plugins: { autoInstall: [] } });
-    expect(isCloudManagedInstance({ PAPERCLIP_MANAGED_CONFIG: doc })).toBe(true);
+    expect(isCloudManagedInstance({ THINKINGMACH_MANAGED_CONFIG: doc })).toBe(true);
   });
 
   it("fails closed: blank or corrupted documents still count as cloud-managed", () => {
-    expect(isCloudManagedInstance({ PAPERCLIP_MANAGED_CONFIG: "" })).toBe(true);
-    expect(isCloudManagedInstance({ PAPERCLIP_MANAGED_CONFIG: "   " })).toBe(true);
-    expect(isCloudManagedInstance({ PAPERCLIP_MANAGED_CONFIG: "{not json" })).toBe(true);
-    expect(isCloudManagedInstance({ PAPERCLIP_MANAGED_CONFIG: JSON.stringify({ mode: "self-hosted" }) })).toBe(true);
+    expect(isCloudManagedInstance({ THINKINGMACH_MANAGED_CONFIG: "" })).toBe(true);
+    expect(isCloudManagedInstance({ THINKINGMACH_MANAGED_CONFIG: "   " })).toBe(true);
+    expect(isCloudManagedInstance({ THINKINGMACH_MANAGED_CONFIG: "{not json" })).toBe(true);
+    expect(isCloudManagedInstance({ THINKINGMACH_MANAGED_CONFIG: JSON.stringify({ mode: "self-hosted" }) })).toBe(true);
   });
 });
 

@@ -4,13 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SetupWizardFooter } from "@/components/SetupWizard";
 
-const instanceUrl = import.meta.env.VITE_PAPERCLIP_INSTANCE_URL ?? "";
+const instanceUrl = import.meta.env.VITE_THINKINGMACH_INSTANCE_URL ?? "";
 const meta = {
   title: "Connections/Slack/Setup prompt",
   component: SlackSetupPrompt,
   parameters: {
     layout: "padded",
-    docs: { description: { component: "Production copy button and full browser-agent prompt. The surrounding agent selection is a static placement preview; it does not create a connection. Configure PAPERCLIP_STORYBOOK_API_URL to include a real instance origin in copied instructions. Otherwise the prompt asks for the instance URL." } },
+    docs: { description: { component: "Production copy button and full browser-agent prompt. The surrounding agent selection is a static placement preview; it does not create a connection. Configure THINKINGMACH_STORYBOOK_API_URL to include a real instance origin in copied instructions. Otherwise the prompt asks for the instance URL." } },
   },
   args: { instanceUrl },
 } satisfies Meta<typeof SlackSetupPrompt>;

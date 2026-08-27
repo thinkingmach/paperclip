@@ -4,12 +4,12 @@
 
 This is the lowest Live console layer. It extends the package-local Codex driver,
 typed harness contract, deterministic fixtures, and mock-core demo server. It
-does not import or change Paperclip server, UI, database, or production routes.
+does not import or change ThinkingMach server, UI, database, or production routes.
 
 The browser boundary is HTTP plus server-sent events. The browser sends typed
 actions to the demo server. Only the server starts `codex app-server`, reads
 the existing Codex login, owns the working directory, and resumes provider
-threads. No provider or Paperclip credential is serialized to browser state.
+threads. No provider or ThinkingMach credential is serialized to browser state.
 
 ## Deterministic fixture
 
@@ -79,7 +79,7 @@ notifications are ignored instead of being attached to the active session.
 Start it with:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner demo:live-console -- \
+pnpm --filter @thinkingmach/paperclip-runner demo:live-console -- \
   --host 127.0.0.1 --port 4174
 ```
 
@@ -106,7 +106,7 @@ Important routes:
 - `POST /api/liveConsole/sessions/:id/close`
 
 The server chooses the working directory. A create body cannot override it.
-Provider, Paperclip, cookie, and bearer credential fields in create bodies are
+Provider, ThinkingMach, cookie, and bearer credential fields in create bodies are
 rejected. Runtime-request resolution must match the pending request, its turn,
 and the session named by the route; stale, cross-scope, and duplicate responses
 fail with `409` before reaching the driver.
@@ -129,7 +129,7 @@ multi-user authorization boundary.
 Run deterministic conformance first, then the real Codex boundary:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/drivers/codex/codex-app-server-driver.test.ts \
   src/mock-core/live-console-demo-server.test.ts
 ```

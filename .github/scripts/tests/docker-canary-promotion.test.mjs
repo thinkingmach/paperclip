@@ -39,7 +39,7 @@ else if (args.slice(0, 3).join(" ") !== "buildx imagetools create") process.exit
       const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c", script], {
         encoding: "utf8", env: {
           ...process.env, PATH: `${dir}${path.delimiter}${process.env.PATH}`,
-          IMAGE: "ghcr.io/paperclipai/paperclip", GITHUB_REPOSITORY: "paperclipai/paperclip",
+          IMAGE: "ghcr.io/thinkingmach/paperclip", GITHUB_REPOSITORY: "thinkingmach/paperclip",
           TEST_CALLS: log, TEST_SHA: sha, COMMIT_PRESENT: String(commitPresent), IMAGE_PRESENT: String(imagePresent),
         },
       });
@@ -48,8 +48,8 @@ else if (args.slice(0, 3).join(" ") !== "buildx imagetools create") process.exit
       assert.ok(calls.find(call => call.command === "gh").args.some(arg => arg.includes("canary%2Fv2026.922.0-canary.1")));
       const docker = calls.filter(call => call.command === "docker").map(call => call.args);
       assert.deepEqual(docker, [
-        ...(commitPresent ? [["buildx", "imagetools", "inspect", "ghcr.io/paperclipai/paperclip:sha-aaaaaaa"]] : []),
-        ...(commitPresent && imagePresent ? [["buildx", "imagetools", "create", "-t", "ghcr.io/paperclipai/paperclip:canary", "ghcr.io/paperclipai/paperclip:sha-aaaaaaa"]] : []),
+        ...(commitPresent ? [["buildx", "imagetools", "inspect", "ghcr.io/thinkingmach/paperclip:sha-aaaaaaa"]] : []),
+        ...(commitPresent && imagePresent ? [["buildx", "imagetools", "create", "-t", "ghcr.io/thinkingmach/paperclip:canary", "ghcr.io/thinkingmach/paperclip:sha-aaaaaaa"]] : []),
       ]);
     } finally { rmSync(dir, { recursive: true, force: true }); }
   });

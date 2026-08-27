@@ -8,7 +8,7 @@ import { resolve } from "node:path";
  * The browser never talks to a provider. Only this Node process starts a
  * driver, owns the working directory, and reads any provider login. The
  * default driver replays deterministic demo manifests; setting
- * `PAPERCLIP_LIVE_CONSOLE_DRIVER=codex` swaps in the real Codex app-server driver
+ * `THINKINGMACH_LIVE_CONSOLE_DRIVER=codex` swaps in the real Codex app-server driver
  * behind exactly the same routes.
  */
 async function loadRunner() {
@@ -17,22 +17,22 @@ async function loadRunner() {
 
 async function createWorkingDirectory() {
   const scratchRoot =
-    process.env.PAPERCLIP_RUN_SCRATCH_DIR ?? process.env.PAPERCLIP_SCRATCH_DIR ?? tmpdir();
+    process.env.THINKINGMACH_RUN_SCRATCH_DIR ?? process.env.THINKINGMACH_SCRATCH_DIR ?? tmpdir();
   return mkdtemp(resolve(scratchRoot, "live-console-browser-"));
 }
 
 export function createLiveConsoleBrowserMiddleware(options = {}) {
   const load = options.loadRunner ?? loadRunner;
-  const driverMode = options.driverMode ?? process.env.PAPERCLIP_LIVE_CONSOLE_DRIVER ?? "demo";
+  const driverMode = options.driverMode ?? process.env.THINKINGMACH_LIVE_CONSOLE_DRIVER ?? "demo";
   const chunkDelayMs = Number.parseInt(
-    options.chunkDelayMs ?? process.env.PAPERCLIP_LIVE_CONSOLE_CHUNK_DELAY_MS ?? "45",
+    options.chunkDelayMs ?? process.env.THINKINGMACH_LIVE_CONSOLE_CHUNK_DELAY_MS ?? "45",
     10,
   );
   // Abandoned demo sessions hold their slot until the process exits, so a long
   // scripted run needs headroom the interactive default does not. The server
   // still clamps this to its own hard ceiling.
   const maxActiveSessions = Number.parseInt(
-    options.maxActiveSessions ?? process.env.PAPERCLIP_LIVE_CONSOLE_MAX_SESSIONS ?? "",
+    options.maxActiveSessions ?? process.env.THINKINGMACH_LIVE_CONSOLE_MAX_SESSIONS ?? "",
     10,
   );
   let bootstrap = null;

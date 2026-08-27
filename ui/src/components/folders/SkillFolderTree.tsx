@@ -8,23 +8,8 @@ import {
   type PointerEvent,
   type ReactNode,
 } from "react";
-import {
-  Boxes,
-  Check,
-  ChevronRight,
-  Folder as FolderIcon,
-  FolderPlus,
-  Hash,
-  Home,
-  Layers,
-  MoreHorizontal,
-  MoveRight,
-  Plus,
-  Search,
-  Trash2,
-  User,
-} from "lucide-react";
-import type { FolderListItem, FolderListResult } from "@paperclipai/shared";
+import { Boxes, Check, ChevronRight, Folder as FolderIcon, FolderPlus, Hash, Home, Layers, MoreHorizontal, MoveRight, Plus, Search, Trash2, User,  } from "lucide-react";
+import type { FolderListItem, FolderListResult } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

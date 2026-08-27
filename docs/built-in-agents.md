@@ -1,6 +1,6 @@
 # Built-in Agents
 
-Built-in agents are first-party, company-scoped agents that Paperclip can resolve by a stable registry key. They are normal rows in `agents`, but they carry immutable metadata under `metadata.paperclipBuiltInAgent` so services can find them without hardcoding a database id.
+Built-in agents are first-party, company-scoped agents that ThinkingMach can resolve by a stable registry key. They are normal rows in `agents`, but they carry immutable metadata under `metadata.paperclipBuiltInAgent` so services can find them without hardcoding a database id.
 
 The first built-ins are `briefs` and `learning`. Operators can provision them from the API without going through board hire approval, but the route still requires the same `agents:create` permission as normal agent creation.
 
@@ -44,7 +44,7 @@ Provision and reset require `agents:create`. Provision intentionally skips `requ
 5. Decide whether the built-in needs a nonzero `defaultBudgetMonthlyCents`.
 6. Add or update tests in `server/src/__tests__/built-in-agents.test.ts`.
 7. If the built-in is surfaced in UI or docs, add those changes in the same PR.
-8. Run the focused tests from the repo root with `pnpm --filter @paperclipai/server exec vitest run src/__tests__/built-in-agents.test.ts src/__tests__/built-in-agent-routes.test.ts`.
+8. Run the focused tests from the repo root with `pnpm --filter @thinkingmach/server exec vitest run src/__tests__/built-in-agents.test.ts src/__tests__/built-in-agent-routes.test.ts`.
 
 Do not write built-in markers directly through generic agent create/update routes. The agent service rejects marker add, remove, and mutation unless the built-in service explicitly opts in.
 
@@ -60,7 +60,7 @@ Hypothetical registry diff:
      featureKeys: ["learning"],
      shortPurpose: "Maintains reusable company learning from completed work and recurring patterns.",
      defaultInstructions:
-       "You are Paperclip's built-in Learning agent. Extract durable lessons from completed work, preserve useful patterns, and keep learning artifacts grounded in source context.",
+       "You are ThinkingMach's built-in Learning agent. Extract durable lessons from completed work, preserve useful patterns, and keep learning artifacts grounded in source context.",
      defaultRole: "general",
      allowedAdapterTypes: ["codex_local", "claude_local", "gemini_local", "opencode_local", "process"],
      defaultBudgetMonthlyCents: 0,
@@ -71,7 +71,7 @@ Hypothetical registry diff:
 +    featureKeys: ["digest"],
 +    shortPurpose: "Summarizes recent company activity into a board-readable digest.",
 +    defaultInstructions:
-+      "You are Paperclip's built-in Digest agent. Produce short, sourced summaries of recent company activity, decisions, blockers, and next actions.",
++      "You are ThinkingMach's built-in Digest agent. Produce short, sourced summaries of recent company activity, decisions, blockers, and next actions.",
 +    defaultRole: "general",
 +    allowedAdapterTypes: ["codex_local", "claude_local", "process"],
 +    defaultBudgetMonthlyCents: 0,
@@ -132,7 +132,7 @@ If the agent is missing or not configured, the helper throws:
 - Focused tests pass:
 
 ```sh
-pnpm --filter @paperclipai/server exec vitest run src/__tests__/built-in-agents.test.ts src/__tests__/built-in-agent-routes.test.ts
+pnpm --filter @thinkingmach/server exec vitest run src/__tests__/built-in-agents.test.ts src/__tests__/built-in-agent-routes.test.ts
 ```
 
 ## Operational Notes

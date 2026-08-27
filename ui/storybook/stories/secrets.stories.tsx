@@ -7,7 +7,7 @@ import type {
   EnvBinding,
   UserSecretCoverageSummary,
   UserSecretDefinition,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Secrets } from "@/pages/Secrets";
 import { SecretBindingPicker, type SecretBindingValue } from "@/components/SecretBindingPicker";
 import { EnvironmentVariablesEditor } from "@/components/environment-variables-editor";

@@ -1,6 +1,6 @@
 # Capability — Issue-Thread UX Contract
 
-Status: **binding** for track 7G (Paperclip-style Web UI) and reviewable by tracks 7E/7K.
+Status: **binding** for track 7G (ThinkingMach-style Web UI) and reviewable by tracks 7E/7K.
 Source of authority: Capability plan (TASK-16897 `plan` document), Revision 3 §"Page information
 architecture", §"Native issue-thread interactions", §"Live execution contract", and Revision 4
 §"Final evidence eligibility". Capability vocabulary: Capability generated contract
@@ -52,8 +52,8 @@ what runs it, what control plane it talks to, and whether this session is live.
    - `Real runnerd` — neutral chip with a live process dot (pulse while a runnerd session is
      attached; static gray when detached). Shown in `live` mode only; `fake`/`replay` show
      `In-process runner`.
-   - `Mock Paperclip` — amber chip, shown in **all** modes. Tooltip: "All issue records are
-     mock. No real Paperclip API is reachable."
+   - `Mock ThinkingMach` — amber chip, shown in **all** modes. Tooltip: "All issue records are
+     mock. No real ThinkingMach API is reachable."
 2. **Mode is data, not styling**: the root element carries `data-session-mode="live|fake|replay"`
    and the chips render from the server-reported session record. A session artifact with
    `mode=fake` must be visually distinguishable from `live` in every screenshot (Revision 4
@@ -74,7 +74,7 @@ what runs it, what control plane it talks to, and whether this session is live.
 ┌──────────────────────────────────────────────────────────────┬───────────────┐
 │ Issue header (sticky):                                       │               │
 │  MCK-31 · title · StatusBadge · PriorityIcon · assignee      │  Debug panel  │
-│  [Fake agent|Real Codex] [Real runnerd] [Mock Paperclip]     │  (collapsed   │
+│  [Fake agent|Real Codex] [Real runnerd] [Mock ThinkingMach]     │  (collapsed   │
 │  run state · Scenario ▾ · Replay · Reset · Stop              │   by default; │
 ├──────────────────────────────────────────────────────────────┤   resizable   │
 │ Thread column (centered, max-width 760px, single column):    │   320–640px)  │
@@ -91,7 +91,7 @@ what runs it, what control plane it talks to, and whether this session is live.
   user's open/width choice persists per browser (`localStorage`), and deep links may force it
   (§10). The page never leads with raw protocol events.
 - Thread column measure: max-width 760px, centered in the remaining space; `text-sm` body
-  scale per the Paperclip type ramp.
+  scale per the ThinkingMach type ramp.
 - Debug panel: right side, resizable 320–640px with a keyboard-operable splitter
   (`role="separator"`, `aria-valuenow`), collapse toggle in the header (`Evidence` button with
   open/closed state).
@@ -124,7 +124,7 @@ outside an interaction response (§5). Items in chronological order, grouped by 
 
 | # | Item | Source | Anatomy |
 |---|------|--------|---------|
-| T1 | **User message** | thread record | Right-aligned bubble style is **not** used; Paperclip comment card with author "You (board user)", timestamp, markdown body. |
+| T1 | **User message** | thread record | Right-aligned bubble style is **not** used; ThinkingMach comment card with author "You (board user)", timestamp, markdown body. |
 | T2 | **Agent response** | model output items | Comment card, author = agent identity chip (`Fake agent` / `Real Codex`), streaming state per §6. Model prose only — never confused with durable records (see T3). |
 | T3 | **Durable progress comment** | `report_progress` / `answer_status_question` `operation_result` | Distinct comment card with a `Recorded to mock thread` marker (filled corner tag + tooltip naming the semantic operation). This is the visual boundary between ephemeral model text (T2) and durable mock records. |
 | T4 | **Tool activity strip** | semantic call + typed result | One line per call inside the turn group: status glyph (`✓ ok`, `✕ denied`, `⏳ running`), operation id (`write_document`), one-line human summary, `›` expander. Expanded: request args (redacted per rules), typed result, and a `View in Evidence` link that opens the debug panel pre-filtered to that call. Strips are collapsed by default; a turn shows at most 3 strips + `N more…` expander (progressive disclosure). |
@@ -227,7 +227,7 @@ mock state, not from browser memory.
   rotates/clears session authority (Revision 4), and lands on a clean thread with a fresh
   `Turn 0` seeded context. Reset affects only the current browser session's scenario instance.
 - **Replay**: mode `replay` re-renders a recorded run from canonical events. Composer
-  `disabled` (`Replay is read-only`), identity chip row shows `Replay` + `Mock Paperclip`,
+  `disabled` (`Replay is read-only`), identity chip row shows `Replay` + `Mock ThinkingMach`,
   and a top progress strip allows step/next-turn/play-all with a deterministic `?at=<ordinal>`
   deep-link parameter. Replay of a `fake` recording must still be labeled as fake-derived
   (chip `Replay · fake source`) so replay evidence can never satisfy a live criterion.
@@ -274,7 +274,7 @@ turn selector pinned under the segmented control.
 
 ## 8. Visual language
 
-Follow the Paperclip design language without importing the product `ui/` package:
+Follow the ThinkingMach design language without importing the product `ui/` package:
 
 - Dark theme default, OKLCH neutral grays; semantic tokens only (background/card/muted/
   accent/destructive/border/ring equivalents defined package-locally). No raw hex in
@@ -288,7 +288,7 @@ Follow the Paperclip design language without importing the product `ui/` package
 - Radii ≤ `rounded-xl`; shadows ≤ `shadow-sm`; density = product issue page, not a marketing
   layout.
 - Interaction cards use the product interaction-card anatomy (title row + prompt + controls +
-  state chip) so the mock thread reads as a Paperclip issue thread (Jakob's Law is the point
+  state chip) so the mock thread reads as a ThinkingMach issue thread (Jakob's Law is the point
   of this phase's demo).
 
 ## 9. Accessibility acceptance (blocking)
@@ -370,7 +370,7 @@ rules.
 - The only browser-initiated mock mutation is an interaction response (§5). Composer messages
   go to the runner session, not to mock state.
 - No provider, runner, or control-plane credential ever reaches the browser; redactions render
-  by rule name. Real Paperclip URLs/API paths never appear.
+  by rule name. Real ThinkingMach URLs/API paths never appear.
 - Policy and state authority live in the package server + mock `ControlPlanePort`; refresh
   and reconnect re-derive everything from them.
 

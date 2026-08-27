@@ -46,7 +46,7 @@ describe("runner E2E Daytona image contract", () => {
       "/opt/paperclip-runner/provider-pack/provider-pack.json",
     );
     expect(dockerfile).toContain(
-      "${PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin",
+      "${THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin",
     );
     for (const command of ["acpx", "claude-agent-acp", "codex-acp"]) {
       expect(dockerfile).toContain(command);
@@ -93,7 +93,7 @@ describe("runner E2E Daytona image contract", () => {
       "e2e-content-${{ needs.catalog.outputs.daytona_image_content_id }}",
     );
     expect(workflow).toContain(
-      '--build-arg "PAPERCLIP_RUNNER_CONTENT_ID=${IMAGE_CONTENT_ID}"',
+      '--build-arg "THINKINGMACH_RUNNER_CONTENT_ID=${IMAGE_CONTENT_ID}"',
     );
     expect(daytonaImageJob).toContain(
       "TARGET_LOCK_SHA256: ${{ needs.target_lock.outputs.lock_sha256 }}",
@@ -102,17 +102,17 @@ describe("runner E2E Daytona image contract", () => {
       '[[ "$TARGET_LOCK_SHA256" =~ ^[0-9a-f]{64}$ ]]',
     );
     expect(daytonaImageJob).toContain(
-      '--build-arg "PAPERCLIP_RUNNER_LOCK_SHA256=${TARGET_LOCK_SHA256}"',
+      '--build-arg "THINKINGMACH_RUNNER_LOCK_SHA256=${TARGET_LOCK_SHA256}"',
     );
     expect(
       daytonaImageJob!.indexOf('[[ "$TARGET_LOCK_SHA256" =~ ^[0-9a-f]{64}$ ]]'),
     ).toBeLessThan(
       daytonaImageJob!.indexOf(
-        '--build-arg "PAPERCLIP_RUNNER_LOCK_SHA256=${TARGET_LOCK_SHA256}"',
+        '--build-arg "THINKINGMACH_RUNNER_LOCK_SHA256=${TARGET_LOCK_SHA256}"',
       ),
     );
     expect(workflow).toContain(
-      "IMAGE_CACHE: ghcr.io/paperclipai/paperclip-daytona-runner:e2e-buildcache-amd64",
+      "IMAGE_CACHE: ghcr.io/thinkingmach/paperclip-daytona-runner:e2e-buildcache-amd64",
     );
     expect(workflow).toContain(
       '--cache-from "type=registry,ref=${IMAGE_CACHE}"',
@@ -137,15 +137,15 @@ describe("runner E2E Daytona image contract", () => {
     expect(workflow).toContain('.architecture == "amd64"');
     expect(workflow).toContain('.os == "linux"');
     expect(workflow).toContain('.config.User == "daytona"');
-    expect(workflow).toContain("PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT=");
+    expect(workflow).toContain("THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT=");
     expect(workflow).toContain(
       "node packages/paperclip-runner/scripts/build-provider-pack.mjs packages/paperclip-runner/provider-pack",
     );
     expect(workflow).toContain(
-      "PAPERCLIP_RUNNER_REMOTE_PROVIDER_PACK_PATH: ${{ github.workspace }}/packages/paperclip-runner/provider-pack",
+      "THINKINGMACH_RUNNER_REMOTE_PROVIDER_PACK_PATH: ${{ github.workspace }}/packages/paperclip-runner/provider-pack",
     );
     expect(workflow).toContain(
-      "PAPERCLIP_RUNNER_SOURCE_REVISION: ${{ needs.daytona_image.outputs.source_revision }}",
+      "THINKINGMACH_RUNNER_SOURCE_REVISION: ${{ needs.daytona_image.outputs.source_revision }}",
     );
     expect(workflow.indexOf("cosign verify")).toBeLessThan(
       workflow.indexOf("docker logout ghcr.io"),
@@ -154,17 +154,17 @@ describe("runner E2E Daytona image contract", () => {
       workflow.indexOf(`--format '{{json .Image}}'`),
     );
     const providerInstall = dockerfile.indexOf(
-      "pnpm install --frozen-lockfile --filter '@paperclipai/paperclip-runner...'",
+      "pnpm install --frozen-lockfile --filter '@thinkingmach/paperclip-runner...'",
     );
     const runnerSourceCopy = dockerfile.indexOf(
       "COPY packages ./packages",
     );
     const providerRevisionArg = dockerfile.indexOf(
-      "ARG PAPERCLIP_RUNNER_SOURCE_REVISION",
+      "ARG THINKINGMACH_RUNNER_SOURCE_REVISION",
     );
     const cliInstall = dockerfile.indexOf("npm install -g");
     const finalMetadataArgs = dockerfile.lastIndexOf(
-      "ARG PAPERCLIP_RUNNER_CONTENT_ID",
+      "ARG THINKINGMACH_RUNNER_CONTENT_ID",
     );
     expect(providerInstall).toBeGreaterThan(0);
     expect(runnerSourceCopy).toBeGreaterThan(0);
@@ -244,7 +244,7 @@ describe("runner E2E Daytona image contract", () => {
       );
       await writeFile(
         path.join(root, "packages/paperclip-runner/package.json"),
-        '{"name":"@paperclipai/paperclip-runner"}\n',
+        '{"name":"@thinkingmach/paperclip-runner"}\n',
       );
       await writeFile(
         path.join(root, "packages/paperclip-runner/src/runner.ts"),

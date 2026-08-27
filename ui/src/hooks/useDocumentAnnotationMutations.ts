@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { DocumentAnnotationComment, DocumentAnnotationThreadStatus, DocumentAnnotationThreadWithComments } from "@paperclipai/shared";
+import type { DocumentAnnotationComment, DocumentAnnotationThreadStatus, DocumentAnnotationThreadWithComments } from "@thinkingmach/shared";
 import { authApi } from "@/api/auth";
 import { documentAnnotationsApi, type DocumentAnnotationTarget } from "@/api/document-annotations";
 import { queryKeys } from "@/lib/queryKeys";

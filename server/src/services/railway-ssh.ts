@@ -25,7 +25,7 @@ export async function generateRailwaySshKey(): Promise<{ publicKey: string; priv
     await promisify(execFile)("/usr/bin/ssh-keygen", ["-q", "-t", "ed25519", "-N", "", "-C", "paperclip-railway", "-f", keyPath], { timeout: 10_000, env: { PATH: "/usr/bin:/bin" } });
     return { publicKey: (await readFile(`${keyPath}.pub`, "utf8")).trim(), privateKey: await readFile(keyPath, "utf8") };
   } catch {
-    throw new RailwayError("railway_ssh_unavailable", "Generating a Railway key requires system OpenSSH (ssh-keygen) on the Paperclip runtime.", 422);
+    throw new RailwayError("railway_ssh_unavailable", "Generating a Railway key requires system OpenSSH (ssh-keygen) on the ThinkingMach runtime.", 422);
   } finally { await rm(directory, { recursive: true, force: true }); }
 }
 
@@ -71,7 +71,7 @@ export async function runRailwaySshCommand(input: RailwaySshInput & { privateKey
       input.signal.addEventListener("abort", abort, { once: true });
       if (input.signal.aborted) abort();
       const cleanup = () => { clearTimeout(timer); input.signal.removeEventListener("abort", abort); };
-      child.once("error", () => { cleanup(); reject(new RailwayError("railway_ssh_unavailable", "System OpenSSH is unavailable on this Paperclip runtime.", 422)); });
+      child.once("error", () => { cleanup(); reject(new RailwayError("railway_ssh_unavailable", "System OpenSSH is unavailable on this ThinkingMach runtime.", 422)); });
       child.once("close", (exitCode) => {
         cleanup();
         if (input.signal.aborted) { reject(input.signal.reason); return; }

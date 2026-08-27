@@ -243,7 +243,7 @@ class LocalRunnerController implements LocalRunnerRunHandle {
     }
     await Promise.all([access(runnerBinary), access(fakeHarnessBinary)]).catch(() => {
       throw new Error(
-        `Local runner Rust binaries are missing. Run pnpm --filter @paperclipai/paperclip-runner build:rust first. PATH entries: ${(process.env.PATH ?? "").split(delimiter).length}.`,
+        `Local runner Rust binaries are missing. Run pnpm --filter @thinkingmach/paperclip-runner build:rust first. PATH entries: ${(process.env.PATH ?? "").split(delimiter).length}.`,
       );
     });
     const controller = new LocalRunnerController(options);

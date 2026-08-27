@@ -69,7 +69,7 @@ test("extractor emits deterministic proposed-telemetry-extractor.v2 records", ()
 
   assert.equal(output.schemaVersion, PROPOSED_TELEMETRY_SCHEMA_VERSION);
   assert.deepEqual(output.source, {
-    repo: "paperclipai/paperclip",
+    repo: "thinkingmach/paperclip",
     ref: "fixture-sha",
     baseRef: "master",
   });

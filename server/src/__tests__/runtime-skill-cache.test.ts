@@ -5,7 +5,7 @@ import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { CompanySkill } from "@paperclipai/shared";
+import type { CompanySkill } from "@thinkingmach/shared";
 import { removeRuntimeSkillCache, resolveRuntimeSkillCache, runtimeSkillCacheSpec } from "../services/runtime-skill-cache.js";
 
 async function makeWritable(root: string): Promise<void> {

@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       target_branch:
-        description: "Branch in paperclipai/paperclip to evaluate; trusted orchestration still runs from master"
+        description: "Branch in thinkingmach/paperclip to evaluate; trusted orchestration still runs from master"
         type: string
         required: false
       evals_sha:
-        description: "Exact 40-character paperclipai/paperclip-evals commit to execute"
+        description: "Exact 40-character thinkingmach/paperclip-evals commit to execute"
         type: string
         required: false
       rosters:
@@ -90,7 +90,7 @@ jobs:
             fi
           done
 
-      - name: Resolve requested Paperclip branch to an immutable commit
+      - name: Resolve requested ThinkingMach branch to an immutable commit
         id: target
         env:
           GH_TOKEN: ${{ github.token }}
@@ -117,7 +117,7 @@ jobs:
         id: evals_token
         env:
           COMMITPERCLIP_KEY: ${{ secrets.COMMITPERCLIP_KEY }}
-          GH_REPO: paperclipai/paperclip-evals
+          GH_REPO: thinkingmach/paperclip-evals
         run: |
           set -euo pipefail
           token="$(node .github/scripts/get-bot-token.mjs)"
@@ -135,7 +135,7 @@ jobs:
             echo "evals_sha (or RUNNER_PROTOCOL_EVALS_SHA for schedules) must be an exact 40-character commit." >&2
             exit 1
           fi
-          resolved="$(gh api -X GET "repos/paperclipai/paperclip-evals/commits/$EVALS_SHA" --jq .sha)"
+          resolved="$(gh api -X GET "repos/thinkingmach/paperclip-evals/commits/$EVALS_SHA" --jq .sha)"
           test "$resolved" = "$EVALS_SHA"
           echo "sha=$resolved" >> "$GITHUB_OUTPUT"
 
@@ -240,7 +240,7 @@ jobs:
         id: evals_token
         env:
           COMMITPERCLIP_KEY: ${{ secrets.COMMITPERCLIP_KEY }}
-          GH_REPO: paperclipai/paperclip-evals
+          GH_REPO: thinkingmach/paperclip-evals
         run: |
           set -euo pipefail
           token="$(node .github/scripts/get-bot-token.mjs)"
@@ -249,7 +249,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: paperclipai/paperclip-evals
+          repository: thinkingmach/paperclip-evals
           ref: ${{ needs.authorize.outputs.evals_sha }}
           path: .paperclip-evals
           token: ${{ steps.evals_token.outputs.value }}
@@ -258,8 +258,8 @@ jobs:
       - name: Build the two bounded roster-plus-case matrices
         id: catalog
         env:
-          PAPERCLIP_PROTOCOL_EVAL_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
-          PAPERCLIP_PROTOCOL_EVALS_SHA: ${{ needs.authorize.outputs.evals_sha }}
+          THINKINGMACH_PROTOCOL_EVAL_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
+          THINKINGMACH_PROTOCOL_EVALS_SHA: ${{ needs.authorize.outputs.evals_sha }}
           MAX_PARALLEL: ${{ vars.RUNNER_E2E_MAX_PARALLEL || needs.authorize.outputs.max_parallel_default }}
           MAX_PARALLEL_LIMIT: ${{ needs.authorize.outputs.max_parallel_limit }}
           REQUESTED_MAX_PARALLEL: ${{ inputs.max_parallel }}
@@ -363,9 +363,9 @@ jobs:
       - name: Build runner CLI, daemon, and canonical attempt viewer
         run: |
           set -euo pipefail
-          pnpm --filter @paperclipai/paperclip-runner build:typescript
-          pnpm --filter @paperclipai/paperclip-runner build:runner-binaries
-          pnpm --filter @paperclipai/paperclip-runner build:issue-thread
+          pnpm --filter @thinkingmach/paperclip-runner build:typescript
+          pnpm --filter @thinkingmach/paperclip-runner build:runner-binaries
+          pnpm --filter @thinkingmach/paperclip-runner build:issue-thread
           # Older target refs must fail before paid cells, not publish an empty viewer.
           grep -q 'paperclip-eval-report' packages/paperclip-runner/dist-issue-thread/assets/*.js
           grep -q 'evalbook-site' packages/paperclip-runner/dist-issue-thread/assets/*.css
@@ -378,7 +378,7 @@ jobs:
             --pack-destination "$RUNNER_TEMP/runner-protocol-build/package"
           package="$(find "$RUNNER_TEMP/runner-protocol-build/package" -maxdepth 1 -type f -name '*.tgz' -print -quit)"
           test -f "$package"
-          pnpm --filter @paperclipai/paperclip-runner deploy --prod \
+          pnpm --filter @thinkingmach/paperclip-runner deploy --prod \
             "$RUNNER_TEMP/runner-protocol-build/portable"
           cp "$package" "$RUNNER_TEMP/runner-protocol-build/paperclip-runner.tgz"
           cp packages/paperclip-runner/runner/target/debug/paperclip-runnerd "$RUNNER_TEMP/runner-protocol-build/paperclip-runnerd"
@@ -450,7 +450,7 @@ jobs:
         id: evals_token
         env:
           COMMITPERCLIP_KEY: ${{ secrets.COMMITPERCLIP_KEY }}
-          GH_REPO: paperclipai/paperclip-evals
+          GH_REPO: thinkingmach/paperclip-evals
         run: |
           set -euo pipefail
           token="$(node .github/scripts/get-bot-token.mjs)"
@@ -459,7 +459,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: paperclipai/paperclip-evals
+          repository: thinkingmach/paperclip-evals
           ref: ${{ needs.authorize.outputs.evals_sha }}
           path: .paperclip-evals
           token: ${{ steps.evals_token.outputs.value }}
@@ -521,7 +521,7 @@ jobs:
       - name: Prepare short-lived AgentCore web identity
         if: matrix.credentialName == 'AWS_AGENTCORE_OIDC'
         env:
-          AGENTCORE_ROLE_ARN: ${{ vars.PAPERCLIP_AWS_AGENTCORE_EXECUTION_ROLE_ARN }}
+          AGENTCORE_ROLE_ARN: ${{ vars.THINKINGMACH_AWS_AGENTCORE_EXECUTION_ROLE_ARN }}
         run: |
           set -euo pipefail
           test -n "$AGENTCORE_ROLE_ARN"
@@ -552,27 +552,27 @@ jobs:
           ANTHROPIC_API_KEY: ${{ matrix.credentialName == 'ANTHROPIC_API_KEY' && secrets.ANTHROPIC_API_KEY || '' }}
           OPENROUTER_API_KEY: ${{ matrix.credentialName == 'OPENROUTER_API_KEY' && secrets.OPENROUTER_API_KEY || '' }}
           XAI_API_KEY: ${{ matrix.credentialName == 'XAI_API_KEY' && secrets.XAI_API_KEY || '' }}
-          PAPERCLIP_ACPX_GROK_AUTH_JSON_SECRET: ${{ matrix.credentialName == 'PAPERCLIP_ACPX_GROK_AUTH_JSON_SECRET' && secrets.GROK_AUTH_JSON || '' }}
-          PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID: ${{ vars.PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID }}
-          PAPERCLIP_CLAUDE_MANAGED_AGENT_ID: ${{ vars.PAPERCLIP_CLAUDE_MANAGED_AGENT_ID }}
-          PAPERCLIP_CLAUDE_MANAGED_AGENT_VERSION: ${{ vars.PAPERCLIP_CLAUDE_MANAGED_AGENT_VERSION }}
-          PAPERCLIP_CLAUDE_MANAGED_ENVIRONMENT_ID: ${{ vars.PAPERCLIP_CLAUDE_MANAGED_ENVIRONMENT_ID }}
-          AWS_REGION: ${{ vars.PAPERCLIP_AWS_AGENTCORE_REGION }}
-          AWS_DEFAULT_REGION: ${{ vars.PAPERCLIP_AWS_AGENTCORE_REGION }}
-          PAPERCLIP_AWS_AGENTCORE_PROFILE_ID: ${{ vars.PAPERCLIP_AWS_AGENTCORE_PROFILE_ID }}
-          PAPERCLIP_AWS_AGENTCORE_ACCOUNT_ID: ${{ vars.PAPERCLIP_AWS_AGENTCORE_ACCOUNT_ID }}
-          PAPERCLIP_AWS_AGENTCORE_HARNESS_ARN: ${{ vars.PAPERCLIP_AWS_AGENTCORE_HARNESS_ARN }}
-          PAPERCLIP_AWS_AGENTCORE_HARNESS_VERSION: ${{ vars.PAPERCLIP_AWS_AGENTCORE_HARNESS_VERSION }}
-          PAPERCLIP_AWS_AGENTCORE_ENDPOINT_ARN: ${{ vars.PAPERCLIP_AWS_AGENTCORE_ENDPOINT_ARN }}
-          PAPERCLIP_AWS_AGENTCORE_ENDPOINT_QUALIFIER: ${{ vars.PAPERCLIP_AWS_AGENTCORE_ENDPOINT_QUALIFIER }}
-          PAPERCLIP_AWS_AGENTCORE_RUNTIME_ARN: ${{ vars.PAPERCLIP_AWS_AGENTCORE_RUNTIME_ARN }}
-          PAPERCLIP_AWS_AGENTCORE_MEMORY_ARN: ${{ vars.PAPERCLIP_AWS_AGENTCORE_MEMORY_ARN }}
-          PAPERCLIP_AWS_AGENTCORE_MEMORY_ID: ${{ vars.PAPERCLIP_AWS_AGENTCORE_MEMORY_ID }}
-          PAPERCLIP_AWS_AGENTCORE_INVOCATION_ROLE_ARN: ${{ vars.PAPERCLIP_AWS_AGENTCORE_INVOCATION_ROLE_ARN }}
-          PAPERCLIP_AWS_AGENTCORE_CONTEXT_BUCKET: ${{ vars.PAPERCLIP_AWS_AGENTCORE_CONTEXT_BUCKET }}
-          PAPERCLIP_AWS_AGENTCORE_CONTEXT_PREFIX: ${{ vars.PAPERCLIP_AWS_AGENTCORE_CONTEXT_PREFIX }}
-          PAPERCLIP_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN: ${{ vars.PAPERCLIP_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN }}
-          PAPERCLIP_AWS_AGENTCORE_QUALIFICATION_REVISION: ${{ vars.PAPERCLIP_AWS_AGENTCORE_QUALIFICATION_REVISION }}
+          THINKINGMACH_ACPX_GROK_AUTH_JSON_SECRET: ${{ matrix.credentialName == 'THINKINGMACH_ACPX_GROK_AUTH_JSON_SECRET' && secrets.GROK_AUTH_JSON || '' }}
+          THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID: ${{ vars.THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID }}
+          THINKINGMACH_CLAUDE_MANAGED_AGENT_ID: ${{ vars.THINKINGMACH_CLAUDE_MANAGED_AGENT_ID }}
+          THINKINGMACH_CLAUDE_MANAGED_AGENT_VERSION: ${{ vars.THINKINGMACH_CLAUDE_MANAGED_AGENT_VERSION }}
+          THINKINGMACH_CLAUDE_MANAGED_ENVIRONMENT_ID: ${{ vars.THINKINGMACH_CLAUDE_MANAGED_ENVIRONMENT_ID }}
+          AWS_REGION: ${{ vars.THINKINGMACH_AWS_AGENTCORE_REGION }}
+          AWS_DEFAULT_REGION: ${{ vars.THINKINGMACH_AWS_AGENTCORE_REGION }}
+          THINKINGMACH_AWS_AGENTCORE_PROFILE_ID: ${{ vars.THINKINGMACH_AWS_AGENTCORE_PROFILE_ID }}
+          THINKINGMACH_AWS_AGENTCORE_ACCOUNT_ID: ${{ vars.THINKINGMACH_AWS_AGENTCORE_ACCOUNT_ID }}
+          THINKINGMACH_AWS_AGENTCORE_HARNESS_ARN: ${{ vars.THINKINGMACH_AWS_AGENTCORE_HARNESS_ARN }}
+          THINKINGMACH_AWS_AGENTCORE_HARNESS_VERSION: ${{ vars.THINKINGMACH_AWS_AGENTCORE_HARNESS_VERSION }}
+          THINKINGMACH_AWS_AGENTCORE_ENDPOINT_ARN: ${{ vars.THINKINGMACH_AWS_AGENTCORE_ENDPOINT_ARN }}
+          THINKINGMACH_AWS_AGENTCORE_ENDPOINT_QUALIFIER: ${{ vars.THINKINGMACH_AWS_AGENTCORE_ENDPOINT_QUALIFIER }}
+          THINKINGMACH_AWS_AGENTCORE_RUNTIME_ARN: ${{ vars.THINKINGMACH_AWS_AGENTCORE_RUNTIME_ARN }}
+          THINKINGMACH_AWS_AGENTCORE_MEMORY_ARN: ${{ vars.THINKINGMACH_AWS_AGENTCORE_MEMORY_ARN }}
+          THINKINGMACH_AWS_AGENTCORE_MEMORY_ID: ${{ vars.THINKINGMACH_AWS_AGENTCORE_MEMORY_ID }}
+          THINKINGMACH_AWS_AGENTCORE_INVOCATION_ROLE_ARN: ${{ vars.THINKINGMACH_AWS_AGENTCORE_INVOCATION_ROLE_ARN }}
+          THINKINGMACH_AWS_AGENTCORE_CONTEXT_BUCKET: ${{ vars.THINKINGMACH_AWS_AGENTCORE_CONTEXT_BUCKET }}
+          THINKINGMACH_AWS_AGENTCORE_CONTEXT_PREFIX: ${{ vars.THINKINGMACH_AWS_AGENTCORE_CONTEXT_PREFIX }}
+          THINKINGMACH_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN: ${{ vars.THINKINGMACH_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN }}
+          THINKINGMACH_AWS_AGENTCORE_QUALIFICATION_REVISION: ${{ vars.THINKINGMACH_AWS_AGENTCORE_QUALIFICATION_REVISION }}
         run: |
           set -euo pipefail
           mkdir -p cell-output/runs
@@ -580,10 +580,10 @@ jobs:
             test -n "${!CREDENTIAL_NAME:-}"
           fi
           if [ "$PROVIDER" = "claude_managed" ]; then
-            test -n "$PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID"
-            test -n "$PAPERCLIP_CLAUDE_MANAGED_AGENT_ID"
-            test -n "$PAPERCLIP_CLAUDE_MANAGED_AGENT_VERSION"
-            test -n "$PAPERCLIP_CLAUDE_MANAGED_ENVIRONMENT_ID"
+            test -n "$THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID"
+            test -n "$THINKINGMACH_CLAUDE_MANAGED_AGENT_ID"
+            test -n "$THINKINGMACH_CLAUDE_MANAGED_AGENT_VERSION"
+            test -n "$THINKINGMACH_CLAUDE_MANAGED_ENVIRONMENT_ID"
           fi
           set +e
           python3 .paperclip-evals/evals/paperclip-runner/tools/run_live_roster.py run \
@@ -602,7 +602,7 @@ jobs:
           import { readFileSync, writeFileSync } from "node:fs";
           let authenticationMode;
           let authenticationEvidenceFailure;
-          if (["XAI_API_KEY", "PAPERCLIP_ACPX_GROK_AUTH_JSON_SECRET"].includes(process.env.CREDENTIAL_NAME)) {
+          if (["XAI_API_KEY", "THINKINGMACH_ACPX_GROK_AUTH_JSON_SECRET"].includes(process.env.CREDENTIAL_NAME)) {
             const expected = process.env.CREDENTIAL_NAME === "XAI_API_KEY" ? "api_key" : "subscription";
             try {
               const observed = JSON.parse(readFileSync("cell-output/roster-summary.json", "utf8")).authenticationMode;
@@ -673,7 +673,7 @@ jobs:
         id: evals_token
         env:
           COMMITPERCLIP_KEY: ${{ secrets.COMMITPERCLIP_KEY }}
-          GH_REPO: paperclipai/paperclip-evals
+          GH_REPO: thinkingmach/paperclip-evals
         run: |
           set -euo pipefail
           token="$(node .github/scripts/get-bot-token.mjs)"
@@ -682,7 +682,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: paperclipai/paperclip-evals
+          repository: thinkingmach/paperclip-evals
           ref: ${{ needs.authorize.outputs.evals_sha }}
           path: .paperclip-evals
           token: ${{ steps.evals_token.outputs.value }}
@@ -755,10 +755,10 @@ jobs:
 
       - name: Aggregate every expected cell, including missing infrastructure cells
         env:
-          PAPERCLIP_PROTOCOL_EVAL_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
-          PAPERCLIP_PROTOCOL_EVAL_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
-          PAPERCLIP_PROTOCOL_EVALS_SHA: ${{ needs.authorize.outputs.evals_sha }}
-          PAPERCLIP_PROTOCOL_EVAL_WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          THINKINGMACH_PROTOCOL_EVAL_SOURCE_SHA: ${{ needs.authorize.outputs.target_sha }}
+          THINKINGMACH_PROTOCOL_EVAL_SOURCE_REF: ${{ needs.authorize.outputs.target_ref }}
+          THINKINGMACH_PROTOCOL_EVALS_SHA: ${{ needs.authorize.outputs.evals_sha }}
+          THINKINGMACH_PROTOCOL_EVAL_WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           node packages/paperclip-runner/scripts/runner-protocol-eval-campaign.mjs aggregate \
             --catalog runner-protocol-catalog/runner-protocol-eval-catalog.json \
@@ -799,7 +799,7 @@ jobs:
       - name: Verify the actual chat viewer before publication
         run: |
           pnpm install --frozen-lockfile --ignore-scripts
-          pnpm --filter @paperclipai/paperclip-runner exec playwright install --with-deps chromium
+          pnpm --filter @thinkingmach/paperclip-runner exec playwright install --with-deps chromium
           node packages/paperclip-runner/scripts/verify-runner-evalbook-viewer.mjs --report-root runner-protocol-merged/public-report --screenshots runner-protocol-merged/viewer-proof
           node packages/paperclip-runner/scripts/verify-runner-evalbook-viewer.mjs --report-root runner-protocol-merged/report
 
@@ -814,7 +814,7 @@ jobs:
           {
             echo '## Runner direct live protocol evals'
             echo
-            jq -r '"- Cells: \(.totals.passed)/\(.totals.selected) passed\n- Behavior failures: \(.totals.behaviorFailures)\n- Infrastructure failures: \(.totals.infrastructureFailures)\n- Paperclip: `\(.source.paperclip.sha)`\n- Evals: `\(.source.evals.sha)`"' runner-protocol-merged/campaign.json
+            jq -r '"- Cells: \(.totals.passed)/\(.totals.selected) passed\n- Behavior failures: \(.totals.behaviorFailures)\n- Infrastructure failures: \(.totals.infrastructureFailures)\n- ThinkingMach: `\(.source.paperclip.sha)`\n- Evals: `\(.source.evals.sha)`"' runner-protocol-merged/campaign.json
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload access-controlled canonical Evalbook and raw attempts
@@ -886,8 +886,8 @@ jobs:
       - name: Publish versioned report and refresh the root index
         id: publish
         env:
-          PAPERCLIP_RUNNER_PROTOCOL_EVAL_PUBLIC_REPORT_DIR: ${{ github.workspace }}/runner-protocol-public-report
-          PAPERCLIP_RUNNER_PROTOCOL_EVAL_VIEWER_DIR: ${{ github.workspace }}/runner-protocol-trusted-viewer
+          THINKINGMACH_RUNNER_PROTOCOL_EVAL_PUBLIC_REPORT_DIR: ${{ github.workspace }}/runner-protocol-public-report
+          THINKINGMACH_RUNNER_PROTOCOL_EVAL_VIEWER_DIR: ${{ github.workspace }}/runner-protocol-trusted-viewer
           RUNNER_PROTOCOL_EVAL_HISTORY_S3_BUCKET: ${{ vars.RUNNER_PROTOCOL_EVAL_HISTORY_S3_BUCKET || vars.RUNNER_E2E_HISTORY_S3_BUCKET }}
           RUNNER_PROTOCOL_EVAL_HISTORY_PREFIX: ${{ vars.RUNNER_PROTOCOL_EVAL_HISTORY_PREFIX || 'runner-protocol-evals' }}
           RUNNER_PROTOCOL_EVAL_HISTORY_PUBLIC_BASE_URL: ${{ vars.RUNNER_PROTOCOL_EVAL_HISTORY_PUBLIC_BASE_URL || vars.RUNNER_E2E_HISTORY_PUBLIC_BASE_URL }}

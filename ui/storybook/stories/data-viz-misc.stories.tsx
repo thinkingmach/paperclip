@@ -1,20 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { HeartbeatRun, Issue } from "@paperclipai/shared";
+import type { HeartbeatRun, Issue } from "@thinkingmach/shared";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Archive,
-  Bot,
-  CheckCircle2,
-  Clock3,
-  FileCode2,
-  FolderKanban,
-  ListFilter,
-  Loader2,
-  Play,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { Archive, Bot, CheckCircle2, Clock3, FileCode2, FolderKanban, ListFilter, Loader2, Play, ShieldCheck, Sparkles,  } from "lucide-react";
 import {
   ChartCard,
   IssueStatusChart,
@@ -190,7 +178,7 @@ const kanbanIssues: Issue[] = [
 ];
 
 const packageFiles: Record<string, string> = {
-  "COMPANY.md": "---\nname: Paperclip Storybook\nkind: company\n---\nFixture company package for UI review.",
+  "COMPANY.md": "---\nname: ThinkingMach Storybook\nkind: company\n---\nFixture company package for UI review.",
   "agents/codexcoder/AGENTS.md": "---\nname: CodexCoder\nskills:\n  - frontend-design\n  - paperclip\n---\nShips product UI and verifies changes.",
   "agents/qachecker/AGENTS.md": "---\nname: QAChecker\nskills:\n  - web-design-guidelines\n---\nReviews browser behavior and acceptance criteria.",
   "projects/board-ui/PROJECT.md": "---\ntitle: Board UI\nstatus: in_progress\n---\nStorybook and operator control-plane surfaces.",
@@ -556,7 +544,7 @@ function SwipeToArchiveDemo({ disabled = false }: { disabled?: boolean }) {
 
 function CompanyPatternIconMatrix() {
   const companies = [
-    "Paperclip Storybook",
+    "ThinkingMach Storybook",
     "Research Bureau",
     "Launch Ops",
     "Atlas Finance",

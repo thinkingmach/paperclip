@@ -270,7 +270,7 @@ export function buildTeamsFileConsentCard(binding: TeamsFileConsentBinding) {
     contentType: "application/vnd.microsoft.teams.card.file.consent" as const,
     name: validated.filename,
     content: {
-      description: "Allow Paperclip to upload this file to your OneDrive.",
+      description: "Allow ThinkingMach to upload this file to your OneDrive.",
       sizeInBytes: validated.byteSize,
       acceptContext: {
         schema: SCHEMA,
@@ -1131,7 +1131,7 @@ export function parseTeamsFileConsentCard(
       content: z
         .object({
           description: z.literal(
-            "Allow Paperclip to upload this file to your OneDrive.",
+            "Allow ThinkingMach to upload this file to your OneDrive.",
           ),
           sizeInBytes: z
             .number()

@@ -23,7 +23,7 @@ test("the shared cache excludes workspace artifacts and only restores or saves t
   assert.match(runner, /cache-workspace-crates: false/);
   assert.match(runner, /cache-bin: false/);
   const saveIf = runner.match(/^\s*save-if: (.+)$/m)?.[1];
-  assert.equal(saveIf, "${{ matrix.lane == 'rust' && github.repository == 'paperclipai/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master' && inputs.ref == github.sha }}");
+  assert.equal(saveIf, "${{ matrix.lane == 'rust' && github.repository == 'thinkingmach/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master' && inputs.ref == github.sha }}");
   const cacheStep = runner.split("      - name: Cache Runner Rust dependencies")[1].split("      - name: Install dependencies")[0];
   assert.equal(cacheStep.match(/^\s*if: (.+)$/m)?.[1], saveIf.replace("matrix.lane == 'rust' && ", ""));
   assert.doesNotMatch(runner, /cache-on-failure: true|cache-all-crates: true/);
@@ -36,10 +36,10 @@ test("parallel lanes cover check:all exactly once and never bypass verification"
   assert.deepEqual([...runner.matchAll(/^          - lane: (.+)$/gm)].map(([, value]) => value), ["protocol", "rust"]);
   assert.match(runner, /fail-fast: false/);
   assert.doesNotMatch(runner, /max-parallel: 1|^    needs:|continue-on-error:/m);
-  const verify = runner.split("      - name: Verify Paperclip Runner\n")[1].split("      - name: Warm debug")[0];
+  const verify = runner.split("      - name: Verify ThinkingMach Runner\n")[1].split("      - name: Warm debug")[0];
   assert.match(verify, /RUNNER_CHECKS: \$\{\{ matrix.checks \}\}/);
   assert.match(verify, /set -euo pipefail/);
-  assert.match(verify, /for check in \$RUNNER_CHECKS; do\s+pnpm --filter @paperclipai\/paperclip-runner "\$check"\s+done/);
+  assert.match(verify, /for check in \$RUNNER_CHECKS; do\s+pnpm --filter @thinkingmach\/paperclip-runner "\$check"\s+done/);
   assert.doesNotMatch(verify, /if:|cache-hit/);
   assert.doesNotMatch(runner, /id-token: write|packages: write|secrets: inherit/);
 });
@@ -49,9 +49,9 @@ test("only the trusted Rust lane writes, and warms both build profiles before sa
   const warm = runner.split("      - name: Warm debug dependencies for the shared Runner cache")[1];
   const expr = (body, field) => body.match(new RegExp(`^ +${field}: \\$\\{\\{ (.+) \\}\\}$`, "m"))[1];
   assert.equal(expr(cache, "save-if"), expr(warm, "if"));
-  assert.match(warm, /run: pnpm --filter @paperclipai\/paperclip-runner build:rust/);
+  assert.match(warm, /run: pnpm --filter @thinkingmach\/paperclip-runner build:rust/);
   const sha = "a".repeat(40);
-  const base = { repository: "paperclipai/paperclip", event_name: "push", ref: "refs/heads/master", sha };
+  const base = { repository: "thinkingmach/paperclip", event_name: "push", ref: "refs/heads/master", sha };
   for (const lane of ["protocol", "rust"]) {
     for (const [overrides, ref, trusted] of [
       [{}, sha, true],

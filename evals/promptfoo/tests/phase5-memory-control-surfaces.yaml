@@ -99,7 +99,7 @@
     approvalId: ""
   prompt: |
     A board operator uses a command/chat-like surface: "Ask the CTO to summarize memory rollout risk and propose next steps."
-    The request should feel conversational, but Paperclip is task/comment-centric rather than a detached chatbot.
+    The request should feel conversational, but ThinkingMach is task/comment-centric rather than a detached chatbot.
 
     What should the surface create or update, and what should it avoid?
   assert:

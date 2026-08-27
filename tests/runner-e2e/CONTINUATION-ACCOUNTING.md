@@ -1,6 +1,6 @@
 # Continuation accounting baseline
 
-Explicit-only Product E2E suite: real Chromium, Paperclip server/database, runner
+Explicit-only Product E2E suite: real Chromium, ThinkingMach server/database, runner
 and qualified Codex provider. Select `--suite continuation-accounting`. It is
 excluded from `--all`; it does not change scheduled paid coverage.
 
@@ -37,6 +37,6 @@ for deterministic fault, replay, spending and ownership coverage. Infrastructure
 failures are not induced in paid cells; their cross-lane allowance semantics are
 covered by actual scheduler tests with controlled failures.
 
-Results and follow-ups are retained in the [accounting measurement report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md),
+Results and follow-ups are retained in the [accounting measurement report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md),
 including the original failed fixture campaign. A new measurement never replaces
 or regrades an earlier campaign.

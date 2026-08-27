@@ -13,9 +13,9 @@ import {
 import { renderReport } from "./render-report.mjs";
 
 test("extracts only pull requests from the requested repository", () => {
-  assert.equal(extractPullRequestNumber("https://github.com/paperclipai/paperclip/pull/9507", "paperclipai/paperclip"), 9507);
-  assert.equal(extractPullRequestNumber("github.com/paperclipai/paperclip/pull/9507", "paperclipai/paperclip"), 9507);
-  assert.equal(extractPullRequestNumber("https://github.com/other/repo/pull/9507", "paperclipai/paperclip"), null);
+  assert.equal(extractPullRequestNumber("https://github.com/thinkingmach/paperclip/pull/9507", "thinkingmach/paperclip"), 9507);
+  assert.equal(extractPullRequestNumber("github.com/thinkingmach/paperclip/pull/9507", "thinkingmach/paperclip"), 9507);
+  assert.equal(extractPullRequestNumber("https://github.com/other/repo/pull/9507", "thinkingmach/paperclip"), null);
 });
 
 test("origin selection prioritizes work products then comment mentions", () => {
@@ -38,10 +38,10 @@ test("origin selection prioritizes work products then comment mentions", () => {
       assigneeAgentId: "agent-1",
       updatedAt: "2026-07-12T12:00:00Z",
       mentions: [{ field: "comment" }],
-      workProducts: [{ type: "pull_request", url: "http://github.com/paperclipai/paperclip/pull/9507?source=paperclip#review" }],
+      workProducts: [{ type: "pull_request", url: "http://github.com/thinkingmach/paperclip/pull/9507?source=paperclip#review" }],
     },
   ];
-  assert.equal(chooseOriginatingIssue(issues, "https://github.com/paperclipai/paperclip/pull/9507").issueId, "origin");
+  assert.equal(chooseOriginatingIssue(issues, "https://github.com/thinkingmach/paperclip/pull/9507").issueId, "origin");
 });
 
 function discoveryFixture() {
@@ -61,17 +61,17 @@ function discoveryFixture() {
             updatedAt: "2026-07-13T00:00:00Z",
             matchesTruncated: false,
             matches: [
-              { value: "https://github.com/paperclipai/paperclip/pull/1", field: "comment", label: "Comment", source: { type: "comment", commentId: "c1" } },
-              { value: "https://github.com/paperclipai/paperclip/pull/1", field: "document_body", label: "Document", source: { type: "document", documentId: "d1", documentKey: "plan" } },
-              { value: "https://github.com/paperclipai/paperclip/pull/2", field: "description", label: "Description", source: { type: "issue", issueId: "issue-1" } },
-              { value: "https://github.com/paperclipai/paperclip/pull/3", field: "description", label: "Description", source: { type: "issue", issueId: "issue-1" } },
-              { value: "https://github.com/paperclipai/paperclip/pull/4", field: "comment", label: "Comment", source: { type: "comment", commentId: "c2" } },
+              { value: "https://github.com/thinkingmach/paperclip/pull/1", field: "comment", label: "Comment", source: { type: "comment", commentId: "c1" } },
+              { value: "https://github.com/thinkingmach/paperclip/pull/1", field: "document_body", label: "Document", source: { type: "document", documentId: "d1", documentKey: "plan" } },
+              { value: "https://github.com/thinkingmach/paperclip/pull/2", field: "description", label: "Description", source: { type: "issue", issueId: "issue-1" } },
+              { value: "https://github.com/thinkingmach/paperclip/pull/3", field: "description", label: "Description", source: { type: "issue", issueId: "issue-1" } },
+              { value: "https://github.com/thinkingmach/paperclip/pull/4", field: "comment", label: "Comment", source: { type: "comment", commentId: "c2" } },
             ],
           },
         ],
       };
     }
-    return [{ type: "pull_request", url: "https://github.com/paperclipai/paperclip/pull/1/" }];
+    return [{ type: "pull_request", url: "https://github.com/thinkingmach/paperclip/pull/1/" }];
   };
   const ghJson = (args) => {
     if (args[0] === "api" && args[1] === "user") return { login: "Cryppadotta" };
@@ -79,7 +79,7 @@ function discoveryFixture() {
     if (number === 3) throw new Error("GraphQL: Could not resolve to a PullRequest with the number of 3");
     return {
       number,
-      url: `https://github.com/paperclipai/paperclip/pull/${number}`,
+      url: `https://github.com/thinkingmach/paperclip/pull/${number}`,
       title: `PR ${number}`,
       author: { login: number === 4 ? "community-dev" : "cryppadotta" },
       state: number === 1 || number === 4 ? "OPEN" : "MERGED",
@@ -94,7 +94,7 @@ function discoveryFixture() {
 test("candidate discovery deduplicates mentions, drops closed PRs, and excludes community authors by default", async () => {
   const fixture = discoveryFixture();
   const result = await findCandidates({
-    repo: "paperclipai/paperclip",
+    repo: "thinkingmach/paperclip",
     api_url: "http://paperclip.test",
     api_key: "test-key",
     company_id: "company-1",
@@ -126,7 +126,7 @@ test("capped match sets are recorded instead of aborting discovery", async () =>
     return { ...page, results: page.results.map((issue) => ({ ...issue, matchesTruncated: true })) };
   };
   const result = await findCandidates({
-    repo: "paperclipai/paperclip",
+    repo: "thinkingmach/paperclip",
     api_url: "http://paperclip.test",
     api_key: "test-key",
     company_id: "company-1",
@@ -142,7 +142,7 @@ test("capped match sets are recorded instead of aborting discovery", async () =>
 test("--include-community disables the author filter", async () => {
   const fixture = discoveryFixture();
   const result = await findCandidates({
-    repo: "paperclipai/paperclip",
+    repo: "thinkingmach/paperclip",
     api_url: "http://paperclip.test",
     api_key: "test-key",
     company_id: "company-1",
@@ -159,7 +159,7 @@ test("--include-community disables the author filter", async () => {
 test("open PRs with no activity inside the window are dropped as stale", async () => {
   const fixture = discoveryFixture();
   const result = await findCandidates({
-    repo: "paperclipai/paperclip",
+    repo: "thinkingmach/paperclip",
     api_url: "http://paperclip.test",
     api_key: "test-key",
     company_id: "company-1",
@@ -188,8 +188,8 @@ test("summarizes PR bodies into a one-line purpose", () => {
     "Fixes the flaky retry loop so wakes stop duplicating.",
   );
   assert.equal(
-    summarizePullRequestBody("> - Paperclip is the control plane.\n> - Blocker edges gate work."),
-    "Paperclip is the control plane. Blocker edges gate work.",
+    summarizePullRequestBody("> - ThinkingMach is the control plane.\n> - Blocker edges gate work."),
+    "ThinkingMach is the control plane. Blocker edges gate work.",
   );
   assert.equal(summarizePullRequestBody(""), null);
   assert.equal(summarizePullRequestBody(null), null);
@@ -238,7 +238,7 @@ test("unresolved nullable mergeability is reported instead of crashing", () => {
 test("renders scope, purpose, confidence groups, and immutable guardrail", () => {
   const entry = {
     number: 1,
-    url: "https://github.com/paperclipai/paperclip/pull/1",
+    url: "https://github.com/thinkingmach/paperclip/pull/1",
     title: "Example",
     author: "cryppadotta",
     purpose: "Fixes the retry loop.",
@@ -256,14 +256,14 @@ test("renders scope, purpose, confidence groups, and immutable guardrail", () =>
   };
   assert.equal(confidenceFor(entry), "high");
   const report = renderReport({
-    repository: "paperclipai/paperclip",
+    repository: "thinkingmach/paperclip",
     windowDays: 14,
     authors: ["cryppadotta"],
     generatedAt: "2026-07-13T00:00:00Z",
     summary: { ready: 1, needsGardening: 0, reportOnly: 0 },
     pullRequests: [entry],
   });
-  assert.match(report, /Scope: PRs authored by `cryppadotta` \(this Paperclip instance\) referenced by issues active in the last 14 day\(s\)/);
+  assert.match(report, /Scope: PRs authored by `cryppadotta` \(this ThinkingMach instance\) referenced by issues active in the last 14 day\(s\)/);
   assert.match(report, /- Purpose: Fixes the retry loop\./);
   assert.match(report, /- Author: `cryppadotta`/);
   assert.match(report, /## High Confidence/);
@@ -272,7 +272,7 @@ test("renders scope, purpose, confidence groups, and immutable guardrail", () =>
 
 test("escapes contributor-controlled Markdown in report titles and purposes", () => {
   const report = renderReport({
-    repository: "paperclipai/paperclip",
+    repository: "thinkingmach/paperclip",
     windowDays: 14,
     authors: null,
     generatedAt: "2026-07-27T00:00:00Z",
@@ -280,7 +280,7 @@ test("escapes contributor-controlled Markdown in report titles and purposes", ()
     pullRequests: [
       {
         number: 2,
-        url: "https://github.com/paperclipai/paperclip/pull/2",
+        url: "https://github.com/thinkingmach/paperclip/pull/2",
         title: "[Injected](https://example.test)",
         author: "community-user",
         purpose: "![tracking pixel](https://example.test/pixel.png) <img src=x>",

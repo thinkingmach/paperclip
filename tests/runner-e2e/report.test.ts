@@ -43,7 +43,7 @@ describe("runner E2E report aggregation", () => {
     const output = path.join(root, "merged");
     await execFileAsync(process.execPath, [path.join(repositoryRoot, "cli/node_modules/tsx/dist/cli.mjs"), path.join(repositoryRoot, "tests/runner-e2e/report.ts")], {
       cwd: repositoryRoot,
-      env: { ...process.env, PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root, PAPERCLIP_RUNNER_E2E_REPORT_OUT: output, PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]) },
+      env: { ...process.env, THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root, THINKINGMACH_RUNNER_E2E_REPORT_OUT: output, THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]) },
     });
     const markdown = await readFile(path.join(output, "summary.md"), "utf8");
     expect(markdown.split("\n").find((line) => line.startsWith("Tokens: "))).toBe(`Tokens: ${tokens}`);
@@ -82,7 +82,7 @@ describe("runner E2E report aggregation", () => {
     }
     const output = path.join(root, "merged");
     await expect(execFileAsync(process.execPath, [path.join(repositoryRoot, "cli/node_modules/tsx/dist/cli.mjs"), path.join(repositoryRoot, "tests/runner-e2e/report.ts")], {
-      cwd: repositoryRoot, env: { ...process.env, PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root, PAPERCLIP_RUNNER_E2E_REPORT_OUT: output, PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify(ids) },
+      cwd: repositoryRoot, env: { ...process.env, THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root, THINKINGMACH_RUNNER_E2E_REPORT_OUT: output, THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify(ids) },
     })).rejects.toBeDefined();
     const normalized = JSON.parse(await readFile(path.join(output, "normalized-results.json"), "utf8"));
     expect(normalized).toMatchObject({ passed: 0, failed: 1, incomplete: 1 });
@@ -157,7 +157,7 @@ describe("runner E2E report aggregation", () => {
                 {
                   matcher: {
                     kind: "message_contains" as const,
-                    expected: "PAPERCLIP_E2E_OK",
+                    expected: "THINKINGMACH_E2E_OK",
                   },
                   passed: true,
                   detail: "matched",
@@ -213,21 +213,21 @@ describe("runner E2E report aggregation", () => {
         cwd: repositoryRoot,
         env: {
           ...process.env,
-          PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root,
-          PAPERCLIP_RUNNER_E2E_REPORT_OUT: output,
-          PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
-          PAPERCLIP_RUNNER_E2E_SOURCE_SHA:
+          THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root,
+          THINKINGMACH_RUNNER_E2E_REPORT_OUT: output,
+          THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
+          THINKINGMACH_RUNNER_E2E_SOURCE_SHA:
             "0123456789abcdef0123456789abcdef01234567",
-          PAPERCLIP_RUNNER_E2E_SOURCE_REF:
+          THINKINGMACH_RUNNER_E2E_SOURCE_REF:
             "refs/heads/fix/runner-paid-source-attribution",
           GITHUB_SHA: "trusted-default-workflow-sha",
           GITHUB_REF: "refs/heads/master",
           GITHUB_SERVER_URL: "https://github.com",
-          GITHUB_REPOSITORY: "paperclipai/paperclip",
+          GITHUB_REPOSITORY: "thinkingmach/paperclip",
           GITHUB_RUN_ID: "123456",
-          PAPERCLIP_RUNNER_E2E_HISTORY_PUBLIC_BASE_URL:
+          THINKINGMACH_RUNNER_E2E_HISTORY_PUBLIC_BASE_URL:
             "https://reports.example.test/",
-          PAPERCLIP_RUNNER_E2E_HISTORY_PREFIX: "/runner-e2e/",
+          THINKINGMACH_RUNNER_E2E_HISTORY_PREFIX: "/runner-e2e/",
         },
       },
     );
@@ -246,7 +246,7 @@ describe("runner E2E report aggregation", () => {
         sha: "0123456789abcdef0123456789abcdef01234567",
         ref: "refs/heads/fix/runner-paid-source-attribution",
         workflowRunUrl:
-          "https://github.com/paperclipai/paperclip/actions/runs/123456",
+          "https://github.com/thinkingmach/paperclip/actions/runs/123456",
       },
     });
     expect(normalized.billing).toMatchObject({
@@ -264,7 +264,7 @@ describe("runner E2E report aggregation", () => {
         sha: "0123456789abcdef0123456789abcdef01234567",
         ref: "refs/heads/fix/runner-paid-source-attribution",
         workflowRunUrl:
-          "https://github.com/paperclipai/paperclip/actions/runs/123456",
+          "https://github.com/thinkingmach/paperclip/actions/runs/123456",
       },
     });
     const dashboard = await readFile(
@@ -353,10 +353,10 @@ describe("runner E2E report aggregation", () => {
       "[Open the exact interactive campaign report](https://reports.example.test/runner-e2e/campaigns/gha-123456-1/index.html)",
     );
     expect(summary).toContain(
-      "[Open the workflow run and per-cell job logs](https://github.com/paperclipai/paperclip/actions/runs/123456)",
+      "[Open the workflow run and per-cell job logs](https://github.com/thinkingmach/paperclip/actions/runs/123456)",
     );
     expect(summary).toContain(
-      "[Download the merged report and per-cell evidence](https://github.com/paperclipai/paperclip/actions/runs/123456#artifacts)",
+      "[Download the merged report and per-cell evidence](https://github.com/thinkingmach/paperclip/actions/runs/123456#artifacts)",
     );
     expect(summary).toContain(
       `[core-compatibility.${executionId}](https://reports.example.test/runner-e2e/campaigns/gha-123456-1/index.html#execution-core-compatibility.${executionId})`,
@@ -429,9 +429,9 @@ describe("runner E2E report aggregation", () => {
         cwd: repositoryRoot,
         env: {
           ...process.env,
-          PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root,
-          PAPERCLIP_RUNNER_E2E_REPORT_OUT: output,
-          PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
+          THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root,
+          THINKINGMACH_RUNNER_E2E_REPORT_OUT: output,
+          THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
         },
       },
     );
@@ -511,9 +511,9 @@ describe("runner E2E report aggregation", () => {
         cwd: repositoryRoot,
         env: {
           ...process.env,
-          PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root,
-          PAPERCLIP_RUNNER_E2E_REPORT_OUT: output,
-          PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
+          THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root,
+          THINKINGMACH_RUNNER_E2E_REPORT_OUT: output,
+          THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
         },
       },
     );
@@ -571,9 +571,9 @@ describe("runner E2E report aggregation", () => {
           cwd: repositoryRoot,
           env: {
             ...process.env,
-            PAPERCLIP_RUNNER_E2E_REPORT_ROOT: root,
-            PAPERCLIP_RUNNER_E2E_REPORT_OUT: output,
-            PAPERCLIP_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
+            THINKINGMACH_RUNNER_E2E_REPORT_ROOT: root,
+            THINKINGMACH_RUNNER_E2E_REPORT_OUT: output,
+            THINKINGMACH_RUNNER_E2E_EXPECTED_IDS: JSON.stringify([executionId]),
           },
         },
       ),

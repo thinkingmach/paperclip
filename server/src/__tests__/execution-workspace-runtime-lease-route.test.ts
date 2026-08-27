@@ -10,7 +10,7 @@ import {
   executionWorkspaces,
   issues,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

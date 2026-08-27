@@ -50,8 +50,8 @@ export function resolvePrivateHostnameAllowSet(opts: { allowedHostnames: string[
 // outer shell. Emit a static `<host>` placeholder and do not echo the raw request
 // value. The operator supplies the real hostname.
 const BLOCKED_HOSTNAME_MESSAGE =
-  "This hostname is not allowed for this Paperclip instance. " +
-  "If you want to allow a hostname, run npx paperclipai allowed-hostname <host>.";
+  "This hostname is not allowed for this ThinkingMach instance. " +
+  "If you want to allow a hostname, run npx thinkingmach allowed-hostname <host>.";
 
 export function privateHostnameGuard(opts: {
   enabled: boolean;
@@ -72,7 +72,7 @@ export function privateHostnameGuard(opts: {
     const wantsJson = req.path.startsWith("/api") || req.accepts(["json", "html", "text"]) === "json";
 
     if (!hostname) {
-      const error = "Missing Host header. If you want to allow a hostname, run npx paperclipai allowed-hostname <host>.";
+      const error = "Missing Host header. If you want to allow a hostname, run npx thinkingmach allowed-hostname <host>.";
       if (wantsJson) {
         res.status(403).json({ error });
       } else {

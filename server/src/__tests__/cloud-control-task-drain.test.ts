@@ -29,8 +29,8 @@ const publicJwk = {
 };
 
 const ENV = {
-  PAPERCLIP_CLOUD_RUNTIME_IDENTITY_JWKS: JSON.stringify({ keys: [publicJwk] }),
-  PAPERCLIP_CLOUD_STACK_ID: STACK_ID,
+  THINKINGMACH_CLOUD_RUNTIME_IDENTITY_JWKS: JSON.stringify({ keys: [publicJwk] }),
+  THINKINGMACH_CLOUD_STACK_ID: STACK_ID,
 } as NodeJS.ProcessEnv;
 
 function encodeJson(value: Record<string, unknown>) {
@@ -155,7 +155,7 @@ describe("verifyCloudControlAssertion", () => {
       verifyCloudControlAssertion({
         compactJws: controlAssertion(),
         expectedAction: "task-drain:start",
-        env: { PAPERCLIP_CLOUD_RUNTIME_IDENTITY_JWKS: ENV.PAPERCLIP_CLOUD_RUNTIME_IDENTITY_JWKS } as NodeJS.ProcessEnv,
+        env: { THINKINGMACH_CLOUD_RUNTIME_IDENTITY_JWKS: ENV.THINKINGMACH_CLOUD_RUNTIME_IDENTITY_JWKS } as NodeJS.ProcessEnv,
         now: NOW,
       }),
     ).toThrow(/does not match this instance/);
@@ -188,10 +188,10 @@ describe("cloudControlMiddleware", () => {
 
   beforeEach(() => {
     resetCloudControlReplayFenceForTests();
-    savedEnv.PAPERCLIP_CLOUD_RUNTIME_IDENTITY_JWKS = process.env.PAPERCLIP_CLOUD_RUNTIME_IDENTITY_JWKS;
-    savedEnv.PAPERCLIP_CLOUD_STACK_ID = process.env.PAPERCLIP_CLOUD_STACK_ID;
-    process.env.PAPERCLIP_CLOUD_RUNTIME_IDENTITY_JWKS = ENV.PAPERCLIP_CLOUD_RUNTIME_IDENTITY_JWKS;
-    process.env.PAPERCLIP_CLOUD_STACK_ID = STACK_ID;
+    savedEnv.THINKINGMACH_CLOUD_RUNTIME_IDENTITY_JWKS = process.env.THINKINGMACH_CLOUD_RUNTIME_IDENTITY_JWKS;
+    savedEnv.THINKINGMACH_CLOUD_STACK_ID = process.env.THINKINGMACH_CLOUD_STACK_ID;
+    process.env.THINKINGMACH_CLOUD_RUNTIME_IDENTITY_JWKS = ENV.THINKINGMACH_CLOUD_RUNTIME_IDENTITY_JWKS;
+    process.env.THINKINGMACH_CLOUD_STACK_ID = STACK_ID;
   });
 
   afterEach(() => {

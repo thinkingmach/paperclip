@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Approval, HeartbeatRun, Issue } from "@paperclipai/shared";
+import type { Approval, HeartbeatRun, Issue } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CompanyJoinRequest } from "../api/access";
 import {

@@ -1,6 +1,6 @@
 import { parentPort } from "node:worker_threads";
 import sharp from "sharp";
-import { renderAgentSvg } from "@paperclipai/shared/cliplab/static";
+import { renderAgentSvg } from "@thinkingmach/shared/cliplab/static";
 import type { AgentAvatarRequest } from "./agent-avatars.js";
 
 parentPort!.on("message", async (request: AgentAvatarRequest) => {

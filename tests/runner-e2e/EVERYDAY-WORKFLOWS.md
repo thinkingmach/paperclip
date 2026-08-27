@@ -1,4 +1,4 @@
-# Everyday Paperclip workflow evals
+# Everyday ThinkingMach workflow evals
 
 This manual suite tests useful work through the production browser, public API,
 native runner, and normal agent instructions. It complements the tightly

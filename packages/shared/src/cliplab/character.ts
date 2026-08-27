@@ -2,7 +2,7 @@
 import type { Definition } from "./model.js";
 
 /** The persona character: Tonio's ClipLab studio export, every palette recolours its body. */
-export const PAPERCLIP_CHARACTER: Definition = {
+export const THINKINGMACH_CHARACTER: Definition = {
   "version": 1,
   "character": {
     "id": "character-5128bda1",

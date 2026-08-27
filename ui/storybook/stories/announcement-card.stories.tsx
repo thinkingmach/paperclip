@@ -17,7 +17,7 @@ export const Mobile: Story = { globals: { viewport: { value: "mobile1", isRotate
 export const MissingImage: Story = { args: { imageSrc: "/missing-announcement-image.png" } };
 export const TextOnly: Story = { args: { announcement: { ...announcementPreview, image: undefined, secondaryLink: undefined } } };
 export const LongText: Story = {
-  args: { announcement: { ...announcementPreview, title: "Give your most ambitious ideas a team that can carry them forward", description: "Organize your agents around a shared goal, bring the work into one place, and keep every decision connected to its context. Follow progress, review outcomes, and help your team take the next step whenever it needs your direction.", primaryAction: { kind: "external", label: "See everything that’s new in Paperclip", url: "https://paperclip.ing" } } },
+  args: { announcement: { ...announcementPreview, title: "Give your most ambitious ideas a team that can carry them forward", description: "Organize your agents around a shared goal, bring the work into one place, and keep every decision connected to its context. Follow progress, review outcomes, and help your team take the next step whenever it needs your direction.", primaryAction: { kind: "external", label: "See everything that’s new in ThinkingMach", url: "https://thinkingmach.com" } } },
 };
 
 export const Animated: Story = { args: { announcement: announcementAnimationPreview, animationSrc: announcementAnimationPreviewSrc } };

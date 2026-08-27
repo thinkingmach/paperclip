@@ -2,56 +2,56 @@ import { Ajv2020 } from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv/dist/2020.js";
 
 import {
-  PAPERCLIP_SEMANTIC_ACTION_CATALOG,
+  THINKINGMACH_SEMANTIC_ACTION_CATALOG,
   paperclipSemanticAction,
 } from "../catalog/semantic-action-catalog.js";
 import type {
-  PaperclipJsonValue,
-  PaperclipSemanticActionDescriptor,
-  PaperclipSemanticActionId,
+  ThinkingMachJsonValue,
+  ThinkingMachSemanticActionDescriptor,
+  ThinkingMachSemanticActionId,
 } from "../catalog/semantic-action-types.js";
-import { decidePaperclipSemanticAuthorization } from "./authorization.js";
+import { decideThinkingMachSemanticAuthorization } from "./authorization.js";
 import {
-  discoverPaperclipSemanticTools,
-  projectPaperclipSemanticTools,
+  discoverThinkingMachSemanticTools,
+  projectThinkingMachSemanticTools,
 } from "./paperclip-discovery.js";
 import {
-  createPaperclipSemanticInputReceipt,
-  createPaperclipSemanticResultReceipt,
+  createThinkingMachSemanticInputReceipt,
+  createThinkingMachSemanticResultReceipt,
   denialRetryable,
-  digestPaperclipSemanticContent,
-  isPaperclipSemanticStableId,
-  normalizePaperclipSemanticReferences,
+  digestThinkingMachSemanticContent,
+  isThinkingMachSemanticStableId,
+  normalizeThinkingMachSemanticReferences,
   paperclipSemanticAuthorizationBoundary,
   paperclipSemanticOutcome,
 } from "./receipts.js";
 import {
-  inspectPaperclipSemanticValue,
-  redactPaperclipSemanticValue,
+  inspectThinkingMachSemanticValue,
+  redactThinkingMachSemanticValue,
 } from "./redaction.js";
 import type {
-  PaperclipSemanticActionBinding,
-  PaperclipSemanticAuthorizationDecision,
-  PaperclipSemanticAuthorizationRecord,
-  PaperclipSemanticBindingResult,
-  PaperclipSemanticContextProvider,
-  PaperclipSemanticDenialCode,
-  PaperclipSemanticDiscoveryResult,
-  PaperclipSemanticIdempotencyClaim,
-  PaperclipSemanticIdempotencyStore,
-  PaperclipSemanticRunContext,
-  PaperclipSemanticStoredOutcome,
-  PaperclipSemanticToolCall,
-  PaperclipSemanticToolDefinition,
-  PaperclipSemanticToolDenial,
-  PaperclipSemanticToolResult,
-  PaperclipSemanticToolSuccess,
+  ThinkingMachSemanticActionBinding,
+  ThinkingMachSemanticAuthorizationDecision,
+  ThinkingMachSemanticAuthorizationRecord,
+  ThinkingMachSemanticBindingResult,
+  ThinkingMachSemanticContextProvider,
+  ThinkingMachSemanticDenialCode,
+  ThinkingMachSemanticDiscoveryResult,
+  ThinkingMachSemanticIdempotencyClaim,
+  ThinkingMachSemanticIdempotencyStore,
+  ThinkingMachSemanticRunContext,
+  ThinkingMachSemanticStoredOutcome,
+  ThinkingMachSemanticToolCall,
+  ThinkingMachSemanticToolDefinition,
+  ThinkingMachSemanticToolDenial,
+  ThinkingMachSemanticToolResult,
+  ThinkingMachSemanticToolSuccess,
 } from "./types.js";
 
-export interface PaperclipSemanticDispatcherOptions {
-  readonly contextProvider: PaperclipSemanticContextProvider;
-  readonly bindings: readonly PaperclipSemanticActionBinding[];
-  readonly idempotencyStore?: PaperclipSemanticIdempotencyStore;
+export interface ThinkingMachSemanticDispatcherOptions {
+  readonly contextProvider: ThinkingMachSemanticContextProvider;
+  readonly bindings: readonly ThinkingMachSemanticActionBinding[];
+  readonly idempotencyStore?: ThinkingMachSemanticIdempotencyStore;
   readonly maxAuthorizationRecords?: number;
 }
 
@@ -61,27 +61,27 @@ interface ClaimedMutation {
   readonly idempotencyKey: string;
 }
 
-export class PaperclipSemanticDispatcher {
-  readonly #contextProvider: PaperclipSemanticContextProvider;
+export class ThinkingMachSemanticDispatcher {
+  readonly #contextProvider: ThinkingMachSemanticContextProvider;
   readonly #bindings = new Map<
-    PaperclipSemanticActionId,
-    PaperclipSemanticActionBinding
+    ThinkingMachSemanticActionId,
+    ThinkingMachSemanticActionBinding
   >();
-  readonly #boundOperationIds: ReadonlySet<PaperclipSemanticActionId>;
+  readonly #boundOperationIds: ReadonlySet<ThinkingMachSemanticActionId>;
   readonly #inputValidators = new Map<
-    PaperclipSemanticActionId,
+    ThinkingMachSemanticActionId,
     ValidateFunction
   >();
   readonly #outputValidators = new Map<
-    PaperclipSemanticActionId,
+    ThinkingMachSemanticActionId,
     ValidateFunction
   >();
-  readonly #idempotencyStore: PaperclipSemanticIdempotencyStore | undefined;
+  readonly #idempotencyStore: ThinkingMachSemanticIdempotencyStore | undefined;
   readonly #maxAuthorizationRecords: number;
-  readonly #authorizationRecords: PaperclipSemanticAuthorizationRecord[] = [];
+  readonly #authorizationRecords: ThinkingMachSemanticAuthorizationRecord[] = [];
   #recordSequence = 0;
 
-  constructor(options: PaperclipSemanticDispatcherOptions) {
+  constructor(options: ThinkingMachSemanticDispatcherOptions) {
     this.#contextProvider = options.contextProvider;
     this.#idempotencyStore = options.idempotencyStore;
     this.#maxAuthorizationRecords = Math.max(
@@ -108,7 +108,7 @@ export class PaperclipSemanticDispatcher {
       allowUnionTypes: true,
       strict: true,
     });
-    for (const descriptor of PAPERCLIP_SEMANTIC_ACTION_CATALOG) {
+    for (const descriptor of THINKINGMACH_SEMANTIC_ACTION_CATALOG) {
       this.#inputValidators.set(
         descriptor.operationId,
         ajv.compile(descriptor.inputSchema),
@@ -122,10 +122,10 @@ export class PaperclipSemanticDispatcher {
 
   async listAlwaysAvailableTools(
     runId: string,
-  ): Promise<readonly PaperclipSemanticToolDefinition[]> {
+  ): Promise<readonly ThinkingMachSemanticToolDefinition[]> {
     const context = await this.#contextProvider(runId);
     this.#recordExposureDecisions(runId, context, "always");
-    return projectPaperclipSemanticTools({
+    return projectThinkingMachSemanticTools({
       runId,
       context,
       boundOperationIds: this.#boundOperationIds,
@@ -138,23 +138,23 @@ export class PaperclipSemanticDispatcher {
     readonly query: string;
     readonly namespace?: string;
     readonly limit?: number;
-  }): Promise<PaperclipSemanticDiscoveryResult> {
+  }): Promise<ThinkingMachSemanticDiscoveryResult> {
     const context = await this.#contextProvider(input.runId);
     this.#recordExposureDecisions(input.runId, context, "optional");
-    return discoverPaperclipSemanticTools({
+    return discoverThinkingMachSemanticTools({
       ...input,
       context,
       boundOperationIds: this.#boundOperationIds,
     });
   }
 
-  authorizationRecords(): readonly PaperclipSemanticAuthorizationRecord[] {
+  authorizationRecords(): readonly ThinkingMachSemanticAuthorizationRecord[] {
     return deepFreeze(structuredClone(this.#authorizationRecords));
   }
 
   async dispatch(
-    call: PaperclipSemanticToolCall,
-  ): Promise<PaperclipSemanticToolResult> {
+    call: ThinkingMachSemanticToolCall,
+  ): Promise<ThinkingMachSemanticToolResult> {
     if (!validCallIdentity(call)) {
       return this.#identityDenial(call);
     }
@@ -164,13 +164,13 @@ export class PaperclipSemanticDispatcher {
       return this.#denial(call, "operation_absent", null, null);
     }
 
-    let context: PaperclipSemanticRunContext;
+    let context: ThinkingMachSemanticRunContext;
     try {
       context = await this.#contextProvider(call.runId);
     } catch {
       return this.#denial(call, "binding_failed", descriptor, null);
     }
-    let decision = decidePaperclipSemanticAuthorization(
+    let decision = decideThinkingMachSemanticAuthorization(
       descriptor,
       context,
       "invocation",
@@ -187,7 +187,7 @@ export class PaperclipSemanticDispatcher {
       );
     }
 
-    const inputSafety = inspectPaperclipSemanticValue(call.input);
+    const inputSafety = inspectThinkingMachSemanticValue(call.input);
     if (!inputSafety.withinBounds) {
       decision = deniedDecision(
         decision,
@@ -236,14 +236,14 @@ export class PaperclipSemanticDispatcher {
       return this.#denial(call, "input_invalid", descriptor, context, decision);
     }
 
-    const inputReceipt = createPaperclipSemanticInputReceipt({
+    const inputReceipt = createThinkingMachSemanticInputReceipt({
       operationId: descriptor.operationId,
       callId: call.callId,
       correlation: call.correlation,
       idempotencyKey: idempotencyKey ?? null,
       content: call.input,
     });
-    const inputDigest = digestPaperclipSemanticContent(call.input);
+    const inputDigest = digestThinkingMachSemanticContent(call.input);
     let claim: ClaimedMutation | undefined;
     if (descriptor.effect !== "read") {
       if (this.#idempotencyStore === undefined) {
@@ -260,13 +260,13 @@ export class PaperclipSemanticDispatcher {
           decision,
         );
       }
-      const scope = digestPaperclipSemanticContent([
+      const scope = digestThinkingMachSemanticContent([
         context.companyId,
         call.runId,
         descriptor.operationId,
         idempotencyKey,
       ]);
-      let claimed: PaperclipSemanticIdempotencyClaim;
+      let claimed: ThinkingMachSemanticIdempotencyClaim;
       try {
         claimed = await this.#idempotencyStore.claim({
           scope,
@@ -335,7 +335,7 @@ export class PaperclipSemanticDispatcher {
 
     // Re-read authority after any durable claim and immediately before the
     // application binding. A stale projection can never authorize execution.
-    let currentContext: PaperclipSemanticRunContext;
+    let currentContext: ThinkingMachSemanticRunContext;
     try {
       currentContext = await this.#contextProvider(call.runId);
     } catch {
@@ -349,7 +349,7 @@ export class PaperclipSemanticDispatcher {
       }
       return this.#denial(call, "binding_failed", descriptor, context);
     }
-    decision = decidePaperclipSemanticAuthorization(
+    decision = decideThinkingMachSemanticAuthorization(
       descriptor,
       currentContext,
       "invocation",
@@ -379,7 +379,7 @@ export class PaperclipSemanticDispatcher {
       );
     }
 
-    let executed: PaperclipSemanticBindingResult;
+    let executed: ThinkingMachSemanticBindingResult;
     try {
       executed = await binding.execute({
         runId: call.runId,
@@ -388,7 +388,7 @@ export class PaperclipSemanticDispatcher {
         taskId: currentContext.activeTask.id,
         callId: call.callId,
         operationId: descriptor.operationId,
-        input: call.input as Readonly<Record<string, PaperclipJsonValue>>,
+        input: call.input as Readonly<Record<string, ThinkingMachJsonValue>>,
       });
     } catch {
       // A mutation may have crossed the application boundary. Keep its claim
@@ -421,8 +421,8 @@ export class PaperclipSemanticDispatcher {
         decision,
       );
     }
-    const outputSafety = inspectPaperclipSemanticValue(executed.value);
-    const safeValue = redactPaperclipSemanticValue(executed.value);
+    const outputSafety = inspectThinkingMachSemanticValue(executed.value);
+    const safeValue = redactThinkingMachSemanticValue(executed.value);
     const outputValidator = this.#outputValidators.get(descriptor.operationId);
     if (
       !outputSafety.withinBounds ||
@@ -448,10 +448,10 @@ export class PaperclipSemanticDispatcher {
     }
 
     const code = executed.code ?? "ok";
-    const references = normalizePaperclipSemanticReferences(
+    const references = normalizeThinkingMachSemanticReferences(
       executed.references,
     );
-    const resultReceipt = createPaperclipSemanticResultReceipt({
+    const resultReceipt = createThinkingMachSemanticResultReceipt({
       operationId: descriptor.operationId,
       callId: call.callId,
       correlation: call.correlation,
@@ -473,7 +473,7 @@ export class PaperclipSemanticDispatcher {
     const operationReceiptId = String(resultReceipt.operationReceiptId);
 
     if (claim !== undefined) {
-      const stored: PaperclipSemanticStoredOutcome = {
+      const stored: ThinkingMachSemanticStoredOutcome = {
         operationId: descriptor.operationId,
         inputDigest,
         operationReceiptId,
@@ -531,22 +531,22 @@ export class PaperclipSemanticDispatcher {
         : {}),
       inputReceipt,
       resultReceipt,
-    } satisfies PaperclipSemanticToolSuccess);
+    } satisfies ThinkingMachSemanticToolSuccess);
   }
 
   #recordExposureDecisions(
     runId: string,
-    context: PaperclipSemanticRunContext,
-    placement: PaperclipSemanticActionDescriptor["placement"],
+    context: ThinkingMachSemanticRunContext,
+    placement: ThinkingMachSemanticActionDescriptor["placement"],
   ): void {
-    for (const descriptor of PAPERCLIP_SEMANTIC_ACTION_CATALOG) {
+    for (const descriptor of THINKINGMACH_SEMANTIC_ACTION_CATALOG) {
       if (
         descriptor.placement !== placement ||
         !this.#boundOperationIds.has(descriptor.operationId)
       ) {
         continue;
       }
-      const decision = decidePaperclipSemanticAuthorization(
+      const decision = decideThinkingMachSemanticAuthorization(
         descriptor,
         context,
         "exposure",
@@ -557,14 +557,14 @@ export class PaperclipSemanticDispatcher {
   }
 
   #duplicate(
-    call: PaperclipSemanticToolCall,
-    descriptor: PaperclipSemanticActionDescriptor,
-    context: PaperclipSemanticRunContext,
-    decision: PaperclipSemanticAuthorizationDecision,
-    inputReceipt: PaperclipSemanticToolSuccess["inputReceipt"],
+    call: ThinkingMachSemanticToolCall,
+    descriptor: ThinkingMachSemanticActionDescriptor,
+    context: ThinkingMachSemanticRunContext,
+    decision: ThinkingMachSemanticAuthorizationDecision,
+    inputReceipt: ThinkingMachSemanticToolSuccess["inputReceipt"],
     inputDigest: string,
-    stored: PaperclipSemanticStoredOutcome,
-  ): PaperclipSemanticToolResult {
+    stored: ThinkingMachSemanticStoredOutcome,
+  ): ThinkingMachSemanticToolResult {
     if (!isStoredOutcome(stored)) {
       const denied = deniedDecision(
         decision,
@@ -580,12 +580,12 @@ export class PaperclipSemanticDispatcher {
       );
     }
     const outputValidator = this.#outputValidators.get(descriptor.operationId);
-    const outputSafety = inspectPaperclipSemanticValue(stored.value);
-    const safeValue = redactPaperclipSemanticValue(stored.value);
+    const outputSafety = inspectThinkingMachSemanticValue(stored.value);
+    const safeValue = redactThinkingMachSemanticValue(stored.value);
     if (
       stored.operationId !== descriptor.operationId ||
       stored.inputDigest !== inputDigest ||
-      !isPaperclipSemanticStableId(stored.operationReceiptId) ||
+      !isThinkingMachSemanticStableId(stored.operationReceiptId) ||
       !validCode(stored.code) ||
       !validOptionalRevision(stored.stateRevision) ||
       !validOptionalStableId(stored.auditReceiptId) ||
@@ -606,8 +606,8 @@ export class PaperclipSemanticDispatcher {
         denied,
       );
     }
-    const references = normalizePaperclipSemanticReferences(stored.references);
-    const resultReceipt = createPaperclipSemanticResultReceipt({
+    const references = normalizeThinkingMachSemanticReferences(stored.references);
+    const resultReceipt = createThinkingMachSemanticResultReceipt({
       operationId: descriptor.operationId,
       callId: call.callId,
       correlation: call.correlation,
@@ -649,7 +649,7 @@ export class PaperclipSemanticDispatcher {
         : {}),
       inputReceipt,
       resultReceipt,
-    } satisfies PaperclipSemanticToolSuccess);
+    } satisfies ThinkingMachSemanticToolSuccess);
   }
 
   async #releaseClaim(token: string): Promise<boolean> {
@@ -662,8 +662,8 @@ export class PaperclipSemanticDispatcher {
   }
 
   #identityDenial(
-    call: PaperclipSemanticToolCall,
-  ): PaperclipSemanticToolDenial {
+    call: ThinkingMachSemanticToolCall,
+  ): ThinkingMachSemanticToolDenial {
     return deepFreeze({
       ok: false,
       operationId: safeIdentity(call.operationId),
@@ -679,15 +679,15 @@ export class PaperclipSemanticDispatcher {
   }
 
   #denial(
-    call: PaperclipSemanticToolCall,
-    code: PaperclipSemanticDenialCode,
-    descriptor: PaperclipSemanticActionDescriptor | null,
-    context: PaperclipSemanticRunContext | null,
-    decision?: PaperclipSemanticAuthorizationDecision,
+    call: ThinkingMachSemanticToolCall,
+    code: ThinkingMachSemanticDenialCode,
+    descriptor: ThinkingMachSemanticActionDescriptor | null,
+    context: ThinkingMachSemanticRunContext | null,
+    decision?: ThinkingMachSemanticAuthorizationDecision,
     redacted = false,
-  ): PaperclipSemanticToolDenial {
+  ): ThinkingMachSemanticToolDenial {
     const idempotencyKey = stringProperty(call.input, "idempotencyKey") ?? null;
-    const inputReceipt = createPaperclipSemanticInputReceipt({
+    const inputReceipt = createThinkingMachSemanticInputReceipt({
       operationId: call.operationId,
       callId: call.callId,
       correlation: call.correlation,
@@ -695,7 +695,7 @@ export class PaperclipSemanticDispatcher {
       content: call.input,
       redacted,
     });
-    const resultReceipt = createPaperclipSemanticResultReceipt({
+    const resultReceipt = createThinkingMachSemanticResultReceipt({
       operationId: call.operationId,
       callId: call.callId,
       correlation: call.correlation,
@@ -711,7 +711,7 @@ export class PaperclipSemanticDispatcher {
       const finalDecision =
         decision ??
         deniedDecision(
-          decidePaperclipSemanticAuthorization(
+          decideThinkingMachSemanticAuthorization(
             descriptor,
             context,
             "invocation",
@@ -725,7 +725,7 @@ export class PaperclipSemanticDispatcher {
         context,
         finalDecision,
         call.callId,
-        digestPaperclipSemanticContent(call.input),
+        digestThinkingMachSemanticContent(call.input),
         String(resultReceipt.operationReceiptId),
       );
     }
@@ -744,8 +744,8 @@ export class PaperclipSemanticDispatcher {
   }
 
   #record(
-    context: PaperclipSemanticRunContext,
-    decision: PaperclipSemanticAuthorizationDecision,
+    context: ThinkingMachSemanticRunContext,
+    decision: ThinkingMachSemanticAuthorizationDecision,
     callId: string | null,
     inputDigest: string | null,
     operationReceiptId: string | null,
@@ -775,7 +775,7 @@ export class PaperclipSemanticDispatcher {
   }
 }
 
-function validCallIdentity(call: PaperclipSemanticToolCall): boolean {
+function validCallIdentity(call: ThinkingMachSemanticToolCall): boolean {
   return (
     call.correlation.runId === call.runId &&
     [
@@ -788,19 +788,19 @@ function validCallIdentity(call: PaperclipSemanticToolCall): boolean {
       ...(call.correlation.requestId === undefined
         ? []
         : [call.correlation.requestId]),
-    ].every(isPaperclipSemanticStableId)
+    ].every(isThinkingMachSemanticStableId)
   );
 }
 
 function isBindingResult(
   value: unknown,
-): value is PaperclipSemanticBindingResult {
+): value is ThinkingMachSemanticBindingResult {
   return typeof value === "object" && value !== null && "value" in value;
 }
 
 function isStoredOutcome(
   value: unknown,
-): value is PaperclipSemanticStoredOutcome {
+): value is ThinkingMachSemanticStoredOutcome {
   return (
     typeof value === "object" &&
     value !== null &&
@@ -814,23 +814,23 @@ function isStoredOutcome(
 }
 
 function deniedDecision(
-  decision: PaperclipSemanticAuthorizationDecision,
-  code: PaperclipSemanticDenialCode,
+  decision: ThinkingMachSemanticAuthorizationDecision,
+  code: ThinkingMachSemanticDenialCode,
   reason: string,
-): PaperclipSemanticAuthorizationDecision {
+): ThinkingMachSemanticAuthorizationDecision {
   return { ...decision, allowed: false, code, reason };
 }
 
 function denialCode(
-  decision: PaperclipSemanticAuthorizationDecision,
-): PaperclipSemanticDenialCode {
+  decision: ThinkingMachSemanticAuthorizationDecision,
+): ThinkingMachSemanticDenialCode {
   if (decision.code === "allowed") {
     throw new Error("allowed authorization decision cannot create a denial");
   }
   return decision.code;
 }
 
-function denialMessage(code: PaperclipSemanticDenialCode): string {
+function denialMessage(code: ThinkingMachSemanticDenialCode): string {
   switch (code) {
     case "operation_absent":
       return "The requested semantic action is not available.";
@@ -879,12 +879,12 @@ function validOptionalRevision(value: unknown): value is number | undefined {
 function validOptionalStableId(value: unknown): value is string | undefined {
   return (
     value === undefined ||
-    (typeof value === "string" && isPaperclipSemanticStableId(value))
+    (typeof value === "string" && isThinkingMachSemanticStableId(value))
   );
 }
 
 function safeIdentity(value: string): string {
-  return isPaperclipSemanticStableId(value) ? value : "invalid";
+  return isThinkingMachSemanticStableId(value) ? value : "invalid";
 }
 
 function deepFreeze<T>(value: T): T {

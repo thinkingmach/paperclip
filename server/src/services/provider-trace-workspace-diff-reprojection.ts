@@ -1,6 +1,6 @@
 import { and, eq, inArray } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { heartbeatRunEvents } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { heartbeatRunEvents } from "@thinkingmach/db";
 import { parseCodexTurnDiff } from "../vendor/paperclip-runner/index.js";
 import { appendHeartbeatRunEvent } from "./heartbeat-run-events.js";
 

@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { agents, heartbeatRuns, type Db } from "@paperclipai/db";
+import { agents, heartbeatRuns, type Db } from "@thinkingmach/db";
 import { captureRunFailure, type RunFailureStatus } from "../sentry.js";
 import { redactCurrentUserText } from "../log-redaction.js";
 import { redactSensitiveText } from "../redaction.js";

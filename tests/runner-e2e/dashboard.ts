@@ -551,7 +551,7 @@ function renderHistory(history: RunnerE2EHistoryIndex | undefined) {
       <label>Through <input type="date" data-history-through></label>
       <label class="history-checkbox"><input type="checkbox" data-history-partial> Include partial campaigns</label>
     </div>
-    <div class="history-table-wrap"><table class="history-table"><thead><tr><th>Campaign</th><th>Paperclip SHA</th><th>Result</th><th>Tokens</th><th>Cost</th><th>Execution</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="history-table-wrap"><table class="history-table"><thead><tr><th>Campaign</th><th>ThinkingMach SHA</th><th>Result</th><th>Tokens</th><th>Cost</th><th>Execution</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="history-empty" data-history-empty hidden>No campaigns match these filters.</p>
   </section>`;
 }
@@ -704,9 +704,9 @@ export function renderRunnerE2EDashboard(input: RunnerDashboardInput) {
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="assets/favicon-32x32.png" type="image/png">
-  <title>${html(input.title)} · Paperclip</title>
+  <title>${html(input.title)} · ThinkingMach</title>
   <style>
-    @font-face { font-family: "Paperclip Inter"; src: url("assets/InterVariable.woff2") format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: "ThinkingMach Inter"; src: url("assets/InterVariable.woff2") format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
     :root {
       color-scheme: light dark;
       --background: #ffffff;
@@ -733,13 +733,13 @@ export function renderRunnerE2EDashboard(input: RunnerDashboardInput) {
       --idle-text: #52585d;
       --idle-border: #a8aeb2;
       --radius: 8px;
-      /* TaskChatBubble: right-aligned human bubbles use Paperclip's liveness blue. */
+      /* TaskChatBubble: right-aligned human bubbles use ThinkingMach's liveness blue. */
       --chat-human-background: #2563eb;
       --chat-human-foreground: #ffffff;
       --chat-bubble-radius: 1rem;
       --chat-body-size: 0.875rem;
       --navigation-sticky-offset: 58px;
-      --font-sans: "Paperclip Inter", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-sans: "ThinkingMach Inter", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
     @media (prefers-color-scheme: dark) {
@@ -1100,9 +1100,9 @@ export function renderRunnerE2EDashboard(input: RunnerDashboardInput) {
 </head>
 <body>
   <div class="brand-bar">
-    <a class="brand-lockup" href="https://paperclip.ing" aria-label="Paperclip home">
+    <a class="brand-lockup" href="https://thinkingmach.com" aria-label="ThinkingMach home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/></svg>
-      <span>Paperclip</span>
+      <span>ThinkingMach</span>
     </a>
     <span class="brand-context">Quality engineering · Runner acceptance</span>
   </div>

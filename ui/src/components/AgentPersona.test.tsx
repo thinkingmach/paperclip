@@ -2,15 +2,15 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { appearanceForPalette } from "@paperclipai/shared";
+import { appearanceForPalette } from "@thinkingmach/shared";
 import { AgentAvatar } from "./AgentAvatar";
 import { AgentCharacter } from "./AgentCharacter";
 import { useAgentAppearanceDraft } from "../hooks/useAgentAppearanceDraft";
 
 const renderer = vi.hoisted(() => ({ destroy: vi.fn(), setDefinition: vi.fn(), setAnimation: vi.fn() }));
 const createCharacter = vi.hoisted(() => vi.fn(() => renderer));
-vi.mock("@paperclipai/shared/cliplab/runtime", () => ({ createCharacter }));
-vi.mock("@paperclipai/shared/cliplab/definition", () => ({ characterDefinition: vi.fn(value => value), animationId: vi.fn(value => value) }));
+vi.mock("@thinkingmach/shared/cliplab/runtime", () => ({ createCharacter }));
+vi.mock("@thinkingmach/shared/cliplab/definition", () => ({ characterDefinition: vi.fn(value => value), animationId: vi.fn(value => value) }));
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root;
 let host: HTMLDivElement;

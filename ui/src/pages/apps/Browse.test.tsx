@@ -5,7 +5,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Browse } from "./Browse";
-import { getAppStoreDefinition } from "@paperclipai/shared";
+import { getAppStoreDefinition } from "@thinkingmach/shared";
 import { queryKeys } from "@/lib/queryKeys";
 
 const listGalleryMock = vi.hoisted(() => vi.fn());
@@ -49,7 +49,7 @@ vi.mock("@/lib/router", () => ({
 vi.mock("@/context/CompanyContext", () => ({
   useCompany: () => ({
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach" },
   }),
 }));
 
@@ -155,7 +155,7 @@ describe("Connectors landing page", () => {
           tagline: "Search and draft email.",
           availability: {
             available: false,
-            reason: "Gmail is not available on this Paperclip instance yet.",
+            reason: "Gmail is not available on this ThinkingMach instance yet.",
           },
         }),
       ],
@@ -513,7 +513,7 @@ describe("Connectors landing page", () => {
     await act(() => remove!.click());
     await flushReact();
     expect(chatSetupMock).not.toHaveBeenCalled();
-    expect(document.body.textContent).toContain("Existing Paperclip tasks and conversation history remain available.");
+    expect(document.body.textContent).toContain("Existing ThinkingMach tasks and conversation history remain available.");
     chatListMock.mockResolvedValue([]);
     await act(() => Array.from(document.querySelectorAll("button")).find((button) => button.textContent?.trim() === "Remove connection")!.click());
     await flushReact();

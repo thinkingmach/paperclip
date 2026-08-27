@@ -4,7 +4,7 @@ import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { eq, sql } from "drizzle-orm";
-import { agents, authUsers, companies, companyMemberships, createDb, heartbeatRuns, issues, projects, projectWorkspaces, activityLog, issueComments, assets, goals, approvals, documents, documentRevisions, issueDocuments, issueRelations, issueThreadInteractions, connectionIntentDeliveries, toolApplications, toolConnections, toolConnectionInstalls, connectionGrants, toolCatalogEntries, toolProfiles, toolProfileBindings } from "@paperclipai/db";
+import { agents, authUsers, companies, companyMemberships, createDb, heartbeatRuns, issues, projects, projectWorkspaces, activityLog, issueComments, assets, goals, approvals, documents, documentRevisions, issueDocuments, issueRelations, issueThreadInteractions, connectionIntentDeliveries, toolApplications, toolConnections, toolConnectionInstalls, connectionGrants, toolCatalogEntries, toolProfiles, toolProfileBindings } from "@thinkingmach/db";
 import { documentService } from "../../services/documents.js";
 import { connectionIntentService } from "../../services/connection-intents.js";
 import { initializeRunIdentity } from "../../services/run-identity.js";
@@ -13,7 +13,7 @@ import { createApp } from "../../app.js";
 import { createLocalDiskStorageProvider } from "../../storage/local-disk-provider.js";
 import { createStorageService } from "../../storage/service.js";
 import { setupRunnerPrpWebSocketServer, runnerPrpWebSocketInternals } from "../../realtime/runner-prp-ws.js";
-import { PaperclipRunnerToolAuthority } from "../../services/native-runtime/paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "../../services/native-runtime/paperclip-runner-tool-authority.js";
 
 export type RunnerConnectionScenario = "fresh" | "pending" | "declined" | "custom" | "foreign" | "stale_owner" | "ready";
 const CONNECTION_SCENARIOS: readonly RunnerConnectionScenario[] = ["fresh", "pending", "declined", "custom", "foreign", "stale_owner", "ready"];
@@ -151,7 +151,7 @@ export async function startRunnerApiTestServer() {
         connectionScenario: options.connectionScenario ?? null, responsibleUserId, userId: responsibleUserId, sourceRunId: runId,
         customConnectionService, foreignConnectionService, pendingInteractionId,
         initialInteractionIds: pendingInteractionId ? [pendingInteractionId] : [],
-        authority: new PaperclipRunnerToolAuthority(db, binding),
+        authority: new ThinkingMachRunnerToolAuthority(db, binding),
         async snapshot() {
           return {
             issues: await db.select().from(issues).where(eq(issues.companyId, companyId)),

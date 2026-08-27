@@ -3,7 +3,7 @@ import { isVideoLikeOutput } from "@/lib/issue-output";
 import { AgentAvatar, type AvatarAgent } from "../AgentAvatar";
 import { useCallback, useContext, useState, type ReactNode } from "react";
 import { useEmailComment } from "@/components/EmailMessageCard";
-import type { IssueAttachment } from "@paperclipai/shared";
+import type { IssueAttachment } from "@thinkingmach/shared";
 import { IssueGalleryContext } from "@/context/IssueGalleryContext";
 import { cn } from "@/lib/utils";
 import { useStreamlinedTaskChatPresentation } from "./presentation-mode";

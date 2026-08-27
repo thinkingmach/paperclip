@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 const log = vi.hoisted(() => vi.fn());
 vi.mock("../heartbeat-run-events.js", () => ({ appendHeartbeatRunEvent: log }));
 import { restoreNativeWorkspaceBestEffort } from "./native-workspace-best-effort.js";

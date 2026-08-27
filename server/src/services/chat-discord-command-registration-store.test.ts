@@ -20,15 +20,15 @@ import {
   startEmbeddedPostgresTestDatabase,
   toolApplications,
   toolConnections,
-} from "@paperclipai/db";
-import { discordPaperclipCommandDefinition } from "./chat-discord-command-registration.js";
+} from "@thinkingmach/db";
+import { discordThinkingMachCommandDefinition } from "./chat-discord-command-registration.js";
 import {
   readRegisteredDiscordCommandRegistration,
   reconcileStoredDiscordCommandRegistration,
   type StoredDiscordCommandRegistrationOptions,
 } from "./chat-discord-command-registration-store.js";
 
-const external = process.env.PAPERCLIP_TEST_DATABASE_URL;
+const external = process.env.THINKINGMACH_TEST_DATABASE_URL;
 const support = external
   ? { supported: true }
   : await getEmbeddedPostgresTestSupport();
@@ -246,8 +246,8 @@ suite("Discord command ownership store (real PostgreSQL, no network)", () => {
       ownerId: string;
       receipt: Record<string, unknown>;
     };
-    const prior = discordPaperclipCommandDefinition(registration.ownerId);
-    prior.options[2]!.description = "Close the current Paperclip task";
+    const prior = discordThinkingMachCommandDefinition(registration.ownerId);
+    prior.options[2]!.description = "Close the current ThinkingMach task";
     const remote = f.remote[0]!;
     f.remote[0] = {
       ...prior,
@@ -287,7 +287,7 @@ suite("Discord command ownership store (real PostgreSQL, no network)", () => {
       receipt: { commandId: remote.id },
     });
     expect(f.remote[0]).toMatchObject(
-      discordPaperclipCommandDefinition(registration.ownerId),
+      discordThinkingMachCommandDefinition(registration.ownerId),
     );
   });
 
@@ -509,7 +509,7 @@ suite("Discord command ownership store (real PostgreSQL, no network)", () => {
     await f.reconcile();
     f.remote[0] = {
       ...f.remote[0],
-      ...discordPaperclipCommandDefinition("b".repeat(32)),
+      ...discordThinkingMachCommandDefinition("b".repeat(32)),
     };
     f.options.force = true;
     expect(await f.reconcile()).toMatchObject({ kind: "conflict" });

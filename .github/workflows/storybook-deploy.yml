@@ -78,7 +78,7 @@ jobs:
         run: |
           [[ "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ ]]
           curl --fail --silent --show-error --location --retry 3 \
-            "https://codeload.github.com/paperclipai/paperclip/tar.gz/$SOURCE_SHA" \
+            "https://codeload.github.com/thinkingmach/paperclip/tar.gz/$SOURCE_SHA" \
             --output "$RUNNER_TEMP/source.tar.gz"
           tar -xzf "$RUNNER_TEMP/source.tar.gz" --strip-components=1
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6

@@ -1,6 +1,6 @@
 import { useMemo, useState, type DragEvent, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { IssueAttachment } from "@paperclipai/shared";
+import type { IssueAttachment } from "@thinkingmach/shared";
 import { Download, ExternalLink, FileText, Maximize2, Paperclip, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FoldCurtain } from "./FoldCurtain";

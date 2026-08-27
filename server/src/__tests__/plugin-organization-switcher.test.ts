@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pluginManifestV1Schema } from "@paperclipai/shared";
+import { pluginManifestV1Schema } from "@thinkingmach/shared";
 import { pluginCapabilityValidator } from "../services/plugin-capability-validator.js";
 
 describe("organization switcher installation", () => {

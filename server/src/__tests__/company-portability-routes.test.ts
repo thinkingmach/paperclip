@@ -1036,7 +1036,7 @@ describe.sequential("company portability routes", () => {
     // purpose: the import floor keys on isCloudManagedInstance(), not on the
     // actor. With the signal present, even the trusted tenant actor is
     // floored — importing is disabled on cloud-managed instances outright.
-    vi.stubEnv("PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN", "tenant-secret");
+    vi.stubEnv("THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN", "tenant-secret");
     try {
       const app = await createApp(cloudTenantActor());
 

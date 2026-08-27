@@ -22,7 +22,7 @@ import type {
   CompanySkillUpdateRequest,
   CompanySkillUpdateStatus,
   CompanySkillVersion,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { companySkillsApi } from "../api/companySkills";
 import { foldersApi } from "../api/folders";
 import { agentsApi } from "../api/agents";
@@ -166,7 +166,7 @@ import {
   XOctagon,
 } from "lucide-react";
 import { GithubIcon } from "../components/icons/github-icon";
-import type { FolderListItem, FolderListResult } from "@paperclipai/shared";
+import type { FolderListItem, FolderListResult } from "@thinkingmach/shared";
 
 type SkillTreeNode = {
   name: string;
@@ -273,7 +273,7 @@ function sourceMeta(sourceBadge: CompanySkillSourceBadge, sourceLabel: string | 
     case "local":
       return { icon: Folder, label: sourceLabel ?? "Folder", managedLabel: "Folder managed" };
     case "paperclip":
-      return { icon: Paperclip, label: sourceLabel ?? "Paperclip", managedLabel: "Paperclip managed" };
+      return { icon: Paperclip, label: sourceLabel ?? "ThinkingMach", managedLabel: "ThinkingMach managed" };
     default:
       return { icon: Boxes, label: sourceLabel ?? "Catalog", managedLabel: "Catalog managed" };
   }
@@ -504,7 +504,7 @@ function CompatChip({ compatibility }: { compatibility: CompanySkillCompatibilit
     unknown: {
       icon: HelpCircle,
       label: "Unknown format",
-      tooltip: "Paperclip could not validate this skill as Agent Skills markdown. Install at your own risk.",
+      tooltip: "ThinkingMach could not validate this skill as Agent Skills markdown. Install at your own risk.",
       className: "border-yellow-500/40 bg-yellow-500/10 text-yellow-800 dark:text-yellow-200",
     },
     invalid: {
@@ -711,7 +711,7 @@ function buildDiscoveryCards(
       catalogRef: entry.id,
       name: entry.name,
       slug: entry.slug,
-      author: entry.packageName ?? "Paperclip",
+      author: entry.packageName ?? "ThinkingMach",
       version: discoveryVersionLabel({ packageVersion: entry.packageVersion ?? null, sourceRef: null }, required),
       tagline: null,
       description: entry.description,
@@ -4411,7 +4411,7 @@ export function CompanySkills() {
       pushToast({
         tone: "success",
         title: skill.forkedFromSkillId ? "Skill fork created" : "Skill created",
-        body: `${skill.name} is now editable in the Paperclip workspace.`,
+        body: `${skill.name} is now editable in the ThinkingMach workspace.`,
       });
     },
     onError: (error) => {
@@ -5143,7 +5143,7 @@ export function CompanySkills() {
   const studioTitle = studioForkFromId ? "Fork skill" : "Create a new skill";
   const studioDescription = studioForkFromId
     ? "Review the fork metadata and create an editable company copy."
-    : "Create an editable company skill in the Paperclip workspace.";
+    : "Create an editable company skill in the ThinkingMach workspace.";
   return (
     <>
       {policyDenial.denial ? (

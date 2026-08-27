@@ -6,7 +6,7 @@ The shipped new-agent flow starts from **Agents → New Agent**. A small dialog 
 
 On Cloud, the new-agent picker and direct setup links allow Claude, Codex, OpenCode, and Grok. Four available adapters use a two-column grid on desktop and mobile. Grok uses the existing `grok_local` adapter with an xAI subscription or API-key connection and the managed sandbox environment. The picker and connection step share provider marks that adapt to light and dark mode. An adapter must also be loaded and enabled to be available.
 
-Paperclip Runner offers native Codex (app server), Claude via ACPX, and OpenCode. The selected provider is passed through the existing runner configuration builder. Codex's default is the adapter catalog default. OpenCode and Pi require a provider/model ID; OpenRouter uses `openrouter/<provider>/<model>` and `OPENROUTER_API_KEY`. Entered keys are tested through the probe-only `testCredentials` field without storage. Finishing setup saves each key as an isolated user secret so a failed test cannot overwrite another agent’s credential, and an existing organization secret can also be bound. Agent configuration and revisions contain references, never the entered key.
+ThinkingMach Runner offers native Codex (app server), Claude via ACPX, and OpenCode. The selected provider is passed through the existing runner configuration builder. Codex's default is the adapter catalog default. OpenCode and Pi require a provider/model ID; OpenRouter uses `openrouter/<provider>/<model>` and `OPENROUTER_API_KEY`. Entered keys are tested through the probe-only `testCredentials` field without storage. Finishing setup saves each key as an isolated user secret so a failed test cannot overwrite another agent’s credential, and an existing organization secret can also be bound. Agent configuration and revisions contain references, never the entered key.
 
 **Run test** uses the chosen environment and current configuration. For Claude/Codex readiness checks that do not make a model request, setup also invokes the adapter's existing CLI hello probe with the same environment and credentials. Runtime failures, provider failures, warnings, and in-progress tests use the same compact result card in setup and full configuration. Warnings remain distinguishable from blocking failures.
 
@@ -18,7 +18,7 @@ The sections below are the original design reference; the implementation summary
 
 ## Context
 
-Agents are the employees of a Paperclip company. Each agent has an adapter type (`claude_local`, `codex_local`, `process`, `http`) that determines how it runs, a position in the org chart (who it reports to), a heartbeat policy (how/when it wakes up), and a budget. The UI at `/agents` needs to support creating and configuring agents, viewing their org hierarchy, and inspecting what they've been doing -- their run history, live logs, and accumulated costs.
+Agents are the employees of a ThinkingMach company. Each agent has an adapter type (`claude_local`, `codex_local`, `process`, `http`) that determines how it runs, a position in the org chart (who it reports to), a heartbeat policy (how/when it wakes up), and a budget. The UI at `/agents` needs to support creating and configuring agents, viewing their org hierarchy, and inspecting what they've been doing -- their run history, live logs, and accumulated costs.
 
 This spec covers three surfaces:
 

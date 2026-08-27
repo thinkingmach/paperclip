@@ -2,11 +2,11 @@
 
 This record distinguishes live behavior from the existence of an eval. No native
 onboarding default or production prompt was changed. All paid work ran on isolated
-GitHub Actions workers with real providers, Chromium, Paperclip, and public APIs.
+GitHub Actions workers with real providers, Chromium, ThinkingMach, and public APIs.
 
 ## Native onboarding
 
-[Campaign 35656761484](https://github.com/paperclipai/paperclip/actions/runs/35656761484)
+[Campaign 35656761484](https://github.com/thinkingmach/paperclip/actions/runs/35656761484)
 on master `846336e5a0d3003e1b938e8c983aa5a65bda81ff`: **26/26 passed**,
 with **26/26 cleanup passes**. The 13 cases ran on both native Codex and native
 Claude: interviews, clear/ambiguous requests, plain messages, explicit plans,
@@ -23,7 +23,7 @@ production rollout, neither of which is enabled by this change.
 
 ## Initial new-case campaign
 
-[Campaign 35657128077](https://github.com/paperclipai/paperclip/actions/runs/35657128077)
+[Campaign 35657128077](https://github.com/thinkingmach/paperclip/actions/runs/35657128077)
 on `3ca6d25e0d20dd36e74c0868872802856e5503fc` retained all six failures:
 
 - Active reassignment, both providers: the fixture sent an instructions bundle to
@@ -91,7 +91,7 @@ changing prompts solely to make the benchmark green.
 
 ## Grounded status answers: corrected live proof
 
-[Campaign 35658262695](https://github.com/paperclipai/paperclip/actions/runs/35658262695)
+[Campaign 35658262695](https://github.com/thinkingmach/paperclip/actions/runs/35658262695)
 on `4a26f10be7dd6aeabf2ca7b44b3d6b2ece7817e0`: **2/2 passed**, both
 cleanup passes. Each provider answered both turns, preserved both source tasks,
 and started no execution on either task. The original failed attempts above are
@@ -118,7 +118,7 @@ honest uncertainty, useful next step, and clear prose. No production prompt chan
 
 ## Active reassignment: corrected live proof
 
-[Campaign 35659014397](https://github.com/paperclipai/paperclip/actions/runs/35659014397)
+[Campaign 35659014397](https://github.com/thinkingmach/paperclip/actions/runs/35659014397)
 on `cf6d4ae3a8576d822861bc916e7f536d0a0b7bc7`: **2/2 passed**, both
 cleanup passes, using `gpt-5.6-sol` and `claude-sonnet-5`.
 
@@ -129,7 +129,7 @@ the same task. The plan, scope, and original draft revision survive. The success
 may revise the canonical document, and its final contribution must be attributed
 to that successor. The audit records the native reassignment tool.
 
-The preceding [campaign 35657945095](https://github.com/paperclipai/paperclip/actions/runs/35657945095)
+The preceding [campaign 35657945095](https://github.com/thinkingmach/paperclip/actions/runs/35657945095)
 on `6039b02ed` remains failed: both handoffs actually completed, but the draft
 oracle incorrectly required the latest document to remain frozen. Both successors
 legitimately revised that document. The new oracle requires the exact original
@@ -158,9 +158,9 @@ story qualifications, not a claim that all native-runner reliability is solved.
 
 ## Crash guard follow-up
 
-[Campaign 35658772755](https://github.com/paperclipai/paperclip/actions/runs/35658772755)
+[Campaign 35658772755](https://github.com/thinkingmach/paperclip/actions/runs/35658772755)
 did not reach provider cases: GitHub artifact finalization returned HTTP 403.
-A replacement [campaign 35659580100](https://github.com/paperclipai/paperclip/actions/runs/35659580100)
+A replacement [campaign 35659580100](https://github.com/thinkingmach/paperclip/actions/runs/35659580100)
 on `a11bd236e33833dc081cc3702baa3d3f98d8d12f` retained two failed recovery
 attempts, both with successful disposable cleanup. The API correctly refused
 Retry with 409 and created no second run, but the eval then waited for a run

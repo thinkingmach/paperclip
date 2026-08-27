@@ -342,7 +342,7 @@ describe("POST /invites/:token/accept", () => {
     expect(updateMock).not.toHaveBeenCalled();
   });
 
-  it("rejects Paperclip Runner before an agent invite creates a join request", async () => {
+  it("rejects ThinkingMach Runner before an agent invite creates a join request", async () => {
     const { db, insert, update } = createAgentInviteDbStub();
     const app = createApp(db);
 
@@ -356,7 +356,7 @@ describe("POST /invites/:token/accept", () => {
 
     expect(res.status).toBe(400);
     expect(res.body.error).toBe(
-      "Paperclip Runner is not available through agent invite onboarding.",
+      "ThinkingMach Runner is not available through agent invite onboarding.",
     );
     expect(insert).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();

@@ -7,7 +7,7 @@ import {
 
 /** The name the CEO role fills in — see AGENT_ROLE_LABELS. */
 const AGENT_NAME = "CEO";
-const TASK_TITLE = "Paperclip onboarding";
+const TASK_TITLE = "ThinkingMach onboarding";
 
 /**
  * The first task opens with the chief of staff's opening card sitting where

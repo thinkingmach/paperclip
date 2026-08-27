@@ -165,7 +165,7 @@ export function trackConnectionCreated(
   },
 ): void {
   client.track(
-    // @ts-expect-error -- proposed-telemetry(https://github.com/paperclipai/paperclip/issues/13578): measure which catalog connectors installations create connections for
+    // @ts-expect-error -- proposed-telemetry(https://github.com/thinkingmach/paperclip/issues/13578): measure which catalog connectors installations create connections for
     "connection.created",
     dims,
   );
@@ -192,7 +192,7 @@ export function trackConnectionUpdated(
   },
 ): void {
   client.track(
-    // @ts-expect-error -- proposed-telemetry(https://github.com/paperclipai/paperclip/issues/13578): measure connector lifecycle transitions (configured, paused, archived) after creation
+    // @ts-expect-error -- proposed-telemetry(https://github.com/thinkingmach/paperclip/issues/13578): measure connector lifecycle transitions (configured, paused, archived) after creation
     "connection.updated",
     dims,
   );
@@ -216,7 +216,7 @@ export function trackConnectionInvoked(
   },
 ): void {
   client.track(
-    // @ts-expect-error -- proposed-telemetry(https://github.com/paperclipai/paperclip/issues/13578): measure whether connected connectors are successfully used and where invocations fail; records completed invocation attempts and their terminal status, never invocation starts
+    // @ts-expect-error -- proposed-telemetry(https://github.com/thinkingmach/paperclip/issues/13578): measure whether connected connectors are successfully used and where invocations fail; records completed invocation attempts and their terminal status, never invocation starts
     "connection.invoked",
     dims,
   );

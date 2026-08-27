@@ -1,7 +1,7 @@
 /**
  * Route-level coverage for the plugin install security floor:
  *
- * - Cloud-managed instances (PAPERCLIP_MANAGED_CONFIG present) may only
+ * - Cloud-managed instances (THINKINGMACH_MANAGED_CONFIG present) may only
  *   install plugins whose source canonicalizes into the bundled plugin
  *   catalog root; npm installs and arbitrary local paths are rejected.
  * - Every instance canonicalizes and validates `localPath` (traversal,
@@ -15,7 +15,7 @@ import os from "node:os";
 import path from "node:path";
 import request from "supertest";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { createDb, plugins } from "@paperclipai/db";
+import { createDb, plugins } from "@thinkingmach/db";
 import { pluginLoader, REPO_ROOT } from "../services/plugin-loader.js";
 import {
   getEmbeddedPostgresTestSupport,
@@ -73,7 +73,7 @@ type FixturePlugin = {
  */
 async function createBuiltPluginFixture(parentDir: string, nameSuffix: string): Promise<FixturePlugin> {
   const slug = `plugin-install-guard-${nameSuffix}-${randomUUID().slice(0, 8)}`;
-  const packageName = `@paperclipai/${slug}`;
+  const packageName = `@thinkingmach/${slug}`;
   const pluginKey = `paperclip.${slug.replace(/^plugin-/, "").replace(/-/g, "_")}`;
   const packageRoot = path.join(parentDir, slug);
   const distDir = path.join(packageRoot, "dist");
@@ -100,7 +100,7 @@ async function createBuiltPluginFixture(parentDir: string, nameSuffix: string): 
     version: "0.1.0",
     displayName: "Install Guard Fixture",
     description: "Plugin fixture for install-route security floor coverage.",
-    author: "Paperclip",
+    author: "ThinkingMach",
     categories: ["automation"],
     capabilities: ["companies.read"],
     entrypoints: {
@@ -149,7 +149,7 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
   let db!: ReturnType<typeof createDb>;
   let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
   const cleanupPaths = new Set<string>();
-  const originalManagedConfig = process.env["PAPERCLIP_MANAGED_CONFIG"];
+  const originalManagedConfig = process.env["THINKINGMACH_MANAGED_CONFIG"];
 
   beforeAll(async () => {
     tempDb = await startEmbeddedPostgresTestDatabase("paperclip-plugin-install-guard-");
@@ -164,9 +164,9 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
     }
     cleanupPaths.clear();
     if (originalManagedConfig === undefined) {
-      delete process.env["PAPERCLIP_MANAGED_CONFIG"];
+      delete process.env["THINKINGMACH_MANAGED_CONFIG"];
     } else {
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = originalManagedConfig;
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = originalManagedConfig;
     }
   });
 
@@ -176,7 +176,7 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
 
   describe("cloud-managed instances", () => {
     it("rejects npm installs outright", async () => {
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
       const app = await createInstallApp(db);
 
       const res = await request(app)
@@ -193,9 +193,9 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
       // with a corrupted document, so boot with a valid one and corrupt it
       // afterwards: the install floor must still hold because it keys off
       // the variable's presence at request time, never its parsed content.
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
       const app = await createInstallApp(db);
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = "{definitely not json";
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = "{definitely not json";
 
       const res = await request(app)
         .post("/api/plugins/install")
@@ -206,7 +206,7 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
     });
 
     it("rejects localPath installs from outside the bundled catalog root", async () => {
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
       const outsideDir = await mkdtemp(path.join(os.tmpdir(), "guard-outside-"));
       cleanupPaths.add(outsideDir);
       const fixture = await createBuiltPluginFixture(outsideDir, "outside");
@@ -222,7 +222,7 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
     });
 
     it("rejects localPath traversal that escapes the bundled catalog root", async () => {
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
       const app = await createInstallApp(db);
 
       // Starts under packages/plugins but canonicalizes to the repo's server
@@ -238,7 +238,7 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
     });
 
     it("rejects a symlink inside the catalog root that points outside it", async () => {
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
       const outsideDir = await mkdtemp(path.join(os.tmpdir(), "guard-symlink-target-"));
       cleanupPaths.add(outsideDir);
       const fixture = await createBuiltPluginFixture(outsideDir, "symlink-target");
@@ -258,7 +258,7 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
     });
 
     it("allows installing a plugin from inside the bundled catalog root", async () => {
-      process.env["PAPERCLIP_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
+      process.env["THINKINGMACH_MANAGED_CONFIG"] = CLOUD_MANAGED_CONFIG;
       const fixture = await createBuiltPluginFixture(repoPluginRoot, "bundled");
       cleanupPaths.add(fixture.packageRoot);
       const app = await createInstallApp(db);
@@ -368,7 +368,7 @@ describeEmbeddedPostgres("plugin install route security floor", () => {
       expect(mockLifecycle.load).not.toHaveBeenCalled();
     });
 
-    it("does not apply the cloud floor when PAPERCLIP_MANAGED_CONFIG is absent", async () => {
+    it("does not apply the cloud floor when THINKINGMACH_MANAGED_CONFIG is absent", async () => {
       const app = await createInstallApp(db);
 
       // A well-formed npm package name passes route validation and reaches

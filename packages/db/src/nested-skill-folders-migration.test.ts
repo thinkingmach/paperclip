@@ -51,7 +51,7 @@ describeEmbeddedPostgres("nested skill folders migration", () => {
     const unfiledSkillId = randomUUID();
     await sql`
       INSERT INTO "companies" ("id", "name", "issue_prefix")
-      VALUES (${companyId}, 'Paperclip', 'PAP')
+      VALUES (${companyId}, 'ThinkingMach', 'PAP')
     `;
     await sql`
       INSERT INTO "projects" ("id", "company_id", "name")
@@ -67,7 +67,7 @@ describeEmbeddedPostgres("nested skill folders migration", () => {
     await sql`
       INSERT INTO "company_skills" ("id", "company_id", "key", "slug", "name", "markdown", "metadata")
       VALUES
-        (${bundledSkillId}, ${companyId}, 'paperclipai/bundled/software-development/review', 'review', 'Review', '# Review', '{"sourceKind":"paperclip_bundled"}'::jsonb),
+        (${bundledSkillId}, ${companyId}, 'thinkingmach/bundled/software-development/review', 'review', 'Review', '# Review', '{"sourceKind":"paperclip_bundled"}'::jsonb),
         (${projectSkillId}, ${companyId}, 'company/project-skill', 'project-skill', 'Project Skill', '# Project', ${sql.json({ sourceKind: "project_scan", projectId, projectName: "Agent Platform" })}),
         (${unfiledSkillId}, ${companyId}, 'company/unfiled', 'unfiled', 'Unfiled', '# Unfiled', '{}'::jsonb)
     `;

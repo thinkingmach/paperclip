@@ -19,7 +19,7 @@ import {
  * exactly that failing condition.
  */
 
-const FIRST_TASK_TITLE = "Paperclip onboarding";
+const FIRST_TASK_TITLE = "ThinkingMach onboarding";
 
 /**
  * Intercept authentication, environment checks, and hiring so no real CLI check

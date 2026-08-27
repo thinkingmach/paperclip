@@ -1,6 +1,6 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
-import { agentWakeupRequests, issueThreadInteractions, type Db } from "@paperclipai/db";
-import type { IssueComment, IssueQueuedCommentEntry } from "@paperclipai/shared";
+import { agentWakeupRequests, issueThreadInteractions, type Db } from "@thinkingmach/db";
+import type { IssueComment, IssueQueuedCommentEntry } from "@thinkingmach/shared";
 
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};

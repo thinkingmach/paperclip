@@ -3,7 +3,7 @@ import {
   LOW_TRUST_REVIEW_PRESET,
   agentPermissionsSchema,
   updateAgentPermissionsSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   defaultAgentPermissions,
   normalizeAgentPermissions,

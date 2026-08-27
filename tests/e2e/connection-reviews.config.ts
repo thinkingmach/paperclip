@@ -4,9 +4,9 @@ import base from "./playwright.config";
 
 // Inherits the normal throwaway instance and adds explicit process restart control.
 const controlPath =
-  process.env.PAPERCLIP_REVIEW_RESTART_FILE ??
-  path.join(process.env.PAPERCLIP_HOME!, "connection-review-restart.txt");
-process.env.PAPERCLIP_REVIEW_RESTART_FILE = controlPath;
+  process.env.THINKINGMACH_REVIEW_RESTART_FILE ??
+  path.join(process.env.THINKINGMACH_HOME!, "connection-review-restart.txt");
+process.env.THINKINGMACH_REVIEW_RESTART_FILE = controlPath;
 export default defineConfig({
   ...base,
   testMatch: "connection-reviews.spec.ts",
@@ -19,7 +19,7 @@ export default defineConfig({
       "node --import ./cli/node_modules/tsx/dist/loader.mjs tests/e2e/connection-reviews-server.ts",
     env: {
       ...(base.webServer as { env: Record<string, string> }).env,
-      PAPERCLIP_REVIEW_RESTART_FILE: controlPath,
+      THINKINGMACH_REVIEW_RESTART_FILE: controlPath,
     },
   },
 });

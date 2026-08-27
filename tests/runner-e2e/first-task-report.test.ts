@@ -124,7 +124,7 @@ function result(): RunnerE2EResult {
     firstTask: recording(),
     failureClass: "secret_leak",
     error:
-      "Credential detected in persisted Paperclip home: sessions/example.json",
+      "Credential detected in persisted ThinkingMach home: sessions/example.json",
   };
 }
 

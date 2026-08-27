@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { ProjectRepository } from "@paperclipai/shared";
+import type { ProjectRepository } from "@thinkingmach/shared";
 import { Folder, X } from "lucide-react";
 import { useDialog } from "../context/DialogContext";
 import { useCompany } from "../context/CompanyContext";

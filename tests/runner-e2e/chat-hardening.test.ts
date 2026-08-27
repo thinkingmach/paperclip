@@ -104,7 +104,7 @@ describe("agent chat hardening oracles", () => {
     expect(cells.every(cell => cell.suite.manualOnly && cell.profile.generation === "native")).toBe(true);
     expect(cells.filter(cell => cell.environment.id === "daytona")).toHaveLength(6);
     for (const cell of cells) {
-      expect(buildRunnerE2EProcessEnvironment({}, [cell]).PAPERCLIP_RUNNER_API_TOOLS_ENABLED).toBe(
+      expect(buildRunnerE2EProcessEnvironment({}, [cell]).THINKINGMACH_RUNNER_API_TOOLS_ENABLED).toBe(
         ["hire-delegate-reuse", "blocked-status-review"].includes(cell.task.id) ? "true" : undefined);
       const config = cell.profile.buildAgent({ executionId: "fixture", workspacePath: "/workspace", environmentId: "local",
         environmentFixtureId: "local", secretRefs: { [cell.profile.credential]: { type: "secret_ref", secretId: "secret", version: "latest" } } });

@@ -1,10 +1,10 @@
-# Changing Paperclip's UI — a field guide
+# Changing ThinkingMach's UI — a field guide
 
 How to make visual changes now that the design system exists. Written for everyone: designers, engineers, and AI agents (AGENTS.md points here via DESIGN.md).
 
 ## The one-minute mental model
 
-Paperclip's look lives in **three layers**, and you almost always work in the first one:
+ThinkingMach's look lives in **three layers**, and you almost always work in the first one:
 
 1. **Tokens** — every color, text size, spacing, radius, and shadow is a named value in `ui/src/index.css`. Change a token, and every surface using it follows.
 2. **Components** — consume tokens, never raw values. One component per job (one Button, one Card, one ToggleSwitch).
@@ -39,7 +39,7 @@ The core palette follows the shadcn token names, so a theme built at ui.shadcn.c
 cd ui && pnpm dlx shadcn@latest init --preset <CODE> --force --no-reinstall
 ```
 
-Then **review the git diff and keep only the CSS-variable value changes** — the CLI also tries to rewrite `components.json`, `lib/utils.ts`, and add dependencies; revert those (it once deleted 240 lines of our utils). Never use `shadcn apply --preset` (it overwrites component files). After the token diff is clean: Recipe 1 steps 3–4, plus a sanity pass on the Paperclip-specific tiers (agent gradients, WCAG-tuned status hues) for clashes.
+Then **review the git diff and keep only the CSS-variable value changes** — the CLI also tries to rewrite `components.json`, `lib/utils.ts`, and add dependencies; revert those (it once deleted 240 lines of our utils). Never use `shadcn apply --preset` (it overwrites component files). After the token diff is clean: Recipe 1 steps 3–4, plus a sanity pass on the ThinkingMach-specific tiers (agent gradients, WCAG-tuned status hues) for clashes.
 
 ## Recipe 3 — build or style a component
 

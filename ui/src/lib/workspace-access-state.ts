@@ -3,7 +3,7 @@ import type {
   WorkspaceReadiness,
   WorkspaceReadinessState,
   WorkspaceRuntimeService,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 /**
  * Derives the workspace access state the UI shows (PAP-17572).
@@ -102,7 +102,7 @@ const HANDOFF_REASON_COPY: Record<string, string> = {
   no_board_identity:
     "Your session has no cloned user to sign in as, so opening the board falls back to snapshot-local credentials.",
   runtime_not_running: "No healthy runtime service is publishing a URL for this workspace yet.",
-  runtime_url_unusable: "The runtime row is publishing a URL Paperclip cannot open.",
+  runtime_url_unusable: "The runtime row is publishing a URL ThinkingMach cannot open.",
   workspace_not_ready: "The cloned database is not ready to accept a login yet.",
 };
 
@@ -249,7 +249,7 @@ export function resolveWorkspaceAccessState(input: {
         title: validating ? "Validating clone" : "Workspace is degraded",
         description: [
           cause ?? "The workspace is serving, but its clone did not pass the readiness contract.",
-          validating ? "Paperclip is still confirming the clone." : "One bounded repair replaces the isolated database.",
+          validating ? "ThinkingMach is still confirming the clone." : "One bounded repair replaces the isolated database.",
         ].join(" "),
         action: validating
           ? { kind: "wait", label: "Validating" }
@@ -275,7 +275,7 @@ export function resolveWorkspaceAccessState(input: {
     return {
       state: "provisioning",
       title: "Workspace is starting",
-      description: "Paperclip is starting the workspace runtime and waiting for its board URL.",
+      description: "ThinkingMach is starting the workspace runtime and waiting for its board URL.",
       action: { kind: "wait", label: "Starting workspace" },
       handoffAvailable,
     };
@@ -300,7 +300,7 @@ export function resolveWorkspaceAccessState(input: {
       state: "degraded",
       title: "Workspace is degraded",
       description: cause
-        ?? "The runtime is up but did not report a usable database, so Paperclip will not publish it as ready.",
+        ?? "The runtime is up but did not report a usable database, so ThinkingMach will not publish it as ready.",
       action: { kind: "repair", label: "Repair workspace" },
       handoffAvailable,
     };

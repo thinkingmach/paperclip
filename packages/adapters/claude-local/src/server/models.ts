@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { AdapterModel } from "@paperclipai/adapter-utils";
+import type { AdapterModel } from "@thinkingmach/adapter-utils";
 import { models as DIRECT_MODELS } from "../index.js";
 
 const ANTHROPIC_MODELS_ENDPOINT = "/v1/models";

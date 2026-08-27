@@ -13,7 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import type { ServerAdapterModule } from "./types.js";
-import { validateAdapterLoginCapability } from "@paperclipai/adapter-utils";
+import { validateAdapterLoginCapability } from "@thinkingmach/adapter-utils";
 import { logger } from "../middleware/logger.js";
 
 import {

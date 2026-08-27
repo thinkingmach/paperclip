@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { and, eq, inArray, ne, notInArray, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agentWakeupRequests,
   approvals,
@@ -10,7 +10,7 @@ import {
   issueThreadInteractions,
   issueWorkProducts,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { parseIssueExecutionState } from "../issue-execution-policy.js";
 
 const ACTIVE_RUN_STATUSES = ["queued", "running", "scheduled_retry"] as const;

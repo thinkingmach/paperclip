@@ -8,7 +8,7 @@ const html = readFileSync(new URL("../../ui/index.html", import.meta.url), "utf8
 // Offline fallback belongs to stamped production workers. Development workers
 // deliberately leave requests to Vite; service-worker-reload.spec.ts covers that.
 const worker = readFileSync(new URL("../../ui/public/sw.js", import.meta.url), "utf8")
-  .replace("__PAPERCLIP_BUILD_ID__", "bootstrap-recovery-test");
+  .replace("__THINKINGMACH_BUILD_ID__", "bootstrap-recovery-test");
 
 test.use({ serviceWorkers: "allow" });
 
@@ -69,7 +69,7 @@ test.describe("browser bootstrap recovery", () => {
       }
       mode = "failed";
       await page.goto(`${baseURL}/tasks/reload`);
-      await expect(page.getByRole("heading", { name: "Paperclip couldn’t start" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "ThinkingMach couldn’t start" })).toBeVisible();
       expect(await page.locator("#root").evaluate(root => root.childElementCount)).toBe(0);
       mode = "ready";
       await page.getByRole("button", { name: "Reload page" }).click();
@@ -88,12 +88,12 @@ test.describe("browser bootstrap recovery", () => {
     await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
     mode = "failed";
     await page.reload();
-    await expect(page.getByRole("heading", { name: "Paperclip couldn’t start" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "ThinkingMach couldn’t start" })).toBeVisible();
     await context.setOffline(true);
     try {
       for (let attempt = 0; attempt < 2; attempt += 1) {
         await page.getByRole("button", { name: "Reload page" }).click();
-        await expect(page.getByRole("heading", { name: "Paperclip is offline" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "ThinkingMach is offline" })).toBeVisible();
         await expect(page.getByRole("button", { name: "Reload page" })).toBeVisible();
       }
     } finally {
@@ -111,7 +111,7 @@ test.describe("browser bootstrap recovery", () => {
     await page.goto(`${baseURL}/tasks/reload`, { waitUntil: "commit" });
     await expect.poll(() => pending.length).toBe(1);
     await page.clock.runFor(30_000);
-    await expect(page.getByRole("heading", { name: "Paperclip is taking longer to load" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "ThinkingMach is taking longer to load" })).toBeVisible();
     // Late success must recover in place, without a reload or losing the route.
     pending[0]!.writeHead(200, { "Content-Type": "text/javascript" });
     pending[0]!.end(readyModule);
@@ -123,7 +123,7 @@ test.describe("browser bootstrap recovery", () => {
   test("module evaluation errors before React mounts show recovery", async ({ page }) => {
     mode = "throws";
     await page.goto(`${baseURL}/tasks/reload`);
-    await expect(page.getByRole("heading", { name: "Paperclip couldn’t start" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "ThinkingMach couldn’t start" })).toBeVisible();
   });
 
   test("completed startup disables the timer and error handlers", async ({ page }) => {

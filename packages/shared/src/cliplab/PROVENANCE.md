@@ -5,7 +5,7 @@ Release: v0.2.0 (runtime package 0.2.0)
 Commit: 987b6db049471df815ebcb88bcd7abb46ed0c34b
 License: MIT (see LICENSE). Three.js is MIT licensed.
 
-Paperclip adaptations: ESM extensions, optional graphics backend for Node SVG
+ThinkingMach adaptations: ESM extensions, optional graphics backend for Node SVG
 snapshots, region-scoped runtime input (with explicit page scope for onboarding),
 suspended frame scheduling, and supersampled live textures/canvases. Live-only
 framing leaves the versioned static snapshot geometry unchanged. The Vue

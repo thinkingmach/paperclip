@@ -18,7 +18,7 @@ import type {
   RejectSecretProposalInput,
   UserSecretCoverageSummary,
   UserSecretDefinition,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { api } from "./client";
 
 export interface SecretUsageResponse {

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { canBrowseProjectRepositoryGrant, mergeProjectRepository, resolveProjectRepositorySelection } from "../services/project-repositories.js";
 import { loadGitHubTokenRepositories } from "../services/tool-access.js";
-import type { ProjectRepository } from "@paperclipai/shared";
+import type { ProjectRepository } from "@thinkingmach/shared";
 
 describe("project repository access", () => {
   const own = { status: "active", kind: "user", subjectUserId: "alice" };

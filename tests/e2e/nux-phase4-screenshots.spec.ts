@@ -57,7 +57,7 @@ test.describe("NUX Phase 4 visual QA", () => {
     page.on("pageerror", (err) => consoleErrors.push("PAGEERROR: " + err.message));
 
     const baseUrl =
-      "http://127.0.0.1:" + (process.env.PAPERCLIP_E2E_PORT ?? "3199");
+      "http://127.0.0.1:" + (process.env.THINKINGMACH_E2E_PORT ?? "3199");
 
     // ── Section A: create-company path (name → hire) ──────────────────────
     await openWizard(page);

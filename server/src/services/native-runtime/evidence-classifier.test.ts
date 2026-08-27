@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { classifyNativeEvidence } from "./evidence-classifier.js";
 
 const workProductId = "00000000-0000-4000-8000-000000000001";

@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { configure } from "../commands/configure.js";
-import type { PaperclipConfig } from "../config/schema.js";
+import type { ThinkingMachConfig } from "../config/schema.js";
 
 const ORIGINAL_EXIT_CODE = process.exitCode;
 
@@ -12,7 +12,7 @@ afterEach(() => {
 });
 
 function writeBaseConfig(configPath: string) {
-  const base: PaperclipConfig = {
+  const base: ThinkingMachConfig = {
     $meta: {
       version: 1,
       updatedAt: "2026-01-01T00:00:00.000Z",

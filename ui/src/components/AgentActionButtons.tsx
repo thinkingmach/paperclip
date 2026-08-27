@@ -1,18 +1,7 @@
 import { useCallback, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "@/lib/router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Pause,
-  Play,
-  Plus,
-  MoreHorizontal,
-  Loader2,
-  Copy,
-  RotateCcw,
-  Trash2,
-  CheckCircle2,
-  Bug,
-} from "lucide-react";
+import { Pause, Play, Plus, MoreHorizontal, Loader2, Copy, RotateCcw, Trash2, CheckCircle2, Bug,  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -47,7 +36,7 @@ import type {
   AgentInstructionsBundle,
   AgentInstructionsFileSummary,
   HeartbeatRun,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export function RunButton({
   onClick,

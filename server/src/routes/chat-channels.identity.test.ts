@@ -1,5 +1,5 @@
 import express, { type Request } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { HttpError, unprocessable } from "../errors.js";

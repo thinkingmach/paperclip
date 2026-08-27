@@ -8,7 +8,7 @@ import type {
   ExternalStoreAdapter,
   ThreadMessage,
 } from "@assistant-ui/react";
-import { usePaperclipIssueRuntime } from "./usePaperclipIssueRuntime";
+import { useThinkingMachIssueRuntime } from "./useThinkingMachIssueRuntime";
 
 const { useExternalStoreRuntimeMock } = vi.hoisted(() => ({
   useExternalStoreRuntimeMock: vi.fn(() => ({ kind: "runtime" })),
@@ -39,7 +39,7 @@ function HookHarness({
   }) => Promise<void>;
   onCancel?: (() => Promise<void>) | undefined;
 }) {
-  usePaperclipIssueRuntime({
+  useThinkingMachIssueRuntime({
     messages,
     isRunning,
     onSend,
@@ -83,7 +83,7 @@ function createAssistantMessage(id: string, text: string): ThreadMessage {
   } as unknown as ThreadMessage;
 }
 
-describe("usePaperclipIssueRuntime", () => {
+describe("useThinkingMachIssueRuntime", () => {
   afterEach(() => {
     useExternalStoreRuntimeMock.mockReset();
   });

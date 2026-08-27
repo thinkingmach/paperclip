@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { CreateConfigValues } from "@paperclipai/adapter-utils";
+import type { CreateConfigValues } from "@thinkingmach/adapter-utils";
 import { buildClaudeLocalConfig } from "./build-config.js";
 
 function makeValues(overrides: Partial<CreateConfigValues> = {}): CreateConfigValues {

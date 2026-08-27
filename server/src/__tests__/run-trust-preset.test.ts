@@ -17,8 +17,8 @@ import {
   heartbeatRuns,
   issues,
   projects,
-} from "@paperclipai/db";
-import { LOW_TRUST_REVIEW_PRESET } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { LOW_TRUST_REVIEW_PRESET } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

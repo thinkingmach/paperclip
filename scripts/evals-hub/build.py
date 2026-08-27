@@ -84,7 +84,7 @@ def main():
                 history = json.load(response)
         values.update({f"{kind}_{k}": v for k, v in summarize(history, kind).items()})
     values["refreshed"] = display_date(datetime.now(timezone.utc).isoformat())
-    values["guide_url"] = "https://github.com/paperclipai/paperclip/blob/" + quote(args.docs_ref, safe="/") + "/doc/evals.md"
+    values["guide_url"] = "https://github.com/thinkingmach/paperclip/blob/" + quote(args.docs_ref, safe="/") + "/doc/evals.md"
     template = Template(Path(__file__).with_name("template.html").read_text())
     rendered = template.substitute(values)
     args.output.mkdir(parents=True, exist_ok=True)

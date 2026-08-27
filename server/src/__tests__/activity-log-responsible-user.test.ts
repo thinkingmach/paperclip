@@ -10,7 +10,7 @@ import {
   heartbeatRuns,
   issues,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   logActivity,
   resolveResponsibleUserIdForActivity,
@@ -190,7 +190,7 @@ describeEmbeddedPostgres("logActivity responsible-user stamping", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       defaultResponsibleUserId: "default-user",
       requireBoardApprovalForNewAgents: false,

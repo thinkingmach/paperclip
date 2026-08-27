@@ -1,23 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  AlertTriangle,
-  Bot,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Circle,
-  CircleHelp,
-  Clock3,
-  ExternalLink,
-  FileCode2,
-  FileText,
-  GitBranch,
-  Loader2,
-  PackageCheck,
-  ShieldCheck,
-  TerminalSquare,
-  X,
-} from "lucide-react";
+import { AlertTriangle, Bot, Check, ChevronDown, ChevronRight, Circle, CircleHelp, Clock3, ExternalLink, FileCode2, FileText, GitBranch, Loader2, PackageCheck, ShieldCheck, TerminalSquare, X,  } from "lucide-react";
 import { MarkdownBody } from "@/components/MarkdownBody";
 import type { MentionOption } from "@/components/MarkdownEditor";
 import { WorkspaceFileLink } from "@/components/WorkspaceFileLink";

@@ -1,9 +1,9 @@
 import { reassignTaskAction } from "../protocol-actions/reassign-task.js";
 import type {
-  PaperclipJsonSchema,
-  PaperclipSemanticActionDescriptor,
-  PaperclipSemanticActionId,
-  PaperclipSemanticActionMode,
+  ThinkingMachJsonSchema,
+  ThinkingMachSemanticActionDescriptor,
+  ThinkingMachSemanticActionId,
+  ThinkingMachSemanticActionMode,
 } from "./semantic-action-types.js";
 import { createSkillAction } from "../protocol-actions/create-skill.js";
 import { searchApiAction } from "../protocol-actions/search-api.js";
@@ -17,7 +17,7 @@ const STANDARD_MODE = ["standard", "skill_test"] as const;
 const text = (
   description: string,
   maxLength = 20_000,
-): PaperclipJsonSchema => ({
+): ThinkingMachJsonSchema => ({
   type: "string",
   description,
   minLength: 1,
@@ -27,13 +27,13 @@ const text = (
 const nullableText = (
   description: string,
   maxLength = 20_000,
-): PaperclipJsonSchema => ({
+): ThinkingMachJsonSchema => ({
   type: ["string", "null"],
   description,
   maxLength,
 });
 
-const stringArray = (description: string): PaperclipJsonSchema => ({
+const stringArray = (description: string): ThinkingMachJsonSchema => ({
   type: "array",
   description,
   items: { type: "string", minLength: 1 },
@@ -42,16 +42,16 @@ const stringArray = (description: string): PaperclipJsonSchema => ({
 });
 
 const object = (
-  properties: Readonly<Record<string, PaperclipJsonSchema>> = {},
+  properties: Readonly<Record<string, ThinkingMachJsonSchema>> = {},
   required: readonly string[] = [],
-): PaperclipJsonSchema => ({
+): ThinkingMachJsonSchema => ({
   type: "object",
   properties,
   required,
   additionalProperties: false,
 });
 
-const openObject: PaperclipJsonSchema = {
+const openObject: ThinkingMachJsonSchema = {
   type: "object",
   additionalProperties: true,
 };
@@ -78,19 +78,19 @@ const operationReceipt = object(
 );
 
 interface DescriptorInput {
-  readonly operationId: PaperclipSemanticActionId;
+  readonly operationId: ThinkingMachSemanticActionId;
   readonly title: string;
   readonly description: string;
   readonly placement?: "always" | "optional";
   readonly effect?: "read" | "write" | "governance";
   readonly requiredClaims?: readonly string[];
-  readonly allowedModes?: readonly PaperclipSemanticActionMode[];
+  readonly allowedModes?: readonly ThinkingMachSemanticActionMode[];
   readonly allowedRoles?: readonly string[];
-  readonly inputSchema?: PaperclipJsonSchema;
-  readonly outputSchema?: PaperclipJsonSchema;
+  readonly inputSchema?: ThinkingMachJsonSchema;
+  readonly outputSchema?: ThinkingMachJsonSchema;
 }
 
-function descriptor(input: DescriptorInput): PaperclipSemanticActionDescriptor {
+function descriptor(input: DescriptorInput): ThinkingMachSemanticActionDescriptor {
   return {
     schema: "paperclip.semantic-action.v1",
     operationId: input.operationId,
@@ -109,7 +109,7 @@ function descriptor(input: DescriptorInput): PaperclipSemanticActionDescriptor {
   };
 }
 
-const descriptors: readonly PaperclipSemanticActionDescriptor[] = [
+const descriptors: readonly ThinkingMachSemanticActionDescriptor[] = [
   descriptor({ ...createSkillAction.live.descriptor, placement: "optional", effect: "write" }),
   ...[searchApiAction, callApiAction].map(action => descriptor({
     operationId: action.id,
@@ -327,7 +327,7 @@ const descriptors: readonly PaperclipSemanticActionDescriptor[] = [
     operationId: "hire_agent",
     title: "Hire a native agent",
     description:
-      "Create one native Paperclip Runner teammate for the current company and task. The new agent reports to you, inherits your native runtime, and receives no provider, adapter, environment, or credential configuration from the tool. Reuse an existing teammate when appropriate and follow any approval returned by the API.",
+      "Create one native ThinkingMach Runner teammate for the current company and task. The new agent reports to you, inherits your native runtime, and receives no provider, adapter, environment, or credential configuration from the tool. Reuse an existing teammate when appropriate and follow any approval returned by the API.",
     placement: "optional",
     effect: "write",
     requiredClaims: ["delegation:agents:create"],
@@ -613,18 +613,18 @@ if (byId.size !== descriptors.length)
  * Canonical declarations only. Consumers must not treat membership as
  * permission to expose or invoke an action.
  */
-export const PAPERCLIP_SEMANTIC_ACTION_CATALOG = Object.freeze([
+export const THINKINGMACH_SEMANTIC_ACTION_CATALOG = Object.freeze([
   ...byId.values(),
 ]);
 
 export function paperclipSemanticAction(
   operationId: string,
-): PaperclipSemanticActionDescriptor | undefined {
-  return byId.get(operationId as PaperclipSemanticActionId);
+): ThinkingMachSemanticActionDescriptor | undefined {
+  return byId.get(operationId as ThinkingMachSemanticActionId);
 }
 
-export function canonicalPaperclipSemanticActionCatalog(): string {
-  return `${JSON.stringify(sortKeys(PAPERCLIP_SEMANTIC_ACTION_CATALOG), null, 2)}\n`;
+export function canonicalThinkingMachSemanticActionCatalog(): string {
+  return `${JSON.stringify(sortKeys(THINKINGMACH_SEMANTIC_ACTION_CATALOG), null, 2)}\n`;
 }
 
 function deepFreeze<T>(value: T): T {

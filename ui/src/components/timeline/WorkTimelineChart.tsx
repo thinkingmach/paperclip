@@ -1,5 +1,5 @@
 import { agentAvatarUrl } from "@/lib/agent-avatar-url";
-import { resolveAgentAppearance } from "@paperclipai/shared";
+import { resolveAgentAppearance } from "@thinkingmach/shared";
 /**
  * Work Timeline — custom-SVG Gantt (board-locked Direction C, PAP-12422).
  *
@@ -12,7 +12,7 @@ import { resolveAgentAppearance } from "@paperclipai/shared";
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "@/lib/router";
-import type { WorkTimelineActor, WorkTimelineResult } from "@paperclipai/shared";
+import type { WorkTimelineActor, WorkTimelineResult } from "@thinkingmach/shared";
 import { applyCompanyPrefix, extractCompanyPrefixFromPath } from "@/lib/company-routes";
 import {
   AXIS_H,

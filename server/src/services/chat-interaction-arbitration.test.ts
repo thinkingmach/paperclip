@@ -13,7 +13,7 @@ import {
   issueThreadInteractions,
   toolApplications,
   toolConnections,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "../__tests__/helpers/embedded-postgres.js";
 import { hasChatRunOwnedProviderInteraction } from "./chat-interaction-arbitration.js";
 

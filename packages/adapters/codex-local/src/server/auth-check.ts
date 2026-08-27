@@ -4,4 +4,4 @@
  * the adapters and the user interface gate login from the same code. See the
  * source in the shared package for the full contract.
  */
-export { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
+export { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@thinkingmach/shared";

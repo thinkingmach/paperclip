@@ -16,8 +16,8 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   nativeRuntimePromptDigest,
   type NativeRuntimeContextSnapshot,
@@ -58,8 +58,8 @@ function context(
   const digest = "0".repeat(64);
   const value = {
     prompt: {
-      revision: PAPERCLIP_EXECUTION_PROMPT_REVISION,
-      text: PAPERCLIP_EXECUTION_PROMPT,
+      revision: THINKINGMACH_EXECUTION_PROMPT_REVISION,
+      text: THINKINGMACH_EXECUTION_PROMPT,
       digest: nativeRuntimePromptDigest(),
     },
     instructions: {
@@ -95,14 +95,14 @@ describe("runtime context materialization", () => {
   it("validates native MCP launch bindings before they reach Codex", () => {
     expect(nativeMcpLaunchBinding({})).toBeNull();
     expect(() => nativeMcpLaunchBinding({
-      PAPERCLIP_NATIVE_MCP_NAME: "paperclip",
-      PAPERCLIP_NATIVE_MCP_URL: "http://paperclip.example/mcp",
-      PAPERCLIP_NATIVE_MCP_TOKEN: "x".repeat(40),
+      THINKINGMACH_NATIVE_MCP_NAME: "paperclip",
+      THINKINGMACH_NATIVE_MCP_URL: "http://paperclip.example/mcp",
+      THINKINGMACH_NATIVE_MCP_TOKEN: "x".repeat(40),
     })).toThrow("requires HTTPS or loopback HTTP");
     expect(() => nativeMcpLaunchBinding({
-      PAPERCLIP_NATIVE_MCP_NAME: "paperclip",
-      PAPERCLIP_NATIVE_MCP_URL: "https://user:pass@paperclip.example/mcp#secret",
-      PAPERCLIP_NATIVE_MCP_TOKEN: "x".repeat(40),
+      THINKINGMACH_NATIVE_MCP_NAME: "paperclip",
+      THINKINGMACH_NATIVE_MCP_URL: "https://user:pass@paperclip.example/mcp#secret",
+      THINKINGMACH_NATIVE_MCP_TOKEN: "x".repeat(40),
     })).toThrow("contains forbidden URL data");
   });
 
@@ -131,9 +131,9 @@ describe("runtime context materialization", () => {
       codexHome,
       sourceCodexHome: join(root, "host-home"),
       nativeMcp: nativeMcpLaunchBinding({
-        PAPERCLIP_NATIVE_MCP_NAME: "paperclip-assigned",
-        PAPERCLIP_NATIVE_MCP_URL: "https://paperclip.example/mcp",
-        PAPERCLIP_NATIVE_MCP_TOKEN: "x".repeat(40),
+        THINKINGMACH_NATIVE_MCP_NAME: "paperclip-assigned",
+        THINKINGMACH_NATIVE_MCP_URL: "https://paperclip.example/mcp",
+        THINKINGMACH_NATIVE_MCP_TOKEN: "x".repeat(40),
       }),
     });
 

@@ -70,12 +70,12 @@ Image, video, audio, and embedding models are outside these coding-agent pickers
 
 ## Prior work checked
 
-Fable 5.1 was already merged in [#12730](https://github.com/paperclipai/paperclip/pull/12730).
-Astra was already merged in [#12851](https://github.com/paperclipai/paperclip/pull/12851).
-The Grok 4.6/4.5 proposal [#11324](https://github.com/paperclipai/paperclip/pull/11324)
+Fable 5.1 was already merged in [#12730](https://github.com/thinkingmach/paperclip/pull/12730).
+Astra was already merged in [#12851](https://github.com/thinkingmach/paperclip/pull/12851).
+The Grok 4.6/4.5 proposal [#11324](https://github.com/thinkingmach/paperclip/pull/11324)
 was closed and parked by its author. This update preserves the newer CLI-default
-sentinel behavior from [#12062](https://github.com/paperclipai/paperclip/pull/12062).
-Open model-discovery work such as [#13127](https://github.com/paperclipai/paperclip/pull/13127)
-and [#13565](https://github.com/paperclipai/paperclip/pull/13565) is separate from
+sentinel behavior from [#12062](https://github.com/thinkingmach/paperclip/pull/12062).
+Open model-discovery work such as [#13127](https://github.com/thinkingmach/paperclip/pull/13127)
+and [#13565](https://github.com/thinkingmach/paperclip/pull/13565) is separate from
 these catalog and effort corrections. No open PR covering the newly added IDs
 was found before implementation.

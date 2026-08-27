@@ -1,4 +1,4 @@
-import { heartbeatRuns } from "@paperclipai/db";
+import { heartbeatRuns } from "@thinkingmach/db";
 import { sql } from "drizzle-orm";
 
 export const NATIVE_OWNERSHIP_UNVERIFIED_ERROR_CODE =

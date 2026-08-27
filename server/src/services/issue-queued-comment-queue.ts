@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { IssueComment, IssueQueuedCommentQueue } from "@paperclipai/shared";
+import type { IssueComment, IssueQueuedCommentQueue } from "@thinkingmach/shared";
 
 const QUEUE_CONTEXT_KEY = "_paperclipWakeContext";
 const QUEUE_IDS_KEY = "wakeCommentIds";

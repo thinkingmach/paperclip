@@ -2,7 +2,7 @@ import { chmod, mkdir, mkdtemp, open, readFile, rename, rm, writeFile } from "no
 import { randomUUID } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
-import { withDirectoryMergeLock } from "@paperclipai/adapter-utils/workspace-restore-merge";
+import { withDirectoryMergeLock } from "@thinkingmach/adapter-utils/workspace-restore-merge";
 import {
   grokHomeHasUsableAuth,
   parseGrokAuthPayload,

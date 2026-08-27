@@ -41,7 +41,7 @@ describe("managed install store", () => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-install-store-"));
     paths = resolveInstallStorePaths({
       homeDir: path.join(root, "home"),
-      paperclipHome: path.join(root, "home", ".paperclip"),
+      thinkingmachHome: path.join(root, "home", ".paperclip"),
     });
   });
 
@@ -110,7 +110,7 @@ describe("managed install store", () => {
     const shim = fs.readFileSync(paths.shimPath, "utf8");
     expect(shim).toContain(process.execPath);
     expect(shim).toContain(paths.currentPath);
-    expect(shim).not.toContain("PAPERCLIP_HOME");
+    expect(shim).not.toContain("THINKINGMACH_HOME");
     expect(fs.statSync(paths.shimPath).mode & 0o777).toBe(0o755);
 
     const rcPath = path.join(root, "home", ".bashrc");
@@ -118,12 +118,12 @@ describe("managed install store", () => {
     expect(addManagedPathBlock(rcPath)).toBe(false);
     fs.chmodSync(rcPath, 0o640);
     expect(removeManagedPathBlock(rcPath)).toBe(true);
-    expect(fs.readFileSync(rcPath, "utf8")).not.toContain("paperclipai managed PATH");
+    expect(fs.readFileSync(rcPath, "utf8")).not.toContain("thinkingmach managed PATH");
     expect(fs.statSync(rcPath).mode & 0o777).toBe(0o640);
   });
 
   it("uses the pinned Node for child tools even with an older node first on the service PATH", () => {
-    const entrypoint = path.join(paths.currentPath, "node_modules", "paperclipai", "dist", "index.js");
+    const entrypoint = path.join(paths.currentPath, "node_modules", "thinkingmach", "dist", "index.js");
     fs.mkdirSync(path.dirname(entrypoint), { recursive: true });
     fs.writeFileSync(entrypoint, `console.log(require("node:child_process").execFileSync("node", ["-p", "process.execPath"], {encoding: "utf8"}).trim())`);
     const oldBin = path.join(root, "old-bin");
@@ -176,7 +176,7 @@ describe("managed install store", () => {
   it("reports managed provenance only for the payload selected by current", () => {
     const manifestPayload = payloadPathFor(paths, "npm", "1.0.0");
     const currentPayload = payloadPathFor(paths, "npm", "2.0.0");
-    const executable = path.join(manifestPayload, "node_modules", "paperclipai", "dist", "index.js");
+    const executable = path.join(manifestPayload, "node_modules", "thinkingmach", "dist", "index.js");
     fs.mkdirSync(path.dirname(executable), { recursive: true });
     fs.writeFileSync(executable, "");
     fs.mkdirSync(currentPayload, { recursive: true });

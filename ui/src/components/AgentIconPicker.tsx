@@ -1,8 +1,6 @@
 import { useState, useMemo } from "react";
-import {
-  type LucideIcon,
-} from "lucide-react";
-import { AGENT_ICON_NAMES, type AgentIconName } from "@paperclipai/shared";
+import { type LucideIcon,  } from "lucide-react";
+import { AGENT_ICON_NAMES, type AgentIconName } from "@thinkingmach/shared";
 import {
   Popover,
   PopoverContent,

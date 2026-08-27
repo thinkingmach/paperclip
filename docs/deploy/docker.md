@@ -3,7 +3,7 @@ title: Docker
 summary: Docker Compose quickstart
 ---
 
-Run Paperclip in Docker without installing Node or pnpm locally.
+Run ThinkingMach in Docker without installing Node or pnpm locally.
 
 ## Compose Quickstart (Recommended)
 
@@ -21,11 +21,11 @@ Defaults:
 Override with environment variables:
 
 ```sh
-PAPERCLIP_PORT=3200 PAPERCLIP_DATA_DIR=../data/pc \
+THINKINGMACH_PORT=3200 THINKINGMACH_DATA_DIR=../data/pc \
   docker compose -f docker/docker-compose.quickstart.yml up --build
 ```
 
-**Note:** `PAPERCLIP_DATA_DIR` is resolved relative to the compose file (`docker/`), so `../data/pc` maps to `data/pc` in the project root.
+**Note:** `THINKINGMACH_DATA_DIR` is resolved relative to the compose file (`docker/`), so `../data/pc` maps to `data/pc` in the project root.
 
 ## Manual Docker Build
 
@@ -34,7 +34,7 @@ docker build -t paperclip-local .
 docker run --name paperclip \
   -p 3100:3100 \
   -e HOST=0.0.0.0 \
-  -e PAPERCLIP_HOME=/paperclip \
+  -e THINKINGMACH_HOME=/paperclip \
   -v "$(pwd)/data/docker-paperclip:/paperclip" \
   paperclip-local
 ```
@@ -63,7 +63,7 @@ Pass API keys to enable local adapter runs inside the container:
 docker run --name paperclip \
   -p 3100:3100 \
   -e HOST=0.0.0.0 \
-  -e PAPERCLIP_HOME=/paperclip \
+  -e THINKINGMACH_HOME=/paperclip \
   -e OPENAI_API_KEY=sk-... \
   -e ANTHROPIC_API_KEY=sk-... \
   -e GEMINI_API_KEY=... \

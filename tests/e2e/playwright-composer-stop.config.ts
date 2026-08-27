@@ -6,18 +6,18 @@ import base from "./playwright.config";
 
 // Opt-in native coverage uses real runnerd with the repo's deterministic Codex
 // protocol fixture. Never let this suite fall through to a logged-in real Codex.
-const fixture = process.env.PAPERCLIP_STOP_FAKE_CODEX;
+const fixture = process.env.THINKINGMACH_STOP_FAKE_CODEX;
 const fixtureDir = fs.mkdtempSync(
   path.join(os.tmpdir(), "composer-stop-provider-"),
 );
 const logPath =
-  process.env.PAPERCLIP_STOP_CODEX_LOG ??
+  process.env.THINKINGMACH_STOP_CODEX_LOG ??
   path.join(fixtureDir, "codex-calls.log");
-process.env.PAPERCLIP_STOP_CODEX_LOG = logPath;
+process.env.THINKINGMACH_STOP_CODEX_LOG = logPath;
 if (fixture) {
   if (!path.isAbsolute(fixture) || !fs.existsSync(fixture))
     throw new Error(
-      "PAPERCLIP_STOP_FAKE_CODEX must name the built fake-codex-app-server binary",
+      "THINKINGMACH_STOP_FAKE_CODEX must name the built fake-codex-app-server binary",
     );
   const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
   fs.writeFileSync(

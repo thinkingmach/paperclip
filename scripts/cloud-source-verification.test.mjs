@@ -6,7 +6,7 @@ const sha = "a".repeat(40);
 const workflow = { id: 123, path: ".github/workflows/cloud-readiness.yml" };
 const baseRun = {
   id: 456, workflow_id: workflow.id, path: workflow.path, run_attempt: 2,
-  repository: { full_name: "paperclipai/paperclip" }, head_repository: { full_name: "paperclipai/paperclip" },
+  repository: { full_name: "thinkingmach/paperclip" }, head_repository: { full_name: "thinkingmach/paperclip" },
   head_sha: sha, head_branch: "master", event: "push", status: "in_progress", conclusion: null,
 };
 const baseJob = { id: 789, name: sourceVerificationJob, run_id: 456, run_attempt: 2, head_sha: sha, status: "completed", conclusion: "success" };

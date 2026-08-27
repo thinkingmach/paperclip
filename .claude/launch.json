@@ -11,7 +11,7 @@
       "runtimeExecutable": "/bin/sh",
       "runtimeArgs": [
         "-c",
-        "PAPERCLIP_STORYBOOK_API_URL=http://localhost:3121 pnpm --filter @paperclipai/ui exec storybook dev -p 6016 -c storybook/.storybook --no-open --ci"
+        "THINKINGMACH_STORYBOOK_API_URL=http://localhost:3121 pnpm --filter @thinkingmach/ui exec storybook dev -p 6016 -c storybook/.storybook --no-open --ci"
       ],
       "port": 6016
     },

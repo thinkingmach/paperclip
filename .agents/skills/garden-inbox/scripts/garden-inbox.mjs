@@ -29,7 +29,7 @@ function usage() {
   garden-inbox.mjs apply [--issue-id ID] (--interaction-id ID | --interaction-file FILE) [--candidates FILE] [--dry-run]
 
 Common environment:
-  PAPERCLIP_API_URL, PAPERCLIP_API_KEY, PAPERCLIP_RUN_ID, PAPERCLIP_TASK_ID`;
+  THINKINGMACH_API_URL, THINKINGMACH_API_KEY, THINKINGMACH_RUN_ID, THINKINGMACH_TASK_ID`;
 }
 
 function parseArgs(argv) {
@@ -65,25 +65,25 @@ function required(value, name) {
 }
 
 function normalizeApiBase(value) {
-  let base = required(value, "PAPERCLIP_API_URL").replace(/\/+$/, "");
+  let base = required(value, "THINKINGMACH_API_URL").replace(/\/+$/, "");
   if (base.endsWith("/api")) base = base.slice(0, -4);
   return base;
 }
 
 function runtime(options, { requireApi = true } = {}) {
-  const apiUrl = options.api_url ?? process.env.PAPERCLIP_API_URL;
-  const apiKey = options.api_key ?? process.env.PAPERCLIP_API_KEY;
+  const apiUrl = options.api_url ?? process.env.THINKINGMACH_API_URL;
+  const apiKey = options.api_key ?? process.env.THINKINGMACH_API_KEY;
   return {
     apiBase: requireApi ? normalizeApiBase(apiUrl) : (apiUrl ? normalizeApiBase(apiUrl) : null),
-    apiKey: requireApi ? required(apiKey, "PAPERCLIP_API_KEY") : apiKey ?? null,
-    runId: options.run_id ?? process.env.PAPERCLIP_RUN_ID ?? null,
+    apiKey: requireApi ? required(apiKey, "THINKINGMACH_API_KEY") : apiKey ?? null,
+    runId: options.run_id ?? process.env.THINKINGMACH_RUN_ID ?? null,
   };
 }
 
 async function apiRequest(context, path, { method = "GET", body } = {}) {
   const headers = { Accept: "application/json", Authorization: `Bearer ${context.apiKey}` };
   if (body !== undefined) headers["Content-Type"] = "application/json";
-  if (method !== "GET" && context.runId) headers["X-Paperclip-Run-Id"] = context.runId;
+  if (method !== "GET" && context.runId) headers["X-ThinkingMach-Run-Id"] = context.runId;
   const response = await fetch(`${context.apiBase}/api${path}`, {
     method,
     headers,
@@ -104,12 +104,12 @@ async function apiRequest(context, path, { method = "GET", body } = {}) {
 }
 
 function decodeJwtPayload(token) {
-  const parts = required(token, "PAPERCLIP_API_KEY").split(".");
-  if (parts.length < 2) throw new Error("PAPERCLIP_API_KEY is not a JWT; pass --user-id explicitly");
+  const parts = required(token, "THINKINGMACH_API_KEY").split(".");
+  if (parts.length < 2) throw new Error("THINKINGMACH_API_KEY is not a JWT; pass --user-id explicitly");
   try {
     return JSON.parse(Buffer.from(parts[1], "base64url").toString("utf8"));
   } catch {
-    throw new Error("Could not decode the PAPERCLIP_API_KEY JWT payload; pass --user-id explicitly");
+    throw new Error("Could not decode the THINKINGMACH_API_KEY JWT payload; pass --user-id explicitly");
   }
 }
 
@@ -540,8 +540,8 @@ function confirmationBody(scanData, candidates, index, count, unselectedIds = ne
 
 async function confirm(options) {
   const data = candidateFile(options);
-  const drivingIssueId = options.issue_id ?? process.env.PAPERCLIP_TASK_ID;
-  if (!options.dry_run) required(drivingIssueId, "--issue-id or PAPERCLIP_TASK_ID");
+  const drivingIssueId = options.issue_id ?? process.env.THINKINGMACH_TASK_ID;
+  if (!options.dry_run) required(drivingIssueId, "--issue-id or THINKINGMACH_TASK_ID");
   const candidateIds = new Set(data.candidates.map((candidate) => candidate.issueId));
   const unselectedIds = new Set(optionValues(options.unselect).map((id) => required(id, "--unselect")));
   for (const id of unselectedIds) {
@@ -594,7 +594,7 @@ async function resolveInteractions(options, context, drivingIssueId) {
   const ids = optionValues(options.interaction_id);
   const fromFiles = files.flatMap((file) => flattenInteractionFile(readJson(file)));
   if (ids.length === 0) return fromFiles;
-  required(drivingIssueId, "--issue-id or PAPERCLIP_TASK_ID");
+  required(drivingIssueId, "--issue-id or THINKINGMACH_TASK_ID");
   const live = await apiRequest(context, `/issues/${encodeURIComponent(drivingIssueId)}/interactions`);
   if (!Array.isArray(live)) throw new Error("Interactions API returned a non-array response");
   const byId = new Map(live.map((interaction) => [interaction.id, interaction]));
@@ -651,7 +651,7 @@ function renderApplySummary(results, interactions, dryRun, userId) {
 
 async function applyAccepted(options) {
   const data = candidateFile(options);
-  const drivingIssueId = options.issue_id ?? process.env.PAPERCLIP_TASK_ID ?? null;
+  const drivingIssueId = options.issue_id ?? process.env.THINKINGMACH_TASK_ID ?? null;
   const needsLiveApi = optionValues(options.interaction_id).length > 0 || !options.dry_run;
   const context = runtime(options, { requireApi: needsLiveApi });
   const interactions = await resolveInteractions(options, context, drivingIssueId);

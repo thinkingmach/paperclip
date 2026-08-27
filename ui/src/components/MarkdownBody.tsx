@@ -42,7 +42,7 @@ import { copyTextToClipboard } from "../lib/clipboard";
 import type {
   ExternalObjectLivenessState,
   ExternalObjectStatusCategory,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 /**
  * Host-resolved external-object metadata for inline markdown decoration.

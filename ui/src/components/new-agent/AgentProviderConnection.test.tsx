@@ -182,7 +182,7 @@ describe("AgentProviderConnection reuse", () => {
     await mount(adapterType, false, false, false, false, false, { intent, onComplete }, true);
     openProvider();
     await vi.waitFor(() => expect(host.textContent).toContain(adapterType === "claude_local" ? "claude auth login" : "codex login"));
-    expect(host.textContent).toContain("machine running Paperclip");
+    expect(host.textContent).toContain("machine running ThinkingMach");
     expect(host.textContent).not.toContain("sandbox");
     managedApi.connectLocal.mockRejectedValueOnce(new Error("Run local login and try again"));
     click("Connect");

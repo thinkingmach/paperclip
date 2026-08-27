@@ -1,6 +1,6 @@
 # File Browser Example Plugin
 
-Example Paperclip plugin that demonstrates:
+Example ThinkingMach plugin that demonstrates:
 
 - **projectSidebarItem** — An optional "Files" link under each project in the sidebar that opens the project detail with this plugin’s tab selected. This is controlled by plugin settings and defaults to off.
 - **detailTab** (entityType project) — A project detail tab with a workspace-path selector, a desktop two-column layout (file tree left, editor right), and a mobile one-panel flow with a back button from editor to file tree, including save support.
@@ -38,14 +38,14 @@ This is a repo-local example plugin for development. It should not be assumed to
 From the repo root, build the plugin and install it by local path:
 
 ```bash
-pnpm --filter @paperclipai/plugin-file-browser-example build
-npx paperclipai plugin install ./packages/plugins/examples/plugin-file-browser-example
+pnpm --filter @thinkingmach/plugin-file-browser-example build
+npx thinkingmach plugin install ./packages/plugins/examples/plugin-file-browser-example
 ```
 
 To uninstall:
 
 ```bash
-npx paperclipai plugin uninstall paperclip-file-browser-example --force
+npx thinkingmach plugin uninstall paperclip-file-browser-example --force
 ```
 
 **Local development notes:**

@@ -46,9 +46,9 @@ async function loadProfileEnvironment() {
 async function main() {
   await loadProfileEnvironment();
   for (const key of [
-    "PAPERCLIP_AWS_AGENTCORE_CONTEXT_BUCKET",
-    "PAPERCLIP_AWS_AGENTCORE_CONTEXT_PREFIX",
-    "PAPERCLIP_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN",
+    "THINKINGMACH_AWS_AGENTCORE_CONTEXT_BUCKET",
+    "THINKINGMACH_AWS_AGENTCORE_CONTEXT_PREFIX",
+    "THINKINGMACH_AWS_AGENTCORE_CONTEXT_KMS_KEY_ARN",
   ]) assert(process.env[key], `the qualified profile includes ${key}`);
   let providerFailure = null;
   const middleware = createCapabilityIssueThreadMiddleware({
@@ -85,8 +85,8 @@ async function main() {
   try {
     const configuration = {
       provider: "aws_agentcore",
-      model: process.env.PAPERCLIP_AWS_AGENTCORE_MODEL,
-      agentCoreProfileId: process.env.PAPERCLIP_AWS_AGENTCORE_PROFILE_ID,
+      model: process.env.THINKINGMACH_AWS_AGENTCORE_MODEL,
+      agentCoreProfileId: process.env.THINKINGMACH_AWS_AGENTCORE_PROFILE_ID,
       maxEstimatedSessionCostUsd: 1,
       lifecyclePolicy: { mode: "warm", idleTimeoutMs: 300_000 },
     };
@@ -108,7 +108,7 @@ async function main() {
       operationId: "get_task_context",
       input: {},
     })).json();
-    assert(read.toolResult && typeof read.toolResult === "object", "the mock Paperclip read operation succeeded");
+    assert(read.toolResult && typeof read.toolResult === "object", "the mock ThinkingMach read operation succeeded");
 
     const serialized = JSON.stringify({ opened, first, second, read });
     for (const pattern of [

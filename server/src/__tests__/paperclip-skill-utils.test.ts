@@ -6,9 +6,9 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  listPaperclipSkillEntries,
+  listThinkingMachSkillEntries,
   removeMaintainerOnlySkillSymlinks,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 
 async function makeTempDir(prefix: string): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
@@ -78,7 +78,7 @@ respond() {
 }
 
 attachment_json() {
-  originating_run_id="$PAPERCLIP_RUN_ID"
+  originating_run_id="$THINKINGMACH_RUN_ID"
   if [[ -f "$FAKE_CURL_STATE_DIR/originating-run-id" ]]; then
     originating_run_id="$(<"$FAKE_CURL_STATE_DIR/originating-run-id")"
   fi
@@ -103,7 +103,7 @@ if [[ "$method" == "GET" && "$url" == */work-products ]]; then
   if [[ -f "$FAKE_CURL_STATE_DIR/upload-committed" ]]; then
     work_product_json="$(
       jq -nc \
-        --arg runId "$PAPERCLIP_RUN_ID" \
+        --arg runId "$THINKINGMACH_RUN_ID" \
         '{
           id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
           type: "artifact",
@@ -139,7 +139,7 @@ if [[ "$method" == "POST" && "$url" == */attachments ]]; then
     (
       sleep "$FAKE_CURL_COMMIT_AFTER_DROP_DELAY"
       : >"$FAKE_CURL_STATE_DIR/upload-committed"
-      printf '%s' "$PAPERCLIP_RUN_ID" >"$FAKE_CURL_STATE_DIR/originating-run-id"
+      printf '%s' "$THINKINGMACH_RUN_ID" >"$FAKE_CURL_STATE_DIR/originating-run-id"
     ) >/dev/null 2>&1 &
     exit 56
   fi
@@ -148,7 +148,7 @@ if [[ "$method" == "POST" && "$url" == */attachments ]]; then
     exit 56
   fi
   : >"$FAKE_CURL_STATE_DIR/upload-committed"
-  printf '%s' "$PAPERCLIP_RUN_ID" >"$FAKE_CURL_STATE_DIR/originating-run-id"
+  printf '%s' "$THINKINGMACH_RUN_ID" >"$FAKE_CURL_STATE_DIR/originating-run-id"
   if [[ -n "\${FAKE_CURL_AMBIGUOUS_STATUS:-}" && ! -f "$FAKE_CURL_STATE_DIR/upload-status-used" ]]; then
     : >"$FAKE_CURL_STATE_DIR/upload-status-used"
     respond '{"error":"ambiguous upstream response","outcome":"indeterminate","retryable":false}' "$FAKE_CURL_AMBIGUOUS_STATUS"
@@ -171,7 +171,7 @@ if [[ "$method" == "POST" && "$url" == */attachments ]]; then
 fi
 
 if [[ "$method" == "POST" && "$url" == */work-products ]]; then
-  respond "$(jq -nc --arg runId "$PAPERCLIP_RUN_ID" '{ id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", createdByRunId: $runId }')" 201
+  respond "$(jq -nc --arg runId "$THINKINGMACH_RUN_ID" '{ id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", createdByRunId: $runId }')" 201
   exit 0
 fi
 
@@ -189,12 +189,12 @@ exit 2
   const env = {
     ...process.env,
     PATH: `${binDir}:${process.env.PATH ?? ""}`,
-    PAPERCLIP_API_KEY: "test-run-key",
-    PAPERCLIP_API_URL: options.apiUrl ?? "http://paperclip.invalid",
-    PAPERCLIP_COMPANY_ID: "company-1",
-    PAPERCLIP_HELPER_STATE_DIR: lockDir,
-    PAPERCLIP_RUN_ID: "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
-    PAPERCLIP_TASK_ID: "issue-1",
+    THINKINGMACH_API_KEY: "test-run-key",
+    THINKINGMACH_API_URL: options.apiUrl ?? "http://paperclip.invalid",
+    THINKINGMACH_COMPANY_ID: "company-1",
+    THINKINGMACH_HELPER_STATE_DIR: lockDir,
+    THINKINGMACH_RUN_ID: "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+    THINKINGMACH_TASK_ID: "issue-1",
     FAKE_ATTACHMENT_SHA: sha256,
     FAKE_CURL_AMBIGUOUS_STATUS:
       options.ambiguousHttpStatusAfterCommit ?? "",
@@ -250,11 +250,11 @@ describe("paperclip skill utils", () => {
     await fs.mkdir(path.join(root, ".agents", "skills", "release"), { recursive: true });
     await fs.mkdir(path.join(root, ".agents", "skills", "terminal-bench-loop"), { recursive: true });
 
-    const entries = await listPaperclipSkillEntries(moduleDir);
+    const entries = await listThinkingMachSkillEntries(moduleDir);
 
     expect(entries.map((entry) => entry.key)).toEqual([
-      "paperclipai/paperclip/paperclip",
-      "paperclipai/paperclip/paperclip-create-agent",
+      "thinkingmach/paperclip/paperclip",
+      "thinkingmach/paperclip/paperclip-create-agent",
     ]);
     expect(entries.map((entry) => entry.runtimeName)).toEqual([
       "paperclip",
@@ -264,7 +264,7 @@ describe("paperclip skill utils", () => {
     expect(entries[1]?.source).toBe(path.join(root, "skills", "paperclip-create-agent"));
   });
 
-  it("documents artifact uploads in the installed Paperclip skill", async () => {
+  it("documents artifact uploads in the installed ThinkingMach skill", async () => {
     const skillBody = await fs.readFile(path.resolve("skills/paperclip/SKILL.md"), "utf8");
     const referenceBody = await fs.readFile(path.resolve("skills/paperclip/references/artifacts.md"), "utf8");
     const helperBody = await fs.readFile(path.resolve("skills/paperclip/scripts/paperclip-upload-artifact.sh"), "utf8");
@@ -272,18 +272,18 @@ describe("paperclip skill utils", () => {
 
     expect(skillBody).toContain("Generated Artifacts and Work Products");
     expect(skillBody).toContain("references/artifacts.md");
-    expect(skillBody).not.toContain("/api/companies/$PAPERCLIP_COMPANY_ID/issues/$PAPERCLIP_TASK_ID/attachments");
+    expect(skillBody).not.toContain("/api/companies/$THINKINGMACH_COMPANY_ID/issues/$THINKINGMACH_TASK_ID/attachments");
     expect(referenceBody).toContain("Generated Artifacts and Work Products");
     expect(referenceBody).toContain("scripts/paperclip-upload-artifact.sh");
     expect(referenceBody).toContain("POST");
-    expect(referenceBody).toContain("/api/companies/$PAPERCLIP_COMPANY_ID/issues/$PAPERCLIP_TASK_ID/attachments");
-    expect(referenceBody).toContain("/api/issues/$PAPERCLIP_TASK_ID/work-products");
+    expect(referenceBody).toContain("/api/companies/$THINKINGMACH_COMPANY_ID/issues/$THINKINGMACH_TASK_ID/attachments");
+    expect(referenceBody).toContain("/api/issues/$THINKINGMACH_TASK_ID/work-products");
     expect(referenceBody).toContain('--chat-comment "Here is the requested image."');
     expect(referenceBody).toContain("not proof of external");
     expect(referenceBody).toContain("--retry-unknown-upload");
     expect(referenceBody).toContain("was **not**");
     expect(normalizedReferenceBody).toContain("bound to the response comment");
-    expect(referenceBody).not.toContain("npx paperclipai issue comment");
+    expect(referenceBody).not.toContain("npx thinkingmach issue comment");
     expect(helperBody).toContain("--chat-comment TEXT");
     expect(helperBody).toContain("--retry-unknown-upload");
     expect(helperBody).toContain('"$api_base/issues/$issue_id/comments"');
@@ -475,7 +475,7 @@ describe("paperclip skill utils", () => {
     await expect(fs.lstat(staleLockPath)).rejects.toThrow();
   });
 
-  it("accepts PAPERCLIP_API_URL with an existing trailing API path", async () => {
+  it("accepts THINKINGMACH_API_URL with an existing trailing API path", async () => {
     const harness = await makeArtifactHelperHarness(cleanupDirs, {
       apiUrl: "http://paperclip.invalid/api/",
     });

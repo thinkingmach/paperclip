@@ -25,7 +25,7 @@ For manual inspection, start the same server and open
 `http://127.0.0.1:4197/tests/task-chat-perf.html`:
 
 ```sh
-pnpm --filter @paperclipai/ui exec vite --host 127.0.0.1 --port 4197 --strictPort
+pnpm --filter @thinkingmach/ui exec vite --host 127.0.0.1 --port 4197 --strictPort
 ```
 
 This HTML entry is not part of the shipped application build.

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQueries, type UseQueryResult } from "@tanstack/react-query";
-import type { ActivityEvent, Project } from "@paperclipai/shared";
+import type { ActivityEvent, Project } from "@thinkingmach/shared";
 import { projectsApi } from "@/api/projects";
 import { queryKeys } from "@/lib/queryKeys";
 import { projectCreatedItems } from "@/components/task-chat/project-created-items";

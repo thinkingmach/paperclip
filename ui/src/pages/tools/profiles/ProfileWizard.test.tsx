@@ -3,7 +3,7 @@
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ToolCatalogEntry, ToolProfileWithDetails } from "@paperclipai/shared";
+import type { ToolCatalogEntry, ToolProfileWithDetails } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const navigate = vi.hoisted(() => vi.fn());

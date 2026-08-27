@@ -1,11 +1,11 @@
-import type { PaperclipPluginManifestV1 } from "@paperclipai/plugin-sdk";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/plugin-sdk";
 
-const manifest: PaperclipPluginManifestV1 = {
+const manifest: ThinkingMachPluginManifestV1 = {
   id: "paperclip.createos-sandbox-provider",
   apiVersion: 1,
   version: "0.1.0",
   displayName: "CreateOS Sandbox Provider",
-  description: "Runs Paperclip agents in CreateOS sandboxes.",
+  description: "Runs ThinkingMach agents in CreateOS sandboxes.",
   author: "CreateOS",
   categories: ["automation"],
   capabilities: ["environment.drivers.register"],
@@ -22,7 +22,7 @@ const manifest: PaperclipPluginManifestV1 = {
       required: ["apiUrl", "shape"],
       properties: {
         apiUrl: { type: "string", title: "API URL", default: "https://api.sb.createos.sh", description: "https://api.sb.createos.sh" },
-        apiKey: { type: "string", format: "secret-ref", description: "CreateOS API key or Paperclip secret reference. Saved keys become company secrets. The official API endpoint can use CREATEOS_API_KEY from the host; custom endpoints require an explicit key." },
+        apiKey: { type: "string", format: "secret-ref", description: "CreateOS API key or ThinkingMach secret reference. Saved keys become company secrets. The official API endpoint can use CREATEOS_API_KEY from the host; custom endpoints require an explicit key." },
         shape: {
           type: "string",
           title: "Shape",

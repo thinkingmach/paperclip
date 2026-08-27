@@ -1,17 +1,17 @@
 ---
 title: Experimental Features
-summary: What Paperclip experimental features mean for board operators
+summary: What ThinkingMach experimental features mean for board operators
 ---
 
 Experimental features are opt-in and are provided without compatibility guarantees. They may break, change, or be removed at any time. Use them at your own risk.
 
 ## What "experimental" means
 
-When a feature is marked experimental, Paperclip is still evaluating the product shape and implementation details.
+When a feature is marked experimental, ThinkingMach is still evaluating the product shape and implementation details.
 
 - The feature is not part of the stable operator contract yet.
 - UI, API, CLI, behavior, and stored configuration may change as the feature evolves.
-- Paperclip does not promise compatibility, rollback, migration, or long-term support for experimental features.
+- ThinkingMach does not promise compatibility, rollback, migration, or long-term support for experimental features.
 
 If you need stable behavior for an important workflow, do not rely on an experimental feature.
 
@@ -25,8 +25,8 @@ controls retain their configured values.
 The CLI exposes the same surface:
 
 ```sh
-pnpm paperclipai instance settings:experimental
-npx paperclipai instance settings:experimental:update --payload-json '{...}'
+pnpm thinkingmach instance settings:experimental
+npx thinkingmach instance settings:experimental:update --payload-json '{...}'
 ```
 
 Those commands change the same opt-in settings that the UI manages.
@@ -34,7 +34,7 @@ Those commands change the same opt-in settings that the UI manages.
 ## Chat connectors
 
 **Chat connectors** is off by default. Enable it to connect a dedicated
-Slack, GitHub, Microsoft Teams, Telegram, or Discord bot to one Paperclip
+Slack, GitHub, Microsoft Teams, Telegram, or Discord bot to one ThinkingMach
 agent. The experiment shows chat setup, connection management, agent channels,
 and external task controls.
 
@@ -68,4 +68,4 @@ Before enabling an experimental feature:
 
 - See [Status Cards](/guides/board-operator/status-cards) for the watched-query summary experiment, refresh policies, and cost model.
 - See the CLI caveat in [Control-Plane Commands](/cli/control-plane-commands).
-- See the repo CLI reference in [`doc/CLI.md`](https://github.com/paperclipai/paperclip/blob/master/doc/CLI.md) when working from the repository.
+- See the repo CLI reference in [`doc/CLI.md`](https://github.com/thinkingmach/paperclip/blob/master/doc/CLI.md) when working from the repository.

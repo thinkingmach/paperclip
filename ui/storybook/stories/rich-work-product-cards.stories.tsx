@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { IssueAttachment, IssueWorkProduct } from "@paperclipai/shared";
+import type { IssueAttachment, IssueWorkProduct } from "@thinkingmach/shared";
 import { expect } from "storybook/test";
 import { RichWorkProductCard } from "../../src/components/task-chat/RichWorkProductCard";
 import { TaskChatBubble } from "../../src/components/task-chat/TaskChatBubble";
@@ -45,8 +45,8 @@ const KINDS: CardKind[] = [
     type: "pull_request",
     provider: "github",
     title: "Add rich work-product cards",
-    url: "https://github.com/paperclipai/paperclip/pull/12717",
-    metadata: { repo: "paperclipai/paperclip", number: 12717, baseRef: "master", headRef: "rich-cards" },
+    url: "https://github.com/thinkingmach/paperclip/pull/12717",
+    metadata: { repo: "thinkingmach/paperclip", number: 12717, baseRef: "master", headRef: "rich-cards" },
   },
   {
     id: "commit",
@@ -54,7 +54,7 @@ const KINDS: CardKind[] = [
     type: "commit",
     provider: "github",
     title: "Render kind-specific work products",
-    url: "https://github.com/paperclipai/paperclip/commit/9c12ae7b41e5",
+    url: "https://github.com/thinkingmach/paperclip/commit/9c12ae7b41e5",
     metadata: { sha: "9c12ae7b41e5", branch: "rich-cards" },
   },
   {
@@ -63,8 +63,8 @@ const KINDS: CardKind[] = [
     type: "branch",
     provider: "github",
     title: "rich-cards",
-    url: "https://github.com/paperclipai/paperclip/tree/rich-cards",
-    metadata: { repository: "paperclipai/paperclip", branch: "rich-cards" },
+    url: "https://github.com/thinkingmach/paperclip/tree/rich-cards",
+    metadata: { repository: "thinkingmach/paperclip", branch: "rich-cards" },
   },
   {
     id: "artifact-file",
@@ -99,7 +99,7 @@ const KINDS: CardKind[] = [
     type: "preview_url",
     provider: "custom",
     title: "Rich cards preview",
-    url: "https://preview.paperclip.ing/rich-cards",
+    url: "https://preview.thinkingmach.com/rich-cards",
     metadata: {},
   },
   {

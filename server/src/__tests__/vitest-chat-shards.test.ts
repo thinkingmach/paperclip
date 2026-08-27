@@ -15,7 +15,7 @@ it("runs every active nested/parameterized fixture case exactly once through the
     symlinkSync(path.join(repoRoot, "node_modules"), path.join(root, "node_modules"), "junction");
     writeFileSync(path.join(root, "package.json"), JSON.stringify({ private: true }));
     writeFileSync(path.join(root, "vitest.config.mjs"), `export default {
-      test: { projects: [{ test: { name: "@paperclipai/server", root: ${JSON.stringify(path.join(root, "server"))},
+      test: { projects: [{ test: { name: "@thinkingmach/server", root: ${JSON.stringify(path.join(root, "server"))},
         include: ["src/**/*.test.ts"], pool: "forks", maxWorkers: 1 } }] }
     };`);
     const trace = path.join(root, "executed.jsonl");

@@ -1288,7 +1288,7 @@ describe("CompanyEnvironments — test provider button", () => {
       expect(dialog?.textContent).not.toContain("id 12345678-90a");
       expect(
         dialog?.querySelector(
-          "[title='Provider snapshot ref redacted-template-ref (Paperclip template 12345678-90ab-cdef-1234-567890abcdef)']",
+          "[title='Provider snapshot ref redacted-template-ref (ThinkingMach template 12345678-90ab-cdef-1234-567890abcdef)']",
         ),
       ).toBeTruthy();
       expect(findButton(dialog!, "Refresh")).toBeTruthy();

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { RUNTIME_EXPOSURE_APP_PORT_MIN, deriveViteHmrPort } from "@paperclipai/shared";
+import { RUNTIME_EXPOSURE_APP_PORT_MIN, deriveViteHmrPort } from "@thinkingmach/shared";
 
 import {
   BrokerClientError,
@@ -28,7 +28,7 @@ const CONFIG = {
   type: "tailscale_https" as const,
   hostname: "auto" as const,
   publicPort: "same" as const,
-  includePaperclipViteHmr: true,
+  includeThinkingMachViteHmr: true,
   failurePolicy: "fail_closed" as const,
 };
 
@@ -226,7 +226,7 @@ describe("provisionExposure", () => {
     });
     const { status } = await provisionExposure(deps(broker, async () => true), {
       runtimeId: RUNTIME_ID,
-      config: { ...CONFIG, includePaperclipViteHmr: false },
+      config: { ...CONFIG, includeThinkingMachViteHmr: false },
       handle: HANDLE,
       hostname: HOSTNAME,
       appPort: APP_PORT,

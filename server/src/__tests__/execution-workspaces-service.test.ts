@@ -22,7 +22,7 @@ import {
   projectWorkspaces,
   projects,
   workspaceRuntimeServices,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -175,7 +175,7 @@ async function readGit(cwd: string, args: string[]) {
 async function createTempRepo() {
   const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-execution-workspace-"));
   await runGit(repoRoot, ["init"]);
-  await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
+  await runGit(repoRoot, ["config", "user.name", "ThinkingMach Test"]);
   await runGit(repoRoot, ["config", "user.email", "test@paperclip.local"]);
   await fs.writeFile(path.join(repoRoot, "README.md"), "# Test repo\n", "utf8");
   await runGit(repoRoot, ["add", "README.md"]);
@@ -315,7 +315,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
     const headSha = await readGit(worktreePath, ["rev-parse", "HEAD"]);
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
     });
@@ -336,7 +336,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       cwd: worktreePath,
       providerRef: worktreePath,
       providerType: "git_worktree",
-      repoUrl: "https://github.com/paperclipai/paperclip.git",
+      repoUrl: "https://github.com/thinkingmach/paperclip.git",
       baseRef: "main",
       branchName: "PAP-16015-delivery",
     });
@@ -373,7 +373,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
         type: "pull_request",
         provider: "github",
         title: "Delivered PR",
-        url: "https://github.com/paperclipai/paperclip/pull/10623",
+        url: "https://github.com/thinkingmach/paperclip/pull/10623",
         status: "merged",
       });
     }
@@ -439,7 +439,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       providerRef: worktreePath,
       providerType: "git_worktree",
       baseRef: "main",
-      repoUrl: "https://github.com/paperclipai/paperclip.git",
+      repoUrl: "https://github.com/thinkingmach/paperclip.git",
       branchName: "PAP-16015-delivery",
     }).where(eq(executionWorkspaces.id, seeded.executionWorkspaceId));
     await db.insert(issueWorkProducts).values({
@@ -448,7 +448,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       type: "pull_request",
       provider: "github",
       title: "Cross-branch delivery",
-      url: "https://github.com/paperclipai/paperclip/pull/10623",
+      url: "https://github.com/thinkingmach/paperclip/pull/10623",
       status: "merged",
     });
 
@@ -495,7 +495,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
     const issuePrefix = `P${companyId.slice(0, 8).toUpperCase()}`;
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
     });
@@ -516,7 +516,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       cwd: worktreePath,
       providerRef: worktreePath,
       providerType: "git_worktree",
-      repoUrl: "https://github.com/paperclipai/paperclip.git",
+      repoUrl: "https://github.com/thinkingmach/paperclip.git",
       baseRef: "main",
       branchName,
     });
@@ -565,7 +565,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
         state: "blocked",
         isDestructiveCloseAllowed: false,
         blockingReasons: [
-          "Paperclip could not verify the workspace git status. Retry before destructive cleanup.",
+          "ThinkingMach could not verify the workspace git status. Retry before destructive cleanup.",
         ],
       });
 
@@ -641,7 +641,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
     const issuePrefix = `P${companyId.slice(0, 8).toUpperCase()}`;
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
     });
@@ -960,7 +960,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       type: "pull_request",
       provider: "github",
       title: "Unrelated merged PR",
-      url: "https://github.com/paperclipai/paperclip/pull/10624",
+      url: "https://github.com/thinkingmach/paperclip/pull/10624",
       status: "merged",
     });
 
@@ -994,7 +994,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
         type: "pull_request",
         provider: "github",
         title: "Wrong branch merged PR",
-        url: "https://github.com/paperclipai/paperclip/pull/10624",
+        url: "https://github.com/thinkingmach/paperclip/pull/10624",
         status: "merged",
       },
       {
@@ -1080,7 +1080,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
     expect(readiness?.git).toMatchObject({ hasUntrackedFiles: true, untrackedEntryCount: 5_000 });
     expect(readiness?.warnings).toContain("The workspace has 5000 untracked files.");
     expect(readiness?.blockingReasons).not.toContain(
-      "Paperclip could not verify the workspace git status. Retry before destructive cleanup.",
+      "ThinkingMach could not verify the workspace git status. Retry before destructive cleanup.",
     );
     expect(await svc.sweepTerminalWorkspaces()).toMatchObject({ archived: 0, skippedUndelivered: 1 });
     await expect(fs.access(seeded.worktreePath)).resolves.toBeUndefined();
@@ -1826,7 +1826,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       type: "pull_request",
       provider: "github",
       title: "Descendant delivery",
-      url: "https://github.com/paperclipai/paperclip/pull/10625",
+      url: "https://github.com/thinkingmach/paperclip/pull/10625",
       status: "merged",
     });
 
@@ -1896,7 +1896,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -1972,7 +1972,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2069,7 +2069,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2166,7 +2166,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2288,7 +2288,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2369,7 +2369,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2442,7 +2442,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2521,7 +2521,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2681,7 +2681,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2799,7 +2799,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -2980,7 +2980,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix: "PAP",
         requireBoardApprovalForNewAgents: false,
       });
@@ -3147,7 +3147,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3232,7 +3232,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3317,7 +3317,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3421,7 +3421,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3528,7 +3528,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3657,7 +3657,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3840,7 +3840,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -3911,7 +3911,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -4003,7 +4003,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -4168,7 +4168,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -4341,7 +4341,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
     await db.insert(companies).values([
       {
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix: "PAP",
         requireBoardApprovalForNewAgents: false,
       },
@@ -4561,7 +4561,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -4656,7 +4656,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });

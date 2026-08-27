@@ -14,7 +14,7 @@ import {
   secretAccessEvents,
   userSecretDeclarations,
   userSecretDefinitions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { secretService } from "../services/secrets.js";
 
@@ -30,12 +30,12 @@ if (!embeddedPostgresSupport.supported) {
 describeEmbeddedPostgres("secretService resolveAdapterConfigForRuntime — userSecretMediation", () => {
   let stopDb: (() => Promise<void>) | null = null;
   let db!: ReturnType<typeof createDb>;
-  const previousKeyFile = process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+  const previousKeyFile = process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
   const secretsTmpDir = path.join(os.tmpdir(), `paperclip-owner-scoped-${randomUUID()}`);
 
   beforeAll(async () => {
     mkdirSync(secretsTmpDir, { recursive: true });
-    process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
+    process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = path.join(secretsTmpDir, "master.key");
     const started = await startEmbeddedPostgresTestDatabase("owner-scoped-secrets");
     stopDb = started.cleanup;
     db = createDb(started.connectionString);
@@ -57,9 +57,9 @@ describeEmbeddedPostgres("secretService resolveAdapterConfigForRuntime — userS
   afterAll(async () => {
     if (stopDb) await stopDb();
     if (previousKeyFile === undefined) {
-      delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+      delete process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE;
     } else {
-      process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE = previousKeyFile;
+      process.env.THINKINGMACH_SECRETS_MASTER_KEY_FILE = previousKeyFile;
     }
     rmSync(secretsTmpDir, { recursive: true, force: true });
   });

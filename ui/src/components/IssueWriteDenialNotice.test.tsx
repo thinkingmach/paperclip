@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { ISSUE_WRITE_DENIAL_CODES } from "@paperclipai/shared";
+import { ISSUE_WRITE_DENIAL_CODES } from "@thinkingmach/shared";
 import { IssueWriteDenialNotice } from "./IssueWriteDenialNotice";
 import { issueWriteDenialForActivity } from "../lib/issue-write-denial-activity";
 

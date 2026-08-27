@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { check, foreignKey, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
-import type { AiProvider } from "@paperclipai/shared";
+import type { AiProvider } from "@thinkingmach/shared";
 import { companies } from "./companies.js";
 import { connectionGrants } from "./tool_access.js";
 

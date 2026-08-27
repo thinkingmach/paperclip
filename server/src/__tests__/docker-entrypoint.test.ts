@@ -89,7 +89,7 @@ describe("docker-entrypoint.sh", () => {
     // ownership, modelling the post-remap mismatch that must trigger chown.
     installStubs({ uid: 0, gid: 0, homeMismatch: true });
 
-    const { stdout, calls } = await runEntrypoint({ USER_UID: "1001", USER_GID: "1001", PAPERCLIP_HOME: stubDir });
+    const { stdout, calls } = await runEntrypoint({ USER_UID: "1001", USER_GID: "1001", THINKINGMACH_HOME: stubDir });
 
     expect(stdout).toContain("ENTRYPOINT-CMD-RAN");
     expect(calls).toContain("usermod -o -u 1001 node");
@@ -101,7 +101,7 @@ describe("docker-entrypoint.sh", () => {
   it.each([false, true])("skips remapping a cloud identity while preserving volume repair (mismatch: %s)", async (homeMismatch) => {
     installStubs({ uid: 0, gid: 0, nodeUid: 1001, nodeGid: 1001, homeMismatch });
 
-    const { stdout, calls } = await runEntrypoint({ USER_UID: "1001", USER_GID: "1001", PAPERCLIP_HOME: stubDir });
+    const { stdout, calls } = await runEntrypoint({ USER_UID: "1001", USER_GID: "1001", THINKINGMACH_HOME: stubDir });
 
     expect(stdout).toContain("ENTRYPOINT-CMD-RAN");
     expect(calls).not.toContain("usermod");
@@ -117,7 +117,7 @@ describe("docker-entrypoint.sh", () => {
     // first mkdir.
     installStubs({ uid: 0, gid: 0, homeMismatch: true });
 
-    const { stdout, calls } = await runEntrypoint({ PAPERCLIP_HOME: stubDir });
+    const { stdout, calls } = await runEntrypoint({ THINKINGMACH_HOME: stubDir });
 
     expect(stdout).toContain("ENTRYPOINT-CMD-RAN");
     expect(calls).toContain(`chown -R node:node ${stubDir}`);
@@ -128,7 +128,7 @@ describe("docker-entrypoint.sh", () => {
   it("repairs ownership on a GID-only remap (stale group on persisted descendants)", async () => {
     installStubs({ uid: 0, gid: 0, homeMismatch: true });
 
-    const { calls } = await runEntrypoint({ USER_GID: "1001", PAPERCLIP_HOME: stubDir });
+    const { calls } = await runEntrypoint({ USER_GID: "1001", THINKINGMACH_HOME: stubDir });
 
     expect(calls).toContain("groupmod -o -g 1001 node");
     expect(calls).toContain(`chown -R node:node ${stubDir}`);
@@ -137,16 +137,16 @@ describe("docker-entrypoint.sh", () => {
   it("keeps a fully node-owned tree chown-free (no per-boot recursive chown)", async () => {
     installStubs({ uid: 0, gid: 0, homeMismatch: false });
 
-    const { calls } = await runEntrypoint({ PAPERCLIP_HOME: stubDir });
+    const { calls } = await runEntrypoint({ THINKINGMACH_HOME: stubDir });
 
     expect(calls).not.toContain("chown");
     expect(calls).toContain("gosu node echo ENTRYPOINT-CMD-RAN");
   });
 
-  it("honours PAPERCLIP_HOME for the ownership probe", async () => {
+  it("honours THINKINGMACH_HOME for the ownership probe", async () => {
     installStubs({ uid: 0, gid: 0, homeMismatch: true });
 
-    const { calls } = await runEntrypoint({ PAPERCLIP_HOME: stubDir });
+    const { calls } = await runEntrypoint({ THINKINGMACH_HOME: stubDir });
 
     expect(calls).toContain(`chown -R node:node ${stubDir}`);
   });

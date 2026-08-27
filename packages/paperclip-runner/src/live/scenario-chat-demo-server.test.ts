@@ -71,7 +71,7 @@ describe("Scenario chat deployment boundary", () => {
   it("rejects ambient credential families by name without inspecting values", () => {
     const unsafe = {
       PATH: "/usr/bin",
-      PAPERCLIP_API_KEY: "not-read",
+      THINKINGMACH_API_KEY: "not-read",
       AWS_SECRET_ACCESS_KEY: "not-read",
       OPENAI_API_KEY: "not-read",
       VERCEL_TOKEN: "not-read",
@@ -79,7 +79,7 @@ describe("Scenario chat deployment boundary", () => {
     expect(forbiddenScenarioChatEnvironmentNames(unsafe)).toEqual([
       "AWS_SECRET_ACCESS_KEY",
       "OPENAI_API_KEY",
-      "PAPERCLIP_API_KEY",
+      "THINKINGMACH_API_KEY",
       "VERCEL_TOKEN",
     ]);
     expect(() => assertScenarioChatEnvironmentSafe(unsafe)).toThrow(/forbidden environment names/);
@@ -100,10 +100,10 @@ describe("Scenario chat deployment boundary", () => {
 
     for (const [path, source] of closure) {
       expect(source, path).not.toMatch(/\bimport\s*\(/);
-      expect(source, path).not.toMatch(/PaperclipControlPlanePort|PAPERCLIP_API_(?:URL|KEY)|@paperclipai\/db/);
+      expect(source, path).not.toMatch(/ThinkingMachControlPlanePort|THINKINGMACH_API_(?:URL|KEY)|@thinkingmach\/db/);
       for (const specifier of importSpecifiers(source)) {
         expect(specifier, `${path} imports outside the standalone boundary`).not.toMatch(
-          /^(?:server|ui|cli)(?:\/|$)|^@paperclipai\/(?!paperclip-runner(?:\/|$))/,
+          /^(?:server|ui|cli)(?:\/|$)|^@thinkingmach\/(?!paperclip-runner(?:\/|$))/,
         );
       }
     }
@@ -405,7 +405,7 @@ async function withHttpRuntime(
   });
   await runtime.initialize();
   const server = runtime.createServer();
-  const scratchRoot = process.env.PAPERCLIP_RUN_SCRATCH_DIR ?? tmpdir();
+  const scratchRoot = process.env.THINKINGMACH_RUN_SCRATCH_DIR ?? tmpdir();
   const socketDirectory = await mkdtemp(resolve(scratchRoot, "scenario-chat-http-"));
   const socketPath = resolve(socketDirectory, "server.sock");
   await new Promise<void>((resolveListen, rejectListen) => {

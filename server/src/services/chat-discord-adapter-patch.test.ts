@@ -108,7 +108,7 @@ function harness(config: Record<string, unknown> = {}) {
   return { adapter, chat, client, handlers, logger };
 }
 
-describe("Paperclip Discord adapter patch", () => {
+describe("ThinkingMach Discord adapter patch", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
@@ -476,7 +476,7 @@ describe("Paperclip Discord adapter patch", () => {
     expect(threadId).toBe("discord:@me:dm-1");
   });
 
-  it("never logs inbound message content before Paperclip admission", async () => {
+  it("never logs inbound message content before ThinkingMach admission", async () => {
     const { adapter, chat, client, handlers, logger } = harness();
     await adapter.initialize(chat as never);
     (
@@ -871,7 +871,7 @@ describe("Paperclip Discord adapter patch", () => {
     );
   });
 
-  it("checks Paperclip admission before creating a root provider thread", async () => {
+  it("checks ThinkingMach admission before creating a root provider thread", async () => {
     const shouldCreateThread = vi.fn().mockResolvedValue(false);
     const { adapter, chat } = harness({ shouldCreateThread });
     await adapter.initialize(chat as never);
@@ -1243,7 +1243,7 @@ describe("Paperclip Discord adapter patch", () => {
     );
   });
 
-  it("does not acknowledge an action that Paperclip durably rejects", async () => {
+  it("does not acknowledge an action that ThinkingMach durably rejects", async () => {
     const { adapter, chat, client, handlers, logger } = harness();
     chat.handleActionEvent.mockRejectedValueOnce(
       Object.assign(new Error("action rejected"), {
@@ -1267,11 +1267,11 @@ describe("Paperclip Discord adapter patch", () => {
     expect(interaction.deferUpdate).not.toHaveBeenCalled();
     expect(interaction.reply).toHaveBeenCalledWith({
       content:
-        "This action is no longer available. Open the linked Paperclip task or ask an operator to link this account.",
+        "This action is no longer available. Open the linked ThinkingMach task or ask an operator to link this account.",
       flags: 64,
     });
     expect(logger.info).toHaveBeenCalledWith(
-      "Discord Gateway action was not acknowledged after Paperclip rejected it",
+      "Discord Gateway action was not acknowledged after ThinkingMach rejected it",
       expect.objectContaining({
         event: "interaction",
         messageId: "message-2",
@@ -1279,7 +1279,7 @@ describe("Paperclip Discord adapter patch", () => {
     );
   });
 
-  it("acknowledges a duplicate that Paperclip reports as already durable", async () => {
+  it("acknowledges a duplicate that ThinkingMach reports as already durable", async () => {
     const { adapter, chat, client, handlers } = harness();
     await adapter.initialize(chat as never);
     (
@@ -1365,7 +1365,7 @@ describe("Paperclip Discord adapter patch", () => {
     expect(interaction.deferUpdate).not.toHaveBeenCalled();
     expect(interaction.reply).not.toHaveBeenCalled();
     expect(logger.info).toHaveBeenCalledWith(
-      "Discord Gateway action was not acknowledged after Paperclip rejected it",
+      "Discord Gateway action was not acknowledged after ThinkingMach rejected it",
       expect.objectContaining({
         event: "interaction",
         messageId: "message-2",

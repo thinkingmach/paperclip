@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArchiveRestore, MoreHorizontal, Plus, ShieldCheck, Users } from "lucide-react";
-import type { ToolProfileWithDetails } from "@paperclipai/shared";
+import type { ToolProfileWithDetails } from "@thinkingmach/shared";
 import { useNavigate } from "@/lib/router";
 import { toolsApi } from "@/api/tools";
 import { queryKeys } from "@/lib/queryKeys";

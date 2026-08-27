@@ -57,9 +57,9 @@ No fixture contains credential material. Input values are cleared after submissi
 Review the Connectors list first, then open an account, add one, reconnect, reuse it in a task, and exercise the AI binding picker. Theme and viewport controls cover desktop/narrow and light/dark. Keyboard coverage includes the shared chooser buttons, dialogs, and return focus after cancellation/completion. Harness/model values are asserted unchanged by connection selection.
 
 ```sh
-pnpm --filter @paperclipai/ui typecheck
+pnpm --filter @thinkingmach/ui typecheck
 pnpm check:token-gates
-pnpm --filter @paperclipai/ui exec vitest run src/pages/apps/Browse.test.tsx src/pages/apps/AppDetail.test.tsx src/pages/apps/AppsConnect.test.tsx src/features/connections/ConnectionIntentInteractionBody.test.tsx src/components/ai-connections src/components/AdapterLoginChrome.test.tsx src/components/OnboardingWizard.adapters.test.tsx src/components/OnboardingWizard.test.tsx
+pnpm --filter @thinkingmach/ui exec vitest run src/pages/apps/Browse.test.tsx src/pages/apps/AppDetail.test.tsx src/pages/apps/AppsConnect.test.tsx src/features/connections/ConnectionIntentInteractionBody.test.tsx src/components/ai-connections src/components/AdapterLoginChrome.test.tsx src/components/OnboardingWizard.adapters.test.tsx src/components/OnboardingWizard.test.tsx
 pnpm build-storybook
 pnpm exec playwright test --config tests/ai-connections-review/playwright.config.ts
 ```

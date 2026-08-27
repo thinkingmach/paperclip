@@ -2,7 +2,7 @@ import { hasConversationContinuationPolicy } from "../../../services/conversatio
 import { getExecutionBlocker } from "../../../services/execution-blocker.js";
 import { getNativeReviewAssignment } from "../../../services/native-runtime/native-review-participant.js";
 import { and, asc, eq, gte, inArray, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agentWakeupRequests,
   agents,
@@ -13,8 +13,8 @@ import {
   issueRecoveryActions,
   issueComments,
   issues,
-} from "@paperclipai/db";
-import { ISSUE_DISPOSITION_REPAIR_RETRY_REASON } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { ISSUE_DISPOSITION_REPAIR_RETRY_REASON } from "@thinkingmach/shared";
 import { parseObject } from "../../../adapters/utils.js";
 import { evaluateAgentInvokabilityFromDb } from "../../../services/agent-invokability.js";
 import { budgetService } from "../../../services/budgets.js";

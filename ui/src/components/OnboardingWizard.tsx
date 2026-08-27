@@ -3,10 +3,10 @@ import { LocalProviderLoginInstructions } from "./AdapterLoginChrome";
 import { useLocalAiLogin } from "./ai-connections/useLocalAiLogin";
 import { aiConnectionsApi } from "@/api/ai-connections";
 import { aiProviderForAdapter } from "./ai-connections/AiConnectionField";
-import type { AiConnectionBinding } from "@paperclipai/shared";
+import type { AiConnectionBinding } from "@thinkingmach/shared";
 import { storeProviderApiKey } from "../lib/provider-credential";
 import { SavedProviderKeySelect, useSavedProviderKeys } from "./onboarding/SavedProviderKeySelect";
-import { randomAgentAppearance, resolveAgentAppearance, agentAppearanceSchema } from "@paperclipai/shared";
+import { randomAgentAppearance, resolveAgentAppearance, agentAppearanceSchema } from "@thinkingmach/shared";
 import { OnboardingCharacter } from "./onboarding/OnboardingCharacter";
 import { useEffect, useState, useMemo, useRef } from "react";
 import type { ComponentType, CSSProperties } from "react";
@@ -18,8 +18,8 @@ import type {
   ClaudeOAuthTokenStatusResponse,
   Environment,
   InstanceSettings,
-} from "@paperclipai/shared";
-import { AGENT_ROLES, AGENT_ROLE_LABELS, ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { AGENT_ROLES, AGENT_ROLE_LABELS, ADAPTER_AUTH_MISSING_CHECK_CODE } from "@thinkingmach/shared";
 import { AdapterLoginPanel } from "./AgentConfigForm";
 import {
   CONNECT_SOURCE_NAMES,
@@ -104,11 +104,11 @@ import {
   selectReusableOnboardingProject,
 } from "../lib/onboarding-launch";
 import { buildNewAgentRuntimeConfig } from "../lib/new-agent-runtime-config";
-import { DEFAULT_CODEX_LOCAL_BYPASS_APPROVALS_AND_SANDBOX } from "@paperclipai/adapter-codex-local";
-import { DEFAULT_CURSOR_LOCAL_MODEL } from "@paperclipai/adapter-cursor-local";
-import { DEFAULT_GEMINI_LOCAL_MODEL } from "@paperclipai/adapter-gemini-local";
-import { DEFAULT_KIMI_LOCAL_MODEL } from "@paperclipai/adapter-kimi-local";
-import { DEFAULT_OPENCODE_LOCAL_MODEL, isValidOpenCodeModelId } from "@paperclipai/adapter-opencode-local";
+import { DEFAULT_CODEX_LOCAL_BYPASS_APPROVALS_AND_SANDBOX } from "@thinkingmach/adapter-codex-local";
+import { DEFAULT_CURSOR_LOCAL_MODEL } from "@thinkingmach/adapter-cursor-local";
+import { DEFAULT_GEMINI_LOCAL_MODEL } from "@thinkingmach/adapter-gemini-local";
+import { DEFAULT_KIMI_LOCAL_MODEL } from "@thinkingmach/adapter-kimi-local";
+import { DEFAULT_OPENCODE_LOCAL_MODEL, isValidOpenCodeModelId } from "@thinkingmach/adapter-opencode-local";
 import {
   canGoBackFromOnboardingStep,
   canJumpToOnboardingStep,
@@ -148,7 +148,7 @@ type Step = 0 | 1 | 2 | 3 | 4 | 5;
 type AdapterType = string;
 
 // First-run onboarding stays on the proven direct adapters even when an
-// instance administrator has opted into Paperclip Runner elsewhere. The
+// instance administrator has opted into ThinkingMach Runner elsewhere. The
 // experimental flag only exposes the runner in explicit agent configuration.
 const ONBOARDING_EXCLUDED_ADAPTER_TYPES = new Set([
   "process",
@@ -274,7 +274,7 @@ function ModelSourceMark({
 // Exported so tests write/read the exact key the component uses, instead of
 // duplicating the literal and silently drifting from it if it's ever renamed.
 export const ONBOARDING_STORAGE_KEY = "paperclip-onboarding-state";
-const DEFAULT_TASK_TITLE = "Paperclip onboarding";
+const DEFAULT_TASK_TITLE = "ThinkingMach onboarding";
 /**
  * The onboarding draft in `localStorage`, via a browser that is allowed to say
  * no.
@@ -925,7 +925,7 @@ function OnboardingWizardInner({
     isFetching: adapterModelsFetching
   } = useQuery({
     // The wizard doesn't expose an environment selector, so models always
-    // resolve against the local Paperclip host (environmentId = null).
+    // resolve against the local ThinkingMach host (environmentId = null).
     queryKey: createdCompanyId
       ? queryKeys.agents.adapterModels(createdCompanyId, adapterType, null)
       : ["agents", "none", "adapter-models", adapterType, null],
@@ -2023,7 +2023,7 @@ function OnboardingWizardInner({
     if (adapterType === "paperclip_runner") {
       setAdapterType("claude_local");
       setModel("");
-      setError("Paperclip Runner is not available during onboarding. Choose a legacy adapter.");
+      setError("ThinkingMach Runner is not available during onboarding. Choose a legacy adapter.");
       return;
     }
     if (createdAgentId) {
@@ -2575,7 +2575,7 @@ function OnboardingWizardInner({
                       <p className="pt-2 text-base leading-relaxed text-muted-foreground">
                         <motion.span key={step} {...titleSwapMotion} className="inline-block">
                           {step === 4
-                            ? "Paperclip works with your subscription or API keys."
+                            ? "ThinkingMach works with your subscription or API keys."
                             : `${agentName.trim() || "Your first agent"} is ready to work!`}
                         </motion.span>
                       </p>

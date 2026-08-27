@@ -1,6 +1,6 @@
 import { and, asc, eq } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { companySecrets, managedAgentProfiles } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { companySecrets, managedAgentProfiles } from "@thinkingmach/db";
 
 import { conflict, notFound, unprocessable } from "../errors.js";
 import {

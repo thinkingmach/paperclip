@@ -8,7 +8,7 @@ import {
   companies,
   createDb,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

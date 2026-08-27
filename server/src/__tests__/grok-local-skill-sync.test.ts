@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   listGrokSkills,
   syncGrokSkills,
-} from "@paperclipai/adapter-grok-local/server";
+} from "@thinkingmach/adapter-grok-local/server";
 
 describe("grok local skill sync", () => {
-  const paperclipKey = "paperclipai/paperclip/paperclip";
+  const paperclipKey = "thinkingmach/paperclip/paperclip";
 
-  it("defaults the operational Paperclip skill as ephemeral workspace-mounted state", async () => {
+  it("defaults the operational ThinkingMach skill as ephemeral workspace-mounted state", async () => {
     const snapshot = await listGrokSkills({
       agentId: "agent-1",
       companyId: "company-1",
@@ -31,7 +31,7 @@ describe("grok local skill sync", () => {
       companyId: "company-1",
       adapterType: "grok_local",
       config: {
-        paperclipRuntimeSkills: [],
+        thinkingmachRuntimeSkills: [],
         paperclipSkillSync: {
           desiredSkills: ["unknown-skill"],
         },
@@ -40,7 +40,7 @@ describe("grok local skill sync", () => {
 
     expect(snapshot.mode).toBe("ephemeral");
     expect(snapshot.warnings).toContain(
-      'Desired skill "unknown-skill" is not available from the Paperclip skills directory.',
+      'Desired skill "unknown-skill" is not available from the ThinkingMach skills directory.',
     );
     expect(snapshot.entries).toContainEqual(expect.objectContaining({
       key: "unknown-skill",

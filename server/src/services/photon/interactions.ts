@@ -5,7 +5,7 @@ import type {
   AskUserQuestionsAnswer,
   IssueThreadInteraction,
   RequestConfirmationInteraction,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { PhotonChatAdapter } from "./adapter.js";
 import { PhotonError, photonFailure } from "./cloud.js";
 import { projectSafeChatPublicationText } from "../chat-publication-projection.js";
@@ -249,7 +249,7 @@ export async function publishPhotonPrompt(input: {
     interaction.payload.questions.length > 1
       ? `Answers are saved for you. Finish with /submit ${binding.reference}.`
       : "",
-    input.taskUrl ? `Open this Paperclip task: ${input.taskUrl}` : "",
+    input.taskUrl ? `Open this ThinkingMach task: ${input.taskUrl}` : "",
   ]
     .filter(Boolean)
     .join("\n\n");

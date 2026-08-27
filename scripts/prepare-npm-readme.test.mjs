@@ -5,9 +5,9 @@ import test from "node:test";
 import { prepareNpmReadme } from "./prepare-npm-readme.mjs";
 
 const assetBase =
-  "https://raw.githubusercontent.com/paperclipai/paperclip/master/doc/assets/";
+  "https://raw.githubusercontent.com/thinkingmach/paperclip/master/doc/assets/";
 const releaseAssetBase =
-  "https://raw.githubusercontent.com/paperclipai/paperclip/abc123/doc/assets/";
+  "https://raw.githubusercontent.com/thinkingmach/paperclip/abc123/doc/assets/";
 
 test("rewrites repository-relative image sources for npm", () => {
   const readme = [

@@ -376,7 +376,7 @@ describe("Discord native modal Gateway bridge", () => {
     expect(click.reply).toHaveBeenCalledWith(
       expect.objectContaining({
         content:
-          "This form could not be opened. Open the linked Paperclip task.",
+          "This form could not be opened. Open the linked ThinkingMach task.",
         flags: 64,
       }),
     );
@@ -429,7 +429,7 @@ describe("Discord native modal Gateway bridge", () => {
       await adapter.handleGatewayInteraction(input);
       expect(input.reply).toHaveBeenCalledWith({
         content:
-          "This response was not accepted. Open the linked Paperclip task or reopen the question to try again.",
+          "This response was not accepted. Open the linked ThinkingMach task or reopen the question to try again.",
         flags: 64,
         allowedMentions: { parse: [] },
       });

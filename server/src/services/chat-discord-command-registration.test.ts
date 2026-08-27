@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 import {
   createDiscordCommandRegistration,
-  discordPaperclipCommandDefinition,
+  discordThinkingMachCommandDefinition,
   parseDiscordCommandRegistration,
   reconcileDiscordCommandRegistration,
   type DiscordCommandRegistration,
@@ -46,7 +46,7 @@ function fixture() {
     if (method === "GET") return json(commands);
     expect(stored.phase).toBe("attempted");
     const body = JSON.parse(String(init?.body));
-    expect(body).toEqual(discordPaperclipCommandDefinition(stored.ownerId));
+    expect(body).toEqual(discordThinkingMachCommandDefinition(stored.ownerId));
     expect(["POST", "PATCH"]).toContain(method);
     if (method === "PATCH")
       expect(String(url).endsWith(`/${commandId}`)).toBe(true);
@@ -113,8 +113,8 @@ describe("Discord owned native-command registration", () => {
   async function priorCopyFixture() {
     const f = fixture();
     await reconcileDiscordCommandRegistration(f.options());
-    const prior = discordPaperclipCommandDefinition(f.stored.ownerId);
-    prior.options[2]!.description = "Close the current Paperclip task";
+    const prior = discordThinkingMachCommandDefinition(f.stored.ownerId);
+    prior.options[2]!.description = "Close the current ThinkingMach task";
     if (f.stored.phase !== "registered") throw new Error("Missing receipt");
     f.stored = {
       ...f.stored,
@@ -154,7 +154,7 @@ describe("Discord owned native-command registration", () => {
     expect(f.commands[0]).toEqual(f.unrelated);
     expect(f.commands[1]).toMatchObject({
       id: commandId,
-      ...discordPaperclipCommandDefinition(f.stored.ownerId),
+      ...discordThinkingMachCommandDefinition(f.stored.ownerId),
     });
   });
 
@@ -240,8 +240,8 @@ describe("Discord owned native-command registration", () => {
     expect(f.commit).not.toHaveBeenCalled();
   });
 
-  it("describes closing a conversation without claiming to close the Paperclip task", () => {
-    const definition = discordPaperclipCommandDefinition(
+  it("describes closing a conversation without claiming to close the ThinkingMach task", () => {
+    const definition = discordThinkingMachCommandDefinition(
       createDiscordCommandRegistration(scope).ownerId,
     );
     expect(
@@ -274,7 +274,7 @@ describe("Discord owned native-command registration", () => {
     const f = fixture();
     f.commands = [
       {
-        ...discordPaperclipCommandDefinition("b".repeat(32)),
+        ...discordThinkingMachCommandDefinition("b".repeat(32)),
         id: commandId,
         application_id: scope.applicationId,
         version,
@@ -404,7 +404,7 @@ describe("Discord owned native-command registration", () => {
     ).resolves.toMatchObject({ kind: "unknown" });
     expect(f.order).toEqual(["GET"]);
     f.commands[1] = {
-      ...discordPaperclipCommandDefinition(f.stored.ownerId),
+      ...discordThinkingMachCommandDefinition(f.stored.ownerId),
       id: "678901234567890123",
       application_id: scope.applicationId,
       version,
@@ -487,7 +487,7 @@ describe("Discord owned native-command registration", () => {
 
   it("enforces Discord command limits without deleting customer commands", async () => {
     const f = fixture();
-    const body = discordPaperclipCommandDefinition(f.stored.ownerId);
+    const body = discordThinkingMachCommandDefinition(f.stored.ownerId);
     expect(body.name.length).toBeLessThanOrEqual(32);
     expect(body.description.length).toBeLessThanOrEqual(100);
     expect(body.options).toHaveLength(3);
@@ -588,7 +588,7 @@ describe("Discord owned native-command registration", () => {
     const f = fixture();
     f.commands = [
       {
-        ...discordPaperclipCommandDefinition(f.stored.ownerId),
+        ...discordThinkingMachCommandDefinition(f.stored.ownerId),
         id: commandId,
         application_id: scope.applicationId,
         version,

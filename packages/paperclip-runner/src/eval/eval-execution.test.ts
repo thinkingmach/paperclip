@@ -28,7 +28,7 @@ function bundle(): EvalBundle {
     },
     grants: ["control_plane:wakes", "governance:approvals:decide"],
     runner: {
-      package: "@paperclipai/paperclip-runner",
+      package: "@thinkingmach/paperclip-runner",
       binary: "node",
       version: "0.1.2",
     },

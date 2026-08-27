@@ -7,7 +7,7 @@ import type {
   ToolCatalogEntry,
   ToolPolicy,
   ToolProfileEffectiveSummary,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createElement } from "react";
 
@@ -322,7 +322,7 @@ describe("AgentToolsTab", () => {
             repositoryCount: 1,
             repositorySelection: "selected",
             installationIds: ["456"],
-            installationOwnerLogins: ["paperclipai"],
+            installationOwnerLogins: ["thinkingmach"],
           },
         },
       }],

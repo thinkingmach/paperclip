@@ -1,6 +1,6 @@
-# Paperclip Evals
+# ThinkingMach Evals
 
-Eval framework for testing Paperclip agent behaviors across models and prompt versions.
+Eval framework for testing ThinkingMach agent behaviors across models and prompt versions.
 
 See [the evals framework plan](../doc/plans/2026-03-13-agent-evals-framework.md) for full design rationale.
 
@@ -47,7 +47,7 @@ promptfoo view
 
 ### What's tested
 
-Phase 0 covers narrow behavior evals for the Paperclip heartbeat skill:
+Phase 0 covers narrow behavior evals for the ThinkingMach heartbeat skill:
 
 | Case | Category | What it checks |
 |------|----------|---------------|

@@ -392,7 +392,7 @@ describe("runner API request boundary", () => {
     expect(new Headers(options.headers).get("Authorization")).toBe(
       "Bearer private-agent-token",
     );
-    expect(new Headers(options.headers).get("X-Paperclip-Run-Id")).toBe(
+    expect(new Headers(options.headers).get("X-ThinkingMach-Run-Id")).toBe(
       context.runId,
     );
     expect(options.redirect).toBe("manual");

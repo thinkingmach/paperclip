@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ToolProfileSummary } from "@paperclipai/shared";
+import type { ToolProfileSummary } from "@thinkingmach/shared";
 import { allowsLabel, assignedLabel, STATUS_LABEL } from "./profile-summary";
 
 function summary(partial: Partial<ToolProfileSummary>): ToolProfileSummary {

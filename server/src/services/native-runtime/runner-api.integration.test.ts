@@ -3,34 +3,34 @@ import { randomUUID } from "node:crypto";
 import { chmod, writeFile, symlink, mkdir, open } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { eq } from "drizzle-orm";
-import { assets, documents, heartbeatRuns, issues, projects, routineDocuments, routines, runnerApiResponseReservations } from "@paperclipai/db";
+import { assets, documents, heartbeatRuns, issues, projects, routineDocuments, routines, runnerApiResponseReservations } from "@thinkingmach/db";
 import { beforeAll, afterAll, beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { startRunnerApiTestServer } from "../../__tests__/helpers/runner-api-server.js";
 import { createRunnerdCodexTransport, defaultCapabilityRunnerdBinary } from "../../vendor/paperclip-runner/index.js";
 import { runnerApiCatalog } from "./runner-api-catalog.js";
 import { registerRunnerPrpAuthority } from "../../realtime/runner-prp-ws.js";
 import { RUNNER_API_RESPONSE_MAX_BYTES, RUNNER_API_RESPONSE_RUN_MAX_BYTES } from "./runner-api-response-limits.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 
 describe("runner API against real HTTP routes", () => {
   let server: Awaited<ReturnType<typeof startRunnerApiTestServer>>;
-  const oldSecret = process.env.PAPERCLIP_AGENT_JWT_SECRET;
+  const oldSecret = process.env.THINKINGMACH_AGENT_JWT_SECRET;
   beforeEach(() => {
-    vi.stubEnv("PAPERCLIP_RUNNER_API_TOOLS_ENABLED", undefined);
-    vi.stubEnv("PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS", undefined);
+    vi.stubEnv("THINKINGMACH_RUNNER_API_TOOLS_ENABLED", undefined);
+    vi.stubEnv("THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS", undefined);
   });
   afterEach(() => vi.unstubAllEnvs());
   beforeAll(async () => {
-    process.env.PAPERCLIP_AGENT_JWT_SECRET = randomUUID();
+    process.env.THINKINGMACH_AGENT_JWT_SECRET = randomUUID();
     server = await startRunnerApiTestServer();
   }, 60_000);
   afterAll(async () => {
     await server?.close();
-    if (oldSecret === undefined) delete process.env.PAPERCLIP_AGENT_JWT_SECRET;
-    else process.env.PAPERCLIP_AGENT_JWT_SECRET = oldSecret;
+    if (oldSecret === undefined) delete process.env.THINKINGMACH_AGENT_JWT_SECRET;
+    else process.env.THINKINGMACH_AGENT_JWT_SECRET = oldSecret;
   });
 
-  it.skipIf(!process.env.PAPERCLIP_REQUIRE_RUNNER_API_INTEGRATION && !existsSync(defaultCapabilityRunnerdBinary())).each(["current", "legacy_http"])("runs runnerd → PRP → authority → actual authenticated HTTP (%s receipt)", async (receiptFormat) => {
+  it.skipIf(!process.env.THINKINGMACH_REQUIRE_RUNNER_API_INTEGRATION && !existsSync(defaultCapabilityRunnerdBinary())).each(["current", "legacy_http"])("runs runnerd → PRP → authority → actual authenticated HTTP (%s receipt)", async (receiptFormat) => {
     const fixture = await server.fixture();
     const provider = join(server.root, `scripted-api-provider-${receiptFormat}.mjs`);
     await writeFile(provider, `#!${process.execPath}
@@ -97,14 +97,14 @@ else if(m.id!==undefined) send({id:m.id,result:{}});
 
   it("cannot opt into API tools through a binding when the operator flag is false", async () => {
     const fixture = await server.fixture({ apiToolsEnabled: true });
-    process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED = "false";
+    process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED = "false";
     try {
       const names = (await fixture.authority.definitions()).map(tool => tool.name);
       expect(names).toContain("get_task_context");
       expect(names).not.toContain("search_api");
       expect(names).not.toContain("call_api");
       await expect(fixture.authority.execute({ tool: "call_api", callId: "disabled", arguments: { operationId: "GET /api/companies/{companyId}/projects" } })).rejects.toThrow("not_advertised");
-    } finally { delete process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED; }
+    } finally { delete process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED; }
   });
 
   it("rejects credential calls before any durable receipt or secret result exists", async () => {
@@ -203,7 +203,7 @@ else if(m.id!==undefined) send({id:m.id,result:{}});
   it("revokes advertised API tools without disabling dedicated operations", async () => {
     const fixture = await server.fixture();
     expect(fixture.authority.definitions().some(tool => tool.name === "call_api")).toBe(true);
-    vi.stubEnv("PAPERCLIP_RUNNER_API_TOOLS_ENABLED", "false");
+    vi.stubEnv("THINKINGMACH_RUNNER_API_TOOLS_ENABLED", "false");
     try {
       expect(fixture.authority.definitions().some(tool => tool.name === "search_api")).toBe(false);
       await expect(fixture.authority.execute({ tool: "call_api", callId: "revoked", arguments: {
@@ -372,14 +372,14 @@ else if(m.id!==undefined) send({id:m.id,result:{}});
 
   it("counts old snapshots and other-run reservations against the company quota, and reclaims deletions", async () => {
     const fixture = await server.fixture();
-    vi.stubEnv("PAPERCLIP_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES", String(2 * RUNNER_API_RESPONSE_MAX_BYTES));
+    vi.stubEnv("THINKINGMACH_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES", String(2 * RUNNER_API_RESPONSE_MAX_BYTES));
     const [oldSnapshot] = await server.db.insert(assets).values({ companyId: fixture.companyId, provider: "local_disk",
       objectKey: `${fixture.companyId}/runner-api/old-snapshot`, contentType: "text/plain", byteSize: RUNNER_API_RESPONSE_MAX_BYTES,
       sha256: "old-snapshot", createdByAgentId: fixture.agentId }).returning();
     const [reservation] = await server.db.insert(runnerApiResponseReservations).values({ companyId: fixture.companyId, runId: null, reservedBytes: RUNNER_API_RESPONSE_MAX_BYTES }).returning();
     await server.db.update(projects).set({ description: "x".repeat(32 * 1024) }).where(eq(projects.id, fixture.projectId));
     // A fresh authority instance cannot reset reservations from another run/process.
-    const authority = new PaperclipRunnerToolAuthority(server.db, fixture);
+    const authority = new ThinkingMachRunnerToolAuthority(server.db, fixture);
     const call = () => authority.execute({ tool: "call_api", callId: randomUUID(), arguments: {
       operationId: "GET /api/projects/{id}", pathParams: { id: fixture.projectId },
     } });
@@ -436,12 +436,12 @@ else if(m.id!==undefined) send({id:m.id,result:{}});
 
   it("shares company admission across simultaneous runs", async () => {
     const fixture = await server.fixture();
-    vi.stubEnv("PAPERCLIP_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES", String(RUNNER_API_RESPONSE_MAX_BYTES));
+    vi.stubEnv("THINKINGMACH_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES", String(RUNNER_API_RESPONSE_MAX_BYTES));
     const otherRunId = randomUUID();
     await server.db.insert(heartbeatRuns).values({ id: otherRunId, companyId: fixture.companyId, agentId: fixture.agentId,
       status: "running", runtimeMode: "native", nativeIssueId: fixture.blockerId, contextSnapshot: { issueId: fixture.blockerId } });
     await server.db.update(issues).set({ status: "in_progress", executionRunId: otherRunId }).where(eq(issues.id, fixture.blockerId));
-    const other = new PaperclipRunnerToolAuthority(server.db, { ...fixture, issueId: fixture.blockerId, runId: otherRunId });
+    const other = new ThinkingMachRunnerToolAuthority(server.db, { ...fixture, issueId: fixture.blockerId, runId: otherRunId });
     await server.db.update(projects).set({ description: "x".repeat(32 * 1024) }).where(eq(projects.id, fixture.projectId));
     const arguments_ = { operationId: "GET /api/projects/{id}", pathParams: { id: fixture.projectId } };
     const results: any[] = await Promise.all([fixture.authority, other].map(authority => authority.execute({ tool: "call_api", callId: randomUUID(), arguments: arguments_ })));

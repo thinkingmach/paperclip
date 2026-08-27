@@ -42,7 +42,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import type {
   AgentPermissions,
   EmailEndpointSummary,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 const selectClass =
   "w-full rounded-md border border-input bg-background px-3 py-2 text-sm";
 
@@ -200,7 +200,7 @@ export function EmailEndpointSetup() {
       <p className="text-sm text-muted-foreground">
         {lowTrust
           ? "Email tasks stay inside the configured project or root task boundary. Output is quarantined for trusted review."
-          : "Email can contain malicious instructions. We recommend Low-trust review to limit the agent’s access to Paperclip work."}
+          : "Email can contain malicious instructions. We recommend Low-trust review to limit the agent’s access to ThinkingMach work."}
       </p>
       <p className="text-xs text-muted-foreground">Low-trust execution also requires isolated workspaces and an active sandbox environment in the agent’s runtime settings.</p>
       <Button
@@ -589,7 +589,7 @@ export function EmailEndpointSetup() {
             candidatesLoading={projects.isPending || boundaryIssues.isPending}
           />
           <p className="text-xs text-muted-foreground">
-            Low trust limits Paperclip access; it does not sandbox the runtime.
+            Low trust limits ThinkingMach access; it does not sandbox the runtime.
             Review filesystem, tool, and secret access separately.
           </p>
           {(trust.error || projects.error || boundaryIssues.error) && (

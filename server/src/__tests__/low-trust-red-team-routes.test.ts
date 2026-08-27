@@ -35,11 +35,11 @@ import {
   issueWorkProducts,
   principalPermissionGrants,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   ISSUE_CONTINUATION_SUMMARY_DOCUMENT_KEY,
   LOW_TRUST_REVIEW_PRESET,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -1808,9 +1808,9 @@ describeEmbeddedPostgres(
       const heartbeat = heartbeatService(db, {
         runtimeEnv: {
           ...process.env,
-          PAPERCLIP_IN_WORKTREE: "false",
-          PAPERCLIP_DATABASE_RESTORE_IN_PROGRESS: "false",
-          PAPERCLIP_RESTORE_IN_PROGRESS: "false",
+          THINKINGMACH_IN_WORKTREE: "false",
+          THINKINGMACH_DATABASE_RESTORE_IN_PROGRESS: "false",
+          THINKINGMACH_RESTORE_IN_PROGRESS: "false",
         },
       });
 
@@ -2012,7 +2012,7 @@ describeEmbeddedPostgres(
           },
         });
         expect(String(payload.message ?? "")).toContain(
-          "## Paperclip Wake Payload",
+          "## ThinkingMach Wake Payload",
         );
         expectNoCanary(payload, fixture.canaries.raw);
         gateway.releaseFirstWait();

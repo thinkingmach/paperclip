@@ -3,7 +3,7 @@
 Run Storybook:
 
 ```sh
-pnpm --filter @paperclipai/ui exec storybook dev --port 6010 --host 127.0.0.1 --no-open -c storybook/.storybook
+pnpm --filter @thinkingmach/ui exec storybook dev --port 6010 --host 127.0.0.1 --no-open -c storybook/.storybook
 ```
 
 ## Existing onboarding
@@ -25,7 +25,7 @@ through Connect → Configure → Confirmation. Other adapters go straight to
 configuration. No working directory, instructions, advanced settings, role,
 permissions, or scheduling steps are shown.
 
-Paperclip Runner has exactly three choices, selected before creation:
+ThinkingMach Runner has exactly three choices, selected before creation:
 
 - Codex (app server): the native Codex runner.
 - Claude (ACPX): the Claude runner.
@@ -92,7 +92,7 @@ are cleaned up on unmount.
 
 **Agents / Configuration refresh** covers Overview, Instructions, Skills,
 Harness / Runtime, Secrets & variables, Tools, Permissions / Trust, API Keys, and Revisions.
-Additional runtime stories cover Codex, OpenCode, Pi, and Paperclip Runner, plus
+Additional runtime stories cover Codex, OpenCode, Pi, and ThinkingMach Runner, plus
 interactive test-failure and save-failure fixtures.
 
 This preview composes the existing `AgentContextualSidebar`, `AgentOverview`,

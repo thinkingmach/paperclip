@@ -4,7 +4,7 @@ import { AiConnectionAccountControls } from "@/components/ai-connections/AiConne
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes, useNavigate, useSearchParams } from "@/lib/router";
-import { APP_DEFINITIONS, getAppStoreDefinition, type AppDefinition, type ToolApplication, type ToolConnection, type ConnectionGrantsResponse } from "@paperclipai/shared";
+import { APP_DEFINITIONS, getAppStoreDefinition, type AppDefinition, type ToolApplication, type ToolConnection, type ConnectionGrantsResponse } from "@thinkingmach/shared";
 import { Browse } from "@/pages/apps/Browse";
 import { AppDetail } from "@/pages/apps/AppDetail";
 import { ConnectionSetupFlow } from "@/features/connections/ConnectionSetupFlow";

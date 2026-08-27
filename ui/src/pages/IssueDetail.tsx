@@ -358,7 +358,7 @@ import {
   type IssueTreeControlMode,
   type WorkspaceFileRef,
   workspaceFileRefSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 // Stable empty array for React Query `data` defaults. A literal `= []` default
 // creates a new array reference on every render while `data` is undefined
@@ -432,7 +432,7 @@ function buildPlanDecisionResponseText(
 
 const FEEDBACK_TERMS_URL =
   import.meta.env.VITE_FEEDBACK_TERMS_URL?.trim() ||
-  "https://paperclip.ing/tos";
+  "https://thinkingmach.com/tos";
 const ISSUE_COMMENT_AUTOLOAD_LIMIT = ISSUE_COMMENT_PAGE_SIZE * 3;
 const JUMP_TO_LATEST_MAX_COMMENT_PAGES = 10;
 function treeControlPreviewErrorCopy(error: unknown): string {
@@ -1481,7 +1481,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
       resolveIssueActiveRun({ status: issueStatus, executionRunId }, activeRun, liveRuns),
     [activeRun, executionRunId, issueStatus, liveRuns],
   );
-  const assigneeUsesPaperclipRunner = Boolean(
+  const assigneeUsesThinkingMachRunner = Boolean(
     issueAssigneeAgentId &&
     agentMap.get(issueAssigneeAgentId)?.adapterType === "paperclip_runner",
   );
@@ -1493,7 +1493,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
     null;
   // Do not briefly select queue behavior from the current assignee while the
   // authoritative active-run lookup is still loading. The active runtime owns
-  // the protocol: native Paperclip turns can steer in place, while legacy
+  // the protocol: native ThinkingMach turns can steer in place, while legacy
   // adapters expose the same composer queue with an interrupt fallback.
   const runtimeSelectionKnown =
     liveRunsFetched && (!activeRunQueryEnabled || activeRunFetched);
@@ -2245,7 +2245,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
         if (code === "queued_comment_already_dispatching") {
           pushToast({
             title: "Message is already being sent",
-            body: "The continuation started before the discard was confirmed, so Paperclip could not unsend it.",
+            body: "The continuation started before the discard was confirmed, so ThinkingMach could not unsend it.",
             tone: "error",
             ttlMs: 15_000,
             dedupeKey: `queued-comment-already-dispatching:${issueId}:${commentId}`,

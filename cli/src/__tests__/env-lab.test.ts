@@ -134,10 +134,10 @@ describe("env-lab cleanup command hint", () => {
   it("never restores the unsafe pnpm invocation forms", () => {
     const command = buildEnvLabCleanupCommand();
 
-    // The bare `pnpm paperclipai` script form is unsafe. The `pnpm exec` form
+    // The bare `pnpm thinkingmach` script form is unsafe. The `pnpm exec` form
     // does not resolve the CLI binary. Keep both out of the hint.
-    expect(command).not.toContain("pnpm paperclipai");
-    expect(command).not.toContain("pnpm exec paperclipai");
+    expect(command).not.toContain("pnpm thinkingmach");
+    expect(command).not.toContain("pnpm exec thinkingmach");
   });
 
   // A checkout path can hold shell metacharacters. A contributor copies the hint
@@ -231,13 +231,13 @@ describe("env-lab cleanup command hint", () => {
 });
 
 describe("env-lab doctor cleanup hint instance", () => {
-  const originalInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
+  const originalInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
 
   afterEach(() => {
     if (originalInstanceId === undefined) {
-      delete process.env.PAPERCLIP_INSTANCE_ID;
+      delete process.env.THINKINGMACH_INSTANCE_ID;
     } else {
-      process.env.PAPERCLIP_INSTANCE_ID = originalInstanceId;
+      process.env.THINKINGMACH_INSTANCE_ID = originalInstanceId;
     }
     vi.restoreAllMocks();
   });
@@ -255,10 +255,10 @@ describe("env-lab doctor cleanup hint instance", () => {
     return messages;
   }
 
-  it("pins the PAPERCLIP_INSTANCE_ID instance when opts.instance is absent", async () => {
-    // The doctor diagnoses the instance that `PAPERCLIP_INSTANCE_ID` selects.
+  it("pins the THINKINGMACH_INSTANCE_ID instance when opts.instance is absent", async () => {
+    // The doctor diagnoses the instance that `THINKINGMACH_INSTANCE_ID` selects.
     // The cleanup hint must target that instance, not the default instance.
-    process.env.PAPERCLIP_INSTANCE_ID = "env-selected-instance";
+    process.env.THINKINGMACH_INSTANCE_ID = "env-selected-instance";
     const messages = captureDoctorMessages();
 
     await envLabDoctorCommand({ instance: undefined });
@@ -270,10 +270,10 @@ describe("env-lab doctor cleanup hint instance", () => {
     expect(cleanup).toContain("env-selected-instance");
   });
 
-  it("pins the explicit instance over PAPERCLIP_INSTANCE_ID", async () => {
+  it("pins the explicit instance over THINKINGMACH_INSTANCE_ID", async () => {
     // An explicit `--instance` flag overrides the environment variable, so the
     // hint targets the explicit instance the doctor inspected.
-    process.env.PAPERCLIP_INSTANCE_ID = "env-selected-instance";
+    process.env.THINKINGMACH_INSTANCE_ID = "env-selected-instance";
     const messages = captureDoctorMessages();
 
     await envLabDoctorCommand({ instance: "explicit-instance" });

@@ -204,7 +204,7 @@ function sortRunsChronologically(runs: readonly RunRecord[]): RunRecord[] {
   );
 }
 
-async function restartIsolatedPaperclipServer(input: {
+async function restartIsolatedThinkingMachServer(input: {
   api: RunnerApi;
   requestId: string;
   deadlineAt: number;
@@ -257,7 +257,7 @@ async function restartIsolatedPaperclipServer(input: {
 }
 
 const executionIds = (() => {
-  const encoded = process.env.PAPERCLIP_RUNNER_E2E_EXECUTION_IDS;
+  const encoded = process.env.THINKINGMACH_RUNNER_E2E_EXECUTION_IDS;
   if (encoded) {
     const parsed = JSON.parse(encoded) as unknown;
     if (
@@ -266,21 +266,21 @@ const executionIds = (() => {
       parsed.some((value) => typeof value !== "string")
     ) {
       throw new Error(
-        "PAPERCLIP_RUNNER_E2E_EXECUTION_IDS must be a non-empty JSON string array",
+        "THINKINGMACH_RUNNER_E2E_EXECUTION_IDS must be a non-empty JSON string array",
       );
     }
     return parsed;
   }
-  const single = process.env.PAPERCLIP_RUNNER_E2E_EXECUTION_ID;
+  const single = process.env.THINKINGMACH_RUNNER_E2E_EXECUTION_ID;
   if (!single)
-    throw new Error("PAPERCLIP_RUNNER_E2E_EXECUTION_IDS is required");
+    throw new Error("THINKINGMACH_RUNNER_E2E_EXECUTION_IDS is required");
   return [single];
 })();
 const executions = executionIds.map(runnerExecutionById);
-const attempt = Number(process.env.PAPERCLIP_RUNNER_E2E_ATTEMPT ?? "1");
-const temporaryRoot = process.env.PAPERCLIP_RUNNER_E2E_TEMP_ROOT;
-const privateRoot = process.env.PAPERCLIP_RUNNER_E2E_PRIVATE_DIR;
-const workspacePath = process.env.PAPERCLIP_RUNNER_E2E_WORKSPACE;
+const attempt = Number(process.env.THINKINGMACH_RUNNER_E2E_ATTEMPT ?? "1");
+const temporaryRoot = process.env.THINKINGMACH_RUNNER_E2E_TEMP_ROOT;
+const privateRoot = process.env.THINKINGMACH_RUNNER_E2E_PRIVATE_DIR;
+const workspacePath = process.env.THINKINGMACH_RUNNER_E2E_WORKSPACE;
 if (!temporaryRoot || !privateRoot || !workspacePath)
   throw new Error("Runner E2E temporary/private/workspace paths are required");
 
@@ -794,7 +794,7 @@ for (const execution of executions) {
         executionNonce: nonce,
         workspacePath,
         credentials,
-        daytonaImage: process.env.PAPERCLIP_E2E_DAYTONA_IMAGE,
+        daytonaImage: process.env.THINKINGMACH_E2E_DAYTONA_IMAGE,
       });
 
       if (execution.suite.id === "api-response-reading") {
@@ -844,7 +844,7 @@ for (const execution of executions) {
       if (execution.task.flow === "continuation_accounting") {
         const accounting = await runAccountingFlow({
           page, api, fixtures, execution, nonce, deadlineAt: startedAtMs + deadlineMs - 60_000,
-          restart: () => restartIsolatedPaperclipServer({ api, requestId: `accounting-${nonce}`, deadlineAt: startedAtMs + deadlineMs }),
+          restart: () => restartIsolatedThinkingMachServer({ api, requestId: `accounting-${nonce}`, deadlineAt: startedAtMs + deadlineMs }),
           observe: (currentIssue, currentRuns, checks) => {
             issue = currentIssue; selectedRuns = currentRuns;
             matcherResults = checks.map(check => ({ matcher: { kind: "json_path" as const, path: `accounting.${check.id}`, expected: true }, passed: check.passed, detail: check.detail }));
@@ -856,7 +856,7 @@ for (const execution of executions) {
       } else if (execution.task.flow === "continuation") {
         const continuation = await runContinuationFlow({
           page, api, fixtures, execution, nonce, secrets, workspacePath, deadlineAt: startedAtMs + deadlineMs - 60_000,
-          restart: () => restartIsolatedPaperclipServer({ api, requestId: `continuation-${nonce}`, deadlineAt: startedAtMs + deadlineMs }),
+          restart: () => restartIsolatedThinkingMachServer({ api, requestId: `continuation-${nonce}`, deadlineAt: startedAtMs + deadlineMs }),
           observe: (currentIssue, currentRuns, checks) => {
             issue = currentIssue; selectedRuns = currentRuns;
             matcherResults = checks.map(check => ({ matcher: { kind: "json_path" as const, path: `continuation.${check.id}`, expected: true }, passed: check.passed, detail: check.detail }));
@@ -869,7 +869,7 @@ for (const execution of executions) {
         const story = await runEverydayFlow({
           page, api, fixtures, execution, nonce, workspacePath, privateDir,
           deadlineAt: startedAtMs + deadlineMs,
-          restart: () => restartIsolatedPaperclipServer({ api, requestId: `story-${nonce}`, deadlineAt: startedAtMs + deadlineMs }),
+          restart: () => restartIsolatedThinkingMachServer({ api, requestId: `story-${nonce}`, deadlineAt: startedAtMs + deadlineMs }),
           observe: (storyIssue, storyRuns) => { issue = storyIssue; selectedRuns = storyRuns; },
           capture: captureScreenshot,
           evidence: (name, data) => writeSanitizedJson(snapshotsDir, name, data, secrets),
@@ -879,7 +879,7 @@ for (const execution of executions) {
       } else if (execution.task.flow === "agent_chat") {
         const chat = await runChatFlow({
           page, api, fixtures, execution, nonce, workspacePath,
-          restart: () => restartChatServer(page, () => restartIsolatedPaperclipServer({ api, requestId: `chat-${nonce}`, deadlineAt: startedAtMs + deadlineMs })),
+          restart: () => restartChatServer(page, () => restartIsolatedThinkingMachServer({ api, requestId: `chat-${nonce}`, deadlineAt: startedAtMs + deadlineMs })),
           observe: (chatIssue, chatRuns) => { issue = chatIssue; selectedRuns = chatRuns; },
           capture: captureScreenshot,
           evidence: (name, data) => writeSanitizedJson(snapshotsDir, name, data, secrets),
@@ -1022,7 +1022,7 @@ for (const execution of executions) {
         await page.getByRole("button", { name: "Dismiss Approve tool action" }).click();
         await page.getByRole("button", { name: "Review request", exact: true }).click();
         if (execution.task.toolReviewDecision === "restart") {
-          await restartIsolatedPaperclipServer({ api, requestId: `tool-review-${nonce}`, deadlineAt });
+          await restartIsolatedThinkingMachServer({ api, requestId: `tool-review-${nonce}`, deadlineAt });
           await page.reload();
         }
         if (execution.task.toolReviewDecision === "always") {
@@ -1278,7 +1278,7 @@ for (const execution of executions) {
         );
         if (execution.task.restartServerBeforeQuestionAnswer) {
           const restartRequestId = `question-wait-${nonce}`;
-          await restartIsolatedPaperclipServer({
+          await restartIsolatedThinkingMachServer({
             api,
             requestId: restartRequestId,
             deadlineAt,

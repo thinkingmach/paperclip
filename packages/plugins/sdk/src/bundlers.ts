@@ -1,5 +1,5 @@
 /**
- * Bundling presets for Paperclip plugins.
+ * Bundling presets for ThinkingMach plugins.
  *
  * These helpers return plain config objects so plugin authors can use them
  * with esbuild or rollup without re-implementing host contract defaults.
@@ -56,12 +56,12 @@ export interface PluginBundlerPresets {
  * Build esbuild/rollup baseline configs for plugin worker, manifest, and UI bundles.
  *
  * The presets intentionally externalize host/runtime deps (`react`, SDK packages)
- * to match the Paperclip plugin loader contract.
+ * to match the ThinkingMach plugin loader contract.
  */
 export function createPluginBundlerPresets(input: PluginBundlerPresetInput = {}): PluginBundlerPresets {
   const uiExternal = [
-    "@paperclipai/plugin-sdk/ui",
-    "@paperclipai/plugin-sdk/ui/hooks",
+    "@thinkingmach/plugin-sdk/ui",
+    "@thinkingmach/plugin-sdk/ui/hooks",
     "react",
     "react-dom",
     "react/jsx-runtime",
@@ -94,7 +94,7 @@ export function createPluginBundlerPresets(input: PluginBundlerPresetInput = {})
     platform: "node",
     target: "node24",
     sourcemap,
-    external: ["@paperclipai/plugin-sdk"],
+    external: ["@thinkingmach/plugin-sdk"],
   };
 
   const esbuildUi = uiEntry
@@ -130,7 +130,7 @@ export function createPluginBundlerPresets(input: PluginBundlerPresetInput = {})
       sourcemap,
       entryFileNames: "manifest.js",
     },
-    external: ["@paperclipai/plugin-sdk"],
+    external: ["@thinkingmach/plugin-sdk"],
   };
 
   const rollupUi = uiEntry

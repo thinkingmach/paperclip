@@ -2,22 +2,22 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionContext, AdapterInvocationMeta } from "@paperclipai/adapter-utils";
-import { runChildProcess } from "@paperclipai/adapter-utils/server-utils";
+import type { AdapterExecutionContext, AdapterInvocationMeta } from "@thinkingmach/adapter-utils";
+import { runChildProcess } from "@thinkingmach/adapter-utils/server-utils";
 
 // Wrap the shared staging seam in a call-recording spy that still delegates to
 // the real implementation (a runner-backed sandbox test exercises it end to
 // end against the local sandbox stand-in). This lets a test assert the exact
 // `assets` the Claude remote managed-home seam sends it without changing any
 // real behavior for the other tests.
-vi.mock("@paperclipai/adapter-utils/execution-target", async (importActual) => {
-  const actual = await importActual<typeof import("@paperclipai/adapter-utils/execution-target")>();
+vi.mock("@thinkingmach/adapter-utils/execution-target", async (importActual) => {
+  const actual = await importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>();
   return {
     ...actual,
     prepareAdapterExecutionTargetRuntime: vi.fn(actual.prepareAdapterExecutionTargetRuntime),
   };
 });
-import { prepareAdapterExecutionTargetRuntime } from "@paperclipai/adapter-utils/execution-target";
+import { prepareAdapterExecutionTargetRuntime } from "@thinkingmach/adapter-utils/execution-target";
 import {
   buildClaudeAcpConfig,
   createClaudeAcpExecutor,
@@ -80,8 +80,8 @@ type FakeRuntimeTurn = {
 const tempRoots: string[] = [];
 const originalNodeVersion = process.version;
 const originalEnv: Record<string, string | undefined> = {
-  PAPERCLIP_HOME: process.env.PAPERCLIP_HOME,
-  PAPERCLIP_INSTANCE_ID: process.env.PAPERCLIP_INSTANCE_ID,
+  THINKINGMACH_HOME: process.env.THINKINGMACH_HOME,
+  THINKINGMACH_INSTANCE_ID: process.env.THINKINGMACH_INSTANCE_ID,
   CLAUDE_CONFIG_DIR: process.env.CLAUDE_CONFIG_DIR,
 };
 
@@ -848,8 +848,8 @@ describe("claude_local ACP lane", () => {
       "utf8",
     );
     await fs.writeFile(path.join(sharedClaudeConfig, "CLAUDE.md"), "# shared guidance\n", "utf8");
-    process.env.PAPERCLIP_HOME = path.join(root, "paperclip-home");
-    process.env.PAPERCLIP_INSTANCE_ID = "test";
+    process.env.THINKINGMACH_HOME = path.join(root, "paperclip-home");
+    process.env.THINKINGMACH_INSTANCE_ID = "test";
     process.env.CLAUDE_CONFIG_DIR = sharedClaudeConfig;
 
     const meta: AdapterInvocationMeta[] = [];
@@ -914,8 +914,8 @@ describe("claude_local ACP lane", () => {
       "utf8",
     );
     await fs.writeFile(path.join(sharedClaudeConfig, "CLAUDE.md"), "# shared guidance\n", "utf8");
-    process.env.PAPERCLIP_HOME = path.join(root, "paperclip-home");
-    process.env.PAPERCLIP_INSTANCE_ID = "test";
+    process.env.THINKINGMACH_HOME = path.join(root, "paperclip-home");
+    process.env.THINKINGMACH_INSTANCE_ID = "test";
     process.env.CLAUDE_CONFIG_DIR = sharedClaudeConfig;
 
     // The runtime writes a NEW file into the in-sandbox workspace during the turn.
@@ -984,8 +984,8 @@ describe("claude_local ACP lane", () => {
     await fs.mkdir(localCwd, { recursive: true });
     await fs.mkdir(remoteCwd, { recursive: true });
     await fs.writeFile(path.join(localCwd, "hello.txt"), "hi", "utf8");
-    process.env.PAPERCLIP_HOME = path.join(root, "paperclip-home");
-    process.env.PAPERCLIP_INSTANCE_ID = "test";
+    process.env.THINKINGMACH_HOME = path.join(root, "paperclip-home");
+    process.env.THINKINGMACH_INSTANCE_ID = "test";
 
     // The runtime writes a new file into the in-sandbox workspace during the
     // turn, so the teardown's restore has something to copy back — and a new
@@ -1076,8 +1076,8 @@ describe("claude_local ACP lane", () => {
       JSON.stringify({ permissions: { defaultMode: "acceptEdits" } }),
       "utf8",
     );
-    process.env.PAPERCLIP_HOME = path.join(root, "paperclip-home");
-    process.env.PAPERCLIP_INSTANCE_ID = "test";
+    process.env.THINKINGMACH_HOME = path.join(root, "paperclip-home");
+    process.env.THINKINGMACH_INSTANCE_ID = "test";
 
     const meta: AdapterInvocationMeta[] = [];
     const logs: string[] = [];
@@ -1144,8 +1144,8 @@ describe("claude_local ACP lane", () => {
       "utf8",
     );
     await fs.writeFile(path.join(sharedClaudeConfig, "CLAUDE.md"), "# shared guidance\n", "utf8");
-    process.env.PAPERCLIP_HOME = path.join(root, "paperclip-home");
-    process.env.PAPERCLIP_INSTANCE_ID = "test";
+    process.env.THINKINGMACH_HOME = path.join(root, "paperclip-home");
+    process.env.THINKINGMACH_INSTANCE_ID = "test";
     process.env.CLAUDE_CONFIG_DIR = sharedClaudeConfig;
 
     const meta: AdapterInvocationMeta[] = [];
@@ -1233,7 +1233,7 @@ describe("claude_local ACP lane", () => {
 
     const description = "Update launch-card.svg and change the CTA to Try Team free.";
     const fullTaskMarkdown = [
-      "Paperclip task context:",
+      "ThinkingMach task context:",
       "- Issue: \"PAP-15271\"",
       "- Title: \"Preserve the task brief\"",
       "",
@@ -1243,7 +1243,7 @@ describe("claude_local ACP lane", () => {
       "```",
     ].join("\n");
     const compactTaskMarkdown = [
-      "Paperclip task context:",
+      "ThinkingMach task context:",
       "- Issue: \"PAP-15271\"",
       "- Title: \"Preserve the task brief\"",
     ].join("\n");
@@ -1275,7 +1275,7 @@ describe("claude_local ACP lane", () => {
     const first = await execute(buildContext(root, { context: wakeContext("issue_assigned") }));
     const freshPrompt = runtimes[0]?.startInputs[0]?.text ?? "";
     expect(freshPrompt.split(description)).toHaveLength(2);
-    expect(freshPrompt).toContain("Paperclip task context:");
+    expect(freshPrompt).toContain("ThinkingMach task context:");
 
     const second = await execute(buildContext(root, {
       runtime: {
@@ -1289,7 +1289,7 @@ describe("claude_local ACP lane", () => {
     expect(second.exitCode).toBe(0);
     const resumePrompt = runtimes[1]?.startInputs[0]?.text ?? "";
     expect(resumePrompt).not.toContain(description);
-    expect(resumePrompt).toContain("Paperclip task context:");
+    expect(resumePrompt).toContain("ThinkingMach task context:");
     expect(resumePrompt).toContain(
       "- issue description: omitted from this resume delta; fetch the issue if you need the latest brief",
     );

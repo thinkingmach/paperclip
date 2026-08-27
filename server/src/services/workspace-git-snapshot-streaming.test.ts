@@ -4,9 +4,9 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { afterEach, expect, it } from "vitest";
-import { disposeGitWorkspaceSnapshot, readGitWorkspaceSnapshot, runLocalGit, setExpensiveWorkspaceGitExecutor, type GitWorkspaceSnapshot } from "@paperclipai/adapter-utils/git-workspace-sync";
-import { isPathManifest, workspacePaths } from "@paperclipai/adapter-utils/workspace-manifest";
-import { prepareSandboxManagedRuntime, type PreparedSandboxManagedRuntime, type SandboxManagedRuntimeClient } from "@paperclipai/adapter-utils/sandbox-managed-runtime";
+import { disposeGitWorkspaceSnapshot, readGitWorkspaceSnapshot, runLocalGit, setExpensiveWorkspaceGitExecutor, type GitWorkspaceSnapshot } from "@thinkingmach/adapter-utils/git-workspace-sync";
+import { isPathManifest, workspacePaths } from "@thinkingmach/adapter-utils/workspace-manifest";
+import { prepareSandboxManagedRuntime, type PreparedSandboxManagedRuntime, type SandboxManagedRuntimeClient } from "@thinkingmach/adapter-utils/sandbox-managed-runtime";
 import { createWorkspaceGitOperationScheduler } from "./workspace-git-operation-scheduler.js";
 
 const exec = promisify(execFile);

@@ -14,8 +14,8 @@ import type {
   CapabilityJsonValue,
   CapabilityTaskStatus,
 } from "../mock-core/capability-control-plane-types.js";
-import type { PaperclipWorkspaceDiff } from "../live/workspace-diff.js";
-import type { PaperclipWorkspaceFileReference } from "../live/workspace-file-reference.js";
+import type { ThinkingMachWorkspaceDiff } from "../live/workspace-diff.js";
+import type { ThinkingMachWorkspaceFileReference } from "../live/workspace-file-reference.js";
 export type { CapabilityJsonValue } from "../mock-core/capability-control-plane-types.js";
 import type { CapabilitySemanticOperationId } from "../semantic-tools/types.js";
 
@@ -43,7 +43,7 @@ export interface CapabilityThreadIdentity {
   runnerLabel: string;
   /** Pulse while a runnerd session is attached; static when detached. */
   runnerAttached: boolean;
-  /** Always `Mock Paperclip`. */
+  /** Always `Mock ThinkingMach`. */
   controlPlaneLabel: string;
   controlPlaneTooltip: string;
   /** Present in replay mode so replay evidence can never satisfy a live criterion. */
@@ -93,7 +93,7 @@ export type CapabilityThreadInteractionState =
 
 export interface CapabilityThreadLink {
   label: string;
-  /** In-explorer route only. Real Paperclip URLs never appear (§11). */
+  /** In-explorer route only. Real ThinkingMach URLs never appear (§11). */
   href: string;
 }
 
@@ -215,13 +215,13 @@ export type CapabilityThreadItem =
       kind: "workspace_changes";
       id: string;
       at: string;
-      changeSet: PaperclipWorkspaceDiff;
+      changeSet: ThinkingMachWorkspaceDiff;
     }
   | {
       kind: "workspace_file_reference";
       id: string;
       at: string;
-      reference: PaperclipWorkspaceFileReference;
+      reference: ThinkingMachWorkspaceFileReference;
     }
   | {
       kind: "provider_activity";

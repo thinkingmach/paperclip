@@ -19,12 +19,12 @@ import {
   companyMemberships,
   chatDeliveries,
   chatMessageLinks,
-} from "@paperclipai/db";
-import { renderPaperclipWakePrompt } from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/db";
+import { renderThinkingMachWakePrompt } from "@thinkingmach/adapter-utils/server-utils";
 import { startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import {
   attestReviewedExternalChatRun,
-  buildPaperclipWakePayload,
+  buildThinkingMachWakePayload,
 } from "../services/heartbeat.js";
 import {
   listAuthorizedChatAttachments,
@@ -295,7 +295,7 @@ describe.each(["slack", "discord"] as const)("reviewed %s execution binding", (p
       checkoutRunId: null,
       executionRunId: runId,
     });
-    const wake = await buildPaperclipWakePayload({
+    const wake = await buildThinkingMachWakePayload({
       db,
       companyId,
       agentId,
@@ -309,7 +309,7 @@ describe.each(["slack", "discord"] as const)("reviewed %s execution binding", (p
       externalChatExecutionBound: true,
       externalChatProvider: provider,
     });
-    const prompt = renderPaperclipWakePrompt(wake);
+    const prompt = renderThinkingMachWakePrompt(wake);
     expect(prompt).toContain("not a checkout, approval");
     expect(prompt).toContain("task remains in review");
     expect(prompt).not.toContain("checked out the issue for this run");
@@ -553,7 +553,7 @@ describe.each(["slack", "discord"] as const)("reviewed %s execution binding", (p
 
   it("binds closed historical/current readers without pretending checkout occurred", async () => {
     expect(await attest()).toBe(true);
-    const wake = await buildPaperclipWakePayload({
+    const wake = await buildThinkingMachWakePayload({
       db,
       companyId,
       agentId,

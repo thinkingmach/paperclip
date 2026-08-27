@@ -1,7 +1,7 @@
 import { schemaFieldSection } from "./config-sections";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-import type { AdapterConfigSchema, ConfigFieldSchema, CreateConfigValues } from "@paperclipai/adapter-utils";
+import type { AdapterConfigSchema, ConfigFieldSchema, CreateConfigValues } from "@thinkingmach/adapter-utils";
 
 import type { AdapterConfigFieldsProps } from "./types";
 import {

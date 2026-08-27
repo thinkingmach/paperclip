@@ -1,14 +1,14 @@
 import { createHash } from "node:crypto";
 
 import type { PrpSemanticToolEnvelope } from "../protocol/replay-contract.js";
-import { redactPaperclipSemanticValue } from "./redaction.js";
+import { redactThinkingMachSemanticValue } from "./redaction.js";
 import type {
-  PaperclipSemanticCorrelation,
-  PaperclipSemanticDenialCode,
-  PaperclipSemanticSafeReference,
+  ThinkingMachSemanticCorrelation,
+  ThinkingMachSemanticDenialCode,
+  ThinkingMachSemanticSafeReference,
 } from "./types.js";
 
-export type PaperclipSemanticAuthorizationBoundary =
+export type ThinkingMachSemanticAuthorizationBoundary =
   | "company"
   | "actor"
   | "active_task"
@@ -17,31 +17,31 @@ export type PaperclipSemanticAuthorizationBoundary =
   | "lock"
   | "revision";
 
-export type PaperclipSemanticToolOutcome =
+export type ThinkingMachSemanticToolOutcome =
   "succeeded" | "denied" | "conflict" | "duplicate" | "unavailable" | "failed";
 
 interface SemanticReceiptBase {
   readonly operationId: string;
   readonly callId: string;
-  readonly correlation: PaperclipSemanticCorrelation;
+  readonly correlation: ThinkingMachSemanticCorrelation;
   readonly idempotencyKey?: string | null;
   readonly content: unknown;
-  readonly references?: readonly PaperclipSemanticSafeReference[];
+  readonly references?: readonly ThinkingMachSemanticSafeReference[];
   readonly redacted?: boolean;
 }
 
 interface SemanticResultReceiptInput extends SemanticReceiptBase {
-  readonly outcome: PaperclipSemanticToolOutcome;
+  readonly outcome: ThinkingMachSemanticToolOutcome;
   readonly code: string;
   readonly retryable: boolean;
-  readonly authorizationBoundary: PaperclipSemanticAuthorizationBoundary;
+  readonly authorizationBoundary: ThinkingMachSemanticAuthorizationBoundary;
   readonly operationReceiptId?: string;
   readonly auditReceiptId?: string;
   readonly currentRevision?: number | string;
   readonly duplicateOfReceiptId?: string;
 }
 
-export function createPaperclipSemanticInputReceipt(
+export function createThinkingMachSemanticInputReceipt(
   input: SemanticReceiptBase,
 ): PrpSemanticToolEnvelope {
   return {
@@ -56,7 +56,7 @@ export function createPaperclipSemanticInputReceipt(
   } as PrpSemanticToolEnvelope;
 }
 
-export function createPaperclipSemanticResultReceipt(
+export function createThinkingMachSemanticResultReceipt(
   input: SemanticResultReceiptInput,
 ): PrpSemanticToolEnvelope {
   const operationReceiptId =
@@ -87,14 +87,14 @@ export function createPaperclipSemanticResultReceipt(
   } as PrpSemanticToolEnvelope;
 }
 
-export function digestPaperclipSemanticContent(value: unknown): string {
-  const safeValue = redactPaperclipSemanticValue(value);
+export function digestThinkingMachSemanticContent(value: unknown): string {
+  const safeValue = redactThinkingMachSemanticValue(value);
   return `sha256:${createHash("sha256").update(canonicalJson(safeValue)).digest("hex")}`;
 }
 
 export function paperclipSemanticAuthorizationBoundary(
   code: string,
-): PaperclipSemanticAuthorizationBoundary {
+): ThinkingMachSemanticAuthorizationBoundary {
   if (code.includes("company")) return "company";
   if (code.includes("actor") || code.includes("role")) return "actor";
   if (code.includes("claim") || code.includes("absent")) return "grant";
@@ -118,7 +118,7 @@ export function paperclipSemanticOutcome(input: {
   readonly ok: boolean;
   readonly code: string;
   readonly duplicate?: boolean;
-}): PaperclipSemanticToolOutcome {
+}): ThinkingMachSemanticToolOutcome {
   if (input.ok) return input.duplicate === true ? "duplicate" : "succeeded";
   if (input.code.includes("conflict")) return "conflict";
   if (input.code === "operation_absent") return "unavailable";
@@ -128,7 +128,7 @@ export function paperclipSemanticOutcome(input: {
   return "denied";
 }
 
-export function isPaperclipSemanticStableId(value: string): boolean {
+export function isThinkingMachSemanticStableId(value: string): boolean {
   return (
     value.length >= 1 &&
     value.length <= 240 &&
@@ -136,11 +136,11 @@ export function isPaperclipSemanticStableId(value: string): boolean {
   );
 }
 
-export function normalizePaperclipSemanticReferences(
-  references: readonly PaperclipSemanticSafeReference[] | undefined,
-): readonly PaperclipSemanticSafeReference[] {
+export function normalizeThinkingMachSemanticReferences(
+  references: readonly ThinkingMachSemanticSafeReference[] | undefined,
+): readonly ThinkingMachSemanticSafeReference[] {
   if (!Array.isArray(references)) return Object.freeze([]);
-  const allowedKinds = new Set<PaperclipSemanticSafeReference["kind"]>([
+  const allowedKinds = new Set<ThinkingMachSemanticSafeReference["kind"]>([
     "task",
     "document_revision",
     "interaction",
@@ -153,13 +153,13 @@ export function normalizePaperclipSemanticReferences(
     "audit",
     "operation",
   ]);
-  const unique = new Map<string, PaperclipSemanticSafeReference>();
+  const unique = new Map<string, ThinkingMachSemanticSafeReference>();
   for (const reference of references.slice(0, 200)) {
     if (
       typeof reference === "object" &&
       reference !== null &&
       allowedKinds.has(reference.kind) &&
-      isPaperclipSemanticStableId(reference.id)
+      isThinkingMachSemanticStableId(reference.id)
     ) {
       unique.set(`${reference.kind}:${reference.id}`, {
         kind: reference.kind,
@@ -172,9 +172,9 @@ export function normalizePaperclipSemanticReferences(
 
 function safeContent(input: SemanticReceiptBase) {
   return {
-    digest: digestPaperclipSemanticContent(input.content),
+    digest: digestThinkingMachSemanticContent(input.content),
     redactionDisposition: input.redacted === true ? "redacted" : "digest_only",
-    references: [...normalizePaperclipSemanticReferences(input.references)],
+    references: [...normalizeThinkingMachSemanticReferences(input.references)],
   };
 }
 
@@ -198,6 +198,6 @@ function canonicalJson(value: unknown): string {
   return JSON.stringify(value) ?? "null";
 }
 
-export function denialRetryable(code: PaperclipSemanticDenialCode): boolean {
+export function denialRetryable(code: ThinkingMachSemanticDenialCode): boolean {
   return code === "idempotency_in_progress" || code === "binding_failed";
 }

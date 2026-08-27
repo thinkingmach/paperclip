@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { ChevronsUpDown } from "lucide-react";
-import type { PluginOrganizationSwitcherProps } from "@paperclipai/plugin-sdk/ui";
+import type { PluginOrganizationSwitcherProps } from "@thinkingmach/plugin-sdk/ui";
 import { useAccountIdentity, useCompanyListQuery } from "@/api/companies-query";
 import { useCompany } from "@/context/CompanyContext";
 import { useSidebar } from "@/context/SidebarContext";

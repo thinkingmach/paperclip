@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { companies } from "./companies.js";
-import type { FolderKind } from "@paperclipai/shared";
+import type { FolderKind } from "@thinkingmach/shared";
 
 export const folders = pgTable(
   "folders",

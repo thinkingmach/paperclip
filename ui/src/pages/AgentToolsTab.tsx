@@ -7,7 +7,7 @@ import type {
   ToolCatalogEntry,
   ToolConnection,
   ToolPolicy,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { queryKeys } from "../lib/queryKeys";
 import { toolsApi } from "../api/tools";
@@ -70,7 +70,7 @@ function GitHubIdentitySection({
               <>
                 <p className="mt-0.5 text-sm font-medium text-foreground">Could not load GitHub identity</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Paperclip could not verify this agent&apos;s current connection. Your existing setup was not changed.
+                  ThinkingMach could not verify this agent&apos;s current connection. Your existing setup was not changed.
                 </p>
               </>
             ) : dedicatedIdentity ? (
@@ -86,7 +86,7 @@ function GitHubIdentitySection({
               <>
                 <p className="mt-0.5 text-sm font-medium text-foreground">Use responsible person&apos;s GitHub</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  At run start, Paperclip uses the personal GitHub connection of the person responsible for the task.
+                  At run start, ThinkingMach uses the personal GitHub connection of the person responsible for the task.
                 </p>
                 {personalIdentity ? (
                   <p className="mt-1 text-xs text-muted-foreground">
@@ -566,7 +566,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
         title="Effective access"
         body={
           <>
-            This is exactly the tool set Paperclip will accept for{" "}
+            This is exactly the tool set ThinkingMach will accept for{" "}
             <span className="font-medium">{agent.name}</span>. Profile and policy edits are
             reflected within ~5 seconds. The agent's prompt can narrow this list but{" "}
             <span className="font-medium">cannot expand it</span> — everything else is blocked by
@@ -756,7 +756,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
               ) : (
                 <>
                   <p className="text-(length:--text-micro) text-muted-foreground">
-                    Tools the agent could name but Paperclip would block:
+                    Tools the agent could name but ThinkingMach would block:
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {deniedTools.slice(0, DENIED_TOOLS_DISPLAY_LIMIT).map((tool) => (

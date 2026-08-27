@@ -28,7 +28,7 @@
     "safeUrl": { "type": ["string", "null"], "maxLength": 8192, "pattern": "^https?://" },
     "plan": {
       "type": "object",
-      "description": "A complete provider-authored within-turn checklist snapshot. Consumers replace the prior snapshot with the same planId in PRP sourceSeq order; this is not Paperclip's durable Plan document.",
+      "description": "A complete provider-authored within-turn checklist snapshot. Consumers replace the prior snapshot with the same planId in PRP sourceSeq order; this is not ThinkingMach's durable Plan document.",
       "required": ["schema", "planId", "revision", "steps", "complete", "syncStatus"],
       "properties": {
         "schema": { "const": "paperclip.plan.updated.v1" },

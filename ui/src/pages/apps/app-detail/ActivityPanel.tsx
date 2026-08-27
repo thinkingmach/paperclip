@@ -4,7 +4,7 @@ import {
   type Agent,
   type ToolCallEvent,
   type ToolConnectionLifecycleEvent,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";

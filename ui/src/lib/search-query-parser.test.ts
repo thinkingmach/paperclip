@@ -14,7 +14,7 @@ const context = {
     { id: "agent-2", name: "QA" },
   ],
   projects: [
-    { id: "11111111-1111-4111-8111-111111111111", name: "Paperclip App", urlKey: "paperclip-app" },
+    { id: "11111111-1111-4111-8111-111111111111", name: "ThinkingMach App", urlKey: "paperclip-app" },
   ],
   labels: [
     { id: "22222222-2222-4222-8222-222222222222", name: "bug" },

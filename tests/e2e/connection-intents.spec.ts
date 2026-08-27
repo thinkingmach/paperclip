@@ -114,7 +114,7 @@ async function startFakeProvider() {
 
 function connectionAwareScript(connectionId: string) {
   return `
-const post = async (url, body, token = process.env.PAPERCLIP_RUNTIME_TOOLS_TOKEN) => {
+const post = async (url, body, token = process.env.THINKINGMACH_RUNTIME_TOOLS_TOKEN) => {
   const response = await fetch(url, {
     method: "POST",
     headers: { authorization: \`Bearer \${token}\`, "content-type": "application/json" },
@@ -123,19 +123,19 @@ const post = async (url, body, token = process.env.PAPERCLIP_RUNTIME_TOOLS_TOKEN
   if (!response.ok) throw new Error(\`\${response.status}: \${await response.text()}\`);
   return await response.json();
 };
-const apiHeaders = { authorization: \`Bearer \${process.env.PAPERCLIP_API_KEY}\`, "content-type": "application/json", "x-paperclip-run-id": process.env.PAPERCLIP_RUN_ID };
-const runResponse = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/heartbeat-runs/\${process.env.PAPERCLIP_RUN_ID}\`, { headers: apiHeaders });
+const apiHeaders = { authorization: \`Bearer \${process.env.THINKINGMACH_API_KEY}\`, "content-type": "application/json", "x-paperclip-run-id": process.env.THINKINGMACH_RUN_ID };
+const runResponse = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/heartbeat-runs/\${process.env.THINKINGMACH_RUN_ID}\`, { headers: apiHeaders });
 if (!runResponse.ok) throw new Error(await runResponse.text());
 const run = await runResponse.json();
-const issueId = process.env.PAPERCLIP_TASK_ID ?? run.contextSnapshot.issueId;
+const issueId = process.env.THINKINGMACH_TASK_ID ?? run.contextSnapshot.issueId;
 if (!issueId) throw new Error("Missing task binding");
-const search = await post(process.env.PAPERCLIP_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL, { query: "notion" });
+const search = await post(process.env.THINKINGMACH_RUNTIME_TOOLS_CONNECTIONS_SEARCH_URL, { query: "notion" });
 const notion = search.results.find((result) => result.service === "notion");
 if (!notion) throw new Error("Notion was not advertised");
 if (notion.state !== "ready") {
-  const requested = await post(process.env.PAPERCLIP_RUNTIME_TOOLS_CONNECTION_REQUEST_URL, { service: notion.service });
+  const requested = await post(process.env.THINKINGMACH_RUNTIME_TOOLS_CONNECTION_REQUEST_URL, { service: notion.service });
   if (requested.state !== "needs_user_action") throw new Error("Expected a user-action request");
-  const comment = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/issues/\${issueId}/comments\`, {
+  const comment = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/issues/\${issueId}/comments\`, {
     method: "POST",
     headers: apiHeaders,
     body: JSON.stringify({ body: "Requested Notion access through the connection card." })
@@ -144,20 +144,20 @@ if (notion.state !== "ready") {
   console.log("waiting for connection intent");
   process.exit(0);
 }
-const sessionResponse = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/sessions\`, {
+const sessionResponse = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/sessions\`, {
   method: "POST",
   headers: apiHeaders,
-  body: JSON.stringify({ runId: process.env.PAPERCLIP_RUN_ID, ttlMs: 60000 })
+  body: JSON.stringify({ runId: process.env.THINKINGMACH_RUN_ID, ttlMs: 60000 })
 });
 if (!sessionResponse.ok) throw new Error(await sessionResponse.text());
 const session = await sessionResponse.json();
-const toolsResponse = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/tools\`, {
+const toolsResponse = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/tools\`, {
   headers: { "x-paperclip-tool-gateway-token": session.token }
 });
 const tools = await toolsResponse.json();
 const tool = tools.find((entry) => entry.connectionId === ${JSON.stringify(connectionId)} && entry.upstreamToolName === "notion:list_pages");
 if (!tool) throw new Error("Continuation did not receive the installed Notion tool");
-const call = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/tools/call\`, {
+const call = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/tool-gateway/tools/call\`, {
   method: "POST",
   headers: { "x-paperclip-tool-gateway-token": session.token, "content-type": "application/json" },
   body: JSON.stringify({ tool: tool.name, parameters: {} })
@@ -165,7 +165,7 @@ const call = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/tool-gateway/to
 if (!call.ok) throw new Error(await call.text());
 console.log(await call.text());
 // Successful tool use must end with a durable task disposition.
-const completion = await fetch(\`\${process.env.PAPERCLIP_API_URL}/api/issues/\${issueId}\`, {
+const completion = await fetch(\`\${process.env.THINKINGMACH_API_URL}/api/issues/\${issueId}\`, {
   method: "PATCH",
   headers: apiHeaders,
   body: JSON.stringify({ status: "done", comment: "Read the requested Notion page inventory." })

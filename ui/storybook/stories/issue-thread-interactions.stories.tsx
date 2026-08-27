@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import type { PaperclipQuestionResponse, PaperclipQuestionSet } from "@paperclipai/adapter-utils";
+import type { ThinkingMachQuestionResponse, ThinkingMachQuestionSet } from "@thinkingmach/adapter-utils";
 import { QuestionForm, QuestionResponseSummary } from "@/components/task-chat/QuestionForm";
 import { TaskChatComposer } from "@/components/task-chat/TaskChatComposer";
 import { Button } from "@/components/ui/button";
@@ -501,7 +501,7 @@ export const SuggestedTasksRejected: Story = {
   ),
 };
 
-const composerQuestions: PaperclipQuestionSet = {
+const composerQuestions: ThinkingMachQuestionSet = {
   schema: "paperclip.question_set.v1",
   title: "Express app — scope",
   questions: [
@@ -543,7 +543,7 @@ const composerQuestions: PaperclipQuestionSet = {
 };
 
 function InteractiveComposerQuestions() {
-  const [response, setResponse] = useState<PaperclipQuestionResponse | null>(null);
+  const [response, setResponse] = useState<ThinkingMachQuestionResponse | null>(null);
   const [open, setOpen] = useState(true);
   const [reset, setReset] = useState(0);
   return (
@@ -894,7 +894,7 @@ export const ConnectionIntentStates: Story = {
           </ScenarioCard>
           <ScenarioCard
             title="Other viewer"
-            description="Other viewers see who Paperclip is waiting for and receive no connection controls."
+            description="Other viewers see who ThinkingMach is waiting for and receive no connection controls."
           >
             <IssueThreadInteractionCard
               interaction={pendingConnectionIntentInteraction}

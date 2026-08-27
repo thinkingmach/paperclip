@@ -16,22 +16,22 @@ import path from "node:path";
 import { execFile as execFileCallback } from "node:child_process";
 import { promisify } from "node:util";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionContext, AdapterRuntimeMcpAccess } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext, AdapterRuntimeMcpAccess } from "@thinkingmach/adapter-utils";
 import {
-  startAdapterExecutionTargetPaperclipBridge,
+  startAdapterExecutionTargetThinkingMachBridge,
   startAdapterExecutionTargetProcessSessionBridge,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 
 // Wrap the staging seam + both sandbox bridges in call-recording spies that
 // still delegate to the real implementations. A runner-backed sandbox test
 // exercises them end-to-end against a local runner, while a teardown test can
 // override just the bridges with stop spies. (Copied from execute.test.ts.)
-vi.mock("@paperclipai/adapter-utils/execution-target", async (importActual) => {
-  const actual = await importActual<typeof import("@paperclipai/adapter-utils/execution-target")>();
+vi.mock("@thinkingmach/adapter-utils/execution-target", async (importActual) => {
+  const actual = await importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>();
   return {
     ...actual,
     prepareAdapterExecutionTargetRuntime: vi.fn(actual.prepareAdapterExecutionTargetRuntime),
-    startAdapterExecutionTargetPaperclipBridge: vi.fn(actual.startAdapterExecutionTargetPaperclipBridge),
+    startAdapterExecutionTargetThinkingMachBridge: vi.fn(actual.startAdapterExecutionTargetThinkingMachBridge),
     startAdapterExecutionTargetProcessSessionBridge: vi.fn(actual.startAdapterExecutionTargetProcessSessionBridge),
   };
 });
@@ -220,7 +220,7 @@ async function setupRemoteSandbox() {
 function stubBridges() {
   const paperclipStops: Array<ReturnType<typeof vi.fn>> = [];
   const processStops: Array<ReturnType<typeof vi.fn>> = [];
-  vi.mocked(startAdapterExecutionTargetPaperclipBridge).mockImplementation(async () => {
+  vi.mocked(startAdapterExecutionTargetThinkingMachBridge).mockImplementation(async () => {
     const stop = vi.fn(async () => {});
     paperclipStops.push(stop);
     return { env: {}, stop } as never;
@@ -300,7 +300,7 @@ describe("ACP settlement — Layer A: engine teardown orchestration", () => {
     // and the seam teardown, and read the still-held lease during the sync-back.
     const { stateDir, localCwd, executionTarget } = await setupRemoteSandbox();
     const order: string[] = [];
-    vi.mocked(startAdapterExecutionTargetPaperclipBridge).mockImplementation(async () => ({
+    vi.mocked(startAdapterExecutionTargetThinkingMachBridge).mockImplementation(async () => ({
       env: {},
       stop: vi.fn(async () => {
         order.push("bridge-stop");
@@ -911,7 +911,7 @@ describe("ACP settlement — Layer B: restoreWorkspace order + native-sync selec
     await fs.mkdir(sourceRepoDir, { recursive: true });
     await git(sourceRepoDir, ["init"]);
     await git(sourceRepoDir, ["checkout", "-b", "main"]);
-    await git(sourceRepoDir, ["config", "user.name", "Paperclip Test"]);
+    await git(sourceRepoDir, ["config", "user.name", "ThinkingMach Test"]);
     await git(sourceRepoDir, ["config", "user.email", "test@paperclip.dev"]);
     await fs.writeFile(path.join(sourceRepoDir, "tracked.txt"), "base\n", "utf8");
     await git(sourceRepoDir, ["add", "tracked.txt"]);
@@ -940,7 +940,7 @@ describe("ACP settlement — Layer B: restoreWorkspace order + native-sync selec
 
     // The sandbox holds a real git worktree seeded from the host history.
     expect((await git(remoteWorkspaceDir, ["rev-list", "--count", "HEAD"]))).toBe("1");
-    await git(remoteWorkspaceDir, ["config", "user.name", "Paperclip Sandbox"]);
+    await git(remoteWorkspaceDir, ["config", "user.name", "ThinkingMach Sandbox"]);
     await git(remoteWorkspaceDir, ["config", "user.email", "sandbox@paperclip.dev"]);
     await git(remoteWorkspaceDir, ["add", "-A"]);
     await git(remoteWorkspaceDir, ["commit", "-m", "sandbox update"]);

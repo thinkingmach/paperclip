@@ -26,7 +26,7 @@ describe("announcement placement gates", () => {
   let root: Root;
   let health: HealthStatus;
   const render = async () => { await act(async () => root.render(<AnnouncementWell health={health} />)); };
-  const visible = () => Boolean(container.querySelector('[aria-label="Paperclip announcements"]'));
+  const visible = () => Boolean(container.querySelector('[aria-label="ThinkingMach announcements"]'));
   beforeEach(() => {
     Object.assign(state, { userId: "alice", settled: true, companyId: "company", loading: false, onboardingOpen: false, toasts: [] });
     vi.clearAllMocks();

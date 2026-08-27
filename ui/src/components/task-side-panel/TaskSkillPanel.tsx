@@ -6,7 +6,7 @@ import { MarkdownBody } from "@/components/MarkdownBody";
 import { Button } from "@/components/ui/button";
 import { queryKeys } from "@/lib/queryKeys";
 import { useNavigate } from "@/lib/router";
-import { parseFrontmatterMarkdown } from "@paperclipai/shared";
+import { parseFrontmatterMarkdown } from "@thinkingmach/shared";
 
 export function TaskSkillPanel({ companyId, skillId }: { companyId: string; skillId: string }) {
   const navigate = useNavigate();

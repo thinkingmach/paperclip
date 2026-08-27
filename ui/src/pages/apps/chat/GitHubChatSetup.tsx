@@ -8,7 +8,7 @@ import {
   RefreshCw,
   XCircle,
 } from "lucide-react";
-import type { ChatEndpointSetupState } from "@paperclipai/shared";
+import type { ChatEndpointSetupState } from "@thinkingmach/shared";
 import { agentsApi } from "@/api/agents";
 import {
   chatEndpointsApi,
@@ -79,7 +79,7 @@ export function GitHubChatSetup() {
   const [availableStep, setAvailableStep] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [name, setName] = useState("Paperclip Review");
+  const [name, setName] = useState("ThinkingMach Review");
   const [existing, setExisting] = useState(reconnecting);
   const [credentials, setCredentials] = useState({
     appId: "",
@@ -243,7 +243,7 @@ export function GitHubChatSetup() {
         </p>
         <h1 className="mt-2 text-2xl font-semibold">{steps[step]}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          GitHub conversations run as Paperclip tasks on one assigned agent.
+          GitHub conversations run as ThinkingMach tasks on one assigned agent.
         </p>
       </div>
       {(error || current.error || agents.error) && (
@@ -312,12 +312,12 @@ export function GitHubChatSetup() {
               A publicly reachable HTTPS address is required before App
               registration. Configure the instance’s public URL or an explicit
               webhook ingress URL, then refresh. {" "}
-              <a className="underline" href="https://docs.paperclip.ing/reference/deploy/https/" target="_blank" rel="noreferrer">Learn how to set up HTTPS</a>
+              <a className="underline" href="https://docs.thinkingmach.com/reference/deploy/https/" target="_blank" rel="noreferrer">Learn how to set up HTTPS</a>
             </div>
           )}
           <p className="text-sm">
             Create a dedicated GitHub App for{" "}
-            {selectedAgent?.name ?? endpoint.assignedAgentName}. Paperclip
+            {selectedAgent?.name ?? endpoint.assignedAgentName}. ThinkingMach
             stores the credentials in its vault and uses this same App for the
             agent’s GitHub tools.
           </p>
@@ -524,7 +524,7 @@ export function GitHubChatSetup() {
             GitHub, choose the repositories the installation can access.
           </p>
           <p className="text-sm text-muted-foreground">
-            You will choose the subset enabled in Paperclip in the next step.
+            You will choose the subset enabled in ThinkingMach in the next step.
             Changing the installation does not automatically enable repositories
             here.
           </p>
@@ -686,7 +686,7 @@ export function GitHubChatSetup() {
           </div>
           <p className="text-xs text-muted-foreground">
             Tool assignment grants this agent the bot App’s task-scoped tools
-            through its Paperclip tool profile. Existing deny and approval
+            through its ThinkingMach tool profile. Existing deny and approval
             policies still apply.
           </p>
           <div className="divide-y divide-border rounded-lg border border-border">
@@ -713,7 +713,7 @@ export function GitHubChatSetup() {
       {step === 5 && endpoint && (
         <>
           <p className="text-sm">
-            Choose your existing personal GitHub connection. Paperclip verifies
+            Choose your existing personal GitHub connection. ThinkingMach verifies
             the account, then asks you to confirm ownership. This link
             identifies your requests; the bot still uses its own App
             credentials.
@@ -830,7 +830,7 @@ export function GitHubChatSetup() {
         <>
           <p className="text-sm">
             Mention the bot in an enabled repository. The request should create
-            a real Paperclip task on{" "}
+            a real ThinkingMach task on{" "}
             {selectedAgent?.name ?? endpoint.assignedAgentName} and reply on
             GitHub.
           </p>

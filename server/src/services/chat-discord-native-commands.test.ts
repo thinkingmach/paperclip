@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import type { ChatSdkCallbackEvent } from "./chat-sdk-runtime.js";
 import {
   createDiscordCommandRegistration,
-  discordPaperclipCommandDefinition,
+  discordThinkingMachCommandDefinition,
 } from "./chat-discord-command-registration.js";
 import {
   isCurrentDiscordCommandRegistration,
@@ -79,7 +79,7 @@ function registrationAction() {
           definitionDigest: createHash("sha256")
             .update(
               JSON.stringify(
-                discordPaperclipCommandDefinition(prepared.ownerId),
+                discordThinkingMachCommandDefinition(prepared.ownerId),
               ),
             )
             .digest("hex"),

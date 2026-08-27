@@ -262,7 +262,7 @@ function globalSidebar(height) {
     "Connectors",
     "Audit",
   ];
-  return `<g data-region="global-sidebar">${tx(24, 40, "Paperclip", 20, "#000", 'font-weight="700"')}${items
+  return `<g data-region="global-sidebar">${tx(24, 40, "ThinkingMach", 20, "#000", 'font-weight="700"')}${items
     .map((item, index) => {
       const y = 80 + index * 48;
       return `${item === "Connectors" ? rc(8, y - 24, 224, 40, 'fill="#e6e6e6"') : ""}${circle(32, y - 8, 6, 'fill="#e6e6e6"')}${tx(56, y, item, 14, item === "Connectors" ? "#000" : "#666", item === "Connectors" ? 'font-weight="600"' : "")}`;
@@ -430,7 +430,7 @@ function accessDesktop(data, provider) {
     tx(
       528,
       402,
-      "Can message enabled conversations and attach safe files. Cannot approve or administer Paperclip.",
+      "Can message enabled conversations and attach safe files. Cannot approve or administer ThinkingMach.",
       12,
       "#666",
     ),
@@ -438,7 +438,7 @@ function accessDesktop(data, provider) {
     tx(
       512,
       516,
-      "Linked people use their current Paperclip permissions.",
+      "Linked people use their current ThinkingMach permissions.",
       12,
       "#666",
     ),
@@ -487,14 +487,14 @@ function accessMobile(data) {
       468,
       [
         "May message and attach safe files.",
-        "Cannot approve or administer Paperclip.",
+        "Cannot approve or administer ThinkingMach.",
       ],
       12,
       "#666",
       18,
     ),
     tx(16, 560, "Linked accounts", 20, "#000", 'font-weight="700"'),
-    tx(16, 588, "Uses current Paperclip permissions.", 12, "#666"),
+    tx(16, 588, "Uses current ThinkingMach permissions.", 12, "#666"),
     ln(16, 616, 359, 616),
   ];
   data.linked.forEach(([external, paperclip, action], index) => {
@@ -524,7 +524,7 @@ function conversationsDesktop(data, provider) {
     tx(512, 112, data.conversationsTitle, 28, "#000", 'font-weight="700"'),
     tx(512, 144, data.conversationsSubtitle, 14, "#666"),
     tx(528, 216, "CONVERSATION", 12, "#666", 'font-weight="700"'),
-    tx(744, 216, "PAPERCLIP TASK", 12, "#666", 'font-weight="700"'),
+    tx(744, 216, "THINKINGMACH TASK", 12, "#666", 'font-weight="700"'),
     tx(984, 216, "STATE", 12, "#666", 'font-weight="700"'),
     ln(512, 232, 1224, 232),
   ];
@@ -624,14 +624,14 @@ const sharedDefinitions = [
       "One selection is required.",
       "Continue begins provider setup.",
     ],
-    rationale: "This is the only shared Paperclip-specific setup decision.",
+    rationale: "This is the only shared ThinkingMach-specific setup decision.",
   },
   {
     id: "11",
     slug: "bound-task",
     title: "Externally connected task",
-    subtitle: "A normal Paperclip task connected to its provider conversation.",
-    group: "Paperclip",
+    subtitle: "A normal ThinkingMach task connected to its provider conversation.",
+    group: "ThinkingMach",
     tab: "Task",
     annotations: [
       "The task shows its external source and provider link.",
@@ -647,7 +647,7 @@ const sharedDefinitions = [
     slug: "agent-channels",
     title: "Agent Channels",
     subtitle: "See every provider identity representing this agent.",
-    group: "Paperclip",
+    group: "ThinkingMach",
     tab: "Agent",
     annotations: [
       "Channel identities are summarized per provider.",
@@ -743,10 +743,10 @@ for (const provider of providers) {
   );
   const settingsAnnotations = [
     "Only provider-available destinations appear here.",
-    "Each toggle is Paperclip's independent allow or deny decision.",
+    "Each toggle is ThinkingMach's independent allow or deny decision.",
     "The provider action changes availability; newly discovered destinations remain disabled.",
     ...(data.conversationToggles.length
-      ? ["Private-conversation reach is an explicit Paperclip choice."]
+      ? ["Private-conversation reach is an explicit ThinkingMach choice."]
       : []),
   ];
   detailScreens.push({
@@ -759,7 +759,7 @@ for (const provider of providers) {
     subtitle: data.settingsSubtitle,
     annotations: settingsAnnotations,
     rationale:
-      "Provider membership is the ceiling; Paperclip enablement is the narrower enforcement boundary.",
+      "Provider membership is the ceiling; ThinkingMach enablement is the narrower enforcement boundary.",
     desktopSize: `${settingsD.width}×${settingsD.height}`,
     mobileSize: `${settingsM.width}×${settingsM.height}`,
   });
@@ -783,8 +783,8 @@ for (const provider of providers) {
     subtitle: data.accessSubtitle,
     annotations: [
       "The only guest-policy choice is whether unlinked people may participate.",
-      "The restricted profile permits task conversation but never Paperclip governance.",
-      `Linked accounts map a stable ${data.identityHint} to a Paperclip user and can be revoked.`,
+      "The restricted profile permits task conversation but never ThinkingMach governance.",
+      `Linked accounts map a stable ${data.identityHint} to a ThinkingMach user and can be revoked.`,
     ],
     rationale:
       "Settings controls where the bot works; Access controls who external people represent and which authority model applies.",
@@ -871,7 +871,7 @@ function flowSvg() {
   return baseSvg(
     1280,
     880,
-    `${tx(48, 48, "Chat connector product flow", 28, "#000", 'font-weight="700"')}${tx(48, 80, "The provider grants availability; Paperclip grants permission to act.", 14, "#666")}
+    `${tx(48, 48, "Chat connector product flow", 28, "#000", 'font-weight="700"')}${tx(48, 80, "The provider grants availability; ThinkingMach grants permission to act.", 14, "#666")}
     ${node(48, 128, 176, "Connectors", "Choose provider", true)}${arrow(224, 176, 264, 176)}${node(264, 128, 192, "Choose agent", "Exactly once")}${arrow(456, 176, 496, 176)}${node(496, 128, 208, "Install or invite", "Provider ceiling")}${arrow(704, 176, 744, 176)}${node(744, 128, 208, "Test destination", "Enabled first")}${arrow(952, 176, 992, 176)}${node(992, 128, 192, "Active", "Ready", true)}
     ${tx(48, 304, "ENDPOINT MANAGEMENT", 12, "#666", 'font-weight="700"')}${node(48, 336, 232, "Settings", "Where it may work", true)}${node(304, 336, 232, "Access", "Who people are")}${node(560, 336, 232, "Conversations", "Provider ↔ task")}${node(816, 336, 232, "Activity", "Health + repair")}
     ${tx(48, 512, "RESOURCE LIFECYCLE", 12, "#666", 'font-weight="700"')}${node(48, 544, 232, "Invited / installed", "Available")}${arrow(280, 588, 320, 588)}${node(320, 544, 232, "Enabled in Settings", "Eligible")}${arrow(552, 588, 592, 588)}${node(592, 544, 232, "Conversation", "One task")}${arrow(824, 588, 864, 588)}${node(864, 544, 232, "Task output", "Safe publication")}
@@ -896,7 +896,7 @@ const groups = [
       ...detailScreens.filter((screen) => screen.provider === provider.name),
     ],
   ]),
-  ["Paperclip", sharedScreens.filter((screen) => screen.group === "Paperclip")],
+  ["ThinkingMach", sharedScreens.filter((screen) => screen.group === "ThinkingMach")],
 ];
 const orderedScreens = groups.flatMap(([, screens]) => screens);
 
@@ -916,7 +916,7 @@ function uiDocument() {
   const permissions = permissionModel
     .map(([name, behavior]) => `- **${name}:** ${behavior}`)
     .join("\n");
-  return `# Paperclip Chat Adapters UI Surfaces — v8\n\nDate: 2026-09-04  \nOriginal planning base: \`${baseSha}\`; release qualification records the exact tested revision separately.  \nReview viewer: [\`index.html\`](./index.html)  \nWireframes: [\`wireframes-v8/\`](./wireframes-v8/)\n\n## Permission model\n\n${permissions}\n\n## Access tab\n\n**Settings answers where the bot may work. Access answers who an external sender represents and what Paperclip authority applies.** A linked external identity acts as its mapped Paperclip user and is checked against current permissions on every action. An unlinked identity may be allowed under the fixed restricted profile: it can converse within enabled resources and attach safe files, but it cannot approve, change budgets, hire, manage permissions or connections, or reassign agents. The connection owner remains an internal audit and authority ceiling; it is not ordinary UI configuration.\n\n## Conversations tab\n\nEach provider has one plain list. Every row contains the external conversation, Paperclip task, current state, an Open-provider link, and Open task. There is no separate binding-management section or conversation-boundary explainer. If provider access disappears, the row becomes unavailable while its history remains inspectable.\n\nThe former \"How conversations work\" screens are removed. Provider-native activation and reply behavior remains implementation documentation, not a standalone product page.\n\n## Screen inventory\n\n| ID | Group | Surface | Title | Desktop | Mobile |\n|---|---|---|---|---|---|\n${inventory}\n\n## Annotation and action notes\n\n${details}\n`;
+  return `# ThinkingMach Chat Adapters UI Surfaces — v8\n\nDate: 2026-09-04  \nOriginal planning base: \`${baseSha}\`; release qualification records the exact tested revision separately.  \nReview viewer: [\`index.html\`](./index.html)  \nWireframes: [\`wireframes-v8/\`](./wireframes-v8/)\n\n## Permission model\n\n${permissions}\n\n## Access tab\n\n**Settings answers where the bot may work. Access answers who an external sender represents and what ThinkingMach authority applies.** A linked external identity acts as its mapped ThinkingMach user and is checked against current permissions on every action. An unlinked identity may be allowed under the fixed restricted profile: it can converse within enabled resources and attach safe files, but it cannot approve, change budgets, hire, manage permissions or connections, or reassign agents. The connection owner remains an internal audit and authority ceiling; it is not ordinary UI configuration.\n\n## Conversations tab\n\nEach provider has one plain list. Every row contains the external conversation, ThinkingMach task, current state, an Open-provider link, and Open task. There is no separate binding-management section or conversation-boundary explainer. If provider access disappears, the row becomes unavailable while its history remains inspectable.\n\nThe former \"How conversations work\" screens are removed. Provider-native activation and reply behavior remains implementation documentation, not a standalone product page.\n\n## Screen inventory\n\n| ID | Group | Surface | Title | Desktop | Mobile |\n|---|---|---|---|---|---|\n${inventory}\n\n## Annotation and action notes\n\n${details}\n`;
 }
 
 function viewerHtml() {
@@ -938,7 +938,7 @@ function viewerHtml() {
   const sections = groups
     .map(
       ([label, screens]) =>
-        `<div class="provider-break"><div class="lede">${esc(label)}</div><h2>${label === "Start" ? "Shared connection start" : label === "Paperclip" ? "Shared Paperclip surfaces" : `${esc(label)} connector`}</h2></div>${screens
+        `<div class="provider-break"><div class="lede">${esc(label)}</div><h2>${label === "Start" ? "Shared connection start" : label === "ThinkingMach" ? "Shared ThinkingMach surfaces" : `${esc(label)} connector`}</h2></div>${screens
           .map((screen) => {
             const notes = screen.annotations
               .map(
@@ -958,7 +958,7 @@ function viewerHtml() {
       ([name, behavior]) => `<li><b>${esc(name)}</b> — ${esc(behavior)}</li>`,
     )
     .join("\n");
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Paperclip chat adapters — permissions and conversation review</title>${style}<style>.doc-links{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:16px}.doc-links a{min-height:48px;display:inline-flex;align-items:center;font-size:13px;font-weight:600}.notice{max-width:var(--maxw);margin:-32px 0 48px;padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:4px}.notice p{margin:0}.decision{margin-top:24px;padding:18px;background:var(--panel);border:1px solid var(--line);border-radius:8px}.decision b{display:block;margin-bottom:6px}.provider-break{max-width:var(--maxw);margin:80px 0 8px;padding-top:24px;border-top:2px solid var(--ink)}.provider-break h2{font-size:28px;margin:6px 0 0}.toc-body h2{margin-top:18px}code{font-size:.92em}</style></head><body><div class="shell"><details class="toc"><summary class="toc-summary"><span><span class="crumb">Chat adapters · v8</span><br><span class="title">Jump to a screen</span></span><span class="chevron" aria-hidden="true"></span></summary><nav class="toc-body" aria-label="Section navigation"><h1>Chat adapters</h1><div style="font-size:13px;color:var(--muted);margin-bottom:16px">Permissions + conversations</div><h2>Documents</h2><a href="2026-09-03-chat-adapters-architecture.md"><span class="num">A</span>Architecture</a><a href="2026-09-04-chat-adapters-ui-surfaces-v8.md"><span class="num">U</span>UI specification v8</a><a href="2026-09-04-chat-adapters-browser-e2e-runbook.md"><span class="num">E</span>Browser E2E runbook</a><a href="2026-09-04-chat-adapters-minimum-setup-v6.md"><span class="num">M</span>Minimum setup</a><a href="2026-09-04-chat-adapters-platform-surfaces.md"><span class="num">P</span>Platform research</a><h2>Flow</h2><a href="#flow"><span class="num">↳</span>Product flow</a>${toc}<h2>Review</h2><a href="#decisions"><span class="num">✓</span>Permission model</a></nav></details><main><header class="hero"><div class="crumb">Paperclip · Connectors · v8</div><h1>Providers grant presence. Paperclip grants permission.</h1><p>Settings enables destinations. Access maps people to Paperclip authority. Conversations is a simple list linking each external conversation to its task.</p><div class="decision"><b>Effective reach</b><span>Provider-installed or invited ∩ Paperclip-enabled ∩ active connection ∩ authorized action.</span></div><div class="doc-links"><a href="2026-09-03-chat-adapters-architecture.md">Architecture plan</a><a href="2026-09-04-chat-adapters-ui-surfaces-v8.md">UI specification v8</a><a href="2026-09-04-chat-adapters-browser-e2e-runbook.md">Browser E2E runbook</a><a href="2026-09-04-chat-adapters-platform-surfaces.md">Platform decisions</a></div><div class="pills"><span class="pill">${orderedScreens.length} product surfaces</span><span class="pill">4 management tabs</span><span class="pill">No walkthrough pages</span><span class="pill">Desktop + mobile</span></div></header><div class="notice" role="note"><p><b>Review convention:</b> red dashed marks are annotations, not proposed UI.</p></div><section id="flow" class="flow-section"><div class="lede">Navigation and product flow</div><h2>Provider availability, then Paperclip enablement</h2><p class="desc">The setup test destination is enabled explicitly. Later provider invitations or installations become available but remain off until enabled in Settings.</p><div class="wire" data-zoom data-caption="Chat connector product flow"><div class="label"><span>flow.svg</span><span>1280×880</span></div><img src="wireframes-v8/flow.svg" alt="Chat connector product flow"/></div></section>${sections}<section id="decisions"><div class="lede">Product decisions</div><h2>Permission model</h2><div class="notes"><ul>${permissions}</ul><div class="why"><b>Access tab:</b> linked people use current Paperclip permissions; allowed unlinked people receive a fixed restricted profile and cannot govern Paperclip.</div></div></section><div class="footer">Generated with Paperclip’s wireframe contract. Conversation walkthrough pages and binding-management controls are intentionally absent.</div></main></div><div class="lightbox" id="lb" aria-hidden="true"><span class="close" id="lbClose" role="button" aria-label="Close preview">×</span><img id="lbImg" alt=""/><div class="caption" id="lbCap"></div></div><script>const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');document.querySelectorAll('[data-zoom]').forEach(el=>el.addEventListener('click',()=>{const target=el.querySelector('img');if(!target)return;lbImg.src=target.src;lbImg.alt=target.alt;lbCap.textContent=el.dataset.caption||target.alt||'';lb.classList.add('open');lb.setAttribute('aria-hidden','false')}));function closeLightbox(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true')}lb.addEventListener('click',closeLightbox);document.getElementById('lbClose').addEventListener('click',closeLightbox);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});const tocElement=document.querySelector('details.toc'),media=window.matchMedia('(max-width:900px)'),setToc=()=>{tocElement.open=!media.matches};setToc();media.addEventListener('change',setToc);tocElement.querySelectorAll('.toc-body a').forEach(link=>link.addEventListener('click',()=>{if(media.matches)tocElement.open=false}));</script></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>ThinkingMach chat adapters — permissions and conversation review</title>${style}<style>.doc-links{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:16px}.doc-links a{min-height:48px;display:inline-flex;align-items:center;font-size:13px;font-weight:600}.notice{max-width:var(--maxw);margin:-32px 0 48px;padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:4px}.notice p{margin:0}.decision{margin-top:24px;padding:18px;background:var(--panel);border:1px solid var(--line);border-radius:8px}.decision b{display:block;margin-bottom:6px}.provider-break{max-width:var(--maxw);margin:80px 0 8px;padding-top:24px;border-top:2px solid var(--ink)}.provider-break h2{font-size:28px;margin:6px 0 0}.toc-body h2{margin-top:18px}code{font-size:.92em}</style></head><body><div class="shell"><details class="toc"><summary class="toc-summary"><span><span class="crumb">Chat adapters · v8</span><br><span class="title">Jump to a screen</span></span><span class="chevron" aria-hidden="true"></span></summary><nav class="toc-body" aria-label="Section navigation"><h1>Chat adapters</h1><div style="font-size:13px;color:var(--muted);margin-bottom:16px">Permissions + conversations</div><h2>Documents</h2><a href="2026-09-03-chat-adapters-architecture.md"><span class="num">A</span>Architecture</a><a href="2026-09-04-chat-adapters-ui-surfaces-v8.md"><span class="num">U</span>UI specification v8</a><a href="2026-09-04-chat-adapters-browser-e2e-runbook.md"><span class="num">E</span>Browser E2E runbook</a><a href="2026-09-04-chat-adapters-minimum-setup-v6.md"><span class="num">M</span>Minimum setup</a><a href="2026-09-04-chat-adapters-platform-surfaces.md"><span class="num">P</span>Platform research</a><h2>Flow</h2><a href="#flow"><span class="num">↳</span>Product flow</a>${toc}<h2>Review</h2><a href="#decisions"><span class="num">✓</span>Permission model</a></nav></details><main><header class="hero"><div class="crumb">ThinkingMach · Connectors · v8</div><h1>Providers grant presence. ThinkingMach grants permission.</h1><p>Settings enables destinations. Access maps people to ThinkingMach authority. Conversations is a simple list linking each external conversation to its task.</p><div class="decision"><b>Effective reach</b><span>Provider-installed or invited ∩ ThinkingMach-enabled ∩ active connection ∩ authorized action.</span></div><div class="doc-links"><a href="2026-09-03-chat-adapters-architecture.md">Architecture plan</a><a href="2026-09-04-chat-adapters-ui-surfaces-v8.md">UI specification v8</a><a href="2026-09-04-chat-adapters-browser-e2e-runbook.md">Browser E2E runbook</a><a href="2026-09-04-chat-adapters-platform-surfaces.md">Platform decisions</a></div><div class="pills"><span class="pill">${orderedScreens.length} product surfaces</span><span class="pill">4 management tabs</span><span class="pill">No walkthrough pages</span><span class="pill">Desktop + mobile</span></div></header><div class="notice" role="note"><p><b>Review convention:</b> red dashed marks are annotations, not proposed UI.</p></div><section id="flow" class="flow-section"><div class="lede">Navigation and product flow</div><h2>Provider availability, then ThinkingMach enablement</h2><p class="desc">The setup test destination is enabled explicitly. Later provider invitations or installations become available but remain off until enabled in Settings.</p><div class="wire" data-zoom data-caption="Chat connector product flow"><div class="label"><span>flow.svg</span><span>1280×880</span></div><img src="wireframes-v8/flow.svg" alt="Chat connector product flow"/></div></section>${sections}<section id="decisions"><div class="lede">Product decisions</div><h2>Permission model</h2><div class="notes"><ul>${permissions}</ul><div class="why"><b>Access tab:</b> linked people use current ThinkingMach permissions; allowed unlinked people receive a fixed restricted profile and cannot govern ThinkingMach.</div></div></section><div class="footer">Generated with ThinkingMach’s wireframe contract. Conversation walkthrough pages and binding-management controls are intentionally absent.</div></main></div><div class="lightbox" id="lb" aria-hidden="true"><span class="close" id="lbClose" role="button" aria-label="Close preview">×</span><img id="lbImg" alt=""/><div class="caption" id="lbCap"></div></div><script>const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');document.querySelectorAll('[data-zoom]').forEach(el=>el.addEventListener('click',()=>{const target=el.querySelector('img');if(!target)return;lbImg.src=target.src;lbImg.alt=target.alt;lbCap.textContent=el.dataset.caption||target.alt||'';lb.classList.add('open');lb.setAttribute('aria-hidden','false')}));function closeLightbox(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true')}lb.addEventListener('click',closeLightbox);document.getElementById('lbClose').addEventListener('click',closeLightbox);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});const tocElement=document.querySelector('details.toc'),media=window.matchMedia('(max-width:900px)'),setToc=()=>{tocElement.open=!media.matches};setToc();media.addEventListener('change',setToc);tocElement.querySelectorAll('.toc-body a').forEach(link=>link.addEventListener('click',()=>{if(media.matches)tocElement.open=false}));</script></body></html>`;
 }
 
 writeFileSync(

@@ -63,7 +63,7 @@ describe("managed Codex credentials", () => {
     const lease = await stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: JSON.stringify({
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: JSON.stringify({
           tokens: { access_token: "inline-canary" },
         }),
       },
@@ -110,7 +110,7 @@ describe("managed Codex credentials", () => {
     const firstLease = await stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
       },
     });
 
@@ -118,7 +118,7 @@ describe("managed Codex credentials", () => {
       stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
         environment: {
-          PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
+          THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
         },
       }),
     ).rejects.toThrow("already has an active lease");
@@ -130,7 +130,7 @@ describe("managed Codex credentials", () => {
     const secondLease = await stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
       },
     });
     await expect(readFile(secondLease.path, "utf8")).resolves.toBe(
@@ -144,7 +144,7 @@ describe("managed Codex credentials", () => {
     const firstLease = await stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
       },
     });
 
@@ -154,7 +154,7 @@ describe("managed Codex credentials", () => {
       freshCredentials.stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
         environment: {
-          PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
+          THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
         },
       }),
     ).rejects.toThrow("already has an active lease");
@@ -176,7 +176,7 @@ describe("managed Codex credentials", () => {
         const lease = await stageManagedCodexCredential({
           agentHomeDirectory: fixture.home,
           environment: {
-            PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"paperclip"}',
+            THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"paperclip"}',
           },
         });
         await expect(readFile(lease.path, "utf8")).resolves.toBe(
@@ -257,7 +257,7 @@ describe("managed Codex credentials", () => {
         stageManagedCodexCredential({
           agentHomeDirectory: fixture.home,
           environment: {
-            PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
+            THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
           },
         }),
       ).rejects.toThrow("already has an active lease");
@@ -280,13 +280,13 @@ describe("managed Codex credentials", () => {
       firstCredentials.stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
         environment: {
-          PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
+          THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
         },
       }),
       secondCredentials.stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
         environment: {
-          PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
+          THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
         },
       }),
     ]);
@@ -322,7 +322,7 @@ describe("managed Codex credentials", () => {
         `const { stageManagedCodexCredential } = await import(${JSON.stringify(credentialModule)});`,
         "const lease = await stageManagedCodexCredential({",
         "  agentHomeDirectory: process.argv[2],",
-        '  environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: \'{"owner":"first"}\' },',
+        '  environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: \'{"owner":"first"}\' },',
         "});",
         'process.send?.({ type: "ready", path: lease.path });',
         "process.on('message', async (message) => {",
@@ -352,7 +352,7 @@ describe("managed Codex credentials", () => {
         stageManagedCodexCredential({
           agentHomeDirectory: fixture.home,
           environment: {
-            PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
+            THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
           },
         }),
       ).rejects.toThrow("already has an active lease");
@@ -367,7 +367,7 @@ describe("managed Codex credentials", () => {
       const successor = await stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
         environment: {
-          PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
+          THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
         },
       });
       await expect(readFile(destination, "utf8")).resolves.toBe(
@@ -395,7 +395,7 @@ describe("managed Codex credentials", () => {
       const fixture = await credentialFixture();
       const lease = await stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
-        environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+        environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
       });
       const probe = await open(fixture.home, "r");
       const prototype = Object.getPrototypeOf(probe) as {
@@ -430,7 +430,7 @@ describe("managed Codex credentials", () => {
         await expect(
           freshCredentials.stageManagedCodexCredential({
             agentHomeDirectory: fixture.home,
-            environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+            environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
           }),
         ).rejects.toThrow("already has an active lease");
 
@@ -438,7 +438,7 @@ describe("managed Codex credentials", () => {
         await expect(closing).resolves.toBeUndefined();
         const successor = await freshCredentials.stageManagedCodexCredential({
           agentHomeDirectory: fixture.home,
-          environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+          environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
         });
         await successor.close();
       } finally {
@@ -453,7 +453,7 @@ describe("managed Codex credentials", () => {
     const firstLease = await stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"first"}',
       },
     });
     await rm(firstLease.path, { force: true });
@@ -467,7 +467,7 @@ describe("managed Codex credentials", () => {
     const secondLease = await stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"second"}',
       },
     });
     await expect(firstLease.close()).resolves.toBeUndefined();
@@ -541,7 +541,7 @@ describe("managed Codex credentials", () => {
     const lease = await freshCredentials.stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"successor"}',
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"successor"}',
       },
     });
     await expect(readFile(stagingPath)).rejects.toMatchObject({
@@ -601,7 +601,7 @@ describe("managed Codex credentials", () => {
       const fixture = await credentialFixture();
       const lease = await stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
-        environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+        environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
       });
       const probe = await open(fixture.home, "r");
       const prototype = Object.getPrototypeOf(probe) as {
@@ -660,7 +660,7 @@ describe("managed Codex credentials", () => {
       try {
         const lease = await stageManagedCodexCredential({
           agentHomeDirectory: fixture.home,
-          environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+          environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
         });
         await expect(readFile(lease.path, "utf8")).resolves.toBe("{}");
         await expect(lease.close()).resolves.toBeUndefined();
@@ -704,7 +704,7 @@ describe("managed Codex credentials", () => {
     const lease = await stageManagedCodexCredential({
       agentHomeDirectory: fixture.home,
       environment: {
-        PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"fresh":true}',
+        THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"fresh":true}',
       },
     });
     await expect(readFile(destination, "utf8")).resolves.toBe('{"fresh":true}');
@@ -1468,7 +1468,7 @@ describe("managed Codex credentials", () => {
         await expect(
           stageManagedCodexCredential({
             agentHomeDirectory: fixture.home,
-            environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+            environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
           }),
         ).rejects.toThrow("remained non-durable after 8 attempts");
         await expect(readFile(destination)).rejects.toMatchObject({
@@ -1538,7 +1538,7 @@ describe("managed Codex credentials", () => {
         await expect(
           stageManagedCodexCredential({
             agentHomeDirectory: fixture.home,
-            environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+            environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
           }),
         ).rejects.toThrow("remained non-durable after 8 attempts");
         await expect(readFile(destination, "utf8")).resolves.toBe("{}");
@@ -1546,7 +1546,7 @@ describe("managed Codex credentials", () => {
         syncSpy.mockRestore();
         const lease = await stageManagedCodexCredential({
           agentHomeDirectory: fixture.home,
-          environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+          environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
         });
         await expect(readFile(destination, "utf8")).resolves.toBe("{}");
         await lease.close();
@@ -1566,14 +1566,14 @@ describe("managed Codex credentials", () => {
         agentHomeDirectory: fixture.home,
         environment: {
           OPENAI_API_KEY: "key",
-          PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}",
+          THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}",
         },
       }),
     ).rejects.toThrow(/ambiguous/);
     await expect(
       stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
-        environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "[]" },
+        environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "[]" },
       }),
     ).rejects.toThrow(/malformed/);
 
@@ -1634,7 +1634,7 @@ describe("managed Codex credentials", () => {
 
       const lease = await stageManagedCodexCredential({
         agentHomeDirectory: fixture.home,
-        environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
+        environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: "{}" },
       });
       await expect(readFile(target, "utf8")).resolves.toBe('{"outside":true}');
       expect((await stat(lease.path)).isFile()).toBe(true);

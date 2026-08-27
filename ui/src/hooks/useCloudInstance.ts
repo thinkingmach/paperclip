@@ -3,7 +3,7 @@ import { healthApi } from "@/api/health";
 import { queryKeys } from "@/lib/queryKeys";
 
 /**
- * Reads Paperclip Cloud metadata from the app-wide health query cache.
+ * Reads ThinkingMach Cloud metadata from the app-wide health query cache.
  * CloudAccessGate owns the fetch; disabling this observer's query function
  * prevents consumers from adding another health request when they mount.
  */

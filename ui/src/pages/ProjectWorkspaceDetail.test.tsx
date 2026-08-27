@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Project, ProjectWorkspace } from "@paperclipai/shared";
+import type { Project, ProjectWorkspace } from "@thinkingmach/shared";
 import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -103,7 +103,7 @@ function projectWorkspace(overrides: Partial<ProjectWorkspace> = {}): ProjectWor
     name: "Primary checkout",
     sourceType: "local_path",
     cwd: "/tmp/paperclip",
-    repoUrl: "https://github.com/paperclipai/paperclip",
+    repoUrl: "https://github.com/thinkingmach/paperclip",
     repoRef: "master",
     defaultRef: "origin/main",
     visibility: "default",
@@ -132,7 +132,7 @@ function project(overrides: Partial<Project> = {}): Project {
     goalId: null,
     goalIds: [],
     goals: [],
-    name: "Paperclip App",
+    name: "ThinkingMach App",
     description: null,
     status: "in_progress",
     leadAgentId: null,

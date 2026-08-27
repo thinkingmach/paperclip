@@ -11,7 +11,7 @@ import {
   type chatConversations,
   type chatPublications,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { HttpError } from "../errors.js";
 import { authorizeSlackChannel } from "./connectors/slack-access.js";
 import { slackClient } from "./connectors/slack-client.js";

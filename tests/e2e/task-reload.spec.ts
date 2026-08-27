@@ -56,7 +56,7 @@ test("an interrupted app bundle offers a retry that restores the saved task", as
     // Fail the shipped module before React (and its error boundary) can start.
     await page.route("**/assets/*.js", intercepted => intercepted.abort());
     await page.goto(route);
-    await expect(page.getByRole("heading", { name: "Paperclip couldn’t start" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "ThinkingMach couldn’t start" })).toBeVisible();
     expect(await page.locator("#root").evaluate(root => root.childElementCount)).toBe(0);
     await page.unroute("**/assets/*.js");
     await page.getByRole("button", { name: "Reload page" }).click();

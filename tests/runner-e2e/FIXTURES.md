@@ -55,7 +55,7 @@ factory validated by the shared environment schema.
 The local environment is instance-managed: company creation ensures it exists,
 and the public API intentionally rejects a second local environment. The setup
 registry therefore discovers that row through the public environments API.
-This still provides full isolation because every cell starts a new Paperclip
+This still provides full isolation because every cell starts a new ThinkingMach
 instance and database.
 
 Daytona creates sandbox environments through the public API. The core fixture
@@ -100,9 +100,9 @@ canonical Plan revision, capture its pending UI, approve in the browser, and
 prove exactly two successful runs. `warm_three_turn` provides exactly two
 browser follow-up messages, preserves one project/execution-workspace scope,
 verifies host file contents after every turn, and finishes within three
-ten-minute turn deadlines. Native turns 1 and 2 include an actionable human review in the completion report's `attentionRequests`. Paperclip creates the review gate from that report. An explicit question-tool wait yields the turn and suppresses its final prose, so it is not interchangeable with this completion-review fixture. Turn 3 reports Done without another review.
+ten-minute turn deadlines. Native turns 1 and 2 include an actionable human review in the completion report's `attentionRequests`. ThinkingMach creates the review gate from that report. An explicit question-tool wait yields the turn and suppresses its final prose, so it is not interchangeable with this completion-review fixture. Turn 3 reports Done without another review.
 
-Every selected case runs in its own isolated Paperclip process, and independent
+Every selected case runs in its own isolated ThinkingMach process, and independent
 cases may run concurrently. Follow-up turns inside one case retain their shared
 task state. Each case creates and tears down its own company, secrets,
 environment selection, agent, and browser-created task. The current plan case
@@ -121,7 +121,7 @@ Adding a task expands its suite's matrix. Update the suite's intentional size,
 the complete-catalog size, and credential-free unit tests in the same change.
 Paid tests never silently skip a missing credential or unsupported artifact.
 
-## New Paperclip object fixtures
+## New ThinkingMach object fixtures
 
 The explicit-only `lifecycle-baseline` suite reuses this registry and existing
 continuation, chat and governed-action flows. Its narrative pairs require actual

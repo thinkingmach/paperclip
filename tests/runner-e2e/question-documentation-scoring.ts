@@ -53,10 +53,10 @@ export function gradeQuestionDocumentation(checkpoints: ContinuationCheckpoint[]
     {
       id: "question-guidance-not-in-wake",
       passed: inputs.length >= 3 && inputs.every(prompt => typeof prompt === "string"
-        && prompt.includes("Use Paperclip's request_human_input for durable task questions.")
+        && prompt.includes("Use ThinkingMach's request_human_input for durable task questions.")
         && !prompt.includes("## Questions that need a user response")
         && !prompt.includes("payload.questionSet")
-        && !prompt.includes("Create a durable human question or approval card on the current Paperclip task bound to this run")),
+        && !prompt.includes("Create a durable human question or approval card on the current ThinkingMach task bound to this run")),
       detail: "Every recorded native turn must retain the short routing hint without the old question block or copied tool-format instructions.",
     },
     {

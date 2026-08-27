@@ -410,7 +410,7 @@ describe("Chat SDK endpoint runtime", () => {
       expectedKey: "teams",
       providerConfig: {
         provider: "microsoft-teams" as const,
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "teams-app",
           appPassword: "teams-password",
@@ -698,7 +698,7 @@ describe("Chat SDK endpoint runtime", () => {
     createChatSdkEndpointRuntime({
       ...baseOptions({
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: { appId: "app", appPassword: "password" },
       }),
       callbacks: { onMessage },
@@ -749,7 +749,7 @@ describe("Chat SDK endpoint runtime", () => {
     const runtime = createChatSdkEndpointRuntime({
       ...baseOptions({
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "app",
           appPassword: "password",

@@ -66,7 +66,7 @@
       "planning",
       "skill_test"
     ],
-    "description": "Fallback only: discover Paperclip API operations when the available dedicated tools cannot express the task. Prefer dedicated tools for common operations; do not search before using them. For a persistent hire, first list_agents to reuse a suitable teammate. Search agent-hires for the hiring schema and agent-configurations for compatible adapter/runtime settings, then use call_api with the returned operationId. Supply role-specific instructionsBundle.files as a filename-to-content record. Use the returned agent.id for delegation and obey any pending approval. Provider helper threads are temporary workers, not Paperclip hires. If a hire response is uncertain, reconcile with list_agents before retrying.",
+    "description": "Fallback only: discover ThinkingMach API operations when the available dedicated tools cannot express the task. Prefer dedicated tools for common operations; do not search before using them. For a persistent hire, first list_agents to reuse a suitable teammate. Search agent-hires for the hiring schema and agent-configurations for compatible adapter/runtime settings, then use call_api with the returned operationId. Supply role-specific instructionsBundle.files as a filename-to-content record. Use the returned agent.id for delegation and obey any pending approval. Provider helper threads are temporary workers, not ThinkingMach hires. If a hire response is uncertain, reconcile with list_agents before retrying.",
     "effect": "read",
     "inputSchema": {
       "additionalProperties": false,
@@ -102,7 +102,7 @@
       "api:discover"
     ],
     "schema": "paperclip.semantic-action.v1",
-    "title": "Search the Paperclip API",
+    "title": "Search the ThinkingMach API",
     "version": 1
   },
   {
@@ -112,7 +112,7 @@
       "planning",
       "skill_test"
     ],
-    "description": "Fallback only: call a discovered Paperclip API operation when dedicated tools lack the required operation or parameters. Uses your existing permissions. Prefer dedicated tools; never bypass a denial or runner lifecycle tool. For large text responses, read the returned artifact with GET /api/assets/{assetId}/content and responseText; follow nextOffsetBytes until null.",
+    "description": "Fallback only: call a discovered ThinkingMach API operation when dedicated tools lack the required operation or parameters. Uses your existing permissions. Prefer dedicated tools; never bypass a denial or runner lifecycle tool. For large text responses, read the returned artifact with GET /api/assets/{assetId}/content and responseText; follow nextOffsetBytes until null.",
     "effect": "write",
     "inputSchema": {
       "additionalProperties": false,
@@ -235,7 +235,7 @@
       "api:call"
     ],
     "schema": "paperclip.semantic-action.v1",
-    "title": "Call the Paperclip API",
+    "title": "Call the ThinkingMach API",
     "version": 1
   },
   {
@@ -1230,7 +1230,7 @@
       "standard",
       "skill_test"
     ],
-    "description": "Create one native Paperclip Runner teammate for the current company and task. The new agent reports to you, inherits your native runtime, and receives no provider, adapter, environment, or credential configuration from the tool. Reuse an existing teammate when appropriate and follow any approval returned by the API.",
+    "description": "Create one native ThinkingMach Runner teammate for the current company and task. The new agent reports to you, inherits your native runtime, and receives no provider, adapter, environment, or credential configuration from the tool. Reuse an existing teammate when appropriate and follow any approval returned by the API.",
     "effect": "write",
     "inputSchema": {
       "additionalProperties": false,

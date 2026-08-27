@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from "react";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { Button } from "@/components/ui/button";
 import {

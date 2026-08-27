@@ -2,9 +2,9 @@
 
 # Capability Capability Contract
 
-This generated contract is a self-contained derivative of the Paperclip skill, its seven references, the Paperclip Evals corpus, and the legacy MCP tool surface. It does not import or contact the Paperclip control plane.
+This generated contract is a self-contained derivative of the ThinkingMach skill, its seven references, the ThinkingMach Evals corpus, and the legacy MCP tool surface. It does not import or contact the ThinkingMach control plane.
 
-The skill/reference inventory and eval cases are the only normative behavior sources. Paperclip does not use the legacy MCP calls as a production capability surface; all MCP names below are traceability aliases folded into normative eval rows. Their disposition, grants, assertions, and evidence contract are inherited from the target row rather than classified independently.
+The skill/reference inventory and eval cases are the only normative behavior sources. ThinkingMach does not use the legacy MCP calls as a production capability surface; all MCP names below are traceability aliases folded into normative eval rows. Their disposition, grants, assertions, and evidence contract are inherited from the target row rather than classified independently.
 
 ## Baseline Counts
 
@@ -41,7 +41,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 
 | Capability | Primary disposition | Source anchor |
 | --- | --- | --- |
-| skill:skills/paperclip/SKILL.md:paperclip-skill:10 | optional_agent_tool | skills/paperclip/SKILL.md:10 |
+| skill:skills/paperclip/SKILL.md:thinkingmach-skill:10 | optional_agent_tool | skills/paperclip/SKILL.md:10 |
 | skill:skills/paperclip/SKILL.md:terminology:14 | optional_agent_tool | skills/paperclip/SKILL.md:14 |
 | skill:skills/paperclip/SKILL.md:authentication:18 | control_plane_owned | skills/paperclip/SKILL.md:18 |
 | skill:skills/paperclip/SKILL.md:conversation-tasks:30 | optional_agent_tool | skills/paperclip/SKILL.md:30 |
@@ -106,7 +106,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 | skill:skills/paperclip/references/issue-workspaces.md:stop-all-running-services:44 | optional_agent_tool | skills/paperclip/references/issue-workspaces.md:44 |
 | skill:skills/paperclip/references/issue-workspaces.md:read-the-url:63 | optional_agent_tool | skills/paperclip/references/issue-workspaces.md:63 |
 | skill:skills/paperclip/references/issue-workspaces.md:mcp-tools:72 | optional_agent_tool | skills/paperclip/references/issue-workspaces.md:72 |
-| skill:skills/paperclip/references/routines.md:paperclip-routines:1 | optional_agent_tool | skills/paperclip/references/routines.md:1 |
+| skill:skills/paperclip/references/routines.md:thinkingmach-routines:1 | optional_agent_tool | skills/paperclip/references/routines.md:1 |
 | skill:skills/paperclip/references/routines.md:lifecycle:16 | optional_agent_tool | skills/paperclip/references/routines.md:16 |
 | skill:skills/paperclip/references/routines.md:creating-a-routine:27 | optional_agent_tool | skills/paperclip/references/routines.md:27 |
 | skill:skills/paperclip/references/routines.md:concurrency-policies:64 | optional_agent_tool | skills/paperclip/references/routines.md:64 |
@@ -121,13 +121,13 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 | skill:skills/paperclip/references/routines.md:manual-run:196 | optional_agent_tool | skills/paperclip/references/routines.md:196 |
 | skill:skills/paperclip/references/routines.md:updating-a-routine:212 | optional_agent_tool | skills/paperclip/references/routines.md:212 |
 | skill:skills/paperclip/references/routines.md:reading-routines-and-runs:223 | optional_agent_tool | skills/paperclip/references/routines.md:223 |
-| skill:skills/paperclip/references/workflows.md:paperclip-workflow-playbooks:1 | optional_agent_tool | skills/paperclip/references/workflows.md:1 |
+| skill:skills/paperclip/references/workflows.md:thinkingmach-workflow-playbooks:1 | optional_agent_tool | skills/paperclip/references/workflows.md:1 |
 | skill:skills/paperclip/references/workflows.md:project-setup-ceo-manager:7 | optional_agent_tool | skills/paperclip/references/workflows.md:7 |
 | skill:skills/paperclip/references/workflows.md:openclaw-invite-ceo:22 | optional_agent_tool | skills/paperclip/references/workflows.md:22 |
 | skill:skills/paperclip/references/workflows.md:setting-agent-instructions-path:50 | optional_agent_tool | skills/paperclip/references/workflows.md:50 |
 | skill:skills/paperclip/references/workflows.md:company-import-export:79 | optional_agent_tool | skills/paperclip/references/workflows.md:79 |
 | skill:skills/paperclip/references/workflows.md:self-test-playbook-app-level:106 | optional_agent_tool | skills/paperclip/references/workflows.md:106 |
-| skill:skills/paperclip/references/api-reference.md:paperclip-api-reference:1 | optional_agent_tool | skills/paperclip/references/api-reference.md:1 |
+| skill:skills/paperclip/references/api-reference.md:thinkingmach-api-reference:1 | optional_agent_tool | skills/paperclip/references/api-reference.md:1 |
 | skill:skills/paperclip/references/api-reference.md:response-schemas:9 | optional_agent_tool | skills/paperclip/references/api-reference.md:9 |
 | skill:skills/paperclip/references/api-reference.md:agent-record-get-api-agents-me-or-get-api-agents-agentid:11 | optional_agent_tool | skills/paperclip/references/api-reference.md:11 |
 | skill:skills/paperclip/references/api-reference.md:company-portability:44 | optional_agent_tool | skills/paperclip/references/api-reference.md:44 |
@@ -161,7 +161,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 | skill:skills/paperclip/references/api-reference.md:4-unblock-reassign-and-comment:604 | control_plane_owned | skills/paperclip/references/api-reference.md:604 |
 | skill:skills/paperclip/references/api-reference.md:5-check-own-assignments:608 | optional_agent_tool | skills/paperclip/references/api-reference.md:608 |
 | skill:skills/paperclip/references/api-reference.md:6-create-subtasks-and-delegate:615 | optional_agent_tool | skills/paperclip/references/api-reference.md:615 |
-| skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-paperclip-will-auto-wake-agent-55-when-the-blocker-resolves:621 | control_plane_owned | skills/paperclip/references/api-reference.md:621 |
+| skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-thinkingmach-will-auto-wake-agent-55-when-the-blocker-resolves:621 | control_plane_owned | skills/paperclip/references/api-reference.md:621 |
 | skill:skills/paperclip/references/api-reference.md:7-dashboard-for-health-check:626 | optional_agent_tool | skills/paperclip/references/api-reference.md:626 |
 | skill:skills/paperclip/references/api-reference.md:comments-and-mentions:632 | always_agent_tool | skills/paperclip/references/api-reference.md:632 |
 | skill:skills/paperclip/references/api-reference.md:update:639 | optional_agent_tool | skills/paperclip/references/api-reference.md:639 |

@@ -1,18 +1,18 @@
 # Capability Future Binding Boundary (future upload integration / ACPX)
 
 Capability is a package-local model. It does not integrate the runner into
-Paperclip, and it must not. This page states exactly what Capability defers to
+ThinkingMach, and it must not. This page states exactly what Capability defers to
 future upload integration and what clean seam it preserves so the deferral stays cheap.
 
 ## What Capability does not do
 
-Nothing in Capability contacts a real Paperclip control plane, database, ACPX
+Nothing in Capability contacts a real ThinkingMach control plane, database, ACPX
 session, or provider credential. The 106-case conformance suite and the browser
 explorer run entirely against the in-process
 [mock ControlPlanePort](capability-mock-control-plane-port.md) and checked-in
 fixtures. The [forbidden-imports boundary](architecture.md) rejects any import
-that crosses into `server/`, `ui/`, `cli/`, `@paperclipai/db`, or other
-Paperclip workspace internals.
+that crosses into `server/`, `ui/`, `cli/`, `@thinkingmach/db`, or other
+ThinkingMach workspace internals.
 
 ## The preserved seam
 
@@ -34,7 +34,7 @@ runnable against the mock adapter after the real one exists.
 
 ## What future upload integration (ACPX) will bind
 
-future upload integration binds a real Paperclip `ControlPlanePort` implementation behind the same
+future upload integration binds a real ThinkingMach `ControlPlanePort` implementation behind the same
 seam so the semantic tools and authorization engine act against a live control
 plane instead of the mock. That work is out of scope here and requires separate
 CTO approval at the Capability checkpoint (`TASK-16908`). Until then:

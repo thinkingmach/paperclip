@@ -1,7 +1,7 @@
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   nativeRuntimePromptDigest,
   type NativeRuntimeContextSnapshot,
@@ -11,8 +11,8 @@ export function nativeRuntimeContextFixture(): NativeRuntimeContextSnapshot {
   const digest = "0".repeat(64);
   const context = {
     prompt: {
-      revision: PAPERCLIP_EXECUTION_PROMPT_REVISION,
-      text: PAPERCLIP_EXECUTION_PROMPT,
+      revision: THINKINGMACH_EXECUTION_PROMPT_REVISION,
+      text: THINKINGMACH_EXECUTION_PROMPT,
       digest: nativeRuntimePromptDigest(),
     },
     instructions: {

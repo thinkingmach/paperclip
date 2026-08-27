@@ -129,7 +129,7 @@ jobs:
       - name: Checkout canonical Evalbook reporter
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: paperclipai/paperclip-evals
+          repository: thinkingmach/paperclip-evals
           ref: 0c8dfea0ef71a73e909b59a5c0484554cbee199b
           path: .paperclip-evals
           token: ${{ steps.evals_token.outputs.value }}
@@ -157,22 +157,22 @@ jobs:
             runner-live-eval-history-${{ github.ref_name }}-
 
       - name: Build provider-neutral eval kernel
-        run: pnpm --filter @paperclipai/paperclip-eval-kernel build
+        run: pnpm --filter @thinkingmach/paperclip-eval-kernel build
 
       - name: Run trend-only live matrix
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          PAPERCLIP_EVAL_BASELINE_READY: "true"
-          PAPERCLIP_EVAL_RUNNER_BUILD: ${{ github.sha }}
-          PAPERCLIP_EVAL_MAX_CAMPAIGN_COST_USD: "12"
-          PAPERCLIP_EVAL_SCHEDULE_SEED: runner-live-seven-week-v1
-          PAPERCLIP_EVAL_CANDIDATE: ${{ inputs.candidate }}
-          PAPERCLIP_EVAL_CASE: ${{ inputs.case }}
-          PAPERCLIP_EVAL_LIMIT: ${{ inputs.limit }}
-          PAPERCLIP_EVALBOOK_PROGRAM: ${{ github.workspace }}/.paperclip-evals/evals/paperclip-runner/tools/eval_program.py
-        run: pnpm --filter @paperclipai/paperclip-runner report:runner-live-evals
+          THINKINGMACH_EVAL_BASELINE_READY: "true"
+          THINKINGMACH_EVAL_RUNNER_BUILD: ${{ github.sha }}
+          THINKINGMACH_EVAL_MAX_CAMPAIGN_COST_USD: "12"
+          THINKINGMACH_EVAL_SCHEDULE_SEED: runner-live-seven-week-v1
+          THINKINGMACH_EVAL_CANDIDATE: ${{ inputs.candidate }}
+          THINKINGMACH_EVAL_CASE: ${{ inputs.case }}
+          THINKINGMACH_EVAL_LIMIT: ${{ inputs.limit }}
+          THINKINGMACH_EVALBOOK_PROGRAM: ${{ github.workspace }}/.paperclip-evals/evals/paperclip-runner/tools/eval_program.py
+        run: pnpm --filter @thinkingmach/paperclip-runner report:runner-live-evals
 
       - name: Publish job summary
         if: always()

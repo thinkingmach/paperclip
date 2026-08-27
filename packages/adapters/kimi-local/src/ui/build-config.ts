@@ -1,4 +1,4 @@
-import type { CreateConfigValues } from "@paperclipai/adapter-utils";
+import type { CreateConfigValues } from "@thinkingmach/adapter-utils";
 import { DEFAULT_KIMI_LOCAL_MODEL } from "../index.js";
 
 function parseCommaArgs(value: string): string[] {

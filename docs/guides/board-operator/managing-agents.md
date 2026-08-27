@@ -32,13 +32,13 @@ Common adapter choices:
 - `hermes_gateway` / `openclaw_gateway` / `http` for webhook-based external agents
 - `process` for generic local command execution
 
-Use `hermes_local` when Paperclip should start the local Hermes CLI. Use
-`hermes_gateway` when Hermes is already running as an API server and Paperclip
+Use `hermes_local` when ThinkingMach should start the local Hermes CLI. Use
+`hermes_gateway` when Hermes is already running as an API server and ThinkingMach
 should call that server. Both are built-in adapter types from the unified
-`@paperclipai/hermes-paperclip-adapter` package.
+`@thinkingmach/hermes-paperclip-adapter` package.
 
 For `opencode_local`, configure an explicit `adapterConfig.model` (`provider/model`).
-Paperclip validates the selected model against live `opencode models` output.
+ThinkingMach validates the selected model against live `opencode models` output.
 
 ### Reusing model connections
 
@@ -48,7 +48,7 @@ otherwise a saved API key is selected automatically. Personal keys appear before
 organization keys. You can still choose a new key or another account:
 
 - Claude can use your saved subscription login without another sign-in.
-- OpenAI lists ChatGPT accounts saved by Paperclip's Codex sign-in flow. Choose
+- OpenAI lists ChatGPT accounts saved by ThinkingMach's Codex sign-in flow. Choose
   an account or select **Sign in to another account**.
 - In API-key mode, choose a saved personal or organization provider key, or
   enter a new key. The picker recognizes canonical provider keys (such as

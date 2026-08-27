@@ -25,8 +25,8 @@ describe("remote MCP open-ended argument inputs", () => {
       Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")!.set!.call(input, value);
       input.dispatchEvent(new Event("input", { bubbles: true }));
     });
-    await fill('{"repoName":"paperclipai/paperclip"}');
-    expect(actual).toEqual({ tools: [{ arguments: { repoName: "paperclipai/paperclip" } }] });
+    await fill('{"repoName":"thinkingmach/paperclip"}');
+    expect(actual).toEqual({ tools: [{ arguments: { repoName: "thinkingmach/paperclip" } }] });
     expect(validateJsonSchemaForm(schema, actual)).toEqual({});
     await fill('{"repoName":');
     expect(validateJsonSchemaForm(schema, actual)).toEqual({ "/tools/0/arguments": "Enter a valid JSON object" });

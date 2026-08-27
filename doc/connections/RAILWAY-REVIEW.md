@@ -7,7 +7,7 @@ before the source-deployment security follow-up below.
 
 ## Thinking Path
 
-> - Paperclip controls the access that agents receive to external resources.
+> - ThinkingMach controls the access that agents receive to external resources.
 > - Apps already supplies remote MCP, OAuth, vault storage, grants and policies.
 > - Operators need Railway service inspection, logs, deployments and container commands.
 > - The hosted Railway server alone does not supply narrow governed tools for all these operations.
@@ -24,7 +24,7 @@ Apps catalog, connection setup, gateway execution, shared contracts and connecti
 **Problem or motivation**
 
 An operator needs to authorize a Railway account once, grant access to selected
-agents, and let them inspect and operate Railway resources through Paperclip.
+agents, and let them inspect and operate Railway resources through ThinkingMach.
 
 **Proposed solution**
 
@@ -140,16 +140,16 @@ for a local preview; this is not a claim of completed live qualification.
 - [x] I have checked ROADMAP.md and confirmed this PR does not duplicate planned core work
 - [x] I have searched GitHub for duplicate or related PRs and linked them above
 - [x] I have described the issue using the feature-request fields
-- [x] I have not referenced internal Paperclip issues
+- [x] I have not referenced internal ThinkingMach issues
 - [x] My branch name describes the change
 - [ ] I have run all tests locally and they pass
 - [x] I have added or updated relevant tests
 - [x] I have updated the connection documentation
 - [x] I have documented the risks
-- [ ] All Paperclip CI gates are green
+- [ ] All ThinkingMach CI gates are green
 - [ ] Greptile is 5/5 with no open follow-ups
 - [x] I will address all reviewer comments before requesting merge
 
 Unchecked release checks remain pending. Related Railway PRs #311, #939 and
-#7861 concern hosting Paperclip on Railway, not governing Railway through Apps.
+#7861 concern hosting ThinkingMach on Railway, not governing Railway through Apps.
 This implementation uses the existing governed Apps path described in ROADMAP.md.

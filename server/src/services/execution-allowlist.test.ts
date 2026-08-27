@@ -100,7 +100,7 @@ describe("evaluateExecutionAllowlist", () => {
     it("ALLOWS the platform-managed (daytona) sandbox and the tenant's own sandbox/ssh", () => {
       // Unlike kubernetes mode, managed-sandbox-only does not pin one
       // provider: it only forbids local. Tenant-owned sandbox and ssh
-      // environments run on the tenant's own infrastructure, not Paperclip's.
+      // environments run on the tenant's own infrastructure, not ThinkingMach's.
       expect(evaluateExecutionAllowlist({ managedSandboxOnly: true }, daytonaSandboxEnv).allowed).toBe(true);
       expect(evaluateExecutionAllowlist({ managedSandboxOnly: true }, sshEnv).allowed).toBe(true);
     });

@@ -7,9 +7,9 @@ export interface NativeMcpLaunchBinding {
 export function nativeMcpLaunchBinding(
   environment: NodeJS.ProcessEnv = process.env,
 ): NativeMcpLaunchBinding | null {
-  const name = environment.PAPERCLIP_NATIVE_MCP_NAME?.trim();
-  const url = environment.PAPERCLIP_NATIVE_MCP_URL?.trim();
-  const token = environment.PAPERCLIP_NATIVE_MCP_TOKEN?.trim();
+  const name = environment.THINKINGMACH_NATIVE_MCP_NAME?.trim();
+  const url = environment.THINKINGMACH_NATIVE_MCP_URL?.trim();
+  const token = environment.THINKINGMACH_NATIVE_MCP_TOKEN?.trim();
   if (!name && !url && !token) return null;
   if (
     !name

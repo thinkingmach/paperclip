@@ -37,7 +37,7 @@ jobs:
   #
   # This was one job building linux/amd64,linux/arm64 together on an x86
   # runner. The arm64 half is emulated there, and it did not merely run slow:
-  # it wedged, every time, in `RUN pnpm --filter @paperclipai/server build`,
+  # it wedged, every time, in `RUN pnpm --filter @thinkingmach/server build`,
   # emitting nothing for 38-45 minutes until `timeout-minutes: 60` killed the
   # job. Verified across three consecutive runs on 2026-09-04; the amd64 half
   # reached `production 5/5` minutes earlier in every one.
@@ -216,10 +216,10 @@ jobs:
             type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=sha
-            type=raw,value=sha-${{ github.sha }},enable=${{ github.repository == 'paperclipai/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+            type=raw,value=sha-${{ github.sha }},enable=${{ github.repository == 'thinkingmach/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
           labels: |
-            io.github.paperclipai.schema.last-migration=${{ steps.schema.outputs.last }}
-            io.github.paperclipai.schema.migration-count=${{ steps.schema.outputs.count }}
+            io.github.thinkingmach.schema.last-migration=${{ steps.schema.outputs.last }}
+            io.github.thinkingmach.schema.migration-count=${{ steps.schema.outputs.count }}
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v7
@@ -230,8 +230,8 @@ jobs:
           # target the default would silently become that stage.
           target: production
           build-args: |
-            PAPERCLIP_BUILD_VERSION=${{ steps.build-version.outputs.version }}
-            PAPERCLIP_BUILD_COMMIT=${{ github.sha }}
+            THINKINGMACH_BUILD_VERSION=${{ steps.build-version.outputs.version }}
+            THINKINGMACH_BUILD_COMMIT=${{ github.sha }}
             CLI_TOOLS_CACHE_EPOCH=${{ steps.tools-epoch.outputs.epoch }}
           platforms: ${{ matrix.platform }}
           # By digest, not by tag: two runners cannot each push the same tag
@@ -334,10 +334,10 @@ jobs:
             type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=sha
-            type=raw,value=sha-${{ github.sha }},enable=${{ github.repository == 'paperclipai/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+            type=raw,value=sha-${{ github.sha }},enable=${{ github.repository == 'thinkingmach/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
           labels: |
-            io.github.paperclipai.schema.last-migration=${{ steps.schema.outputs.last }}
-            io.github.paperclipai.schema.migration-count=${{ steps.schema.outputs.count }}
+            io.github.thinkingmach.schema.last-migration=${{ steps.schema.outputs.last }}
+            io.github.thinkingmach.schema.migration-count=${{ steps.schema.outputs.count }}
 
       - name: Create manifest list and push
         working-directory: /tmp/digests
@@ -371,18 +371,18 @@ jobs:
       # digest, so later tag movement cannot change what was verified.
       - name: Resolve standard image digest
         id: standard
-        if: github.repository == 'paperclipai/paperclip' && github.repository_id == '1170821064' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.repository == 'thinkingmach/paperclip' && github.repository_id == '1170821064' && github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: node scripts/standard-image-contract.mjs --resolve "$GITHUB_SHA"
       - name: Verify the immutable standard image
         if: steps.standard.outputs.digest != ''
         env:
           IMAGE_DIGEST: ${{ steps.standard.outputs.digest }}
-        run: docker run --rm -i --pull always "ghcr.io/paperclipai/paperclip@$IMAGE_DIGEST" sh -s < scripts/assert-orphan-reaping.sh
+        run: docker run --rm -i --pull always "ghcr.io/thinkingmach/paperclip@$IMAGE_DIGEST" sh -s < scripts/assert-orphan-reaping.sh
       - name: Attest the standard production image
         if: steps.standard.outputs.digest != ''
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
         with:
-          subject-name: ghcr.io/paperclipai/paperclip
+          subject-name: ghcr.io/thinkingmach/paperclip
           subject-digest: ${{ steps.standard.outputs.digest }}
           push-to-registry: true
 
@@ -429,7 +429,7 @@ jobs:
           IMAGE: ghcr.io/${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          current="$(curl -fsS "https://registry.npmjs.org/-/package/@paperclipai%2Fdb/dist-tags" | jq -er .canary)"
+          current="$(curl -fsS "https://registry.npmjs.org/-/package/@thinkingmach%2Fdb/dist-tags" | jq -er .canary)"
           sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/$(printf 'canary/v%s' "$current" | jq -sRr @uri)" --jq .sha 2>/dev/null || true)"
           if [ -z "$sha" ]; then
             echo "canary/v${current} does not resolve yet; a later promotion converges the channel"

@@ -350,7 +350,7 @@ export async function runFirstTaskFlow(input: {
       desired.map((s: string | { key: string }) =>
         typeof s === "string" ? s : s.key,
       ),
-    ).toContain("paperclipai/paperclip/first-task");
+    ).toContain("thinkingmach/paperclip/first-task");
     const bundle = await api.get<{ files: Array<{ path: string }> }>(
       `/api/agents/${fixtures.agent.id}/instructions-bundle`,
     );
@@ -421,7 +421,7 @@ export async function runFirstTaskFlow(input: {
           o.id === (scenario.opening === "interview" ? "interview" : "task"),
       );
       await page
-        // Paperclip includes the option description in the accessible name.
+        // ThinkingMach includes the option description in the accessible name.
         .getByRole("radio", { name: option.label })
         .last()
         .click();

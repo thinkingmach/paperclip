@@ -4,9 +4,9 @@ import path from "node:path";
 import {
   cleanupGitHubOperationLaunchers,
   prepareGitHubOperationLaunchers,
-  startAdapterExecutionTargetPaperclipBridge,
-} from "@paperclipai/adapter-utils/execution-target";
-import { githubBrokerEnvironment } from "@paperclipai/adapter-utils/github-launcher";
+  startAdapterExecutionTargetThinkingMachBridge,
+} from "@thinkingmach/adapter-utils/execution-target";
+import { githubBrokerEnvironment } from "@thinkingmach/adapter-utils/github-launcher";
 
 type Binding = { companyId: string; agentId: string; issueId: string; runId: string };
 type LauncherInput = Parameters<typeof prepareGitHubOperationLaunchers>[0];
@@ -23,14 +23,14 @@ export async function createNativeGitHubAccess(input: {
   env: NodeJS.ProcessEnv;
   resolveCredentials: (binding: Binding) => Promise<unknown>;
   onLog?: (stream: "stdout" | "stderr", chunk: string) => Promise<void>;
-}, startBridge = startAdapterExecutionTargetPaperclipBridge) {
+}, startBridge = startAdapterExecutionTargetThinkingMachBridge) {
   const token = randomBytes(32).toString("hex");
   const location = { runId: `native-session-${randomUUID()}`, target: input.target };
   let active: Binding | null = null;
   let stopped = false;
   let ready = true;
   let stopping: Promise<void> | undefined;
-  let bridge: Awaited<ReturnType<typeof startAdapterExecutionTargetPaperclipBridge>> = null;
+  let bridge: Awaited<ReturnType<typeof startAdapterExecutionTargetThinkingMachBridge>> = null;
   const server = createServer(async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
     res.setHeader("Content-Type", "application/json");
@@ -119,11 +119,11 @@ export async function createNativeGitHubAccess(input: {
       ...location, cwd: input.cwd,
       env: {
         ...githubBrokerEnvironment({ PATH: input.env.PATH }, {
-          url: ready ? bridge?.env.PAPERCLIP_API_URL ?? url : "",
-          token: ready ? bridge?.env.PAPERCLIP_API_KEY ?? token : "",
+          url: ready ? bridge?.env.THINKINGMACH_API_URL ?? url : "",
+          token: ready ? bridge?.env.THINKINGMACH_API_KEY ?? token : "",
         }),
         // Never retain an old run's bridge authentication override.
-        PAPERCLIP_GITHUB_BRIDGE_TOKEN: ready ? bridge?.env.PAPERCLIP_API_KEY ?? token : "",
+        THINKINGMACH_GITHUB_BRIDGE_TOKEN: ready ? bridge?.env.THINKINGMACH_API_KEY ?? token : "",
       },
     });
     return {

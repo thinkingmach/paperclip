@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Screenshot utility for Paperclip UI.
+ * Screenshot utility for ThinkingMach UI.
  *
  * Reads the board token from ~/.paperclip/auth.json and injects it as a
  * Bearer header so Playwright can access authenticated pages.
@@ -73,7 +73,7 @@ const origin = new URL(url).origin;
     });
 
     const page = await context.newPage();
-    // Scope the auth header to the Paperclip origin only
+    // Scope the auth header to the ThinkingMach origin only
     await page.route(`${origin}/**`, async (route) => {
       await route.continue({
         headers: { ...route.request().headers(), Authorization: `Bearer ${cred.token}` },

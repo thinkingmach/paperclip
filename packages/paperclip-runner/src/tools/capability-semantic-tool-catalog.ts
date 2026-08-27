@@ -1,7 +1,7 @@
 /** Scenario/eval projection of the per-action protocol definitions. */
-import { PAPERCLIP_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
+import { THINKINGMACH_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
 import type { CapabilityOptionalCatalogGroup, CapabilitySemanticToolDescriptor } from "./capability-semantic-tool-types.js";
-const descriptors = PAPERCLIP_PROTOCOL_ACTIONS.filter((action) => action.scenario !== null)
+const descriptors = THINKINGMACH_PROTOCOL_ACTIONS.filter((action) => action.scenario !== null)
   .sort((left, right) => left.scenario!.order - right.scenario!.order)
   .map((action) => action.scenario!.descriptor as unknown as CapabilitySemanticToolDescriptor);
 export const CAPABILITY_SEMANTIC_TOOL_CATALOG: readonly CapabilitySemanticToolDescriptor[] = Object.freeze(descriptors);

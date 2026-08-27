@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { resolvePaperclipInstanceRoot } from "../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../home-paths.js";
 
 /**
  * One orphan pending-cleanup record. The acquire builds it when the conditional
@@ -75,7 +75,7 @@ let tempFileCounter = 0;
 function resolveDefaultSpoolDir(): string {
   return (
     process.env.SANDBOX_ORPHAN_CLEANUP_SPOOL_DIR ??
-    path.resolve(resolvePaperclipInstanceRoot(), "data", "sandbox-orphan-cleanup")
+    path.resolve(resolveThinkingMachInstanceRoot(), "data", "sandbox-orphan-cleanup")
   );
 }
 

@@ -9,7 +9,7 @@ import {
   UserRound,
   UserRoundPen,
 } from "lucide-react";
-import type { DeploymentMode } from "@paperclipai/shared";
+import type { DeploymentMode } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { authApi } from "@/api/auth";
 import { queryKeys } from "@/lib/queryKeys";
@@ -24,8 +24,8 @@ import { ThemeToggle } from "./ThemeToggle";
 import { SidebarServerInfo } from "./SidebarServerInfo";
 
 const PROFILE_SETTINGS_PATH = "/company/settings/instance/profile";
-const DOCS_URL = "https://docs.paperclip.ing/";
-const FEEDBACK_URL = "https://paperclip.ing/feedback";
+const DOCS_URL = "https://docs.thinkingmach.com/";
+const FEEDBACK_URL = "https://thinkingmach.com/feedback";
 
 interface SidebarAccountMenuProps {
   deploymentMode?: DeploymentMode;

@@ -12,7 +12,7 @@ import {
   nativeRunFinalizations,
   toolInvocations,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { decideNativeReplacement } from "./native-replacement-evidence.js";
 import { issueService } from "../issues.js";
 import { issueRecoveryActionService } from "../issue-recovery-actions.js";

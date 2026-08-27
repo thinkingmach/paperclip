@@ -27,11 +27,11 @@ describe("Codex security configuration", () => {
   });
 
   it("preserves target DNS symlink resources without opening all of /run", () => {
-    const source = { PAPERCLIP_RUNNER_NETWORK_ACCESS: "enabled", PAPERCLIP_RUNNER_NETWORK_ROOTS: '["/run/systemd/resolve/stub-resolv.conf","/etc/ssl/certs"]' };
+    const source = { THINKINGMACH_RUNNER_NETWORK_ACCESS: "enabled", THINKINGMACH_RUNNER_NETWORK_ROOTS: '["/run/systemd/resolve/stub-resolv.conf","/etc/ssl/certs"]' };
     const args = createIsolatedCodexAppServerArgs(source).join("\n");
     expect(args).toContain('"/run/systemd/resolve/stub-resolv.conf"="read"');
     expect(args).not.toContain('"/run"="read"');
-    expect(codexNetworkReadOnlyRoots({ ...source, PAPERCLIP_RUNNER_NETWORK_ACCESS: "disabled" })).toEqual([]);
+    expect(codexNetworkReadOnlyRoots({ ...source, THINKINGMACH_RUNNER_NETWORK_ACCESS: "disabled" })).toEqual([]);
   });
 
   it("requires the controller's network decision even when GitHub credentials exist", () => {
@@ -44,7 +44,7 @@ describe("Codex security configuration", () => {
 
   it("honors an explicit network restriction independently of GitHub", () => {
     for (const GH_TOKEN of [undefined, "managed-token"]) {
-      const args = createIsolatedCodexAppServerArgs({ GH_TOKEN, PAPERCLIP_RUNNER_NETWORK_ACCESS: "disabled" }).join("\n");
+      const args = createIsolatedCodexAppServerArgs({ GH_TOKEN, THINKINGMACH_RUNNER_NETWORK_ACCESS: "disabled" }).join("\n");
       expect(args).toContain("network.enabled=false");
       expect(args).not.toContain("network.enabled=true");
     }
@@ -52,17 +52,17 @@ describe("Codex security configuration", () => {
 
   it("restores host Git resources without exposing the provider home", () => {
     const args = createIsolatedCodexAppServerArgs({
-      HOME: "/provider", CODEX_HOME: "/provider", PATH: "/usr/bin:/bin", PAPERCLIP_GITHUB_AUTH_MODE: "host",
-      OPENAI_API_KEY: "must-not-cross", DATABASE_URL: "must-not-cross", PAPERCLIP_API_KEY: "must-not-cross",
-      PAPERCLIP_GITHUB_HOST_HOME: "/legacy", GH_CONFIG_DIR: "/legacy/.config/gh",
-      SSH_AUTH_SOCK: "/agent/socket", PAPERCLIP_GIT_METADATA_ROOTS: '["/repo/.git","/repo/.git"]',
+      HOME: "/provider", CODEX_HOME: "/provider", PATH: "/usr/bin:/bin", THINKINGMACH_GITHUB_AUTH_MODE: "host",
+      OPENAI_API_KEY: "must-not-cross", DATABASE_URL: "must-not-cross", THINKINGMACH_API_KEY: "must-not-cross",
+      THINKINGMACH_GITHUB_HOST_HOME: "/legacy", GH_CONFIG_DIR: "/legacy/.config/gh",
+      SSH_AUTH_SOCK: "/agent/socket", THINKINGMACH_GIT_METADATA_ROOTS: '["/repo/.git","/repo/.git"]',
     }).join("\n");
     const allowlist = JSON.parse(args.split("\n").find((arg) => arg.startsWith("shell_environment_policy.include_only="))!.split("=", 2)[1]!);
-    expect(allowlist).toEqual(["GH_CONFIG_DIR", "HOME", "PAPERCLIP_GITHUB_AUTH_MODE", "PAPERCLIP_GITHUB_HOST_HOME", "PAPERCLIP_GIT_METADATA_ROOTS", "PATH", "SSH_AUTH_SOCK"]);
+    expect(allowlist).toEqual(["GH_CONFIG_DIR", "HOME", "THINKINGMACH_GITHUB_AUTH_MODE", "THINKINGMACH_GITHUB_HOST_HOME", "THINKINGMACH_GIT_METADATA_ROOTS", "PATH", "SSH_AUTH_SOCK"]);
     expect(args).not.toContain("must-not-cross");
     expect(args).not.toContain("OPENAI_API_KEY");
     expect(args).not.toContain("DATABASE_URL");
-    expect(args).not.toContain("PAPERCLIP_API_KEY");
+    expect(args).not.toContain("THINKINGMACH_API_KEY");
     expect(args).toContain('HOME="/legacy"');
     expect(args).toContain('"/legacy/.gitconfig"="read"');
     expect(args).toContain('"/legacy/.ssh"="read"');
@@ -93,7 +93,7 @@ describe("Codex security configuration", () => {
         HOME: "/host/home",
         CODEX_HOME: "/host/codex",
         PATH: "/safe/bin",
-        PAPERCLIP_RUNNER_NETWORK_ACCESS: "enabled",
+        THINKINGMACH_RUNNER_NETWORK_ACCESS: "enabled",
         LANG: "C.UTF-8",
         OPENAI_API_KEY: "must-not-cross",
       },
@@ -112,7 +112,7 @@ describe("Codex security configuration", () => {
     expect(serialized).toContain('":workspace_roots"={"."="write"}');
     expect(serialized).toContain('":workspace_roots"={"."="read"}');
     expect(serialized).toContain("network.enabled=true");
-    expect(serialized).toContain('shell_environment_policy.include_only=["LANG","PAPERCLIP_RUNNER_NETWORK_ACCESS","PATH"]');
+    expect(serialized).toContain('shell_environment_policy.include_only=["LANG","THINKINGMACH_RUNNER_NETWORK_ACCESS","PATH"]');
     expect(serialized).toContain('PATH="/safe/bin"');
     expect(serialized).toContain('LANG="C.UTF-8"');
     expect(serialized).not.toContain("OPENAI_API_KEY");
@@ -122,10 +122,10 @@ describe("Codex security configuration", () => {
   it("inherits only projected GitHub credentials without serializing their values", () => {
     const args = createIsolatedCodexAppServerArgs({
       PATH: "/safe/bin",
-      PAPERCLIP_RUNNER_NETWORK_ACCESS: "enabled",
+      THINKINGMACH_RUNNER_NETWORK_ACCESS: "enabled",
       GH_TOKEN: "must-remain-in-process-environment",
       GITHUB_TOKEN: "must-remain-in-process-environment",
-      PAPERCLIP_GIT_TOKEN: "must-remain-in-process-environment",
+      THINKINGMACH_GIT_TOKEN: "must-remain-in-process-environment",
       GIT_TERMINAL_PROMPT: "0",
       GIT_CONFIG_COUNT: "1",
       GIT_CONFIG_KEY_0: "credential.https://github.com.helper",
@@ -152,10 +152,10 @@ describe("Codex security configuration", () => {
     const serialized = createIsolatedCodexAppServerArgs({
       HOME: "/isolated/provider", CODEX_HOME: "/isolated/provider",
       PATH: "/runtime/run-B:/safe/bin",
-      PAPERCLIP_GITHUB_LAUNCHER_DIR: "/runtime/run-B",
-      PAPERCLIP_GITHUB_BROKER_TOKEN: "private-run-capability",
-      PAPERCLIP_GITHUB_BRIDGE_TOKEN: "private-bridge-capability",
-      PAPERCLIP_API_KEY: "forbidden-agent-token",
+      THINKINGMACH_GITHUB_LAUNCHER_DIR: "/runtime/run-B",
+      THINKINGMACH_GITHUB_BROKER_TOKEN: "private-run-capability",
+      THINKINGMACH_GITHUB_BRIDGE_TOKEN: "private-bridge-capability",
+      THINKINGMACH_API_KEY: "forbidden-agent-token",
       GH_CONFIG_DIR: "/runtime/run-B/gh-config",
     }).join("\n");
     expect(serialized).toContain('"/isolated/provider"="none"');
@@ -164,8 +164,8 @@ describe("Codex security configuration", () => {
     expect(serialized).toContain('HOME="/runtime/run-B"');
     expect(serialized).toContain('ZDOTDIR="/runtime/run-B"');
     expect(serialized).toContain('BASH_ENV="/runtime/run-B/.bashrc"');
-    expect(serialized).toContain('"PAPERCLIP_GITHUB_BRIDGE_TOKEN"');
-    expect(serialized).not.toContain("PAPERCLIP_API_KEY");
+    expect(serialized).toContain('"THINKINGMACH_GITHUB_BRIDGE_TOKEN"');
+    expect(serialized).not.toContain("THINKINGMACH_API_KEY");
     expect(serialized).not.toContain("private-run-capability");
     expect(serialized).not.toContain("private-bridge-capability");
     expect(serialized).not.toContain("forbidden-agent-token");
@@ -184,7 +184,7 @@ describe("Codex security configuration", () => {
   });
 
   it("uses the outer sandbox for default-mode commands only when the controller authorizes it", () => {
-    const source = { PAPERCLIP_RUNNER_EXTERNAL_SANDBOX: "1", PAPERCLIP_RUNNER_NETWORK_ACCESS: "enabled" };
+    const source = { THINKINGMACH_RUNNER_EXTERNAL_SANDBOX: "1", THINKINGMACH_RUNNER_NETWORK_ACCESS: "enabled" };
     const externalArgs = createIsolatedCodexAppServerArgs(source);
     const serializedExternalArgs = externalArgs.join("\n");
     expect(externalArgs).toContain(

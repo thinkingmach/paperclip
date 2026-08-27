@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "microsoft-teams",
   "name": "Microsoft Teams",
-  "description": "Let people start and continue Paperclip work with an agent from Microsoft Teams.",
+  "description": "Let people start and continue ThinkingMach work with an agent from Microsoft Teams.",
   "categories": [
     "communication"
   ],
@@ -24,7 +24,7 @@
       "ownershipModes": [
         "customer"
       ],
-      "whenToUse": "Let people in Microsoft Teams start and continue work with one Paperclip agent.",
+      "whenToUse": "Let people in Microsoft Teams start and continue work with one ThinkingMach agent.",
       "credentialFields": [
         {
           "key": "clientId",

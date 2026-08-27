@@ -1,6 +1,6 @@
 /** Redacted presentation contracts shared with the production API. */
-import type { AiProvider, AiAuthMethod, AiManagedConnectionSummary, AiConnectionBinding } from "@paperclipai/shared";
-export type { AiProvider, AiAuthMethod, AiConnectionBinding } from "@paperclipai/shared";
+import type { AiProvider, AiAuthMethod, AiManagedConnectionSummary, AiConnectionBinding } from "@thinkingmach/shared";
+export type { AiProvider, AiAuthMethod, AiConnectionBinding } from "@thinkingmach/shared";
 export type AiConnectionStatus = AiManagedConnectionSummary["status"];
 
 export const AI_PROVIDERS: Record<

@@ -1,7 +1,7 @@
 import { and, eq, inArray } from "drizzle-orm";
 import { createHash } from "node:crypto";
-import type { Db } from "@paperclipai/db";
-import { agentWakeupRequests } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { agentWakeupRequests } from "@thinkingmach/db";
 
 export const ISSUE_BLOCKERS_RESOLVED_WAKE_REASON = "issue_blockers_resolved";
 

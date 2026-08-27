@@ -11,10 +11,10 @@
     {
       "id": "mcp:paperclipMe",
       "name": "paperclipMe",
-      "description": "Get the current authenticated Paperclip actor details",
+      "description": "Get the current authenticated ThinkingMach actor details",
       "sourceKind": "legacy_mcp_alias",
       "sourceAnchor": "packages/mcp-server/src/tools.ts:290",
-      "expectedSemantics": "Get the current authenticated Paperclip actor details",
+      "expectedSemantics": "Get the current authenticated ThinkingMach actor details",
       "foldedInto": "eval:hb-inbox-lite-01",
       "evidenceId": "mcp:paperclipMe"
     },
@@ -421,10 +421,10 @@
     {
       "id": "mcp:paperclipApiRequest",
       "name": "paperclipApiRequest",
-      "description": "Make a JSON request to an existing Paperclip /api endpoint for unsupported operations",
+      "description": "Make a JSON request to an existing ThinkingMach /api endpoint for unsupported operations",
       "sourceKind": "legacy_mcp_alias",
       "sourceAnchor": "packages/mcp-server/src/tools.ts:677",
-      "expectedSemantics": "Make a JSON request to an existing Paperclip /api endpoint for unsupported operations",
+      "expectedSemantics": "Make a JSON request to an existing ThinkingMach /api endpoint for unsupported operations",
       "foldedInto": "eval:rf-api-404-report-01",
       "evidenceId": "mcp:paperclipApiRequest"
     }

@@ -2,14 +2,14 @@ import type {
   AdapterEnvironmentCheck,
   AdapterEnvironmentTestContext,
   AdapterEnvironmentTestResult,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   asNumber,
   asString,
   asStringArray,
   ensurePathInEnv,
   parseObject,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 import {
   describeAdapterExecutionTarget,
   prepareAdapterExecutionTargetRuntime,
@@ -17,7 +17,7 @@ import {
   ensureAdapterExecutionTargetDirectory,
   resolveAdapterExecutionTargetCwd,
   runAdapterExecutionTargetProcess,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import { mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -25,7 +25,7 @@ import { stageGrokHomeForSync } from "./grok-home.js";
 import { copyBackGrokAuth } from "./grok-auth-copyback.js";
 import { DEFAULT_GROK_LOCAL_MODEL } from "../index.js";
 import { parseGrokJsonl } from "./parse.js";
-import { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
+import { ADAPTER_AUTH_MISSING_CHECK_CODE } from "@thinkingmach/shared";
 
 export interface GrokModelsProbe {
   authenticated: boolean;

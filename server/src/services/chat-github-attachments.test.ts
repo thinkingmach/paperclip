@@ -23,7 +23,7 @@ const request = vi.mocked(guardedRemoteHttpFetch);
 const imageUrl =
   "https://github.com/user-attachments/assets/11111111-2222-3333-4444-555555555555";
 const fileUrl = "https://github.com/user-attachments/files/31917991/proof.txt";
-const threadId = "github:paperclipai/chat-e2e:issue:42";
+const threadId = "github:thinkingmach/chat-e2e:issue:42";
 const png = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10, 0]);
 function message(overrides: Record<string, unknown> = {}): Message {
   return {
@@ -40,7 +40,7 @@ function message(overrides: Record<string, unknown> = {}): Message {
       type: "issue_comment",
       prNumber: 42,
       threadType: "issue",
-      repository: { full_name: "paperclipai/chat-e2e" },
+      repository: { full_name: "thinkingmach/chat-e2e" },
       comment: { id: 4242, body: `![Image](${imageUrl}) [proof](${fileUrl})` },
     },
     ...overrides,
@@ -64,8 +64,8 @@ const signedImageUrl =
 function canonicalComment(overrides: Record<string, unknown> = {}) {
   return {
     id: 4242,
-    url: "https://api.github.com/repos/paperclipai/chat-e2e/issues/comments/4242",
-    issue_url: "https://api.github.com/repos/paperclipai/chat-e2e/issues/42",
+    url: "https://api.github.com/repos/thinkingmach/chat-e2e/issues/comments/4242",
+    issue_url: "https://api.github.com/repos/thinkingmach/chat-e2e/issues/42",
     body: (message().raw as { comment: { body: string } }).comment.body,
     body_html: `<p><a href="${imageUrl}"><img src="${signedImageUrl}"></a><a href="${fileUrl}">proof</a></p>`,
     ...overrides,
@@ -340,7 +340,7 @@ describe("GitHub exact-comment private image resolution", () => {
     { body: "edited body" },
     { issue_url: "https://api.github.com/repos/other/repo/issues/42" },
     {
-      url: "https://api.github.com/repos/paperclipai/chat-e2e/issues/comments/4243",
+      url: "https://api.github.com/repos/thinkingmach/chat-e2e/issues/comments/4243",
     },
     {
       body_html: `<a href="${imageUrl}"><img src="${signedImageUrl}"><img src="${signedImageUrl}"></a>`,
@@ -379,7 +379,7 @@ describe("GitHub exact-comment private image resolution", () => {
   });
   it("uses the documented review-comment media type and exact review-root binding", () => {
     const value = message({
-      threadId: "github:paperclipai/chat-e2e:42:rc:4000",
+      threadId: "github:thinkingmach/chat-e2e:42:rc:4000",
     });
     const raw = value.raw as Record<string, unknown>;
     raw.type = "review_comment";
@@ -387,13 +387,13 @@ describe("GitHub exact-comment private image resolution", () => {
     const image = githubPublicAttachmentsFromMessage(value)[0]!;
     const requestDescriptor = githubAttachmentCommentRequest(image)!;
     expect(requestDescriptor).toEqual({
-      url: "https://api.github.com/repos/paperclipai/chat-e2e/pulls/comments/4242",
+      url: "https://api.github.com/repos/thinkingmach/chat-e2e/pulls/comments/4242",
       accept: "application/vnd.github-commitcomment.full+json",
     });
     const response = canonicalComment({
       url: requestDescriptor.url,
       pull_request_url:
-        "https://api.github.com/repos/paperclipai/chat-e2e/pulls/42",
+        "https://api.github.com/repos/thinkingmach/chat-e2e/pulls/42",
       in_reply_to_id: 4000,
     });
     expect(resolveGitHubCommentAttachmentTarget(image, response)?.href).toBe(
@@ -683,8 +683,8 @@ describe("public GitHub attachment extraction", () => {
   it.each([
     { id: "99" },
     { threadId: "github:other/repo:issue:42" },
-    { threadId: "github:paperclipai/chat-e2e:issue:43" },
-    { threadId: "github:paperclipai/chat-e2e:42:rc:4242" },
+    { threadId: "github:thinkingmach/chat-e2e:issue:43" },
+    { threadId: "github:thinkingmach/chat-e2e:42:rc:4242" },
   ])("rejects forged source tuples %j", (override) => {
     expect(githubPublicAttachmentsFromMessage(message(override))).toEqual([]);
     expect(request).not.toHaveBeenCalled();
@@ -853,7 +853,7 @@ describe("public GitHub attachment download", () => {
       expect(init.credentials).toBe("omit");
       expect(init.headers).toEqual({
         accept: "*/*",
-        "user-agent": "Paperclip/ChatAttachments",
+        "user-agent": "ThinkingMach/ChatAttachments",
       });
       expect(guard.allowPrivateNetwork).toBe(false);
     }

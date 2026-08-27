@@ -84,7 +84,7 @@ asserts this parity (the 18/18 fake-agent/Codex operation matrix).
 ## Running the tests
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/tools/capability-semantic-tools.test.ts
 ```
 

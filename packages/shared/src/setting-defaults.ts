@@ -6,7 +6,7 @@ import type { InstanceGeneralSettings } from "./types/instance.js";
  *
  * A hosting operator (a managed cloud, an internal shared server) can replace
  * the schema default of selected instance settings by setting the
- * `PAPERCLIP_SETTING_DEFAULTS` environment variable to a JSON object, e.g.
+ * `THINKINGMACH_SETTING_DEFAULTS` environment variable to a JSON object, e.g.
  * `{"feedbackDataSharingPreference":"allowed"}`. The operator value
  * substitutes for the schema default at read time: any field whose effective
  * value is still the schema default resolves to the operator value, while an
@@ -21,11 +21,11 @@ import type { InstanceGeneralSettings } from "./types/instance.js";
  * fleet of mixed app versions where older images predate a field.
  *
  * Pairing note: an operator that also wants the control invisible hides it
- * with `PAPERCLIP_HIDDEN_SETTINGS` (see settings-visibility.ts); the two
+ * with `THINKINGMACH_HIDDEN_SETTINGS` (see settings-visibility.ts); the two
  * mechanisms are orthogonal.
  */
 
-export const SETTING_DEFAULTS_ENV_KEY = "PAPERCLIP_SETTING_DEFAULTS";
+export const SETTING_DEFAULTS_ENV_KEY = "THINKINGMACH_SETTING_DEFAULTS";
 
 /** Instance → General fields whose schema default an operator may replace. */
 export const DEFAULTABLE_GENERAL_SETTINGS = [
@@ -57,7 +57,7 @@ const defaultableFieldsSchema = instanceGeneralSettingsSchema
 const schemaDefaults: InstanceGeneralSettings = instanceGeneralSettingsSchema.parse({});
 
 /**
- * Parse a `PAPERCLIP_SETTING_DEFAULTS`-style JSON object.
+ * Parse a `THINKINGMACH_SETTING_DEFAULTS`-style JSON object.
  *
  * @throws when the JSON is malformed, not an object, or a known field carries
  * an invalid value — policy configuration fails closed.

@@ -8,7 +8,7 @@ describe("runtime connection tools token", () => {
   });
 
   it("binds the token to company, agent, run, responsible user, and scope", () => {
-    vi.stubEnv("PAPERCLIP_AGENT_JWT_SECRET", "test-runtime-tools-secret");
+    vi.stubEnv("THINKINGMACH_AGENT_JWT_SECRET", "test-runtime-tools-secret");
     vi.setSystemTime(new Date("2026-08-26T12:00:00.000Z"));
     const minted = createRuntimeToolsToken({
       agentId: "agent-1",
@@ -27,7 +27,7 @@ describe("runtime connection tools token", () => {
   });
 
   it("rejects tampering and expiry", () => {
-    vi.stubEnv("PAPERCLIP_AGENT_JWT_SECRET", "test-runtime-tools-secret");
+    vi.stubEnv("THINKINGMACH_AGENT_JWT_SECRET", "test-runtime-tools-secret");
     vi.setSystemTime(new Date("2026-08-26T12:00:00.000Z"));
     const minted = createRuntimeToolsToken({
       agentId: "agent-1",

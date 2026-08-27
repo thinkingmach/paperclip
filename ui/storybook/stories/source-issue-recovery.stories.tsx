@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
-import type { IssueRecoveryAction, IssueRelationIssueSummary } from "@paperclipai/shared";
+import type { IssueRecoveryAction, IssueRelationIssueSummary } from "@thinkingmach/shared";
 import { Eye, ExternalLink, OctagonAlert, RefreshCw, TriangleAlert } from "lucide-react";
 import { IssueRecoveryActionCard } from "@/components/IssueRecoveryActionCard";
 import { IssueRow } from "@/components/IssueRow";
@@ -574,7 +574,7 @@ function InboxRowPanel() {
 }
 
 const meta = {
-  title: "Paperclip/Source Issue Recovery",
+  title: "ThinkingMach/Source Issue Recovery",
   component: AllStatesPanel,
   parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof AllStatesPanel>;

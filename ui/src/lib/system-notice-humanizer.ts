@@ -1,4 +1,4 @@
-import type { IssueCommentPresentation } from "@paperclipai/shared";
+import type { IssueCommentPresentation } from "@thinkingmach/shared";
 import type { SystemNoticeTone } from "../components/SystemNotice";
 
 /**

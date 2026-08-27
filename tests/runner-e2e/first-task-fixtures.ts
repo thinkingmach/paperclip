@@ -1,4 +1,4 @@
-import { normalizePaperclipOperationalSkillPreference } from "../../packages/adapter-utils/src/server-utils.js";
+import { normalizeThinkingMachOperationalSkillPreference } from "../../packages/adapter-utils/src/server-utils.js";
 import type { RunnerApi } from "./api.js";
 import type { LiveFixtureValues } from "./live-fixtures.js";
 import type { CredentialName, MatrixExecution } from "./types.js";
@@ -84,7 +84,7 @@ export function firstTaskNativeRuntimePatch(
   else config.model = agent.adapterConfig.model;
   return {
     adapterType: "paperclip_runner",
-    adapterConfig: normalizePaperclipOperationalSkillPreference(
+    adapterConfig: normalizeThinkingMachOperationalSkillPreference(
       "paperclip_runner",
       config,
     ),

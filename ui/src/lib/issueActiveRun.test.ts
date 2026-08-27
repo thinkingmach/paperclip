@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 import type { ActiveRunForIssue, LiveRunForIssue } from "../api/heartbeats";
 import { resolveIssueActiveRun, shouldTrackIssueActiveRun } from "./issueActiveRun";
 

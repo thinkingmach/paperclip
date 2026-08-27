@@ -14,13 +14,13 @@ set -euo pipefail
 # pointing at /run/user/<uid>; see the smoke_service job in
 # .github/workflows/release-smoke.yml.
 
-PAPERCLIPAI_VERSION="${PAPERCLIPAI_VERSION:-latest}"
+THINKINGMACH_VERSION="${THINKINGMACH_VERSION:-latest}"
 DATA_DIR="${DATA_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/paperclip-service-smoke.XXXXXX")}"
 ONBOARD_TIMEOUT_SECONDS="${ONBOARD_TIMEOUT_SECONDS:-600}"
 SMOKE_READY_TIMEOUT_SECONDS="${SMOKE_READY_TIMEOUT_SECONDS:-420}"
 HEALTH_URL="${HEALTH_URL:-http://127.0.0.1:3100/api/health}"
-SERVICE_NAME="paperclipai.service"
-SHIM_PATH="${PAPERCLIP_SHIM_PATH:-$HOME/.local/bin/paperclipai}"
+SERVICE_NAME="thinkingmach.service"
+SHIM_PATH="${THINKINGMACH_SHIM_PATH:-$HOME/.local/bin/thinkingmach}"
 # Cleanup defaults to on so a local run does not leave a service behind; CI
 # disables it so the diagnostics step can still inspect the unit.
 SMOKE_CLEANUP="${SMOKE_CLEANUP:-true}"
@@ -64,10 +64,10 @@ if [[ "$SMOKE_FORCE" != "true" ]]; then
   fi
 fi
 
-echo "==> Onboarding paperclipai@$PAPERCLIPAI_VERSION with --install-service"
+echo "==> Onboarding thinkingmach@$THINKINGMACH_VERSION with --install-service"
 echo "    Data dir: $DATA_DIR"
 if ! timeout "$ONBOARD_TIMEOUT_SECONDS" \
-  npx --yes "paperclipai@${PAPERCLIPAI_VERSION}" onboard --yes --install-service --data-dir "$DATA_DIR"; then
+  npx --yes "thinkingmach@${THINKINGMACH_VERSION}" onboard --yes --install-service --data-dir "$DATA_DIR"; then
   diagnostics
   fail "onboard exited non-zero"
 fi

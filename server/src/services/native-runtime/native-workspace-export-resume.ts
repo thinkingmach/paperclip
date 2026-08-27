@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray, ne, sql } from "drizzle-orm";
-import { environmentLeases, heartbeatRuns, nativeRunFinalizations, nativeRunResults, type Db } from "@paperclipai/db";
+import { environmentLeases, heartbeatRuns, nativeRunFinalizations, nativeRunResults, type Db } from "@thinkingmach/db";
 import { remoteTerminationReceipt } from "../remote-execution-termination.js";
 import { readNativeWorkspaceSyncReference } from "./native-workspace-sync.js";
 

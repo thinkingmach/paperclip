@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import type { Issue, Project } from "@paperclipai/shared";
+import type { Issue, Project } from "@thinkingmach/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TaskDetailTasksPanel } from "./TaskDetailTasksPanel";
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Button } from "@paperclipai/paperclip-runner/react";
+import { Button } from "@thinkingmach/paperclip-runner/react";
 import type { CapabilityScenarioIndexEntry } from "@paperclip-runner-local/capability";
 
 import { DISPOSITION_LABEL, groupLabel, PARITY_LABEL, ROLE_LABEL } from "../labels.js";

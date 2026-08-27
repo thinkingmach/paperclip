@@ -26,7 +26,7 @@ import {
   type IssueThreadInteractionEffectiveResolverPolicySource,
   type IssueThreadInteractionResolverPolicy,
   type IssueThreadInteractionResolverPolicyProvenance,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type { IssueThreadInteraction } from "./issue-thread-interactions";
 
 /**

@@ -29,7 +29,7 @@ Either way: launch `claude` from inside that directory, type `/goal`, paste the 
 ## The /goal paste block
 
 ```
-Converge Paperclip's duplicated hand-rolled UI onto the shared
+Converge ThinkingMach's duplicated hand-rolled UI onto the shared
 primitives, per the approved scope in doc/design/DECISION-SHEET.md
 items C2, C3, C5, C11. DESIGN.md is the source of truth; read
 doc/design/CHANGING-THE-UI.md and doc/design/RUN3-PROMPT.md first.
@@ -74,7 +74,7 @@ DONE WHEN (all verified in this worktree)
    recorded in DECISION-SHEET.md.
 3. AgentDetail story exists and renders in the suite.
 4. pnpm check:token-gates 3/3 CLEAN; pnpm typecheck green;
-   pnpm --filter @paperclipai/ui build exit 0.
+   pnpm --filter @thinkingmach/ui build exit 0.
 5. Full visual suite passes against the updated baseline, and
    doc/design/run3-review/ contains the triplets for every story
    whose baseline changed, committed.

@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { environmentLeases, heartbeatRuns, type Db } from "@paperclipai/db";
+import { environmentLeases, heartbeatRuns, type Db } from "@thinkingmach/db";
 import { hasNativeLocalProcessStop } from "./native-local-process-stop.js";
 import { hasRemoteTerminationReceipt } from "./remote-execution-termination.js";
 

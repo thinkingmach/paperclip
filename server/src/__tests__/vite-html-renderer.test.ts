@@ -38,9 +38,9 @@ describe("createCachedViteHtmlRenderer", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-vite-html-"));
     tempDirs.push(tempDir);
     fs.writeFileSync(path.join(tempDir, "index.html"), "<html><body>App</body></html>");
-    vi.stubEnv("PAPERCLIP_MANAGED_CONFIG", "{}");
-    vi.stubEnv("PAPERCLIP_CLOUD_UI_SNIPPET", '<script src="https://example.com/legacy-plain.js"></script>');
-    vi.stubEnv("PAPERCLIP_CLOUD_UI_SNIPPET_B64", Buffer.from('<script src="https://example.com/legacy-encoded.js"></script>').toString("base64"));
+    vi.stubEnv("THINKINGMACH_MANAGED_CONFIG", "{}");
+    vi.stubEnv("THINKINGMACH_CLOUD_UI_SNIPPET", '<script src="https://example.com/legacy-plain.js"></script>');
+    vi.stubEnv("THINKINGMACH_CLOUD_UI_SNIPPET_B64", Buffer.from('<script src="https://example.com/legacy-encoded.js"></script>').toString("base64"));
     const renderer = createCachedViteHtmlRenderer({
       vite: { watcher: createWatcher(), transformIndexHtml: async (_url, html) => html },
       uiRoot: tempDir,
@@ -51,7 +51,7 @@ describe("createCachedViteHtmlRenderer", () => {
       expect(html).toContain("App");
       expect(html).not.toContain("legacy-plain.js");
       expect(html).not.toContain("legacy-encoded.js");
-      vi.stubEnv("PAPERCLIP_CLOUD_UI_SNIPPET", undefined);
+      vi.stubEnv("THINKINGMACH_CLOUD_UI_SNIPPET", undefined);
 
       expect(await renderer.render("/issues")).not.toContain("legacy-encoded.js");
     } finally {

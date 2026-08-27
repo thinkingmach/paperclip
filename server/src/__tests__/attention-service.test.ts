@@ -34,7 +34,7 @@ import {
   joinRequests,
   projects,
   projectWorkspaces,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

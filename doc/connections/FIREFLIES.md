@@ -6,13 +6,13 @@ Verified against official documentation and public protocol metadata on 2026-09-
 
 In **Apps → Fireflies**, choose who can use the connection, then sign in with
 Fireflies. Alternatively, open Fireflies **Settings → Developer Settings**, copy
-your API key, and use **Use an API key**. Credentials are stored in Paperclip's
+your API key, and use **Use an API key**. Credentials are stored in ThinkingMach's
 vault and tools use the ordinary connection grants, policy, and audit path.
 
 Setup is **Access → Connect**. Successful authentication and catalog discovery
 complete setup; manage action permissions and test tools on the connection's
 Permissions screen. Available data follows the connected Fireflies account's
-permissions. Writes follow Paperclip's normal defaults and any restrictions you
+permissions. Writes follow ThinkingMach's normal defaults and any restrictions you
 configure. Reconnect and catalog refresh preserve **Off** and **Ask first**
 selections; newly discovered actions keep the normal connection defaults.
 
@@ -32,13 +32,13 @@ renaming meetings, revoking access, and creating soundbites are mutations.
    A localhost URL or private-network HTTPS address cannot receive Fireflies
    deliveries. This prerequisite applies only to webhooks, not MCP access.
 4. Open [Fireflies Webhooks V2 settings](https://app.fireflies.ai/integrations/api/webhook).
-   Add the displayed URL and paste Paperclip’s **Secret key** into Fireflies’
+   Add the displayed URL and paste ThinkingMach’s **Secret key** into Fireflies’
    **Signing Secret** field. This is the routine’s generated secret, not your
    Fireflies API key.
 5. Subscribe only to `meeting.summarized`, then save in Fireflies.
 6. Optionally finish a meeting you own and wait for its summary to test delivery.
    Setup deliveries verify the connection without creating tasks. Finish setup
-   in Paperclip to activate future deliveries; test events are never replayed.
+   in ThinkingMach to activate future deliveries; test events are never replayed.
 
 Suggested routine instructions:
 
@@ -80,7 +80,7 @@ retries with identical request bodies return success without extra runs, includi
 concurrent delivery. Setup receipts survive activation. For senders with custom
 headers, a stable `Idempotency-Key` also deduplicates retries whose bodies change.
 Without that header, changed request bytes count as a new event. Events received
-while paused are not backfilled by Paperclip.
+while paused are not backfilled by ThinkingMach.
 
 Earlier `fireflies_hmac` triggers retain their provider-specific validation,
 summary-only dispatch, and per-meeting deduplication. New setup uses only the
@@ -114,7 +114,7 @@ application alone does not change that gateway policy.
   meeting reads and mutations; experimental search/fetch availability varies.
 - [Webhooks V2](https://docs.fireflies.ai/graphql-api/webhooks-v2) documents
   signatures, payloads, ownership limits, and the requirement to respond within
-  10 seconds. Paperclip uses normal routine dispatch and does not wait for agent
+  10 seconds. ThinkingMach uses normal routine dispatch and does not wait for agent
   execution or fetch meeting content during webhook handling.
 - Official SVG: `https://fireflies.ai/api/logos/file/fireflies.svg`, linked from
   Fireflies' product site. Bundled unchanged as `ui/public/brands/apps/fireflies.svg`;

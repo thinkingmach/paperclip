@@ -1,7 +1,7 @@
 # PRP v1/v2 Contract
 
 The JSON Schema files in `schemas/` are the language-neutral source of truth for
-Paperclip Runner Protocol versions 1 and 2. The fixtures in `fixtures/` define
+ThinkingMach Runner Protocol versions 1 and 2. The fixtures in `fixtures/` define
 accepted and rejected compatibility cases.
 
 ## Compatibility
@@ -25,7 +25,7 @@ The `unknown-optional-fields.json` fixture must be accepted. The
 
 PRP v2 adds a provider-neutral durable session-goal lifecycle. Every v2
 capability snapshot includes `sessionGoals`, even when its availability is
-`unsupported` or `policy_disabled`. Paperclip sends controls only when the
+`unsupported` or `policy_disabled`. ThinkingMach sends controls only when the
 negotiated capability advertises the corresponding action.
 
 Commands:
@@ -41,7 +41,7 @@ Events:
 - `session.goal.updated`
 - `session.goal.cleared`
 
-Goal state is separate from Paperclip's company/business goal hierarchy. The
+Goal state is separate from ThinkingMach's company/business goal hierarchy. The
 snapshot distinguishes the durable status from `workingNow`, because an active
 goal can be idle between autonomous turns. A runner emits the full capability
 and authoritative snapshot after every session open or resume. Missing v1

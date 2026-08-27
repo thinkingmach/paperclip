@@ -15,7 +15,7 @@ function assertOwnedByCurrentUser(stats: Stats, description: string) {
 
   const currentUserId = process.getuid?.();
   if (currentUserId !== undefined && stats.uid !== currentUserId) {
-    throw new Error(`${description} must be owned by the Paperclip process user`);
+    throw new Error(`${description} must be owned by the ThinkingMach process user`);
   }
 }
 
@@ -68,7 +68,7 @@ function readGeneratedSecret(keyPath: string): string {
   const existing = readFileSync(keyPath, "utf8").trim();
   if (existing.length < MIN_SECRET_LENGTH) {
     throw new Error(
-      `Invalid decision signing key at ${keyPath} (must be at least ${MIN_SECRET_LENGTH} characters); remove the file to regenerate it or set PAPERCLIP_DECISION_SIGNING_SECRET`,
+      `Invalid decision signing key at ${keyPath} (must be at least ${MIN_SECRET_LENGTH} characters); remove the file to regenerate it or set THINKINGMACH_DECISION_SIGNING_SECRET`,
     );
   }
   return existing;
@@ -121,11 +121,11 @@ function loadOrCreateGeneratedSecret(): string {
 }
 
 export function resolveDecisionSigningSecret(): string {
-  const fromEnv = process.env.PAPERCLIP_DECISION_SIGNING_SECRET?.trim();
+  const fromEnv = process.env.THINKINGMACH_DECISION_SIGNING_SECRET?.trim();
   if (fromEnv) {
     if (fromEnv.length < MIN_SECRET_LENGTH) {
       throw new Error(
-        `PAPERCLIP_DECISION_SIGNING_SECRET must be at least ${MIN_SECRET_LENGTH} characters when set (unset it to use an auto-generated key)`,
+        `THINKINGMACH_DECISION_SIGNING_SECRET must be at least ${MIN_SECRET_LENGTH} characters when set (unset it to use an auto-generated key)`,
       );
     }
     return fromEnv;
@@ -135,7 +135,7 @@ export function resolveDecisionSigningSecret(): string {
 
 /**
  * Startup guard: resolves the signing secret once so an invalid explicit
- * PAPERCLIP_DECISION_SIGNING_SECRET fails fast and the generated key file is
+ * THINKINGMACH_DECISION_SIGNING_SECRET fails fast and the generated key file is
  * materialized before the first decision write. A missing env var is not an
  * error — the secret is auto-generated and persisted per instance.
  */

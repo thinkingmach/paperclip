@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * The onboarding seed Paperclip Cloud pushes into a stack at activation
+ * The onboarding seed ThinkingMach Cloud pushes into a stack at activation
  * Every field except `revision` is customer free text collected in
  * the Cloud signup wizard, so it is untrusted input and is bounded here to the
  * same limits Cloud enforces before sending.

@@ -65,7 +65,7 @@ import type {
   ToolRuntimeSlotStatus,
   VercelConnectCredentialReference,
   VercelConnectGrantReference,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { agents } from "./agents.js";
 import { approvals } from "./approvals.js";
 import { companies } from "./companies.js";

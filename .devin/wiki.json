@@ -10,16 +10,16 @@
       "content": "Page contract: each subsystem page should explain the problem it solves, what it owns, its inputs and outputs, authoritative persisted state, and its boundaries with neighboring systems. Trace one representative flow through actual entry points. Include a compact 'Where to change it' map linking responsibilities to source, relevant regression tests with the behavior they protect, and practical investigation steps for characteristic failures. Cite the code that performs a decision or effect rather than an import list or unrelated file. A passing unit fixture does not establish live provider support. Parent pages should offer reading routes, boundary maps, or diagnostic routing instead of repeating all their children."
     },
     {
-      "content": "Navigation and scope: generate the 30 specified pages in their listed hierarchy. Use descriptive internal links to the owning page instead of duplicating detailed explanations across chapters. Link to `docs/docs.json` and the corresponding pages at https://docs.paperclip.ing for maintained user, command, and API reference; verify the route from the docs configuration rather than inventing URLs. Distinguish public product docs under `docs/`, engineering contracts under `doc/`, repository contributor skills under `.agents/skills/`, runtime coordination skills under `skills/`, and app-shipped skills and teams catalogs. Do not turn this handbook into a second exhaustive API manual."
+      "content": "Navigation and scope: generate the 30 specified pages in their listed hierarchy. Use descriptive internal links to the owning page instead of duplicating detailed explanations across chapters. Link to `docs/docs.json` and the corresponding pages at https://docs.thinkingmach.com for maintained user, command, and API reference; verify the route from the docs configuration rather than inventing URLs. Distinguish public product docs under `docs/`, engineering contracts under `doc/`, repository contributor skills under `.agents/skills/`, runtime coordination skills under `skills/`, and app-shipped skills and teams catalogs. Do not turn this handbook into a second exhaustive API manual."
     },
     {
       "content": "Diagrams and worked examples: include an architecture diagram on Architecture and Repository Map, an end-to-end sequence on A Task from Request to Work Product, separate task and run state diagrams on Completion, Review, and Human Decisions and Run Agents respectively, and an authorization sequence on Connections, Credentials, and MCP. Label arrows with actions and identify process, persistence, and authority boundaries. Keep diagrams small enough to read, introduce them in prose, and cite their implementation sources. Explain conditions on transitions; do not infer transitions from an enum. Elsewhere add diagrams only when they clarify a relationship better than prose or a table."
     },
     {
-      "content": "Terminology and invariants: distinguish task (UI language) from issue (many APIs and tables), wake request from execution run, provider session from a run, business goals from session goals, project workspace from realized execution workspace, and parentage from a blocker or durable wait. Keep single-assignee ownership separate from active execution locks and review participants. Explain that successful execution does not by itself complete a task. Company isolation, checkout atomicity, governed approvals, budget enforcement, and mutation audit history belong to the control plane. Provider permission settings do not grant Paperclip authority, credentials, or cross-company access."
+      "content": "Terminology and invariants: distinguish task (UI language) from issue (many APIs and tables), wake request from execution run, provider session from a run, business goals from session goals, project workspace from realized execution workspace, and parentage from a blocker or durable wait. Keep single-assignee ownership separate from active execution locks and review participants. Explain that successful execution does not by itself complete a task. Company isolation, checkout atomicity, governed approvals, budget enforcement, and mutation audit history belong to the control plane. Provider permission settings do not grant ThinkingMach authority, credentials, or cross-company access."
     },
     {
-      "content": "Freshness: resolve defaults, feature gates, supported providers, package exports, status values, and commands from the indexed code every time the wiki is generated. Source anchors below are starting points, not an exhaustive file allowlist; follow their production callers and adjacent tests. If an anchor moves, locate its replacement and cite that implementation, or explicitly identify removal. Do not invent a replacement symbol. Do not preserve hardcoded provider/version inventories or source line numbers from this configuration. Recheck direct-adapter versus experimental Paperclip Runner selection and persisted-run recovery behavior rather than assuming every agent uses Runner."
+      "content": "Freshness: resolve defaults, feature gates, supported providers, package exports, status values, and commands from the indexed code every time the wiki is generated. Source anchors below are starting points, not an exhaustive file allowlist; follow their production callers and adjacent tests. If an anchor moves, locate its replacement and cite that implementation, or explicitly identify removal. Do not invent a replacement symbol. Do not preserve hardcoded provider/version inventories or source line numbers from this configuration. Recheck direct-adapter versus experimental ThinkingMach Runner selection and persisted-run recovery behavior rather than assuming every agent uses Runner."
     },
     {
       "content": "Diagnostic evidence and data destinations: clearly separate the local run log (`heartbeat_run_events`), operator-configured OpenTelemetry observability, and opt-out first-party telemetry. Explain where each is stored or sent, its enablement/default behavior, and which question it answers. Keep activity audit records and work-product artifacts distinct from those three paths as well. Use safe example identifiers, never actual credentials or private runtime data. For investigations, start with durable records and decision reasons; a comment, transcript claim, detached process, or local file alone is not proof of a healthy continuation, completed task, or delivered work product."
@@ -27,8 +27,8 @@
   ],
   "pages": [
     {
-      "title": "Understand Paperclip",
-      "purpose": "Give new contributors a clear mental model of Paperclip and a short, purposeful route through the handbook.",
+      "title": "Understand ThinkingMach",
+      "purpose": "Give new contributors a clear mental model of ThinkingMach and a short, purposeful route through the handbook.",
       "page_notes": [
         {
           "content": "Introduce the company control plane through one running example: an operator asks an agent to produce a report, the agent works under company policy, and the operator receives an inspectable result. Explain the roles of the board, company, agent, task, execution service, and work product. Offer three linked reading routes: understand the system, make a first change, and diagnose work that stopped. Explain which chapter answers which question and link to official quickstart/operator docs. Keep this page approachable; leave architecture detail, entity mapping, and the complete code trace to its three children."
@@ -41,10 +41,10 @@
     {
       "title": "Architecture and Repository Map",
       "purpose": "Map running processes, package boundaries, persistence, and extension points to the code that owns them.",
-      "parent": "Understand Paperclip",
+      "parent": "Understand ThinkingMach",
       "page_notes": [
         {
-          "content": "Draw the board/CLI/API to server to database/storage path, plus distinct direct-adapter and Paperclip Runner/provider execution branches. Identify who owns business authorization and workflow state versus provider process/session execution. Show browser event delivery without implying the browser connects directly to runnerd. Add a compact responsibility-to-directory table covering shared contracts, adapters/utilities, Runner, plugins, skills/teams catalogs, CLI, UI, and tests. Explain server startup/composition and the incremental domain/application/adapter module pattern; do not imply all services have been migrated to it. Link protocol and runtime details to Run Agents."
+          "content": "Draw the board/CLI/API to server to database/storage path, plus distinct direct-adapter and ThinkingMach Runner/provider execution branches. Identify who owns business authorization and workflow state versus provider process/session execution. Show browser event delivery without implying the browser connects directly to runnerd. Add a compact responsibility-to-directory table covering shared contracts, adapters/utilities, Runner, plugins, skills/teams catalogs, CLI, UI, and tests. Explain server startup/composition and the incremental domain/application/adapter module pattern; do not imply all services have been migrated to it. Link protocol and runtime details to Run Agents."
         },
         {
           "content": "Source anchors: `pnpm-workspace.yaml`, `server/src/index.ts`, `server/src/app.ts`, `server/src/modules/README.md`, `server/src/services/heartbeat.ts`, `server/src/services/native-runtime/runtime-mode.ts`, `packages/paperclip-runner/package.json`, `ui/src/App.tsx`, `cli/src/index.ts`. Boundary evidence: `scripts/check-module-boundaries.mjs`, `scripts/check-module-boundaries.test.mjs`, and `server/src/services/native-runtime/runtime-mode.test.ts`."
@@ -54,7 +54,7 @@
     {
       "title": "Domain Model and Invariants",
       "purpose": "Connect the product vocabulary to persisted entities and the invariants a contributor must preserve.",
-      "parent": "Understand Paperclip",
+      "parent": "Understand ThinkingMach",
       "page_notes": [
         {
           "content": "Use a concept-to-schema/service table for company, agent/org tree, goal, project, task/issue, wake, run, session, approval/interaction, and work product. Explain company scope and documented instance-level exceptions without asserting every table has identical tenancy. Distinguish assignment from execution ownership, parent/child structure from blockers, and business goals from provider session goals. Give concrete examples of atomic checkout, company-boundary rejection, and a durable wait. Explain where these invariants are enforced and tested; leave full state transitions, permissions, and database operations to their owning pages."
@@ -67,7 +67,7 @@
     {
       "title": "A Task from Request to Work Product",
       "purpose": "Provide the flagship end-to-end code tour from a user's task request to persisted execution, task disposition, and a visible deliverable.",
-      "parent": "Understand Paperclip",
+      "parent": "Understand ThinkingMach",
       "page_notes": [
         {
           "content": "Follow one illustrative request to create a report. Trace UI/API task creation and assignment, durable wake admission, dispatch gates, checkout/execution ownership, workspace selection, runtime selection, invocation, events, finalization, task disposition, and work-product display. At each boundary name the actor, actual entry point, durable record, and next owner. Use a sequence diagram with separate direct-adapter and Runner branches; never splice their finalizers into one fictional call stack. Include a review/wait branch and show why a successful run can leave work pending. A work product may be registered during execution, so verify actual ordering rather than assuming finalization uploads it. Close with source/test links and links to detailed subsystem pages."
@@ -78,7 +78,7 @@
       ]
     },
     {
-      "title": "Contribute to Paperclip",
+      "title": "Contribute to ThinkingMach",
       "purpose": "Help a contributor choose the correct implementation layers, repository workflow, and validation for a proposed change.",
       "page_notes": [
         {
@@ -92,10 +92,10 @@
     {
       "title": "Local Development and Worktrees",
       "purpose": "Explain how to run and verify an isolated development checkout without sharing live instance state.",
-      "parent": "Contribute to Paperclip",
+      "parent": "Contribute to ThinkingMach",
       "page_notes": [
         {
-          "content": "Derive prerequisites and setup commands from current manifests, CLI, and development docs. Explain same-origin dev serving, config discovery, local state/storage, external versus embedded PostgreSQL, and worktree-specific ports and database ownership. Show the supported worktree initialization and health/readiness workflow, including seed modes and quarantine of copied live execution. Separate creating a git worktree from configuring a running Paperclip instance. Diagnose missing worktree configuration, occupied ports, and wrong-instance connections. Reconcile stale PGlite references against the current database implementation; do not reproduce destructive reset snippets as routine setup. Link release/deployment operations elsewhere."
+          "content": "Derive prerequisites and setup commands from current manifests, CLI, and development docs. Explain same-origin dev serving, config discovery, local state/storage, external versus embedded PostgreSQL, and worktree-specific ports and database ownership. Show the supported worktree initialization and health/readiness workflow, including seed modes and quarantine of copied live execution. Separate creating a git worktree from configuring a running ThinkingMach instance. Diagnose missing worktree configuration, occupied ports, and wrong-instance connections. Reconcile stale PGlite references against the current database implementation; do not reproduce destructive reset snippets as routine setup. Link release/deployment operations elsewhere."
         },
         {
           "content": "Source anchors: `package.json`, `doc/DEVELOPING.md`, `doc/DATABASE.md`, `scripts/dev-runner.ts`, `server/src/config.ts`, `server/src/index.ts`, `cli/src/commands/worktree.ts`, `cli/src/commands/worktree-lib.ts`. Regression anchor: `cli/src/__tests__/worktree.test.ts`. Use current CLI help and these sources for commands, flags, seeding, and readiness claims."
@@ -105,7 +105,7 @@
     {
       "title": "Testing and Evaluations",
       "purpose": "Provide a decision guide for choosing tests and understanding what each kind of evidence does and does not prove.",
-      "parent": "Contribute to Paperclip",
+      "parent": "Contribute to ThinkingMach",
       "page_notes": [
         {
           "content": "Map change categories to narrow unit/service tests, database integration, browser E2E, Runner protocol/conformance, recovery, and Product E2E evaluations. Distinguish Runner Evals against a mock control plane from Product E2E against a real server/database/browser/runner. Separate credential-free checks from live provider runs; list prerequisites without implying live evals belong in every local check. Explain fixtures, provenance, failure classification, and the required handoff checks. Some live eval definitions reside in another repository: link documented ownership and do not invent local paths or claim they were inspected. Include a few verified commands, with links to detailed harness docs."
@@ -118,7 +118,7 @@
     {
       "title": "Frontend Architecture and Design System",
       "purpose": "Trace how board UI routes, company context, API state, live events, and task-thread components work together.",
-      "parent": "Contribute to Paperclip",
+      "parent": "Contribute to ThinkingMach",
       "page_notes": [
         {
           "content": "Trace a task page from route and selected company through API client/query keys to rendering, mutation, and realtime invalidation/reconnect. Distinguish server state from local draft/panel state. Identify the shared task-thread/composer, interaction, transcript, document, and work-product surfaces so contributors reuse them. Explain error/loading/empty states, Storybook, and token-only styling with the documented allowlist and token gate. Include the required aligned form footer convention and current design source of truth. Diagnose stale UI after a server change or reconnect. Link session semantics and product governance elsewhere; do not catalog every component."
@@ -131,7 +131,7 @@
     {
       "title": "Data Model and Migrations",
       "purpose": "Explain schema ownership, transactions, compatibility, and the supported workflow for changing persisted data.",
-      "parent": "Contribute to Paperclip",
+      "parent": "Contribute to ThinkingMach",
       "page_notes": [
         {
           "content": "Explain Drizzle schema/export/client/migration ownership, embedded versus external PostgreSQL, and how shared contracts track database changes. Use an existing company-scoped relation to demonstrate foreign keys, indexes, atomic updates, and company-consistent joins. Show the current generate/validate workflow, snapshot handling, migration ordering, bounded backfills, and drift checks; distinguish migration authoring from applying migrations to an instance. Explain additive native execution records without implying their existence enables Runner. Link domain semantics to Domain Model and Invariants and backup/deployment operations to Deployment and Releases."
@@ -144,7 +144,7 @@
     {
       "title": "Deployment and Releases",
       "purpose": "Connect deployment topology, configuration, artifacts, migrations, and release verification for contributors changing operational behavior.",
-      "parent": "Contribute to Paperclip",
+      "parent": "Contribute to ThinkingMach",
       "page_notes": [
         {
           "content": "Explain local-trusted versus authenticated modes, exposure policy, persistent database/storage, secrets, migrations, and health/readiness boundaries. Distinguish local development, self-hosted packaged/Docker deployment, and cloud integration; label external infrastructure dependencies rather than claiming the public repository contains a complete hosted service. Trace release/version selection through build artifacts and verification, including Runner/package compatibility where relevant. Link existing backup, upgrade, and rollback runbooks rather than embedding a long operational command transcript. Separate automated checks from live release smoke evidence and derive all version/tooling rules from current sources."
@@ -159,7 +159,7 @@
       "purpose": "Explain who owns the next action on a task and route readers to the policies that make work progress or wait.",
       "page_notes": [
         {
-          "content": "Introduce the control loop: accepted work, eligible wake, owned execution, persisted outcome, and either completion, durable waiting, continuation, or visible recovery. Use a responsibility table for issue service, wake queue, dispatch gates, heartbeat orchestration, status arbitration, and recovery. Explain that orchestration policies stay in Paperclip even when execution is remote. Provide a short symptom routing table for never-started work, blocked work, review waits, repeated turns, and interrupted work. Link to the four child pages and Run Agents; keep provider transports and detailed state machines out of this parent."
+          "content": "Introduce the control loop: accepted work, eligible wake, owned execution, persisted outcome, and either completion, durable waiting, continuation, or visible recovery. Use a responsibility table for issue service, wake queue, dispatch gates, heartbeat orchestration, status arbitration, and recovery. Explain that orchestration policies stay in ThinkingMach even when execution is remote. Provide a short symptom routing table for never-started work, blocked work, review waits, repeated turns, and interrupted work. Link to the four child pages and Run Agents; keep provider transports and detailed state machines out of this parent."
         },
         {
           "content": "Source anchors: `doc/execution-semantics.md`, `server/src/services/issues.ts`, `server/src/modules/wake-queue/index.ts`, `server/src/modules/run-dispatch/index.ts`, `server/src/services/heartbeat.ts`, `server/src/services/recovery/service.ts`, `server/src/services/native-runtime/status-arbiter.ts`. Policy evidence: `server/src/modules/wake-queue/domain/policy.test.ts`, `server/src/modules/run-dispatch/domain/policy.test.ts`."
@@ -207,7 +207,7 @@
     },
     {
       "title": "Cancellation and Recovery",
-      "purpose": "Show how Paperclip proves execution has stopped, preserves ownership, and repairs or escalates interrupted work.",
+      "purpose": "Show how ThinkingMach proves execution has stopped, preserves ownership, and repairs or escalates interrupted work.",
       "parent": "Orchestrate Work",
       "page_notes": [
         {
@@ -223,7 +223,7 @@
       "purpose": "Explain runtime selection and the lifecycle of a run while keeping execution separate from business workflow authority.",
       "page_notes": [
         {
-          "content": "Give a decision map for direct adapters versus the explicitly selected experimental Paperclip Runner path. Explain persisted runtime selection and why an old native run may need recovery even after a rollout setting changes. Draw the run state diagram from actual dispatch/finalization/retry paths, keeping it separate from task status. Introduce agent configuration, execution target, workspace, provider session/turn, run events, usage, and terminal result as distinct concepts. Identify the contract each runtime implements and route readers to adapter, Runner, session, and workspace children. Do not claim Runner replaces every existing adapter or determines business authorization."
+          "content": "Give a decision map for direct adapters versus the explicitly selected experimental ThinkingMach Runner path. Explain persisted runtime selection and why an old native run may need recovery even after a rollout setting changes. Draw the run state diagram from actual dispatch/finalization/retry paths, keeping it separate from task status. Introduce agent configuration, execution target, workspace, provider session/turn, run events, usage, and terminal result as distinct concepts. Identify the contract each runtime implements and route readers to adapter, Runner, session, and workspace children. Do not claim Runner replaces every existing adapter or determines business authorization."
         },
         {
           "content": "Source anchors: `server/src/services/heartbeat.ts`, `server/src/services/native-runtime/runtime-mode.ts`, `server/src/adapters/`, `packages/adapter-utils/src/types.ts`, `packages/db/src/schema/heartbeat_runs.ts`, `packages/paperclip-runner/README.md`. Regression anchors: `server/src/services/native-runtime/runtime-mode.test.ts`, `server/src/__tests__/heartbeat-retry-scheduling.test.ts`. Derive feature availability from current instance settings and runtime resolution rather than old architecture proposals."
@@ -236,7 +236,7 @@
       "parent": "Run Agents",
       "page_notes": [
         {
-          "content": "Trace one representative direct local adapter from server configuration and invocation through provider execution, transcript parsing, session persistence, usage, and cancellation. Compare local CLI/session, process, HTTP/gateway, and external adapter approaches at the contract level without reproducing every provider configuration. Explain server/UI/CLI registration and shared types/utilities so a new adapter is wired end to end. Derive engine selection and prerequisite/failure behavior from current code; do not imply silent fallback is safe. Distinguish adapter capability, execution-target restrictions, and provider permission settings from Paperclip tool grants. Link workspace and Runner paths to their pages."
+          "content": "Trace one representative direct local adapter from server configuration and invocation through provider execution, transcript parsing, session persistence, usage, and cancellation. Compare local CLI/session, process, HTTP/gateway, and external adapter approaches at the contract level without reproducing every provider configuration. Explain server/UI/CLI registration and shared types/utilities so a new adapter is wired end to end. Derive engine selection and prerequisite/failure behavior from current code; do not imply silent fallback is safe. Distinguish adapter capability, execution-target restrictions, and provider permission settings from ThinkingMach tool grants. Link workspace and Runner paths to their pages."
         },
         {
           "content": "Source anchors: `docs/adapters/overview.md`, `docs/adapters/creating-an-adapter.md`, `docs/adapters/external-adapters.md`, `packages/adapter-utils/src/types.ts`, `packages/adapters/codex-local/src/server/index.ts`, `packages/adapters/`, `server/src/adapters/`, `ui/src/adapters/`, `cli/src/adapters/`. Example execution regression: `packages/adapter-utils/src/acpx-engine/execute.test.ts`. Follow each adapter's current exports and registration; tests for one engine do not qualify all providers."
@@ -244,7 +244,7 @@
       ]
     },
     {
-      "title": "Paperclip Runner and PRP",
+      "title": "ThinkingMach Runner and PRP",
       "purpose": "Explain the experimental Runner process, protocol, provider drivers, and server authority boundary with source-backed extension guidance.",
       "parent": "Run Agents",
       "page_notes": [
@@ -403,7 +403,7 @@
       "parent": "Govern and Diagnose",
       "page_notes": [
         {
-          "content": "Use a comparison table for producer, contract, destination, default/enablement, retention/configuration owner, investigative use, and change-review requirements. Run-log rows stay in the instance database. OpenTelemetry tracing requires an operator OTLP endpoint and is a no-operation without it. First-party telemetry is opt-out and sends to a Paperclip endpoint by default. Verify current configuration and contracts, and explain redaction/allowlists without reproducing private values. Identify the generated telemetry contract and README/privacy-review workflow separately from observability and run-log changes. Explain how to correlate a failed run across evidence sources and why recovery-observability naming does not make it part of the OTLP path. Link artifacts and general audit history elsewhere."
+          "content": "Use a comparison table for producer, contract, destination, default/enablement, retention/configuration owner, investigative use, and change-review requirements. Run-log rows stay in the instance database. OpenTelemetry tracing requires an operator OTLP endpoint and is a no-operation without it. First-party telemetry is opt-out and sends to a ThinkingMach endpoint by default. Verify current configuration and contracts, and explain redaction/allowlists without reproducing private values. Identify the generated telemetry contract and README/privacy-review workflow separately from observability and run-log changes. Explain how to correlate a failed run across evidence sources and why recovery-observability naming does not make it part of the OTLP path. Link artifacts and general audit history elsewhere."
         },
         {
           "content": "Source anchors: `AGENTS.md`, `doc/run-log-events.md`, `packages/db/src/schema/heartbeat_run_events.ts`, `server/src/services/heartbeat.ts`, `doc/observability.md`, `server/src/instrumentation.ts`, `packages/adapter-utils/src/duplex-observability.ts`, `server/src/services/duplex-observability-recorder.ts`, `packages/adapter-utils/src/acpx-engine/startup-timing.ts`, `packages/shared/src/telemetry/README.md`, `packages/shared/src/telemetry/generated/paperclip-telemetry.ts`, `packages/shared/src/telemetry/events.ts`, `packages/shared/src/telemetry/client.ts`. Regression anchors: `server/src/services/native-runtime/native-run-finalizer-telemetry.test.ts` for first-party event emission, `server/src/instrumentation.test.ts` and `packages/adapter-utils/src/duplex-observability.test.ts` for tracing, and `server/src/__tests__/heartbeat-run-event-sequencing.test.ts` plus `server/src/__tests__/heartbeat-run-log.test.ts` for local run evidence. Explain each test boundary separately."

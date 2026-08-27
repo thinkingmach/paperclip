@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { defaultStatusCardRefreshPolicy } from "@paperclipai/shared";
+import { defaultStatusCardRefreshPolicy } from "@thinkingmach/shared";
 import { Loader2 } from "lucide-react";
 
 import { statusCardsApi } from "@/api/statusCards";

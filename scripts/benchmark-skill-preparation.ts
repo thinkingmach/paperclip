@@ -1,4 +1,4 @@
-/** Isolated, repeatable preparation benchmark. Run with pnpm --filter @paperclipai/server exec tsx ../scripts/benchmark-skill-preparation.ts. */
+/** Isolated, repeatable preparation benchmark. Run with pnpm --filter @thinkingmach/server exec tsx ../scripts/benchmark-skill-preparation.ts. */
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
@@ -11,9 +11,9 @@ import { removeRuntimeSkillCache } from "../server/src/services/runtime-skill-ca
 import { companySkillService } from "../server/src/services/company-skills.js";
 
 const child = process.argv.includes("--warm-child");
-const home = child ? process.env.PAPERCLIP_HOME! : await fs.mkdtemp(path.join(os.tmpdir(), "skill-preparation-benchmark-"));
-process.env.PAPERCLIP_HOME = home;
-process.env.PAPERCLIP_INSTANCE_ID = "default";
+const home = child ? process.env.THINKINGMACH_HOME! : await fs.mkdtemp(path.join(os.tmpdir(), "skill-preparation-benchmark-"));
+process.env.THINKINGMACH_HOME = home;
+process.env.THINKINGMACH_INSTANCE_ID = "default";
 const database = child ? null : await startEmbeddedPostgresTestDatabase("skill-preparation-benchmark-");
 const db = createDb(database?.connectionString ?? process.env.SKILL_BENCH_DATABASE_URL!);
 const companyId = child ? process.env.SKILL_BENCH_COMPANY_ID! : randomUUID();

@@ -1,13 +1,13 @@
 {
-  "name": "paperclipai",
-  "version": "0.3.1",
-  "description": "Paperclip CLI — orchestrate AI agent teams to run a business",
+  "name": "thinkingmach",
+  "version": "0.3.3",
+  "description": "ThinkingMach CLI — orchestrate AI agent teams to run a business",
   "type": "module",
   "bin": {
-    "paperclipai": "./dist/index.js"
+    "thinkingmach": "./dist/index.js"
   },
   "keywords": [
-    "paperclip",
+    "thinkingmach",
     "ai",
     "agents",
     "orchestration",
@@ -16,54 +16,42 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "cli"
   },
-  "homepage": "https://github.com/paperclipai/paperclip",
+  "homepage": "https://github.com/thinkingmach/paperclip",
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "scripts": {
-    "dev": "tsx src/index.ts",
-    "build": "node --input-type=module -e \"import esbuild from 'esbuild'; import config from './esbuild.config.mjs'; await esbuild.build(config);\" && chmod +x dist/index.js",
-    "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@clack/prompts": "^1.7.0",
-    "@paperclipai/adapter-claude-local": "workspace:*",
-    "@paperclipai/adapter-codex-local": "workspace:*",
-    "@paperclipai/adapter-cursor-cloud": "workspace:*",
-    "@paperclipai/adapter-cursor-local": "workspace:*",
-    "@paperclipai/adapter-gemini-local": "workspace:*",
-    "@paperclipai/adapter-grok-local": "workspace:*",
-    "@paperclipai/adapter-kimi-local": "workspace:*",
-    "@paperclipai/adapter-opencode-local": "workspace:*",
-    "@paperclipai/adapter-pi-local": "workspace:*",
-    "@paperclipai/adapter-openclaw-gateway": "workspace:*",
-    "@paperclipai/adapter-utils": "workspace:*",
-    "@paperclipai/db": "workspace:*",
-    "@paperclipai/server": "workspace:*",
-    "@paperclipai/shared": "workspace:*",
-    "@paperclipai/hermes-paperclip-adapter": "workspace:*",
-    "drizzle-orm": "0.45.2",
-    "dotenv": "^17.4.2",
-    "commander": "^15.0.0",
-    "embedded-postgres": "^18.1.0-beta.16",
-    "picocolors": "^1.1.1"
-  },
-  "devDependencies": {
-    "@types/node": "^24.0.0",
-    "tsx": "^4.23.12",
-    "typescript": "^7.0.2"
-  },
   "engines": {
     "node": ">=24.11.0"
+  },
+  "dependencies": {
+    "@agentclientprotocol/claude-agent-acp": "^0.73.0",
+    "@agentclientprotocol/codex-acp": "^1.6.2",
+    "@anthropic-ai/sdk": "0.121.0",
+    "@clack/prompts": "^1.7.0",
+    "@thinkingmach/server": "0.3.1",
+    "commander": "^15.0.0",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "0.45.2",
+    "picocolors": "^1.1.1",
+    "postgres": "^3.4.9",
+    "three": "0.185.1",
+    "ws": "^8.21.3",
+    "zod": "^4.4.3"
+  },
+  "optionalDependencies": {
+    "@embedded-postgres/darwin-arm64": "^18.1.0-beta.16",
+    "@embedded-postgres/darwin-x64": "^18.1.0-beta.16",
+    "@embedded-postgres/linux-arm": "^18.1.0-beta.16",
+    "@embedded-postgres/linux-arm64": "^18.1.0-beta.16",
+    "@embedded-postgres/linux-ia32": "^18.1.0-beta.16",
+    "@embedded-postgres/linux-ppc64": "^18.1.0-beta.16",
+    "@embedded-postgres/linux-x64": "^18.1.0-beta.16",
+    "@embedded-postgres/windows-x64": "^18.1.0-beta.16"
   }
 }

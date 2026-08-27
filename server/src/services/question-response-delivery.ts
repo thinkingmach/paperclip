@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, inArray, isNull, lte, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agentWakeupRequests,
   agents,
@@ -10,12 +10,12 @@ import {
   issueQuestionResponseDeliveries,
   issues,
   issueThreadInteractions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AskUserQuestionsInteraction,
-  PaperclipQuestionSetPayload,
-} from "@paperclipai/shared";
-import type { PaperclipQuestionResponse } from "../vendor/paperclip-runner/index.js";
+  ThinkingMachQuestionSetPayload,
+} from "@thinkingmach/shared";
+import type { ThinkingMachQuestionResponse } from "../vendor/paperclip-runner/index.js";
 import { isUniqueViolation } from "../db-errors.js";
 import { getTelemetryClient } from "../telemetry.js";
 import { logger } from "../middleware/logger.js";
@@ -67,8 +67,8 @@ export interface QuestionResponseDeliveryEnvelope {
   schema: "paperclip.question_response_delivery.v1";
   interactionId: string;
   sourceRunId: string | null;
-  questionSet: PaperclipQuestionSetPayload;
-  response: PaperclipQuestionResponse;
+  questionSet: ThinkingMachQuestionSetPayload;
+  response: ThinkingMachQuestionResponse;
 }
 
 export interface QuestionResponseDeliveryOutcome {
@@ -106,7 +106,7 @@ function compactLine(value: unknown): string | null {
 
 function canonicalQuestionSet(
   interaction: Pick<AskUserQuestionsInteraction, "title" | "payload">,
-): PaperclipQuestionSetPayload {
+): ThinkingMachQuestionSetPayload {
   if (interaction.payload.questionSet)
     return structuredClone(interaction.payload.questionSet);
   return {
@@ -165,7 +165,7 @@ export function buildQuestionResponseDeliveryEnvelope(
   const questionById = new Map(
     questionSet.questions.map((question) => [question.id, question]),
   );
-  const response: PaperclipQuestionResponse = {
+  const response: ThinkingMachQuestionResponse = {
     schema: "paperclip.question_response.v1",
     answers: Object.fromEntries(
       interaction.result.answers.map((answer) => {

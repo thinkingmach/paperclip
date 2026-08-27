@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { CompanySecret } from "@paperclipai/shared";
+import type { CompanySecret } from "@thinkingmach/shared";
 import { AlertCircle, KeyRound, Trash2, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

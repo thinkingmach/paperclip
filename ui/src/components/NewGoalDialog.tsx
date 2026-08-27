@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { GOAL_STATUSES, GOAL_LEVELS } from "@paperclipai/shared";
+import { GOAL_STATUSES, GOAL_LEVELS } from "@thinkingmach/shared";
 import { useDialog } from "../context/DialogContext";
 import { useCompany } from "../context/CompanyContext";
 import { goalsApi } from "../api/goals";
@@ -16,12 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Maximize2,
-  Minimize2,
-  Target,
-  Layers,
-} from "lucide-react";
+import { Maximize2, Minimize2, Target, Layers,  } from "lucide-react";
 import { cn } from "../lib/utils";
 import { MarkdownEditor, type MarkdownEditorRef } from "./MarkdownEditor";
 import { StatusBadge } from "./StatusBadge";

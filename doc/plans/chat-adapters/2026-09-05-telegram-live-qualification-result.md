@@ -23,7 +23,7 @@ the older temporary-tunnel topology below and the earlier private-8443 checkpoin
 
 The real **Reconnect bot** action reused the already-vaulted token successfully;
 the user did not need to create another bot or re-enter a secret. The verified
-bot is [MayaPaperclipQA1234bot](https://t.me/MayaPaperclipQA1234bot), endpoint
+bot is [MayaThinkingMachQA1234bot](https://t.me/MayaThinkingMachQA1234bot), endpoint
 `5b18b946-2b24-45b6-957f-783a0a735d8a`. Tapping **Start** discovered the account and
 displayed the native welcome without starting a failing agent run. The observed
 account was privately linked through Access, and **Continue setup** returned to
@@ -60,23 +60,23 @@ case below to the current source.
 
 The live-tested merge commit is `da8f83d6c9befe7bf958f6d9cf12a95fc7e59e88`. After the account-less Cloudflare test tunnel expired, the bot webhook was rotated to the new verified URL with the already-vaulted token and webhook secret; neither credential was exposed. Telegram reported zero queued updates and no provider-side webhook error. A fresh `new` followed by a `task` command created one task and produced exact `TELEGRAM-MERGED-A-0906`. Its working placeholder and final share provider message ID `-1004415501660:69`, proving that the final edited the status in place. Both inbound command deliveries processed once and both publications completed with `attempts=1`, no error, and no pending, retry, failed, or ambiguous row. A plain unaddressed group follow-up was intentionally not delivered to the bot under Telegram privacy mode. Later implementation revision `83018c688` changes only Discord log redaction plus documentation and setup copy relative to that tested Telegram runtime.
 
-A later group/topic iteration repeated the privacy and exact-publication path. Telegram delivered `/new` once, intentionally withheld the following plain unaddressed text under privacy mode, and then delivered the explicit `/task` command. Paperclip created only `CHA-90`, completed it successfully, and published working plus exact final `TELEGRAM-ITERATION-0906` with `attempts=1`, no errors, and the same provider message id `-1004415501660:74`. This is additional live evidence for command admission, privacy enforcement, and working-to-final in-place editing; it does not exercise the reconnect backlog repair below.
+A later group/topic iteration repeated the privacy and exact-publication path. Telegram delivered `/new` once, intentionally withheld the following plain unaddressed text under privacy mode, and then delivered the explicit `/task` command. ThinkingMach created only `CHA-90`, completed it successfully, and published working plus exact final `TELEGRAM-ITERATION-0906` with `attempts=1`, no errors, and the same provider message id `-1004415501660:74`. This is additional live evidence for command admission, privacy enforcement, and working-to-final in-place editing; it does not exercise the reconnect backlog repair below.
 
 ## 2026-09-06 reconnect backlog-preservation audit
 
-The successful tunnel-rotation retest above had zero queued provider updates, so it did not exercise recovery of a backlog. A later code audit found that the reconnect path asked Telegram for `drop_pending_updates=true` whenever the public webhook URL changed. During a real ingress outage or domain migration, that option could silently discard messages Telegram had queued while Paperclip was unreachable. The clean exact response above remains valid positive transport evidence, but it cannot be cited as proof that queued updates survived a reconnect.
+The successful tunnel-rotation retest above had zero queued provider updates, so it did not exercise recovery of a backlog. A later code audit found that the reconnect path asked Telegram for `drop_pending_updates=true` whenever the public webhook URL changed. During a real ingress outage or domain migration, that option could silently discard messages Telegram had queued while ThinkingMach was unreachable. The clean exact response above remains valid positive transport evidence, but it cannot be cited as proof that queued updates survived a reconnect.
 
 The working-tree repair now distinguishes first setup from recovery:
 
-1. Initial bot setup may drop updates that predate the Paperclip connection.
+1. Initial bot setup may drop updates that predate the ThinkingMach connection.
 2. Every reconnect preserves pending updates, including a reconnect that changes the public webhook URL.
 3. Endpoint removal continues to delete the webhook without requesting a pending-update drop.
 
-The shipped removal boundary also deletes Paperclip's registered command menu through the same durable maintenance outbox, then retires the saved token. It does not delete the BotFather bot or remove that bot from chats; those remain explicit provider-side cleanup steps.
+The shipped removal boundary also deletes ThinkingMach's registered command menu through the same durable maintenance outbox, then retires the saved token. It does not delete the BotFather bot or remove that bot from chats; those remain explicit provider-side cleanup steps.
 
 The focused fresh-database regression passed 1/1, the adjacent reconnect subset passed 5/5, server typecheck passed, and formatting/diff checks passed.
 
-The final working-tree retest then exercised the provider failure mode directly. Telegram updates `75` (`/new`) and `76` (`/task`) were sent while the prior quick-tunnel hostname was dead and therefore remained queued at Telegram. Paperclip restarted on the migrated current source, reconnected the bot to a fresh public origin, and preserved both pending updates. They arrived in provider sequence, processed once each with `attempts=1`, and created only `CHA-91`. The task reached `done`; its working state and exact final `TELEGRAM-FINAL-SOURCE-0906` each published once with no error and shared provider message id `-1004415501660:78`. Telegram Web visibly showed the exact final. This upgrades this specific backlog-preservation path from deterministic-only evidence to one live outage/rotation/replay pass; provider flood control, token revocation, and the rest of the failure matrix remain open.
+The final working-tree retest then exercised the provider failure mode directly. Telegram updates `75` (`/new`) and `76` (`/task`) were sent while the prior quick-tunnel hostname was dead and therefore remained queued at Telegram. ThinkingMach restarted on the migrated current source, reconnected the bot to a fresh public origin, and preserved both pending updates. They arrived in provider sequence, processed once each with `attempts=1`, and created only `CHA-91`. The task reached `done`; its working state and exact final `TELEGRAM-FINAL-SOURCE-0906` each published once with no error and shared provider message id `-1004415501660:78`. Telegram Web visibly showed the exact final. This upgrades this specific backlog-preservation path from deterministic-only evidence to one live outage/rotation/replay pass; provider flood control, token revocation, and the rest of the failure matrix remain open.
 
 As with Slack, the account-less Cloudflare quick tunnel was useful for finding and live-verifying the defect but is not production ingress. Stable qualification still requires a durable HTTPS origin and the remaining TG recovery cases on the final release-candidate source.
 
@@ -88,9 +88,9 @@ A third recovery run did execute after the answer continuation. Its comment stay
 
 ## 2026-09-06 current-build continuation closure
 
-After the public test tunnel changed, Paperclip rotated the bot webhook to the current verified URL using the already-vaulted credential; no token was exposed. The first current-build request then exposed a real shared presentation defect: the exact final comment existed in Paperclip, but Telegram received only `Maya completed this turn.` because heartbeat materialized the final response as an internal comment.
+After the public test tunnel changed, ThinkingMach rotated the bot webhook to the current verified URL using the already-vaulted credential; no token was exposed. The first current-build request then exposed a real shared presentation defect: the exact final comment existed in ThinkingMach, but Telegram received only `Maya completed this turn.` because heartbeat materialized the final response as an internal comment.
 
-The repaired path now authorizes only the selected final-assistant presentation of an exactly chat-bound run. A fresh request produced exact provider-visible `TG-CURRENT-BUILD-0906-C` instead of a generic completion. A fresh ordinary confirmation then rendered native **Approve** and **Reject** controls; selecting **Approve** edited the card to **Accepted**, scheduled one continuation, and produced exact provider-visible `TG-CONFIRM-CONTINUED-0906`. The final response appeared once, and no generic completion followed it. Raw reasoning, tool events, and internal logs remain in Paperclip.
+The repaired path now authorizes only the selected final-assistant presentation of an exactly chat-bound run. A fresh request produced exact provider-visible `TG-CURRENT-BUILD-0906-C` instead of a generic completion. A fresh ordinary confirmation then rendered native **Approve** and **Reject** controls; selecting **Approve** edited the card to **Accepted**, scheduled one continuation, and produced exact provider-visible `TG-CONFIRM-CONTINUED-0906`. The final response appeared once, and no generic completion followed it. Raw reasoning, tool events, and internal logs remain in ThinkingMach.
 
 Transcript review then found that the originating run's own meta-summary still appeared beside the native control and exposed internal interaction terminology. The final implementation keeps that source-run summary internal whenever its exact provider-visible interaction prompt exists, including when the user answers before presentation resolves. The native prompt and the later continuation remain external.
 
@@ -99,7 +99,7 @@ Transcript review then found that the originating run's own meta-summary still a
 Earlier provider checks on pre-merge revision `77ad5383e3a8badf7b1b0933a7e9c66469186d55` distinguished the native control from its downstream continuation:
 
 - The older confirmation attempt exposed a link-only fallback gap and is not evidence for native Telegram actions.
-- A fresh confirmation on provider message `521…` displayed native **Yes** and **No** controls in Telegram. Selecting **Yes** was accepted exactly once, the sibling choice expired, and the same provider message was edited to **Accepted** with no buttons left active. Paperclip scheduled exactly one continuation.
+- A fresh confirmation on provider message `521…` displayed native **Yes** and **No** controls in Telegram. Selecting **Yes** was accepted exactly once, the sibling choice expired, and the same provider message was edited to **Accepted** with no buttons left active. ThinkingMach scheduled exactly one continuation.
 - The continuation run's final comment remained internal because its run lineage was not recognized as originating from the bound external turn. That older attempt exposed the defect. The current-build **Approve** retest documented above supersedes it and completed the native question-to-continuation round trip with exact final output.
 
 ## 2026-09-06 group and boundary extension
@@ -142,13 +142,13 @@ The live ledger and provider UI showed:
 
 ### Native file proof
 
-A Telegram document plus “Read the attached file and reply with exactly its Token value” produced one processed direct-message delivery, one stored Paperclip issue attachment, and the exact `chat-upload-a74` final response. Its working and final publications each completed in one attempt, and the final edited the working provider message in place. This proves the tested document path only; photos, audio, video, oversize files, malformed files, and download-failure recovery remain separate cases.
+A Telegram document plus “Read the attached file and reply with exactly its Token value” produced one processed direct-message delivery, one stored ThinkingMach issue attachment, and the exact `chat-upload-a74` final response. Its working and final publications each completed in one attempt, and the final edited the working provider message in place. This proves the tested document path only; photos, audio, video, oversize files, malformed files, and download-failure recovery remain separate cases.
 
 ### Queued `new` generation race
 
 The run deliberately put a slow task in one Telegram DM generation, sent another `new`, and then started a new task before the older task finished. The durable state shows distinct consecutive bindings (`CHA-54` and `CHA-55`) on the same Telegram chat. Both inbound requests processed once and both final publications succeeded once. The newer generation returned `telegram-new-generation-a74` before the older generation later returned `telegram-old-generation-a74`; neither final overwrote or attached to the other generation.
 
-This is useful proof of generation isolation, not strict global FIFO across generations. Paperclip intentionally gives each task generation its own provider publication lane, so an older still-running task may finish after a newer one. The current run did not test cancellation of the old run, because `new` defines a new active binding rather than cancellation semantics.
+This is useful proof of generation isolation, not strict global FIFO across generations. ThinkingMach intentionally gives each task generation its own provider publication lane, so an older still-running task may finish after a newer one. The current run did not test cancellation of the old run, because `new` defines a new active binding rather than cancellation semantics.
 
 ### Delayed-status chronology defect found live
 
@@ -169,7 +169,7 @@ Earlier delivery rows intentionally retain the false duplicate telemetry produce
 The following private-chat behavior was observed on the recorded working tree:
 
 1. Telegram delivered sequence `118` (`/new`) and sequence `119` (the next request) with the same second-resolution `sentAt` value.
-2. The corrected ordering uses Telegram's raw provider date together with monotonically increasing `message_id`, so Paperclip processed `/new` before the request even when their normalized timestamps tied.
+2. The corrected ordering uses Telegram's raw provider date together with monotonically increasing `message_id`, so ThinkingMach processed `/new` before the request even when their normalized timestamps tied.
 3. The corrected slash-command normalization preserved provider message ID `417200359:118`; the provider receipt reaction succeeded and the durable delivery's redacted error remained null. This supersedes the earlier sequence `114` run, where a synthetic hash was incorrectly passed to Telegram as a message ID and the receipt reaction failed.
 4. `/new` established the fresh boundary, the following request entered active issue `b2867d3e…`, and the provider showed the acknowledgement followed by the successful final response `tg-receipt-order-live`.
 5. The working and final publications each completed in one attempt with no error and reused provider message `417200359:121`, proving that the final response edited the working message in place instead of posting a duplicate.
@@ -179,7 +179,7 @@ This proof supersedes the previously observed same-second race. It does not by i
 
 ## Pre-merge local regression evidence
 
-- Telegram edit lifecycle rows now retain the normalized external actor and revalidate the current identity link and Paperclip membership under lock immediately before creating the lifecycle system comment. A deterministic race revokes the actor's link after the original message is admitted; the later edit is filtered, its text is removed from the durable row, and no task comment is created.
+- Telegram edit lifecycle rows now retain the normalized external actor and revalidate the current identity link and ThinkingMach membership under lock immediately before creating the lifecycle system comment. A deterministic race revokes the actor's link after the original message is admitted; the later edit is filtered, its text is removed from the durable row, and no task comment is created.
 - On that pre-merge working tree based on revision `77ad5383e`, the full chat-channel PostgreSQL integration suite passed 183/183 on fresh migrated database `chat_adapters_test_final_20260906_0833`.
 - Focused shared tests passed 11/11, focused server tests passed 194/194, and focused UI tests passed 41/41.
 - The deterministic browser suite `tests/e2e/chat-adapters-ui.spec.ts` passed 4/4, and shared, database, server, and UI typechecks all passed.
@@ -187,7 +187,7 @@ This proof supersedes the previously observed same-second race. It does not by i
 
 ## Earlier core-smoke evidence
 
-On the older `e5f3917b7` checkpoint, rapid updates `88` and `89` each produced one inbound delivery and one final publication in FIFO order. One Telegram Web client displayed an apparent duplicate, but an independent client, the provider event IDs, and Paperclip's durable records showed only one inbound event and one final publication. That older evidence remains a rendering-artifact diagnosis, not a substitute for the current run.
+On the older `e5f3917b7` checkpoint, rapid updates `88` and `89` each produced one inbound delivery and one final publication in FIFO order. One Telegram Web client displayed an apparent duplicate, but an independent client, the provider event IDs, and ThinkingMach's durable records showed only one inbound event and one final publication. That older evidence remains a rendering-artifact diagnosis, not a substitute for the current run.
 
 ## Qualification gap
 

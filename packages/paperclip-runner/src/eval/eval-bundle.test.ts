@@ -17,7 +17,7 @@ function bundle(overrides: Partial<EvalBundle> = {}): EvalBundle {
     launchContext: { workingDirectoryClass: "ephemeral-fixture", scenarioId: "capability-eval-st-1", turnTimeoutMs: 60_000 },
     promptPolicy: { id: "exact-single-call", callTemplate: "Call {op} exactly once.", restraintTemplate: "Do not call any tools." },
     grants: ["discovery:tasks:read"],
-    runner: { package: "@paperclipai/paperclip-runner", binary: "paperclip-runnerd", version: "0.0.0" },
+    runner: { package: "@thinkingmach/paperclip-runner", binary: "paperclip-runnerd", version: "0.0.0" },
     controlPlaneAdapter: { kind: "mock", contract: "paperclip.capability.control-plane.v1" },
     faultInjection: [],
     ...overrides,
@@ -31,7 +31,7 @@ describe("bundleId", () => {
       // Same content, different key insertion order.
       faultInjection: [],
       controlPlaneAdapter: { contract: "paperclip.capability.control-plane.v1", kind: "mock" },
-      runner: { version: "0.0.0", binary: "paperclip-runnerd", package: "@paperclipai/paperclip-runner" },
+      runner: { version: "0.0.0", binary: "paperclip-runnerd", package: "@thinkingmach/paperclip-runner" },
       grants: ["discovery:tasks:read"],
       promptPolicy: { restraintTemplate: "Do not call any tools.", callTemplate: "Call {op} exactly once.", id: "exact-single-call" },
       model: { reasoningEffort: "medium", id: "gpt-5-codex" },

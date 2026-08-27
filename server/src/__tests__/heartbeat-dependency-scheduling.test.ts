@@ -23,7 +23,7 @@ import {
   issueTreeHolds,
   issues,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -177,7 +177,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `N${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -204,7 +204,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
     const nativeWakePayload = {
       issueId,
       taskId: issueId,
-      _paperclipWakeContext: {
+      _thinkingmachWakeContext: {
         issueId,
         taskId: issueId,
         source: "native_status_decision",
@@ -275,7 +275,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `R${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -370,7 +370,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -626,7 +626,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `D${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -758,7 +758,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -895,7 +895,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -1095,7 +1095,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -1227,7 +1227,7 @@ describeEmbeddedPostgres("heartbeat dependency-aware queued run selection", () =
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",

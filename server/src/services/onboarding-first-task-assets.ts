@@ -4,7 +4,7 @@ import {
   askUserQuestionsPayloadSchema,
   askUserQuestionsQuestionOptionSchema,
   type AskUserQuestionsPayload,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 // Everything the onboarding first agent is told lives as plain markdown under
 // server/src/onboarding-assets/first-task/ so the board can edit the wording

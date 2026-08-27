@@ -1,4 +1,4 @@
-import type { Environment } from "@paperclipai/shared";
+import type { Environment } from "@thinkingmach/shared";
 
 /** Resolve runner retention before acquiring a sandbox, not after it is ephemeral.
  * This is a run-scoped view; never persist it over a shared environment's config.

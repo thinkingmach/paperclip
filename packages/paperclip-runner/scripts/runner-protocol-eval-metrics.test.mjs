@@ -12,7 +12,7 @@ function campaign(id, failed = [], overrides = {}) {
   }));
   return {
     campaignId: `gha-${id}-1`, generatedAt: `2026-09-${String(id).padStart(2, "0")}T00:00:00.000Z`,
-    source: { paperclip: { sha: "a".repeat(40), ref: "refs/heads/master" }, evals: { sha: "b".repeat(40) }, workflowRunUrl: `https://github.com/paperclipai/paperclip/actions/runs/${id}` },
+    source: { paperclip: { sha: "a".repeat(40), ref: "refs/heads/master" }, evals: { sha: "b".repeat(40) }, workflowRunUrl: `https://github.com/thinkingmach/paperclip/actions/runs/${id}` },
     complete: true, allPassed: failed.length === 0, results,
     selection: { kind: "maintained_full" },
     totals: { selected: 3, passed: 3 - failed.length, behaviorFailures: failed.length, infrastructureFailures: 0 },
@@ -75,8 +75,8 @@ test("history graphs exclude refreshes, link exact SHAs and Actions, and open th
   assert.match(html, /2 recorded runs/);
   assert.match(html, /1 regressions · 1 recoveries/);
   assert.match(html, /Full maintained suite/);
-  assert.ok(html.includes(`https://github.com/paperclipai/paperclip/commit/${"a".repeat(40)}`));
-  assert.ok(html.includes(`https://github.com/paperclipai/paperclip-evals/commit/${"b".repeat(40)}`));
+  assert.ok(html.includes(`https://github.com/thinkingmach/paperclip/commit/${"a".repeat(40)}`));
+  assert.ok(html.includes(`https://github.com/thinkingmach/paperclip-evals/commit/${"b".repeat(40)}`));
   assert.match(html, /actions\/runs\/2/);
   assert.match(html, /href="https:\/\/reports.example\/runner-protocol-evals\/campaigns\/gha-2-1-report-theme\/">Latest · gha-2-1/);
   assert.doesNotMatch(html, /<script|NaN|Infinity/);

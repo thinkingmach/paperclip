@@ -5,7 +5,7 @@ const root = process.cwd();
 // This mode preserves the checked-in ingestion report.
 const definitionsOnly = process.argv.includes("--definitions-only");
 const corpus =
-  process.env.PAPERCLIP_CONTENT_TEMPLATES ??
+  process.env.THINKINGMACH_CONTENT_TEMPLATES ??
   path.resolve(
     root,
     "../../paperclip-content/research/connections/vercel/templates",
@@ -84,7 +84,7 @@ const channelMethod = (
   transport: "chat_sdk",
   auth: "api_key",
   ownershipModes: ["customer"],
-  whenToUse: `Let people in ${chatProviderName(provider)} start and continue work with one Paperclip agent.`,
+  whenToUse: `Let people in ${chatProviderName(provider)} start and continue work with one ThinkingMach agent.`,
   credentialFields,
   guidanceMd,
   consoleLinks,
@@ -166,7 +166,7 @@ const posthogConfigFields = () => [
     defaultValue: "tools",
     options: [{ value: "tools", label: "Individual tools" }],
     helperMd:
-      "Paperclip uses individual tools so every action can be governed. CLI mode remains unavailable until nested execution is governed.",
+      "ThinkingMach uses individual tools so every action can be governed. CLI mode remains unavailable until nested execution is governed.",
     transport: { location: "query", name: "mode" },
   },
 ];
@@ -234,7 +234,7 @@ const apps = [
         oauthAuthorizationParams: { prompt: "consent" },
       },
       "S4",
-      "Sign in to Railway and select the workspaces your agents may use. Paperclip adds direct service, deployment, and bounded log tools when Railway accepts the connection for API access. Container commands require the separate SSH setup on the connection. Project tokens are not supported by Railway's hosted connection.",
+      "Sign in to Railway and select the workspaces your agents may use. ThinkingMach adds direct service, deployment, and bounded log tools when Railway accepts the connection for API access. Container commands require the separate SSH setup on the connection. Project tokens are not supported by Railway's hosted connection.",
       {
         label: "Connect Railway",
         ownershipModes: ["dcr", "customer"],
@@ -247,8 +247,8 @@ const apps = [
         warnings: [
           "Railway enforces the workspaces selected at consent. Selected actions start Allowed; choose Ask first for operations you want to approve.",
           "Logs and container commands can expose application data and secrets. Grant access only to agents trusted with the selected services.",
-          "The general Railway agent and committing staged changes are unavailable because their internal changes cannot be individually reviewed in Paperclip.",
-          "Live Railway qualification is pending. If Railway rejects API access, reconnect with the required permissions; Paperclip never falls back to another credential.",
+          "The general Railway agent and committing staged changes are unavailable because their internal changes cannot be individually reviewed in ThinkingMach.",
+          "Live Railway qualification is pending. If Railway rejects API access, reconnect with the required permissions; ThinkingMach never falls back to another credential.",
         ],
         requiredResourceFilters: ["workspace", "project", "environment", "service"],
       },
@@ -269,7 +269,7 @@ const apps = [
         "oauth",
         { serverUrl: "https://api.githubcopilot.com/mcp/" },
         "S3",
-        "Authorize Paperclip, then choose selected repositories in GitHub. You can edit repository access later from GitHub's installation settings.",
+        "Authorize ThinkingMach, then choose selected repositories in GitHub. You can edit repository access later from GitHub's installation settings.",
         {
           label: "Use this connection as an agent tool",
           purpose: "tool",
@@ -324,7 +324,7 @@ const apps = [
           },
         ],
         ["organization", "repository"],
-        "Generate the webhook secret in Paperclip, then create one private GitHub App with active SSL-verified webhooks, Issues and Pull requests read/write permission, and the selectable issue_comment and pull_request_review_comment events. GitHub sends installation and installation_repositories automatically. Install the App only on repositories where people may mention the agent.",
+        "Generate the webhook secret in ThinkingMach, then create one private GitHub App with active SSL-verified webhooks, Issues and Pull requests read/write permission, and the selectable issue_comment and pull_request_review_comment events. GitHub sends installation and installation_repositories automatically. Install the App only on repositories where people may mention the agent.",
         {
           register: "https://github.com/settings/apps/new",
           docs: "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app",
@@ -335,7 +335,7 @@ const apps = [
   [
     "slack",
     "Slack",
-    "Give agents Slack tools or let people start and continue Paperclip work from Slack.",
+    "Give agents Slack tools or let people start and continue ThinkingMach work from Slack.",
     "communication",
     "slack.com",
     ["https://mcp.slack.com/*", "https://app.slack.com/client/*"],
@@ -370,7 +370,7 @@ const apps = [
           ),
         ],
         ["workspace", "channel"],
-        "Create and install one Slack App for this agent. Paperclip receives verified Events API requests and interactive callbacks, acknowledges with reactions, responds in direct messages, and starts one Paperclip task per new mentioned channel thread.",
+        "Create and install one Slack App for this agent. ThinkingMach receives verified Events API requests and interactive callbacks, acknowledges with reactions, responds in direct messages, and starts one ThinkingMach task per new mentioned channel thread.",
         {
           register: "https://api.slack.com/apps",
           docs: "https://api.slack.com/start/quickstart",
@@ -381,7 +381,7 @@ const apps = [
   [
     "microsoft-teams",
     "Microsoft Teams",
-    "Let people start and continue Paperclip work with an agent from Microsoft Teams.",
+    "Let people start and continue ThinkingMach work with an agent from Microsoft Teams.",
     "communication",
     "teams.microsoft.com",
     ["https://teams.microsoft.com/*"],
@@ -418,16 +418,16 @@ const apps = [
   ],
   [
     "imessage-photon", "iMessage Photon",
-    "Message a Paperclip agent from Apple Messages using Photon Cloud. Pro supports DMs; dedicated lines also support groups.",
+    "Message a ThinkingMach agent from Apple Messages using Photon Cloud. Pro supports DMs; dedicated lines also support groups.",
     "communication", "photon.codes", ["https://photon.codes/*"],
     channelMethod("imessage-photon", [field("projectSecret", "Project secret", "Photon project secret")], ["direct_message", "group_chat"],
-      "Connect a Photon Cloud project. Pro shared lines support DMs after sender enrollment in Photon and identity linking in Paperclip. Dedicated lines also support individually enabled groups.",
+      "Connect a Photon Cloud project. Pro shared lines support DMs after sender enrollment in Photon and identity linking in ThinkingMach. Dedicated lines also support individually enabled groups.",
       { register: "https://photon.codes/", docs: "https://photon.codes/docs/spectrum-ts/providers/imessage/connection-and-routing" }),
   ],
   [
     "telegram",
     "Telegram",
-    "Let people start and continue Paperclip work with an agent from Telegram.",
+    "Let people start and continue ThinkingMach work with an agent from Telegram.",
     "communication",
     "telegram.org",
     ["https://t.me/*", "https://telegram.me/*", "https://api.telegram.org/*"],
@@ -435,7 +435,7 @@ const apps = [
       "telegram",
       [field("botToken", "Bot token", "123456789:AA...")],
       ["chat", "group", "topic"],
-      "Create one dedicated bot with BotFather, then connect its token to the public Paperclip webhook endpoint.",
+      "Create one dedicated bot with BotFather, then connect its token to the public ThinkingMach webhook endpoint.",
       {
         register: "https://t.me/BotFather",
         docs: "https://core.telegram.org/bots/tutorial",
@@ -445,7 +445,7 @@ const apps = [
   [
     "discord",
     "Discord",
-    "Let people start and continue Paperclip work with an agent from Discord.",
+    "Let people start and continue ThinkingMach work with an agent from Discord.",
     "communication",
     "discord.com",
     ["https://discord.com/*"],
@@ -465,7 +465,7 @@ const apps = [
         },
       ],
       ["channel"],
-      "Create one dedicated Discord application and bot, enable the Message Content intent, install it in one server with the documented bot permissions, then connect its bot token, Application ID, and server ID. Paperclip starts one Discord thread per root bot mention and keeps the linked Paperclip task authoritative.",
+      "Create one dedicated Discord application and bot, enable the Message Content intent, install it in one server with the documented bot permissions, then connect its bot token, Application ID, and server ID. ThinkingMach starts one Discord thread per root bot mention and keeps the linked ThinkingMach task authoritative.",
       {
         register: "https://discord.com/developers/applications",
         docs: "https://discord.com/developers/docs/quick-start/getting-started",
@@ -550,7 +550,7 @@ const apps = [
         scopesHint: ["read", "write"],
       },
       "S2",
-      "Register a Linear OAuth app and add Paperclip's redirect URI before connecting.",
+      "Register a Linear OAuth app and add ThinkingMach's redirect URI before connecting.",
       {
         ownershipModes: ["customer"],
         requiredResourceFilters: ["workspace", "team", "project"],
@@ -571,7 +571,7 @@ const apps = [
       "none",
       { templateKey: "paperclip.google-sheets" },
       "S3",
-      "Share each spreadsheet with the Paperclip robot email, then paste the sheet links.",
+      "Share each spreadsheet with the ThinkingMach robot email, then paste the sheet links.",
       { requiredResourceFilters: ["spreadsheet"] },
     ),
   ],
@@ -615,7 +615,7 @@ const apps = [
           },
         },
         "S3",
-        "Connect Shopify's current UCP server for shopper-facing catalog and commerce tools. Paperclip supplies the required agent profile automatically.",
+        "Connect Shopify's current UCP server for shopper-facing catalog and commerce tools. ThinkingMach supplies the required agent profile automatically.",
         {
           label: "Shopify UCP commerce",
           whenToUse:
@@ -641,7 +641,7 @@ const apps = [
           warnings: [
             "This is Shopify's shopper-facing UCP server, not Admin API access. It does not manage merchant products or customers.",
             "The storefront must be public. A private or password-protected storefront returns HTTP 401 even when the merchant is signed in to Shopify Admin.",
-            "Paperclip currently uses Shopify's documented hosted agent-profile fixture while Paperclip's production UCP profile is being established.",
+            "ThinkingMach currently uses Shopify's documented hosted agent-profile fixture while ThinkingMach's production UCP profile is being established.",
           ],
           requiredResourceFilters: ["store"],
         },
@@ -689,11 +689,11 @@ const apps = [
       setupPrerequisite: {
         title: "Launch the storefront before connecting",
         description:
-          "Shopify's Storefront MCP is a public, no-auth endpoint. Paperclip cannot use the merchant's Shopify Admin session to bypass a private storefront.",
+          "Shopify's Storefront MCP is a public, no-auth endpoint. ThinkingMach cannot use the merchant's Shopify Admin session to bypass a private storefront.",
         steps: [
           "Select a Shopify plan; Shopify keeps trial storefronts private until a plan is selected.",
           "In Shopify Admin, open Online Store → Preferences and set Storefront visibility to Public (remove password protection).",
-          "Use the permanent <store>.myshopify.com domain in Paperclip, even if the store also has a custom domain.",
+          "Use the permanent <store>.myshopify.com domain in ThinkingMach, even if the store also has a custom domain.",
         ],
         actionLabel: "Open Shopify Admin",
         actionUrl: "https://admin.shopify.com/",
@@ -723,7 +723,7 @@ const apps = [
       "oauth",
       {},
       "S3",
-      "Register an OAuth client with the provider and add Paperclip's redirect URI.",
+      "Register an OAuth client with the provider and add ThinkingMach's redirect URI.",
       {
         credentialFields: [
           {
@@ -871,7 +871,7 @@ apps.push({
       grantKinds: ["user"],
       ownershipModes: ["customer"],
       whenToUse:
-        "Use Paperclip ID for a personal Gmail connection with centrally registered Google OAuth.",
+        "Use ThinkingMach ID for a personal Gmail connection with centrally registered Google OAuth.",
       defaults: {
         serverUrl: "https://gmailmcp.googleapis.com/mcp/v1",
         scopesHint: [
@@ -880,7 +880,7 @@ apps.push({
         ],
       },
       guidanceMd:
-        "Connect your Gmail identity. Paperclip can search and read mail and create drafts. Sending mail is not enabled.",
+        "Connect your Gmail identity. ThinkingMach can search and read mail and create drafts. Sending mail is not enabled.",
       warnings: [
         "This connection is personal. Agents need an explicit install, profile, and delegation before they can use it.",
       ],
@@ -1356,14 +1356,14 @@ const specialMethodsFor = (entry) => {
     return [
       oauthMethodFor(entry, "mcp-oauth", entry.serverUrl, {
         guidanceMd:
-          "Connect Supabase in the browser and scope the connection to one development project. Write tools start enabled and remain governed by Paperclip's action policies.",
+          "Connect Supabase in the browser and scope the connection to one development project. Write tools start enabled and remain governed by ThinkingMach's action policies.",
         tenantFields,
         warnings: [entry.prerequisite, warning],
         requiredResourceFilters: ["project"],
       }),
       apiKeyMethodFor(entry, "mcp-api-key", entry.serverUrl, {
         guidanceMd:
-          "Use a customer-created Supabase key scoped to one development project. Write tools start enabled and remain governed by Paperclip's action policies.",
+          "Use a customer-created Supabase key scoped to one development project. Write tools start enabled and remain governed by ThinkingMach's action policies.",
         tenantFields,
         warnings: [entry.prerequisite, warning],
         requiredResourceFilters: ["project"],
@@ -1409,11 +1409,11 @@ apps.push({
   docsUrl: "https://docs.cognee.ai/cognee-cloud/connections/cloud-mcp",
   setupPrerequisite: {
     title: "Cognee Cloud and a local runtime",
-    description: "Use your Cognee Cloud tenant API URL and key. Paperclip's runtime host needs uv installed to run the official Cognee MCP client. Public deployments require a trusted MCP runtime host.",
+    description: "Use your Cognee Cloud tenant API URL and key. ThinkingMach's runtime host needs uv installed to run the official Cognee MCP client. Public deployments require a trusted MCP runtime host.",
     actionLabel: "Open Cognee API keys", actionUrl: "https://platform.cognee.ai/api-keys",
   },
   methods: [method("cloud-local", "local_stdio", "api_key", { templateKey: "paperclip.cognee-cloud" }, "S3",
-    "Copy the API Base URL and create an API key on Cognee's API Keys page. Use a Cloud workspace with an active subscription. Paperclip uses its bundled Cloud client; no extra runtime installation is required.", {
+    "Copy the API Base URL and create an API key on Cognee's API Keys page. Use a Cloud workspace with an active subscription. ThinkingMach uses its bundled Cloud client; no extra runtime installation is required.", {
       label: "Connect Cognee Cloud", whenToUse: "Connect your Cloud tenant through the official Cognee MCP client.",
       credentialFields: [
         { key: "COGNEE_BASE_URL", label: "API Base URL", type: "text", required: true, secret: false, placeholder: "https://your-tenant.aws.cognee.ai", validation: { pattern: "^https://[a-zA-Z0-9-]+\\.aws\\.cognee\\.ai/?$", maxLength: 255 }, helperMd: "Copy API Base URL from Cognee's API Keys page." },
@@ -1583,7 +1583,7 @@ const inferState = (slug, state) => {
         : null;
   const ownershipModes = [];
   // A "Managed" state in Vercel describes credential custody, not ownership of
-  // a Paperclip connection. Keep those concepts separate: importing this review
+  // a ThinkingMach connection. Keep those concepts separate: importing this review
   // evidence must never silently turn an operator-owned connector into
   // `platform_shared`.
   const externalCredentialCustody =

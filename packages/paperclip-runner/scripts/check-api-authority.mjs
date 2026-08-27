@@ -10,7 +10,7 @@ function run(args, cwd, env = process.env) {
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
-run(["--filter", "@paperclipai/plugin-sdk", "ensure-build-deps"], fileURLToPath(new URL("../../../", import.meta.url)));
+run(["--filter", "@thinkingmach/plugin-sdk", "ensure-build-deps"], fileURLToPath(new URL("../../../", import.meta.url)));
 run(["run", "build:binary"], fileURLToPath(new URL("../", import.meta.url)));
 run([
   "exec", "vitest", "run",
@@ -18,5 +18,5 @@ run([
   "server/src/services/native-runtime/runner-api-rollout.test.ts",
   "server/src/services/native-runtime/runner-api.integration.test.ts",
 ], fileURLToPath(new URL("../../../", import.meta.url)), {
-  ...process.env, PAPERCLIP_REQUIRE_RUNNER_API_INTEGRATION: "1",
+  ...process.env, THINKINGMACH_REQUIRE_RUNNER_API_INTEGRATION: "1",
 });

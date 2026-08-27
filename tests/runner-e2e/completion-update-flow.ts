@@ -121,7 +121,7 @@ export async function runChatCompletionUpdate(context: {
   if (relative.startsWith("..") || path.isAbsolute(relative)) throw new Error("Completion fixture escaped isolated instance");
   const wait = await prepareChatBrief(workspace, input.nonce, 240_000);
   const reference = marker;
-  const instructions = `For the welcome-note assignment, run node ${wait.scriptPath} to read the organizer's brief before writing the final note. Save a two-sentence welcome note as a Paperclip document on your assigned task using the brief's details and reference. Then complete your task. Do not edit or comment on another task.`;
+  const instructions = `For the welcome-note assignment, run node ${wait.scriptPath} to read the organizer's brief before writing the final note. Save a two-sentence welcome note as a ThinkingMach document on your assigned task using the brief's details and reference. Then complete your task. Do not edit or comment on another task.`;
   const saved = await api.request.put(`/api/agents/${worker.id}/instructions-bundle/file`, { data: { path: "AGENTS.md", content: instructions } });
   expect(saved.ok()).toBe(true);
   expect(await api.get(`/api/agents/${worker.id}/instructions-bundle/file?path=AGENTS.md`)).toMatchObject({ content: instructions });

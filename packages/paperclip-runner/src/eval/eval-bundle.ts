@@ -55,7 +55,7 @@ export interface EvalBundlePromptPolicy {
 }
 
 export interface EvalBundleRunner {
-  /** Runner package, e.g. `@paperclipai/paperclip-runner`. */
+  /** Runner package, e.g. `@thinkingmach/paperclip-runner`. */
   package: string;
   /** Runner binary that hosts the provider session, e.g. `paperclip-runnerd`. */
   binary: string;

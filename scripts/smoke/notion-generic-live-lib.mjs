@@ -1,11 +1,11 @@
 const REQUIRED_ENVIRONMENT = [
-  "PAPERCLIP_E2E_BASE_URL",
-  "PAPERCLIP_E2E_EMAIL",
-  "PAPERCLIP_DEV_LOGIN_PASSWORD",
-  "PAPERCLIP_API_URL",
-  "PAPERCLIP_API_KEY",
-  "PAPERCLIP_RUN_ID",
-  "PAPERCLIP_TASK_ID",
+  "THINKINGMACH_E2E_BASE_URL",
+  "THINKINGMACH_E2E_EMAIL",
+  "THINKINGMACH_DEV_LOGIN_PASSWORD",
+  "THINKINGMACH_API_URL",
+  "THINKINGMACH_API_KEY",
+  "THINKINGMACH_RUN_ID",
+  "THINKINGMACH_TASK_ID",
 ];
 
 // Agent secret APIs expose access.notion_generic_flow_test_account under this
@@ -119,10 +119,10 @@ export function preflightNotionGenericLive(environment = process.env) {
     throw new NotionGenericLivePreflightError("missing_environment", { missing });
   }
 
-  const base = explicitHttpsOrigin(requiredValue(environment, "PAPERCLIP_E2E_BASE_URL"), "unsafe_base_url");
-  const api = explicitHttpsOrigin(requiredValue(environment, "PAPERCLIP_API_URL"), "unsafe_api_url");
+  const base = explicitHttpsOrigin(requiredValue(environment, "THINKINGMACH_E2E_BASE_URL"), "unsafe_base_url");
+  const api = explicitHttpsOrigin(requiredValue(environment, "THINKINGMACH_API_URL"), "unsafe_api_url");
 
-  const email = requiredValue(environment, "PAPERCLIP_E2E_EMAIL");
+  const email = requiredValue(environment, "THINKINGMACH_E2E_EMAIL");
   if (!email.includes("@")) throw new NotionGenericLivePreflightError("invalid_paperclip_email");
 
   return {
@@ -130,10 +130,10 @@ export function preflightNotionGenericLive(environment = process.env) {
     apiBaseUrl: `${api.origin}/api`,
     callbackUrl: `${base.origin}/api/tools/oauth/callback`,
     paperclipEmail: email,
-    paperclipPassword: environment.PAPERCLIP_DEV_LOGIN_PASSWORD,
-    agentApiKey: environment.PAPERCLIP_API_KEY,
-    runId: environment.PAPERCLIP_RUN_ID,
-    taskId: environment.PAPERCLIP_TASK_ID,
+    paperclipPassword: environment.THINKINGMACH_DEV_LOGIN_PASSWORD,
+    agentApiKey: environment.THINKINGMACH_API_KEY,
+    runId: environment.THINKINGMACH_RUN_ID,
+    taskId: environment.THINKINGMACH_TASK_ID,
     secretBindingKey: NOTION_SECRET_BINDING_KEY,
   };
 }

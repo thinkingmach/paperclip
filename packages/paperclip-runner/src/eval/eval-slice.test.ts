@@ -12,7 +12,7 @@ function bundle(): EvalBundle {
     launchContext: { workingDirectoryClass: "ephemeral-fixture", scenarioId: "slice", turnTimeoutMs: 60_000 },
     promptPolicy: { id: "exact-single-call", callTemplate: "Call {op}.", restraintTemplate: "No tools." },
     grants: ["discovery:tasks:read"],
-    runner: { package: "@paperclipai/paperclip-runner", binary: "paperclip-runnerd", version: "0.0.0" },
+    runner: { package: "@thinkingmach/paperclip-runner", binary: "paperclip-runnerd", version: "0.0.0" },
     controlPlaneAdapter: { kind: "mock", contract: "paperclip.capability.control-plane.v1" },
     faultInjection: [],
   };

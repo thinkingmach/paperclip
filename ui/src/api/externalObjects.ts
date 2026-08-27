@@ -1,4 +1,4 @@
-import type { ExternalObjectMentionGroup, ExternalObjectSummary } from "@paperclipai/shared";
+import type { ExternalObjectMentionGroup, ExternalObjectSummary } from "@thinkingmach/shared";
 import { api } from "./client";
 
 export const externalObjectsApi = {

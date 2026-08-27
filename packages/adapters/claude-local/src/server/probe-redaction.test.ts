@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
 
 // The managed-config step runs inside `prepareSandboxClaudeProbeRuntime`. The
-// step resolves the Paperclip instance root first. This mock makes that resolve
+// step resolves the ThinkingMach instance root first. This mock makes that resolve
 // throw, so the managed-config materialization fails with a controllable error
 // that carries a secret marker.
 const { resolveInstanceRoot } = vi.hoisted(() => {
@@ -10,9 +10,9 @@ const { resolveInstanceRoot } = vi.hoisted(() => {
   return { resolveInstanceRoot };
 });
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
@@ -20,16 +20,16 @@ vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/server-utils", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/server-utils")>(
-    "@paperclipai/adapter-utils/server-utils",
+vi.mock("@thinkingmach/adapter-utils/server-utils", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/server-utils")>(
+    "@thinkingmach/adapter-utils/server-utils",
   );
   return {
     ...actual,
-    resolvePaperclipInstanceRootForAdapter: (...args: unknown[]) => {
+    resolveThinkingMachInstanceRootForAdapter: (...args: unknown[]) => {
       if (resolveInstanceRoot.throwError) throw resolveInstanceRoot.throwError;
       return (
-        actual.resolvePaperclipInstanceRootForAdapter as (...a: unknown[]) => string
+        actual.resolveThinkingMachInstanceRootForAdapter as (...a: unknown[]) => string
       )(...args);
     },
   };

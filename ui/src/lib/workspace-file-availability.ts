@@ -1,4 +1,4 @@
-import type { ResolvedWorkspaceResource, WorkspaceFileSelector } from "@paperclipai/shared";
+import type { ResolvedWorkspaceResource, WorkspaceFileSelector } from "@thinkingmach/shared";
 import type { ParsedWorkspaceFileRef } from "./workspace-file-parser";
 
 /** Server cap on `POST /file-resources/availability` (`queries` max length). */

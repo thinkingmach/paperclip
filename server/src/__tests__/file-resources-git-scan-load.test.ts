@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { errorHandler } from "../middleware/index.js";
 import {
   createFileResourceListLimiter,

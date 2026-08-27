@@ -46,15 +46,15 @@ import type {
   SuccessfulRunHandoffState,
   IssueWorkMode,
   IssueWorkProduct,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type { ActiveRunForIssue, LiveRunForIssue } from "../api/heartbeats";
 import { findUIAdapter } from "../adapters/registry";
 import { useLiveRunTranscripts } from "./transcript/useLiveRunTranscripts";
 import { useSecondTick } from "../hooks/useSecondTick";
 import {
-  usePaperclipIssueRuntime,
-  type PaperclipIssueRuntimeReassignment,
-} from "../hooks/usePaperclipIssueRuntime";
+  useThinkingMachIssueRuntime,
+  type ThinkingMachIssueRuntimeReassignment,
+} from "../hooks/useThinkingMachIssueRuntime";
 import { useOptionalToastActions } from "../context/ToastContext";
 import { copyTextToClipboard } from "../lib/clipboard";
 import {
@@ -194,7 +194,7 @@ import type {
   IssueCommentMetadata,
   IssueCommentPresentation,
   SourceTrustMetadata,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   describeToolInput,
   displayToolName,
@@ -204,7 +204,7 @@ import {
   summarizeToolInput,
   summarizeToolResult,
 } from "../lib/transcriptPresentation";
-import { buildAgentMentionHref } from "@paperclipai/shared";
+import { buildAgentMentionHref } from "@thinkingmach/shared";
 import { useComposerStop } from "@/hooks/useComposerStop";
 import { cn, formatDateTime, formatShortDate } from "../lib/utils";
 import { liveBlueBadge } from "../lib/status-colors";
@@ -1001,7 +1001,7 @@ function toValidIsoString(
 
 function parseReassignment(
   target: string,
-): PaperclipIssueRuntimeReassignment | null {
+): ThinkingMachIssueRuntimeReassignment | null {
   if (!target || target === "__none__") {
     return { assigneeAgentId: null, assigneeUserId: null };
   }
@@ -2912,7 +2912,7 @@ function IssueChatFeedbackButtons({
           <DialogHeader>
             <DialogTitle>Save your feedback sharing preference</DialogTitle>
             <DialogDescription>
-              Choose whether voted AI outputs can be shared with Paperclip Labs.
+              Choose whether voted AI outputs can be shared with ThinkingMach Labs.
               This answer becomes the default for future thumbs up and thumbs
               down votes.
             </DialogDescription>
@@ -3532,14 +3532,14 @@ function SystemNoticeCommentContent({
       ? (agentMap?.get(runAgentId)?.name ?? null)
       : null;
     if (authorType === "system") {
-      const label = runAgentName ?? "Paperclip";
+      const label = runAgentName ?? "ThinkingMach";
       if (runAgentId && runId)
         return { label, href: `/agents/${runAgentId}/runs/${runId}` };
       return { label };
     }
     if (runAgentId && runId) {
       return {
-        label: authorName ?? runAgentName ?? "Paperclip",
+        label: authorName ?? runAgentName ?? "ThinkingMach",
         href: `/agents/${runAgentId}/runs/${runId}`,
       };
     }
@@ -6082,7 +6082,7 @@ export function IssueChatThread({
     },
     [onAdd],
   );
-  const runtime = usePaperclipIssueRuntime({
+  const runtime = useThinkingMachIssueRuntime({
     messages,
     isRunning,
     onSend: ({ body, reopen, reassignment, attachmentIds }) =>

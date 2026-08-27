@@ -4,7 +4,7 @@ The Runner workflow eval system turns the `STRESS-001`–`STRESS-044` campaign
 into complementary deterministic, live, and chaos lanes. It is additive to the
 capability inventory, capability cases, and existing scoring/report readers.
 
-The workspace-private `@paperclipai/paperclip-eval-kernel` package owns only
+The workspace-private `@thinkingmach/paperclip-eval-kernel` package owns only
 structural scenario-by-candidate orchestration. Runner-specific cases,
 observations, scoring, and traceability remain package-local. The HTML matrix is
 rendered by the canonical `paperclip-evals` report program so live results use
@@ -12,24 +12,24 @@ the same grid and drill-down pages as the direct Runner eval suite.
 
 ## Lanes
 
-- `pnpm --filter @paperclipai/paperclip-runner test:runner-workflow-evals`
+- `pnpm --filter @thinkingmach/paperclip-runner test:runner-workflow-evals`
   runs the credential-free PR gate over sanitized Codex, OpenCode, and ACPX
   normalization fixtures.
-- `pnpm --filter @paperclipai/paperclip-runner report:runner-workflow-evals`
+- `pnpm --filter @thinkingmach/paperclip-runner report:runner-workflow-evals`
   validates the deterministic fail-closed fixture matrix and writes JSON,
   Markdown, JUnit, and GitHub-safe artifacts under
   `.paperclip-local/evals/workflows/`. It makes no network requests.
-- `pnpm --filter @paperclipai/paperclip-runner report:runner-live-evals` runs
+- `pnpm --filter @thinkingmach/paperclip-runner report:runner-live-evals` runs
   the balanced forty-execution schedule against real provider sessions. Live
   candidate failures are trend-only; missing credentials, qualification
   failures, and provider outages remain unscored.
-- `pnpm --filter @paperclipai/paperclip-runner report:runner-chaos-evals`
+- `pnpm --filter @thinkingmach/paperclip-runner report:runner-chaos-evals`
   writes the eight-scenario fault schedule consumed by weekly and pre-release
   restart, replay, trace, finalization, interaction, and wake-race suites.
 
 The checked-in live manifest contains only adapter/model settings,
 qualification variable names, and budgets. Credentials remain in the
-environment. `PAPERCLIP_EVAL_MAX_CAMPAIGN_COST_USD` must be a positive finite
+environment. `THINKINGMACH_EVAL_MAX_CAMPAIGN_COST_USD` must be a positive finite
 number and defaults to 12 USD for scheduled runs.
 
 Live executions export one immutable Evalbook attempt per workflow/candidate to
@@ -37,8 +37,8 @@ Live executions export one immutable Evalbook attempt per workflow/candidate to
 `evals/paperclip-runner/tools/eval_program.py report` from a `paperclip-evals`
 checkout. That program writes the canonical matrix to
 `.paperclip-local/evals/workflows/index.html`, plus `latest.html`, test pages,
-and attempt pages. Set `PAPERCLIP_EVALBOOK_PROGRAM` to the program's absolute
-path or `PAPERCLIP_EVALS_ROOT` to its repository root. Conventional sibling
+and attempt pages. Set `THINKINGMACH_EVALBOOK_PROGRAM` to the program's absolute
+path or `THINKINGMACH_EVALS_ROOT` to its repository root. Conventional sibling
 worktree locations are discovered automatically. GitHub Actions checks out a
 pinned `paperclip-evals` revision, so every hosted run uses the same reviewed
 report implementation rather than a copied or package-local renderer.

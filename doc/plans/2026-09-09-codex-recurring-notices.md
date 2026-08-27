@@ -6,11 +6,11 @@ full-answer streaming are separate preceding changes.
 
 ## Product rules
 
-1. Trust the execution root that Paperclip selects at startup. Resolve it on
+1. Trust the execution root that ThinkingMach selects at startup. Resolve it on
    the execution host, including a Git worktree's main repository trust key.
    Write only the isolated Codex configuration. Keep sandbox, tool, and secret
    controls authoritative. Later directory changes do not grant new trust.
-2. Codex retains model conversation context. Paperclip reads provider state to
+2. Codex retains model conversation context. ThinkingMach reads provider state to
    establish execution authority or recover specific evidence. Normal resume
    must not download historical message contents.
 3. A resume usage snapshot describes completed work. It can establish a
@@ -52,7 +52,7 @@ separate from Codex's protocol requirements.
 Before spawning Codex, canonicalize the selected root and add its trusted
 project entry to the isolated config. Preserve unrelated settings and use a
 private atomic replacement. Start the provider process in that same root,
-so startup cannot load the Paperclip server checkout by accident. Persist the
+so startup cannot load the ThinkingMach server checkout by accident. Persist the
 startup directory in the existing optional session checkpoint for cold resume.
 Remote roots are resolved on the execution host.
 

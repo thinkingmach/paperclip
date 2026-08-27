@@ -2,7 +2,7 @@
 # Build the real Docker target on two fresh builders using an exported cache.
 # Export only metadata, avoiding a multi-gigabyte test image in the daemon.
 # External access: the baseline build anonymously reads the public BuildKit
-# cache at ghcr.io/paperclipai/paperclip:buildcache-{amd64,arm64} (see
+# cache at ghcr.io/thinkingmach/paperclip:buildcache-{amd64,arm64} (see
 # RUNNER_CHECK_SEED_CACHE below). No credentials are used or required, and
 # nothing is pushed.
 set -euo pipefail
@@ -49,8 +49,8 @@ docker buildx create --name "$baseline_builder" --driver docker-container
 # another ref, or to the empty string to force the cold path.
 if [[ -z "${RUNNER_CHECK_SEED_CACHE+x}" ]]; then
   case "$(uname -m)" in
-    x86_64) RUNNER_CHECK_SEED_CACHE="ghcr.io/paperclipai/paperclip:buildcache-amd64" ;;
-    aarch64 | arm64) RUNNER_CHECK_SEED_CACHE="ghcr.io/paperclipai/paperclip:buildcache-arm64" ;;
+    x86_64) RUNNER_CHECK_SEED_CACHE="ghcr.io/thinkingmach/paperclip:buildcache-amd64" ;;
+    aarch64 | arm64) RUNNER_CHECK_SEED_CACHE="ghcr.io/thinkingmach/paperclip:buildcache-arm64" ;;
     *) RUNNER_CHECK_SEED_CACHE="" ;;
   esac
 fi

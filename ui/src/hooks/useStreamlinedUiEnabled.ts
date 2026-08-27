@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { QueryClient, QueryClientContext, useQuery } from "@tanstack/react-query";
-import type { InstanceExperimentalSettings } from "@paperclipai/shared";
+import type { InstanceExperimentalSettings } from "@thinkingmach/shared";
 import { instanceSettingsApi } from "@/api/instanceSettings";
 import { queryKeys } from "@/lib/queryKeys";
 

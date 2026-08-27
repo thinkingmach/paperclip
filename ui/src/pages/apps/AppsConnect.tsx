@@ -1,5 +1,5 @@
 import { ConnectionSetupFlow } from "@/features/connections/ConnectionSetupFlow";
-import type { ToolConnectionCredentialSource } from "@paperclipai/shared";
+import type { ToolConnectionCredentialSource } from "@thinkingmach/shared";
 
 export { AccessStep, OAuthConnectStateScreen, type OAuthConnectPhase } from "@/features/connections/ConnectionSetupFlow";
 

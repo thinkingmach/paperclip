@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import type { PaperclipSemanticActionBinding } from "./types.js";
-import { PaperclipSemanticDispatcher } from "./paperclip-dispatcher.js";
+import type { ThinkingMachSemanticActionBinding } from "./types.js";
+import { ThinkingMachSemanticDispatcher } from "./paperclip-dispatcher.js";
 import type {
-  PaperclipSemanticIdempotencyClaim,
-  PaperclipSemanticIdempotencyStore,
-  PaperclipSemanticRunContext,
-  PaperclipSemanticStoredOutcome,
-  PaperclipSemanticToolCall,
+  ThinkingMachSemanticIdempotencyClaim,
+  ThinkingMachSemanticIdempotencyStore,
+  ThinkingMachSemanticRunContext,
+  ThinkingMachSemanticStoredOutcome,
+  ThinkingMachSemanticToolCall,
 } from "./types.js";
-import { PAPERCLIP_SEMANTIC_REDACTED } from "./redaction.js";
+import { THINKINGMACH_SEMANTIC_REDACTED } from "./redaction.js";
 import {
   validatePrpEvent,
   type PrpEvent,
@@ -29,7 +29,7 @@ describe("run-scoped semantic tool authority", () => {
       actorClaims: ["discovery:tasks:read", "discovery:agents:read"],
       delegatedClaims: ["discovery:tasks:read"],
     });
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => context,
       bindings: [
         binding("get_task_context", { task: { id: "task_semantic_test" } }),
@@ -62,7 +62,7 @@ describe("run-scoped semantic tool authority", () => {
   it("rechecks ownership after projection and before invocation", async () => {
     let context = runContext();
     let executions = 0;
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => context,
       bindings: [
         {
@@ -90,7 +90,7 @@ describe("run-scoped semantic tool authority", () => {
 
   it("rejects forged scope and protected input before a binding executes", async () => {
     let executions = 0;
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () =>
         runContext({
           actorClaims: ["discovery:tasks:read"],
@@ -122,7 +122,7 @@ describe("run-scoped semantic tool authority", () => {
   });
 
   it("redacts binding output and emits schema-valid digest-only receipts", async () => {
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext(),
       bindings: [
         binding("get_task_context", {
@@ -135,7 +135,7 @@ describe("run-scoped semantic tool authority", () => {
 
     expect(result).toMatchObject({
       ok: true,
-      value: { accessToken: PAPERCLIP_SEMANTIC_REDACTED },
+      value: { accessToken: THINKINGMACH_SEMANTIC_REDACTED },
       duplicate: false,
     });
     expect(JSON.stringify(result)).not.toContain("sk_should-never-cross");
@@ -150,7 +150,7 @@ describe("run-scoped semantic tool authority", () => {
 
   it("fails mutations closed when no idempotency store is configured", async () => {
     let executions = 0;
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext(),
       bindings: [
         {
@@ -176,7 +176,7 @@ describe("run-scoped semantic tool authority", () => {
   it("replays exact mutation retries and rejects key reuse with changed input", async () => {
     let executions = 0;
     const store = new MemoryIdempotencyStore();
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext(),
       idempotencyStore: store,
       bindings: [
@@ -238,7 +238,7 @@ describe("run-scoped semantic tool authority", () => {
   it("recovers a completed mutation when the primary receipt commit fails", async () => {
     let executions = 0;
     const store = new MemoryIdempotencyStore({ failCompleteOnce: true });
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext(),
       idempotencyStore: store,
       bindings: [
@@ -272,7 +272,7 @@ describe("run-scoped semantic tool authority", () => {
       releaseExecution = resolve;
     });
     let executions = 0;
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext(),
       idempotencyStore: store,
       bindings: [
@@ -307,7 +307,7 @@ describe("run-scoped semantic tool authority", () => {
     const store = new MemoryIdempotencyStore();
     let lookups = 0;
     let executions = 0;
-    const dispatcher = new PaperclipSemanticDispatcher({
+    const dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: () => {
         lookups += 1;
         return runContext({
@@ -344,7 +344,7 @@ describe("run-scoped semantic tool authority", () => {
 
   it("fails closed when durable storage or binding metadata is invalid", async () => {
     let executions = 0;
-    const unavailableStore = new PaperclipSemanticDispatcher({
+    const unavailableStore = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext(),
       idempotencyStore: {
         claim: () => {
@@ -371,7 +371,7 @@ describe("run-scoped semantic tool authority", () => {
       error: { code: "receipt_store_unavailable" },
     });
 
-    const invalidBinding = new PaperclipSemanticDispatcher({
+    const invalidBinding = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext(),
       bindings: [
         {
@@ -390,7 +390,7 @@ describe("run-scoped semantic tool authority", () => {
   });
 
   it("denies cross-company contexts and malformed protocol identities", async () => {
-    const crossCompany = new PaperclipSemanticDispatcher({
+    const crossCompany = new ThinkingMachSemanticDispatcher({
       contextProvider: () => runContext({ actorCompanyId: "company_other" }),
       bindings: [binding("get_task_context", {})],
     });
@@ -415,7 +415,7 @@ describe("run-scoped semantic tool authority", () => {
       resultReceipt: null,
     });
 
-    const malformedAuthority = new PaperclipSemanticDispatcher({
+    const malformedAuthority = new ThinkingMachSemanticDispatcher({
       contextProvider: () =>
         ({ ...runContext(), companyId: "bad company id" }) as never,
       bindings: [binding("get_task_context", {})],
@@ -439,7 +439,7 @@ function runContext(
     actorCompanyId?: string;
     executionRunId?: string;
   } = {},
-): PaperclipSemanticRunContext {
+): ThinkingMachSemanticRunContext {
   return {
     runId: correlation.runId,
     companyId: "company_semantic_test",
@@ -463,9 +463,9 @@ function runContext(
 }
 
 function binding(
-  operationId: PaperclipSemanticActionBinding["operationId"],
+  operationId: ThinkingMachSemanticActionBinding["operationId"],
   value: Record<string, unknown>,
-): PaperclipSemanticActionBinding {
+): ThinkingMachSemanticActionBinding {
   return {
     operationId,
     execute: () => ({ value: value as never }),
@@ -476,7 +476,7 @@ function call(
   operationId: string,
   input: unknown,
   callId = `call_${operationId}`,
-): PaperclipSemanticToolCall {
+): ThinkingMachSemanticToolCall {
   return { runId: correlation.runId, callId, operationId, correlation, input };
 }
 
@@ -522,13 +522,13 @@ function event(
   } as PrpEvent;
 }
 
-class MemoryIdempotencyStore implements PaperclipSemanticIdempotencyStore {
+class MemoryIdempotencyStore implements ThinkingMachSemanticIdempotencyStore {
   readonly #entries = new Map<
     string,
     {
       digest: string;
       token: string;
-      outcome?: PaperclipSemanticStoredOutcome;
+      outcome?: ThinkingMachSemanticStoredOutcome;
     }
   >();
   readonly #tokenToScope = new Map<string, string>();
@@ -547,9 +547,9 @@ class MemoryIdempotencyStore implements PaperclipSemanticIdempotencyStore {
 
   claim(input: {
     scope: string;
-    operationId: PaperclipSemanticStoredOutcome["operationId"];
+    operationId: ThinkingMachSemanticStoredOutcome["operationId"];
     inputDigest: string;
-  }): PaperclipSemanticIdempotencyClaim {
+  }): ThinkingMachSemanticIdempotencyClaim {
     const existing = this.#entries.get(input.scope);
     if (existing !== undefined) {
       if (existing.digest !== input.inputDigest) return { kind: "conflict" };
@@ -564,7 +564,7 @@ class MemoryIdempotencyStore implements PaperclipSemanticIdempotencyStore {
     return { kind: "claimed", token };
   }
 
-  complete(token: string, outcome: PaperclipSemanticStoredOutcome): void {
+  complete(token: string, outcome: ThinkingMachSemanticStoredOutcome): void {
     if (this.#failCompleteOnce) {
       this.#failCompleteOnce = false;
       throw new Error("primary receipt commit failed");
@@ -572,12 +572,12 @@ class MemoryIdempotencyStore implements PaperclipSemanticIdempotencyStore {
     this.#storeOutcome(token, outcome);
   }
 
-  recover(token: string, outcome: PaperclipSemanticStoredOutcome): void {
+  recover(token: string, outcome: ThinkingMachSemanticStoredOutcome): void {
     this.recoveryCount += 1;
     this.#storeOutcome(token, outcome);
   }
 
-  #storeOutcome(token: string, outcome: PaperclipSemanticStoredOutcome): void {
+  #storeOutcome(token: string, outcome: ThinkingMachSemanticStoredOutcome): void {
     const scope = this.#tokenToScope.get(token);
     const entry = scope === undefined ? undefined : this.#entries.get(scope);
     if (scope === undefined || entry?.token !== token) {

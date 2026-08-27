@@ -1,4 +1,4 @@
-import type { heartbeatRuns } from "@paperclipai/db";
+import type { heartbeatRuns } from "@thinkingmach/db";
 import { buildHeartbeatRunIssueComment } from "./heartbeat-run-summary.js";
 
 export function buildHeartbeatRunStatusLiveEventPayload(

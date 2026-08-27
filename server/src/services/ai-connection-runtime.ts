@@ -4,17 +4,17 @@ import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { and, eq } from "drizzle-orm";
-import { type Db, companySecrets, connectionGrants } from "@paperclipai/db";
+import { type Db, companySecrets, connectionGrants } from "@thinkingmach/db";
 import {
   AI_CONNECTION_CAPABILITIES,
   type AiConnectionBinding,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { aiConnectionService } from "./ai-connections.js";
 import { secretService } from "./secrets.js";
-import { decideCodexAuthMerge } from "@paperclipai/adapter-codex-local/server";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
-import { runAdapterExecutionTargetProcess } from "@paperclipai/adapter-utils/execution-target";
-import { decideGrokAuthMerge } from "@paperclipai/adapter-grok-local/server";
+import { decideCodexAuthMerge } from "@thinkingmach/adapter-codex-local/server";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
+import { runAdapterExecutionTargetProcess } from "@thinkingmach/adapter-utils/execution-target";
+import { decideGrokAuthMerge } from "@thinkingmach/adapter-grok-local/server";
 
 export function isAiConnectionBusy(error: unknown): error is HttpError {
   return error instanceof HttpError && error.status === 422 &&
@@ -38,7 +38,7 @@ export const AI_AUTH_ENV_KEYS = [
   "OPENCODE_CONFIG_CONTENT",
   "OPENCODE_CONFIG",
   "OPENCODE_CONFIG_DIR",
-  "PAPERCLIP_OPENCODE_PROVIDERS",
+  "THINKINGMACH_OPENCODE_PROVIDERS",
   "ANTHROPIC_BASE_URL",
   "OPENAI_BASE_URL",
   "XAI_BASE_URL",
@@ -59,7 +59,7 @@ export function stripAiAuthBindings(env: unknown): Record<string, unknown> {
         "CLAUDE_CODE_USE_BEDROCK",
         "CLAUDE_CODE_USE_VERTEX",
         "CLAUDE_CODE_USE_FOUNDRY",
-        "PAPERCLIP_OPENCODE_PROVIDERS",
+        "THINKINGMACH_OPENCODE_PROVIDERS",
       ].includes(key)
     )
       delete result[key];
@@ -217,7 +217,7 @@ export async function prepareManagedAiRuntime(
     "CLAUDE_CODE_USE_BEDROCK",
     "CLAUDE_CODE_USE_VERTEX",
     "CLAUDE_CODE_USE_FOUNDRY",
-    "PAPERCLIP_OPENCODE_PROVIDERS",
+    "THINKINGMACH_OPENCODE_PROVIDERS",
   ]) {
     if (configuredEnv[key])
       throw unprocessable(

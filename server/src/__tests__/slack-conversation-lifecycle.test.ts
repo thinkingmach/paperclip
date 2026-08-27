@@ -9,14 +9,14 @@ import {
   chatMessageLinks, chatPublications, companies, createDb, heartbeatRuns, issueApprovals,
   issueComments, issueRelations, issueThreadInteractions, issues, nativeRunFinalizations,
   toolApplications, toolConnections,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { settleSlackConversation } from "../services/slack-conversation-lifecycle.js";
 import { externalConversationStateSql } from "../services/slack-conversation-state.js";
 import { executionIssueCondition } from "../services/issue-visibility.js";
 import { dashboardService } from "../services/dashboard.js";
 import { attentionService } from "../services/attention.js";
-import { companySearchQuerySchema } from "@paperclipai/shared";
+import { companySearchQuerySchema } from "@thinkingmach/shared";
 import { companySearchService } from "../services/company-search.js";
 import { recoveryService } from "../services/recovery/service.js";
 import { issueService } from "../services/issues.js";

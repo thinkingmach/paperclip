@@ -290,7 +290,7 @@ describe.sequential("auth routes", () => {
     });
   });
 
-  it("accepts Paperclip asset paths for avatars", async () => {
+  it("accepts ThinkingMach asset paths for avatars", async () => {
     const app = await createApp(
       {
         type: "board",

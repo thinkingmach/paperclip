@@ -2,12 +2,12 @@ import type {
   AdapterEnvironmentCheck,
   AdapterEnvironmentTestContext,
   AdapterEnvironmentTestResult,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import {
   asString,
   parseObject,
   ensurePathInEnv,
-} from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/adapter-utils/server-utils";
 import {
   ensureAdapterExecutionTargetCommandResolvable,
   ensureAdapterExecutionTargetDirectory,
@@ -16,7 +16,7 @@ import {
   describeAdapterExecutionTarget,
   resolveAdapterExecutionTargetCwd,
   prepareAdapterExecutionTargetRuntime,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
@@ -110,7 +110,7 @@ async function prepareCodexHelloProbe(input: {
     // Prepare the exact home a real run would use, mirroring execute.ts: vend
     // the shared credential's freshest same-identity cached copy, then seed the
     // effective home — the company default when no CODEX_HOME is configured, a
-    // Paperclip-managed override (the per-agent home) seeded in place — and
+    // ThinkingMach-managed override (the per-agent home) seeded in place — and
     // stage that home's credentials. A genuine external override manages its
     // own auth: its bytes are staged as-is and it is never seeded or mutated.
     // Without this mirror the probe exercises a different credential than the
@@ -222,14 +222,14 @@ async function prepareCodexHelloProbe(input: {
       command: "sh",
       args: [
         "-c",
-        `set -e; umask 077; mkdir -p "$CODEX_HOME"; printf "%s" "$_PAPERCLIP_CODEX_AUTH_JSON" > "$CODEX_HOME/auth.json"; unset _PAPERCLIP_CODEX_AUTH_JSON; cleanup() { result=$?; trap - EXIT; rm -f "$CODEX_HOME/auth.json" || true; rm -rf "$CODEX_HOME" || printf '%s\\n' '${PROBE_CLEANUP_WARNING}' >&2; exit "$result"; }; trap cleanup EXIT; trap 'exit 130' INT; trap 'exit 143' TERM; "$0" "$@"`,
+        `set -e; umask 077; mkdir -p "$CODEX_HOME"; printf "%s" "$_THINKINGMACH_CODEX_AUTH_JSON" > "$CODEX_HOME/auth.json"; unset _THINKINGMACH_CODEX_AUTH_JSON; cleanup() { result=$?; trap - EXIT; rm -f "$CODEX_HOME/auth.json" || true; rm -rf "$CODEX_HOME" || printf '%s\\n' '${PROBE_CLEANUP_WARNING}' >&2; exit "$result"; }; trap cleanup EXIT; trap 'exit 130' INT; trap 'exit 143' TERM; "$0" "$@"`,
         input.command,
         ...input.args,
       ],
       env: {
         ...input.env,
         CODEX_HOME: probeHome,
-        _PAPERCLIP_CODEX_AUTH_JSON: JSON.stringify({ OPENAI_API_KEY: input.probeApiKey }),
+        _THINKINGMACH_CODEX_AUTH_JSON: JSON.stringify({ OPENAI_API_KEY: input.probeApiKey }),
       },
       cleanup,
     };
@@ -499,7 +499,7 @@ export async function testEnvironment(
             ...(detail ? { detail } : {}),
             hint: probeApiKey
               ? "OPENAI_API_KEY was provided but Codex still rejected the request. Verify the key is valid for the OpenAI Responses API (e.g. `curl -H \"Authorization: Bearer $OPENAI_API_KEY\" https://api.openai.com/v1/models`), or run `codex login` and seed `~/.codex/auth.json`."
-              : "Codex CLI does not read OPENAI_API_KEY from the environment; set OPENAI_API_KEY in this adapter's config (so Paperclip writes it to `$CODEX_HOME/auth.json`) or run `codex login` on the host first.",
+              : "Codex CLI does not read OPENAI_API_KEY from the environment; set OPENAI_API_KEY in this adapter's config (so ThinkingMach writes it to `$CODEX_HOME/auth.json`) or run `codex login` on the host first.",
           });
           if (targetIsSandbox) {
             // Emit the neutral canonical check so the user interface can decide

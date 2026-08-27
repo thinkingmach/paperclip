@@ -2,19 +2,19 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  PAPERCLIP_EVAL_KERNEL_COMPATIBILITY,
-  PaperclipEvalKernelConfigurationError,
-  runPaperclipEvalMatrix,
+  THINKINGMACH_EVAL_KERNEL_COMPATIBILITY,
+  ThinkingMachEvalKernelConfigurationError,
+  runThinkingMachEvalMatrix,
 } from "../dist/index.js";
 
 test("runs a caller-owned scenario/candidate matrix", async () => {
-  const results = await runPaperclipEvalMatrix({
+  const results = await runThinkingMachEvalMatrix({
     scenarios: [{ id: "scenario-a", input: { value: 2 } }],
     candidates: [{ id: "candidate-a", config: { multiplier: 3 } }],
     execute: async ({ scenario, candidate }) => scenario.input.value * candidate.config.multiplier,
     score: ({ output }) => ({ passed: output === 6 }),
   });
-  assert.equal(PAPERCLIP_EVAL_KERNEL_COMPATIBILITY.apiVersion, 1);
+  assert.equal(THINKINGMACH_EVAL_KERNEL_COMPATIBILITY.apiVersion, 1);
   assert.deepEqual(results, [{
     scenarioId: "scenario-a",
     candidateId: "candidate-a",
@@ -26,7 +26,7 @@ test("runs a caller-owned scenario/candidate matrix", async () => {
 test("fails before execution when compatibility preflight fails", async () => {
   let executed = false;
   await assert.rejects(
-    runPaperclipEvalMatrix({
+    runThinkingMachEvalMatrix({
       scenarios: [{ id: "scenario-a", input: null }],
       candidates: [{
         id: "candidate-a",
@@ -43,12 +43,12 @@ test("fails before execution when compatibility preflight fails", async () => {
 
 test("rejects duplicate scenario ids", async () => {
   await assert.rejects(
-    runPaperclipEvalMatrix({
+    runThinkingMachEvalMatrix({
       scenarios: [{ id: "duplicate", input: 1 }, { id: "duplicate", input: 2 }],
       candidates: [{ id: "candidate-a", config: null }],
       execute: async () => null,
       score: () => null,
     }),
-    PaperclipEvalKernelConfigurationError,
+    ThinkingMachEvalKernelConfigurationError,
   );
 });

@@ -14,7 +14,7 @@ merging are three independent choices.**
 Here's how they fit together in what we built:
 
 1. **Install the App:** give the bot access to your repository and let GitHub send it notifications.
-2. **Choose its triggers:** tell Paperclip when those notifications should cause the agent to review.
+2. **Choose its triggers:** tell ThinkingMach when those notifications should cause the agent to review.
 3. **Require its check, if you want to:** tell GitHub whether merging must wait for a passing result.
 
 There is also a translation between the second and third choices: the agent's
@@ -35,14 +35,14 @@ This establishes what the bot is allowed to do. It does not yet mean “review
 every PR,” and it does not mean “nobody can merge without this bot.” Those are
 the choices we'll make later.
 
-The App also has a **webhook URL** pointing to Paperclip. A webhook is simply
+The App also has a **webhook URL** pointing to ThinkingMach. A webhook is simply
 GitHub sending an HTTP notification to that address when something happens.
-This is how Paperclip learns about your PR without repeatedly asking GitHub
+This is how ThinkingMach learns about your PR without repeatedly asking GitHub
 whether anything has changed.
 
 Here are the notifications involved:
 
-| What happens on GitHub | Webhook received by Paperclip |
+| What happens on GitHub | Webhook received by ThinkingMach |
 | --- | --- |
 | Someone comments on an issue or in a PR's main conversation | `issue_comment` |
 | Someone comments in an inline PR review thread | `pull_request_review_comment` |
@@ -50,28 +50,28 @@ Here are the notifications involved:
 | Someone pushes new commits to an existing PR | `pull_request`, with action `synchronize` |
 
 For example, you write `@your-bot please review this PR`. GitHub sends the comment
-to the App's webhook, and Paperclip recognizes an authorized request in its
+to the App's webhook, and ThinkingMach recognizes an authorized request in its
 text. There is no separate GitHub mechanism that understands what an AI review
-should do; that interpretation belongs to Paperclip.
+should do; that interpretation belongs to ThinkingMach.
 
 Our connector does not require a GitHub Actions workflow file in the repository.
-Paperclip receives the event and runs the assigned agent in an ordinary
-Paperclip task. The bot's App identity supplies its governed GitHub tools.
+ThinkingMach receives the event and runs the assigned agent in an ordinary
+ThinkingMach task. The bot's App identity supplies its governed GitHub tools.
 
-GitHub installation access and Paperclip's enabled repositories are separate
+GitHub installation access and ThinkingMach's enabled repositories are separate
 controls: the App needs access on GitHub, and the repository must also be enabled
-for this bot in Paperclip.
+for this bot in ThinkingMach.
 
 See [GitHub's webhook documentation](https://docs.github.com/en/webhooks/webhook-events-and-payloads).
 
-## 2. Paperclip's configuration decides which notifications start a review
+## 2. ThinkingMach's configuration decides which notifications start a review
 
 Now the bot can hear about repository activity. The next choice is which of
 those notifications should actually start work.
 
 That choice matters because you may want help only when you ask for it. Or you
 may want every eligible PR reviewed as soon as it opens. Both setups use the
-same GitHub App and webhook; Paperclip's configuration changes what happens
+same GitHub App and webhook; ThinkingMach's configuration changes what happens
 after the notification arrives.
 
 You can choose:
@@ -85,7 +85,7 @@ are independently configurable events. Automatic reviews also respect the
 configured author, draft, branch, label, and repository restrictions.
 
 Suppose you open our example PR with **mentions only** enabled. GitHub still
-notifies Paperclip that the PR opened, but Paperclip does not start an automatic
+notifies ThinkingMach that the PR opened, but ThinkingMach does not start an automatic
 review. When you add `@your-bot please review`, that authorized request starts
 the assigned agent.
 
@@ -98,7 +98,7 @@ bypass repository restrictions, excluded files, or the requester's permissions.
 
 A mention in an ordinary issue starts a task conversation; a PR rating check
 concerns a particular PR commit. Ordinary follow-up discussion does not change
-the rating. Repeat review requests continue the PR's existing Paperclip task.
+the rating. Repeat review requests continue the PR's existing ThinkingMach task.
 
 ## 3. The agent's score becomes a GitHub check result
 
@@ -107,14 +107,14 @@ our PR a **3/5**. What does GitHub do with that number?
 
 On its own, nothing. **GitHub has no built-in concept of 5/5.** It does not read a
 bot's comment and infer that “3/5” should prevent merging. The score belongs to
-Paperclip's assessment format and rating policy.
+ThinkingMach's assessment format and rating policy.
 
-To make the result usable by GitHub's merge rules, Paperclip translates the
-assessment into a **check run** named **Paperclip Review**. This is the same
+To make the result usable by GitHub's merge rules, ThinkingMach translates the
+assessment into a **check run** named **ThinkingMach Review**. This is the same
 kind of GitHub object you see for a build or a test result.
 
 The agent submits a structured assessment containing the reviewed commit,
-score, findings, rationale, and coverage. Paperclip validates the result and
+score, findings, rationale, and coverage. ThinkingMach validates the result and
 compares it with the configured threshold. The agent does not directly choose
 an arbitrary passing check result.
 
@@ -122,15 +122,15 @@ With a minimum score of 5:
 
 ```text
 Agent submits a complete assessment: 3/5
-    → Paperclip validates it
-    → Paperclip reports failure to GitHub
+    → ThinkingMach validates it
+    → ThinkingMach reports failure to GitHub
 
 Agent submits a complete assessment: 5/5
-    → Paperclip validates it
-    → Paperclip reports success to GitHub
+    → ThinkingMach validates it
+    → ThinkingMach reports success to GitHub
 ```
 
-You can therefore see both a comment saying “3/5” and a red **Paperclip Review**
+You can therefore see both a comment saying “3/5” and a red **ThinkingMach Review**
 check on the PR. The comment explains the result to a person. The check gives
 GitHub a result its rules can use. The check is attached to the exact commit
 the agent reviewed.
@@ -158,7 +158,7 @@ See [GitHub's Checks API guide](https://docs.github.com/en/rest/guides/using-the
 
 ## 4. GitHub's repository rules decide whether the check blocks merging
 
-Our example PR now has a red **Paperclip Review** check. We still have one choice
+Our example PR now has a red **ThinkingMach Review** check. We still have one choice
 left: should that result prevent merging?
 
 **A bot can publish a failing check without preventing a merge.** GitHub allows
@@ -170,23 +170,23 @@ merge requirement. You might want to try a reviewer and inspect its feedback
 before making the whole team's merges depend on it.
 
 To make its result mandatory, a repository administrator configures a rule
-that means: **“PRs into `main` need a passing Paperclip Review check.”**
+that means: **“PRs into `main` need a passing ThinkingMach Review check.”**
 
 A typical setup is:
 
-1. Install and configure the bot, then let it publish its first **Paperclip Review** check.
+1. Install and configure the bot, then let it publish its first **ThinkingMach Review** check.
 2. Open the repository's **Settings → Rules → Rulesets**.
 3. Create or edit a branch ruleset targeting the branch you merge into, such as `main`.
-4. Enable **Require status checks to pass** and add **Paperclip Review**.
+4. Enable **Require status checks to pass** and add **ThinkingMach Review**.
 5. Select the bot App as the expected source where available, so a result from a different integration does not satisfy the requirement.
 6. Set the ruleset's enforcement to **Active** and choose bypass permissions deliberately.
 
 A classic branch-protection rule can also require the check. Organization rules
-may already impose requirements on a repository. Paperclip does not automatically
+may already impose requirements on a repository. ThinkingMach does not automatically
 change these GitHub rules when you install or configure a bot.
 
 **Requiring the check does not itself start the agent.** It tells GitHub to wait
-for the result. The trigger configuration in Paperclip still decides when the
+for the result. The trigger configuration in ThinkingMach still decides when the
 agent runs.
 
 For example, you can require the check while leaving the bot in mentions-only
@@ -213,7 +213,7 @@ We can now put the two behavior choices next to each other. This is why
 “the bot reviews PRs” does not, by itself, tell you whether it runs automatically
 or whether its result is mandatory:
 
-| Review trigger | GitHub requires Paperclip Review? | What happens |
+| Review trigger | GitHub requires ThinkingMach Review? | What happens |
 | --- | --- | --- |
 | Mentions only | No | Optional review when someone asks. Its failing check alone does not block merging. |
 | Automatic | No | Automatic feedback. Its failing check alone does not block merging. |
@@ -237,12 +237,12 @@ What happens next depends on the trigger choice we made earlier:
 - **Automatic push reviews enabled:** the push notification starts a new review.
 - **Push reviews disabled:** you write `@your-bot please review again` to start it.
 
-The agent reviews the new commit, submits a complete 5/5, and Paperclip publishes
+The agent reviews the new commit, submits a complete 5/5, and ThinkingMach publishes
 a successful check. The PR has now satisfied **this** merge requirement. Other
 required checks or human approvals may still be outstanding.
 
 A repeat review mention can also request a fresh assessment of the same commit.
-The conversation continues in the same Paperclip task, with review history
+The conversation continues in the same ThinkingMach task, with review history
 retained and one current summary updated. Old executions cannot overwrite the
 latest head's assessment.
 
@@ -268,14 +268,14 @@ Three things can therefore appear on the same PR:
 | Item | What it means |
 | --- | --- |
 | A summary comment saying “5/5” | The bot's explanation of its assessment. |
-| A successful **Paperclip Review** check | The validated assessment satisfied the configured rating policy for that commit. |
+| A successful **ThinkingMach Review** check | The validated assessment satisfied the configured rating policy for that commit. |
 | A formal **Approved** review | The bot explicitly performed GitHub's approval action under separately enabled permissions. |
 
 A 5/5 does not automatically submit a formal approval. A formal approval does
 not turn a failing check green. Neither replaces other required checks or human
 review requirements.
 
-Paperclip's **APPROVE** and **REQUEST_CHANGES** permissions are individually
+ThinkingMach's **APPROVE** and **REQUEST_CHANGES** permissions are individually
 configurable and both off by default. Enabling an action allows the agent to
 request it through a governed tool; it does not automatically perform it.
 
@@ -283,10 +283,10 @@ See [GitHub's protected-branch and review requirements](https://docs.github.com/
 
 ## A practical setup for an automatic required reviewer
 
-- Install the App on the intended repositories and enable them in Paperclip.
+- Install the App on the intended repositories and enable them in ThinkingMach.
 - Enable reviews on new PRs and updated commits, plus authorized repeat mentions.
 - Set the minimum score to 5/5.
-- In GitHub, require **Paperclip Review** for the target branch, using the bot App as its expected source where available.
+- In GitHub, require **ThinkingMach Review** for the target branch, using the bot App as its expected source where available.
 - Keep formal bot approvals off unless you specifically want that separate action.
 - Configure any human approval requirements independently.
 

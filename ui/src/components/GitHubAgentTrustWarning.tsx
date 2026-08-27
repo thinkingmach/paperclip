@@ -1,9 +1,9 @@
 import { AlertTriangle, ExternalLink } from "lucide-react";
-import type { AgentPermissions } from "@paperclipai/shared";
+import type { AgentPermissions } from "@thinkingmach/shared";
 import { getTrustPreset } from "@/lib/trust-policy-ui";
 
 export const LOW_TRUST_AGENT_GUIDE =
-  "https://docs.paperclip.ing/administration/trust-and-low-trust-review/";
+  "https://docs.thinkingmach.com/administration/trust-and-low-trust-review/";
 
 export function GitHubAgentTrustWarning({
   agent,

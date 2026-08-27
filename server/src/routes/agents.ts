@@ -1,23 +1,23 @@
-import { resolveAgentAppearance, agentAvatarUrl } from "@paperclipai/shared";
+import { resolveAgentAppearance, agentAvatarUrl } from "@thinkingmach/shared";
 import { listOpenRouterModels } from "../services/openrouter-models.js";
 import { prepareManagedAiRuntime, assertManagedAiProjectAuth, stripAiAuthBindings } from "../services/ai-connection-runtime.js";
-import { ADAPTER_AUTH_MISSING_CHECK_CODE, AI_CONNECTION_CAPABILITIES, aiConnectionBindingSchema, type AiConnectionBinding } from "@paperclipai/shared";
-import { toolConnections } from "@paperclipai/db";
+import { ADAPTER_AUTH_MISSING_CHECK_CODE, AI_CONNECTION_CAPABILITIES, aiConnectionBindingSchema, type AiConnectionBinding } from "@thinkingmach/shared";
+import { toolConnections } from "@thinkingmach/db";
 import { aiConnectionService } from "../services/ai-connections.js";
 import { defaultAiConnectionForHire } from "../services/agent-ai-connection-default.js";
 import { assertAiConnectionCreateAccess, canInstallSharedAiConnectionForNewAgent, responsibleUserForAiRequest, validateAiApiKey } from "./ai-connections.js";
-import { isAiConnectionCompatible } from "@paperclipai/shared";
+import { isAiConnectionCompatible } from "@thinkingmach/shared";
 import { applyConnectorSkills, resolveConnectorAssignments, annotateConnectorSkills, isConnectorSkill } from "../services/connector-runtime.js";
 import { getExecutionBlocker } from "../services/execution-blocker.js";
-import { paperclipRunnerTransitionConfig, normalizeLegacyRunnerProvider, isPaperclipRunnerProvider } from "@paperclipai/adapter-utils";
+import { paperclipRunnerTransitionConfig, normalizeLegacyRunnerProvider, isThinkingMachRunnerProvider } from "@thinkingmach/adapter-utils";
 import { executionProjectionForRun, executionProjectionsForRuns } from "../services/execution-projection.js";
 import { Router, type NextFunction, type Request, type Response } from "express";
 import { generateKeyPairSync, randomUUID } from "node:crypto";
 import { readFile, rm } from "node:fs/promises";
 import path from "node:path";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import type { ChatChannelService } from "../services/chat-channels.js";
-import { activityLog, agents as agentsTable, chatConversations, companies, heartbeatRuns, issues as issuesTable, projects as projectsTable } from "@paperclipai/db";
+import { activityLog, agents as agentsTable, chatConversations, companies, heartbeatRuns, issues as issuesTable, projects as projectsTable } from "@thinkingmach/db";
 import { and, desc, eq, inArray, not, sql } from "drizzle-orm";
 import { sha256Digest } from "../services/feedback-redaction.js";
 import {
@@ -50,17 +50,17 @@ import {
   submitBrowserCodeRequestSchema,
   toAccountHandle,
   type AgentAdapterType,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   isForbiddenConfigEnvKey,
-  normalizePaperclipRunnerAdapterConfig,
-  PAPERCLIP_OPERATIONAL_SKILL_KEY,
+  normalizeThinkingMachRunnerAdapterConfig,
+  THINKINGMACH_OPERATIONAL_SKILL_KEY,
   parseObject,
-  resolvePaperclipInstanceRootForAdapter,
-  readPaperclipSkillSyncPreference,
-  writePaperclipSkillSyncPreference,
-} from "@paperclipai/adapter-utils/server-utils";
-import { trackAgentCreated } from "@paperclipai/shared/telemetry";
+  resolveThinkingMachInstanceRootForAdapter,
+  readThinkingMachSkillSyncPreference,
+  writeThinkingMachSkillSyncPreference,
+} from "@thinkingmach/adapter-utils/server-utils";
+import { trackAgentCreated } from "@thinkingmach/shared/telemetry";
 import { validate } from "../middleware/validate.js";
 import { inheritNativeRunnerAdapterConfig } from "../services/native-runtime/native-agent-runtime-inheritance.js";
 import { agentInstructionsBundleMode } from "../services/agent-instructions.js";
@@ -82,7 +82,7 @@ import {
   workspaceOperationService,
 } from "../services/index.js";
 import { badRequest, conflict, forbidden, HttpError, notFound, unprocessable } from "../errors.js";
-import { ONBOARDING_FIRST_TASK_SKILL_KEY, PAPERCLIP_CORE_SKILL_KEYS } from "../services/company-skills.js";
+import { ONBOARDING_FIRST_TASK_SKILL_KEY, THINKINGMACH_CORE_SKILL_KEYS } from "../services/company-skills.js";
 import { createRunSecretRedactionRegistry } from "../services/run-secret-redaction.js";
 import { assertAuthenticated, assertBoard, assertCompanyAccess, assertInstanceAdmin, buildActorSecretContext, getAccessibleResource, getActorInfo, hasCompanyAccess } from "./authz.js";
 import { runAdapterLoginStartSpine } from "./adapter-login-route-spine.js";
@@ -96,13 +96,13 @@ import { environmentService } from "../services/environments.js";
 import { resolveEnvironmentExecutionTarget } from "../services/environment-execution-target.js";
 import { environmentRuntimeService } from "../services/environment-runtime.js";
 import { resolvePluginSandboxProviderDriverByKey } from "../services/plugin-environment-driver.js";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
 import type {
   AdapterEnvironmentCheck,
   AdapterEnvironmentTestResult,
-} from "@paperclipai/adapter-utils";
-import { evaluateCodexCredentialReadiness } from "@paperclipai/adapter-codex-local/server";
-import type { AdapterAuthSignal, AdapterAuthSignalResponse, CodexAccountBindingClaim } from "@paperclipai/shared";
+} from "@thinkingmach/adapter-utils";
+import { evaluateCodexCredentialReadiness } from "@thinkingmach/adapter-codex-local/server";
+import type { AdapterAuthSignal, AdapterAuthSignalResponse, CodexAccountBindingClaim } from "@thinkingmach/shared";
 import { getDisabledAdapterTypes } from "../services/adapter-plugin-store.js";
 import { skillVersionSelectionMap } from "../services/runtime-skill-selections.js";
 import { isFixedClaudeOAuthBinding, secretService } from "../services/secrets.js";
@@ -154,7 +154,7 @@ import {
   isTruthyRuntimeEnvValue,
   resolveWorktreeRunExecutionActivationState,
 } from "../services/instance-settings.js";
-import { runClaudeLogin } from "@paperclipai/adapter-claude-local/server";
+import { runClaudeLogin } from "@thinkingmach/adapter-claude-local/server";
 import { createInviteRateLimiter } from "../services/invite-rate-limit.js";
 import {
   SetupTokenSessionService,
@@ -189,12 +189,12 @@ import type {
   ClaudeOAuthTokenStatusResponse,
   ClaudeSetupTokenOverwrite,
   SetupTokenTransportAdvisory,
-} from "@paperclipai/shared";
-import { SETUP_TOKEN_TRANSPORT_ADVISORY_CODE } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { SETUP_TOKEN_TRANSPORT_ADVISORY_CODE } from "@thinkingmach/shared";
 import {
   DEFAULT_CODEX_LOCAL_BYPASS_APPROVALS_AND_SANDBOX,
   DEFAULT_CODEX_LOCAL_MODEL,
-} from "@paperclipai/adapter-codex-local";
+} from "@thinkingmach/adapter-codex-local";
 import {
   checkStagedCredentialReadiness,
   promoteDeviceLoginCredential,
@@ -202,11 +202,11 @@ import {
   resolveManagedCodexHomeDir,
   withAccountHomeSecretMutationLock,
   withCodexAccountHomePromotionLock,
-} from "@paperclipai/adapter-codex-local/server";
+} from "@thinkingmach/adapter-codex-local/server";
 import {
   checkStagedGrokCredentialReadiness,
   promoteGrokDeviceLoginCredential,
-} from "@paperclipai/adapter-grok-local/server";
+} from "@thinkingmach/adapter-grok-local/server";
 import {
   AdapterAuthSessionConflictError,
   createDeviceLoginService,
@@ -217,12 +217,12 @@ import {
   DEVICE_LOGIN_PROVIDER_UNSUPPORTED_CODE,
   type CredentialPromotion,
 } from "../services/device-login-service.js";
-import type { AdapterAuthSessionOwnerResponse } from "@paperclipai/shared";
-import { DEFAULT_CURSOR_LOCAL_MODEL } from "@paperclipai/adapter-cursor-local";
-import { DEFAULT_GEMINI_LOCAL_MODEL } from "@paperclipai/adapter-gemini-local";
-import { DEFAULT_KIMI_LOCAL_MODEL } from "@paperclipai/adapter-kimi-local";
-import { DEFAULT_OPENCODE_LOCAL_MODEL } from "@paperclipai/adapter-opencode-local";
-import { requireOpenCodeModelId } from "@paperclipai/adapter-opencode-local/server";
+import type { AdapterAuthSessionOwnerResponse } from "@thinkingmach/shared";
+import { DEFAULT_CURSOR_LOCAL_MODEL } from "@thinkingmach/adapter-cursor-local";
+import { DEFAULT_GEMINI_LOCAL_MODEL } from "@thinkingmach/adapter-gemini-local";
+import { DEFAULT_KIMI_LOCAL_MODEL } from "@thinkingmach/adapter-kimi-local";
+import { DEFAULT_OPENCODE_LOCAL_MODEL } from "@thinkingmach/adapter-opencode-local";
+import { requireOpenCodeModelId } from "@thinkingmach/adapter-opencode-local/server";
 import {
   loadDefaultAgentInstructionsBundle,
   resolveDefaultAgentInstructionsBundleRole,
@@ -243,8 +243,8 @@ import {
   touchesAgentProfileChangeConsentFields,
 } from "../services/change-consent-gate.js";
 import {
-  PaperclipRunnerProviderProfileError,
-  resolvePaperclipRunnerProviderProfile,
+  ThinkingMachRunnerProviderProfileError,
+  resolveThinkingMachRunnerProviderProfile,
 } from "../services/native-runtime/provider-profile.js";
 import { managedAgentProfileService } from "../services/managed-agent-profiles.js";
 import { remoteAgentProfileService } from "../services/remote-agent-profiles.js";
@@ -418,7 +418,7 @@ async function anySecretNamesAccountHome(
 // Serializes hire requests that share a company and run, so a retried POST
 // cannot race its original past the idempotency lookup: the lookup, the create
 // and the activity record all happen inside the held section. In-process is
-// the right scope because a Paperclip instance serves its API from one
+// the right scope because a ThinkingMach instance serves its API from one
 // process, and the lock is keyed narrowly enough that unrelated hires never
 // wait on each other.
 const hireRunLocks = new Map<string, Promise<void>>();
@@ -728,7 +728,7 @@ export function agentRoutes(
   const companySkills = companySkillService(db);
   const workspaceOperations = workspaceOperationService(db);
   const instanceSettings = instanceSettingsService(db);
-  const strictSecretsMode = process.env.PAPERCLIP_SECRETS_STRICT_MODE === "true";
+  const strictSecretsMode = process.env.THINKINGMACH_SECRETS_STRICT_MODE === "true";
 
   // The company-scoped adapter login-session service. It runs the device-login
   // flow in a fresh trusted sandbox and holds the one-time prompt in memory. The
@@ -1167,7 +1167,7 @@ export function agentRoutes(
     if ((await instanceSettings.getExperimental()).enableManagedSandboxOnly === true) {
       const managed = await environmentsSvc.findManagedSandboxEnvironment(companyId);
       if (!managed) {
-        throw unprocessable("The managed sandbox is unavailable. Restore Paperclip Computer and retry.", {
+        throw unprocessable("The managed sandbox is unavailable. Restore ThinkingMach Computer and retry.", {
           code: "managed_sandbox_unavailable",
         });
       }
@@ -1180,7 +1180,7 @@ export function agentRoutes(
    * Resolve the execution target the adapter should run its test probes against.
    *
    * - No environmentId / local environment → returns a local target so the
-   *   adapter probes the Paperclip host (legacy behavior).
+   *   adapter probes the ThinkingMach host (legacy behavior).
    * - SSH environment → builds an SSH execution target from the environment
    *   config so the adapter probes the remote box. No lease is required:
    *   the SSH spec is fully derived from the saved environment config.
@@ -2158,7 +2158,7 @@ export function agentRoutes(
    * (hire + create), as opposed to the paths that operate on an existing one.
    *
    * A disabled adapter is one this instance cannot run — most often because a
-   * declarative registry (PAPERCLIP_ADAPTERS) curated it out, which
+   * declarative registry (THINKINGMACH_ADAPTERS) curated it out, which
    * reconcileAdapterAvailability turns into a disabled type at boot. Registered
    * but disabled still passes assertKnownAdapterType, so an agent could be
    * created on it and then fail EVERY run at lease time with
@@ -2176,7 +2176,7 @@ export function agentRoutes(
       const experimental = await instanceSettings.getExperimental();
       if (experimental.enableNativeRunner !== true) {
         throw unprocessable(
-          "Paperclip Runner is experimental and disabled on this instance.",
+          "ThinkingMach Runner is experimental and disabled on this instance.",
           { code: "paperclip_runner_rollout_disabled" },
         );
       }
@@ -2193,7 +2193,7 @@ export function agentRoutes(
     );
   }
 
-  async function assertFreshPaperclipRunnerProvider(
+  async function assertFreshThinkingMachRunnerProvider(
     companyId: string,
     adapterType: string,
     adapterConfig: Record<string, unknown>,
@@ -2201,9 +2201,9 @@ export function agentRoutes(
     if (adapterType !== "paperclip_runner") return;
     let profile;
     try {
-      profile = resolvePaperclipRunnerProviderProfile(adapterConfig);
+      profile = resolveThinkingMachRunnerProviderProfile(adapterConfig);
     } catch (error) {
-      if (error instanceof PaperclipRunnerProviderProfileError) {
+      if (error instanceof ThinkingMachRunnerProviderProfileError) {
         throw unprocessable(error.message, { code: error.code });
       }
       throw error;
@@ -2222,7 +2222,7 @@ export function agentRoutes(
     }
   }
 
-  function resolvePaperclipRunnerAdapterTransition(input: {
+  function resolveThinkingMachRunnerAdapterTransition(input: {
     previousAdapterType: string;
     nextAdapterType: string;
     previousAdapterConfig: Record<string, unknown>;
@@ -2236,8 +2236,8 @@ export function agentRoutes(
     }
     const defaults = paperclipRunnerTransitionConfig(input.previousAdapterType, input.previousAdapterConfig.model, input.nextAdapterConfig.provider);
     if (!["claude_local", "codex_local", "opencode_local"].includes(input.previousAdapterType)
-      && !isPaperclipRunnerProvider(input.nextAdapterConfig.provider)) {
-      throw unprocessable("Select a Paperclip Runner provider before converting this agent.");
+      && !isThinkingMachRunnerProvider(input.nextAdapterConfig.provider)) {
+      throw unprocessable("Select a ThinkingMach Runner provider before converting this agent.");
     }
     const next = { ...defaults, ...input.nextAdapterConfig };
     if (!asNonEmptyString(next.model)) next.model = defaults.model;
@@ -2471,7 +2471,7 @@ export function agentRoutes(
         ? { ...input.constraintAdapterConfig, ...normalizedAdapterConfig }
         : normalizedAdapterConfig,
     );
-    return normalizePaperclipRunnerAdapterConfig(
+    return normalizeThinkingMachRunnerAdapterConfig(
       input.adapterType ?? "",
       normalizedAdapterConfig,
     );
@@ -2494,9 +2494,9 @@ export function agentRoutes(
   }
 
   function codexLocalAgentHome(companyId: string, agentId: string): string {
-    const instanceRoot = resolvePaperclipInstanceRootForAdapter({
-      homeDir: asNonEmptyString(process.env.PAPERCLIP_HOME) ?? undefined,
-      instanceId: asNonEmptyString(process.env.PAPERCLIP_INSTANCE_ID) ?? undefined,
+    const instanceRoot = resolveThinkingMachInstanceRootForAdapter({
+      homeDir: asNonEmptyString(process.env.THINKINGMACH_HOME) ?? undefined,
+      instanceId: asNonEmptyString(process.env.THINKINGMACH_INSTANCE_ID) ?? undefined,
       env: process.env,
     });
     return path.resolve(instanceRoot, "companies", companyId, "agents", agentId, "codex-home");
@@ -2615,7 +2615,7 @@ export function agentRoutes(
   ): Record<string, unknown> {
     const next = { ...adapterConfig };
     if (adapterType === "paperclip_runner") {
-      return normalizePaperclipRunnerAdapterConfig(adapterType, next);
+      return normalizeThinkingMachRunnerAdapterConfig(adapterType, next);
     }
     if (adapterType === "codex_local") {
       const hasBypassFlag =
@@ -2650,7 +2650,7 @@ export function agentRoutes(
     adapterConfig: Record<string, unknown>,
   ) {
     if (adapterType === "paperclip_runner") {
-      await assertFreshPaperclipRunnerProvider(companyId, adapterType, adapterConfig);
+      await assertFreshThinkingMachRunnerProvider(companyId, adapterType, adapterConfig);
       return;
     }
     if (adapterType !== "opencode_local") return;
@@ -2928,7 +2928,7 @@ export function agentRoutes(
   // Union them into these skills-capable hires/creates so their desired skills
   // match their instructions. Optional role
   // skills remain removable afterwards. Legacy adapters separately guarantee
-  // the Paperclip operational skill as a runtime invariant.
+  // the ThinkingMach operational skill as a runtime invariant.
   function defaultRoleSkillSelections(
     role: string | null | undefined,
     adapterType: string,
@@ -2938,10 +2938,10 @@ export function agentRoutes(
     const adapter = findActiveServerAdapter(adapterType);
     if (!adapter?.listSkills && !adapter?.syncSkills) return undefined;
     const keys = boardOnboardingFirstAgent
-      ? [...PAPERCLIP_CORE_SKILL_KEYS, ONBOARDING_FIRST_TASK_SKILL_KEY]
-      : PAPERCLIP_CORE_SKILL_KEYS;
+      ? [...THINKINGMACH_CORE_SKILL_KEYS, ONBOARDING_FIRST_TASK_SKILL_KEY]
+      : THINKINGMACH_CORE_SKILL_KEYS;
     return keys
-      .filter((key) => adapterType !== "paperclip_runner" || key !== PAPERCLIP_OPERATIONAL_SKILL_KEY)
+      .filter((key) => adapterType !== "paperclip_runner" || key !== THINKINGMACH_OPERATIONAL_SKILL_KEY)
       .map((key) => ({ key, versionId: null }));
   }
 
@@ -3000,7 +3000,7 @@ export function agentRoutes(
       materializeMissing?: boolean;
     } = {},
   ) {
-    const preference = readPaperclipSkillSyncPreference(config);
+    const preference = readThinkingMachSkillSyncPreference(config);
     const betaSkillsEnabled = (await instanceSettings.getExperimental()).enableBetaSkills === true;
     const runtimeSkillEntries = await companySkills.listRuntimeSkillEntries(companyId, {
       materializeMissing: options.materializeMissing
@@ -3050,7 +3050,7 @@ export function agentRoutes(
       (entry, index, entries) => entries.findIndex((candidate) => candidate.key === entry.key) === index,
     );
 
-    const currentPreference = readPaperclipSkillSyncPreference(adapterConfig);
+    const currentPreference = readThinkingMachSkillSyncPreference(adapterConfig);
     const { resolved: resolvedCurrentSkillEntries, unresolved: unresolvedCurrentSkillKeys } =
       currentPreference.desiredSkillEntries.length > 0
         ? await companySkills.resolveRequestedSkillEntries(
@@ -3072,7 +3072,7 @@ export function agentRoutes(
       mode,
     ).filter(
       (entry) => !isConnectorSkill(entry.key) && (adapterType !== "paperclip_runner"
-        || entry.key.trim().toLowerCase() !== PAPERCLIP_OPERATIONAL_SKILL_KEY),
+        || entry.key.trim().toLowerCase() !== THINKINGMACH_OPERATIONAL_SKILL_KEY),
     );
     const desiredSkills = desiredSkillEntries.map((entry) => entry.key);
     const resolvedKeys = new Set([
@@ -3090,7 +3090,7 @@ export function agentRoutes(
     });
 
     return {
-      adapterConfig: writePaperclipSkillSyncPreference(adapterConfig, desiredSkillEntries),
+      adapterConfig: writeThinkingMachSkillSyncPreference(adapterConfig, desiredSkillEntries),
       desiredSkills,
       desiredSkillEntries,
       runtimeSkillEntries,
@@ -3233,8 +3233,8 @@ export function agentRoutes(
       res.json(await listOpenRouterModels(refresh));
       return;
     }
-    if (type === "paperclip_runner" && provider && !isPaperclipRunnerProvider(provider)) {
-      throw unprocessable("Unknown Paperclip Runner provider");
+    if (type === "paperclip_runner" && provider && !isThinkingMachRunnerProvider(provider)) {
+      throw unprocessable("Unknown ThinkingMach Runner provider");
     }
     const modelAdapterType = type === "paperclip_runner"
       ? provider === "acpx" || provider === "claude_managed" ? "claude_local"
@@ -3622,7 +3622,7 @@ export function agentRoutes(
 
   // The codex_local branch of the auth-signal read. The host filesystem check
   // (`evaluateCodexCredentialReadiness` against `process.env`) describes only
-  // the Paperclip host, so it is authoritative for the null-environment and
+  // the ThinkingMach host, so it is authoritative for the null-environment and
   // "local" driver cases, where the host is the execution target. For a
   // non-local environment (a sandbox), the host's own credential state says
   // nothing about that sandbox, so the route checks the environment's own
@@ -3872,7 +3872,7 @@ export function agentRoutes(
 
     const adapter = findActiveServerAdapter(agent.adapterType);
     if (!adapter?.listSkills) {
-      const preference = readPaperclipSkillSyncPreference(
+      const preference = readThinkingMachSkillSyncPreference(
         agent.adapterConfig as Record<string, unknown>,
       );
       const desiredSkillEntries = preference.desiredSkillEntries.filter(
@@ -3966,7 +3966,7 @@ export function agentRoutes(
             companyId: updated.companyId,
             adapterType: updated.adapterType,
             config: manualSkillConfig,
-          }, readPaperclipSkillSyncPreference(manualSkillConfig).desiredSkills)
+          }, readThinkingMachSkillSyncPreference(manualSkillConfig).desiredSkills)
         : adapter?.listSkills
           ? await adapter.listSkills({
               agentId: updated.id,
@@ -4182,7 +4182,7 @@ export function agentRoutes(
     const worktreeActivation = await resolveWorktreeRunExecutionActivationState({
       getExperimental: () => instanceSettingsService(db).getExperimental(),
     });
-    const isWorktreeRuntime = isTruthyRuntimeEnvValue(process.env.PAPERCLIP_IN_WORKTREE);
+    const isWorktreeRuntime = isTruthyRuntimeEnvValue(process.env.THINKINGMACH_IN_WORKTREE);
     const eligibleRows = !isWorktreeRuntime
       ? rows
       : worktreeActivation.armed
@@ -4338,7 +4338,7 @@ export function agentRoutes(
       rollbackAdapterType !== existing.adapterType ||
       rollbackAdapterType === "paperclip_runner"
     ) {
-      await assertFreshPaperclipRunnerProvider(
+      await assertFreshThinkingMachRunnerProvider(
         existing.companyId,
         rollbackAdapterType,
         rollbackAdapterConfig,
@@ -4481,7 +4481,7 @@ export function agentRoutes(
     hireInput.adapterType = await assertSelectableAdapterType(hireInput.adapterType);
     const rawHireAdapterConfig = (hireInput.adapterConfig ?? {}) as Record<string, unknown>;
     assertProviderTraceSettingTransition(req, hireInput.runtimeConfig);
-    await assertFreshPaperclipRunnerProvider(
+    await assertFreshThinkingMachRunnerProvider(
       companyId,
       hireInput.adapterType,
       rawHireAdapterConfig,
@@ -4789,7 +4789,7 @@ export function agentRoutes(
     createInput.adapterType = await assertSelectableAdapterType(createInput.adapterType);
     const rawCreateAdapterConfig = (createInput.adapterConfig ?? {}) as Record<string, unknown>;
     assertProviderTraceSettingTransition(req, createInput.runtimeConfig);
-    await assertFreshPaperclipRunnerProvider(
+    await assertFreshThinkingMachRunnerProvider(
       companyId,
       createInput.adapterType,
       rawCreateAdapterConfig,
@@ -5313,7 +5313,7 @@ export function agentRoutes(
           existingAdapterConfig,
           rawEffectiveAdapterConfig,
         );
-        rawEffectiveAdapterConfig = resolvePaperclipRunnerAdapterTransition({
+        rawEffectiveAdapterConfig = resolveThinkingMachRunnerAdapterTransition({
           previousAdapterType: existing.adapterType,
           nextAdapterType: requestedAdapterType,
           previousAdapterConfig: existingAdapterConfig,
@@ -5321,7 +5321,7 @@ export function agentRoutes(
         });
       }
       if (requestedAdapterType === "paperclip_runner") {
-        rawEffectiveAdapterConfig = normalizePaperclipRunnerAdapterConfig(requestedAdapterType, rawEffectiveAdapterConfig);
+        rawEffectiveAdapterConfig = normalizeThinkingMachRunnerAdapterConfig(requestedAdapterType, rawEffectiveAdapterConfig);
       }
       const existingRunnerProvider =
         existing.adapterType === "paperclip_runner"
@@ -5333,7 +5333,7 @@ export function agentRoutes(
           (requestedAdapterConfig !== null ||
             rawEffectiveAdapterConfig.provider !== existingRunnerProvider))
       ) {
-        await assertFreshPaperclipRunnerProvider(
+        await assertFreshThinkingMachRunnerProvider(
           existing.companyId,
           requestedAdapterType,
           rawEffectiveAdapterConfig,
@@ -6226,7 +6226,7 @@ export function agentRoutes(
   /**
    * Assesses the setup-token confidential transport. The product
    * owner set a non-negotiable requirement: do not force TLS. Many users run
-   * Paperclip over plain HTTP on a home server or a Tailscale tailnet. So the
+   * ThinkingMach over plain HTTP on a home server or a Tailscale tailnet. So the
    * route does not block a non-confidential transport. It returns a non-blocking
    * advisory instead, and the route attaches it to the confidential response.
    * The client shows a visible disclaimer and lets the login proceed. The

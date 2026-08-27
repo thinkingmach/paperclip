@@ -67,7 +67,7 @@ probes, blank-route reload finding and duplicate-response finding remain in the
 
 ## Recorded baseline
 
-The [measurement report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md)
+The [measurement report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/CONTINUATION-ACCOUNTING-2026-09-22.md)
 retains the deterministic inventory and each paid campaign without regrading.
 The new suite exposes shared allowance accounting in both directions and a
 delayed-repair promotion mismatch. These are production follow-ups; the test

@@ -1976,7 +1976,7 @@ describe("createHttp2BridgeServer + createSandboxHttp2BridgeGateway", () => {
     // or a valid maximum-size attachment fails here before the server ever
     // sees it.
     const maxAttachmentBytes = 10 * 1024 * 1024;
-    const boundary = "----PaperclipTestBoundary1234567890abcdef";
+    const boundary = "----ThinkingMachTestBoundary1234567890abcdef";
     const preamble = Buffer.from(
       `--${boundary}\r\n` +
         `Content-Disposition: form-data; name="file"; filename="attachment.bin"\r\n` +

@@ -19,13 +19,13 @@ describe("GitHub grant metadata", () => {
       if (url.pathname === "/user/installations") {
         return json({ installations: secondPage
           ? [{ id: 102, repository_selection: "all", account: { login: "octocat" } }]
-          : [{ id: 101, repository_selection: "selected", html_url: "https://github.com/settings/installations/101", account: { login: "paperclipai" } }],
+          : [{ id: 101, repository_selection: "selected", html_url: "https://github.com/settings/installations/101", account: { login: "thinkingmach" } }],
         }, !secondPage);
       }
       if (url.pathname === "/user/installations/101/repositories") {
         return json({ total_count: 2, repositories: secondPage
-          ? [{ id: 2, full_name: "paperclipai/b", private: true, description: "must-not-persist", clone_url: "must-not-persist" }]
-          : [{ id: 1, full_name: "paperclipai/a", private: false }],
+          ? [{ id: 2, full_name: "thinkingmach/b", private: true, description: "must-not-persist", clone_url: "must-not-persist" }]
+          : [{ id: 1, full_name: "thinkingmach/a", private: false }],
         }, !secondPage);
       }
       if (url.pathname === "/user/installations/102/repositories") {
@@ -42,11 +42,11 @@ describe("GitHub grant metadata", () => {
       repositoryCount: 3,
       repositorySelection: "mixed",
       installationIds: ["101", "102"],
-      installationOwnerLogins: ["paperclipai", "octocat"],
+      installationOwnerLogins: ["thinkingmach", "octocat"],
       repositories: [
         { id: "3", fullName: "octocat/c", installationId: "102" },
-        { id: "1", fullName: "paperclipai/a", installationId: "101", private: false },
-        { id: "2", fullName: "paperclipai/b", installationId: "101", private: true },
+        { id: "1", fullName: "thinkingmach/a", installationId: "101", private: false },
+        { id: "2", fullName: "thinkingmach/b", installationId: "101", private: true },
       ],
       installationUrl: "https://github.com/apps/paperclip-development/installations/new",
       managementUrl: "https://github.com/settings/installations/101",

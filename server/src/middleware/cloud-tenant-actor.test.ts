@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Request } from "express";
 import { and, eq } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { authUsers, companies, companyMemberships, instanceSettings, instanceUserRoles } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { authUsers, companies, companyMemberships, instanceSettings, instanceUserRoles } from "@thinkingmach/db";
 import { cloudActorHeaderSourceFromHeaders, resolveCloudTenantActor } from "./auth.js";
 
 // Minimal fake Drizzle Db: records every table passed to .insert() / .delete() and
@@ -119,11 +119,11 @@ const MANAGED_CONFIG_FLAG_OFF = JSON.stringify({
 
 describe("resolveCloudTenantActor (shared-pool hardening)", () => {
   beforeEach(() => {
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "test-server-token";
   });
   afterEach(() => {
-    delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
-    delete process.env.PAPERCLIP_MANAGED_CONFIG;
+    delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
+    delete process.env.THINKINGMACH_MANAGED_CONFIG;
   });
 
   it("does not grant instance admin by default (flag off)", async () => {
@@ -173,7 +173,7 @@ describe("resolveCloudTenantActor (shared-pool hardening)", () => {
   });
 
   it("returns null when the server token is unset", async () => {
-    delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
+    delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
     const { db } = createFakeDb();
     const actor = await resolveCloudTenantActor(db, fakeReq(VALID_HEADERS));
     expect(actor).toBeNull();
@@ -298,7 +298,7 @@ describe("resolveCloudTenantActor (shared-pool hardening)", () => {
     );
 
     it("resolves the flag through the managed overlay: overlay on elevates over a DB value of off", async () => {
-      process.env.PAPERCLIP_MANAGED_CONFIG = MANAGED_CONFIG_FLAG_ON;
+      process.env.THINKINGMACH_MANAGED_CONFIG = MANAGED_CONFIG_FLAG_ON;
       const { db } = createFakeDb({
         settingsRow: settingsRowWith({ enableOwnerInstanceAdmin: false }),
       });
@@ -307,7 +307,7 @@ describe("resolveCloudTenantActor (shared-pool hardening)", () => {
     });
 
     it("resolves the flag through the managed overlay: overlay off wins over a DB value of on", async () => {
-      process.env.PAPERCLIP_MANAGED_CONFIG = MANAGED_CONFIG_FLAG_OFF;
+      process.env.THINKINGMACH_MANAGED_CONFIG = MANAGED_CONFIG_FLAG_OFF;
       const { db } = createFakeDb({
         settingsRow: settingsRowWith({ enableOwnerInstanceAdmin: true }),
       });

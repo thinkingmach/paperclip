@@ -20,12 +20,12 @@ import {
   startEmbeddedPostgresTestDatabase,
   toolApplications,
   toolConnections,
-} from "@paperclipai/db";
-import type { ChatFileTransferPhase } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { ChatFileTransferPhase } from "@thinkingmach/shared";
 import type { TeamsFileTransferSummary } from "./chat-teams-file-transfers.js";
 import { projectTeamsFilePublication } from "./chat-teams-file-publication.js";
 
-const external = process.env.PAPERCLIP_TEST_DATABASE_URL;
+const external = process.env.THINKINGMACH_TEST_DATABASE_URL;
 const support = external
   ? { supported: true }
   : await getEmbeddedPostgresTestSupport();

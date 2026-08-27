@@ -1,6 +1,6 @@
-# Paperclip Adapters for Hermes Agent
+# ThinkingMach Adapters for Hermes Agent
 
-A [Paperclip](https://paperclip.ing) adapter package that lets you run [Hermes Agent](https://github.com/NousResearch/hermes-agent) as a managed employee in a Paperclip company.
+A [ThinkingMach](https://thinkingmach.com) adapter package that lets you run [Hermes Agent](https://github.com/NousResearch/hermes-agent) as a managed employee in a ThinkingMach company.
 
 Hermes Agent is a full-featured AI agent by [Nous Research](https://nousresearch.com) with 30+ native tools, persistent memory, session persistence, 80+ skills, MCP support, and multi-provider model access.
 
@@ -9,8 +9,8 @@ This package owns both built-in Hermes adapter types:
 - `hermes_local` runs the local Hermes CLI as a child process. The package root exports remain compatible with the original local adapter.
 - `hermes_gateway` calls an already-running Hermes API server over HTTP/SSE. Gateway entrypoints live under the `./gateway` export namespace.
 
-Choose `hermes_local` when Paperclip and Hermes run on the same trusted host
-and Paperclip should start `hermes chat` for each heartbeat. Choose
+Choose `hermes_local` when ThinkingMach and Hermes run on the same trusted host
+and ThinkingMach should start `hermes chat` for each heartbeat. Choose
 `hermes_gateway` when Hermes is already running as an API server, often on
 another host, in Docker, or behind a private-network/TLS endpoint. The adapter
 type keys did not change during package consolidation.
@@ -20,8 +20,8 @@ type keys did not change during package consolidation.
 This adapter provides:
 
 - **8 inference providers** — Anthropic, OpenRouter, OpenAI, Nous, OpenAI Codex, ZAI, Kimi Coding, MiniMax
-- **Skills integration** — Scans both Paperclip-managed and Hermes-native skills (`~/.hermes/skills/`), with sync/list/resolve APIs
-- **Structured transcript parsing** — Raw Hermes stdout is parsed into typed `TranscriptEntry` objects so Paperclip renders proper tool cards with status icons and expand/collapse
+- **Skills integration** — Scans both ThinkingMach-managed and Hermes-native skills (`~/.hermes/skills/`), with sync/list/resolve APIs
+- **Structured transcript parsing** — Raw Hermes stdout is parsed into typed `TranscriptEntry` objects so ThinkingMach renders proper tool cards with status icons and expand/collapse
 - **Rich post-processing** — Converts Hermes ASCII banners, setext headings, and `+--+` table borders into clean GFM markdown
 - **Comment-driven wakes** — Agents wake to respond to issue comments, not just task assignments
 - **Auto model detection** — Reads `~/.hermes/config.yaml` to pre-populate the UI with the user's configured model
@@ -46,9 +46,9 @@ This adapter provides:
 
 ## Installation
 
-This package ships with Paperclip core as the built-in `hermes_local` and
+This package ships with ThinkingMach core as the built-in `hermes_local` and
 `hermes_gateway` adapters. No Adapter manager installation is required for
-normal Paperclip use.
+normal ThinkingMach use.
 
 ### Prerequisites
 
@@ -62,13 +62,13 @@ normal Paperclip use.
 
 For local adapter development, install the package from a local path in Adapter
 manager, or add an entry to `~/.paperclip/adapter-plugins.json` and restart
-Paperclip. The external package can override either built-in Hermes adapter
+ThinkingMach. The external package can override either built-in Hermes adapter
 while it is enabled:
 
 ```json
 [
   {
-    "packageName": "@paperclipai/hermes-paperclip-adapter",
+    "packageName": "@thinkingmach/hermes-paperclip-adapter",
     "localPath": "/absolute/path/to/paperclip/packages/adapters/hermes",
     "type": "hermes_local",
     "installedAt": "2026-06-23T00:00:00.000Z"
@@ -83,12 +83,12 @@ The package root exports `createServerAdapter()` for the local server adapter,
 a declarative config schema for the generic agent form, and `./ui-parser` for
 local run transcript parsing. Gateway entrypoints are exported from `./gateway`,
 `./gateway/server`, `./gateway/ui`, `./gateway/cli`, and `./gateway/ui-parser`.
-Paperclip core imports these same package entrypoints for built-in adapter
+ThinkingMach core imports these same package entrypoints for built-in adapter
 registration.
 
-### 2. Create a local Hermes agent in Paperclip
+### 2. Create a local Hermes agent in ThinkingMach
 
-In the Paperclip UI or via API, create an agent with adapter type `hermes_local`:
+In the ThinkingMach UI or via API, create an agent with adapter type `hermes_local`:
 
 ```json
 {
@@ -104,10 +104,10 @@ In the Paperclip UI or via API, create an agent with adapter type `hermes_local`
 }
 ```
 
-This mode shells out to the local `hermes` CLI. Paperclip injects runtime
+This mode shells out to the local `hermes` CLI. ThinkingMach injects runtime
 environment variables and captures stdout/stderr from the child process.
 
-### 3. Create a Hermes gateway agent in Paperclip
+### 3. Create a Hermes gateway agent in ThinkingMach
 
 Start Hermes with its API server enabled first:
 
@@ -135,9 +135,9 @@ Then create an agent with adapter type `hermes_gateway`:
 
 If the URL you have is the default Hermes dashboard at
 `http://127.0.0.1:9119` or the default chat URL at
-`http://127.0.0.1:9119/chat`, Paperclip maps it to
+`http://127.0.0.1:9119/chat`, ThinkingMach maps it to
 `http://127.0.0.1:9119/api` before calling Hermes API routes. `/chat` and the
-dashboard root are browser UI routes; Paperclip tests `/api/health` and starts
+dashboard root are browser UI routes; ThinkingMach tests `/api/health` and starts
 runs with `/api/v1/runs` after mapping them to the API base.
 
 This mode does not start Hermes. It creates runs with `POST /v1/runs`, streams
@@ -146,46 +146,46 @@ with `POST /v1/runs/{run_id}/stop`.
 
 ### Compatibility with the old gateway package
 
-`@paperclipai/adapter-hermes-gateway` remains as a deprecated compatibility shim
+`@thinkingmach/adapter-hermes-gateway` remains as a deprecated compatibility shim
 for one release. It re-exports the gateway entrypoints from
-`@paperclipai/hermes-paperclip-adapter/gateway` and preserves the legacy exports
-for existing plugin installs. New installs and built-in Paperclip registrations
-should use `@paperclipai/hermes-paperclip-adapter`; the adapter type remains
+`@thinkingmach/hermes-paperclip-adapter/gateway` and preserves the legacy exports
+for existing plugin installs. New installs and built-in ThinkingMach registrations
+should use `@thinkingmach/hermes-paperclip-adapter`; the adapter type remains
 `hermes_gateway`.
 
 ### Runtime API guidance
 
-Hermes receives Paperclip runtime identity through environment variables:
+Hermes receives ThinkingMach runtime identity through environment variables:
 
-- `PAPERCLIP_API_URL`
-- `PAPERCLIP_API_KEY`
-- `PAPERCLIP_RUN_ID`
+- `THINKINGMACH_API_URL`
+- `THINKINGMACH_API_KEY`
+- `THINKINGMACH_RUN_ID`
 
 Prompts should reference those variables directly. Command output may redact
 secret values, so do not copy printed tokens into comments or config. Use
-`Authorization: Bearer $PAPERCLIP_API_KEY` on Paperclip API requests and
-`X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID` on mutating issue requests. For
+`Authorization: Bearer $THINKINGMACH_API_KEY` on ThinkingMach API requests and
+`X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID` on mutating issue requests. For
 multiline comments or status updates, preserve newlines with a heredoc plus
 `jq --arg`.
 
-### Hermes-originated Paperclip tasks
+### Hermes-originated ThinkingMach tasks
 
 The package includes a Hermes skill/helper for the reverse direction: a user
-starts in Hermes and asks Hermes to create or update Paperclip work. This is not
-the same as Paperclip waking Hermes through `hermes_local` or `hermes_gateway`.
+starts in Hermes and asks Hermes to create or update ThinkingMach work. This is not
+the same as ThinkingMach waking Hermes through `hermes_local` or `hermes_gateway`.
 
-Configure Paperclip access in Hermes env/profile secrets, not prompt text:
+Configure ThinkingMach access in Hermes env/profile secrets, not prompt text:
 
 ```bash
-PAPERCLIP_API_URL=http://127.0.0.1:3100/api
-PAPERCLIP_BRIDGE_API_KEY=<task-bridge-scoped-agent-api-key>
+THINKINGMACH_API_URL=http://127.0.0.1:3100/api
+THINKINGMACH_BRIDGE_API_KEY=<task-bridge-scoped-agent-api-key>
 ```
 
 Optional env values:
 
-- `PAPERCLIP_COMPANY_ID`
-- `PAPERCLIP_AGENT_ID`
-- `PAPERCLIP_RUN_ID`
+- `THINKINGMACH_COMPANY_ID`
+- `THINKINGMACH_AGENT_ID`
+- `THINKINGMACH_RUN_ID`
 
 The bundled `paperclip-task-bridge` skill provides deterministic helper
 commands:
@@ -207,11 +207,11 @@ internet-facing Hermes chat/webhook task-bridge operations.
 
 ### 4. Assign work
 
-Create issues in Paperclip and assign them to your Hermes agent. On each heartbeat, Hermes will:
+Create issues in ThinkingMach and assign them to your Hermes agent. On each heartbeat, Hermes will:
 
 1. Receive the task instructions
 2. Use its full tool suite to complete the work
-3. Report results back to Paperclip
+3. Report results back to ThinkingMach
 4. Persist session state for continuity
 
 ## Configuration Reference
@@ -251,7 +251,7 @@ Available toolsets: `terminal`, `file`, `web`, `browser`, `code_execution`, `vis
 | `extraArgs` | string[] | `[]` | Additional CLI arguments |
 | `env` | object | `{}` | Extra environment variables |
 | `promptTemplate` | string | *(built-in)* | Custom prompt template |
-| `paperclipApiUrl` | string | `http://127.0.0.1:3100/api` | Paperclip API base URL |
+| `paperclipApiUrl` | string | `http://127.0.0.1:3100/api` | ThinkingMach API base URL |
 
 ### Prompt Template Variables
 
@@ -259,7 +259,7 @@ Use `{{variable}}` syntax in `promptTemplate`:
 
 | Variable | Description |
 |----------|-------------|
-| `{{agentId}}` | Paperclip agent ID |
+| `{{agentId}}` | ThinkingMach agent ID |
 | `{{agentName}}` | Agent display name |
 | `{{companyId}}` | Company ID |
 | `{{companyName}}` | Company name |
@@ -268,7 +268,7 @@ Use `{{variable}}` syntax in `promptTemplate`:
 | `{{taskTitle}}` | Task title |
 | `{{taskBody}}` | Task instructions |
 | `{{projectName}}` | Project name |
-| `{{paperclipApiUrl}}` | Paperclip API base URL |
+| `{{paperclipApiUrl}}` | ThinkingMach API base URL |
 | `{{commentId}}` | Comment ID (when woken by a comment) |
 | `{{wakeReason}}` | Reason this run was triggered |
 
@@ -281,7 +281,7 @@ Conditional sections:
 ## Architecture
 
 ```
-Paperclip                          Hermes Agent
+ThinkingMach                          Hermes Agent
 ┌──────────────────┐               ┌──────────────────┐
 │  Heartbeat       │               │                  │
 │  Scheduler       │───execute()──▶│  hermes chat -q  │
@@ -304,7 +304,7 @@ processes the task using its full tool suite, then exits. The adapter:
 3. **Post-processes** Hermes ASCII formatting (banners, setext headings, table borders) into clean GFM markdown
 4. **Reclassifies** benign stderr (MCP init, structured logs) so they don't show as errors
 5. **Tags** sessions as `tool` source to keep them separate from interactive usage
-6. **Reports** results back to Paperclip with cost, usage, and session state
+6. **Reports** results back to ThinkingMach with cost, usage, and session state
 
 Session persistence works via Hermes's `--resume` flag — each run picks
 up where the last one left off, maintaining conversation context,
@@ -315,16 +315,16 @@ and migrates session state between runs.
 
 The adapter scans two skill sources and merges them:
 
-- **Paperclip-managed skills** — bundled with the adapter, togglable from the UI
+- **ThinkingMach-managed skills** — bundled with the adapter, togglable from the UI
 - **Hermes-native skills** — from `~/.hermes/skills/`, read-only, always loaded
 
 The `listSkills` / `syncSkills` APIs expose a unified snapshot so the
-Paperclip UI can display both managed and native skills in one view.
+ThinkingMach UI can display both managed and native skills in one view.
 
 ## Development
 
 ```bash
-git clone https://github.com/paperclipai/paperclip
+git clone https://github.com/thinkingmach/paperclip
 cd paperclip/packages/adapters/hermes
 pnpm install
 pnpm build
@@ -337,6 +337,6 @@ MIT — see [LICENSE](LICENSE)
 ## Links
 
 - [Hermes Agent](https://github.com/NousResearch/hermes-agent) — The AI agent this adapter runs
-- [Paperclip](https://github.com/paperclipai/paperclip) — The orchestration platform
+- [ThinkingMach](https://github.com/thinkingmach/paperclip) — The orchestration platform
 - [Nous Research](https://nousresearch.com) — The team behind Hermes
-- [Paperclip Docs](https://docs.paperclip.ing) — Paperclip documentation
+- [ThinkingMach Docs](https://docs.thinkingmach.com) — ThinkingMach documentation

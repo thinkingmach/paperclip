@@ -5,9 +5,9 @@ import { chromium } from "@playwright/test";
 
 // Opt-in: this sends jobs to an already configured agent in a disposable local
 // test-drive project. No credentials, provider mocks, or production fixtures.
-const target = process.env.PAPERCLIP_LAYOUT_LIVE_URL;
+const target = process.env.THINKINGMACH_LAYOUT_LIVE_URL;
 if (!target || !["localhost", "127.0.0.1", "[::1]"].includes(new URL(target).hostname)) {
-  throw new Error("Set PAPERCLIP_LAYOUT_LIVE_URL to a disposable localhost task with a native Codex assignee.");
+  throw new Error("Set THINKINGMACH_LAYOUT_LIVE_URL to a disposable localhost task with a native Codex assignee.");
 }
 const output = path.resolve("test-results/task-layout/live-acceptance");
 const api = (pathname) => new URL(pathname, target).href;

@@ -5,7 +5,7 @@ import { INSTANCE_FEATURE_KEYS, type InstanceFeatureKey } from "./feature-catalo
  *
  * A hosting operator (a managed cloud, an internal shared server) can hide
  * settings surfaces that do not apply to their deployment by setting the
- * `PAPERCLIP_HIDDEN_SETTINGS` environment variable to a comma-separated
+ * `THINKINGMACH_HIDDEN_SETTINGS` environment variable to a comma-separated
  * list of keys from this registry. An experimental wildcard with named
  * exceptions can also hide future controls automatically. Hiding a surface removes it from the UI
  * (nav, routes, page sections). Surfaces backed by instance-level mutation

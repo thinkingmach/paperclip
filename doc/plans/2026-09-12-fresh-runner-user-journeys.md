@@ -2,7 +2,7 @@
 
 Date: 2026-09-12. Baseline: c9021c6721f91e2c74bd9fee9d3fd41c999d17b7 (fresh worktree).
 
-User: a first-time Paperclip operator who wants useful work from an agent without learning runner internals or manually managing task status.
+User: a first-time ThinkingMach operator who wants useful work from an agent without learning runner internals or manually managing task status.
 
 Environment: isolated test-drive instance, disposable company and tasks, real API-backed Codex and Claude Code providers, local and Daytona execution. Onboarding/bootstrap fixtures are setup, not an onboarding acceptance result. Task submission and user follow-ups are performed through the production browser interface. No special completion-tool instructions are added to user prompts.
 

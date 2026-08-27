@@ -26,7 +26,7 @@ import {
   issues,
   toolApplications,
   toolConnections,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { createLocalDiskStorageProvider } from "../../storage/local-disk-provider.js";
@@ -34,7 +34,7 @@ import { createStorageService } from "../../storage/service.js";
 import type { StorageService } from "../../storage/types.js";
 import { issueService } from "../issues.js";
 import { NativeChatAttachmentReadScope } from "./chat-attachment-read.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 
 const stagingControl = vi.hoisted(() => ({
   beforeStage: undefined as (() => Promise<void>) | undefined,
@@ -620,7 +620,7 @@ describe("native same-conversation historical attachment reading", () => {
       },
     };
     const reader = scope({ storage: emptyStorage });
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       ...binding,
       workspaceRoot,
       executionTargetKind: "local",
@@ -672,7 +672,7 @@ describe("native same-conversation historical attachment reading", () => {
           arguments: { ...selection(), workspaceRoot: "/" },
         }),
       ).rejects.toThrow("arguments_invalid");
-      const unbound = new PaperclipRunnerToolAuthority(db, {
+      const unbound = new ThinkingMachRunnerToolAuthority(db, {
         ...binding,
         workspaceRoot,
       });
@@ -974,7 +974,7 @@ describe("native same-conversation historical attachment reading", () => {
       });
       const filename = `attachment-${attachment.id}.${extension}`;
       const reader = scope();
-      const authority = new PaperclipRunnerToolAuthority(db, {
+      const authority = new ThinkingMachRunnerToolAuthority(db, {
         ...binding,
         workspaceRoot,
         executionTargetKind: "local",

@@ -137,8 +137,8 @@ const CODEX_COLLABORATION_RUNTIME_INSTRUCTIONS = `## Codex-style collaboration
 
 - Before the first tool call in a turn, send a brief commentary update describing the immediate work you are starting.
 - During tool-driven work, send concise commentary updates at meaningful transitions so the user can follow progress without opening raw logs.
-- Reserve \`report_progress\` for meaningful durable milestones on longer work. Do not call it merely to create a completion comment on a short run; Paperclip materializes the final assistant response as the durable completion comment.
-- Invoke the semantic completion tool exactly once before the final assistant response. After it succeeds, send one self-contained final response with the outcome and verification, then do not call another tool. The completion tool records task disposition; Paperclip keeps receiving your answer until the provider turn ends.`;
+- Reserve \`report_progress\` for meaningful durable milestones on longer work. Do not call it merely to create a completion comment on a short run; ThinkingMach materializes the final assistant response as the durable completion comment.
+- Invoke the semantic completion tool exactly once before the final assistant response. After it succeeds, send one self-contained final response with the outcome and verification, then do not call another tool. The completion tool records task disposition; ThinkingMach keeps receiving your answer until the provider turn ends.`;
 
 export function withCodexCollaborationRuntimeInstructions(
   instructions: string,
@@ -1152,7 +1152,7 @@ export interface CapabilityRunnerdCodexTransportOptions {
   runtimeContext?: NativeRuntimeContextSnapshot | null;
   /** Runtime-context paths rewritten for the runner-owned filesystem. */
   runnerRuntimeContext?: NativeRuntimeContextSnapshot | null;
-  /** Root path visible to runnerd when it is not on the Paperclip host. */
+  /** Root path visible to runnerd when it is not on the ThinkingMach host. */
   runnerFilesystemRoot?: string;
   /** Workspace cwd to retain when a local provider session is reopened. */
   resumeWorkingDirectory?: string;
@@ -1195,7 +1195,7 @@ export interface CapabilityRunnerdCodexTransportOptions {
     turnId: string;
     itemId: string;
   };
-  /** Registers the run-bound PRP authority on Paperclip's shared HTTP server. */
+  /** Registers the run-bound PRP authority on ThinkingMach's shared HTTP server. */
   controlPlaneRegistration?: (
     authority: DurablePrpControlPlane,
     identity?: DurableRecoveryIdentity,
@@ -2845,7 +2845,7 @@ function resolveBuildOwnedCliArtifact(
   const resolved = candidates.find((candidate) => existsSync(candidate));
   if (resolved) return resolved;
   throw new Error(
-    `runner_local_provider_artifact_missing: ${artifact} is absent; build @paperclipai/paperclip-runner TypeScript artifacts with build:typescript before starting a local JS-backed provider`,
+    `runner_local_provider_artifact_missing: ${artifact} is absent; build @thinkingmach/paperclip-runner TypeScript artifacts with build:typescript before starting a local JS-backed provider`,
   );
 }
 
@@ -2871,7 +2871,7 @@ function acpxProviderPackageAuthority(
   // resolves dependencies from <workspace>/node_modules. `pnpm deploy` makes
   // the package itself the deployment root and owns <deploy>/node_modules/.pnpm.
   // The older npm-installed portable shape nests the scoped package at
-  // <deploy>/node_modules/@paperclipai/paperclip-runner. The verifier always
+  // <deploy>/node_modules/@thinkingmach/paperclip-runner. The verifier always
   // receives the directory that owns node_modules, regardless of which
   // portable shape launched the already-authenticated sidecar.
   const sourceDependencyRoot = resolve(ownerPackageRoot, "../..");
@@ -3067,8 +3067,8 @@ function withRunnerdProviderTrace(
 ): NodeJS.ProcessEnv {
   const result = { ...environment };
   for (const key of [
-    "PAPERCLIP_PROVIDER_TRACE_PATH",
-    "PAPERCLIP_PROVIDER_TRACE_MAX_BYTES",
+    "THINKINGMACH_PROVIDER_TRACE_PATH",
+    "THINKINGMACH_PROVIDER_TRACE_MAX_BYTES",
   ] as const) {
     const value = source?.[key];
     if (value !== undefined) result[key] = value;
@@ -3085,19 +3085,19 @@ export function createCapabilityRunnerdProviderEnvironment(input: {
   acpxSidecarPath?: string;
 }): NodeJS.ProcessEnv {
   const commonIdentity = {
-    PAPERCLIP_RUNNER_INSTANCE_ID: input.identity.runnerInstanceId,
-    PAPERCLIP_RUN_ID: input.identity.runId,
-    PAPERCLIP_NORMALIZED_SESSION_ID: input.identity.normalizedSessionId,
+    THINKINGMACH_RUNNER_INSTANCE_ID: input.identity.runnerInstanceId,
+    THINKINGMACH_RUN_ID: input.identity.runId,
+    THINKINGMACH_NORMALIZED_SESSION_ID: input.identity.normalizedSessionId,
     ...(input.hasRuntimeContext
-      ? { PAPERCLIP_NATIVE_RUNTIME_CONTEXT_PATH: input.runtimeContextPath }
+      ? { THINKINGMACH_NATIVE_RUNTIME_CONTEXT_PATH: input.runtimeContextPath }
       : {}),
   };
   if (input.provider === "opencode") {
     return {
       ...createSanitizedOpenCodeRunnerEnvironment(input.options.environment),
-      PAPERCLIP_OPENCODE_PERMISSION_MODE:
+      THINKINGMACH_OPENCODE_PERMISSION_MODE:
         input.options.opencodePermissionMode ?? "allow",
-      PAPERCLIP_OPENCODE_RUNTIME_DIR:
+      THINKINGMACH_OPENCODE_RUNTIME_DIR:
         input.options.opencodeRuntimeDirectory ??
         resolve(input.options.stateDirectory ?? tmpdir(), "opencode"),
       ...commonIdentity,
@@ -3115,7 +3115,7 @@ export function createCapabilityRunnerdProviderEnvironment(input: {
       ? null : nativeMcpLaunchBinding(input.options.environment ?? {});
     return {
       ...(assignedGateway ? {
-        PAPERCLIP_NATIVE_MCP_TOKEN: assignedGateway.token,
+        THINKINGMACH_NATIVE_MCP_TOKEN: assignedGateway.token,
       } : {}),
       ...createSanitizedAcpxSpawnInput(
         input.options.environment,
@@ -3125,13 +3125,13 @@ export function createCapabilityRunnerdProviderEnvironment(input: {
       // The verified sidecar bundle cannot use import.meta.url while Node
       // executes it through /proc/self/fd. Anchor its closed provider package
       // lookups at the package that owns the already-authenticated bundle.
-      PAPERCLIP_ACPX_PROVIDER_PACKAGE_ROOT: providerPackageAuthority.root,
-      PAPERCLIP_ACPX_PROVIDER_PACKAGE_MANIFEST:
+      THINKINGMACH_ACPX_PROVIDER_PACKAGE_ROOT: providerPackageAuthority.root,
+      THINKINGMACH_ACPX_PROVIDER_PACKAGE_MANIFEST:
         providerPackageAuthority.manifest,
       ...(input.options.providerRecoveryPolicy ===
       "allow_replacement_after_governed_wait"
         ? {
-            PAPERCLIP_ACPX_PROVIDER_RECOVERY_POLICY:
+            THINKINGMACH_ACPX_PROVIDER_RECOVERY_POLICY:
               "allow_replacement_after_governed_wait",
           }
         : {}),
@@ -3196,9 +3196,9 @@ const OPEN_CODE_RUNNER_ENVIRONMENT_KEYS = new Set([
   "WINDIR",
   "RUST_BACKTRACE",
   "OPENROUTER_API_KEY",
-  "PAPERCLIP_NATIVE_MCP_NAME",
-  "PAPERCLIP_NATIVE_MCP_URL",
-  "PAPERCLIP_NATIVE_MCP_TOKEN",
+  "THINKINGMACH_NATIVE_MCP_NAME",
+  "THINKINGMACH_NATIVE_MCP_URL",
+  "THINKINGMACH_NATIVE_MCP_TOKEN",
 ]);
 
 function createSanitizedOpenCodeRunnerEnvironment(
@@ -3296,7 +3296,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
     contentItems: [
       {
         type: "inputText",
-        text: "No Paperclip control-plane tool handler is installed.",
+        text: "No ThinkingMach control-plane tool handler is installed.",
       },
     ],
   });
@@ -3606,7 +3606,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
           cwd:
             typeof snapshot.cwd === "string" && snapshot.cwd.length > 0
               ? snapshot.cwd
-              : (this.options.environment?.PAPERCLIP_WORKSPACE_CWD ??
+              : (this.options.environment?.THINKINGMACH_WORKSPACE_CWD ??
                 this.options.runnerFilesystemRoot ??
                 tmpdir()),
           turns: recoveredTurns,
@@ -3889,7 +3889,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
   }
 
   recordTraceInterpretation(input: CodexTraceInterpretation): void {
-    const tracePath = this.options.environment?.PAPERCLIP_PROVIDER_TRACE_PATH;
+    const tracePath = this.options.environment?.THINKINGMACH_PROVIDER_TRACE_PATH;
     if (!tracePath) return;
     const traceResult = appendCodexDriverInterpretationTrace(
       this.#traceFrameIndex,
@@ -4207,7 +4207,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
       }
     }
     this.#flushPendingTraceRehydrations();
-    const tracePath = this.options.environment?.PAPERCLIP_PROVIDER_TRACE_PATH;
+    const tracePath = this.options.environment?.THINKINGMACH_PROVIDER_TRACE_PATH;
     if (tracePath) {
       const incomplete =
         this.#traceRehydrationSpoolOverflow ||
@@ -4449,7 +4449,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
       provider === "codex" &&
       record(params.config).include_collaboration_mode_instructions !== false;
     const unboundBaseInstructions = String(
-      params.baseInstructions ?? "You are a Paperclip agent.",
+      params.baseInstructions ?? "You are a ThinkingMach agent.",
     );
     const baseInstructions =
       sourceRuntimeContext && runtimeContext
@@ -6083,7 +6083,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
         this.#queue.push({
           method,
           params,
-          ...(this.options.environment?.PAPERCLIP_PROVIDER_TRACE_PATH
+          ...(this.options.environment?.THINKINGMACH_PROVIDER_TRACE_PATH
             ? {
                 paperclipTrace: {
                   sourceEventId: event.sourceEventId,
@@ -6093,7 +6093,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
             : {}),
         });
       }
-      if (this.options.environment?.PAPERCLIP_PROVIDER_TRACE_PATH) {
+      if (this.options.environment?.THINKINGMACH_PROVIDER_TRACE_PATH) {
         const pending = {
           sourceEventId: event.sourceEventId,
           eventType: event.eventType,
@@ -6101,7 +6101,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
         };
         const traceResult = appendRunnerdRehydrationTrace(
           this.#traceFrameIndex,
-          this.options.environment.PAPERCLIP_PROVIDER_TRACE_PATH,
+          this.options.environment.THINKINGMACH_PROVIDER_TRACE_PATH,
           pending.sourceEventId,
           pending.eventType,
           pending.visibleNotificationCount,
@@ -6246,7 +6246,7 @@ class DurablePrpCodexTransport implements CodexAppServerTransport {
   }
 
   #flushPendingTraceRehydrations(): void {
-    const tracePath = this.options.environment?.PAPERCLIP_PROVIDER_TRACE_PATH;
+    const tracePath = this.options.environment?.THINKINGMACH_PROVIDER_TRACE_PATH;
     if (!tracePath) return;
     const retry: PendingTraceRehydration[] = [];
     for (const pending of this.#pendingTraceRehydrations) {

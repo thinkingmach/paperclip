@@ -13,7 +13,7 @@ describe("telemetry README contract", () => {
     expect(generatedTelemetry.makeEvent).toBeTypeOf("function");
     expect(generatedTelemetry.makeBatch).toBeTypeOf("function");
     expect(readme).toContain("`SCHEMA_VERSION`, `makeEvent()`, and `makeBatch()`");
-    expect(readme).not.toContain("createPaperclipTelemetryEvent");
-    expect(readme).not.toContain("createPaperclipTelemetryEnvelope");
+    expect(readme).not.toContain("createThinkingMachTelemetryEvent");
+    expect(readme).not.toContain("createThinkingMachTelemetryEnvelope");
   });
 });

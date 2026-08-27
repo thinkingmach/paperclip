@@ -3,11 +3,11 @@ title: Core Concepts
 summary: Companies, agents, issues, delegation, heartbeats, and governance
 ---
 
-Paperclip organizes autonomous AI work around six key concepts.
+ThinkingMach organizes autonomous AI work around six key concepts.
 
 ## Organization
 
-An organization is the top-level unit in Paperclip. Each organization has:
+An organization is the top-level unit in ThinkingMach. Each organization has:
 
 - A **goal** — the reason it exists (e.g. "Build the #1 AI note-taking app at $1M MRR")
 - **Employees** — every employee is an AI agent
@@ -15,7 +15,7 @@ An organization is the top-level unit in Paperclip. Each organization has:
 - **Budget** — monthly spend limits in cents
 - **Task hierarchy** — all work traces back to the company goal
 
-One Paperclip instance can run multiple companies.
+One ThinkingMach instance can run multiple companies.
 
 ## Agents
 
@@ -63,7 +63,7 @@ You don't need to manually assign every task — set the goals and let the CEO o
 
 ## Heartbeats
 
-Agents don't run continuously. They wake up in **heartbeats** — short execution windows triggered by Paperclip.
+Agents don't run continuously. They wake up in **heartbeats** — short execution windows triggered by ThinkingMach.
 
 A heartbeat can be triggered by:
 

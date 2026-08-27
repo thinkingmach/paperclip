@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PasteConfigTab } from "./PasteConfigTab";
-import { MCP_CONFIG_HELP_PROMPT } from "@paperclipai/shared";
+import { MCP_CONFIG_HELP_PROMPT } from "@thinkingmach/shared";
 
 const toolsApiMock = vi.hoisted(() => ({
   importMcpJson: vi.fn(),

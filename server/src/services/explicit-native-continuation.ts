@@ -10,7 +10,7 @@ import {
   agents, agentWakeupRequests, approvals, issueApprovals, issueThreadInteractions,
   environmentLeases, heartbeatRuns, issueComments, issueRecoveryActions,
   issues, nativeRunFinalizations, nativeRunResults, type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { executionBlockerPredicate, getExecutionBlocker } from "./execution-blocker.js";
 import { buildExecutionContinuation } from "./execution-continuation.js";
 import { adapterExecutionControls } from "./adapter-execution-control.js";
@@ -235,7 +235,7 @@ export async function admitExplicitNativeContinuation(input: {
         // A missing process identity is not evidence that a provider exited.
         if (!run.processPid && !run.processGroupId &&
             !await hasNativeLocalProcessStop(db, companyId, run.id) &&
-            !await hasHistoricalSuspendedNativeSession(db, run)) return blocked("process_identity_missing", "The previous run has no verified stop record. Paperclip cannot start this message yet.");
+            !await hasHistoricalSuspendedNativeSession(db, run)) return blocked("process_identity_missing", "The previous run has no verified stop record. ThinkingMach cannot start this message yet.");
         if (run.processPid && !processStopped(run.processPid)) return blocked("process_running", "Waiting for the previous process to stop. Your message will start automatically.");
         if (run.processGroupId && !processStopped(-run.processGroupId)) return blocked("process_running", "Waiting for the previous process to stop. Your message will start automatically.");
       }

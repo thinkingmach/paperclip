@@ -276,7 +276,7 @@ const nativeRunnerSuitePath =
 
 // Mirrors pr-trusted.yml (12 shards, called by pr.yml so GITHUB_WORKFLOW is
 // "PR"): the chat suite runs in its dedicated lanes and the cargo-dependent
-// native-runner suite in the Rust-cached final Verify Paperclip Runner vitest
+// native-runner suite in the Rust-cached final Verify ThinkingMach Runner vitest
 // shard, so together the three cover the full server group exactly.
 test("12 PR without-chat shards plus the dedicated chat and native-runner lanes cover the original server group exactly", () => {
   const prEnv = { GITHUB_WORKFLOW: "PR" };
@@ -396,7 +396,7 @@ test("the PR vitest lane wrapper runs the native-runner group exactly on the fin
 });
 
 const lineShardFile = path.join(repoRoot, "server/src/__tests__/chat-channels.integration.test.ts");
-const caseAt = (line, name) => ({ name, file: lineShardFile, projectName: "@paperclipai/server", location: { line, column: 3 } });
+const caseAt = (line, name) => ({ name, file: lineShardFile, projectName: "@thinkingmach/server", location: { line, column: 3 } });
 
 test("test-line shards cover nested and parameterized cases exactly once without splitting a source line", () => {
   const cases = [caseAt(10, "suite > nested > first"), caseAt(10, "suite > nested > second"),

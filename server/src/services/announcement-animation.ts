@@ -1,6 +1,6 @@
 import createDOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
-import { ANNOUNCEMENT_ANIMATION_MAX_BYTES } from "@paperclipai/shared";
+import { ANNOUNCEMENT_ANIMATION_MAX_BYTES } from "@thinkingmach/shared";
 
 // A visual HTML/CSS document, never an application. JSDOM does not execute
 // scripts or load resources. DOMPurify handles HTML parsing/normalization;

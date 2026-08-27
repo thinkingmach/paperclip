@@ -27,7 +27,7 @@
       "defaults": {
         "serverUrl": "https://mcp.asana.com/v2/mcp"
       },
-      "guidanceMd": "Connect Asana in the browser. Create an Asana MCP OAuth app and register Paperclip's callback URI; DCR is not supported.",
+      "guidanceMd": "Connect Asana in the browser. Create an Asana MCP OAuth app and register ThinkingMach's callback URI; DCR is not supported.",
       "riskTier": "S3",
       "label": "Use your own OAuth app",
       "consoleLinks": {
@@ -35,7 +35,7 @@
         "docs": "https://developers.asana.com/docs/integrating-with-asanas-mcp-server"
       },
       "warnings": [
-        "Create an Asana MCP OAuth app and register Paperclip's callback URI; DCR is not supported."
+        "Create an Asana MCP OAuth app and register ThinkingMach's callback URI; DCR is not supported."
       ]
     }
   ]

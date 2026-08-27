@@ -6,8 +6,8 @@ import { writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { agents, companies, completionContracts, createDb, environmentLeases, environments, heartbeatRuns, issues, issueRecoveryActions, nativeRunFinalizations, nativeRunResults, agentWakeupRequests, plugins } from "@paperclipai/db";
-import type { Environment, EnvironmentLease } from "@paperclipai/shared";
+import { agents, companies, completionContracts, createDb, environmentLeases, environments, heartbeatRuns, issues, issueRecoveryActions, nativeRunFinalizations, nativeRunResults, agentWakeupRequests, plugins } from "@thinkingmach/db";
+import type { Environment, EnvironmentLease } from "@thinkingmach/shared";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { environmentRuntimeService } from "../environment-runtime.js";
 import type { PluginWorkerManager } from "../plugin-worker-manager.js";
@@ -17,9 +17,9 @@ import { retryNativeWorkspaceExport } from "./native-workspace-export-retry.js";
 import { recordNativeFinalizationFailure } from "./native-run-finalizer.js";
 import { classifyNativeWorkspaceFailure } from "./native-workspace-failure.js";
 
-const enabled = process.env.PAPERCLIP_LIVE_EXPORT_RESUME === "1";
+const enabled = process.env.THINKINGMACH_LIVE_EXPORT_RESUME === "1";
 const describeLive = enabled ? describe : describe.skip;
-const image = process.env.PAPERCLIP_LIVE_EXPORT_RESUME_IMAGE ?? "";
+const image = process.env.THINKINGMACH_LIVE_EXPORT_RESUME_IMAGE ?? "";
 const quote = (s: string) => `'${s.replaceAll("'", "'\\''")}'`;
 
 describeLive("live Daytona export-resume failure recovery", () => {
@@ -103,7 +103,7 @@ describeLive("live Daytona export-resume failure recovery", () => {
     await db.insert(agents).values({ id: ids.agent, companyId: ids.company, name: "No provider turn", adapterType: "paperclip_runner" });
     await db.insert(environments).values({ id: ids.environment, name: `Lifecycle ${nonce}`, driver: "sandbox", config });
     environment = (await db.select().from(environments).where(eq(environments.id, ids.environment)))[0] as unknown as Environment;
-    await db.insert(plugins).values({ id: ids.plugin, pluginKey: manifest.id, packageName: "@paperclipai/plugin-daytona", version: manifest.version,
+    await db.insert(plugins).values({ id: ids.plugin, pluginKey: manifest.id, packageName: "@thinkingmach/plugin-daytona", version: manifest.version,
       apiVersion: 1, categories: ["automation"], manifestJson: manifest, status: "ready", installOrder: 1 });
     await db.insert(issues).values({ id: ids.issue, companyId: ids.company, title: "Preserved accepted result", status: "blocked", assigneeAgentId: ids.agent });
     await db.insert(completionContracts).values({ id: ids.contract, companyId: ids.company, issueId: ids.issue, revision: 1, schemaVersion: "paperclip.completion-contract.v1", policyVersion: "live-test", risk: "standard", completionAuthority: "server_arbiter", incompleteCriteriaPolicy: "preserve_non_terminal", contractJson: { objective: "Preserve saved work" }, canonicalSha256: digest, createdByActorType: "system", createdByActorId: "live-test" });
@@ -147,7 +147,7 @@ describeLive("live Daytona export-resume failure recovery", () => {
     } catch { throw new Error("Exact live fixture cleanup failed; provider details withheld"); }
     finally {
       if (temporary) await temporary.cleanup();
-      if (process.env.PAPERCLIP_EXPORT_RESUME_EVIDENCE_PATH) await writeFile(process.env.PAPERCLIP_EXPORT_RESUME_EVIDENCE_PATH, JSON.stringify(evidence, null, 2), { mode: 0o600 });
+      if (process.env.THINKINGMACH_EXPORT_RESUME_EVIDENCE_PATH) await writeFile(process.env.THINKINGMACH_EXPORT_RESUME_EVIDENCE_PATH, JSON.stringify(evidence, null, 2), { mode: 0o600 });
     }
   }, 90_000);
   it("stops after a failed probe, and recovers a failed stop through a fresh runtime", async () => {

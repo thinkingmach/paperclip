@@ -8,7 +8,7 @@ preserved. Live checks used the isolated AgentMail Test Drive company at
 
 Only these user-authorized inboxes exchanged test mail:
 
-- Paperclip: `pap15838-qa@agentmail.to`, assigned to Email QA.
+- ThinkingMach: `pap15838-qa@agentmail.to`, assigned to Email QA.
 - Other end: `attractiveforce961@agentmail.to`, inspected in AgentMail Console.
 
 ## Live browser results
@@ -18,13 +18,13 @@ Only these user-authorized inboxes exchanged test mail:
 | Connect from the Apps catalog | Saved personal human access, selected agent access, and a vaulted key through the real UI. |
 | Give an agent an address | Used Permissions → three-step wizard → existing scoped inbox. The selected agent, review warnings, and connection persisted. |
 | Trust controls | Saved Low-trust review with a root-task boundary, verified the missing-sandbox prerequisite, then explicitly restored Standard for this local QA agent. |
-| Live receiving | Inbound correspondence created AGE-6. The agent explicitly replied once; the reply appeared in AgentMail Console and Paperclip recorded Delivered. |
+| Live receiving | Inbound correspondence created AGE-6. The agent explicitly replied once; the reply appeared in AgentMail Console and ThinkingMach recorded Delivered. |
 | Signed webhook | Registered an inbox-scoped webhook. Actual signed POSTs returned 204. AGE-7 received its email, the agent replied once, and both consoles showed the exchange. |
 | Reply to a completed conversation | New mail reused the same task and reopened it. |
 | Restart catch-up | Sent another reply while the server health endpoint was unreachable. Startup imported it into AGE-7, woke the agent, and sent one acknowledgement in the same thread. |
 | Agent-initiated new conversation | A board request in AGE-7 caused the agent to create AGE-8 with `parentId` pointing to AGE-7. One email was sent and marked Delivered; it appeared as a separate thread in AgentMail Console. |
 | Internal publication boundary | Internal summaries and the outbound-only child task's “No reply sent” response produced no additional emails. |
-| Cleanup | Restored WebSocket mode, removed Paperclip's test webhook, stopped the webhook-only proxy/tunnel, and removed the temporary public URL from the isolated configuration. Inbox history and vaulted test credentials remain inspectable. |
+| Cleanup | Restored WebSocket mode, removed ThinkingMach's test webhook, stopped the webhook-only proxy/tunnel, and removed the temporary public URL from the isolated configuration. Inbox history and vaulted test credentials remain inspectable. |
 
 Useful live pages:
 
@@ -115,8 +115,8 @@ duplicate callbacks, and expired idempotency windows are checked deterministical
 rather than against the live provider. Low-trust execution was not run in a real sandbox; setup correctly
 rejected the isolated test drive's missing sandbox runtime.
 
-One restart-test acknowledgement arrived in the other inbox while Paperclip's
+One restart-test acknowledgement arrived in the other inbox while ThinkingMach's
 status remained Sent because its delivery receipt was missed during socket
-recovery. Sent records provider acceptance; Paperclip does not fabricate a
+recovery. Sent records provider acceptance; ThinkingMach does not fabricate a
 Delivered receipt or resend the message. The later independent outbound email
 received and recorded its Delivered receipt normally.

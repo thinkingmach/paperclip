@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { HeartbeatRun } from "@paperclipai/shared";
+import type { HeartbeatRun } from "@thinkingmach/shared";
 import { getRunSnapshotIssueId, resolveLatestRunNavigation, type LatestRunIssue } from "./AgentDetail";
 
 const AGENT_ID = "agent-1";

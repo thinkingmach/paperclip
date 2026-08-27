@@ -1,21 +1,21 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 
-import type { Db } from "@paperclipai/db";
-import { heartbeatRuns, issueThreadInteractions } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { heartbeatRuns, issueThreadInteractions } from "@thinkingmach/db";
 import type {
   AskUserQuestionsAnswer,
   AskUserQuestionsInteraction,
   AskUserQuestionsQuestionOption,
-  PaperclipQuestionSetPayload,
+  ThinkingMachQuestionSetPayload,
   RespondIssueThreadInteraction,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 import type { PrpEvent } from "../../vendor/paperclip-runner/index.js";
 import {
-  parsePaperclipQuestionResponse,
-  parsePaperclipQuestionSet,
-  type PaperclipQuestionResponse,
-  type PaperclipQuestionSet,
+  parseThinkingMachQuestionResponse,
+  parseThinkingMachQuestionSet,
+  type ThinkingMachQuestionResponse,
+  type ThinkingMachQuestionSet,
 } from "../../vendor/paperclip-runner/index.js";
 import { logger } from "../../middleware/logger.js";
 import { unprocessable } from "../../errors.js";
@@ -93,7 +93,7 @@ function uniqueSyntheticOptionId(existing: readonly string[], preferred: string)
   throw new Error("native_question_synthetic_option_exhausted");
 }
 
-function toInteractionPayload(questionSet: PaperclipQuestionSet, runtimeRequestId: string) {
+function toInteractionPayload(questionSet: ThinkingMachQuestionSet, runtimeRequestId: string) {
   return {
     version: 1 as const,
     ...(questionSet.title ? { title: questionSet.title.slice(0, 240) } : {}),
@@ -134,7 +134,7 @@ function toInteractionPayload(questionSet: PaperclipQuestionSet, runtimeRequestI
         options,
       };
     }),
-    questionSet: questionSet as PaperclipQuestionSetPayload,
+    questionSet: questionSet as ThinkingMachQuestionSetPayload,
     runtimeRequestId,
     // A generic task comment cannot satisfy this provider request. Keep the
     // card actionable until a validated answer or an explicit terminal action.
@@ -143,11 +143,11 @@ function toInteractionPayload(questionSet: PaperclipQuestionSet, runtimeRequestI
 }
 
 function canonicalResponse(
-  questionSet: PaperclipQuestionSetPayload,
+  questionSet: ThinkingMachQuestionSetPayload,
   answers: readonly AskUserQuestionsAnswer[],
-): PaperclipQuestionResponse {
+): ThinkingMachQuestionResponse {
   const answerByQuestionId = new Map(answers.map((answer) => [answer.questionId, answer]));
-  const response: PaperclipQuestionResponse = {
+  const response: ThinkingMachQuestionResponse = {
     schema: "paperclip.question_response.v1",
     answers: {},
   };
@@ -175,7 +175,7 @@ function canonicalResponse(
       };
     }
   }
-  return parsePaperclipQuestionResponse(questionSet, response);
+  return parseThinkingMachQuestionResponse(questionSet, response);
 }
 
 async function authorizedNativeRun(
@@ -226,7 +226,7 @@ export async function projectNativeRuntimeRequest(input: {
   ) {
     throw new Error("native_runtime_request_invalid");
   }
-  const questionSet = parsePaperclipQuestionSet(request.input);
+  const questionSet = parseThinkingMachQuestionSet(request.input);
   if (questionSet.questions.some((question) => question.textValidation?.pattern !== undefined)) {
     // JavaScript regular expressions have no execution budget. Provider-authored
     // patterns therefore stay fail-closed until the runner contract supplies a

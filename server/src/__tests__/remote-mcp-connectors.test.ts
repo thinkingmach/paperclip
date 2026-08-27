@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { agents, heartbeatRuns, issues, toolCatalogEntries, toolConnectionInstalls, toolInvocations, companies, companyMemberships, instanceSettings, createDb, toolConnections, toolPolicies, toolProfileEntries } from "@paperclipai/db";
+import { agents, heartbeatRuns, issues, toolCatalogEntries, toolConnectionInstalls, toolInvocations, companies, companyMemberships, instanceSettings, createDb, toolConnections, toolPolicies, toolProfileEntries } from "@thinkingmach/db";
 import { eq } from "drizzle-orm";
 import { startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { toolAccessService } from "../services/tool-access.js";
@@ -20,7 +20,7 @@ describe("remote connector lifecycle", () => {
   let keyDir: string;
   beforeAll(async () => {
     keyDir = await mkdtemp(join(tmpdir(), "mcp-connector-secrets-"));
-    vi.stubEnv("PAPERCLIP_SECRETS_MASTER_KEY_FILE", join(keyDir, "key"));
+    vi.stubEnv("THINKINGMACH_SECRETS_MASTER_KEY_FILE", join(keyDir, "key"));
     fixture = await startEmbeddedPostgresTestDatabase("mcp-connectors-test-");
     db = createDb(fixture.connectionString);
   });
@@ -187,7 +187,7 @@ describe("remote connector lifecycle", () => {
     await callback();
     expect((await service.listConnectionInstalls(connected.connectionId))).toHaveLength(0);
   });
-  it("enforces agent and action permissions before dispatch, and preserves provider resume after Paperclip approval", async () => {
+  it("enforces agent and action permissions before dispatch, and preserves provider resume after ThinkingMach approval", async () => {
     const org = await company();
     const [allowed, denied] = await db.insert(agents).values(["Allowed", "Denied"].map((name) => ({ companyId: org.id, name, role: "engineer", adapterType: "process", adapterConfig: {}, runtimeConfig: {} }))).returning();
     const calls: { name: string; arguments: unknown; session: string | null }[] = [];

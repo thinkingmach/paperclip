@@ -1,5 +1,5 @@
 import { clearIssueExecutionRun } from "./optimistic-issue-runs";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 // @vitest-environment jsdom
 
 import { beforeEach, describe, expect, it, vi } from "vitest";

@@ -1,4 +1,4 @@
-/** GitHub is a channel into an ordinary Paperclip task, not another executor. */
+/** GitHub is a channel into an ordinary ThinkingMach task, not another executor. */
 export const GITHUB_REVIEW_EVENTS = [
   "opened",
   "synchronize",
@@ -152,7 +152,7 @@ export const DEFAULT_GITHUB_REVIEW_PROMPTS: Record<GitHubReviewEvent, string> =
     mention:
       "Respond to the authorized person's request in this GitHub conversation. If they request a review, assess the current head using the review tools.",
     comment:
-      "Continue the existing Paperclip task with this GitHub reply. Ordinary discussion does not change the review rating.",
+      "Continue the existing ThinkingMach task with this GitHub reply. Ordinary discussion does not change the review rating.",
   };
 
 export function defaultGitHubReviewPolicy(): GitHubReviewPolicy {

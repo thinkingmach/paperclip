@@ -337,7 +337,7 @@ describe("Codex resume accounting through the production driver", () => {
         PATH: "/bin",
         HOME: "/isolated/home",
         CODEX_HOME: "/isolated/codex",
-        PAPERCLIP_RUNNER_EXTERNAL_SANDBOX: "1",
+        THINKINGMACH_RUNNER_EXTERNAL_SANDBOX: "1",
       },
     }).openSession({
       runId: "external",

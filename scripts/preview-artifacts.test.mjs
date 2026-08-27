@@ -9,7 +9,7 @@ import { previewManifest, assertMetadata, validateRequest, versionFor, tarManife
 
 const sha = "a".repeat(40);
 const id = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
-const manifest = (name) => previewManifest({ name, version: "0.0.0", dependencies: name.endsWith("/db") ? { "@paperclipai/shared": "workspace:*" } : {}, publishConfig: { exports: { ".": "./dist/index.js" } } }, sha);
+const manifest = (name) => previewManifest({ name, version: "0.0.0", dependencies: name.endsWith("/db") ? { "@thinkingmach/shared": "workspace:*" } : {}, publishConfig: { exports: { ".": "./dist/index.js" } } }, sha);
 function pack(pkg) {
   const b = Buffer.from(JSON.stringify(pkg)); const h = Buffer.alloc(512);
   h.write("package/package.json"); h.write(b.length.toString(8).padStart(11, "0"), 124, 11); h[156] = 48;
@@ -25,7 +25,7 @@ test("preview request requires immutable SHA and correlation UUID", () => {
 });
 
 test("migrator-only planning never waits for GHCR and reuses complete exact-source packages", async () => {
-  for (const available of [[], ["@paperclipai/shared"], ["@paperclipai/shared", "@paperclipai/db"]]) {
+  for (const available of [[], ["@thinkingmach/shared"], ["@thinkingmach/shared", "@thinkingmach/db"]]) {
     const calls = [];
     const result = await planArtifacts(sha, { image: false, migrator: true, fetchImpl: async (url) => {
       assert.equal(new URL(url).hostname, "registry.npmjs.org");
@@ -34,13 +34,13 @@ test("migrator-only planning never waits for GHCR and reuses complete exact-sour
       return available.includes(name) ? json({ ...manifest(name), dist: { integrity: "test-integrity", tarball: "https://registry.npmjs.org/package.tgz" } }) : json({}, 404);
     } });
     assert.deepEqual(result, { image: false, packages: available.length !== 2 });
-    assert.ok(calls.includes("@paperclipai/shared"));
-    if (available.length) assert.ok(calls.includes("@paperclipai/db"));
+    assert.ok(calls.includes("@thinkingmach/shared"));
+    if (available.length) assert.ok(calls.includes("@thinkingmach/db"));
   }
 });
 
 test("migrator-only planning rejects registry outages and mismatched source identity", async () => {
-  for (const response of [json({}, 403), json({}, 503), json({ ...manifest("@paperclipai/shared"), gitHead: "b".repeat(40) })]) {
+  for (const response of [json({}, 403), json({}, 503), json({ ...manifest("@thinkingmach/shared"), gitHead: "b".repeat(40) })]) {
     await assert.rejects(planArtifacts(sha, { image: false, migrator: true, fetchImpl: async () => response }));
   }
 });
@@ -54,37 +54,37 @@ test("ordinary preview planning still requests a missing image without publishin
 });
 
 test("preview manifests carry exact source, isolated versions and shared dependency", () => {
-  const pkg = manifest("@paperclipai/db");
+  const pkg = manifest("@thinkingmach/db");
   assert.equal(pkg.version, `0.0.0-preview.g${sha}`);
-  assert.equal(pkg.dependencies["@paperclipai/shared"], pkg.version);
+  assert.equal(pkg.dependencies["@thinkingmach/shared"], pkg.version);
   assert.deepEqual(pkg.exports, { ".": "./dist/index.js" });
-  assertMetadata(pkg, "@paperclipai/db", sha);
+  assertMetadata(pkg, "@thinkingmach/db", sha);
   assert.throws(() => assertMetadata({ ...pkg, gitHead: "b".repeat(40) }, pkg.name, sha));
-  assert.throws(() => assertMetadata({ ...pkg, dependencies: { "@paperclipai/shared": "latest" } }, pkg.name, sha));
+  assert.throws(() => assertMetadata({ ...pkg, dependencies: { "@thinkingmach/shared": "latest" } }, pkg.name, sha));
   assert.deepEqual(tarManifest(pack(pkg)), pkg);
 });
 
 test("only 404 means an artifact is missing; auth and outages are fatal", async () => {
-  assert.equal(await packageExists("@paperclipai/db", sha, async () => json({}, 404)), false);
-  await assert.rejects(packageExists("@paperclipai/db", sha, async () => json({}, 403)));
-  await assert.rejects(packageExists("@paperclipai/db", sha, async () => json({}, 503)));
+  assert.equal(await packageExists("@thinkingmach/db", sha, async () => json({}, 404)), false);
+  await assert.rejects(packageExists("@thinkingmach/db", sha, async () => json({}, 403)));
+  await assert.rejects(packageExists("@thinkingmach/db", sha, async () => json({}, 503)));
   await assert.rejects(imageExists(sha, async () => json({}, 503)));
   assert.equal(await imageExists(sha, async (url) => url.includes("/token?") ? json({ token: "test-pull-token" }) : json({}, 404)), false);
-  await assert.rejects(packageExists("@paperclipai/db", sha, async () => json({ ...manifest("@paperclipai/db"), gitHead: "b".repeat(40) })));
+  await assert.rejects(packageExists("@thinkingmach/db", sha, async () => json({ ...manifest("@thinkingmach/db"), gitHead: "b".repeat(40) })));
 });
 
 test("publishing reuses existing previews and never executes package lifecycle hooks", async () => {
   const dir = mkdtempSync(path.join(tmpdir(), "preview-publish-test-"));
-  const published = new Set(["@paperclipai/shared"]);
+  const published = new Set(["@thinkingmach/shared"]);
   const calls = [];
   try {
-    for (const short of ["shared", "db"]) writeFileSync(path.join(dir, `${short}.tgz`), pack({ ...manifest(`@paperclipai/${short}`), scripts: { prepublishOnly: "do-not-run" } }));
+    for (const short of ["shared", "db"]) writeFileSync(path.join(dir, `${short}.tgz`), pack({ ...manifest(`@thinkingmach/${short}`), scripts: { prepublishOnly: "do-not-run" } }));
     await publishPreview(dir, sha, {
       fetchImpl: async (url) => {
         const name = decodeURIComponent(new URL(url).pathname.split("/")[1]);
         return published.has(name) ? json({ ...manifest(name), dist: { integrity: "test-integrity", tarball: "https://registry.npmjs.org/package.tgz" } }) : json({}, 404);
       },
-      exec: (command, args) => { calls.push({ command, args }); published.add("@paperclipai/db"); },
+      exec: (command, args) => { calls.push({ command, args }); published.add("@thinkingmach/db"); },
       sleep: async () => {},
     });
     assert.equal(calls.length, 1);
@@ -100,7 +100,7 @@ test("publishing submits both packages before waiting for either to propagate", 
   const submitted = [];
   let polls = 0;
   try {
-    for (const short of ["shared", "db"]) writeFileSync(path.join(dir, `${short}.tgz`), pack(manifest(`@paperclipai/${short}`)));
+    for (const short of ["shared", "db"]) writeFileSync(path.join(dir, `${short}.tgz`), pack(manifest(`@thinkingmach/${short}`)));
     await publishPreview(dir, sha, {
       exec: (_command, args) => submitted.push(path.basename(args[1], ".tgz")),
       fetchImpl: async (url) => {
@@ -121,17 +121,17 @@ test("a visibility timeout identifies the missing package after both were submit
   const dir = mkdtempSync(path.join(tmpdir(), "preview-publish-timeout-"));
   const submitted = [];
   try {
-    for (const short of ["shared", "db"]) writeFileSync(path.join(dir, `${short}.tgz`), pack(manifest(`@paperclipai/${short}`)));
+    for (const short of ["shared", "db"]) writeFileSync(path.join(dir, `${short}.tgz`), pack(manifest(`@thinkingmach/${short}`)));
     await assert.rejects(publishPreview(dir, sha, {
       exec: (_command, args) => submitted.push(path.basename(args[1], ".tgz")),
       fetchImpl: async (url) => {
         const name = decodeURIComponent(new URL(url).pathname.split("/")[1]);
-        return name === "@paperclipai/db" && submitted.includes("db")
+        return name === "@thinkingmach/db" && submitted.includes("db")
           ? json({ ...manifest(name), dist: { integrity: "test-integrity", tarball: "https://registry.npmjs.org/package.tgz" } })
           : json({}, 404);
       },
       sleep: async () => {},
-    }), /not yet visible: @paperclipai\/shared\./);
+    }), /not yet visible: @thinkingmach\/shared\./);
     assert.deepEqual(submitted, ["shared", "db"]);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
@@ -139,8 +139,8 @@ test("a visibility timeout identifies the missing package after both were submit
 test("invalid DB package metadata prevents publication of either package", async () => {
   const dir = mkdtempSync(path.join(tmpdir(), "preview-publish-invalid-"));
   try {
-    writeFileSync(path.join(dir, "shared.tgz"), pack(manifest("@paperclipai/shared")));
-    writeFileSync(path.join(dir, "db.tgz"), pack({ ...manifest("@paperclipai/db"), gitHead: "b".repeat(40) }));
+    writeFileSync(path.join(dir, "shared.tgz"), pack(manifest("@thinkingmach/shared")));
+    writeFileSync(path.join(dir, "db.tgz"), pack({ ...manifest("@thinkingmach/db"), gitHead: "b".repeat(40) }));
     await assert.rejects(publishPreview(dir, sha, {
       exec: () => assert.fail("Invalid package pairs must not be published"),
       fetchImpl: async () => assert.fail("Validate the pair before registry requests"),
@@ -157,7 +157,7 @@ test("preview workflow separates branch compilation from trusted publishing", ()
   assert.doesNotMatch(builder, /id-token: write|packages: write|secrets\./);
   assert.doesNotMatch(publisher, /ref: \$\{\{ inputs.source_ref|working-directory: source|pnpm install/);
   assert.match(publisher, /environment: npm-canary/);
-  assert.match(image, /PAPERCLIP_BUILD_COMMIT=\$\{\{ inputs.source_ref \}\}/);
+  assert.match(image, /THINKINGMACH_BUILD_COMMIT=\$\{\{ inputs.source_ref \}\}/);
   assert.doesNotMatch(image, /cache-(?:to|from):|canary-cloud|latest-cloud|packages: write|secrets\./);
   assert.doesNotMatch(imagePublisher, /ref: \$\{\{ inputs.source_ref|docker\/build-push-action|pnpm install/);
   assert.match(imagePublisher, /publish-image/);
@@ -205,7 +205,7 @@ test("image publisher verifies source and platform before pushing exactly one im
     });
     if (revision === sha) {
       await operation;
-      assert.deepEqual(calls.filter((call) => call.args[0] === "push").map((call) => call.args), [["push", `ghcr.io/paperclipai/paperclip:sha-${sha}-cloud`]]);
+      assert.deepEqual(calls.filter((call) => call.args[0] === "push").map((call) => call.args), [["push", `ghcr.io/thinkingmach/paperclip:sha-${sha}-cloud`]]);
     } else { await assert.rejects(operation, /identity/); assert.ok(!calls.some((call) => call.args[0] === "push")); }
     assert.ok(!calls.some((call) => ["run", "build"].includes(call.args[0])));
   }
@@ -218,5 +218,5 @@ test("commits sharing a short prefix use separate full-SHA image addresses", asy
   const other = sha.slice(0, 7) + "b".repeat(33);
   await imageExists(sha, fetchImpl);
   await imageExists(other, fetchImpl);
-  assert.deepEqual(urls.filter((url) => url.includes("/manifests/")), [sha, other].map((commit) => `https://ghcr.io/v2/paperclipai/paperclip/manifests/sha-${commit}-cloud`));
+  assert.deepEqual(urls.filter((url) => url.includes("/manifests/")), [sha, other].map((commit) => `https://ghcr.io/v2/thinkingmach/paperclip/manifests/sha-${commit}-cloud`));
 });

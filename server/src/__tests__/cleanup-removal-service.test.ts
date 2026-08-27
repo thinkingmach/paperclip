@@ -17,7 +17,7 @@ import {
   issueReadStates,
   issues,
   routines,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -72,7 +72,7 @@ describeEmbeddedPostgres("cleanup removal services", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
     });
@@ -170,10 +170,10 @@ describeEmbeddedPostgres("cleanup removal services", () => {
     await db.insert(companySkills).values({
       id: randomUUID(),
       companyId,
-      key: "paperclipai/paperclip/paperclip",
+      key: "thinkingmach/paperclip/paperclip",
       slug: "paperclip",
-      name: "Paperclip",
-      markdown: "# Paperclip",
+      name: "ThinkingMach",
+      markdown: "# ThinkingMach",
     });
 
     await db.insert(activityLog).values({

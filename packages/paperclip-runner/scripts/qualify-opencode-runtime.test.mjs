@@ -1,5 +1,5 @@
 // Opt-in qualification of the installed CLI, not the fake protocol server.
-// PAPERCLIP_OPENCODE_QUALIFY=1 node --test scripts/qualify-opencode-runtime.test.mjs
+// THINKINGMACH_OPENCODE_QUALIFY=1 node --test scripts/qualify-opencode-runtime.test.mjs
 import assert from "node:assert/strict";
 import { spawn, execFileSync } from "node:child_process";
 import { once } from "node:events";
@@ -10,7 +10,7 @@ import { dirname, join, resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import test from "node:test";
 
-const enabled = process.env.PAPERCLIP_OPENCODE_QUALIFY === "1";
+const enabled = process.env.THINKINGMACH_OPENCODE_QUALIFY === "1";
 const packageRoot = resolve(import.meta.dirname, "..");
 const manifest = JSON.parse(await readFile(join(packageRoot, "package.json"), "utf8"));
 
@@ -37,7 +37,7 @@ test("the pinned OpenCode executable serves health, sessions, SSE, and a local-p
     if (provider) { provider.closeAllConnections(); await new Promise((done) => provider.close(done)); }
     await rm(root, { recursive: true, force: true });
   });
-  const command = resolve(process.env.PAPERCLIP_TEST_OPENCODE_BINARY ?? join(packageRoot, "node_modules/opencode-ai/bin/opencode.exe"));
+  const command = resolve(process.env.THINKINGMACH_TEST_OPENCODE_BINARY ?? join(packageRoot, "node_modules/opencode-ai/bin/opencode.exe"));
   assert.equal(execFileSync(command, ["--version"], { encoding: "utf8", timeout: 10_000 }).trim(), manifest.dependencies["opencode-ai"]);
   const requests = [];
   provider = createServer(async (request, response) => {

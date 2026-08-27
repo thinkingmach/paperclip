@@ -5,7 +5,7 @@ import {
   externalObjects,
   toolConnections,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { and, eq, sql } from "drizzle-orm";
 import {
   logActivity,
@@ -13,9 +13,9 @@ import {
   type ActivityPublication,
 } from "./activity-log.js";
 import {
-  createPaperclipCloudConnector,
+  createThinkingMachCloudConnector,
   paperclipCloudConnectorConfigFromEnv,
-  type PaperclipCloudConnector,
+  type ThinkingMachCloudConnector,
   type SealedConnectorEvents,
 } from "./paperclip-cloud-connector.js";
 import { issueThreadInteractionService } from "./issue-thread-interactions.js";
@@ -210,7 +210,7 @@ function githubSnapshotUpdate(payload: Record<string, unknown>) {
 export function githubConnectionEventService(
   db: Db,
   options: {
-    connector?: PaperclipCloudConnector;
+    connector?: ThinkingMachCloudConnector;
     env?: NodeJS.ProcessEnv;
     now?: () => Date;
     wakeup?: NonNullable<Parameters<typeof issueThreadInteractionService>[1]>["wakeup"];
@@ -467,7 +467,7 @@ export function githubConnectionEventService(
         return { leased: 0, processed: 0, duplicate: 0, ignored: 0, failed: 0 };
       }
       const config = options.connector ? null : paperclipCloudConnectorConfigFromEnv(options.env);
-      const connector = options.connector ?? (config ? createPaperclipCloudConnector({ config }) : null);
+      const connector = options.connector ?? (config ? createThinkingMachCloudConnector({ config }) : null);
       if (!connector) {
         nextPollAt = now().getTime() + 5 * 60_000;
         return { leased: 0, processed: 0, duplicate: 0, ignored: 0, failed: 0 };

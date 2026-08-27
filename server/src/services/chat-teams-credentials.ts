@@ -1,4 +1,4 @@
-import { microsoftTeamsCredentialIdSchema } from "@paperclipai/shared";
+import { microsoftTeamsCredentialIdSchema } from "@thinkingmach/shared";
 import { unprocessable } from "../errors.js";
 
 const MICROSOFT_TEAMS_ID_FIELDS = ["clientId", "tenantId"] as const;
@@ -30,7 +30,7 @@ export function normalizeMicrosoftTeamsCredentialIds(
 
 /**
  * Bot Framework can vary the casing of the same Entra object id between
- * activities. Keep that case-insensitive identity on one Paperclip principal,
+ * activities. Keep that case-insensitive identity on one ThinkingMach principal,
  * while retaining the adapter's opaque user id when the activity omits a
  * usable Entra id (for example, some federated or anonymous participants).
  */

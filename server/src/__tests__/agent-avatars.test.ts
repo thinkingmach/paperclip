@@ -8,7 +8,7 @@ import path from "node:path";
 import express from "express";
 import type { Server } from "node:http";
 import sharp from "sharp";
-import { AGENT_PALETTE_IDS, appearanceForPalette } from "@paperclipai/shared";
+import { AGENT_PALETTE_IDS, appearanceForPalette } from "@thinkingmach/shared";
 import { createLocalDiskStorageProvider } from "../storage/local-disk-provider.js";
 import { createAgentAvatarService, avatarCacheKey, type AgentAvatarRequest } from "../services/agent-avatars.js";
 import { createAgentAvatarPool } from "../services/agent-avatar-pool.js";

@@ -8,7 +8,7 @@ export function prepareNpmReadme(readme, assetRef) {
   }
 
   const assetBaseUrl =
-    `https://raw.githubusercontent.com/paperclipai/paperclip/${assetRef}/doc/assets/`;
+    `https://raw.githubusercontent.com/thinkingmach/paperclip/${assetRef}/doc/assets/`;
 
   return readme.replace(
     /((?:src|srcset)=["'])([^"']*)(["'])/g,

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { StringDecoder } from "node:string_decoder";
 import { setTimeout as delay } from "node:timers/promises";
-import type { PluginEnvironmentExecuteParams, PluginEnvironmentExecuteResult } from "@paperclipai/plugin-sdk";
+import type { PluginEnvironmentExecuteParams, PluginEnvironmentExecuteResult } from "@thinkingmach/plugin-sdk";
 import { CreateosApiError, CreateosClient, identifier, object } from "./client.js";
 
 const MAX_LINE_BYTES = 1_048_576;

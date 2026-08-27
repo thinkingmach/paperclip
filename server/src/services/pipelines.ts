@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { and, asc, desc, eq, inArray, isNotNull, isNull, ne, or, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   documents,
@@ -22,7 +22,7 @@ import {
   pipelines,
   routineRevisions,
   routines,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   extractRoutineVariableNames,
   isBuiltinRoutineVariable,
@@ -41,7 +41,7 @@ import {
   PIPELINE_CASE_BODY_DOCUMENT_KEY,
   type RoutineVariable,
   type RoutineRevisionSnapshotV1,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { conflict, HttpError, notFound, unprocessable } from "../errors.js";
 import { routineService } from "./routines.js";
 import { secretService } from "./secrets.js";
@@ -2354,8 +2354,8 @@ export function pipelineService(db: Db, deps: { heartbeat?: IssueAssignmentWakeu
       }, null, 2),
       "```",
       "",
-      `Paperclip creates each ${input.config.pieceNoun} in "${targetPipeline.name}" at "${targetStage.name}", sets parentCaseId and requestKey, and copies inherited fields automatically.`,
-      input.config.advanceTo ? `After the call succeeds, Paperclip moves this item to "${input.config.advanceTo}".` : null,
+      `ThinkingMach creates each ${input.config.pieceNoun} in "${targetPipeline.name}" at "${targetStage.name}", sets parentCaseId and requestKey, and copies inherited fields automatically.`,
+      input.config.advanceTo ? `After the call succeeds, ThinkingMach moves this item to "${input.config.advanceTo}".` : null,
       "",
       "Target item fields:",
       "",
@@ -3720,7 +3720,7 @@ export function pipelineService(db: Db, deps: { heartbeat?: IssueAssignmentWakeu
       const normalizedEnv = input.env === null
         ? null
         : await secretsSvc.normalizeEnvBindingsForPersistence(input.companyId, input.env, {
-            strictMode: process.env.PAPERCLIP_SECRETS_STRICT_MODE === "true",
+            strictMode: process.env.THINKINGMACH_SECRETS_STRICT_MODE === "true",
             fieldPath: "env",
           }) as Record<string, EnvBinding>;
       const actorPatch = routineActorPatch(input.actor);

@@ -23,7 +23,7 @@ import {
   issues,
   projects,
   projectWorkspaces,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -47,8 +47,8 @@ import {
 import { instanceSettingsService } from "../services/instance-settings.ts";
 
 // Exercise the real SSH lease and heartbeat paths without connecting to a host.
-vi.mock("@paperclipai/adapter-utils/ssh", async (importOriginal) => ({
-  ...await importOriginal<typeof import("@paperclipai/adapter-utils/ssh")>(),
+vi.mock("@thinkingmach/adapter-utils/ssh", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@thinkingmach/adapter-utils/ssh")>(),
   ensureSshWorkspaceReady: async (config: { remoteWorkspacePath: string }) => ({
     remoteCwd: config.remoteWorkspacePath,
   }),
@@ -246,7 +246,7 @@ describeEmbeddedPostgres("shared-workspace run serialization", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",

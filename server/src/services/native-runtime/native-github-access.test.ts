@@ -2,7 +2,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import { spawn, execFile } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile, access } from "node:fs/promises";
 import { promisify } from "node:util";
-import type { CommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/command-managed-runtime";
+import type { CommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/command-managed-runtime";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createInterface } from "node:readline";
@@ -32,14 +32,14 @@ async function broker(resolveCredentials = vi.fn(async (binding: ReturnType<type
   const target = remote ? { kind: "remote" as const, transport: "sandbox" as const, providerKey: "test",
     remoteCwd: root, runner: { execute }, streamRunLogs: false } : null;
   const result = await createNativeGitHubAccess({ scope, target, cwd: root,
-    env: { PATH: `${bin}:${path.dirname(process.execPath)}:/usr/bin:/bin`, PAPERCLIP_API_KEY: "old-run-api-key" }, resolveCredentials, onLog },
+    env: { PATH: `${bin}:${path.dirname(process.execPath)}:/usr/bin:/bin`, THINKINGMACH_API_KEY: "old-run-api-key" }, resolveCredentials, onLog },
     bridgeUnavailable ? async () => { throw new Error("fixture bridge unavailable"); } : undefined);
   cleanups.push(result.stop);
   return { ...result, root, resolveCredentials };
 }
 function request(broker: NativeGitHubAccess, extra: RequestInit = {}, endpoint = "/runtime-tools/github/credentials") {
-  return fetch(broker.env.PAPERCLIP_GITHUB_BROKER_URL + endpoint, {
-    method: "POST", body: "{}", headers: { authorization: `Bearer ${broker.env.PAPERCLIP_GITHUB_BRIDGE_TOKEN}`, "content-type": "application/json" }, ...extra,
+  return fetch(broker.env.THINKINGMACH_GITHUB_BROKER_URL + endpoint, {
+    method: "POST", body: "{}", headers: { authorization: `Bearer ${broker.env.THINKINGMACH_GITHUB_BRIDGE_TOKEN}`, "content-type": "application/json" }, ...extra,
   });
 }
 it.each([false, true])("keeps one live parent and its original launcher environment across two authorized runs (callback bridge: %s)", async (remote) => {
@@ -49,7 +49,7 @@ it.each([false, true])("keeps one live parent and its original launcher environm
     require('node:readline').createInterface({input:process.stdin}).on('line', () => {
       execFile('gh', [], (error, stdout, stderr) => console.log(JSON.stringify({pid:process.pid, value:stdout, error:error?.message, stderr})));
     });
-  `], { env: { ...process.env, ...b.env, PAPERCLIP_API_KEY: "stale-api-key" }, stdio: ["pipe", "pipe", "pipe"] });
+  `], { env: { ...process.env, ...b.env, THINKINGMACH_API_KEY: "stale-api-key" }, stdio: ["pipe", "pipe", "pipe"] });
   cleanups.push(async () => { const exited = new Promise<void>(resolve => parent.once("exit", () => resolve())); parent.kill(); await exited; });
   const lines = createInterface({ input: parent.stdout });
   const operation = () => new Promise<{ pid: number; value: string; stderr: string }>(resolve => {
@@ -67,9 +67,9 @@ it.each([false, true])("keeps one live parent and its original launcher environm
   expect(second.value).toBe("fixture-run-b");
   expect(second.pid).toBe(a.pid);
   expect(b.resolveCredentials.mock.calls.map(([binding]) => binding.runId)).toEqual(["run-a", "run-b"]);
-  expect(await readFile(path.join(b.env.PAPERCLIP_GITHUB_LAUNCHER_DIR, "gh"), "utf8")).not.toContain(b.env.PAPERCLIP_GITHUB_BROKER_TOKEN);
+  expect(await readFile(path.join(b.env.THINKINGMACH_GITHUB_LAUNCHER_DIR, "gh"), "utf8")).not.toContain(b.env.THINKINGMACH_GITHUB_BROKER_TOKEN);
   releaseB(); await b.stop();
-  await expect(access(b.env.PAPERCLIP_GITHUB_LAUNCHER_DIR)).rejects.toThrow();
+  await expect(access(b.env.THINKINGMACH_GITHUB_LAUNCHER_DIR)).rejects.toThrow();
 }, 45_000);
 it("rejects other scopes, concurrent bindings, browser requests and forged authority", async () => {
   const b = await broker();
@@ -79,7 +79,7 @@ it("rejects other scopes, concurrent bindings, browser requests and forged autho
   const release = b.activate(run("a"));
   expect(() => b.activate(run("b"))).toThrow("busy");
   const rejectedHeaders: Record<string, string>[] = [{ authorization: "Bearer wrong" }, { authorization: "é".repeat(71) },
-    { authorization: `Bearer ${b.env.PAPERCLIP_GITHUB_BRIDGE_TOKEN}`, origin: "https://browser.test" }];
+    { authorization: `Bearer ${b.env.THINKINGMACH_GITHUB_BRIDGE_TOKEN}`, origin: "https://browser.test" }];
   for (const headers of rejectedHeaders) {
     expect((await request(b, { headers })).status).toBe(403);
   }
@@ -119,8 +119,8 @@ it.each([false, true])("keeps anonymous launchers usable when the remote broker 
   expect(onLog).toHaveBeenCalledWith("stderr", expect.stringContaining("continuing without managed GitHub access"));
   b.activate(run("a"));
   expect(b.ready).toBe(false);
-  expect(b.env.PAPERCLIP_GITHUB_BROKER_TOKEN).toBe("");
-  const result = await promisify(execFile)(path.join(b.env.PAPERCLIP_GITHUB_LAUNCHER_DIR, "gh"), [], {
+  expect(b.env.THINKINGMACH_GITHUB_BROKER_TOKEN).toBe("");
+  const result = await promisify(execFile)(path.join(b.env.THINKINGMACH_GITHUB_LAUNCHER_DIR, "gh"), [], {
     env: { ...process.env, ...b.env, GH_TOKEN: "ambient-must-not-leak" },
   });
   expect(result.stdout).toBe("anonymous");

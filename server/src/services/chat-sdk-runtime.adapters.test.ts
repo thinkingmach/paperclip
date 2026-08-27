@@ -123,7 +123,7 @@ describe("Chat SDK published adapter integration", () => {
       },
       {
         provider: "microsoft-teams" as const,
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -254,7 +254,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -310,7 +310,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "discord",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           apiUrl: "https://discord.com/api/v10",
           applicationId: "123456789012345678",
@@ -373,7 +373,7 @@ describe("Chat SDK published adapter integration", () => {
             { status: 201 },
           );
         }
-        if (url.endsWith("/repos/paperclipai/chat-e2e/issues/42/comments")) {
+        if (url.endsWith("/repos/thinkingmach/chat-e2e/issues/42/comments")) {
           commentAuthorizations.push(headers.get("authorization") ?? "");
           return Response.json(
             {
@@ -413,11 +413,11 @@ describe("Chat SDK published adapter integration", () => {
       ): Promise<{ id: string }>;
     };
     try {
-      await adapter.postMessage("github:paperclipai/chat-e2e:issue:42", {
+      await adapter.postMessage("github:thinkingmach/chat-e2e:issue:42", {
         markdown: "first safe reply",
       });
       vi.setSystemTime(new Date(start.getTime() + 61 * 60_000));
-      await adapter.postMessage("github:paperclipai/chat-e2e:issue:42", {
+      await adapter.postMessage("github:thinkingmach/chat-e2e:issue:42", {
         markdown: "delayed safe reply",
       });
 
@@ -446,19 +446,19 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret,
         },
       },
     });
     const payload = {
       type: "block_actions",
-      team: { id: "T-PAPERCLIP" },
+      team: { id: "T-THINKINGMACH" },
       user: { id: "U-OPERATOR", username: "operator" },
-      channel: { id: "D-PAPERCLIP-DM" },
+      channel: { id: "D-THINKINGMACH-DM" },
       container: {
         type: "message",
-        channel_id: "D-PAPERCLIP-DM",
+        channel_id: "D-THINKINGMACH-DM",
         message_ts: "1788.200",
       },
       message: { ts: "1788.200" },
@@ -495,7 +495,7 @@ describe("Chat SDK published adapter integration", () => {
           event: expect.objectContaining({
             actionId: "pcq:blue",
             messageId: "1788.200",
-            threadId: "slack:D-PAPERCLIP-DM:1788.200",
+            threadId: "slack:D-THINKINGMACH-DM:1788.200",
             value: "interaction-id",
           }),
         }),
@@ -519,15 +519,15 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret,
         },
       },
     });
     const body = new URLSearchParams({
-      channel_id: "C-PAPERCLIP",
+      channel_id: "C-THINKINGMACH",
       command: "/paperclip-agent",
-      team_id: "T-PAPERCLIP",
+      team_id: "T-THINKINGMACH",
       text: "investigate the release",
       trigger_id: "slash-trigger",
       user_id: "U-OPERATOR",
@@ -546,7 +546,7 @@ describe("Chat SDK published adapter integration", () => {
         async () =>
           await new Promise<never>(() => {
             // A regression to the upstream cold lookup would hold the provider
-            // acknowledgement open until Paperclip's webhook deadline.
+            // acknowledgement open until ThinkingMach's webhook deadline.
           }),
       );
       adapter._client.users.info = usersInfo;
@@ -573,7 +573,7 @@ describe("Chat SDK published adapter integration", () => {
       expect((response as Response).status).toBe(200);
       await expect((response as Response).json()).resolves.toEqual({
         response_type: "ephemeral",
-        text: "Paperclip received this command.",
+        text: "ThinkingMach received this command.",
       });
       expect(usersInfo).not.toHaveBeenCalled();
       expect(onSlashCommand).toHaveBeenCalledWith(
@@ -614,7 +614,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret,
         },
       },
@@ -649,12 +649,12 @@ describe("Chat SDK published adapter integration", () => {
       const edited = await runtime.handleWebhook(
         signedSlackEventRequest(signingSecret, {
           type: "event_callback",
-          team_id: "T-PAPERCLIP",
+          team_id: "T-THINKINGMACH",
           event_id: "Ev-slack-edit",
           event: {
             type: "message",
             subtype: "message_changed",
-            channel: "C-PAPERCLIP",
+            channel: "C-THINKINGMACH",
             channel_type: "channel",
             event_ts: "1788.600",
             message: {
@@ -673,7 +673,7 @@ describe("Chat SDK published adapter integration", () => {
           endpointId: "endpoint-slack-lifecycle-envelope",
           provider: "slack",
           thread: expect.objectContaining({
-            id: "slack:C-PAPERCLIP:1788.400",
+            id: "slack:C-THINKINGMACH:1788.400",
           }),
           message: expect.objectContaining({
             id: "1788.500",
@@ -689,12 +689,12 @@ describe("Chat SDK published adapter integration", () => {
       const deleted = await runtime.handleWebhook(
         signedSlackEventRequest(signingSecret, {
           type: "event_callback",
-          team_id: "T-PAPERCLIP",
+          team_id: "T-THINKINGMACH",
           event_id: "Ev-slack-delete",
           event: {
             type: "message",
             subtype: "message_deleted",
-            channel: "C-PAPERCLIP",
+            channel: "C-THINKINGMACH",
             channel_type: "channel",
             deleted_ts: "1788.500",
             event_ts: "1788.700",
@@ -709,9 +709,9 @@ describe("Chat SDK published adapter integration", () => {
           endpointId: "endpoint-slack-lifecycle-envelope",
           provider: "slack",
           event: expect.objectContaining({
-            channelId: "C-PAPERCLIP",
+            channelId: "C-THINKINGMACH",
             messageId: "1788.500",
-            threadId: "slack:C-PAPERCLIP:1788.400",
+            threadId: "slack:C-THINKINGMACH:1788.400",
           }),
         }),
       );
@@ -850,7 +850,7 @@ describe("Chat SDK published adapter integration", () => {
             userName: "paperclip-agent",
             credentials: {
               botToken: "xoxb-test",
-              botUserId: "U-PAPERCLIP-BOT",
+              botUserId: "U-THINKINGMACH-BOT",
               signingSecret,
             },
           },
@@ -890,13 +890,13 @@ describe("Chat SDK published adapter integration", () => {
                 : signingSecret,
               {
                 type: "event_callback",
-                team_id: "T-PAPERCLIP",
+                team_id: "T-THINKINGMACH",
                 event_id: "Ev-slack-files-only",
                 event: {
                   type: "message",
                   subtype: "message_changed",
                   hidden: testCase.hidden ?? true,
-                  channel: "C-PAPERCLIP",
+                  channel: "C-THINKINGMACH",
                   channel_type: "channel",
                   event_ts: "1788.700",
                   message: {
@@ -929,7 +929,7 @@ describe("Chat SDK published adapter integration", () => {
           if (testCase.changed) {
             const update = onMessageUpdated.mock.calls[0]![0];
             expect(update.provider).toBe("slack");
-            expect(update.thread.id).toBe("slack:C-PAPERCLIP:1788.400");
+            expect(update.thread.id).toBe("slack:C-THINKINGMACH:1788.400");
             expect(update.message.id).toBe(previousMessage.ts);
             expect(update.message.text).toBe(previousMessage.text);
             expect(update.message.metadata.editedAt).toEqual(
@@ -984,7 +984,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret,
         },
       },
@@ -1023,7 +1023,7 @@ describe("Chat SDK published adapter integration", () => {
         const response = await runtime.handleWebhook(
           signedSlackEventRequest(signingSecret, {
             type: "event_callback",
-            team_id: "T-PAPERCLIP",
+            team_id: "T-THINKINGMACH",
             event_id: `Ev-slack-${type}`,
             event: {
               type,
@@ -1031,7 +1031,7 @@ describe("Chat SDK published adapter integration", () => {
               reaction: "eyes",
               item: {
                 type: "message",
-                channel: "C-PAPERCLIP",
+                channel: "C-THINKINGMACH",
                 ts: "1788.500",
               },
               event_ts: eventTs,
@@ -1049,7 +1049,7 @@ describe("Chat SDK published adapter integration", () => {
             added: true,
             messageId: "1788.500",
             rawEmoji: "eyes",
-            threadId: "slack:C-PAPERCLIP:1788.400",
+            threadId: "slack:C-THINKINGMACH:1788.400",
           }),
         }),
         expect.objectContaining({
@@ -1059,7 +1059,7 @@ describe("Chat SDK published adapter integration", () => {
             added: false,
             messageId: "1788.500",
             rawEmoji: "eyes",
-            threadId: "slack:C-PAPERCLIP:1788.400",
+            threadId: "slack:C-THINKINGMACH:1788.400",
           }),
         }),
       ]);
@@ -1080,7 +1080,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "slack-stream-signing-secret",
         },
       },
@@ -1100,12 +1100,12 @@ describe("Chat SDK published adapter integration", () => {
       }));
       const postMessage = vi.fn(async () => ({
         ok: true,
-        channel: "D-PAPERCLIP",
+        channel: "D-THINKINGMACH",
         ts: "1788.901",
       }));
       const update = vi.fn(async () => ({
         ok: true,
-        channel: "D-PAPERCLIP",
+        channel: "D-THINKINGMACH",
         ts: "1788.901",
       }));
       const adapter = runtime.getProviderAdapter() as unknown as {
@@ -1137,10 +1137,10 @@ describe("Chat SDK published adapter integration", () => {
       };
 
       const sent = await adapter.stream(
-        "slack:D-PAPERCLIP:1788.400",
+        "slack:D-THINKINGMACH:1788.400",
         chunks(),
         {
-          recipientTeamId: "T-PAPERCLIP",
+          recipientTeamId: "T-THINKINGMACH",
           recipientUserId: "U-OPERATOR",
           updateIntervalMs: 0,
         },
@@ -1178,7 +1178,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1190,10 +1190,10 @@ describe("Chat SDK published adapter integration", () => {
           ok: true,
           files: [
             {
-              id: "FPAPERCLIP",
+              id: "FTHINKINGMACH",
               shares: {
                 public: {
-                  "C-PAPERCLIP": [{ thread_ts: "1788.300", ts: "1788.302" }],
+                  "C-THINKINGMACH": [{ thread_ts: "1788.300", ts: "1788.302" }],
                 },
               },
             },
@@ -1221,7 +1221,7 @@ describe("Chat SDK published adapter integration", () => {
       adapter._client.files.uploadV2 = uploadV2;
       adapter._client.files.info = fileInfo;
       adapter._client.chat.postMessage = postMessage;
-      const sent = await adapter.postMessage("slack:C-PAPERCLIP:1788.300", {
+      const sent = await adapter.postMessage("slack:C-THINKINGMACH:1788.300", {
         markdown: "",
         files: [
           {
@@ -1235,7 +1235,7 @@ describe("Chat SDK published adapter integration", () => {
       expect(uploadV2).toHaveBeenCalledOnce();
       expect(uploadV2).toHaveBeenCalledWith(
         expect.objectContaining({
-          channel_id: "C-PAPERCLIP",
+          channel_id: "C-THINKINGMACH",
           thread_ts: "1788.300",
           file_uploads: [expect.objectContaining({ filename: "result.txt" })],
         }),
@@ -1259,7 +1259,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1280,7 +1280,7 @@ describe("Chat SDK published adapter integration", () => {
           id: "FSPARSE",
           shares: {
             private: {
-              "D-PAPERCLIP": [{ thread_ts: "1788.400", ts: "1788.401" }],
+              "D-THINKINGMACH": [{ thread_ts: "1788.400", ts: "1788.401" }],
             },
           },
         },
@@ -1308,7 +1308,7 @@ describe("Chat SDK published adapter integration", () => {
       adapter._client.files.info = fileInfo;
       adapter._client.chat.postMessage = postMessage;
       vi.useFakeTimers();
-      const sentPromise = adapter.postMessage("slack:D-PAPERCLIP:1788.400", {
+      const sentPromise = adapter.postMessage("slack:D-THINKINGMACH:1788.400", {
         markdown: "",
         files: [
           {
@@ -1345,7 +1345,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1360,7 +1360,7 @@ describe("Chat SDK published adapter integration", () => {
         id: "FRECEIPT1",
         shares: {
           public: {
-            "C-PAPERCLIP": [{ thread_ts: "1788.410", ts: "1788.411" }],
+            "C-THINKINGMACH": [{ thread_ts: "1788.410", ts: "1788.411" }],
           },
         },
       },
@@ -1393,7 +1393,7 @@ describe("Chat SDK published adapter integration", () => {
       adapter._client.files.info = fileInfo;
       adapter._client.chat.postMessage = postMessage;
       const sentPromise = runtime.postSlackFilePublication(
-        "slack:C-PAPERCLIP:1788.410",
+        "slack:C-THINKINGMACH:1788.410",
         {
           files: [
             {
@@ -1409,7 +1409,7 @@ describe("Chat SDK published adapter integration", () => {
       await receiptAccepted;
       expect(onUploadAccepted).toHaveBeenCalledWith({
         version: 1,
-        channelId: "C-PAPERCLIP",
+        channelId: "C-THINKINGMACH",
         fileIds: ["FRECEIPT1"],
         threadTs: "1788.410",
       });
@@ -1417,7 +1417,7 @@ describe("Chat SDK published adapter integration", () => {
       releaseReceipt();
       await expect(sentPromise).resolves.toMatchObject({
         id: "1788.411",
-        threadId: "slack:C-PAPERCLIP:1788.410",
+        threadId: "slack:C-THINKINGMACH:1788.410",
         edit: expect.any(Function),
         addReaction: expect.any(Function),
         toJSON: expect.any(Function),
@@ -1443,7 +1443,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1471,7 +1471,7 @@ describe("Chat SDK published adapter integration", () => {
                 id: first ? "FFIRST" : second ? "FSECOND" : "FORDINARY",
                 shares: {
                   public: {
-                    "C-PAPERCLIP": [
+                    "C-THINKINGMACH": [
                       {
                         thread_ts: args.thread_ts,
                         ts: first
@@ -1516,12 +1516,12 @@ describe("Chat SDK published adapter integration", () => {
       adapter._client.files.info = fileInfo;
       adapter._client.chat.postMessage = postMessage;
       const first = runtime.postSlackFilePublication(
-        "slack:C-PAPERCLIP:1788.430",
+        "slack:C-THINKINGMACH:1788.430",
         message,
         firstCallback,
       );
       const second = runtime.postSlackFilePublication(
-        "slack:C-PAPERCLIP:1788.440",
+        "slack:C-THINKINGMACH:1788.440",
         message,
         secondCallback,
       );
@@ -1534,7 +1534,7 @@ describe("Chat SDK published adapter integration", () => {
       expect(firstCallback).not.toHaveBeenCalled();
       expect(secondCallback).toHaveBeenCalledExactlyOnceWith({
         version: 1,
-        channelId: "C-PAPERCLIP",
+        channelId: "C-THINKINGMACH",
         threadTs: "1788.440",
         fileIds: ["FSECOND"],
       });
@@ -1542,13 +1542,13 @@ describe("Chat SDK published adapter integration", () => {
       await expect(first).resolves.toMatchObject({ id: "1788.431" });
       expect(firstCallback).toHaveBeenCalledExactlyOnceWith({
         version: 1,
-        channelId: "C-PAPERCLIP",
+        channelId: "C-THINKINGMACH",
         threadTs: "1788.430",
         fileIds: ["FFIRST"],
       });
 
       await expect(
-        runtime.thread("slack:C-PAPERCLIP:1788.450").post(message),
+        runtime.thread("slack:C-THINKINGMACH:1788.450").post(message),
       ).resolves.toMatchObject({ id: "1788.451" });
       expect(firstCallback).toHaveBeenCalledOnce();
       expect(secondCallback).toHaveBeenCalledOnce();
@@ -1577,7 +1577,7 @@ describe("Chat SDK published adapter integration", () => {
           userName: "paperclip-agent",
           credentials: {
             botToken: "xoxb-test",
-            botUserId: "U-PAPERCLIP-BOT",
+            botUserId: "U-THINKINGMACH-BOT",
             signingSecret: "secret",
           },
         },
@@ -1614,7 +1614,7 @@ describe("Chat SDK published adapter integration", () => {
         adapter._client.chat.postMessage = postMessage;
         await expect(
           runtime.postSlackFilePublication(
-            "slack:C-PAPERCLIP:1788.460",
+            "slack:C-THINKINGMACH:1788.460",
             {
               files: [
                 {
@@ -1652,7 +1652,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1664,7 +1664,7 @@ describe("Chat SDK published adapter integration", () => {
         id: "FRECOVERY1",
         shares: {
           public: {
-            "C-PAPERCLIP": [{ thread_ts: "1788.420", ts: "1788.421" }],
+            "C-THINKINGMACH": [{ thread_ts: "1788.420", ts: "1788.421" }],
           },
         },
       },
@@ -1682,14 +1682,14 @@ describe("Chat SDK published adapter integration", () => {
       adapter._client.files.uploadV2 = uploadV2;
       adapter._client.files.info = fileInfo;
       await expect(
-        runtime.resolveSlackFileUploadReceipt("slack:C-PAPERCLIP:1788.420", [
+        runtime.resolveSlackFileUploadReceipt("slack:C-THINKINGMACH:1788.420", [
           "FRECOVERY1",
         ]),
       ).resolves.toBe("1788.421");
       expect(fileInfo).toHaveBeenCalledOnce();
       expect(uploadV2).not.toHaveBeenCalled();
       await expect(
-        runtime.resolveSlackFileUploadReceipt("slack:C-PAPERCLIP:1788.420", [
+        runtime.resolveSlackFileUploadReceipt("slack:C-THINKINGMACH:1788.420", [
           "not-a-slack-file-id",
         ]),
       ).rejects.toMatchObject({ name: "ValidationError" });
@@ -1711,7 +1711,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1755,7 +1755,7 @@ describe("Chat SDK published adapter integration", () => {
       adapter._client.chat.postMessage = postMessage;
       vi.useFakeTimers();
       const rejected = expect(
-        adapter.postMessage("slack:C-PAPERCLIP:1788.500", {
+        adapter.postMessage("slack:C-THINKINGMACH:1788.500", {
           markdown: "",
           files: [
             {
@@ -1792,7 +1792,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1826,7 +1826,7 @@ describe("Chat SDK published adapter integration", () => {
       adapter._client.chat.postMessage = postMessage;
       vi.useFakeTimers();
       const rejected = expect(
-        adapter.postMessage("slack:C-PAPERCLIP:1788.700", {
+        adapter.postMessage("slack:C-THINKINGMACH:1788.700", {
           markdown: "",
           files: [
             {
@@ -1863,7 +1863,7 @@ describe("Chat SDK published adapter integration", () => {
         userName: "paperclip-agent",
         credentials: {
           botToken: "xoxb-test",
-          botUserId: "U-PAPERCLIP-BOT",
+          botUserId: "U-THINKINGMACH-BOT",
           signingSecret: "secret",
         },
       },
@@ -1902,7 +1902,7 @@ describe("Chat SDK published adapter integration", () => {
         return input;
       };
       const rejected = expect(
-        adapter.postMessage("slack:C-PAPERCLIP:1788.800", {
+        adapter.postMessage("slack:C-THINKINGMACH:1788.800", {
           markdown: "",
           files: [
             {
@@ -1942,7 +1942,7 @@ describe("Chat SDK published adapter integration", () => {
           id: "FOTHER",
           shares: {
             public: {
-              "C-PAPERCLIP": [{ thread_ts: "1788.600", ts: "1788.601" }],
+              "C-THINKINGMACH": [{ thread_ts: "1788.600", ts: "1788.601" }],
             },
           },
         },
@@ -1962,7 +1962,7 @@ describe("Chat SDK published adapter integration", () => {
           userName: "paperclip-agent",
           credentials: {
             botToken: "xoxb-test",
-            botUserId: "U-PAPERCLIP-BOT",
+            botUserId: "U-THINKINGMACH-BOT",
             signingSecret: "secret",
           },
         },
@@ -1999,7 +1999,7 @@ describe("Chat SDK published adapter integration", () => {
         adapter._client.files.info = fileInfo;
         adapter._client.chat.postMessage = postMessage;
         await expect(
-          adapter.postMessage("slack:C-PAPERCLIP:1788.600", {
+          adapter.postMessage("slack:C-THINKINGMACH:1788.600", {
             markdown: "",
             files: [
               {
@@ -2086,7 +2086,7 @@ describe("Chat SDK published adapter integration", () => {
     { label: "an absent Content-Length", contentLength: undefined },
     { label: "a misleading small Content-Length", contentLength: "4" },
   ])(
-    "stops Telegram attachment downloads at Paperclip's byte cap with $label",
+    "stops Telegram attachment downloads at ThinkingMach's byte cap with $label",
     async ({ contentLength }) => {
       const providerFetch = vi.fn(async (input: string | URL | Request) => {
         const url = String(input);
@@ -2437,7 +2437,7 @@ describe("Chat SDK published adapter integration", () => {
         );
         const edited = await adapter.editMessage(threadId, "owned-progress", {
           markdown:
-            "This chat conversation is closed. The Paperclip task remains available.",
+            "This chat conversation is closed. The ThinkingMach task remains available.",
         });
         expect(edited).toMatchObject({ id: "owned-progress", threadId });
         expect(put).toHaveBeenCalledTimes(1);
@@ -2448,7 +2448,7 @@ describe("Chat SDK published adapter integration", () => {
         expect(body).toMatchObject({
           type: "message",
           textFormat: "markdown",
-          text: "This chat conversation is closed. The Paperclip task remains available.",
+          text: "This chat conversation is closed. The ThinkingMach task remains available.",
         });
         expect(body.attachments ?? []).toEqual([]);
         expect(body.suggestedActions).toBeUndefined();
@@ -2492,7 +2492,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-4000-8000-000000000511",
           appPassword: "secret",
@@ -2667,7 +2667,7 @@ describe("Chat SDK published adapter integration", () => {
         persistence,
         providerConfig: {
           provider: "microsoft-teams",
-          userName: "Paperclip Agent",
+          userName: "ThinkingMach Agent",
           credentials: {
             appId: "00000000-0000-4000-8000-000000000000",
             appPassword: "secret",
@@ -2723,7 +2723,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-4000-8000-000000000000",
           appPassword: "secret",
@@ -2818,7 +2818,7 @@ describe("Chat SDK published adapter integration", () => {
       provider: "microsoft-teams",
       providerConfig: {
         provider: "microsoft-teams" as const,
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "teams-secret",
@@ -2843,7 +2843,7 @@ describe("Chat SDK published adapter integration", () => {
             result: {
               id: 123,
               is_bot: true,
-              first_name: "Paperclip Agent",
+              first_name: "ThinkingMach Agent",
               username: "paperclip_agent_bot",
             },
           });
@@ -2896,7 +2896,7 @@ describe("Chat SDK published adapter integration", () => {
       repository: {
         id: 202,
         name: "chat-e2e",
-        owner: { id: 303, login: "paperclipai", type: "Organization" },
+        owner: { id: 303, login: "thinkingmach", type: "Organization" },
       },
       sender: { id: 101, login: "operator", type: "User" },
     };
@@ -2962,7 +2962,7 @@ describe("Chat SDK published adapter integration", () => {
         payload.comment,
         payload.repository,
         42,
-        "github:paperclipai/chat-e2e:42:rc:4242",
+        "github:thinkingmach/chat-e2e:42:rc:4242",
       );
       expect(review.text).toContain(safeLink);
       expect(review.text).toContain(safeImage);
@@ -2983,7 +2983,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "teams-secret",
@@ -3064,7 +3064,7 @@ describe("Chat SDK published adapter integration", () => {
       {
         providerConfig: {
           provider: "microsoft-teams",
-          userName: "Paperclip Agent",
+          userName: "ThinkingMach Agent",
           credentials: {
             appId: "00000000-0000-0000-0000-000000000000",
             appPassword: "teams-password-never-persist",
@@ -3172,7 +3172,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -3219,7 +3219,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -3302,7 +3302,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence: state,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -3353,7 +3353,7 @@ describe("Chat SDK published adapter integration", () => {
     await runtime.shutdown();
   });
 
-  it("persists Teams metadata only after Paperclip admits the authenticated activity", async () => {
+  it("persists Teams metadata only after ThinkingMach admits the authenticated activity", async () => {
     const state = memoryPersistence();
     const tenantId = "00000000-0000-4000-8000-000000000622";
     const appId = "00000000-0000-4000-8000-000000000611";
@@ -3365,7 +3365,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence: state,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId,
           appPassword: "secret",
@@ -3471,7 +3471,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -3573,7 +3573,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence: state,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -3695,7 +3695,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -3735,7 +3735,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-4000-8000-000000000000",
           appPassword: "secret",
@@ -3786,7 +3786,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           appId: "00000000-0000-0000-0000-000000000000",
           appPassword: "secret",
@@ -3843,7 +3843,7 @@ describe("Chat SDK published adapter integration", () => {
       persistence,
       providerConfig: {
         provider: "microsoft-teams",
-        userName: "Paperclip Agent",
+        userName: "ThinkingMach Agent",
         credentials: {
           apiUrl: configuredApiUrl,
           appId: "00000000-0000-0000-0000-000000000000",

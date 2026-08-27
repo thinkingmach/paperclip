@@ -19,28 +19,28 @@ import {
 } from "./notion-generic-live-lib.mjs";
 
 const COMPLETE_ENV = {
-  PAPERCLIP_E2E_BASE_URL: "https://paperclip.example.test",
-  PAPERCLIP_E2E_EMAIL: "operator@example.test",
-  PAPERCLIP_DEV_LOGIN_PASSWORD: "not-a-real-password",
-  PAPERCLIP_API_URL: "https://paperclip.example.test/api",
-  PAPERCLIP_API_KEY: "not-a-real-agent-key",
-  PAPERCLIP_RUN_ID: "run-123",
-  PAPERCLIP_TASK_ID: "issue-123",
+  THINKINGMACH_E2E_BASE_URL: "https://paperclip.example.test",
+  THINKINGMACH_E2E_EMAIL: "operator@example.test",
+  THINKINGMACH_DEV_LOGIN_PASSWORD: "not-a-real-password",
+  THINKINGMACH_API_URL: "https://paperclip.example.test/api",
+  THINKINGMACH_API_KEY: "not-a-real-agent-key",
+  THINKINGMACH_RUN_ID: "run-123",
+  THINKINGMACH_TASK_ID: "issue-123",
 };
 
 test("preflight reports binding names without exposing supplied values", () => {
   assert.throws(
-    () => preflightNotionGenericLive({ PAPERCLIP_DEV_LOGIN_PASSWORD: "present" }),
+    () => preflightNotionGenericLive({ THINKINGMACH_DEV_LOGIN_PASSWORD: "present" }),
     (error) => {
       assert.ok(error instanceof NotionGenericLivePreflightError);
       assert.equal(error.code, "missing_environment");
       assert.deepEqual(error.details.missing, [
-        "PAPERCLIP_E2E_BASE_URL",
-        "PAPERCLIP_E2E_EMAIL",
-        "PAPERCLIP_API_URL",
-        "PAPERCLIP_API_KEY",
-        "PAPERCLIP_RUN_ID",
-        "PAPERCLIP_TASK_ID",
+        "THINKINGMACH_E2E_BASE_URL",
+        "THINKINGMACH_E2E_EMAIL",
+        "THINKINGMACH_API_URL",
+        "THINKINGMACH_API_KEY",
+        "THINKINGMACH_RUN_ID",
+        "THINKINGMACH_TASK_ID",
       ]);
       assert.doesNotMatch(error.message, /present/);
       return true;
@@ -56,13 +56,13 @@ test("preflight requires explicit credential-free HTTPS target and control-plane
     "https://paperclip.example.test/?code=secret",
   ]) {
     assert.throws(
-      () => preflightNotionGenericLive({ ...COMPLETE_ENV, PAPERCLIP_E2E_BASE_URL: baseUrl }),
+      () => preflightNotionGenericLive({ ...COMPLETE_ENV, THINKINGMACH_E2E_BASE_URL: baseUrl }),
       (error) => error instanceof NotionGenericLivePreflightError && error.code === "unsafe_base_url",
     );
   }
   const split = preflightNotionGenericLive({
     ...COMPLETE_ENV,
-    PAPERCLIP_API_URL: "https://control-plane.example.test/api",
+    THINKINGMACH_API_URL: "https://control-plane.example.test/api",
   });
   assert.equal(split.baseUrl, "https://paperclip.example.test");
   assert.equal(split.apiBaseUrl, "https://control-plane.example.test/api");
@@ -254,7 +254,7 @@ test("workspace proof extraction and fresh-run comments retain only sanitized id
         text: JSON.stringify({
           id: "bot-123",
           type: "bot",
-          bot: { workspace_id: "workspace-123", workspace_name: "Paperclip" },
+          bot: { workspace_id: "workspace-123", workspace_name: "ThinkingMach" },
           token: "discard-me",
         }),
       }],
@@ -262,15 +262,15 @@ test("workspace proof extraction and fresh-run comments retain only sanitized id
   });
   assert.deepEqual(identity, {
     workspaceId: "workspace-123",
-    workspaceName: "Paperclip",
+    workspaceName: "ThinkingMach",
     botId: "bot-123",
   });
   assert.deepEqual(
     parseSanitizedAgentProof(
-      '{"workspaceId":"workspace-123","workspaceName":"Paperclip","invocationId":"inv-123"}',
+      '{"workspaceId":"workspace-123","workspaceName":"ThinkingMach","invocationId":"inv-123"}',
       identity,
     ),
-    { workspaceId: "workspace-123", workspaceName: "Paperclip", invocationId: "inv-123" },
+    { workspaceId: "workspace-123", workspaceName: "ThinkingMach", invocationId: "inv-123" },
   );
   assert.deepEqual(
     parseRuntimeAbsenceProof('{"connectionId":"conn-123","toolPresent":false}', "conn-123"),

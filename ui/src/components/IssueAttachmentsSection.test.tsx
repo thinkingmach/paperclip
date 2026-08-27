@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { IssueAttachment } from "@paperclipai/shared";
+import type { IssueAttachment } from "@thinkingmach/shared";
 import type { ComponentProps, ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";

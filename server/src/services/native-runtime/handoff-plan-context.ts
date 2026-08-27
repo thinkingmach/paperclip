@@ -1,5 +1,5 @@
 import { and, desc, eq, lte } from "drizzle-orm";
-import { documentRevisions, heartbeatRuns, issueDocuments, issues, issueThreadInteractions, type Db } from "@paperclipai/db";
+import { documentRevisions, heartbeatRuns, issueDocuments, issues, issueThreadInteractions, type Db } from "@thinkingmach/db";
 
 /** Approval evidence belongs to the source conversation and exact revision.
  * It informs scope; it does not approve the new task's document or waive gates. */

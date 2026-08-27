@@ -68,7 +68,7 @@ test("recovers the old empty lock left by interrupted startup", async (t) => {
   const result = await f.launch().done;
   assert.equal(result.code, 0, result.output);
   assert.match(result.output, /Recovered abandoned/);
-  assert.match(result.output, /Building @paperclipai\/shared/);
+  assert.match(result.output, /Building @thinkingmach\/shared/);
   assert.equal(fs.existsSync(f.lock), false);
 });
 
@@ -232,7 +232,7 @@ test("shared source changes invalidate both shared and dependent SDK output", as
   fs.utimesSync(source, oldTime, oldTime);
   const retry = await f.launch().done;
   assert.equal(retry.code, 0, retry.output);
-  assert.match(retry.output, /Building @paperclipai\/shared/);
-  assert.match(retry.output, /Building @paperclipai\/plugin-sdk/);
+  assert.match(retry.output, /Building @thinkingmach\/shared/);
+  assert.match(retry.output, /Building @thinkingmach\/plugin-sdk/);
   assert.equal(fs.readFileSync(path.join(f.root, "builds"), "utf8").trim().split("\n").length, 4);
 });

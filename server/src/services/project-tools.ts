@@ -1,4 +1,4 @@
-import { createProjectSchema, createIssueSchema } from "@paperclipai/shared";
+import { createProjectSchema, createIssueSchema } from "@thinkingmach/shared";
 import { z } from "zod";
 import { CAPABILITY_SEMANTIC_TOOL_CATALOG } from "../vendor/paperclip-runner/index.js";
 import { badRequest } from "../errors.js";

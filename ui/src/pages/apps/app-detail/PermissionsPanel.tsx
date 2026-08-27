@@ -1,7 +1,7 @@
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Ban, Check, FlaskConical, Loader2, RefreshCw, Search, ShieldQuestion } from "lucide-react";
-import type { Agent, ToolCatalogEntry, ToolConnectionCapabilities } from "@paperclipai/shared";
+import type { Agent, ToolCatalogEntry, ToolConnectionCapabilities } from "@thinkingmach/shared";
 import { useSearchParams } from "@/lib/router";
 import { AgentMultiSelect } from "@/components/AgentMultiSelect";
 import { InlineBanner } from "@/components/InlineBanner";

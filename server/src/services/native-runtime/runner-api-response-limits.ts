@@ -2,7 +2,7 @@ export const RUNNER_API_RESPONSE_MAX_BYTES = 1024 * 1024 * 1024;
 export const RUNNER_API_RESPONSE_RUN_MAX_BYTES = 4 * RUNNER_API_RESPONSE_MAX_BYTES;
 export const RUNNER_API_RESPONSE_DEADLINE_MS = 10 * 60_000;
 export function runnerApiCompanyCaptureMaxBytes(): number {
-  const configured = Number(process.env.PAPERCLIP_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES);
+  const configured = Number(process.env.THINKINGMACH_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES);
   return Number.isSafeInteger(configured) && configured >= RUNNER_API_RESPONSE_MAX_BYTES
     ? configured : 20 * RUNNER_API_RESPONSE_MAX_BYTES;
 }

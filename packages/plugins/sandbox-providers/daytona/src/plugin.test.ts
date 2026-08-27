@@ -35,8 +35,8 @@ import plugin, {
   __getDaytonaWritableDirsForTest,
   __setDaytonaPluginContextForTest,
 } from "./plugin.js";
-import type { PluginContext } from "@paperclipai/plugin-sdk";
-import { environmentCreationCleanupErrorData, readEnvironmentCreationCleanupError } from "@paperclipai/plugin-sdk";
+import type { PluginContext } from "@thinkingmach/plugin-sdk";
+import { environmentCreationCleanupErrorData, readEnvironmentCreationCleanupError } from "@thinkingmach/plugin-sdk";
 import manifest from "./manifest.js";
 import { parseTarVerboseListingLine, splitLinkEntryOnce } from "./file-sync.js";
 
@@ -1144,7 +1144,7 @@ describe("Daytona sandbox provider plugin", () => {
       companyId: "company-1",
       environmentId: "env-1",
       providerLeaseId: "sandbox-setup",
-      templateLabel: " Paperclip Env 1 ",
+      templateLabel: " ThinkingMach Env 1 ",
       sourceTemplateRef: "source-secret-snapshot",
       previousTemplateRef: "previous-secret-snapshot",
       timeoutMs: 120000,

@@ -1,15 +1,15 @@
-# `@paperclipai/plugin-cloudflare-sandbox`
+# `@thinkingmach/plugin-cloudflare-sandbox`
 
-Published Cloudflare sandbox provider plugin for Paperclip.
+Published Cloudflare sandbox provider plugin for ThinkingMach.
 
-This package lives in the Paperclip monorepo, but it is intentionally excluded from the root `pnpm` workspace and shaped to publish and install like a standalone npm package. Operators can install it from the Plugins page by package name, and the host will fetch its dependencies at install time without adding lockfile churn to the Paperclip repo.
+This package lives in the ThinkingMach monorepo, but it is intentionally excluded from the root `pnpm` workspace and shaped to publish and install like a standalone npm package. Operators can install it from the Plugins page by package name, and the host will fetch its dependencies at install time without adding lockfile churn to the ThinkingMach repo.
 
 ## Install
 
-From a Paperclip instance, install:
+From a ThinkingMach instance, install:
 
 ```text
-@paperclipai/plugin-cloudflare-sandbox
+@thinkingmach/plugin-cloudflare-sandbox
 ```
 
 Configure Cloudflare from `Instance Settings -> Environments`, not from the plugin's plugin page.
@@ -29,7 +29,7 @@ Important validation rules:
 - non-local `bridgeBaseUrl` values must be `https://`
 - `sessionId` is required when `sessionStrategy` is `named`
 
-Pasted auth tokens are stored by Paperclip as company secrets because the manifest marks `bridgeAuthToken` as a `secret-ref` field.
+Pasted auth tokens are stored by ThinkingMach as company secrets because the manifest marks `bridgeAuthToken` as a `secret-ref` field.
 
 ## Bridge template
 
@@ -45,4 +45,4 @@ pnpm test
 pnpm typecheck
 ```
 
-These commands assume the repo root has already been installed once so the local `@paperclipai/plugin-sdk` workspace package is available to the compiler during development.
+These commands assume the repo root has already been installed once so the local `@thinkingmach/plugin-sdk` workspace package is available to the compiler during development.

@@ -57,7 +57,7 @@ change an existing first task.
 ## Skill assignment and invocation
 
 The company skill service imports `skills/first-task/SKILL.md` with canonical
-key `paperclipai/paperclip/first-task` and runtime name `first-task`. The agent
+key `thinkingmach/paperclip/first-task` and runtime name `first-task`. The agent
 create and hire routes add it alongside the five core skills for board-created
 `onboardingFirstAgent` agents on skills-capable adapters, including Codex and
 Claude. Ordinary CEOs and other agents do not receive it automatically.

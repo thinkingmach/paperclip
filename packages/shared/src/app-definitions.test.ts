@@ -398,7 +398,7 @@ describe("AppDefinition catalog", () => {
       "installation_repositories",
     );
     expect(channel("github")?.guidanceMd).toContain(
-      "Generate the webhook secret in Paperclip",
+      "Generate the webhook secret in ThinkingMach",
     );
     expect(channel("github")?.guidanceMd).toContain("SSL-verified");
     expect(channel("microsoft-teams")?.guidanceMd).toContain(
@@ -422,7 +422,7 @@ describe("AppDefinition catalog", () => {
       "One team install covers its standard channels",
     );
     expect(channel("telegram")?.guidanceMd).toContain(
-      "public Paperclip webhook endpoint",
+      "public ThinkingMach webhook endpoint",
     );
     expect(channel("slack")?.guidanceMd).toContain("reactions");
     expect(channel("slack")?.guidanceMd).toContain("direct messages");
@@ -689,7 +689,7 @@ describe("AppDefinition catalog", () => {
         "https://developers.google.com/workspace/preview",
       );
       expect(prerequisite?.description, slug).toContain(
-        "does not enable unrelated Paperclip customers",
+        "does not enable unrelated ThinkingMach customers",
       );
       expect(prerequisite?.steps?.join(" "), slug).toContain(
         "final project-registration email",

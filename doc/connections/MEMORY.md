@@ -28,10 +28,10 @@ Zep and Supermemory use user grants, the existing PKCE OAuth broker, and automat
 client registration/discovery. Zep advertises its authorization server at
 `https://api.getzep.com/v1/oauth`, with `graph:read graph:write` scopes.
 Supermemory advertises `https://api.supermemory.ai/api/auth`, with
-`openid profile email offline_access`. Neither requires Paperclip ID or a new
-Paperclip-hosted credential service.
+`openid profile email offline_access`. Neither requires ThinkingMach ID or a new
+ThinkingMach-hosted credential service.
 
-Cognee does not advertise a hosted MCP endpoint. Paperclip bundles a narrow
+Cognee does not advertise a hosted MCP endpoint. ThinkingMach bundles a narrow
 Cloud API bridge for `remember`, `recall`, and `forget`, matching the reviewed
 remote-mode contract from `cognee-mcp` 0.5.5. The existing approved template ID
 and credential paths remain compatible, but no process or package manager runs:
@@ -58,7 +58,7 @@ config, manifests, logs, fixtures, or Storybook. Personal credentials stay on
 personal grants; organization credentials stay on the organization grant.
 The local stdio gateway projects only the approved template's environment keys.
 
-Provider resource selectors are not new Paperclip-enforced tenant filters. The
+Provider resource selectors are not new ThinkingMach-enforced tenant filters. The
 provider's key, OAuth consent, and ACLs determine its accessible data. Configure
 agent access and action policies accordingly; do not claim that a user ID,
 workspace name, dataset, or space argument by itself enforces isolation.
@@ -101,7 +101,7 @@ five connected providers (82 tools total).
 Live observations from the isolated `codex/memory-connectors` checkout:
 
 - Mem0: API key created; live setup discovered 11 tools. Search succeeded through
-  Paperclip. An `add_memory` call with synthetic notebook text waited for **Ask
+  ThinkingMach. An `add_memory` call with synthetic notebook text waited for **Ask
   first**, then executed after **Allow once**, with both decisions in the audit log.
 - Supermemory: Google sign-in and developer API key creation completed. Hosted
   MCP OAuth connected separately with read-only consent restricted to the test
@@ -110,13 +110,13 @@ Live observations from the isolated `codex/memory-connectors` checkout:
 - Cognee: API key created and Cloud access verified. The official pinned MCP
   client stored synthetic notebook text in a dedicated test dataset and recalled
   it after indexing completed. Personal setup exposes the three reviewed tools.
-  Paperclip gateway recall returned the expected blue notebook fact (10.6s).
+  ThinkingMach gateway recall returned the expected blue notebook fact (10.6s).
   A nonexistent test dataset returned a tool error, correctly recorded as failure.
 - Zep: Google signup and the isolated `Memory connector test` project are ready.
   Its project API key is saved in `~/.secrets` (mode 0600), separately from the
   hosted MCP OAuth grant. Enabled Google Workspace MCP with writes allowed and
   automatic user creation disabled; created only the matching test user using
-  the documented API. Paperclip dynamic registration and the explicitly approved
+  the documented API. ThinkingMach dynamic registration and the explicitly approved
   `graph:read` / `graph:write` grant completed. Live discovery returned 12 tools.
   The Codex browser's automated form submission stalled; a fresh flow and the
   user's final consent click completed authorization.
@@ -185,7 +185,7 @@ All tools default to **Allowed**, including writes and destructive actions.
 The temporary Mem0 **Ask first** test override was removed after the approval
 test. Effective agent access was checked again: Mem0 11/11, Cognee 3/3,
 Supermemory 16/16, Zep 12/12, and Honcho 40/40 allowed, with zero ask-first or
-off actions. Provider OAuth consent remains a separate boundary from Paperclip
+off actions. Provider OAuth consent remains a separate boundary from ThinkingMach
 tool permissions.
 
 ### Daytona sandbox verification (September 24, 2026)
@@ -199,11 +199,11 @@ account setup; their subsequent local proof appears above. This is a manual
 Product E2E attempt, not a full eval campaign.
 
 The immutable sandbox image is
-`ghcr.io/paperclipai/paperclip-daytona-runner@sha256:b782947dc9738038570308686858dfb37fd731aba2f82944b6bb665a419e2f24`.
+`ghcr.io/thinkingmach/paperclip-daytona-runner@sha256:b782947dc9738038570308686858dfb37fd731aba2f82944b6bb665a419e2f24`.
 The remote runner binary was extracted from that image (SHA-256
 `5067194e4a4eff0946e312b162e78a46184dae49c29f5699be81fec6cfd0b9d7`).
 The first attempt failed before provider startup because a macOS host needs
-`PAPERCLIP_RUNNER_REMOTE_BINARY_PATH` pointing to a Linux binary. After configuring
+`THINKINGMACH_RUNNER_REMOTE_BINARY_PATH` pointing to a Linux binary. After configuring
 it, PRP authenticated through Daytona provider ingress and the agent executed in
 `/home/daytona/paperclip-workspace` as the `daytona` user.
 
@@ -315,7 +315,7 @@ These are simulated provider journeys and do not replace live account tests.
 The original read-only grant was replaced through the browser with a new
 read/write OAuth grant restricted to `paperclip-memory-smoke-20260924` and the
 same test agent. The old local connection was removed. `who_am_i` independently
-returned scoped `permission: write`; all 16 Paperclip tools remain Allowed.
+returned scoped `permission: write`; all 16 ThinkingMach tools remain Allowed.
 
 Local run `fb67a991-2960-47e5-8f79-94282c65d2ec` saved the exact synthetic fact
 “The Supermemory test navigator keeps a turquoise compass in a maple cabinet.”

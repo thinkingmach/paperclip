@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { WorkspaceOverviewItem, WorkspaceOverviewResponse } from "@paperclipai/shared";
+import type { WorkspaceOverviewItem, WorkspaceOverviewResponse } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Workspaces } from "./Workspaces";
 
@@ -69,7 +69,7 @@ function overviewItem(overrides: Partial<WorkspaceOverviewItem> = {}): Workspace
     workspaceName: overrides.workspaceName ?? "Workspace Alpha",
     projectId: overrides.projectId ?? "project-1",
     projectUrlKey: overrides.projectUrlKey ?? "paperclip-app",
-    projectName: overrides.projectName ?? "Paperclip App",
+    projectName: overrides.projectName ?? "ThinkingMach App",
     mode: overrides.mode ?? "isolated_workspace",
     strategyType: overrides.strategyType ?? "git_worktree",
     cwd: overrides.cwd ?? "/tmp/workspace-alpha",
@@ -192,7 +192,7 @@ describe("Workspaces", () => {
     const heading = Array.from(container.querySelectorAll("h2")).find((node) => node.textContent === "Workspaces");
     const summaryCard = container.querySelector('[data-testid="summary-slot-card"]');
     expect(heading && summaryCard ? Boolean(heading.compareDocumentPosition(summaryCard) & Node.DOCUMENT_POSITION_FOLLOWING) : false).toBe(true);
-    expect(container.textContent).toContain("Paperclip App");
+    expect(container.textContent).toContain("ThinkingMach App");
     expect(container.textContent).toContain("Workspace Alpha");
     expect(container.textContent).toContain("PAP-11916");
     expect(container.textContent).toContain("+1 more");

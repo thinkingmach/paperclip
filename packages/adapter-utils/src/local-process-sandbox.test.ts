@@ -212,7 +212,7 @@ describe("local process sandbox", () => {
       await expect(request("http://example.com/")).resolves.toEqual({
         status: 403,
         contentType: "application/json; charset=utf-8",
-        body: '{"error":{"code":"network_target_denied","message":"Network target denied by Paperclip sandbox policy."}}\n',
+        body: '{"error":{"code":"network_target_denied","message":"Network target denied by ThinkingMach sandbox policy."}}\n',
       });
       const connectResponse = await new Promise<string>((resolve, reject) => {
         const socket = net.createConnection(socketPath, () => {
@@ -227,7 +227,7 @@ describe("local process sandbox", () => {
       expect(connectResponse).toContain("HTTP/1.1 403 Forbidden\r\n");
       expect(connectResponse).toContain("Content-Type: application/json; charset=utf-8\r\n");
       expect(connectResponse).toContain(
-        '{"error":{"code":"network_target_denied","message":"Network target denied by Paperclip sandbox policy."}}\n',
+        '{"error":{"code":"network_target_denied","message":"Network target denied by ThinkingMach sandbox policy."}}\n',
       );
     } finally {
       await target.cleanup?.();
@@ -235,7 +235,7 @@ describe("local process sandbox", () => {
     }
   });
 
-  it.runIf(process.platform === "linux")("always permits trusted Paperclip control-plane URLs", async () => {
+  it.runIf(process.platform === "linux")("always permits trusted ThinkingMach control-plane URLs", async () => {
     const workspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-network-trusted-"));
     cleanup.push(workspace);
     const server = http.createServer((_request, response) => response.end("control-plane-response"));
@@ -296,7 +296,7 @@ describe("local process sandbox", () => {
     ).rejects.toThrow("requires Bubblewrap");
   });
 
-  it.runIf(Boolean(process.env.PAPERCLIP_TEST_BWRAP))(
+  it.runIf(Boolean(process.env.THINKINGMACH_TEST_BWRAP))(
     "prevents reads outside the workspace while allowing workspace writes",
     async () => {
       const root = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-fs-sandbox-integration-"));
@@ -326,7 +326,7 @@ describe("local process sandbox", () => {
           workspaceDir: workspace,
           filesystemScope: "workspace",
           extraPaths: [{ path: allowed, access: "ro" }],
-          command: process.env.PAPERCLIP_TEST_BWRAP,
+          command: process.env.THINKINGMACH_TEST_BWRAP,
         },
       });
 
@@ -335,7 +335,7 @@ describe("local process sandbox", () => {
     },
   );
 
-  it.runIf(Boolean(process.env.PAPERCLIP_TEST_BWRAP && process.env.PAPERCLIP_TEST_SANDBOX_BUILD))(
+  it.runIf(Boolean(process.env.THINKINGMACH_TEST_BWRAP && process.env.THINKINGMACH_TEST_SANDBOX_BUILD))(
     "runs the adapter-utils TypeScript build inside the confined workspace",
     async () => {
       const workspace = process.cwd();
@@ -352,7 +352,7 @@ describe("local process sandbox", () => {
           localProcessSandbox: {
             workspaceDir: workspace,
             filesystemScope: "workspace",
-            command: process.env.PAPERCLIP_TEST_BWRAP,
+            command: process.env.THINKINGMACH_TEST_BWRAP,
           },
         },
       );
@@ -361,7 +361,7 @@ describe("local process sandbox", () => {
     },
   );
 
-  it.runIf(Boolean(process.env.PAPERCLIP_TEST_BWRAP))(
+  it.runIf(Boolean(process.env.THINKINGMACH_TEST_BWRAP))(
     "denies direct network egress",
     async () => {
       const workspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-network-deny-"));
@@ -381,7 +381,7 @@ describe("local process sandbox", () => {
           localProcessSandbox: {
             workspaceDir: workspace,
             networkScope: "deny",
-            command: process.env.PAPERCLIP_TEST_BWRAP,
+            command: process.env.THINKINGMACH_TEST_BWRAP,
           },
         });
         expect(result.exitCode, result.stderr).toBe(0);
@@ -391,7 +391,7 @@ describe("local process sandbox", () => {
     },
   );
 
-  it.runIf(Boolean(process.env.PAPERCLIP_TEST_BWRAP))(
+  it.runIf(Boolean(process.env.THINKINGMACH_TEST_BWRAP))(
     "allows only configured network targets through the proxy bridge",
     async () => {
       const workspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-network-allowlist-"));
@@ -439,7 +439,7 @@ function request(url) {
                 filesystemScope: "workspace",
                 networkScope: "allowlist",
                 networkAllowlist: [`127.0.0.1:${address.port}`],
-                command: process.env.PAPERCLIP_TEST_BWRAP,
+                command: process.env.THINKINGMACH_TEST_BWRAP,
               },
             },
           ),

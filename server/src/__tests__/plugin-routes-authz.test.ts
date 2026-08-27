@@ -159,16 +159,16 @@ describe.sequential("plugin install and upgrade authz", () => {
     const byPackageName = new Map(
       res.body.map((plugin: { packageName: string; experimental: boolean; hasBuiltEntrypoints: boolean }) => [plugin.packageName, plugin]),
     );
-    expect(packageNames).toContain("@paperclipai/plugin-workspace-diff");
-    expect(packageNames).toContain("@paperclipai/plugin-llm-wiki");
-    expect(packageNames).toContain("@paperclipai/plugin-modal");
-    expect(packageNames).toContain("@paperclipai/plugin-authoring-smoke-example");
-    expect(packageNames).not.toContain("@paperclipai/plugin-sdk");
-    expect(byPackageName.get("@paperclipai/plugin-workspace-diff")?.experimental).toBe(true);
-    expect(byPackageName.get("@paperclipai/plugin-llm-wiki")?.experimental).toBe(true);
-    expect(byPackageName.get("@paperclipai/plugin-modal")?.experimental).toBe(true);
-    expect(byPackageName.get("@paperclipai/plugin-authoring-smoke-example")?.experimental).toBe(false);
-    expect(typeof byPackageName.get("@paperclipai/plugin-workspace-diff")?.hasBuiltEntrypoints).toBe("boolean");
+    expect(packageNames).toContain("@thinkingmach/plugin-workspace-diff");
+    expect(packageNames).toContain("@thinkingmach/plugin-llm-wiki");
+    expect(packageNames).toContain("@thinkingmach/plugin-modal");
+    expect(packageNames).toContain("@thinkingmach/plugin-authoring-smoke-example");
+    expect(packageNames).not.toContain("@thinkingmach/plugin-sdk");
+    expect(byPackageName.get("@thinkingmach/plugin-workspace-diff")?.experimental).toBe(true);
+    expect(byPackageName.get("@thinkingmach/plugin-llm-wiki")?.experimental).toBe(true);
+    expect(byPackageName.get("@thinkingmach/plugin-modal")?.experimental).toBe(true);
+    expect(byPackageName.get("@thinkingmach/plugin-authoring-smoke-example")?.experimental).toBe(false);
+    expect(typeof byPackageName.get("@thinkingmach/plugin-workspace-diff")?.hasBuiltEntrypoints).toBe("boolean");
   }, 20_000);
 
   it("rejects plugin installation for non-admin board users", async () => {
@@ -1107,10 +1107,10 @@ describe.sequential("plugin tool and bridge authz", () => {
 describe.sequential("operator-hidden plugin management floor", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.PAPERCLIP_HIDDEN_SETTINGS = "instance.plugins";
+    process.env.THINKINGMACH_HIDDEN_SETTINGS = "instance.plugins";
   });
   afterEach(() => {
-    delete process.env.PAPERCLIP_HIDDEN_SETTINGS;
+    delete process.env.THINKINGMACH_HIDDEN_SETTINGS;
   });
 
   const instanceAdmin = () => boardActor({ isInstanceAdmin: true, userId: "instance-admin" });
@@ -1120,7 +1120,7 @@ describe.sequential("operator-hidden plugin management floor", () => {
     readyPlugin();
 
     const attempts: Array<[string, request.Test]> = [
-      ["install", request(app).post("/api/plugins/install").send({ packageName: "@paperclipai/plugin-modal" })],
+      ["install", request(app).post("/api/plugins/install").send({ packageName: "@thinkingmach/plugin-modal" })],
       ["uninstall", request(app).delete(`/api/plugins/${pluginId}`)],
       ["enable", request(app).post(`/api/plugins/${pluginId}/enable`)],
       ["disable", request(app).post(`/api/plugins/${pluginId}/disable`).send({})],

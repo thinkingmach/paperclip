@@ -1,14 +1,14 @@
 ---
 name: paperclip-dev-workspace-run-verify-fix
 description: >
-  Run, verify, reseed, and repair Paperclip isolated dev workspace services. Use
+  Run, verify, reseed, and repair ThinkingMach isolated dev workspace services. Use
   when asked to start or fix a managed project/worktree service and prove health,
   login readiness, cloned data, runtime visibility, and correct port ownership.
 ---
 
-# Paperclip Dev Workspace Run / Verify / Fix
+# ThinkingMach Dev Workspace Run / Verify / Fix
 
-This skill is for Paperclip-specific development workspaces whose service is
+This skill is for ThinkingMach-specific development workspaces whose service is
 started through project execution workspace runtime services, typically a
 worktree service such as `paperclip-dev`.
 
@@ -35,7 +35,7 @@ passed.
 
 ## Hard rules
 
-- The master checkout `/srv/paperclip/home/paperclipai/paperclip` (the primary
+- The master checkout `/srv/paperclip/home/thinkingmach/paperclip` (the primary
   repo with the real instance `.env`) is never a workspace repair target. Never
   point a worktree runtime service at it, never `git worktree add` into it or
   under `<master>/.paperclip/worktrees/`, and never edit its `.env` while
@@ -47,9 +47,9 @@ passed.
   Confirm the port owner's real cwd (`readlink /proc/<pid>/cwd`) before and
   after every repair; the runtime row's recorded `cwd` and `pid` can be
   fabricated by port adoption.
-- Read `doc/DEVELOPING.md` before running Paperclip CLI, dev server, worktree,
+- Read `doc/DEVELOPING.md` before running ThinkingMach CLI, dev server, worktree,
   database, build, or test commands.
-- Use the Paperclip CLI and API as the source of truth for worktree and
+- Use the ThinkingMach CLI and API as the source of truth for worktree and
   database operations. Do not use `psql`, raw embedded-Postgres commands, or
   ad hoc row copying for the normal fix path.
 - Do not manually copy only auth rows as the final fix. That proves login, but
@@ -67,12 +67,12 @@ passed.
 
 Use environment variables when available. Do not print API keys or passwords.
 
-- `PAPERCLIP_API_URL`: main control-plane API URL
-- `PAPERCLIP_API_KEY`: agent API key
-- `PAPERCLIP_RUN_ID`: current run id for runtime-service mutations
-- `PAPERCLIP_TASK_ID`: current issue id
-- `PAPERCLIP_COMPANY_ID`: company id
-- `PAPERCLIP_AGENT_ID`: current agent id
+- `THINKINGMACH_API_URL`: main control-plane API URL
+- `THINKINGMACH_API_KEY`: agent API key
+- `THINKINGMACH_RUN_ID`: current run id for runtime-service mutations
+- `THINKINGMACH_TASK_ID`: current issue id
+- `THINKINGMACH_COMPANY_ID`: company id
+- `THINKINGMACH_AGENT_ID`: current agent id
 - execution workspace id for the worktree service
 - runtime workspace command id, usually `service:paperclip-dev`
 - expected service URL, for example `http://paperclip-dev:40631`
@@ -111,22 +111,22 @@ workspace that should be freshly ready.
 ## Managed start / stop
 
 Use the runtime-service endpoints on the main control plane. Include
-`X-Paperclip-Run-Id` so the mutation is associated with the current heartbeat.
+`X-ThinkingMach-Run-Id` so the mutation is associated with the current heartbeat.
 
 ```sh
 curl -sS -X POST \
-  "$PAPERCLIP_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID/runtime-services/stop" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
-  -H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID" \
+  "$THINKINGMACH_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID/runtime-services/stop" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
+  -H "X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID" \
   -H "Content-Type: application/json" \
   --data-binary '{"workspaceCommandId":"service:paperclip-dev"}'
 ```
 
 ```sh
 curl -sS -X POST \
-  "$PAPERCLIP_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID/runtime-services/start" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
-  -H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID" \
+  "$THINKINGMACH_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID/runtime-services/start" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
+  -H "X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID" \
   -H "Content-Type: application/json" \
   --data-binary '{"workspaceCommandId":"service:paperclip-dev"}'
 ```
@@ -180,9 +180,9 @@ If the port owner is a sibling workspace's process (port squat):
 
 ```sh
 curl -sS -X POST \
-  "$PAPERCLIP_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID/runtime-services/restart" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" \
-  -H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID" \
+  "$THINKINGMACH_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID/runtime-services/restart" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" \
+  -H "X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID" \
   -H "Content-Type: application/json" \
   --data-binary '{"workspaceCommandId":"service:paperclip-dev"}'
 ```
@@ -208,7 +208,7 @@ is missing, the cloned app does not have the expected companies/issues/agents,
 or the user explicitly asks for the normal isolated-workspace database.
 
 ```sh
-npx paperclipai worktree reseed --from-instance default --seed-mode full --yes
+npx thinkingmach worktree reseed --from-instance default --seed-mode full --yes
 ```
 
 After reseed, restart through the managed runtime path. A reseed can copy
@@ -247,7 +247,7 @@ Check the port owner when a process is already listening:
 lsof -nP -iTCP:"$SERVICE_PORT" -sTCP:LISTEN || true
 ```
 
-Use this only to identify and remove a stale matching Paperclip dev-runner
+Use this only to identify and remove a stale matching ThinkingMach dev-runner
 process after managed stop fails. Do not kill unrelated processes.
 
 ## Verify main control-plane runtime state
@@ -257,8 +257,8 @@ record.
 
 ```sh
 curl -sS \
-  "$PAPERCLIP_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" | jq
+  "$THINKINGMACH_API_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID" \
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" | jq
 ```
 
 The target service should show:
@@ -274,13 +274,13 @@ stale process through the managed runtime.
 
 ## Verify served workspace runtime state
 
-The cloned Paperclip app must also know about the service. Query the same
+The cloned ThinkingMach app must also know about the service. Query the same
 execution workspace through the served app when agent auth is available there:
 
 ```sh
 curl -sS \
   "$SERVICE_URL/api/execution-workspaces/$EXECUTION_WORKSPACE_ID" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" | jq
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" | jq
 ```
 
 The served app should agree that the service is `running` / `healthy` at the
@@ -299,9 +299,9 @@ Minimum API checks:
 ```sh
 curl -sS "$SERVICE_URL/api/health" | jq '.status, .bootstrapStatus'
 curl -sS "$SERVICE_URL/api/companies" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" | jq
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" | jq
 curl -sS "$SERVICE_URL/api/agents/me" \
-  -H "Authorization: Bearer $PAPERCLIP_API_KEY" | jq
+  -H "Authorization: Bearer $THINKINGMACH_API_KEY" | jq
 ```
 
 Then verify at least one expected cloned product record through the API, such
@@ -325,7 +325,7 @@ verification was delegated and why.
 
 ### Service URL serves a different workspace (port squat)
 
-Symptom: the workspace URL loads a working Paperclip app, but it is a sibling
+Symptom: the workspace URL loads a working ThinkingMach app, but it is a sibling
 worktree's app — wrong branch, wrong data, or the UI keeps bouncing you into
 another workspace's pages.
 
@@ -395,7 +395,7 @@ Likely cause: stale Node/web process remained alive after embedded Postgres
 died.
 
 Fix: managed stop first. If the process survives, identify the matching
-Paperclip dev-runner process group for the target port and terminate only that
+ThinkingMach dev-runner process group for the target port and terminate only that
 group. Then managed start.
 
 Verify: `/api/health` is ok after a stability wait and the runtime record is
@@ -438,7 +438,7 @@ Likely causes: the cloned issue/run/agent state does not match the current
 heartbeat, or the run id is absent in the cloned database after reseed.
 
 Fix: prefer the main control-plane managed runtime path and full reseed. If
-the cloned app state itself must be repaired, use normal Paperclip issue/run
+the cloned app state itself must be repaired, use normal ThinkingMach issue/run
 transitions first. Do not hide the condition with raw DB edits; report the
 exact guard or missing row if it blocks the normal path.
 

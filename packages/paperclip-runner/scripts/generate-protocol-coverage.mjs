@@ -2,7 +2,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import { PAPERCLIP_PROTOCOL_ACTIONS } from "../dist/protocol-actions/index.js";
+import { THINKINGMACH_PROTOCOL_ACTIONS } from "../dist/protocol-actions/index.js";
 import { buildCapabilityScenarioIndex } from "../dist/scenarios/scenario-index.js";
 import { capabilityScenarioFixture } from "../dist/scenarios/scenario-fixtures.js";
 import { capabilityScenarioPlan } from "../dist/scenarios/scenario-plan.js";
@@ -11,7 +11,7 @@ const root = resolve(import.meta.dirname, "..");
 const manifestPath = resolve(root, "spec/capability/eval-traceability.yaml");
 const outputPath = resolve(root, "spec/capability/protocol-coverage.json");
 const index = buildCapabilityScenarioIndex(await readFile(manifestPath, "utf8"));
-const catalog = PAPERCLIP_PROTOCOL_ACTIONS.map((action) => ({
+const catalog = THINKINGMACH_PROTOCOL_ACTIONS.map((action) => ({
   id: action.id,
   ownership: action.canonical.placement,
   surfaces: action.canonical.surfaces,
@@ -35,7 +35,7 @@ const requirements = index.entries.map((entry) => {
 
 const lifecycleRequirements = [
   ["provider-round-trip", "provider -> runnerd -> control plane -> runnerd -> provider", "src/live/runnerd-codex-transport.test.ts"],
-  ["single-daemon", "one Paperclip-owned sandbox daemon and no TypeScript sandbox dispatcher", "src/live/runnerd-codex-transport.test.ts"],
+  ["single-daemon", "one ThinkingMach-owned sandbox daemon and no TypeScript sandbox dispatcher", "src/live/runnerd-codex-transport.test.ts"],
   ["catalog-drift", "canonical catalog consistency and drift rejection", "runner/crates/runner-core/src/provider_bridge.rs::durable_session_refuses_catalog_drift"],
   ["authorization", "authorization denial and unknown-tool rejection", "runner/crates/runner-core/src/provider_bridge.rs::forwards_only_authorized_calls_and_correlates_results"],
   ["duplicates", "correlated duplicate and conflicting-result handling", "runner/crates/runner-core/src/provider_bridge.rs::rejects_unknown_tools_and_conflicting_duplicate_results"],
@@ -47,10 +47,10 @@ const lifecycleRequirements = [
   ["transcript-accounting", "assistant transcript capture, token usage, and cost inputs", "src/live/live-session.test.ts; src/cli/eval-session.ts"],
   ["state-reconstruction", "fixture and post-run state reconstruction", "src/scenarios/scenario-explorer.test.ts; src/live/live-session.test.ts"],
   ["paperclip-adapter-selection", "paperclip_runner is selectable without changing legacy adapter behavior", "server/src/services/native-runtime/runtime-mode.test.ts; server/src/__tests__/heartbeat-native-runner-selection.test.ts"],
-  ["real-control-plane-binding", "advertised runner tools re-authorize the live company, issue, agent, and run before using real Paperclip services", "server/src/services/native-runtime/paperclip-runner-tool-authority.test.ts; server/src/services/native-runtime/paperclip-runner-real-server.integration.test.ts"],
-  ["shared-paperclip-prp-route", "Rust runnerd authenticates to the shared Paperclip server route and completes a real bound semantic tool call", "server/src/realtime/runner-prp-ws.test.ts; server/src/services/native-runtime/paperclip-runner-real-server.integration.test.ts"],
+  ["real-control-plane-binding", "advertised runner tools re-authorize the live company, issue, agent, and run before using real ThinkingMach services", "server/src/services/native-runtime/paperclip-runner-tool-authority.test.ts; server/src/services/native-runtime/paperclip-runner-real-server.integration.test.ts"],
+  ["shared-paperclip-prp-route", "Rust runnerd authenticates to the shared ThinkingMach server route and completes a real bound semantic tool call", "server/src/realtime/runner-prp-ws.test.ts; server/src/services/native-runtime/paperclip-runner-real-server.integration.test.ts"],
   ["real-control-plane-idempotency", "real service mutations are replay-safe and reject conflicting idempotency-key reuse", "server/src/services/native-runtime/paperclip-runner-tool-authority.test.ts"],
-  ["paperclip-thread-projection", "committed PRP reasoning and semantic tool items render in the existing Paperclip task chat", "ui/src/adapters/paperclip-runner/index.test.ts; server/src/services/native-runtime/paperclip-control-plane-port.test.ts"],
+  ["paperclip-thread-projection", "committed PRP reasoning and semantic tool items render in the existing ThinkingMach task chat", "ui/src/adapters/paperclip-runner/index.test.ts; server/src/services/native-runtime/paperclip-control-plane-port.test.ts"],
 ];
 
 const actions = catalog.map((action) => ({

@@ -17,8 +17,8 @@ import {
   routineRuns,
   routineTriggers,
   routines,
-} from "@paperclipai/db";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -44,14 +44,14 @@ function issuePrefix(id: string) {
   return `T${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 }
 
-function manifest(): PaperclipPluginManifestV1 {
+function manifest(): ThinkingMachPluginManifestV1 {
   return {
     id: "paperclip.managed-routines-test",
     apiVersion: 1,
     version: "0.1.0",
     displayName: "Managed Routines Test",
     description: "Test plugin",
-    author: "Paperclip",
+    author: "ThinkingMach",
     categories: ["automation"],
     capabilities: ["agents.managed", "projects.managed", "routines.managed"],
     entrypoints: { worker: "./dist/worker.js" },
@@ -136,14 +136,14 @@ describeEmbeddedPostgres("plugin-managed routines", () => {
     const pluginId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: issuePrefix(companyId),
       defaultResponsibleUserId: "responsible-user",
     });
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: pluginManifest.id,
-      packageName: "@paperclipai/plugin-managed-routines-test",
+      packageName: "@thinkingmach/plugin-managed-routines-test",
       version: pluginManifest.version,
       apiVersion: pluginManifest.apiVersion,
       categories: pluginManifest.categories,

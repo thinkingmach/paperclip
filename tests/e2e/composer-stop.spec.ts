@@ -138,8 +138,8 @@ for (const adapter of ["process", "paperclip_runner"] as const) {
     request,
   }, testInfo) => {
     test.skip(
-      adapter === "paperclip_runner" && !process.env.PAPERCLIP_STOP_FAKE_CODEX,
-      "Set PAPERCLIP_STOP_FAKE_CODEX and PAPERCLIP_RUNNER_BINARY for real runnerd with the deterministic provider.",
+      adapter === "paperclip_runner" && !process.env.THINKINGMACH_STOP_FAKE_CODEX,
+      "Set THINKINGMACH_STOP_FAKE_CODEX and THINKINGMACH_RUNNER_BINARY for real runnerd with the deterministic provider.",
     );
     const company = await json(
       await request.post("/api/companies", {
@@ -251,7 +251,7 @@ for (const adapter of ["process", "paperclip_runner"] as const) {
           .poll(
             async () => {
               const calls = await readFile(
-                process.env.PAPERCLIP_STOP_CODEX_LOG!,
+                process.env.THINKINGMACH_STOP_CODEX_LOG!,
                 "utf8",
               ).catch(() => "");
               return calls.split("turn/start").length - 1;
@@ -316,7 +316,7 @@ for (const adapter of ["process", "paperclip_runner"] as const) {
           "acknowledged",
         );
         expect(
-          await readFile(process.env.PAPERCLIP_STOP_CODEX_LOG!, "utf8"),
+          await readFile(process.env.THINKINGMACH_STOP_CODEX_LOG!, "utf8"),
         ).toContain("turn/interrupt");
       }
       await testInfo.attach(`${adapter}-timing`, {
@@ -399,7 +399,7 @@ for (const adapter of ["process", "paperclip_runner"] as const) {
       expect(resumedChildRun.id).not.toBe(childRun.id);
       if (adapter === "paperclip_runner") {
         await expect.poll(async () => {
-          const calls = await readFile(process.env.PAPERCLIP_STOP_CODEX_LOG!, "utf8");
+          const calls = await readFile(process.env.THINKINGMACH_STOP_CODEX_LOG!, "utf8");
           return calls.split("turn/start").length - 1;
         }, { timeout: 30_000 }).toBeGreaterThanOrEqual(5);
         await page.screenshot({ path: testInfo.outputPath("native-resumed.png"), fullPage: true });

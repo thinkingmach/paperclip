@@ -230,9 +230,9 @@ to other agents. The recovery regression fails with the guard removed and passes
 with it restored; all 20 comment-wake batching tests and server typecheck pass.
 
 The other failures distinguish requested approval from ordinary draft planning,
-and a persisted Paperclip document from a workspace file. The chat directive now
+and a persisted ThinkingMach document from a workspace file. The chat directive now
 explains how to create a revision-bound approval card when explicitly requested,
-including after a revision. Paid fixtures name the requested Paperclip document
+including after a revision. Paid fixtures name the requested ThinkingMach document
 explicitly while retaining strict checks of approvals, transferred plans, and
 persisted execution output.
 
@@ -273,7 +273,7 @@ ACPX Claude 6/6. All cells completed by 21:34 UTC on September 11, within the
 requested three-hour repair window. No acceptance assertions were disabled.
 
 - [Exact campaign results](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-34648511170-1/summary.md)
-- [GitHub run and retained evidence](https://github.com/paperclipai/paperclip/actions/runs/34648511170)
+- [GitHub run and retained evidence](https://github.com/thinkingmach/paperclip/actions/runs/34648511170)
 
 The [HTML dashboard](https://d1p6rlowie26tp.cloudfront.net/runner-e2e/campaigns/gha-34648511170-1/index.html?report=agent-chat#suite-agent-chat)
 was repaired from retained evidence after its older trusted catalog omitted the

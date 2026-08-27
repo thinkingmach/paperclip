@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { and, eq, sql, type SQL } from "drizzle-orm";
-import { environmentLeases, type Db } from "@paperclipai/db";
+import { environmentLeases, type Db } from "@thinkingmach/db";
 import { isBuiltinSandboxProvider } from "./sandbox-provider-runtime.js";
 import { remoteTerminationReceipt } from "./remote-execution-termination.js";
 import { hasNativeWorkspaceExportResume, readNativeWorkspaceExportResume, settleNativeWorkspaceExportResume } from "./native-runtime/native-workspace-export-resume.js";

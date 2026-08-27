@@ -11,7 +11,7 @@ import {
 // Local qualification uses a physical candidate package, not a transport mock.
 // Default/CI execution resolves the normally installed pinned dependency.
 vi.mock("@chat-adapter/telegram", async (importOriginal) => {
-  const candidate = process.env.PAPERCLIP_TELEGRAM_STOP_ADAPTER_MODULE;
+  const candidate = process.env.THINKINGMACH_TELEGRAM_STOP_ADAPTER_MODULE;
   return candidate ? import(/* @vite-ignore */ candidate) : importOriginal();
 });
 

@@ -54,7 +54,7 @@ export function webhookAgentInstructions(
   signingMode: TriggerDraft["signingMode"] = "app_webhook",
 ) {
   const common = [
-    `Connect the sending app to the Paperclip routine ${JSON.stringify(routineTitle)}.`,
+    `Connect the sending app to the ThinkingMach routine ${JSON.stringify(routineTitle)}.`,
     `Webhook URL: ${webhookUrl}`,
     "Send an HTTP POST request with a JSON object as the body (not an array or string).",
     "Content-Type: application/json",
@@ -72,7 +72,7 @@ export function webhookAgentInstructions(
       : [
           `Secret key: ${webhookSecret}`,
           ...(signingMode === "bearer" ? [] : [
-            `If the app asks for a signing secret, paste the secret key above. Paperclip accepts HMAC-SHA256 over the exact request body in ${signingMode === "fireflies_hmac" ? "X-Hub-Signature" : "X-Hub-Signature or X-Hub-Signature-256"}, formatted sha256=<hex digest>.`,
+            `If the app asks for a signing secret, paste the secret key above. ThinkingMach accepts HMAC-SHA256 over the exact request body in ${signingMode === "fireflies_hmac" ? "X-Hub-Signature" : "X-Hub-Signature or X-Hub-Signature-256"}, formatted sha256=<hex digest>.`,
           ]),
           ...(signingMode === "fireflies_hmac" ? [] : [
             `For apps with custom headers, use Authorization: Bearer ${webhookSecret}`,
@@ -86,11 +86,11 @@ export function webhookAgentInstructions(
   return [
     ...common,
     ...auth,
-    "Open Check connection in Paperclip to see whether the event arrived and authentication passed.",
+    "Open Check connection in ThinkingMach to see whether the event arrived and authentication passed.",
     ...(setupPending
       ? [
           "During setup, deliveries only test the connection. They do not start the routine or create a task.",
-          "Finish setup in Paperclip to enable this webhook for future events. Test events are not replayed.",
+          "Finish setup in ThinkingMach to enable this webhook for future events. Test events are not replayed.",
         ]
       : [
           "This webhook is enabled. Deliveries can start the routine and create tasks.",
@@ -209,7 +209,7 @@ export function RoutineTriggerWizard({
       ? `Choose how to start “${routineTitle}”. You can add another trigger later.`
       : schedule
         ? draft.step === 1
-          ? "Choose when Paperclip should start this routine automatically."
+          ? "Choose when ThinkingMach should start this routine automatically."
           : "This schedule starts the routine automatically. You can pause or change it later."
         : draft.step === 1
           ? "Copy these details into the sending app, then save its webhook settings."

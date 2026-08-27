@@ -38,7 +38,7 @@ export function rewriteUrlPort(rawUrl: string | undefined, port: number): string
  * *external* base URL (e.g. a Tailscale Serve listener on a non-default port like
  * :8443) must survive untouched: rewriting its port to the internal listen port
  * yields an unreachable URL (scheme/port mismatch) that then propagates to spawned
- * agents as a dead PAPERCLIP_API_URL. (BRO-1558)
+ * agents as a dead THINKINGMACH_API_URL. (BRO-1558)
  */
 export function rewriteLoopbackUrlPort(
   rawUrl: string | undefined,

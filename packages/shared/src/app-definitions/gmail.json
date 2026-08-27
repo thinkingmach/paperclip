@@ -17,7 +17,7 @@
   "docsUrl": "https://developers.google.com/workspace/gmail/api/reference/mcp",
   "setupPrerequisite": {
     "title": "Google Developer Preview access required",
-    "description": "Google must register both the Workspace email used to authorize Paperclip and the Google Cloud project that owns the OAuth client. Registration is limited to those emails and projects; it does not enable unrelated Paperclip customers.",
+    "description": "Google must register both the Workspace email used to authorize ThinkingMach and the Google Cloud project that owns the OAuth client. Registration is limited to those emails and projects; it does not enable unrelated ThinkingMach customers.",
     "steps": [
       "Apply with the Workspace email that will sign in and the Google Cloud project that owns the OAuth client.",
       "Wait for the Google Group notification and then Google's final project-registration email, usually within a couple of days.",
@@ -30,7 +30,7 @@
   "methods": [
     {
       "key": "paperclip-read",
-      "label": "Connect with Paperclip",
+      "label": "Connect with ThinkingMach",
       "transport": "mcp_remote",
       "auth": "oauth",
       "oauthStrategy": "paperclip_cloud_connector",
@@ -47,7 +47,7 @@
       "ownershipModes": [
         "platform_shared"
       ],
-      "whenToUse": "Use Paperclip-managed Google OAuth for read-only Gmail access.",
+      "whenToUse": "Use ThinkingMach-managed Google OAuth for read-only Gmail access.",
       "defaults": {
         "serverUrl": "https://gmailmcp.googleapis.com/mcp/v1",
         "scopesHint": [
@@ -91,7 +91,7 @@
           "prompt": "consent"
         }
       },
-      "guidanceMd": "Enable the Gmail and Gmail MCP APIs in your Google Cloud project, then register Paperclip's callback URI.",
+      "guidanceMd": "Enable the Gmail and Gmail MCP APIs in your Google Cloud project, then register ThinkingMach's callback URI.",
       "consoleLinks": {
         "register": "https://console.cloud.google.com/auth/clients",
         "docs": "https://developers.google.com/workspace/guides/configure-mcp-servers"
@@ -103,7 +103,7 @@
     },
     {
       "key": "paperclip-draft",
-      "label": "Connect with Paperclip",
+      "label": "Connect with ThinkingMach",
       "transport": "mcp_remote",
       "auth": "oauth",
       "oauthStrategy": "paperclip_cloud_connector",
@@ -120,7 +120,7 @@
       "ownershipModes": [
         "platform_shared"
       ],
-      "whenToUse": "Use Paperclip-managed Google OAuth to read Gmail and create drafts.",
+      "whenToUse": "Use ThinkingMach-managed Google OAuth to read Gmail and create drafts.",
       "defaults": {
         "serverUrl": "https://gmailmcp.googleapis.com/mcp/v1",
         "scopesHint": [
@@ -167,7 +167,7 @@
           "prompt": "consent"
         }
       },
-      "guidanceMd": "Enable the Gmail and Gmail MCP APIs in your Google Cloud project, then register Paperclip's callback URI.",
+      "guidanceMd": "Enable the Gmail and Gmail MCP APIs in your Google Cloud project, then register ThinkingMach's callback URI.",
       "consoleLinks": {
         "register": "https://console.cloud.google.com/auth/clients",
         "docs": "https://developers.google.com/workspace/guides/configure-mcp-servers"

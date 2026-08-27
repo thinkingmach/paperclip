@@ -189,7 +189,7 @@ async function main() {
         const loc = resp.headers()["location"] ?? "";
         assert(resp.status() === 302 && /[?&]code=/.test(loc), `OAuth consent accepted creds → 302 with code (status ${resp.status()}, location ${loc.slice(0, 80)})`);
         // The 302 target is a dead loopback callback; let that failed navigation
-        // commit (chrome-error page) before navigating into the Paperclip UI.
+        // commit (chrome-error page) before navigating into the ThinkingMach UI.
         await page.waitForLoadState("domcontentloaded").catch(() => {});
         await page.waitForTimeout(800);
         await gotoUI(scenario, conn.id);

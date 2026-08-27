@@ -1,4 +1,4 @@
-import type { StatusCard, StatusCardUpdate } from "@paperclipai/shared";
+import type { StatusCard, StatusCardUpdate } from "@thinkingmach/shared";
 
 /**
  * Board/drawer view of a status card.

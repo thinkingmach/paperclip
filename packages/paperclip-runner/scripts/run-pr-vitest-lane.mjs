@@ -1,4 +1,4 @@
-// Runs this package's vitest shard for a Verify Paperclip Runner lane, then —
+// Runs this package's vitest shard for a Verify ThinkingMach Runner lane, then —
 // on the final shard of the PR workflow only — the server package's
 // general-server-native-runner group.
 //
@@ -7,7 +7,7 @@
 // Rust cache, so hosting it there cold-compiled every third-party crate on
 // each run (277s of a 291s shard vitest step, actions run 35246999382,
 // 2026-09-17) and made that shard the slowest check of the whole run. The
-// Verify Paperclip Runner lanes already restore the shared release-runner-v1
+// Verify ThinkingMach Runner lanes already restore the shared release-runner-v1
 // Rust cache read-only, which turns that build into an incremental rebuild,
 // and the workflow files themselves list this lane's command as a package
 // script — so the suite moves here without a workflow-file change.

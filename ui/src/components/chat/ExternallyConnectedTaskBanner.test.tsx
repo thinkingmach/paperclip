@@ -4,7 +4,7 @@ import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { IssueAttachment } from "@paperclipai/shared";
+import type { IssueAttachment } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ExternallyConnectedTaskBanner } from "./ExternallyConnectedTaskBanner";
 import { boardSendDraftKey, readBoardSendDraft } from "./board-send-draft";
@@ -598,8 +598,8 @@ describe("ExternallyConnectedTaskBanner publication truth", () => {
         endpointId: "endpoint-github",
         provider,
         botLabel: "Maya",
-        externalLabel: "paperclipai/paperclip#42",
-        externalUrl: "https://github.com/paperclipai/paperclip/issues/42",
+        externalLabel: "thinkingmach/paperclip#42",
+        externalUrl: "https://github.com/thinkingmach/paperclip/issues/42",
         conversationId: "conversation-github",
         publicationState: null,
         assignedAgentLocked: true,

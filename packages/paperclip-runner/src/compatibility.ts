@@ -1,8 +1,8 @@
 import { capabilityCanonicalOperation } from "./catalog/index.js";
 
-export const PAPERCLIP_RUNNER_COMPATIBILITY = Object.freeze({
+export const THINKINGMACH_RUNNER_COMPATIBILITY = Object.freeze({
   schema: "paperclip.runner.compatibility.v1" as const,
-  packageName: "@paperclipai/paperclip-runner" as const,
+  packageName: "@thinkingmach/paperclip-runner" as const,
   packageVersion: "0.0.0" as const,
   components: Object.freeze({
     catalog: 1,
@@ -19,19 +19,19 @@ export const PAPERCLIP_RUNNER_COMPATIBILITY = Object.freeze({
   evalCorpus: Object.freeze({ minimum: 1, maximum: 1 }),
 });
 
-export type PaperclipRunnerCompatibilityComponent =
-  keyof typeof PAPERCLIP_RUNNER_COMPATIBILITY.components;
+export type ThinkingMachRunnerCompatibilityComponent =
+  keyof typeof THINKINGMACH_RUNNER_COMPATIBILITY.components;
 
-export type PaperclipRunnerCompatibilityIssueCode =
+export type ThinkingMachRunnerCompatibilityIssueCode =
   | "component_version_mismatch"
   | "eval_corpus_version_unsupported"
   | "catalog_operation_unknown"
   | "provider_capabilities_missing"
   | "provider_operation_unsupported";
 
-export interface PaperclipRunnerCompatibilityIssue {
-  readonly code: PaperclipRunnerCompatibilityIssueCode;
-  readonly component?: PaperclipRunnerCompatibilityComponent | "evalCorpus" | "provider";
+export interface ThinkingMachRunnerCompatibilityIssue {
+  readonly code: ThinkingMachRunnerCompatibilityIssueCode;
+  readonly component?: ThinkingMachRunnerCompatibilityComponent | "evalCorpus" | "provider";
   readonly expected?: string;
   readonly received?: string;
   readonly operationId?: string;
@@ -39,33 +39,33 @@ export interface PaperclipRunnerCompatibilityIssue {
   readonly message: string;
 }
 
-export interface PaperclipProviderCompatibility {
+export interface ThinkingMachProviderCompatibility {
   readonly id: string;
   readonly supportedOperationIds: readonly string[];
 }
 
-export interface PaperclipRunnerCompatibilityRequirement {
+export interface ThinkingMachRunnerCompatibilityRequirement {
   readonly consumer: string;
-  readonly components?: Partial<Readonly<Record<PaperclipRunnerCompatibilityComponent, number>>>;
+  readonly components?: Partial<Readonly<Record<ThinkingMachRunnerCompatibilityComponent, number>>>;
   readonly evalCorpusVersion?: number;
   readonly requiredOperationIds?: readonly string[];
-  readonly provider?: PaperclipProviderCompatibility;
+  readonly provider?: ThinkingMachProviderCompatibility;
 }
 
-export class PaperclipRunnerCompatibilityError extends Error {
+export class ThinkingMachRunnerCompatibilityError extends Error {
   readonly code = "paperclip_runner_incompatible" as const;
-  readonly issues: readonly PaperclipRunnerCompatibilityIssue[];
+  readonly issues: readonly ThinkingMachRunnerCompatibilityIssue[];
 
   constructor(
     readonly consumer: string,
-    issues: readonly PaperclipRunnerCompatibilityIssue[],
+    issues: readonly ThinkingMachRunnerCompatibilityIssue[],
   ) {
     super(
-      `Paperclip runner compatibility check failed for ${consumer}: ${issues
+      `ThinkingMach runner compatibility check failed for ${consumer}: ${issues
         .map((issue) => `${issue.code}: ${issue.message}`)
         .join("; ")}`,
     );
-    this.name = "PaperclipRunnerCompatibilityError";
+    this.name = "ThinkingMachRunnerCompatibilityError";
     this.issues = Object.freeze(issues.map((issue) => Object.freeze({ ...issue })));
   }
 }
@@ -75,15 +75,15 @@ export class PaperclipRunnerCompatibilityError extends Error {
  * eval bundles. Provider limitations are reported as stable compatibility
  * issues instead of being inferred from provider-specific failures later.
  */
-export function assertPaperclipRunnerCompatibility(
-  requirement: PaperclipRunnerCompatibilityRequirement,
-): typeof PAPERCLIP_RUNNER_COMPATIBILITY {
-  const issues: PaperclipRunnerCompatibilityIssue[] = [];
+export function assertThinkingMachRunnerCompatibility(
+  requirement: ThinkingMachRunnerCompatibilityRequirement,
+): typeof THINKINGMACH_RUNNER_COMPATIBILITY {
+  const issues: ThinkingMachRunnerCompatibilityIssue[] = [];
 
   for (const [component, received] of Object.entries(requirement.components ?? {}) as Array<
-    [PaperclipRunnerCompatibilityComponent, number]
+    [ThinkingMachRunnerCompatibilityComponent, number]
   >) {
-    const expected = PAPERCLIP_RUNNER_COMPATIBILITY.components[component];
+    const expected = THINKINGMACH_RUNNER_COMPATIBILITY.components[component];
     if (received !== expected) {
       issues.push({
         code: "component_version_mismatch",
@@ -96,7 +96,7 @@ export function assertPaperclipRunnerCompatibility(
   }
 
   if (requirement.evalCorpusVersion !== undefined) {
-    const { minimum, maximum } = PAPERCLIP_RUNNER_COMPATIBILITY.evalCorpus;
+    const { minimum, maximum } = THINKINGMACH_RUNNER_COMPATIBILITY.evalCorpus;
     if (
       requirement.evalCorpusVersion < minimum
       || requirement.evalCorpusVersion > maximum
@@ -148,7 +148,7 @@ export function assertPaperclipRunnerCompatibility(
   }
 
   if (issues.length > 0) {
-    throw new PaperclipRunnerCompatibilityError(requirement.consumer, issues);
+    throw new ThinkingMachRunnerCompatibilityError(requirement.consumer, issues);
   }
-  return PAPERCLIP_RUNNER_COMPATIBILITY;
+  return THINKINGMACH_RUNNER_COMPATIBILITY;
 }

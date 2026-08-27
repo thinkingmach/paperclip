@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AskUserQuestionsInteraction } from "@paperclipai/shared";
+import type { AskUserQuestionsInteraction } from "@thinkingmach/shared";
 import { modalToAdaptiveCard } from "@chat-adapter/teams/modals";
 import { modalToDiscordPayload } from "@chat-adapter/discord";
 import {
@@ -687,7 +687,7 @@ describe("chat question forms", () => {
       action: "errors",
       errors: {
         [payload.fields[0]!.fieldId]:
-          "This form is no longer authorized. Close it and open the linked Paperclip task.",
+          "This form is no longer authorized. Close it and open the linked ThinkingMach task.",
       },
     });
     expect(chatQuestionFormDenialResponse()).toEqual({ action: "clear" });

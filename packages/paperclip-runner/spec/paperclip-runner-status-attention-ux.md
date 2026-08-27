@@ -10,7 +10,7 @@
 
 ## 1. The layered-outcome model (vocabulary system)
 
-The contract yields four independent facts. A single status badge collapses them into exactly the "agent succeeded" lie the parent issue names. Codex renders them as four distinct visual layers with a strict vocabulary, so a stranger can tell in two seconds *what happened to the process* versus *what Paperclip decided about the work* (Mental Models; Nielsen #1 visibility of system status; #2 match to the real world).
+The contract yields four independent facts. A single status badge collapses them into exactly the "agent succeeded" lie the parent issue names. Codex renders them as four distinct visual layers with a strict vocabulary, so a stranger can tell in two seconds *what happened to the process* versus *what ThinkingMach decided about the work* (Mental Models; Nielsen #1 visibility of system status; #2 match to the real world).
 
 | Layer | Source of truth (spec §18.3 authority table) | Values | Vocabulary rule | Visual treatment |
 |---|---|---|---|---|
@@ -23,7 +23,7 @@ Copy laws (enforceable in review):
 
 1. Never compose "agent" + a success verb. Banned: "Agent succeeded", "Agent completed the task". Allowed: "Run succeeded", "UXDesigner reported done".
 2. A claim is always attributed and past-tense: "*UXDesigner reported done · 12m ago*".
-3. The arbiter is always the subject of status sentences: "*Paperclip kept In Progress — evidence incomplete*".
+3. The arbiter is always the subject of status sentences: "*ThinkingMach kept In Progress — evidence incomplete*".
 4. Filled status colors (green done, violet review, red blocked) are reserved for arbiter output. Claims and process outcomes use neutral/outline treatments. This makes disagreement visible pre-attentively (Selective Attention; color-independence: shape differs too — dashed vs solid).
 
 ---
@@ -41,7 +41,7 @@ Turn completed · Run succeeded · “reported done”        [decision →]
 ```
 
 - Turn/run chips: `text-xs text-muted-foreground`, plain text with mid-dots — they are metadata, not signals (Cognitive Load: don't chip-ify everything).
-- Claim chip: `rounded-full border border-dashed border-border px-2 text-xs text-muted-foreground`, leading `MessageSquareQuote` (14px). Tooltip: "What the agent reported. Paperclip decides issue status separately."
+- Claim chip: `rounded-full border border-dashed border-border px-2 text-xs text-muted-foreground`, leading `MessageSquareQuote` (14px). Tooltip: "What the agent reported. ThinkingMach decides issue status separately."
 - Run `failed` / turn `failed` use `text-red-400` text (not a red fill) — a failed run with preserved status must not look like a blocked issue.
 
 ### 2.2 `StatusDecisionCard` (new — the arbiter explanation)
@@ -52,7 +52,7 @@ Renders one `StatusDecision` plus its `WorkAssessment` summary from `GET /api/is
 
 ```
 [glyph] Kept In Progress — completion claim not accepted: evidence incomplete
-        by Paperclip arbiter · triggered by run finalization · 12m ago     [∨]
+        by ThinkingMach arbiter · triggered by run finalization · 12m ago     [∨]
 ```
 
 - Glyph encodes the decision class (see §5 tone map). "Kept/Moved to {Status}" is the verb: `transitionApplied ? "Moved to" : "Kept"`.
@@ -74,7 +74,7 @@ Anatomy top-to-bottom:
 1. **Header:** classification icon + request summary/question (`text-sm font-medium`) + state chip (`pending / routed / resolved / expired / superseded / rejected / exhausted`) + urgency flag (`high` = amber dot, never a red fill).
 2. **Meta chip row** (the required operator fields, each a labeled chip, `text-xs`):
    - **Owner** — selected resolver: avatar + "Waiting on: Dotta (board)" / "Routed to: CodexCoder". Owner is always a named person/agent/system, never "someone".
-   - **Authority** — derived `minimumAuthority` in plain words: "needs a board decision", "needs governed approval". When the agent asked for more authority than policy derived, show the correction inline: `asked: human → resolved as: expertise` with tooltip "Paperclip routes by policy, not by the agent's request" (trust signal; prevents learned helplessness about spurious escalations).
+   - **Authority** — derived `minimumAuthority` in plain words: "needs a board decision", "needs governed approval". When the agent asked for more authority than policy derived, show the correction inline: `asked: human → resolved as: expertise` with tooltip "ThinkingMach routes by policy, not by the agent's request" (trust signal; prevents learned helplessness about spurious escalations).
    - **Scope** — "blocks this turn only" / "blocks one track" / "blocks the whole task". When narrowed, strike the claim: `~~task-wide~~ → this turn` with the alternate live track linked.
    - **Attempts** — "attempt 2 of 6" from `AttentionResolutionBudget` (spec §18.3.3); expandable route history (context ✓ → retry ✗ → agent…) so a human landing here sees escalation was earned, not first-resort.
    - **Expiry** — relative countdown "expires in 3h 40m"; switches to amber text under 25% remaining; the expired state renders the card inert with "expired unanswered · one fallback wake sent".
@@ -135,7 +135,7 @@ Anatomy top-to-bottom:
 
 1. Board: issue status unchanged; cyan `Reconciliation` chip on the row.
 2. Task page run row: `Turn completed · Run failed` (run failure text in red-400) + `“reported done”` claim chip still visible — the work report is preserved and must not disappear (spec §18.5).
-3. `FinalizationErrorCard`: "**Finalization failed — completion claim preserved, not accepted.** Reconciliation scheduled · owner: Paperclip recovery · retry 1 of 3." For `result_schema_rejected`: "Agent report couldn't be read — status unchanged" + preserved raw payload link.
+3. `FinalizationErrorCard`: "**Finalization failed — completion claim preserved, not accepted.** Reconciliation scheduled · owner: ThinkingMach recovery · retry 1 of 3." For `result_schema_rejected`: "Agent report couldn't be read — status unchanged" + preserved raw payload link.
 4. Explicit anti-copy: never "Agent failed" (the agent may have done the work) and never auto-"Done" (the claim is unverified). This row is the clearest case for the four-layer vocabulary.
 
 ---
@@ -186,7 +186,7 @@ New reason codes added to the v1 enum after this document's approval MUST land w
 
 ## 6. Codex acceptance criteria (UX)
 
-1. On any finalized native run, a stranger can answer separately: did the turn finish, did the run succeed, what did the agent claim, what did Paperclip decide — without opening a drawer (spec §18.11 consistency gate, UI bullet).
+1. On any finalized native run, a stranger can answer separately: did the turn finish, did the run succeed, what did the agent claim, what did ThinkingMach decide — without opening a drawer (spec §18.11 consistency gate, UI bullet).
 2. The strings "agent succeeded/failed/completed" appear nowhere; claims are attributed and quoted.
 3. Every non-terminal decision card names its live path owner as a link.
 4. A board-routed attention card always shows owner, authority, scope, attempts, expiry, and the resume consequence before the answer control.

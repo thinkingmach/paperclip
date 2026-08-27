@@ -81,6 +81,6 @@ execution. Generated cases that need additional fixtures do not establish workin
 coverage. The coverage matrix must continue to show those gaps. The original $300
 budget and 90-minute active paid-campaign limit apply to all stages and retries.
 
-Implementation review: https://github.com/paperclipai/paperclip/pull/13003
+Implementation review: https://github.com/thinkingmach/paperclip/pull/13003
 
-Eval suite and evidence: https://github.com/paperclipai/paperclip-evals/pull/20
+Eval suite and evidence: https://github.com/thinkingmach/paperclip-evals/pull/20

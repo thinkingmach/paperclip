@@ -11,7 +11,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: /^@paperclipai\/paperclip-runner$/,
+        find: /^@thinkingmach\/paperclip-runner$/,
         replacement: resolve(root, "packages/paperclip-runner/src/index.ts"),
       },
     ],

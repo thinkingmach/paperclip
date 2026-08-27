@@ -5,7 +5,7 @@ import { documentService } from "./documents.js";
 import { parseTaskSearch, taskSearchCtes, taskSearchScore } from "./task-search.js";
 import { createdFromIssueCondition } from "./issue-creation-origin.js";
 import { executionProjectionsForRuns } from "./execution-projection.js";
-import type { ExecutionProjection } from "@paperclipai/shared";
+import type { ExecutionProjection } from "@thinkingmach/shared";
 import { Buffer } from "node:buffer";
 import { createHash, randomUUID } from "node:crypto";
 import {
@@ -28,7 +28,7 @@ import {
   sql,
   type SQL,
 } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   activityLog,
   chatActions,
@@ -74,7 +74,7 @@ import {
   projects,
   toolConnections,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AcceptedPlanDecomposition,
   IssueComment,
@@ -91,7 +91,7 @@ import type {
   IssueWatchdogSummary,
   LowTrustBoundary,
   SuccessfulRunHandoffState,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   clampIssueRequestDepth,
   extractAgentMentionIds,
@@ -101,7 +101,7 @@ import {
   issueCommentPresentationSchema,
   isUuidLike,
   normalizeIssueIdentifier as normalizeIssueReferenceIdentifier,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { conflict, HttpError, notFound, unprocessable } from "../errors.js";
 import { isForeignKeyViolation } from "../db-errors.js";
 import { logger } from "../middleware/logger.js";
@@ -3041,9 +3041,9 @@ function inboxVisibleForUserCondition(companyId: string, userId: string) {
 }
 
 const LEGACY_PLUGIN_OPERATION_ORIGIN_KINDS = [
-  "plugin:paperclipai.content-machine:case",
-  "plugin:paperclipai.content-machine:evaluation",
-  "plugin:paperclipai.content-machine:source-sync",
+  "plugin:thinkingmach.content-machine:case",
+  "plugin:thinkingmach.content-machine:evaluation",
+  "plugin:thinkingmach.content-machine:source-sync",
 ] as const;
 
 function nonPluginOperationIssueCondition() {
@@ -9879,8 +9879,8 @@ export function issueService(db: Db) {
             issueData.projectId = workspaceSource.projectId;
           }
           // Workspace linkage is only inheritable inside the source project. A
-          // cross-project child (for example, a Paperclip ID issue created from
-          // a Paperclip App parent) must fall through to its own project's
+          // cross-project child (for example, a ThinkingMach ID issue created from
+          // a ThinkingMach App parent) must fall through to its own project's
           // default workspaces, otherwise the inherited ids fail the
           // project-match assertions below and the create is impossible without
           // the caller naming the target workspaces explicitly.
@@ -12092,7 +12092,7 @@ export function issueService(db: Db) {
         sourceTrust?: typeof issueComments.$inferInsert.sourceTrust;
         createdAt?: Date | string | null;
         clientRequestId?: string;
-        /** Server-only: authenticated Paperclip messages also belong in the Slack thread. */
+        /** Server-only: authenticated ThinkingMach messages also belong in the Slack thread. */
         mirrorToSlack?: boolean;
       },
       dbOrTx: any = db,
@@ -12589,9 +12589,9 @@ export function issueService(db: Db) {
       // Only an explicitly authored comment from the run causally woken by an
       // inbound chat message is automatically publishable. Presentation,
       // recovery, automation, and ordinary internal agent comments stay in
-      // Paperclip even while a bound conversation is active.
+      // ThinkingMach even while a bound conversation is active.
       if (authorType === "agent" && isExplicitExternalAgentComment(metadata)) {
-        // An external-chat run may perform ordinary Paperclip lifecycle or
+        // An external-chat run may perform ordinary ThinkingMach lifecycle or
         // bookkeeping writes before its adapter result is finalized. Those
         // writes remain internal: only heartbeat's selected final presentation
         // may consume this provider response slot. Explicit board "Send to

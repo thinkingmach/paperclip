@@ -1,4 +1,4 @@
-import type { SlackSearchStatus, SlackToolCapabilities } from "@paperclipai/shared";
+import type { SlackSearchStatus, SlackToolCapabilities } from "@thinkingmach/shared";
 import { api } from "./client";
 const root = (companyId: string, endpointId: string) => `/companies/${companyId}/slack/endpoints/${endpointId}`;
 export const slackToolsApi = {

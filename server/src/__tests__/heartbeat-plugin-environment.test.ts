@@ -13,7 +13,7 @@ import {
   plugins,
   projects,
   projectWorkspaces,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

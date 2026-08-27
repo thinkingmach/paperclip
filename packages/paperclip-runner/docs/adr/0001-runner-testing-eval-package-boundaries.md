@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-11
-- Decision owners: Paperclip App
+- Decision owners: ThinkingMach App
 
 ## Context
 
@@ -22,7 +22,7 @@ Ownership is:
 
 | Owner | Stable responsibility |
 |---|---|
-| Paperclip App | PRP schemas and fixtures, canonical semantic catalog and dispatcher, runnerd/client interfaces, `ControlPlanePort`, the production binding, deterministic mock, and mock/real parity fixtures |
+| ThinkingMach App | PRP schemas and fixtures, canonical semantic catalog and dispatcher, runnerd/client interfaces, `ControlPlanePort`, the production binding, deterministic mock, and mock/real parity fixtures |
 | Eval consumers | Scenario corpus, provider configuration, experiment reports, and provider-backed orchestration |
 
 The production binding remains App code at
@@ -34,9 +34,9 @@ Public runner exports are:
 
 | Export | Stability and purpose |
 |---|---|
-| `@paperclipai/paperclip-runner` | Runtime contracts, runner clients/backends, PRP validation/replay, canonical catalog/dispatcher, and compatibility preflight |
-| `@paperclipai/paperclip-runner/evals` | Versioned native-attempt/build metadata, compatibility negotiation, and explicit runnerd artifact resolution |
-| `@paperclipai/paperclip-runner/testing` | Deterministic mocks, PRP port conformance, and provider-neutral semantic conformance kit |
+| `@thinkingmach/paperclip-runner` | Runtime contracts, runner clients/backends, PRP validation/replay, canonical catalog/dispatcher, and compatibility preflight |
+| `@thinkingmach/paperclip-runner/evals` | Versioned native-attempt/build metadata, compatibility negotiation, and explicit runnerd artifact resolution |
+| `@thinkingmach/paperclip-runner/testing` | Deterministic mocks, PRP port conformance, and provider-neutral semantic conformance kit |
 | `./browser`, `./react`, `./standalone`, `./styles.css` | Existing explicitly named UI/standalone consumers |
 
 Mock adapters and conformance constants are no longer package-root exports.
@@ -51,7 +51,7 @@ after an independent release requirement exists; a directory preference is not
 sufficient.
 
 Generic credential-free matrix orchestration lives in the separately versioned,
-workspace-private `@paperclipai/paperclip-eval-kernel` package. It contains no
+workspace-private `@thinkingmach/paperclip-eval-kernel` package. It contains no
 runner imports, provider configuration, scenario corpus, scorer, or report
 renderer. The runner may use it only as a development dependency; runtime,
 optional, and peer dependency sets remain free of eval packages. Paid provider
@@ -60,15 +60,15 @@ campaigns remain external.
 The dependency graph is acyclic:
 
 ```text
-Paperclip App production binding
+ThinkingMach App production binding
             |
             v
-@paperclipai/paperclip-runner (runtime contracts)
+@thinkingmach/paperclip-runner (runtime contracts)
             ^
             |
-Eval consumers ----> @paperclipai/paperclip-runner/evals
-       |             @paperclipai/paperclip-runner/testing
-       +-----------> @paperclipai/paperclip-eval-kernel
+Eval consumers ----> @thinkingmach/paperclip-runner/evals
+       |             @thinkingmach/paperclip-runner/testing
+       +-----------> @thinkingmach/paperclip-eval-kernel
 ```
 
 No arrow points from App runtime to an external eval repository.
@@ -76,7 +76,7 @@ No arrow points from App runtime to an external eval repository.
 ## Compatibility and versioning
 
 Package semver describes distribution compatibility. Independently versioned
-contracts are published in `PAPERCLIP_RUNNER_COMPATIBILITY`:
+contracts are published in `THINKINGMACH_RUNNER_COMPATIBILITY`:
 
 | Component | Current contract | Compatibility rule |
 |---|---:|---|
@@ -91,7 +91,7 @@ contracts are published in `PAPERCLIP_RUNNER_COMPATIBILITY`:
 | Testkit | 1 | Breaking mock seed, vector, observation, or conformance behavior requires a new version |
 | Eval corpus | 1 | Runner declares a supported inclusive corpus-version range; out-of-range bundles fail before execution |
 
-`assertPaperclipRunnerCompatibility` performs a fail-closed preflight. It emits
+`assertThinkingMachRunnerCompatibility` performs a fail-closed preflight. It emits
 `paperclip_runner_incompatible` with stable issue codes for component mismatch,
 unsupported corpus versions, unknown catalog operations, missing provider
 capability declarations, and provider-operation gaps. Provider-specific runtime
@@ -102,8 +102,8 @@ errors must not stand in for this preflight.
 Run:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner check:package-boundaries
-pnpm --filter @paperclipai/paperclip-runner check:clean-consumers
+pnpm --filter @thinkingmach/paperclip-runner check:package-boundaries
+pnpm --filter @thinkingmach/paperclip-runner check:clean-consumers
 ```
 
 The second command builds and packs the runner, installs its tarball into a
@@ -116,7 +116,7 @@ gate; workspace tests alone are not proof.
 ## Consequences
 
 - Existing tests importing mock/conformance values from the package root must
-  migrate to `@paperclipai/paperclip-runner/testing`.
+  migrate to `@thinkingmach/paperclip-runner/testing`.
 - `ajv` is a runtime dependency because the public dispatcher imports it.
 - The semantic conformance kit defines normalized comparison; real App service
   adapters and risk-weighted vectors may evolve behind its testkit version.

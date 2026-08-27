@@ -1,4 +1,4 @@
-import type { AiManagedConnectionSummary, CreateAiConnection, AiConnectionLoginIntent, LocalAiLoginAttempt, LocalAiLoginStatus } from "@paperclipai/shared";
+import type { AiManagedConnectionSummary, CreateAiConnection, AiConnectionLoginIntent, LocalAiLoginAttempt, LocalAiLoginStatus } from "@thinkingmach/shared";
 import { api } from "./client";
 export const aiConnectionsApi = {
   startLocalLogin: (companyId: string, input: AiConnectionLoginIntent & { restart?: boolean }) => api.post<LocalAiLoginAttempt>(`/companies/${companyId}/ai-connections/local/attempts`, input),

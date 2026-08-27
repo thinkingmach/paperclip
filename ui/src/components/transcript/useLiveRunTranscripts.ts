@@ -2,7 +2,7 @@ import { usePageVisibility } from "../../lib/page-visibility";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { readTranscriptRequest } from "./read-transcript-request";
 import { useQuery } from "@tanstack/react-query";
-import type { LiveEvent } from "@paperclipai/shared";
+import type { LiveEvent } from "@thinkingmach/shared";
 import { ApiError } from "../../api/client";
 import { instanceSettingsApi } from "../../api/instanceSettings";
 import { heartbeatsApi } from "../../api/heartbeats";

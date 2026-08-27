@@ -70,7 +70,7 @@ export type GuardedRemoteHttpFetchOptions = RemoteHttpEndpointGuardOptions & {
  * `fetch`, which resolved the hostname a second time. An attacker who controls
  * the name server for the hostname could answer with a public address for the
  * guard's lookup and a loopback, RFC 1918 or link-local address for the
- * connection, reaching internal services and cloud metadata from the Paperclip
+ * connection, reaching internal services and cloud metadata from the ThinkingMach
  * server. This function instead:
  *
  * 1. resolves and validates the hostname exactly once, keeping the approved
@@ -286,7 +286,7 @@ async function sendRequest(input: {
   // OAuth service sees the request (Coda returns 403 instead of its 401 OAuth
   // challenge), so give every guarded request a stable, non-identifying client
   // token while preserving an explicit caller value.
-  if (!headers.has("user-agent")) headers.set("user-agent", "Paperclip/1.0");
+  if (!headers.has("user-agent")) headers.set("user-agent", "ThinkingMach/1.0");
   if (body !== undefined && !headers.has("content-length") && !headers.has("transfer-encoding")) {
     headers.set("content-length", String(body.byteLength));
   }

@@ -81,7 +81,7 @@ describe("remaining native chat qualification", () => {
       expect(cell.environment.id).toBe("local");
       expect(cell.profile.generation).toBe("native");
       expect(cell.task.expectedRunCount).toBe(cell.task.id === "active-reassignment" ? 3 : 2);
-      expect(buildRunnerE2EProcessEnvironment({}, [cell]).PAPERCLIP_RUNNER_API_TOOLS_ENABLED)
+      expect(buildRunnerE2EProcessEnvironment({}, [cell]).THINKINGMACH_RUNNER_API_TOOLS_ENABLED)
         .toBe(cell.task.id === "grounded-answer-quality" ? "true" : undefined);
     }
   });

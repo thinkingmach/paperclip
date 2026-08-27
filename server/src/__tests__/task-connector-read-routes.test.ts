@@ -1,6 +1,6 @@
 import express from "express";
 import request from "supertest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { errorHandler } from "../middleware/error-handler.js";
 import { chatChannelRoutes } from "../routes/chat-channels.js";

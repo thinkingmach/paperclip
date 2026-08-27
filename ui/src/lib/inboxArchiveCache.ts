@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 import { queryKeys } from "./queryKeys";
 
 export type InboxIssueCacheSnapshot = Array<readonly [QueryKey, Issue[] | undefined]>;

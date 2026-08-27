@@ -7,12 +7,12 @@ function shellSingleQuote(value: string): string {
 // toolchain). We install a portable Node tarball into $HOME/.local rather
 // than using apt-get because the distro-packaged Node is often old enough to
 // reject modern JS syntax (regex /v flag, etc.) used by adapter CLIs like
-// @google/gemini-cli. The bootstrap also sets PAPERCLIP_NPM_BOOTSTRAPPED=1
+// @google/gemini-cli. The bootstrap also sets THINKINGMACH_NPM_BOOTSTRAPPED=1
 // so the install step knows to skip sudo — sudo would reset PATH via
 // secure_path and lose visibility of the freshly-installed npm in
 // $HOME/.local/bin.
 const ENSURE_NPM_PREAMBLE =
-  "PAPERCLIP_NPM_BOOTSTRAPPED=; " +
+  "THINKINGMACH_NPM_BOOTSTRAPPED=; " +
   "if ! command -v npm >/dev/null 2>&1 || " +
   "! command -v node >/dev/null 2>&1 || " +
   "! node -e 'const v=process.versions.node.split(\".\").map(Number);" +
@@ -29,14 +29,14 @@ const ENSURE_NPM_PREAMBLE =
   'tar -xJf "/tmp/${NODE_TARBALL}" -C "$HOME/.local" --strip-components=1 && ' +
   'rm -f "/tmp/${NODE_TARBALL}" && ' +
   'export PATH="$HOME/.local/bin:$PATH" && ' +
-  "PAPERCLIP_NPM_BOOTSTRAPPED=1; " +
+  "THINKINGMACH_NPM_BOOTSTRAPPED=1; " +
   "fi;";
 
 export function buildSandboxNpmInstallCommand(packageName: string): string {
   const quotedPackageName = shellSingleQuote(packageName);
   return [
     ENSURE_NPM_PREAMBLE,
-    'if [ -n "$PAPERCLIP_NPM_BOOTSTRAPPED" ]; then',
+    'if [ -n "$THINKINGMACH_NPM_BOOTSTRAPPED" ]; then',
     `npm install -g ${quotedPackageName};`,
     'elif [ "$(id -u)" -eq 0 ]; then',
     `npm install -g ${quotedPackageName};`,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ANNOUNCEMENT_ANIMATION_CSP, type Announcement } from "@paperclipai/shared";
+import { ANNOUNCEMENT_ANIMATION_CSP, type Announcement } from "@thinkingmach/shared";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 export function useAnnouncementAnimation(announcement: Announcement, previewSrc?: string) {

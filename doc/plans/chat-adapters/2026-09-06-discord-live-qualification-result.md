@@ -10,19 +10,19 @@ untested, but remaining media boundaries and server 70's normalized-button
 denial still need live qualification. Gateway reconnection alone is not a
 provider conversation pass.
 
-> **Status: core Discord transport, ordered follow-up bursts, receipt cleanup, and keep-open idle recovery have live proof, but the full DC1–DC7 matrix remains unqualified.** Paperclip has verified the dedicated bot identity, Message Content intent, Clawd membership, and a permission-complete text channel against Discord. The later clean-source checkpoint supersedes the intermediate unsolicited-recovery blocker.
+> **Status: core Discord transport, ordered follow-up bursts, receipt cleanup, and keep-open idle recovery have live proof, but the full DC1–DC7 matrix remains unqualified.** ThinkingMach has verified the dedicated bot identity, Message Content intent, Clawd membership, and a permission-complete text channel against Discord. The later clean-source checkpoint supersedes the intermediate unsolicited-recovery blocker.
 
 ## Resumed live setup — 2026-09-07 UTC
 
-The operator entered the existing bot token directly into Paperclip's masked
+The operator entered the existing bot token directly into ThinkingMach's masked
 field; it was not reset, displayed, logged, or copied into this result. The
 first connection attempt reached Discord but failed with HTTP 400 / code 50035
-because Paperclip called the numeric Get Guild Member route with the literal
+because ThinkingMach called the numeric Get Guild Member route with the literal
 `@me`. The scoped repair now uses the already verified Application ID as the
 bot user snowflake.
 
 After that repair, the preserved provider token connected successfully on the
-working tree based on `f5f31d2e1`. The Paperclip endpoint reached its real
+working tree based on `f5f31d2e1`. The ThinkingMach endpoint reached its real
 `verifying` state with bot external ID `1546330979860221952` and provider
 account/server ID `1457808928258658549`; the UI advanced to **Try Maya E2E in
 Discord**. This provider-backed transition proves that the token identifies the
@@ -39,12 +39,12 @@ remain open.
 
 In Clawd channel `1457808933082108089`, a real root mention produced the `eyes`
 receipt, exactly one native public thread (`1546509943639773244`), exactly one
-Paperclip task (`CHA-3`, issue `1976d84b-0bdf-4342-8afa-1a3e5d9be57c`), and one
+ThinkingMach task (`CHA-3`, issue `1976d84b-0bdf-4342-8afa-1a3e5d9be57c`), and one
 bound conversation (`123b687c-96d7-4164-bf58-bc95edf2bc8c`). Because the
 Eigenjoy Discord principal was unlinked at admission, the turn correctly
 published the safe low-trust-isolation refusal in that thread instead of agent
 output. The operator then completed the private identity link to the local
-Paperclip board; no one-time link or credential is recorded here. A fresh root
+ThinkingMach board; no one-time link or credential is recorded here. A fresh root
 must still prove the linked path because linking cannot retroactively change
 the trust boundary of the already admitted guest turn.
 
@@ -64,9 +64,9 @@ verified that the receipt is now cleared after the terminal reply.
 The live source was the dirty working tree based on `1325329e3`, started at
 13:44:55 UTC; this evidence must therefore be repeated on the final clean
 release-candidate SHA before release. In Clawd `#general`, the linked Eigenjoy
-principal created native thread `1546513811672932372`, exactly one Paperclip
+principal created native thread `1546513811672932372`, exactly one ThinkingMach
 task (`CHA-4`, issue `c65f32f8-a612-4f85-97c5-61bed2de58e2`), and one bound
-conversation. Only `#general` was enabled in Paperclip; the other ten discovered
+conversation. Only `#general` was enabled in ThinkingMach; the other ten discovered
 channels were disabled.
 
 An unmentioned follow-up (`1546516684129575123`) in that native thread asked
@@ -142,10 +142,10 @@ record of what had not yet been tested.
 
 Once the authenticated session is available, the required path is:
 
-1. create a dedicated Discord application and bot for the immutable Paperclip agent;
-2. enable Message Content Intent and enter only Application ID, Server ID, and the write-only bot token in Paperclip;
+1. create a dedicated Discord application and bot for the immutable ThinkingMach agent;
+2. enable Message Content Intent and enter only Application ID, Server ID, and the write-only bot token in ThinkingMach;
 3. inspect the generated OAuth URL for exactly the `bot` scope and permission integer `309237763136`, with the Clawd server pinned and server selection disabled;
-4. install the bot in Clawd, connect it in Paperclip, enable only the intended test channel, and execute DC1–DC7 from the browser runbook.
+4. install the bot in Clawd, connect it in ThinkingMach, enable only the intended test channel, and execute DC1–DC7 from the browser runbook.
 
 There is no managed bot-provisioning path, public webhook URL, interactions public key, slash command, or endpoint delivery choice in the current product.
 
@@ -156,10 +156,10 @@ No bot token, cookie, password, MFA value, or one-time identity-link URL is reco
 The current native Discord implementation includes:
 
 - a long-lived Gateway runtime with bounded reconnect/retry behavior and full provider `retry_after` waits rather than an application-level 60-second cap;
-- immutable application identity, including a database uniqueness constraint that prevents one Discord Application ID from backing multiple active Paperclip agent endpoints even across different servers;
-- server and effective-channel-permission verification, channel discovery, a Paperclip allowlist, and a separate direct-message reach switch;
-- one root mention to one Discord public thread and one Paperclip task, with thread replies serialized onto that task and DMs isolated into linear task generations;
-- endpoint, resource, principal, and root-message preflight before provider-thread creation; denied roots retain only a payload-redacted filtered audit and create no provider thread or Paperclip work;
+- immutable application identity, including a database uniqueness constraint that prevents one Discord Application ID from backing multiple active ThinkingMach agent endpoints even across different servers;
+- server and effective-channel-permission verification, channel discovery, a ThinkingMach allowlist, and a separate direct-message reach switch;
+- one root mention to one Discord public thread and one ThinkingMach task, with thread replies serialized onto that task and DMs isolated into linear task generations;
+- endpoint, resource, principal, and root-message preflight before provider-thread creation; denied roots retain only a payload-redacted filtered audit and create no provider thread or ThinkingMach work;
 - crash-safe root activation: an allowed root persists a provisional receipt before the provider POST, then recovery idempotently creates or reuses the thread and treats Discord error `160004` as an existing-thread reconciliation;
 - explicit missing-root filtering plus retryable ambiguous transport and authentication failures, so uncertainty is neither silently discarded nor misreported as a completed binding;
 - durable message links, endpoint-generation fencing, reaction hydration, edit/delete lifecycle handling, embeds/buttons, and bounded Discord-CDN attachment ingestion;
@@ -174,7 +174,7 @@ real provider.
 
 ## Historical code-audit status before the linked live run
 
-The final hardening removed the code-level release blockers found in the root-activation and lifecycle audit: denied roots no longer create an inert provider thread; a crash between Discord thread creation and Paperclip binding now resumes through the persisted provisional receipt and idempotent reconciliation; provider response bodies and callback errors no longer disclose content or credentials through diagnostics; retry scheduling honors long Discord backoff windows; reconnect now has a distinct, payload-redacted activity action; and Discord `50001`/`50013` destination permission failures disable only the affected resource rather than putting the whole endpoint into attention. True token/app authentication failures and unrelated authorization errors remain endpoint-wide. The compatibility marker, required patched-method checks, clean patch application against the pristine package, and 25-second REST boundary make SDK drift and stalled provider calls fail visibly rather than weakening those guarantees. Per repository policy, CI owns `pnpm-lock.yaml`; its PR workflow regenerates a lockfile artifact from the manifests before running the frozen install.
+The final hardening removed the code-level release blockers found in the root-activation and lifecycle audit: denied roots no longer create an inert provider thread; a crash between Discord thread creation and ThinkingMach binding now resumes through the persisted provisional receipt and idempotent reconciliation; provider response bodies and callback errors no longer disclose content or credentials through diagnostics; retry scheduling honors long Discord backoff windows; reconnect now has a distinct, payload-redacted activity action; and Discord `50001`/`50013` destination permission failures disable only the affected resource rather than putting the whole endpoint into attention. True token/app authentication failures and unrelated authorization errors remain endpoint-wide. The compatibility marker, required patched-method checks, clean patch application against the pristine package, and 25-second REST boundary make SDK drift and stalled provider calls fail visibly rather than weakening those guarantees. Per repository policy, CI owns `pnpm-lock.yaml`; its PR workflow regenerates a lockfile artifact from the manifests before running the frozen install.
 
 At that checkpoint, no code-audit blocker was recorded and none of the behavior
 had yet been observed against the real provider account/server. The linked live
@@ -194,7 +194,7 @@ requires the compatibility and provider contracts to rerun.
 - On the parent merge, the full chat-channel PostgreSQL integration suite passed 188/188 on a fresh migrated database, merge-conflict-focused server tests passed 355/355, and the deterministic five-provider browser suite passed 5/5.
 - On the Discord implementation revision, the 42-test Discord adapter/runtime subset and 34-test Discord/OpenAPI/UI contract subset passed, along with server/UI typechecks, token gates, and both working-tree checks.
 - The Discord patch applied cleanly to a pristine `@chat-adapter/discord@4.39.0` package, and the patched distribution passed syntax and compatibility checks. CI will regenerate the PR lockfile artifact before its frozen install, as required by repository policy.
-- The post-audit Discord adapter/runtime subset passed 48/48, including raw-provider-body and callback-error redaction plus a 120-second `retry_after` contract; the focused reconnect/removal PostgreSQL scenario also passed and proved secret replacement, old-secret retirement, runtime replacement, identity/history/access preservation, redacted reconnect activity, and final Paperclip credential cleanup. Endpoint removal does not uninstall the bot from the Discord server or delete its Developer Portal application; those remain separate provider-side cleanup steps.
+- The post-audit Discord adapter/runtime subset passed 48/48, including raw-provider-body and callback-error redaction plus a 120-second `retry_after` contract; the focused reconnect/removal PostgreSQL scenario also passed and proved secret replacement, old-secret retirement, runtime replacement, identity/history/access preservation, redacted reconnect activity, and final ThinkingMach credential cleanup. Endpoint removal does not uninstall the bot from the Discord server or delete its Developer Portal application; those remain separate provider-side cleanup steps.
 - The final Discord permission classifier/adapter subset passed 49/49, and its database-backed publication regression proved that `50013` cancels only the affected publication/resource while the endpoint remains active. The final combined working tree then passed 193/193 chat-channel integration tests on fresh migrated database `chat_adapters_test_final_20260906_1257`, 111/111 focused runtime/error/privacy tests, all package typechecks, token gates, and the deterministic five-provider browser suite.
 
 This evidence supports implementation integrity. Provider installation,

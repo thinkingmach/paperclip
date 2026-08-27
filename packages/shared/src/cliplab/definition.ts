@@ -1,7 +1,7 @@
 import type { AgentAppearance, CharacterPaletteId, CharacterState } from "../agent-appearance.js";
 import { definitionOf, sampleDefinition, type Definition, type Sample } from "./model.js";
 import { CAP_V1_COLORS } from "./palette-tokens.js";
-import { PAPERCLIP_CHARACTER } from "./character.js";
+import { THINKINGMACH_CHARACTER } from "./character.js";
 
 /**
  * One character, every palette: the studio export's body, expressions and
@@ -11,8 +11,8 @@ import { PAPERCLIP_CHARACTER } from "./character.js";
  */
 export function characterDefinition(appearance: AgentAppearance, muted = false): Definition {
   const colors = CAP_V1_COLORS[(muted ? "muted-dream" : appearance.paletteId) as CharacterPaletteId];
-  const character = { ...PAPERCLIP_CHARACTER.character, id: "paperclip-cap-v1", name: "Agent", color: colors.a, color2: colors.b, followCursor: true, followRotation: true };
-  const definition = definitionOf({ version: 1, name: "Paperclip", characters: [character], expressions: PAPERCLIP_CHARACTER.expressions, animations: PAPERCLIP_CHARACTER.animations }, character);
+  const character = { ...THINKINGMACH_CHARACTER.character, id: "paperclip-cap-v1", name: "Agent", color: colors.a, color2: colors.b, followCursor: true, followRotation: true };
+  const definition = definitionOf({ version: 1, name: "ThinkingMach", characters: [character], expressions: THINKINGMACH_CHARACTER.expressions, animations: THINKINGMACH_CHARACTER.animations }, character);
   for (const animation of definition.animations) if (animation.id === "happy") animation.loop = false;
   return definition;
 }

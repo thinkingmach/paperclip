@@ -1,6 +1,6 @@
 # Tasks created from a task
 
-Run `pnpm --filter @paperclipai/ui exec storybook dev -p 6017 -c storybook/.storybook --no-open`.
+Run `pnpm --filter @thinkingmach/ui exec storybook dev -p 6017 -c storybook/.storybook --no-open`.
 Open **UX Labs → Tasks Created From a Task → Full Task Page**.
 
 The stories render production `Layout`, `IssueDetail`, `TaskSidePanel` and

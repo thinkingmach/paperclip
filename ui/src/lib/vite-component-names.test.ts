@@ -10,7 +10,7 @@ it("keeps component names through the production bundle for React error traces",
   const root = await mkdtemp(path.join(os.tmpdir(), "paperclip-component-names-"));
   try {
     await mkdir(path.join(root, "public"));
-    await writeFile(path.join(root, "public/sw.js"), 'const buildId = "__PAPERCLIP_BUILD_ID__";');
+    await writeFile(path.join(root, "public/sw.js"), 'const buildId = "__THINKINGMACH_BUILD_ID__";');
     const entry = path.join(root, "entry.js");
     await writeFile(entry, `
       function DiagnosticComponent() { return null; }

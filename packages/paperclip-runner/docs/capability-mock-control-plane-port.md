@@ -1,7 +1,7 @@
 # Capability Mock ControlPlanePort
 
 `CapabilityMockControlPlaneAdapter` is a deterministic, serializable, in-memory
-model of Paperclip's control-plane **semantics** — not its transport. It imports
+model of ThinkingMach's control-plane **semantics** — not its transport. It imports
 no server route, service, database, or provider binding, and it holds no
 credential.
 
@@ -79,13 +79,13 @@ and result mutations (failing closed with `native_event_replay_conflict`).
 ## Running the tests
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner exec vitest run \
+pnpm --filter @thinkingmach/paperclip-runner exec vitest run \
   src/conformance/control-plane-port.test.ts \
   src/mock-core/capability-mock-control-plane-adapter.test.ts
 ```
 
 Nine tests, no npm alias of their own — they also run inside
-`pnpm --filter @paperclipai/paperclip-runner test`.
+`pnpm --filter @thinkingmach/paperclip-runner test`.
 
 ## Related
 

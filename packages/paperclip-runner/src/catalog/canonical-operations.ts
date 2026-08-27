@@ -1,6 +1,6 @@
 /** Stable aggregate API over the per-action definitions in `src/protocol-actions/`. */
 import type { CapabilitySideEffectClass, CapabilityToolDisposition, CapabilityOptionalCatalogGroup, CapabilityToolTaskMode, ScenarioChatdempotencyBehavior } from "../tools/capability-semantic-tool-types.js";
-import { PAPERCLIP_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
+import { THINKINGMACH_PROTOCOL_ACTIONS } from "../protocol-actions/index.js";
 
 export type CapabilityCatalogSurface = "scenario" | "live";
 export type CapabilityRealBindingStatus = "live_codex" | "scenario_mock" | "test_only";
@@ -16,12 +16,12 @@ export interface CapabilityCanonicalOperation {
 }
 
 export const CAPABILITY_CANONICAL_OPERATIONS: readonly CapabilityCanonicalOperation[] = Object.freeze(
-  PAPERCLIP_PROTOCOL_ACTIONS
+  THINKINGMACH_PROTOCOL_ACTIONS
     .map((action) => action.canonical as unknown as CapabilityCanonicalOperation)
     .sort((left, right) => left.operationId.localeCompare(right.operationId)),
 );
 const byId = new Map(CAPABILITY_CANONICAL_OPERATIONS.map((operation) => [operation.operationId, operation]));
-if (byId.size !== PAPERCLIP_PROTOCOL_ACTIONS.length) throw new Error("Duplicate canonical semantic operation ID");
+if (byId.size !== THINKINGMACH_PROTOCOL_ACTIONS.length) throw new Error("Duplicate canonical semantic operation ID");
 export function capabilityCanonicalOperation(operationId: string): CapabilityCanonicalOperation | undefined { return byId.get(operationId); }
 export function capabilityCanonicalOperationsForSurface(surface: CapabilityCatalogSurface): readonly CapabilityCanonicalOperation[] { return CAPABILITY_CANONICAL_OPERATIONS.filter((operation) => operation.surfaces.includes(surface)); }
 export function capabilityCanonicalOperationIds(): readonly string[] { return CAPABILITY_CANONICAL_OPERATIONS.map((operation) => operation.operationId); }

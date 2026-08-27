@@ -20,7 +20,7 @@ export const getTaskContextAction = {
     "idempotency": "none",
     "disabledByDefault": false,
     "realBindingStatus": "live_codex",
-    "realServiceBinding": "PaperclipRunnerToolAuthority active issue/run + accepted plan revision",
+    "realServiceBinding": "ThinkingMachRunnerToolAuthority active issue/run + accepted plan revision",
     "prpEvidence": "bound company/assignment query plus exact accepted document revision projection",
     "prpBindingStatus": "bound",
     "legacyAliases": [

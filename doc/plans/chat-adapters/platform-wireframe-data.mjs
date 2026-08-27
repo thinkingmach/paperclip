@@ -2,12 +2,12 @@ export const providerScreens = [
   {
     id: "13", slug: "slack-setup", provider: "Slack", phase: "Setup", group: "Slack", kind: "providerSetup",
     title: "Invite Maya to Slack", subtitle: "Create or select a Slack app, then verify its workspace installation.",
-    rationale: "Paperclip generates the exact provider handoff while keeping Slack-owned installation and workspace policy visible.",
+    rationale: "ThinkingMach generates the exact provider handoff while keeping Slack-owned installation and workspace policy visible.",
     annotations: [
-      "The selected Paperclip agent and derived Slack bot identity stay fixed throughout setup.",
+      "The selected ThinkingMach agent and derived Slack bot identity stay fixed throughout setup.",
       "Direct webhook is the default; relay and Socket Mode are advanced alternatives for private deployments.",
       "The generated manifest owns the exact scopes, events, interactivity URL, and optional command configuration.",
-      "Secrets are masked references; workspace install or OAuth happens in Slack, not inside a Paperclip imitation.",
+      "Secrets are masked references; workspace install or OAuth happens in Slack, not inside a ThinkingMach imitation.",
       "Verification separates identity, signature, scopes, events, and workspace membership so failures are actionable."
     ]
   },
@@ -17,7 +17,7 @@ export const providerScreens = [
     rationale: "Slack exposes the richest optional surface, but least-privilege thread behavior remains the default.",
     annotations: [
       "Reach is the intersection of the saved allowlist and channels where Slack has actually added the bot.",
-      "Root mention → Slack thread → one Paperclip issue is fixed; bound-thread replies continue without mentions.",
+      "Root mention → Slack thread → one ThinkingMach issue is fixed; bound-thread replies continue without mentions.",
       "DMs, Agent Sessions, progress cadence, files, Block Kit, modals, commands, and ephemeral replies are independent controls.",
       "OAuth/Grid identity, token rotation, scope drift, and optional Socket Mode live under Security and delivery.",
       "Unsupported or ungranted features show a precise fallback and reinstall action instead of failing silently."
@@ -25,12 +25,12 @@ export const providerScreens = [
   },
   {
     id: "15", slug: "slack-interactions", provider: "Slack", phase: "Interactions", group: "Slack", kind: "providerInteractions",
-    title: "Slack interaction model", subtitle: "A root mention moves the work into one native thread and one Paperclip issue.",
+    title: "Slack interaction model", subtitle: "A root mention moves the work into one native thread and one ThinkingMach issue.",
     rationale: "This makes the Hermes thread contract and Slack-specific acknowledgement/action deadlines inspectable.",
     annotations: [
       "A human mentions @maya in a channel root; an unmentioned fresh root message is ignored.",
-      "Paperclip durably records and acknowledges the event before task work begins.",
-      "Maya replies under the activation message; that Slack thread binds exactly one assigned Paperclip issue.",
+      "ThinkingMach durably records and acknowledges the event before task work begins.",
+      "Maya replies under the activation message; that Slack thread binds exactly one assigned ThinkingMach issue.",
       "Later human replies, files, and actions in the bound thread become turns after current permission checks.",
       "Safe streaming, stop/actions, final delivery, and error fallback stay in the thread; internal traces never publish."
     ]
@@ -42,7 +42,7 @@ export const providerScreens = [
     annotations: [
       "The purpose is Chat with an agent; repository code access remains a separate GitHub tool connection.",
       "GitHub App is recommended; PAT is marked testing-only and GitHub Enterprise adds an API base URL.",
-      "Paperclip provides the webhook URL/secret and the minimum Issues, Pull requests, and Metadata permissions.",
+      "ThinkingMach provides the webhook URL/secret and the minimum Issues, Pull requests, and Metadata permissions.",
       "The operator installs the App on selected repositories and stores the App ID/private key as secret references.",
       "Verification checks signature delivery, bot identity, subscribed events, installation, and selected repositories."
     ]
@@ -52,23 +52,23 @@ export const providerScreens = [
     title: "GitHub conversation settings", subtitle: "Choose repositories, activation surfaces, and comment behavior.",
     rationale: "The settings reflect GitHub's object-based threads and its narrower non-realtime interaction surface.",
     annotations: [
-      "The Paperclip repository allowlist can only narrow the repositories selected in the GitHub App installation.",
+      "The ThinkingMach repository allowlist can only narrow the repositories selected in the GitHub App installation.",
       "Issues, PR conversations, and inline review-comment threads are distinct activation surfaces and bindings.",
       "Mention-only activation is the default; labels or trusted-author automation are explicit advanced policies.",
-      "Output uses GFM, reactions, and coarse comment edits; files and governed actions become Paperclip links.",
+      "Output uses GFM, reactions, and coarse comment edits; files and governed actions become ThinkingMach links.",
       "Permission drift, installation suspension, GHES URL, rate limits, and self-message suppression are operational settings."
     ]
   },
   {
     id: "18", slug: "github-interactions", provider: "GitHub", phase: "Interactions", group: "GitHub", kind: "providerInteractions",
-    title: "GitHub interaction model", subtitle: "A mention binds the existing issue, PR, or review thread to one Paperclip issue.",
-    rationale: "GitHub supplies the conversation object, so Paperclip binds it rather than manufacturing a new native thread.",
+    title: "GitHub interaction model", subtitle: "A mention binds the existing issue, PR, or review thread to one ThinkingMach issue.",
+    rationale: "GitHub supplies the conversation object, so ThinkingMach binds it rather than manufacturing a new native thread.",
     annotations: [
       "A user mentions the bot in an issue, PR conversation, or inline review comment.",
       "Webhook signature and delivery ID are verified before principal, repository, and activation checks.",
-      "The existing GitHub object/thread maps once to a Paperclip issue; an inline review thread remains separate from the PR conversation.",
+      "The existing GitHub object/thread maps once to a ThinkingMach issue; an inline review thread remains separate from the PR conversation.",
       "Maya reacts, posts or edits one GFM progress comment, and publishes the final answer without token streaming.",
-      "Buttons, modals, ephemeral replies, DMs, and uploads fall back to text plus authenticated Paperclip URLs."
+      "Buttons, modals, ephemeral replies, DMs, and uploads fall back to text plus authenticated ThinkingMach URLs."
     ]
   },
   {
@@ -76,7 +76,7 @@ export const providerScreens = [
     title: "Install Maya in Microsoft Teams", subtitle: "Register the app and bot, then install its package in the tenant.",
     rationale: "Teams setup exposes every external ownership boundary: Entra/bot registration, endpoint, package, tenant policy, and install.",
     annotations: [
-      "Paperclip fixes Maya and supplies the public messaging endpoint before the operator enters Microsoft tooling.",
+      "ThinkingMach fixes Maya and supplies the public messaging endpoint before the operator enters Microsoft tooling.",
       "Teams Developer CLI is the recommended handoff; manual Azure/Developer Portal setup remains available.",
       "Client secret and federated identity are mutually exclusive; single-tenant, multi-tenant, and sovereign cloud are explicit.",
       "Custom-app upload or tenant approval may block installation and is reported as an external admin action.",
@@ -88,7 +88,7 @@ export const providerScreens = [
     title: "Microsoft Teams settings", subtitle: "Configure chat scopes and add privileged Graph access only when needed.",
     rationale: "Teams permissions are layered; basic mention/reply must work without broad directory or history grants.",
     annotations: [
-      "Personal, team/channel, and group-chat reach is bounded by app installation and Paperclip allowlists.",
+      "Personal, team/channel, and group-chat reach is bounded by app installation and ThinkingMach allowlists.",
       "Channel post/reply threads map one issue; DMs and group chats use the stable Teams conversation.",
       "Mention-only is default. RSC all-message/history access is a per-resource, off-by-default grant.",
       "User directory lookup and DM history show their broader Entra application permission and admin-consent status.",
@@ -102,7 +102,7 @@ export const providerScreens = [
     annotations: [
       "A channel root mention starts work in that post's reply thread; the original post is the stable thread root.",
       "A DM or group-chat message binds the stable Teams conversation according to the configured task-boundary policy.",
-      "Paperclip verifies the bot activity, resolves tenant/member identity, and applies current access before waking Maya.",
+      "ThinkingMach verifies the bot activity, resolves tenant/member identity, and applies current access before waking Maya.",
       "DMs can stream natively; group/channel output buffers or edits and uses Adaptive Cards/task modules for actions.",
       "RSC-disabled unmentioned traffic is ignored; denied or unsupported actions use targeted/DM or text-link fallback."
     ]
@@ -112,10 +112,10 @@ export const providerScreens = [
     title: "Connect Maya to Telegram", subtitle: "Create a dedicated bot with BotFather, then choose webhook or polling delivery.",
     rationale: "Telegram has no managed installation object, so bot identity, delivery mode, privacy, and chat membership are separate checks.",
     annotations: [
-      "One BotFather bot represents one Paperclip agent; name, username, avatar, and token come from Telegram.",
+      "One BotFather bot represents one ThinkingMach agent; name, username, avatar, and token come from Telegram.",
       "Privacy mode stays on and group joining is allowed; commands and forum-topic rights are optional provider setup.",
       "Verified webhook is production default; polling is for local long-running development and cannot run simultaneously.",
-      "Paperclip supplies the HTTPS webhook URL and secret token, while the operator adds the bot to intended chats.",
+      "ThinkingMach supplies the HTTPS webhook URL and secret token, while the operator adds the bot to intended chats.",
       "Verification checks getMe identity, webhook/polling exclusivity, pending updates/errors, privacy guidance, and chat reach."
     ]
   },
@@ -139,8 +139,8 @@ export const providerScreens = [
       "In a DM, the first message creates the active issue; /new or an inline button deliberately starts a fresh one.",
       "In a privacy-on group, @maya activates and a reply to Maya continues; unrelated group traffic is not consumed.",
       "In a forum, message_thread_id provides a stable topic-to-issue boundary when the bot is present.",
-      "Paperclip deduplicates update_id, enforces actor/chat scope, then uses typing/reaction and throttled output.",
-      "Inline callbacks carry opaque IDs; unsupported or governed interactions return concise text/DM plus a Paperclip link."
+      "ThinkingMach deduplicates update_id, enforces actor/chat scope, then uses typing/reaction and throttled output.",
+      "Inline callbacks carry opaque IDs; unsupported or governed interactions return concise text/DM plus a ThinkingMach link."
     ]
   }
 ];

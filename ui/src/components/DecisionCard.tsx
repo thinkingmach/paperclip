@@ -1,17 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
-import {
-  AlertTriangle,
-  ArrowRight,
-  Ban,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  Loader2,
-  MinusCircle,
-  ShieldAlert,
-  XCircle,
-} from "lucide-react";
-import { decisionEffectTargetIssueIds, type DecisionEffect, type DecisionOption } from "@paperclipai/shared";
+import { AlertTriangle, ArrowRight, Ban, CheckCircle2, Clock, ExternalLink, Loader2, MinusCircle, ShieldAlert, XCircle,  } from "lucide-react";
+import { decisionEffectTargetIssueIds, type DecisionEffect, type DecisionOption } from "@thinkingmach/shared";
 import type {
   Decision,
   DecisionEffectExecution,

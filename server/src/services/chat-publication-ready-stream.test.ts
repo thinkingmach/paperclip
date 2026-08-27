@@ -7,7 +7,7 @@ import { nativePublicationTextFits } from "./chat-publication-text-parts.js";
 // Local qualification only: load an independently copied candidate module,
 // never a behavioral mock. CI/default runs use the installed pinned adapter.
 vi.mock("@chat-adapter/slack", async (importOriginal) => {
-  const candidate = process.env.PAPERCLIP_SLACK_STREAM_ADAPTER_MODULE;
+  const candidate = process.env.THINKINGMACH_SLACK_STREAM_ADAPTER_MODULE;
   return candidate ? import(/* @vite-ignore */ candidate) : importOriginal();
 });
 
@@ -38,7 +38,7 @@ type NativeStreamReceipt = {
 const streamReceipt = {
   ok: true,
   ts: "1788.901",
-  channel: "D-PAPERCLIP",
+  channel: "D-THINKINGMACH",
 };
 
 async function withNativeSlack(
@@ -158,7 +158,7 @@ async function withNativeSlack(
       };
     };
     await run({
-      stream: (chunks) => adapter.stream("slack:D-PAPERCLIP:1788.400", chunks),
+      stream: (chunks) => adapter.stream("slack:D-THINKINGMACH:1788.400", chunks),
       calls,
       start,
       append,
@@ -516,7 +516,7 @@ describe("already-approved publication streaming", () => {
           "chat.appendStream",
           "chat.stopStream",
         ]).toContain(method);
-        expect(body.get("channel")).toBe("D-PAPERCLIP");
+        expect(body.get("channel")).toBe("D-THINKINGMACH");
         if (method === "chat.startStream")
           expect(body.get("thread_ts")).toBe("1788.400");
         else expect(body.get("ts")).toBe(streamReceipt.ts);
@@ -755,7 +755,7 @@ describe("already-approved publication streaming", () => {
         );
         const wait = vi.fn(async (_delayMs: number) => undefined);
         const result = await adapter.stream(
-          "slack:D-PAPERCLIP:1788.400",
+          "slack:D-THINKINGMACH:1788.400",
           streamSafePublicationText(text, { wait }),
         );
         expect(result.id).toBe("1788.901");
@@ -807,7 +807,7 @@ describe("already-approved publication streaming", () => {
                   message_id: 901,
                   date: 1788910000,
                   chat: { id: chatId, type: chatType },
-                  from: { id: 123, is_bot: true, first_name: "Paperclip" },
+                  from: { id: 123, is_bot: true, first_name: "ThinkingMach" },
                   text: source,
                 },
           });

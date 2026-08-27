@@ -8,7 +8,7 @@ const standaloneCode = runnerRequire("ajv/dist/standalone").default;
 import { skillFrontmatterSchema } from "../src/frontmatter.ts";
 
 // Keep the standalone mock on the production parser and schema without adding
-// a runtime dependency on a Paperclip workspace package.
+// a runtime dependency on a ThinkingMach workspace package.
 const source = await readFile(new URL("../src/frontmatter.ts", import.meta.url), "utf8");
 function section(start: string, end?: string) {
   const from = source.indexOf(start);

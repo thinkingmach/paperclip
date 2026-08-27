@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { index, jsonb, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
-import type { AdapterAuthSessionInternalStatus, AgentAdapterType } from "@paperclipai/shared";
+import type { AdapterAuthSessionInternalStatus, AgentAdapterType } from "@thinkingmach/shared";
 import { companies } from "./companies.js";
 import { environments } from "./environments.js";
 
@@ -48,7 +48,7 @@ export const adapterAuthSessions = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     companyId: uuid("company_id").notNull().references(() => companies.id, { onDelete: "cascade" }),
     environmentId: uuid("environment_id").notNull().references(() => environments.id, { onDelete: "cascade" }),
-    aiConnection: jsonb("ai_connection").$type<import("@paperclipai/shared").AiConnectionLoginIntent>(),
+    aiConnection: jsonb("ai_connection").$type<import("@thinkingmach/shared").AiConnectionLoginIntent>(),
     connectionId: uuid("connection_id"),
     connectionGrantId: uuid("connection_grant_id"),
     connectionMethod: text("connection_method"),

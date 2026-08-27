@@ -408,7 +408,7 @@ describe("Discord modal installed discord.js wire contract", () => {
             content:
               outcome === "accepted"
                 ? "Your response was received."
-                : "This response was not accepted. Open the linked Paperclip task or reopen the question to try again.",
+                : "This response was not accepted. Open the linked ThinkingMach task or reopen the question to try again.",
             flags: 64,
             allowed_mentions: { parse: [] },
           },

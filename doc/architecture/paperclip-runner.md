@@ -1,20 +1,20 @@
-# ADR: Paperclip Runner architecture
+# ADR: ThinkingMach Runner architecture
 
 - Status: Proposed
 - Date: 2026-08-24
-- Owners: Paperclip control plane and runner maintainers
-- Related: [Paperclip Runner compatibility and rollout](paperclip-runner-compatibility.md)
+- Owners: ThinkingMach control plane and runner maintainers
+- Related: [ThinkingMach Runner compatibility and rollout](paperclip-runner-compatibility.md)
 
 ## Context
 
-Paperclip is a control plane. It owns companies, agents, issues, budgets,
+ThinkingMach is a control plane. It owns companies, agents, issues, budgets,
 approvals, and durable workflow state. Agent providers remain execution
-services. Existing adapters invoke those services directly from the Paperclip
+services. Existing adapters invoke those services directly from the ThinkingMach
 server.
 
-Paperclip Runner introduces a separate execution process for provider sessions.
+ThinkingMach Runner introduces a separate execution process for provider sessions.
 This process needs durable delivery, restart recovery, and governed access to
-Paperclip actions. It must not become a second control plane. It must also land
+ThinkingMach actions. It must not become a second control plane. It must also land
 without changing the behavior of existing adapters.
 
 The implementation remains behind one explicit experimental adapter and one
@@ -23,22 +23,22 @@ OpenCode, Claude Managed, AWS AgentCore, and pinned Claude/Codex ACPX profiles.
 
 ## Decision
 
-Add a standalone package named `@paperclipai/paperclip-runner`. The package owns
-the language-neutral Paperclip Runner Protocol (PRP), the Rust runner process,
+Add a standalone package named `@thinkingmach/paperclip-runner`. The package owns
+the language-neutral ThinkingMach Runner Protocol (PRP), the Rust runner process,
 provider drivers, deterministic replay, and semantic action dispatch contracts.
 
 Add one explicit adapter named `paperclip_runner`. The adapter is available only
 when an instance-level, default-off rollout flag is enabled. Provider selection
 is persisted per run and may use only a qualified provider profile.
 
-Do not route existing adapters through Paperclip Runner. A direct adapter keeps
+Do not route existing adapters through ThinkingMach Runner. A direct adapter keeps
 its current invocation, transcript, interaction, cancellation, and finalization
 paths.
 
 ## Goals
 
-- Keep runner process ownership outside the Paperclip server process.
-- Preserve Paperclip as the authority for identity, policy, and workflow state.
+- Keep runner process ownership outside the ThinkingMach server process.
+- Preserve ThinkingMach as the authority for identity, policy, and workflow state.
 - Recover a run after runner or network interruption without duplicate effects.
 - Expose only actions that the current run is allowed to use.
 - Make protocol behavior deterministic across TypeScript and Rust.
@@ -48,7 +48,7 @@ paths.
 
 - Replace existing direct adapters.
 - Move business authorization or issue status policy into Rust.
-- Give runnerd a broad Paperclip API credential.
+- Give runnerd a broad ThinkingMach API credential.
 - Support unqualified provider versions, arbitrary ACPX agents, or editable
   remote-resource identity in agent configuration.
 - Expose browser SDK, React SDK, eval, lab, or scenario-explorer package entry
@@ -61,7 +61,7 @@ paths.
 The initial local topology is:
 
 ```text
-Paperclip server
+ThinkingMach server
   |  authenticated PRP v1 WebSocket
   v
 paperclip-runnerd
@@ -76,11 +76,11 @@ then owns the provider process group and the durable transport state for that
 run.
 
 The browser does not connect to runnerd. It reads projections from the existing
-Paperclip APIs and task-thread models.
+ThinkingMach APIs and task-thread models.
 
 ## Dependency direction
 
-The runner package must build and test without importing Paperclip server, UI,
+The runner package must build and test without importing ThinkingMach server, UI,
 CLI, database, or other private workspace implementation modules.
 
 ```text
@@ -94,17 +94,17 @@ JSON Schema and fixtures
                    v
          deterministic parity
 
-Paperclip server ----implements----> runner public ports
+ThinkingMach server ----implements----> runner public ports
 ```
 
-The dependency points from an implementation to a contract. The Paperclip
+The dependency points from an implementation to a contract. The ThinkingMach
 server may implement a public runner port. The runner package must not import
 the server implementation.
 
 The initial public package surfaces are:
 
-- `@paperclipai/paperclip-runner` for runtime contracts and clients.
-- `@paperclipai/paperclip-runner/testing` for deterministic fakes and
+- `@thinkingmach/paperclip-runner` for runtime contracts and clients.
+- `@thinkingmach/paperclip-runner/testing` for deterministic fakes and
   conformance helpers.
 
 Every export must have an implementation and a clean-consumer test before it is
@@ -137,7 +137,7 @@ input.
 
 ## Trust boundary
 
-The Paperclip server is authoritative for:
+The ThinkingMach server is authoritative for:
 
 - company, agent, issue, run, session, and user attribution;
 - rollout and runtime selection;
@@ -157,7 +157,7 @@ Runnerd is authoritative only for its local responsibilities:
 Runnerd receives a short-lived, one-use bootstrap ticket. The ticket is bound to
 the company, agent, issue, run, runner, session, turn, and verified artifact. The
 server exchanges it for a short-lived connection lease. Raw tickets are never
-stored. Runnerd never receives a broad Paperclip API key.
+stored. Runnerd never receives a broad ThinkingMach API key.
 
 The server rejects expired, replayed, revoked, cross-company, mismatched,
 malformed, oversized, or protocol-incompatible connections. Cancellation,
@@ -245,7 +245,7 @@ Runtime selection is persisted before launch. Later setting changes cannot
 silently move an in-flight run between the direct and native execution paths.
 
 The detailed compatibility rules are in
-[Paperclip Runner compatibility and rollout](paperclip-runner-compatibility.md).
+[ThinkingMach Runner compatibility and rollout](paperclip-runner-compatibility.md).
 
 ## Observability
 
@@ -262,7 +262,7 @@ only on the agent adapter profile.
 
 This design adds process, protocol, and recovery complexity. In return, it gives
 provider sessions a durable and testable execution boundary without moving
-Paperclip governance into the runner.
+ThinkingMach governance into the runner.
 
 The default-off, explicit-adapter rollout duplicates some provider
 configuration during the experiment. This is intentional. It keeps comparison

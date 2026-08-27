@@ -14,7 +14,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { resolvePaperclipHomeDir } from "../home-paths.js";
+import { resolveThinkingMachHomeDir } from "../home-paths.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -44,7 +44,7 @@ interface AdapterSettings {
 // ---------------------------------------------------------------------------
 
 function adapterPluginPaths() {
-  const paperclipDir = resolvePaperclipHomeDir();
+  const paperclipDir = resolveThinkingMachHomeDir();
   return {
     adapterPluginsDir: path.join(paperclipDir, "adapter-plugins"),
     adapterPluginsStorePath: path.join(paperclipDir, "adapter-plugins.json"),
@@ -72,7 +72,7 @@ function ensureDirs(): string {
       name: "paperclip-adapter-plugins",
       version: "0.0.0",
       private: true,
-      description: "Managed directory for Paperclip external adapter plugins. Do not edit manually.",
+      description: "Managed directory for ThinkingMach external adapter plugins. Do not edit manually.",
     }, null, 2) + "\n");
   }
   return adapterPluginsDir;

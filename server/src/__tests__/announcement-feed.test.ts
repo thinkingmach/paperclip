@@ -93,7 +93,7 @@ describe("announcement feed", () => {
     expect(await service.current()).not.toBeNull();
     now = 1000;
     expect(await service.current()).toBeNull();
-    expect(await announcementFeedService({ version: "1.0.0", fetch: async () => json({ ...item, minimumPaperclipVersion: "2.0.0" }) }).current()).toBeNull();
+    expect(await announcementFeedService({ version: "1.0.0", fetch: async () => json({ ...item, minimumThinkingMachVersion: "2.0.0" }) }).current()).toBeNull();
   });
   it("proxies only the current content-addressed image and caches bytes", async () => {
     const bytes = Buffer.from("test-image");
@@ -106,7 +106,7 @@ describe("announcement feed", () => {
     expect(images[1]).toEqual(images[0]);
     await service.image(item.id);
     expect(fetch).toHaveBeenCalledTimes(2);
-    expect(String(fetch.mock.calls[1][0])).toBe(`https://pages.paperclip.ing/announcements/v1/${path}`);
+    expect(String(fetch.mock.calls[1][0])).toBe(`https://pages.thinkingmach.com/announcements/v1/${path}`);
   });
   it("rejects image digest mismatches and cools down image retries", async () => {
     const fetch = vi.fn().mockImplementationOnce(async () => json({ ...item, image: { path: `assets/${"0".repeat(64)}.png`, alt: "" } })).mockImplementation(async () => new Response("wrong", { headers: { "Content-Type": "image/png" } }));

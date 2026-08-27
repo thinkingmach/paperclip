@@ -1,7 +1,7 @@
-import { agentAppearanceSchema, randomAgentAppearance, resolveAgentAppearance, agentAvatarUrl } from "@paperclipai/shared";
+import { agentAppearanceSchema, randomAgentAppearance, resolveAgentAppearance, agentAvatarUrl } from "@thinkingmach/shared";
 import { createHash, randomBytes } from "node:crypto";
 import { and, desc, eq, gte, inArray, lt, ne, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   toolConnectionInstalls,
@@ -17,7 +17,7 @@ import {
   issueExecutionDecisions,
   issues,
   issueComments,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   AGENT_DEFAULT_MAX_CONCURRENT_RUNS,
   agentRuntimeConfigSchema,
@@ -27,10 +27,10 @@ import {
   normalizeAgentUrlKey,
   type AgentEligibilityAgent,
   type AgentApiKeyScope,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
-  normalizePaperclipRunnerAdapterConfig,
-} from "@paperclipai/adapter-utils/server-utils";
+  normalizeThinkingMachRunnerAdapterConfig,
+} from "@thinkingmach/adapter-utils/server-utils";
 import { conflict, notFound, unprocessable } from "../errors.js";
 import {
   collectSecretRefs,
@@ -144,6 +144,7 @@ interface AgentShortnameCollisionOptions {
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
+
 
 function jsonEqual(left: unknown, right: unknown): boolean {
   return JSON.stringify(left) === JSON.stringify(right);
@@ -690,7 +691,7 @@ export function agentService(db: Db) {
     const beforeMarker = readBuiltInAgentMarker(beforeMetadata);
     const afterMarker = readBuiltInAgentMarker(afterMetadata);
     if (builtInAgentMarkersEqual(beforeMarker, afterMarker)) return;
-    throw conflict("Built-in agent marker is managed by Paperclip and cannot be edited directly", {
+    throw conflict("Built-in agent marker is managed by ThinkingMach and cannot be edited directly", {
       code: "built_in_agent_marker_readonly",
       key: beforeMarker?.key ?? afterMarker?.key ?? null,
     });
@@ -758,7 +759,7 @@ export function agentService(db: Db) {
         normalizedPatch.adapterConfig,
         { adapterType: (normalizedPatch.adapterType ?? existing.adapterType) as string },
       );
-      normalizedPatch.adapterConfig = normalizePaperclipRunnerAdapterConfig(
+      normalizedPatch.adapterConfig = normalizeThinkingMachRunnerAdapterConfig(
         (normalizedPatch.adapterType ?? existing.adapterType) as string,
         normalizedAdapterConfig,
       );
@@ -766,11 +767,12 @@ export function agentService(db: Db) {
       Object.prototype.hasOwnProperty.call(normalizedPatch, "adapterType")
       && isPlainRecord(existing.adapterConfig)
     ) {
-      normalizedPatch.adapterConfig = normalizePaperclipRunnerAdapterConfig(
+      normalizedPatch.adapterConfig = normalizeThinkingMachRunnerAdapterConfig(
         normalizedPatch.adapterType as string,
         existing.adapterConfig,
       );
     }
+
     // Run the server-enforced binding invariant when the patch touches the
     // adapter config. The update, approval, and rollback paths keep an existing
     // fixed binding but reject a newly introduced binding, because they carry no
@@ -894,7 +896,7 @@ export function agentService(db: Db) {
       const rawAdapterConfig = isPlainRecord(data.adapterConfig)
         ? await secretsSvc.normalizeAdapterConfigForPersistence(companyId, data.adapterConfig, { adapterType })
         : {};
-      const adapterConfig = normalizePaperclipRunnerAdapterConfig(adapterType, rawAdapterConfig);
+      const adapterConfig = normalizeThinkingMachRunnerAdapterConfig(adapterType, rawAdapterConfig);
       // Run the server-enforced binding invariant after generic normalization
       // and before any database write. A create has no prior config.
       const bindingDecision = assertClaudeOAuthBindingInvariant({
@@ -1109,7 +1111,7 @@ export function agentService(db: Db) {
             patch.adapterConfig,
             { adapterType: (patch.adapterType ?? existing.adapterType) as string },
           );
-          patch.adapterConfig = normalizePaperclipRunnerAdapterConfig(
+          patch.adapterConfig = normalizeThinkingMachRunnerAdapterConfig(
             (patch.adapterType ?? existing.adapterType) as string,
             normalizedAdapterConfig,
           );
@@ -1124,7 +1126,7 @@ export function agentService(db: Db) {
           Object.prototype.hasOwnProperty.call(patch, "adapterType")
           && isPlainRecord(existing.adapterConfig)
         ) {
-          patch.adapterConfig = normalizePaperclipRunnerAdapterConfig(
+          patch.adapterConfig = normalizeThinkingMachRunnerAdapterConfig(
             patch.adapterType as string,
             existing.adapterConfig,
           );

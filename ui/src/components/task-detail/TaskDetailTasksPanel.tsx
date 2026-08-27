@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { Issue, Project } from "@paperclipai/shared";
+import type { Issue, Project } from "@thinkingmach/shared";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import { Link } from "@/lib/router";
 import { projectRouteRef } from "@/lib/utils";

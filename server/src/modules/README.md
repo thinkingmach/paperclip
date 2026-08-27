@@ -9,7 +9,7 @@ adapters  →  application  →  domain
 
 - **`domain/`** holds pure business rules. A domain file takes plain data in
   and returns plain data out. A domain file must not import `drizzle-orm`,
-  `@paperclipai/db`, a service under `server/src/services/`, a route under
+  `@thinkingmach/db`, a service under `server/src/services/`, a route under
   `server/src/routes/`, or a Node.js I/O module (`node:child_process`,
   `node:fs`, `node:net`). A domain function must not read the system clock;
   the caller passes `now` as an explicit `Date` value.
@@ -20,7 +20,7 @@ adapters  →  application  →  domain
   service or route translates application errors into transport responses.
 - **`adapters/`** holds the concrete implementations of the ports:
   Postgres queries, transactions, and process control. An adapter file may
-  import `drizzle-orm`, `@paperclipai/db`, and Node.js I/O modules.
+  import `drizzle-orm`, `@thinkingmach/db`, and Node.js I/O modules.
 
 A module exposes one entry point, `index.ts`, which composes the adapters
 and the use cases behind a factory function. Code outside the module imports

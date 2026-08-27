@@ -1,7 +1,7 @@
 ---
 name: diagnose-why-work-stopped
 description: >
-  Diagnose stalled, looping, or over-recovered Paperclip issue trees and propose
+  Diagnose stalled, looping, or over-recovered ThinkingMach issue trees and propose
   a no-code product-rule plan. Use when asked why work stopped, why it looped, or
   how to prevent a tree from going too deep.
 ---

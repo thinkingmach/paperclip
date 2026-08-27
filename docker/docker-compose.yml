@@ -34,9 +34,9 @@ services:
       DATABASE_URL: postgres://paperclip:paperclip@db:5432/paperclip
       PORT: "3100"
       SERVE_UI: "true"
-      PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private"
-      PAPERCLIP_PUBLIC_URL: "${PAPERCLIP_PUBLIC_URL:-http://localhost:3100}"
+      THINKINGMACH_DEPLOYMENT_MODE: "authenticated"
+      THINKINGMACH_DEPLOYMENT_EXPOSURE: "private"
+      THINKINGMACH_PUBLIC_URL: "${THINKINGMACH_PUBLIC_URL:-http://localhost:3100}"
       BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}"
     volumes:
       - paperclip-data:/paperclip

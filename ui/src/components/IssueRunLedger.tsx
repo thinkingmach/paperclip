@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import type { ActivityEvent, Issue, Agent, ProviderTraceMetadata } from "@paperclipai/shared";
+import type { ActivityEvent, Issue, Agent, ProviderTraceMetadata } from "@thinkingmach/shared";
 import {
   isResponsibleUserDenialCode,
   responsibleUserLabel,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@/lib/router";
 import { accessApi, type CurrentBoardAccess } from "../api/access";
@@ -138,7 +138,7 @@ const PENDING_LIVENESS_COPY: LivenessCopy = {
 const RETRY_PENDING_LIVENESS_COPY: LivenessCopy = {
   label: "Retry pending",
   tone: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300",
-  description: "Paperclip queued an automatic retry that has not started yet.",
+  description: "ThinkingMach queued an automatic retry that has not started yet.",
 };
 
 const MISSING_LIVENESS_COPY: LivenessCopy = {
@@ -426,7 +426,7 @@ function watchdogDecisionErrorMessage(error: unknown) {
   }
   return error instanceof Error && error.message.trim().length > 0
     ? error.message
-    : "Paperclip could not record the watchdog decision.";
+    : "ThinkingMach could not record the watchdog decision.";
 }
 
 export function IssueRunLedger({
@@ -555,7 +555,7 @@ export function IssueRunLedger({
         body:
           error instanceof Error
             ? error.message
-            : "Paperclip could not start the trace re-run.",
+            : "ThinkingMach could not start the trace re-run.",
         tone: "error",
         dedupeKey: `provider-trace-rerun:${issueId}`,
       }),
@@ -760,8 +760,8 @@ export function IssueRunLedgerContent({
           </p>
           <p className="mt-1">
             {latestSilentRun.outputSilence.evaluationIssueIdentifier
-              ? "This signal is informational. Paperclip did not create new delegated recovery work."
-              : "This signal is informational. Paperclip did not create or assign a recovery task."}
+              ? "This signal is informational. ThinkingMach did not create new delegated recovery work."
+              : "This signal is informational. ThinkingMach did not create or assign a recovery task."}
           </p>
           {onWatchdogDecision && canRecordWatchdogDecisions ? (
             <div className="mt-2 flex flex-wrap gap-1.5">

@@ -21,7 +21,7 @@
 // The provider exposes no descriptor application programming interface (API), so
 // this module runs a fixed helper program in the sandbox through the environment
 // runtime `execute` seam. The helper is node, because the sandbox already runs
-// node for the Paperclip bridge. The helper never re-opens the pathname after the
+// node for the ThinkingMach bridge. The helper never re-opens the pathname after the
 // check: the `fstat` and the read bind to the one opened descriptor.
 //
 // Security: the helper prints only the base64 of the credential bytes on the
@@ -32,7 +32,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import type { Environment, EnvironmentLease } from "@paperclipai/shared";
+import type { Environment, EnvironmentLease } from "@thinkingmach/shared";
 import type { EnvironmentRuntimeService } from "./environment-runtime.js";
 import { validateLoginSessionHome } from "./login-command.js";
 
@@ -56,7 +56,7 @@ export const DEVICE_LOGIN_AUTH_READ_ERROR =
 /**
  * The fixed helper program. The server reads the helper from its own script file
  * and runs it in the sandbox as `node -e <script> <sessionHome> <maxBytes>
- * [<expectedUid>]`. The sandbox already runs node for the Paperclip bridge, so the
+ * [<expectedUid>]`. The sandbox already runs node for the ThinkingMach bridge, so the
  * helper needs no extra runtime. The helper source lives in
  * `scripts/adapter-auth-read.cjs`, so no large script stays as a string literal in
  * this module.

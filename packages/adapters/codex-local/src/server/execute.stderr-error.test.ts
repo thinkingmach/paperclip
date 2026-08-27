@@ -6,7 +6,7 @@ const {
   ensureAdapterExecutionTargetCommandResolvable,
   ensureAdapterExecutionTargetRuntimeCommandInstalled,
   prepareCodexRuntimeConfig,
-  readPaperclipRuntimeSkillEntries,
+  readThinkingMachRuntimeSkillEntries,
   resolveAdapterExecutionTargetCommandForLogs,
   runAdapterExecutionTargetProcess,
   tempCodexHome,
@@ -14,7 +14,7 @@ const {
   ensureAdapterExecutionTargetCommandResolvable: vi.fn(async () => undefined),
   ensureAdapterExecutionTargetRuntimeCommandInstalled: vi.fn(async () => undefined),
   prepareCodexRuntimeConfig: vi.fn(async () => ({ cleanup: vi.fn(async () => undefined), notes: [] })),
-  readPaperclipRuntimeSkillEntries: vi.fn(async () => []),
+  readThinkingMachRuntimeSkillEntries: vi.fn(async () => []),
   resolveAdapterExecutionTargetCommandForLogs: vi.fn(async () => "codex"),
   runAdapterExecutionTargetProcess: vi.fn(),
   tempCodexHome: "/tmp/paperclip-codex-stderr-error-test-home",
@@ -27,9 +27,9 @@ vi.mock("./acp.js", () => ({
   resolveCodexExecutionEngineForRun: async () => ({ engine: "cli", explicit: true }),
 }));
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
@@ -40,13 +40,13 @@ vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/server-utils", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/server-utils")>(
-    "@paperclipai/adapter-utils/server-utils",
+vi.mock("@thinkingmach/adapter-utils/server-utils", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/server-utils")>(
+    "@thinkingmach/adapter-utils/server-utils",
   );
   return {
     ...actual,
-    readPaperclipRuntimeSkillEntries,
+    readThinkingMachRuntimeSkillEntries,
   };
 });
 

@@ -11,7 +11,7 @@ import {
   heartbeatRuns,
   issueCreateIdempotencyKeys,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -70,7 +70,7 @@ describeEmbeddedPostgres("issue create deduplication routes", () => {
     const companyId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `D${companyId.replace(/-/g, "").slice(0, 5).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
     });
@@ -314,7 +314,7 @@ describeEmbeddedPostgres("issue create deduplication routes", () => {
 
     const response = await request(app)
       .post(`/api/companies/${companyId}/issues`)
-      .set("X-Paperclip-Run-Id", runId)
+      .set("X-ThinkingMach-Run-Id", runId)
       .send({ parentId: parent.id, title: "Attributed create" })
       .expect(201);
     const [created] = await db.select().from(issues).where(eq(issues.id, response.body.id));

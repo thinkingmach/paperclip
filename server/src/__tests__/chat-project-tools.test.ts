@@ -3,7 +3,7 @@ import { createLocalAgentJwt } from "../agent-auth-jwt.js";
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { issues, heartbeatRuns } from "@paperclipai/db";
+import { issues, heartbeatRuns } from "@thinkingmach/db";
 import { startRunnerApiTestServer } from "./helpers/runner-api-server.js";
 import { issueService } from "../services/issues.js";
 import { documentService } from "../services/documents.js";
@@ -13,9 +13,9 @@ import { getEmbeddedPostgresTestSupport } from "./helpers/embedded-postgres.js";
 const support = await getEmbeddedPostgresTestSupport();
 (support.supported ? describe : describe.skip)("chat project tool handoff", () => {
   let server: Awaited<ReturnType<typeof startRunnerApiTestServer>>;
-  const originalSecret = process.env.PAPERCLIP_AGENT_JWT_SECRET;
-  beforeAll(async () => { process.env.PAPERCLIP_AGENT_JWT_SECRET = randomUUID(); server = await startRunnerApiTestServer(); }, 60_000);
-  afterAll(async () => { await server?.close(); if (originalSecret === undefined) delete process.env.PAPERCLIP_AGENT_JWT_SECRET; else process.env.PAPERCLIP_AGENT_JWT_SECRET = originalSecret; });
+  const originalSecret = process.env.THINKINGMACH_AGENT_JWT_SECRET;
+  beforeAll(async () => { process.env.THINKINGMACH_AGENT_JWT_SECRET = randomUUID(); server = await startRunnerApiTestServer(); }, 60_000);
+  afterAll(async () => { await server?.close(); if (originalSecret === undefined) delete process.env.THINKINGMACH_AGENT_JWT_SECRET; else process.env.THINKINGMACH_AGENT_JWT_SECRET = originalSecret; });
   const call = (fixture: Awaited<ReturnType<typeof server.fixture>>, tool: string, args: Record<string, unknown>) => fixture.authority.execute({ tool, arguments: args, callId: randomUUID() });
 
   it("allows a conversation reply to enter review without manufacturing a review interaction", async () => {

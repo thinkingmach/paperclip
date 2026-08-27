@@ -6,9 +6,9 @@
 > in [`../../../doc/plans/2026-08-20-single-daemon-runner-tool-bridge.md`](../../../doc/plans/2026-08-20-single-daemon-runner-tool-bridge.md): external control plane → PRP → one Rust `paperclip-runnerd` → provider. The TypeScript dispatcher below does not run in the sandbox.
 
 Capability binds the provider-neutral semantic catalog to a real package-local
-`paperclip-runnerd` process and a real Codex app-server session. Paperclip data
+`paperclip-runnerd` process and a real Codex app-server session. ThinkingMach data
 remains deterministic mock state behind `ControlPlanePort`; no request reaches
-the Paperclip API.
+the ThinkingMach API.
 
 ## Process and authority boundary
 
@@ -24,7 +24,7 @@ over stdio. The transport starts a dedicated Unix process group. Normal close,
 stop/reset cleanup, and fatal protocol errors terminate that group with a
 bounded TERM/KILL sequence so a Codex child is not abandoned.
 
-Only the allowlisted Codex host environment is copied. `PAPERCLIP_*` variables,
+Only the allowlisted Codex host environment is copied. `THINKINGMACH_*` variables,
 provider credentials other than Codex's server-side home, and credentialed
 proxy URLs are not passed to runnerd or Codex. Model-issued commands still use
 the separate skillless, network-disabled workspace permission profile.
@@ -38,7 +38,7 @@ attempt's immutable authority tuple:
 import {
   CapabilityLiveSessionService,
   DurableCapabilityLiveSessionStore,
-} from "@paperclipai/paperclip-runner/live";
+} from "@thinkingmach/paperclip-runner/live";
 
 const binding = { sessionId, runId, companyId, actorId, taskId };
 const store = new DurableCapabilityLiveSessionStore({ directory, binding });
@@ -107,16 +107,16 @@ its next response.
 Run the deterministic contract suite:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner test:scenarios
+pnpm --filter @thinkingmach/paperclip-runner test:scenarios
 ```
 
 Run a real runnerd and Codex app-server smoke:
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner trace:live-runner -- --json
+pnpm --filter @thinkingmach/paperclip-runner trace:live-runner -- --json
 ```
 
 The smoke requires an authenticated local Codex installation. It checks a real
 semantic tool mutation, typed-result response, same-thread second turn, process
-ownership/cleanup, cleared authority, and zero Paperclip network/child-env
+ownership/cleanup, cleared authority, and zero ThinkingMach network/child-env
 exposure.

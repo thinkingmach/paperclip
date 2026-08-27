@@ -15,7 +15,7 @@ const body = `// Generated from ui/src/assets/cliplab/onboarding.character.json 
 import type { Definition } from "./model.js";
 
 /** The persona character: Tonio's ClipLab studio export, every palette recolours its body. */
-export const PAPERCLIP_CHARACTER: Definition = ${JSON.stringify(definition, null, 2)} as unknown as Definition;
+export const THINKINGMACH_CHARACTER: Definition = ${JSON.stringify(definition, null, 2)} as unknown as Definition;
 `;
 if (process.argv.includes("--check")) {
   let current = "";

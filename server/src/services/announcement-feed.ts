@@ -3,7 +3,7 @@ import {
   ANNOUNCEMENT_IMAGE_MAX_BYTES, ANNOUNCEMENT_MANIFEST_MAX_BYTES, ANNOUNCEMENT_ANIMATION_MAX_BYTES,
   DEFAULT_ANNOUNCEMENT_FEED_URL, announcementManifestSchema, isAnnouncementEligible,
   type AnnouncementManifest,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { guardedRemoteHttpFetch } from "./remote-http-fetch.js";
 import { validateAnnouncementAnimation } from "./announcement-animation.js";
 import { logger } from "../middleware/logger.js";

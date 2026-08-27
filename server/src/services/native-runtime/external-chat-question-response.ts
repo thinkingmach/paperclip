@@ -1,6 +1,6 @@
 import { photonAnswersMatch } from "../photon/interactions.js";
 import { and, or, eq, inArray, notExists, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agentWakeupRequests,
   chatActions,
@@ -14,8 +14,8 @@ import {
   issueComments,
   issueQuestionResponseDeliveries,
   issueThreadInteractions,
-} from "@paperclipai/db";
-import type { AskUserQuestionsInteraction } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { AskUserQuestionsInteraction } from "@thinkingmach/shared";
 import {
   parseChatQuestionFormSubmitTokenPayload,
   validateChatQuestionFormSubmission,

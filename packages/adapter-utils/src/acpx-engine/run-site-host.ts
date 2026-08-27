@@ -12,7 +12,7 @@
 // transport, no sync-back). A later phase routes the whole lane through the site.
 
 import type { ChildProcess } from "node:child_process";
-import type { AdapterExecutionContext } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext } from "@thinkingmach/adapter-utils";
 import type { AcpRuntime, AcpRuntimeHandle } from "acpx/runtime";
 import type {
   AcpRunContext,

@@ -19,7 +19,7 @@
  * set even though its `port` column still names the pair the lease owns. That
  * is exactly how the pair leased to workspace `b7ce28b4` (`42001/52001`) was
  * handed to the unrelated workspace `PAP-16986-add-posthog-mcp`, while
- * Paperclip went on reporting the leased lane `stopped` and its exposure
+ * ThinkingMach went on reporting the leased lane `stopped` and its exposure
  * `removed`.
  *
  * ## The mediation this module centralizes
@@ -46,7 +46,7 @@
  * broker. Every caller injects its own view, which is what makes all five
  * PAP-17419 regression cases testable without touching host Serve state.
  */
-import { deriveViteHmrPort, isRuntimeExposureAppPort } from "@paperclipai/shared";
+import { deriveViteHmrPort, isRuntimeExposureAppPort } from "@thinkingmach/shared";
 
 /**
  * Who holds (or wants) a port pair. Every field is optional evidence — a
@@ -64,7 +64,7 @@ export interface ExposureOwnerIdentity {
 export type ExposureReservationSource =
   /** This process is running the runtime that owns the pair. */
   | "in_memory_runtime"
-  /** The broker reports a live Paperclip-owned Serve mapping on the port. */
+  /** The broker reports a live ThinkingMach-owned Serve mapping on the port. */
   | "broker_mapping"
   /** A persisted row still claims an exposure that is not `removed`. */
   | "persisted_exposure"
@@ -129,7 +129,7 @@ export interface InMemoryExposureSnapshot {
   ports: ReadonlyArray<number>;
 }
 
-/** One Paperclip-owned listener as reported by the broker's `list()`. */
+/** One ThinkingMach-owned listener as reported by the broker's `list()`. */
 export interface BrokerMappingSnapshot {
   runtimeId: string;
   port: number;
@@ -417,7 +417,7 @@ export class ExposurePortOwnershipConflictError extends Error {
 }
 
 export interface ExposureReservationDrift {
-  /** The row Paperclip believes is stopped/removed. */
+  /** The row ThinkingMach believes is stopped/removed. */
   runtimeServiceId: string;
   owner: ExposureOwnerIdentity;
   port: number;

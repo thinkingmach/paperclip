@@ -46,7 +46,7 @@ describe("self-service Slack identity confirmation", () => {
     expect(mocks.confirmIdentityLink).not.toHaveBeenCalled();
     button("Confirm identity").click();
     await vi.waitFor(() => expect(container.textContent).toContain("Identity linked"));
-    expect(container.textContent).toContain("current Paperclip permissions");
+    expect(container.textContent).toContain("current ThinkingMach permissions");
     expect(container.querySelector('a')?.textContent).toBe("Return to Slack");
   });
   it("keeps other providers out of the Slack return flow", async () => {

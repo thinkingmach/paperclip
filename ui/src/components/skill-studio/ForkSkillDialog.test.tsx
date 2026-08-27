@@ -9,7 +9,7 @@ import type {
   CompanySkillForkPrecheckResult,
   CompanySkillForkSummary,
   CompanySkillUsageAgent,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ForkSkillDialog } from "./ForkSkillDialog";
 

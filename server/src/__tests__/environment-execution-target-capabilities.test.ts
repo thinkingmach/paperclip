@@ -8,7 +8,7 @@ vi.mock("../services/environment-config.js", () => ({
   resolveEnvironmentDriverConfigForRuntime: mockResolveEnvironmentDriverConfigForRuntime,
 }));
 
-import type { EffectiveExecutionCapabilities } from "@paperclipai/adapter-utils/execution-target";
+import type { EffectiveExecutionCapabilities } from "@thinkingmach/adapter-utils/execution-target";
 import { resolveEnvironmentExecutionTarget } from "../services/environment-execution-target.js";
 import type { EnvironmentRuntimeService } from "../services/environment-runtime.js";
 

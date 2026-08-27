@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { CompanySkillVersion } from "@paperclipai/shared";
+import type { CompanySkillVersion } from "@thinkingmach/shared";
 import {
   formatReleaseDate,
   releaseName,

@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { ActivityEvent } from "@paperclipai/shared";
+import type { ActivityEvent } from "@thinkingmach/shared";
 import { IssueFieldChangeReceipt } from "./IssueFieldChangeReceipt";
 
 function event(overrides: Partial<ActivityEvent> = {}) {

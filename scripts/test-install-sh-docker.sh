@@ -34,7 +34,7 @@ run_with_node() {
   docker run --rm \
     -v "$REPO_ROOT/scripts:/paperclip-scripts:ro" \
     -v "$RESULTS_DIR:/results" \
-    -e "PAPERCLIP_INSTALL_TEST_LOG=/results/$name.args" \
+    -e "THINKINGMACH_INSTALL_TEST_LOG=/results/$name.args" \
     -e PATH="/paperclip-scripts/install-sh-fixtures:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
     node:24-bookworm-slim \
     "$@"
@@ -65,7 +65,7 @@ run_shellcheck
 
 echo "==> existing Node"
 run_with_node with-node bash /paperclip-scripts/install.sh --no-prompt --no-onboard
-assert_line "$RESULTS_DIR/with-node.args" "paperclipai@latest"
+assert_line "$RESULTS_DIR/with-node.args" "thinkingmach@latest"
 assert_line "$RESULTS_DIR/with-node.args" "install"
 assert_line "$RESULTS_DIR/with-node.args" "--yes"
 assert_line "$RESULTS_DIR/with-node.args" "--registry=https://registry.npmjs.org"
@@ -82,7 +82,7 @@ docker run --rm \
   -e HOME=/results/hostile-home \
   -e NPM_CONFIG_REGISTRY=http://attacker-registry.invalid \
   -e npm_config_registry=http://attacker-registry.invalid \
-  -e PAPERCLIP_INSTALL_TEST_LOG=/results/hostile.args \
+  -e THINKINGMACH_INSTALL_TEST_LOG=/results/hostile.args \
   -e PATH="/paperclip-scripts/install-sh-fixtures:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
   node:24-bookworm-slim \
   bash /paperclip-scripts/install.sh --no-prompt --no-onboard
@@ -134,15 +134,15 @@ echo "==> environment twins"
 docker run --rm \
   -v "$REPO_ROOT/scripts:/paperclip-scripts:ro" \
   -v "$RESULTS_DIR:/results" \
-  -e PAPERCLIP_INSTALL_TEST_LOG=/results/env.args \
-  -e PAPERCLIP_INSTALL_VERSION=2026.722.0 \
-  -e PAPERCLIP_INSTALL_INSTALL_SERVICE=1 \
-  -e PAPERCLIP_INSTALL_NO_ONBOARD=1 \
-  -e PAPERCLIP_INSTALL_NO_PROMPT=1 \
+  -e THINKINGMACH_INSTALL_TEST_LOG=/results/env.args \
+  -e THINKINGMACH_INSTALL_VERSION=2026.722.0 \
+  -e THINKINGMACH_INSTALL_INSTALL_SERVICE=1 \
+  -e THINKINGMACH_INSTALL_NO_ONBOARD=1 \
+  -e THINKINGMACH_INSTALL_NO_PROMPT=1 \
   -e PATH="/paperclip-scripts/install-sh-fixtures:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
   node:24-bookworm-slim \
   bash /paperclip-scripts/install.sh
-assert_line "$RESULTS_DIR/env.args" "paperclipai@2026.722.0"
+assert_line "$RESULTS_DIR/env.args" "thinkingmach@2026.722.0"
 assert_line "$RESULTS_DIR/env.args" "--version"
 assert_line "$RESULTS_DIR/env.args" "2026.722.0"
 assert_no_line "$RESULTS_DIR/env.args" "--repo"
@@ -153,11 +153,11 @@ echo "==> no Node, apt bootstrap"
 docker run --rm \
   -v "$REPO_ROOT/scripts:/paperclip-scripts:ro" \
   -v "$RESULTS_DIR:/results" \
-  -e PAPERCLIP_INSTALL_TEST_LOG=/results/no-node.args \
+  -e THINKINGMACH_INSTALL_TEST_LOG=/results/no-node.args \
   -e PATH="/paperclip-scripts/install-sh-fixtures:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
   ubuntu:24.04 \
   bash -c 'apt-get update >/dev/null && apt-get install -y ca-certificates curl >/dev/null && bash /paperclip-scripts/install.sh --no-prompt --no-onboard'
-assert_line "$RESULTS_DIR/no-node.args" "paperclipai@latest"
+assert_line "$RESULTS_DIR/no-node.args" "thinkingmach@latest"
 node_version="$(cat "$RESULTS_DIR/no-node.args.node")"
 node_major="${node_version#v}"
 node_major="${node_major%%.*}"

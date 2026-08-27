@@ -4,7 +4,7 @@ const root = resolve(import.meta.dirname, "..");
 const source = readFileSync(resolve(root, "skills/paperclip/references/api-reference.md"), "utf8");
 const key = (method, path) => `${method} ${path.replace(/:[A-Za-z][A-Za-z0-9_]*|\{[^}]+\}/g, "{}")}`;
 const entries = {};
-let section = "Paperclip API Reference";
+let section = "ThinkingMach API Reference";
 for (const line of source.split("\n")) {
   if (/^#{2,5} /.test(line)) section = line.replace(/^#+ /, "");
   const table = /^\|\s*(GET|POST|PATCH|PUT|DELETE)\s*\|\s*`([^`]+)`\s*\|\s*(.*?)\s*\|/.exec(line);

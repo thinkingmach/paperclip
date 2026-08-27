@@ -10,7 +10,7 @@ import type {
   IssueRecoveryAction,
   IssueRetryNowOutcome,
   IssueScheduledRetry,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { IssueBlockedNotice } from "./IssueBlockedNotice";
 import { deriveRecoveryCardState } from "./IssueRecoveryActionCard";
 import { ToastProvider } from "../context/ToastContext";
@@ -145,7 +145,7 @@ describe("IssueBlockedNotice", () => {
     expect(node.querySelector('[data-successful-run-handoff="required"]')).not.toBeNull();
     expect(node.textContent).toContain("This task still needs a next step.");
     expect(node.textContent).toContain(
-      "A run finished successfully, but the task is still open. Paperclip needs someone to choose what happens next.",
+      "A run finished successfully, but the task is still open. ThinkingMach needs someone to choose what happens next.",
     );
     expect(node.textContent).toContain("Mark it done or cancelled.");
     expect(node.textContent).toContain("Send it for review or ask for input.");

@@ -31,7 +31,7 @@ import {
   routineRuns,
   routines,
   routineTriggers,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -140,7 +140,7 @@ describeEmbeddedPostgres("routine routes end-to-end", () => {
 
   beforeEach(() => {
     vi.resetModules();
-    vi.doUnmock("@paperclipai/shared/telemetry");
+    vi.doUnmock("@thinkingmach/shared/telemetry");
     vi.doUnmock("../telemetry.js");
     vi.doUnmock("../services/access.js");
     vi.doUnmock("../services/issues.js");
@@ -202,7 +202,7 @@ describeEmbeddedPostgres("routine routes end-to-end", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
     });
@@ -241,8 +241,8 @@ describeEmbeddedPostgres("routine routes end-to-end", () => {
   it.each(["bearer", "hmac_sha256", "github_hmac", "none"] as const)(
     "authenticates %s HTTP deliveries, persists payloads, and enforces trigger lifecycle",
     async (signingMode) => {
-      vi.stubEnv("PAPERCLIP_API_URL", "http://localhost:3100");
-      vi.stubEnv("PAPERCLIP_IN_WORKTREE", "false");
+      vi.stubEnv("THINKINGMACH_API_URL", "http://localhost:3100");
+      vi.stubEnv("THINKINGMACH_IN_WORKTREE", "false");
       const { companyId, agentId, projectId, userId } = await seedFixture();
       const board = await createApp({ type: "board", source: "local_implicit", userId, isInstanceAdmin: true });
       const created = await request(board).post(`/api/companies/${companyId}/routines`).send({
@@ -277,7 +277,7 @@ describeEmbeddedPostgres("routine routes end-to-end", () => {
         const req = request(ingress).post(path).set("Content-Type", "application/json");
         if (signingMode === "bearer") req.set("Authorization", `Bearer ${secret}`);
         if (signingMode === "hmac_sha256") {
-          req.set("X-Paperclip-Timestamp", ts).set("X-Paperclip-Signature",
+          req.set("X-ThinkingMach-Timestamp", ts).set("X-ThinkingMach-Signature",
             `sha256=${createHmac("sha256", secret).update(`${ts}.`).update(raw).digest("hex")}`);
         }
         if (signingMode === "github_hmac") req.set("X-Hub-Signature-256",
@@ -291,7 +291,7 @@ describeEmbeddedPostgres("routine routes end-to-end", () => {
       if (signingMode === "hmac_sha256") {
         expect((await delivery(undefined, raw, "1")).status).toBe(401);
         const malformed = await request(ingress).post(path).set("Content-Type", "application/json")
-          .set("X-Paperclip-Timestamp", timestamp).set("X-Paperclip-Signature", "é".repeat(64)).send(raw);
+          .set("X-ThinkingMach-Timestamp", timestamp).set("X-ThinkingMach-Signature", "é".repeat(64)).send(raw);
         expect(malformed.status).toBe(401);
       }
       expect((await request(ingress).post(path).type("text").send(raw)).status).toBe(415);
@@ -329,8 +329,8 @@ describeEmbeddedPostgres("routine routes end-to-end", () => {
   );
 
   it("keeps setup deliveries out of runs, persists test receipts, and restores removed triggers", async () => {
-    vi.stubEnv("PAPERCLIP_API_URL", "http://localhost:3100");
-    vi.stubEnv("PAPERCLIP_IN_WORKTREE", "false");
+    vi.stubEnv("THINKINGMACH_API_URL", "http://localhost:3100");
+    vi.stubEnv("THINKINGMACH_IN_WORKTREE", "false");
     const { companyId, agentId, projectId, userId } = await seedFixture();
     const board = await createApp({ type: "board", source: "local_implicit", userId, isInstanceAdmin: true });
     const created = await request(board).post(`/api/companies/${companyId}/routines`).send({

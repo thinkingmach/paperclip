@@ -81,7 +81,7 @@ describe("plugin init", () => {
       "cd '/tmp/acme plugin'",
       "pnpm install",
       "pnpm dev",
-      "paperclipai plugin install '/tmp/acme plugin'",
+      "thinkingmach plugin install '/tmp/acme plugin'",
     ]);
   });
 
@@ -107,7 +107,7 @@ describe("plugin init", () => {
         "--description",
         "Demo description",
         "--author",
-        "Paperclip",
+        "ThinkingMach",
         "--sdk-path",
         "/repo/packages/plugins/sdk",
       ],
@@ -122,7 +122,7 @@ describe("plugin init", () => {
       category: "workspace",
       displayName: "Demo Plugin",
       description: "Demo description",
-      author: "Paperclip",
+      author: "ThinkingMach",
       sdkPath: "/repo/packages/plugins/sdk",
     });
   });
@@ -191,14 +191,14 @@ describe("plugin target diagnostics", () => {
 
   it("marks the target unreachable when the health probe throws", async () => {
     const get = vi.fn(async () => {
-      throw new Error("Could not reach the Paperclip API.\nRequest: GET ...");
+      throw new Error("Could not reach the ThinkingMach API.\nRequest: GET ...");
     });
 
     const diag = await probeTargetDiagnostics({ apiBase: "http://other-host:9999", get });
 
     expect(diag.apiBase).toBe("http://other-host:9999");
     expect(diag.reachable).toBe(false);
-    expect(diag.error).toContain("Could not reach the Paperclip API.");
+    expect(diag.error).toContain("Could not reach the ThinkingMach API.");
   });
 
   it("formats reachable diagnostics with version and mode", () => {
@@ -222,6 +222,6 @@ describe("plugin target diagnostics", () => {
 
     expect(rendered).toContain("unreachable");
     expect(rendered).toContain("--api-base");
-    expect(rendered).toContain("PAPERCLIP_API_URL");
+    expect(rendered).toContain("THINKINGMACH_API_URL");
   });
 });

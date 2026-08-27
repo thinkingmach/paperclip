@@ -12,7 +12,7 @@ import {
   typeLabel,
 } from "./ApprovalPayload";
 import { timeAgo } from "../lib/timeAgo";
-import type { Approval, Agent } from "@paperclipai/shared";
+import type { Approval, Agent } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 

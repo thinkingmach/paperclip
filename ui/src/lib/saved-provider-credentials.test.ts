@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { CompanySecret } from "@paperclipai/shared";
+import type { CompanySecret } from "@thinkingmach/shared";
 import type { MyUserSecretEntry } from "../api/secrets";
 import {
   savedProviderKeys,

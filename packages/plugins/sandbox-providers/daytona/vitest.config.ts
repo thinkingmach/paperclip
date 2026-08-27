@@ -9,7 +9,7 @@ export default defineConfig({
   root: repoRoot,
   resolve: {
     alias: {
-      "@paperclipai/plugin-sdk": path.resolve(dirname, "../../sdk/src/index.ts"),
+      "@thinkingmach/plugin-sdk": path.resolve(dirname, "../../sdk/src/index.ts"),
     },
   },
   test: {

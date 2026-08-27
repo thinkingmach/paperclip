@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from "vitest";
-import type { ResolvedWorkspaceResource } from "@paperclipai/shared";
+import type { ResolvedWorkspaceResource } from "@thinkingmach/shared";
 import {
   chunkWorkspaceFileAvailabilityRefs,
   workspaceFileAvailabilityFromResult,
@@ -76,12 +76,12 @@ describe("workspaceFileAvailabilityTarget", () => {
     expect(workspaceFileAvailabilityTarget(resource({
       workspaceKind: "project_workspace",
       projectId: "17acae7d-9d0c-46bf-9c82-be9694ac3461",
-      projectName: "Paperclip App",
+      projectName: "ThinkingMach App",
     }))).toEqual({
       workspace: "project",
       projectId: "17acae7d-9d0c-46bf-9c82-be9694ac3461",
       workspaceId: "0de5f74f-a7d4-4f73-a9a0-455a2b968cf2",
-      projectName: "Paperclip App",
+      projectName: "ThinkingMach App",
     });
   });
 

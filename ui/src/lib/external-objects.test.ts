@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { ExternalObjectSummary } from "@paperclipai/shared";
+import type { ExternalObjectSummary } from "@thinkingmach/shared";
 import { externalObjectsApi } from "../api/externalObjects";
 import {
   EXTERNAL_OBJECT_SUMMARY_BATCH_SIZE,

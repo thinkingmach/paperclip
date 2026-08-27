@@ -38,15 +38,15 @@ export function ManagedOAuthHandoffState({
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {failed
-              ? error ?? "Paperclip couldn’t prepare the provider sign-in. Try again."
+              ? error ?? "ThinkingMach couldn’t prepare the provider sign-in. Try again."
               : phase === "reauthenticating"
-                ? "Your Paperclip sign-in is being refreshed."
-                : "Paperclip is opening the provider securely."}
+                ? "Your ThinkingMach sign-in is being refreshed."
+                : "ThinkingMach is opening the provider securely."}
           </p>
           {failed ? (
             <div className="mt-6 flex items-center gap-2">
               <Button type="button" onClick={onRetry}>Try again</Button>
-              <Button type="button" variant="ghost" onClick={onCancel}>Return to Paperclip</Button>
+              <Button type="button" variant="ghost" onClick={onCancel}>Return to ThinkingMach</Button>
             </div>
           ) : null}
         </div>
@@ -55,8 +55,8 @@ export function ManagedOAuthHandoffState({
   );
 }
 
-/** Fixed tenant landing used only after Paperclip Cloud refreshes login. */
-export function PaperclipCloudOAuthHandoffPage() {
+/** Fixed tenant landing used only after ThinkingMach Cloud refreshes login. */
+export function ThinkingMachCloudOAuthHandoffPage() {
   const [phase, setPhase] = useState<ManagedOAuthHandoffPhase>("loading");
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +64,7 @@ export function PaperclipCloudOAuthHandoffPage() {
     const handoff = readPendingCloudHandoff();
     if (!handoff) {
       setPhase("error");
-      setError("This sign-in expired. Return to Paperclip and start the connection again.");
+      setError("This sign-in expired. Return to ThinkingMach and start the connection again.");
       return;
     }
     setPhase("loading");
@@ -73,14 +73,14 @@ export function PaperclipCloudOAuthHandoffPage() {
       const target = await prepareOAuthNavigation({ authorizationUrl: "", handoff });
       if (target.kind === "reauthentication") {
         setPhase("error");
-        setError("Paperclip couldn’t refresh this sign-in. Try again to continue.");
+        setError("ThinkingMach couldn’t refresh this sign-in. Try again to continue.");
         return;
       }
       clearPendingCloudHandoff();
       navigateTopLevel(target.url);
     } catch (caught) {
       setPhase("error");
-      setError(caught instanceof Error ? caught.message : "Paperclip couldn’t prepare secure sign-in.");
+      setError(caught instanceof Error ? caught.message : "ThinkingMach couldn’t prepare secure sign-in.");
     }
   }, []);
 

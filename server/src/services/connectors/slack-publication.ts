@@ -5,7 +5,7 @@ import {
   issueComments,
   type chatPublications,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { object } from "./slack-client.js";
 
 /** Explicit sends use a separate durable receipt. Suppress an identical automatic

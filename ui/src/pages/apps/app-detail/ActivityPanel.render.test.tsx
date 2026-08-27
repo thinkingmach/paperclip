@@ -4,7 +4,7 @@ import { flushSync } from "react-dom";
 import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Agent, ToolCallEvent } from "@paperclipai/shared";
+import type { Agent, ToolCallEvent } from "@thinkingmach/shared";
 import { ActivityPanel } from "./ActivityPanel";
 
 vi.mock("@/lib/router", () => ({

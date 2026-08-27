@@ -11,7 +11,7 @@ import {
   toolConnections,
   connectionGrants,
   agents,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   createAiConnectionSchema,
   aiConnectionLoginIntentSchema,
@@ -21,7 +21,7 @@ import {
   type AiConnectionLoginIntent,
   type AiProvider,
   type AiConnectionBinding,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { assertBoard, assertCompanyAccess, getActorInfo } from "./authz.js";
 import { forbidden, notFound, unprocessable } from "../errors.js";
 import { accessService } from "../services/access.js";

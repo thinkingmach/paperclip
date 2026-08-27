@@ -694,7 +694,7 @@ describe.skipIf(!sentryPackage)("captured event shape against the real @sentry/n
 
   it("attaches the actual build commit to an emitted event", async () => {
     const commit = "0123456789abcdef0123456789abcdef01234567";
-    vi.stubEnv("PAPERCLIP_BUILD_COMMIT", commit);
+    vi.stubEnv("THINKINGMACH_BUILD_COMMIT", commit);
     vi.stubEnv("SENTRY_RELEASE", "");
     try {
       let captured: Record<string, unknown> | null = null;
@@ -772,7 +772,7 @@ describe.skipIf(!sentryPackage)("captured event shape against the real @sentry/n
 
   /**
    * `skipOpenTelemetrySetup: true` (set above) keeps this module out of
-   * Paperclip's separate, independently opt-in OpenTelemetry feature. It
+   * ThinkingMach's separate, independently opt-in OpenTelemetry feature. It
    * also turns off Sentry's own per-request async-context tracking. The
    * `RequestData` integration reads the inbound URL, method, headers,
    * cookies, and query string from that per-request context. With the

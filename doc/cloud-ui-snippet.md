@@ -1,6 +1,6 @@
 # Retired Cloud UI snippet settings
 
-`PAPERCLIP_CLOUD_UI_SNIPPET` and `PAPERCLIP_CLOUD_UI_SNIPPET_B64` are no longer
+`THINKINGMACH_CLOUD_UI_SNIPPET` and `THINKINGMACH_CLOUD_UI_SNIPPET_B64` are no longer
 read by the server. They do not inject HTML or JavaScript into static or dev
 pages. This removes an operator-controlled executable HTML path from the app.
 Existing ordinary branding and plugin UI contributions are unchanged.

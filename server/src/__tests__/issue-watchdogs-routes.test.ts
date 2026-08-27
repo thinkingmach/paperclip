@@ -19,7 +19,7 @@ import {
   issueWatchdogs,
   issues,
   principalPermissionGrants,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -137,7 +137,7 @@ describeEmbeddedPostgres("issue watchdog routes", () => {
     });
   }
 
-  async function seedCompany(name = "Paperclip") {
+  async function seedCompany(name = "ThinkingMach") {
     const companyId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
@@ -559,7 +559,7 @@ describeEmbeddedPostgres("issue watchdog routes", () => {
       .post(`/api/companies/${companyId}/issues`)
       .send({
         title: "Fix watchdog source-tree pollution",
-        description: "Watchdog found a Paperclip follow-up routing bug.",
+        description: "Watchdog found a ThinkingMach follow-up routing bug.",
         parentId: watchedChildId,
         watchdogDiscovery: {
           kind: "product_bug",

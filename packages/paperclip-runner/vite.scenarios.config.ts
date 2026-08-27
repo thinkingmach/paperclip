@@ -13,7 +13,7 @@ const packageRoot = fileURLToPath(new URL(".", import.meta.url));
  *
  * `@paperclip-runner-local/*` is deliberately not the published SDK name: the
  * scenario runtime is package-local and stays outside the frozen 0.1.2 export
- * surface, while the explorer consumes `@paperclipai/paperclip-runner/react`
+ * surface, while the explorer consumes `@thinkingmach/paperclip-runner/react`
  * and its token sheet exactly as an external consumer would.
  */
 export default defineConfig({
@@ -23,11 +23,11 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: "@paperclipai/paperclip-runner/react",
+        find: "@thinkingmach/paperclip-runner/react",
         replacement: resolve(packageRoot, "src/react/index.ts"),
       },
       {
-        find: "@paperclipai/paperclip-runner/styles.css",
+        find: "@thinkingmach/paperclip-runner/styles.css",
         replacement: resolve(packageRoot, "styles.css"),
       },
       {

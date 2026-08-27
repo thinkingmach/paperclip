@@ -3,7 +3,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Agent } from "@paperclipai/shared";
+import type { Agent } from "@thinkingmach/shared";
 import { SidebarAgentChats } from "./SidebarAgentChats";
 import { queryKeys } from "@/lib/queryKeys";
 

@@ -2,7 +2,7 @@ import type {
   ChatEndpointSetupState,
   GitHubChatConfiguration,
   GitHubTaskReview,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { api } from "./client";
 import type { ChatEndpoint, ChatEndpointResource } from "./chatEndpoints";
 export type GitHubConfigurationRecord = {

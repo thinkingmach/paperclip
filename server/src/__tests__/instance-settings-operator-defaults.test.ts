@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { instanceSettingsService } from "../services/instance-settings.js";
 import { getOperatorSettingDefaults } from "../services/setting-defaults.js";
 
 const DEFAULTS_RAW = JSON.stringify({ feedbackDataSharingPreference: "allowed" });
 
 function defaultsEnv(raw: string | undefined = DEFAULTS_RAW) {
-  return { PAPERCLIP_SETTING_DEFAULTS: raw };
+  return { THINKINGMACH_SETTING_DEFAULTS: raw };
 }
 
 /** Mirrors the stub in instance-settings-managed-overlay.test.ts. */
@@ -53,7 +53,7 @@ describe("getOperatorSettingDefaults", () => {
 
   it("throws on malformed policy JSON (fail closed)", () => {
     expect(() => getOperatorSettingDefaults(defaultsEnv("{broken"))).toThrow(
-      /PAPERCLIP_SETTING_DEFAULTS/,
+      /THINKINGMACH_SETTING_DEFAULTS/,
     );
   });
 });
@@ -107,7 +107,7 @@ describe("instanceSettingsService operator setting defaults", () => {
     // A client PUTs back the full object it read, including the overlaid
     // "allowed". The stored value is still the schema default (unchosen), so
     // the echo maps back to the schema default: changing or unsetting
-    // PAPERCLIP_SETTING_DEFAULTS later still takes effect.
+    // THINKINGMACH_SETTING_DEFAULTS later still takes effect.
     const { db, persistedSets } = stubDb(settingsRow({}));
     const svc = instanceSettingsService(db, { runtimeEnv: defaultsEnv() });
     const echoed = await svc.getGeneral();

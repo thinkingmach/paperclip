@@ -1,4 +1,4 @@
-import { createSshCommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/ssh";
+import { createSshCommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/ssh";
 import { MAX_REMOTE_DELIVERABLE_BYTES } from "./remote-deliverable-file.js";
 
 /** The command transport used by a native session on an operator-bound SSH host. */

@@ -20,7 +20,7 @@ import {
   toolProfileBindings,
   toolProfileEntries,
   toolProfiles,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { eq } from "drizzle-orm";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { smokeLabRoutes } from "../routes/smoke-lab.js";
@@ -264,7 +264,7 @@ describeEmbeddedPostgres("smoke lab service pack and results API", () => {
     const company = await createCompany(db);
     await enableSmokeLab(db);
     const app = createRouteApp(db);
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "http://paperclip-dev:45439");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "http://paperclip-dev:45439");
 
     // A redirect host that is neither loopback nor the instance's own origin
     // could leak fixture authorization codes off the gated deployment.
@@ -318,8 +318,8 @@ describeEmbeddedPostgres("smoke lab service pack and results API", () => {
     const company = await createCompany(db);
     await enableSmokeLab(db);
     const app = createRouteApp(db);
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "");
-    vi.stubEnv("PAPERCLIP_AUTH_PUBLIC_BASE_URL", "");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "");
+    vi.stubEnv("THINKINGMACH_AUTH_PUBLIC_BASE_URL", "");
     vi.stubEnv("BETTER_AUTH_URL", "");
     vi.stubEnv("BETTER_AUTH_BASE_URL", "");
 

@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { CompanySecretProviderConfig, SecretProposalView } from "@paperclipai/shared";
+import type { CompanySecretProviderConfig, SecretProposalView } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ProposalsTab } from "./ProposalsTab";
 

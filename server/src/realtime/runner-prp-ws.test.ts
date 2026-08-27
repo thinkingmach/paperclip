@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PassThrough } from "node:stream";
 
-import { DurablePrpControlPlane } from "@paperclipai/paperclip-runner";
+import { DurablePrpControlPlane } from "@thinkingmach/paperclip-runner";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {

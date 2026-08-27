@@ -1,5 +1,5 @@
 import type { AdapterModel } from "../../api/agents";
-import type { Issue, Project } from "@paperclipai/shared";
+import type { Issue, Project } from "@thinkingmach/shared";
 import { extractProviderIdWithFallback } from "../../lib/model-utils";
 import type { IssueModelLane } from "../../lib/issue-assignee-overrides";
 import { codexReasoningEffortOptions } from "../../lib/codex-reasoning-effort";

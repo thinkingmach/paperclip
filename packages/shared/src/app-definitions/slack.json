@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "slack",
   "name": "Slack",
-  "description": "Give agents Slack tools or let people start and continue Paperclip work from Slack.",
+  "description": "Give agents Slack tools or let people start and continue ThinkingMach work from Slack.",
   "categories": [
     "communication"
   ],
@@ -52,7 +52,7 @@
       "ownershipModes": [
         "customer"
       ],
-      "whenToUse": "Let people in Slack start and continue work with one Paperclip agent.",
+      "whenToUse": "Let people in Slack start and continue work with one ThinkingMach agent.",
       "credentialFields": [
         {
           "key": "botToken",
@@ -71,7 +71,7 @@
           "secret": true
         }
       ],
-      "guidanceMd": "Create and install one Slack App for this agent. Paperclip receives verified Events API requests and interactive callbacks, acknowledges with reactions, responds in direct messages, and starts one Paperclip task per new mentioned channel thread.",
+      "guidanceMd": "Create and install one Slack App for this agent. ThinkingMach receives verified Events API requests and interactive callbacks, acknowledges with reactions, responds in direct messages, and starts one ThinkingMach task per new mentioned channel thread.",
       "consoleLinks": {
         "register": "https://api.slack.com/apps",
         "docs": "https://api.slack.com/start/quickstart"

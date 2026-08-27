@@ -78,7 +78,7 @@ export function prUrl(repository, number) {
 export function resolveAuthorAllowlist(options, getGhJson) {
   if (options.include_community) return null;
   if (options.authors === true) throw new Error("--authors requires a comma-separated list of GitHub logins");
-  // Default to the authenticated gh identity: every PR this Paperclip instance
+  // Default to the authenticated gh identity: every PR this ThinkingMach instance
   // opens is authored by that login, so it is the scope boundary that excludes
   // community contributions without maintaining a separate roster.
   const raw = options.authors ?? getGhJson(["api", "user"]).login;
@@ -124,7 +124,7 @@ export async function paperclipGet(path, { apiUrl, apiKey }) {
   });
   if (!response.ok) {
     const body = await response.text();
-    throw new Error(`Paperclip GET ${path} failed (${response.status}): ${body}`);
+    throw new Error(`ThinkingMach GET ${path} failed (${response.status}): ${body}`);
   }
   return response.json();
 }

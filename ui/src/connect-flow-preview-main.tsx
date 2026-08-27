@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { MotionConfig, motion } from "motion/react";
-import { isValidBrowserCode } from "@paperclipai/shared";
+import { isValidBrowserCode } from "@thinkingmach/shared";
 import {
   CARD_ENTER,
   CARD_EXIT,
@@ -312,7 +312,7 @@ function ConnectFlowPreview({
             lede={
               done
                 ? "The step advances straight to Review — there is no success screen."
-                : "Paperclip works with your existing subscription or API keys."
+                : "ThinkingMach works with your existing subscription or API keys."
             }
           />
         </div>

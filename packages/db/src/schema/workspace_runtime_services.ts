@@ -7,7 +7,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import type { RuntimeExposureStatus } from "@paperclipai/shared";
+import type { RuntimeExposureStatus } from "@thinkingmach/shared";
 import { companies } from "./companies.js";
 import { projects } from "./projects.js";
 import { projectWorkspaces } from "./project_workspaces.js";

@@ -11,7 +11,7 @@ const sinks = vi.hoisted(() => ({
 }));
 vi.mock("../sentry.js", () => ({ captureException: sinks.captureException }));
 vi.mock("../telemetry.js", () => ({ getTelemetryClient: () => sinks.telemetryClient }));
-vi.mock("@paperclipai/shared/telemetry", () => ({ trackErrorHandlerCrash: sinks.trackErrorHandlerCrash }));
+vi.mock("@thinkingmach/shared/telemetry", () => ({ trackErrorHandlerCrash: sinks.trackErrorHandlerCrash }));
 
 function createApp(routeError?: Error) {
   const app = express();

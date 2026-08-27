@@ -8,7 +8,7 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const defaultServerSrc = resolve(repoRoot, "server/src");
 const defaultModulesRoot = resolve(defaultServerSrc, "modules");
 const layerNames = new Set(["domain", "application", "adapters"]);
-const databasePackages = ["@paperclipai/db", "drizzle-orm", "embedded-postgres", "postgres"];
+const databasePackages = ["@thinkingmach/db", "drizzle-orm", "embedded-postgres", "postgres"];
 
 function normalizedRelative(from, to) {
   return relative(from, to).split(sep).join("/");

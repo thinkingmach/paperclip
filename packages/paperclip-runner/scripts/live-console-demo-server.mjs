@@ -19,7 +19,7 @@ if (!Number.isInteger(parsedPort) || parsedPort < 0 || parsedPort > 65535) {
 }
 const requestedDirectory = option("--working-directory");
 const workingDirectory = requestedDirectory === undefined
-  ? await mkdtemp(resolve(process.env.PAPERCLIP_RUN_SCRATCH_DIR ?? tmpdir(), "live-console-demo-"))
+  ? await mkdtemp(resolve(process.env.THINKINGMACH_RUN_SCRATCH_DIR ?? tmpdir(), "live-console-demo-"))
   : resolve(requestedDirectory);
 
 const server = new LiveConsoleDemoServer({

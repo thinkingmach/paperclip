@@ -11,7 +11,7 @@ type ParsedCodexProvidersConfig = {
   modelProvider: string | null;
 };
 
-// Marker comments delimiting the Paperclip-managed regions of config.toml.
+// Marker comments delimiting the ThinkingMach-managed regions of config.toml.
 // TOML requires root-level keys (model_provider) to appear before the first
 // table header, while [model_providers.*] tables must not swallow the user's
 // root keys, so the managed content is split into a root block prepended to
@@ -51,7 +51,7 @@ function expandEnvPlaceholders<T>(value: T, resolve: (name: string) => string | 
   return value;
 }
 
-// PAPERCLIP_CODEX_PROVIDERS is a JSON object that maps 1:1 onto codex's
+// THINKINGMACH_CODEX_PROVIDERS is a JSON object that maps 1:1 onto codex's
 // config.toml schema:
 //
 //   {
@@ -85,17 +85,17 @@ function parseCodexProvidersConfig(
   } catch {
     // Surface the misconfiguration instead of silently dropping the provider
     // config; an unparseable value would otherwise be undiagnosable.
-    notes.push("PAPERCLIP_CODEX_PROVIDERS contains invalid JSON; custom providers ignored.");
+    notes.push("THINKINGMACH_CODEX_PROVIDERS contains invalid JSON; custom providers ignored.");
     return null;
   }
   if (!isPlainObject(parsed)) {
-    notes.push("PAPERCLIP_CODEX_PROVIDERS is set but is not a JSON object; custom providers ignored.");
+    notes.push("THINKINGMACH_CODEX_PROVIDERS is set but is not a JSON object; custom providers ignored.");
     return null;
   }
   const rawProviders = parsed.providers;
   if (!isPlainObject(rawProviders)) {
     notes.push(
-      'PAPERCLIP_CODEX_PROVIDERS has no "providers" object; custom providers ignored.',
+      'THINKINGMACH_CODEX_PROVIDERS has no "providers" object; custom providers ignored.',
     );
     return null;
   }
@@ -112,7 +112,7 @@ function parseCodexProvidersConfig(
   }
   if (Object.keys(providers).length === 0) {
     notes.push(
-      `PAPERCLIP_CODEX_PROVIDERS "providers" contains no usable entries${
+      `THINKINGMACH_CODEX_PROVIDERS "providers" contains no usable entries${
         skipped.length > 0
           ? ` (skipped provider(s) with empty names or non-object values: ${skipped.join(", ")})`
           : ""
@@ -122,7 +122,7 @@ function parseCodexProvidersConfig(
   }
   if (skipped.length > 0) {
     notes.push(
-      `PAPERCLIP_CODEX_PROVIDERS: skipped provider(s) with empty names or non-object values: ${skipped.join(", ")}.`,
+      `THINKINGMACH_CODEX_PROVIDERS: skipped provider(s) with empty names or non-object values: ${skipped.join(", ")}.`,
     );
   }
   const modelProvider =
@@ -136,7 +136,7 @@ function parseCodexProvidersConfig(
   // malformed JSON: reject the whole block with a visible note.
   if (modelProvider !== null && !(modelProvider in providers)) {
     notes.push(
-      `PAPERCLIP_CODEX_PROVIDERS: model_provider "${modelProvider}" does not match any usable provider entry; custom providers ignored.`,
+      `THINKINGMACH_CODEX_PROVIDERS: model_provider "${modelProvider}" does not match any usable provider entry; custom providers ignored.`,
     );
     return null;
   }
@@ -313,7 +313,7 @@ function configTomlBackupPath(configTomlPath: string): string {
   return `${configTomlPath}.paperclip-backup`;
 }
 
-// Merge custom Codex model providers supplied via PAPERCLIP_CODEX_PROVIDERS
+// Merge custom Codex model providers supplied via THINKINGMACH_CODEX_PROVIDERS
 // into the managed CODEX_HOME's config.toml.
 //
 // Codex has no CLI flag or env var for pointing at a custom OpenAI-compatible
@@ -328,7 +328,7 @@ function configTomlBackupPath(configTomlPath: string): string {
 // comments and conflicting pre-existing definitions are excised so the managed
 // definitions win. cleanup() restores the original file; if a run dies before
 // cleanup, the next prepare restores the original from the pre-run backup file
-// written alongside config.toml (including when PAPERCLIP_CODEX_PROVIDERS is
+// written alongside config.toml (including when THINKINGMACH_CODEX_PROVIDERS is
 // no longer set), falling back to stripping the stale managed blocks.
 //
 // When the adapter config explicitly sets env.CODEX_HOME (a user-managed home),
@@ -340,7 +340,7 @@ export async function prepareCodexRuntimeConfig(input: {
   const resolveEnv = (name: string): string | undefined => input.env[name] ?? process.env[name];
   const notes: string[] = [];
   const parsed = parseCodexProvidersConfig(
-    input.env.PAPERCLIP_CODEX_PROVIDERS ?? process.env.PAPERCLIP_CODEX_PROVIDERS,
+    input.env.THINKINGMACH_CODEX_PROVIDERS ?? process.env.THINKINGMACH_CODEX_PROVIDERS,
     resolveEnv,
     notes,
   );
@@ -349,7 +349,7 @@ export async function prepareCodexRuntimeConfig(input: {
     // Self-heal state left behind by a crashed run (cleanup() never ran).
     if (input.codexHome) {
       const configTomlPath = path.join(input.codexHome, "config.toml");
-      const reason = notes.length === 0 ? " (PAPERCLIP_CODEX_PROVIDERS is no longer set)" : "";
+      const reason = notes.length === 0 ? " (THINKINGMACH_CODEX_PROVIDERS is no longer set)" : "";
       const backupPath = configTomlBackupPath(configTomlPath);
       const backup = await readFileOrNull(backupPath);
       if (backup !== null) {
@@ -360,7 +360,7 @@ export async function prepareCodexRuntimeConfig(input: {
         return {
           notes: [
             ...notes,
-            `Restored "${configTomlPath}" from its pre-run backup, removing stale Paperclip-managed model providers left by an interrupted run${reason}.`,
+            `Restored "${configTomlPath}" from its pre-run backup, removing stale ThinkingMach-managed model providers left by an interrupted run${reason}.`,
           ],
           cleanup: async () => {},
         };
@@ -374,7 +374,7 @@ export async function prepareCodexRuntimeConfig(input: {
           return {
             notes: [
               ...notes,
-              `Removed stale Paperclip-managed model provider blocks from "${configTomlPath}"${reason}.`,
+              `Removed stale ThinkingMach-managed model provider blocks from "${configTomlPath}"${reason}.`,
             ],
             cleanup: async () => {},
           };
@@ -388,7 +388,7 @@ export async function prepareCodexRuntimeConfig(input: {
     return {
       notes: [
         ...notes,
-        "PAPERCLIP_CODEX_PROVIDERS is set but the adapter config explicitly sets env.CODEX_HOME; leaving the user-managed Codex home untouched (no model provider merge).",
+        "THINKINGMACH_CODEX_PROVIDERS is set but the adapter config explicitly sets env.CODEX_HOME; leaving the user-managed Codex home untouched (no model provider merge).",
       ],
       cleanup: async () => {},
     };
@@ -414,7 +414,7 @@ export async function prepareCodexRuntimeConfig(input: {
   return {
     notes: [
       ...notes,
-      `Merged ${providerNames.length} custom Codex model provider(s) from PAPERCLIP_CODEX_PROVIDERS into "${configTomlPath}": ${providerNames.join(", ")}${
+      `Merged ${providerNames.length} custom Codex model provider(s) from THINKINGMACH_CODEX_PROVIDERS into "${configTomlPath}": ${providerNames.join(", ")}${
         parsed.modelProvider ? `; selected model_provider "${parsed.modelProvider}"` : ""
       }.`,
     ],

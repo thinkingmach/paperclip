@@ -1,6 +1,6 @@
-# `@paperclipai/plugin-createos`
+# `@thinkingmach/plugin-createos`
 
-CreateOS sandbox provider for Paperclip. This package lives alongside Daytona
+CreateOS sandbox provider for ThinkingMach. This package lives alongside Daytona
 and E2B, outside the root pnpm workspace, and uses CreateOS's public HTTP API.
 No CreateOS SDK dependency is required; the `tar` library handles local archives. The package has not been published as
 part of this change; use a local-path install for development. Its release
@@ -9,7 +9,7 @@ npm publish and enables CI publishing.
 
 ## Build and install locally
 
-Requires Node 24.11+, pnpm, and an installed Paperclip checkout.
+Requires Node 24.11+, pnpm, and an installed ThinkingMach checkout.
 
 ```sh
 cd packages/plugins/sandbox-providers/createos
@@ -19,7 +19,7 @@ pnpm test
 pnpm build
 ```
 
-From the Paperclip checkout, with your instance running:
+From the ThinkingMach checkout, with your instance running:
 
 ```sh
 node cli/node_modules/tsx/dist/cli.mjs cli/src/index.ts plugin install /absolute/path/to/paperclip/packages/plugins/sandbox-providers/createos
@@ -37,7 +37,7 @@ node cli/node_modules/tsx/dist/cli.mjs cli/src/index.ts plugin enable paperclip.
 ```
 
 The plugin uses the same package entrypoints and publish manifest helper as
-other sandbox providers. Plugin workers are trusted code on the Paperclip host.
+other sandbox providers. Plugin workers are trusted code on the ThinkingMach host.
 
 ## Configure an environment
 
@@ -48,7 +48,7 @@ has no custom UI. Required fields:
   is accepted and normalized. HTTPS is required except on loopback for testing.
 - `shape`: choose from the dropdown of published CreateOS shapes. The bundled
   choices match `https://api.sb.createos.sh/v1/shapes` as of 2026-09-08.
-- `apiKey`: your CreateOS key. Paperclip saves pasted keys as company secrets;
+- `apiKey`: your CreateOS key. ThinkingMach saves pasted keys as company secrets;
   a resolved environment key takes precedence over the optional host fallback
   `CREATEOS_API_KEY` for `https://api.sb.createos.sh` only. Custom API endpoints,
   including loopback fixtures, require an explicit environment key. The host
@@ -113,7 +113,7 @@ CreateOS idle auto-pause is not a guaranteed absolute expiry, so acquisition
 with `requestedExpiresAt` fails before provisioning a resource.
 
 The host has an outbound-WSS native runner path for providers without ingress.
-Using it additionally requires a reachable Paperclip runner endpoint and the
+Using it additionally requires a reachable ThinkingMach runner endpoint and the
 host's qualified runner/provider artifacts. This plugin's local tests do not
 constitute an end-to-end native runner qualification.
 

@@ -1,5 +1,5 @@
 import { Copy } from "lucide-react";
-import type { ToolMcpGatewayWithTokens, ToolProfileWithDetails } from "@paperclipai/shared";
+import type { ToolMcpGatewayWithTokens, ToolProfileWithDetails } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { Button } from "@/components/ui/button";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";

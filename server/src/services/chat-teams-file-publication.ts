@@ -1,6 +1,6 @@
 import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
-import { CHAT_FILE_TRANSFER_PHASES } from "@paperclipai/shared";
+import { CHAT_FILE_TRANSFER_PHASES } from "@thinkingmach/shared";
 import {
   chatActions,
   chatConversations,
@@ -12,7 +12,7 @@ import {
   issueComments,
   issues,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { projectChatFileTransfer } from "./chat-publication-batches.js";
 import type { TeamsFileTransferSummary } from "./chat-teams-file-transfers.js";
 

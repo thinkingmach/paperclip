@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 import { useState, type AnchorHTMLAttributes, type ReactElement } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { AttentionItem, AttentionSourceKind } from "@paperclipai/shared";
+import type { AttentionItem, AttentionSourceKind } from "@thinkingmach/shared";
 import { approvalsApi } from "../api/approvals";
 import { ApiError } from "../api/client";
 import { issuesApi } from "../api/issues";

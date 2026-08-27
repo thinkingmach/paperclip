@@ -511,7 +511,7 @@ describe("Discord native command Gateway boundary", () => {
     expect(f.patch.mock.calls[0]?.[1]).toMatchObject({
       body: {
         content:
-          "This command is not available here. Open the Paperclip task or ask an operator to check your chat access.",
+          "This command is not available here. Open the ThinkingMach task or ask an operator to check your chat access.",
         allowed_mentions: { parse: [] },
       },
     });

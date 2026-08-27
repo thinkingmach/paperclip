@@ -86,7 +86,7 @@ export const resolveCliAuthChallengeSchema = z.object({
 export type ResolveCliAuthChallenge = z.infer<typeof resolveCliAuthChallengeSchema>;
 
 export const createBoardApiKeySchema = z.object({
-  name: z.string().trim().min(1).max(120).default("paperclipai cli"),
+  name: z.string().trim().min(1).max(120).default("thinkingmach cli"),
   expiresAt: z.coerce.date().optional().nullable(),
   requestedCompanyId: z.string().guid().optional().nullable(),
 });

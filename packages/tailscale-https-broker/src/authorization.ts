@@ -13,7 +13,7 @@ import { randomBytes, timingSafeEqual } from "node:crypto";
 import type { LeaseRecord, PeerCredentials } from "./types.js";
 
 export interface PeerPolicy {
-  /** Exact set of allowed peer UIDs (the Paperclip service identity). */
+  /** Exact set of allowed peer UIDs (the ThinkingMach service identity). */
   allowedUids: ReadonlySet<number>;
   /** Exact set of allowed peer GIDs (the dedicated broker socket group). */
   allowedGids: ReadonlySet<number>;

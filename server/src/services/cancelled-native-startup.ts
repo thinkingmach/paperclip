@@ -1,5 +1,5 @@
 import { and, eq, inArray, isNotNull, or } from "drizzle-orm";
-import { environmentLeases, heartbeatRunEvents, heartbeatRuns, nativeRunFinalizations, type Db } from "@paperclipai/db";
+import { environmentLeases, heartbeatRunEvents, heartbeatRuns, nativeRunFinalizations, type Db } from "@thinkingmach/db";
 import { claimedAdapterType } from "./conversation-continuation.js";
 import { PROCESS_IDENTITY_RECORDED, PROCESS_START_REQUESTED } from "./native-local-process-stop.js";
 import { hasRemoteTerminationReceipt } from "./remote-execution-termination.js";

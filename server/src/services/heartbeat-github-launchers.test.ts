@@ -3,8 +3,8 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { cleanupGitHubOperationLaunchers } from "@paperclipai/adapter-utils/execution-target";
-import type { CommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/command-managed-runtime";
+import { cleanupGitHubOperationLaunchers } from "@thinkingmach/adapter-utils/execution-target";
+import type { CommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/command-managed-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { prepareHeartbeatGitHubLaunchers } from "./heartbeat-github-launchers.js";
 
@@ -21,7 +21,7 @@ describe("heartbeat GitHub launcher lifetime", () => {
     expect(prepare).not.toHaveBeenCalled();
     expect(mint).not.toHaveBeenCalled();
     expect(result.cleanupLocation).toBeNull();
-    expect(result.env).toMatchObject({ GH_TOKEN: "", PAPERCLIP_GITHUB_BROKER_TOKEN: "" });
+    expect(result.env).toMatchObject({ GH_TOKEN: "", THINKINGMACH_GITHUB_BROKER_TOKEN: "" });
   });
   it("keeps anonymous native sandbox launchers stable without issuing a run capability", async () => {
     const createBrokerToken = vi.fn(() => "run-secret");
@@ -34,7 +34,7 @@ describe("heartbeat GitHub launcher lifetime", () => {
     expect(prepareLaunchers.mock.calls.map(([input]) => input.runId)).toEqual([expect.stringMatching(/^anonymous-agent-a-/), prepareLaunchers.mock.calls[0]?.[0].runId]);
     expect(first.cleanupLocation).toBeNull();
     expect(second.cleanupLocation).toBeNull();
-    expect(first.env).toMatchObject({ GH_TOKEN: "", PAPERCLIP_GITHUB_BROKER_TOKEN: "", PAPERCLIP_GITHUB_BROKER_URL: "" });
+    expect(first.env).toMatchObject({ GH_TOKEN: "", THINKINGMACH_GITHUB_BROKER_TOKEN: "", THINKINGMACH_GITHUB_BROKER_URL: "" });
   });
   it.each([false, true])("cleans partial run-scoped staging and preserves its error (cleanup fails: %s)", async (cleanupFails) => {
     const stagingError = new Error("remote launcher staging failed");
@@ -73,7 +73,7 @@ describe("heartbeat GitHub launcher lifetime", () => {
     expect(createBrokerToken).toHaveBeenCalledOnce();
     expect(prepareLaunchers.mock.calls[0]?.[0].runId).toBe("run-one");
     expect(result.cleanupLocation).toEqual({ runId: "run-one", target: mode.target });
-    expect(result.env.PAPERCLIP_GITHUB_BROKER_TOKEN).toBe("current-run-secret");
+    expect(result.env.THINKINGMACH_GITHUB_BROKER_TOKEN).toBe("current-run-secret");
   });
 });
 
@@ -103,13 +103,13 @@ process.stdout.write(JSON.stringify({token:process.env.GH_TOKEN || '', githubTok
     const first = await prepareHeartbeatGitHubLaunchers({ ...base, runId: "run-one" });
     await cleanupGitHubOperationLaunchers({ runId: "run-one", target: sandboxTarget });
     const second = await prepareHeartbeatGitHubLaunchers({ ...base, runId: "run-two" });
-    expect(first.env.PAPERCLIP_GITHUB_LAUNCHER_DIR).toBe(second.env.PAPERCLIP_GITHUB_LAUNCHER_DIR);
-    expect(await readFile(path.join(first.env.PAPERCLIP_GITHUB_LAUNCHER_DIR, "gh"), "utf8")).not.toContain("ambient-token");
+    expect(first.env.THINKINGMACH_GITHUB_LAUNCHER_DIR).toBe(second.env.THINKINGMACH_GITHUB_LAUNCHER_DIR);
+    expect(await readFile(path.join(first.env.THINKINGMACH_GITHUB_LAUNCHER_DIR, "gh"), "utf8")).not.toContain("ambient-token");
     // A still-live provider uses its first-turn environment, not the new one.
-    const command = await execute({ command: path.join(first.env.PAPERCLIP_GITHUB_LAUNCHER_DIR, "gh"), env: first.env });
+    const command = await execute({ command: path.join(first.env.THINKINGMACH_GITHUB_LAUNCHER_DIR, "gh"), env: first.env });
     expect(JSON.parse(command.stdout)).toEqual({ token: "", githubToken: "", ssh: "", global: "/dev/null", imageConfig: false });
     const changedPath = await prepareHeartbeatGitHubLaunchers({ ...base, runId: "run-three", env: { ...imageEnv, PATH: `${imageEnv.PATH}:/extra` } });
-    expect(changedPath.env.PAPERCLIP_GITHUB_LAUNCHER_DIR).not.toBe(first.env.PAPERCLIP_GITHUB_LAUNCHER_DIR);
+    expect(changedPath.env.THINKINGMACH_GITHUB_LAUNCHER_DIR).not.toBe(first.env.THINKINGMACH_GITHUB_LAUNCHER_DIR);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

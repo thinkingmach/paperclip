@@ -9,7 +9,7 @@ describe("chat connector UI contract", () => {
   it("describes the close command as a conversation control rather than a task status change", () => {
     const setup = source("./ChatEndpointSetup.tsx");
     expect(setup).toContain("Close the active chat conversation");
-    expect(setup).not.toContain("Close the active Paperclip task");
+    expect(setup).not.toContain("Close the active ThinkingMach task");
   });
 
   it("retries the selected failed run from every Board entry point", () => {
@@ -82,9 +82,9 @@ describe("chat connector UI contract", () => {
     expect(detail).toContain("Allow direct messages");
     expect(detail).toContain("Allow group chats");
     expect(detail).toContain("Their tasks run only with an isolated workspace");
-    expect(detail).toContain("otherwise Paperclip safely refuses the request");
+    expect(detail).toContain("otherwise ThinkingMach safely refuses the request");
     expect(setup).toContain("Link the account you’re testing");
-    expect(setup).toContain("Paperclip does not replay the refused request");
+    expect(setup).toContain("ThinkingMach does not replay the refused request");
     expect(setup).toContain("Review identity access");
     expect(setup).toContain("instanceSettingsApi.getExperimental()");
     expect(setup).toContain("chatEndpointsApi.listPrincipals(endpointId)");
@@ -132,7 +132,7 @@ describe("chat connector UI contract", () => {
       "does not reinstall the App or change repository access",
       "does not add or remove the bot from the server",
       "does not upload or reinstall the Teams app",
-      "automatically refreshes its Paperclip webhook and command menu",
+      "automatically refreshes its ThinkingMach webhook and command menu",
     ]) {
       expect(detail).toContain(reconnectCopy);
       expect(setup).toContain(reconnectCopy);
@@ -143,7 +143,7 @@ describe("chat connector UI contract", () => {
       "It does not uninstall the bot",
       "It does not uninstall the Teams app",
       "queues durable removal of its Telegram webhook and command menu",
-      "After Telegram confirms that cleanup, Paperclip retires the saved token",
+      "After Telegram confirms that cleanup, ThinkingMach retires the saved token",
       "BotFather bot and its chat memberships remain",
     ]) {
       expect(detail).toContain(removalCopy);
@@ -227,7 +227,7 @@ describe("chat connector UI contract", () => {
     expect(setup).toContain("not Microsoft Graph permissions in Entra");
     expect(setup).toContain("does not use Teams single sign-on");
     expect(setup).toContain("webApplicationInfo");
-    expect(setup).toContain('resource: "https://paperclip.ing"');
+    expect(setup).toContain('resource: "https://thinkingmach.com"');
     expect(setup).toContain("only associates the RSC");
     expect(setup).toContain("you do not need to register an Entra");
     expect(setup).toContain("receive every message");
@@ -273,7 +273,7 @@ describe("chat connector UI contract", () => {
     expect(setup).not.toContain("managed Microsoft app");
     expect(setup).toContain("endpoint.providerAccountId && !repairing");
     expect(setup).not.toContain('field("webhookSecret"');
-    expect(setup).not.toContain("@paperclipai/teams-connect");
+    expect(setup).not.toContain("@thinkingmach/teams-connect");
     expect(setup).not.toContain("Copy setup command");
     expect(setup).not.toContain("Add {agentName} to Slack");
     expect(setup).not.toContain("Create in GitHub");

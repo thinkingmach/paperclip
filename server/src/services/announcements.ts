@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { announcementDismissals, announcementPublications, type Db } from "@paperclipai/db";
+import { announcementDismissals, announcementPublications, type Db } from "@thinkingmach/db";
 import { persistActivity, publishActivity } from "./activity-log.js";
 import { logger } from "../middleware/logger.js";
 

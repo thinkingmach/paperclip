@@ -36,9 +36,9 @@ bridge to discover its assigned inbox and queue the send, and created
 - Runtime verified by the agent: Linux, x86_64; hostname matched the sandbox.
 - Run: `cd7b934a-5555-4361-b0e5-b8106c1510ce`.
 - Publication: `d5b7bf41-a583-4f9f-90c0-4d21680e39c2`, **Delivered**.
-- Subject: `[Paperclip E2E] Daytona sandbox — Sep 11`.
-- Provider key remained in Paperclip's vault. The sandbox used its injected
-  Paperclip run credential, and the model key was separately vaulted.
+- Subject: `[ThinkingMach E2E] Daytona sandbox — Sep 11`.
+- Provider key remained in ThinkingMach's vault. The sandbox used its injected
+  ThinkingMach run credential, and the model key was separately vaulted.
 
 The first fixture launches exposed an unavailable default ACP executable and a
 host `service_tier` setting incompatible with the fleet image's Codex CLI. The

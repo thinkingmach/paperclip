@@ -12,7 +12,7 @@ import {
   approvals, issueApprovals, issueThreadInteractions,
   agentWakeupRequests, agents, companies, createDb, heartbeatRunEvents, heartbeatRuns, issueComments, issueRecoveryActions,
   issues, nativeRunFinalizations, nativeRunResults, completionContracts, environmentLeases, environments, issueRelations, issueTreeHolds, issueTreeHoldMembers,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase, getEmbeddedPostgresTestSupport } from "../__tests__/helpers/embedded-postgres.js";
 import { admitExplicitNativeContinuation } from "./explicit-native-continuation.js";
 import { buildExecutionContinuation } from "./execution-continuation.js";
@@ -405,8 +405,8 @@ const support = await getEmbeddedPostgresTestSupport();
     "recovers a historical run without process metadata only from exact suspended state (%s)", async kind => {
       const f = await seed();
       const stateBase = await mkdtemp(join(tmpdir(), "historical-native-followup-"));
-      const previous = process.env.PAPERCLIP_RUNNER_STATE_DIR;
-      process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+      const previous = process.env.THINKINGMACH_RUNNER_STATE_DIR;
+      process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
       try {
         const nativeSessionId = randomUUID(), runnerInstanceId = randomUUID();
         const execution = {
@@ -473,8 +473,8 @@ const support = await getEmbeddedPostgresTestSupport();
         expect(action.evidence.automaticRecovery).toMatchObject({ actionOutcome: "unknown", replay: "explicit_user_continuation" });
         expect(await hasNativeLocalProcessStop(db, f.companyId, f.sourceRunId)).toBe(false);
       } finally {
-        if (previous === undefined) delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
-        else process.env.PAPERCLIP_RUNNER_STATE_DIR = previous;
+        if (previous === undefined) delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
+        else process.env.THINKINGMACH_RUNNER_STATE_DIR = previous;
         await rm(stateBase, { recursive: true, force: true });
       }
     },

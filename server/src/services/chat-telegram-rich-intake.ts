@@ -6,7 +6,7 @@ const MAX_TEXT = 100_000;
 const MAX_NODES = 4096;
 const MAX_DEPTH = 32;
 const OMITTED =
-  "[Paperclip could not import an unsupported or malformed Telegram rich content block.]";
+  "[ThinkingMach could not import an unsupported or malformed Telegram rich content block.]";
 const LIMIT =
   "[Telegram rich content exceeded the supported import limit. Please resend the omitted content as text or a supported file.]";
 const record = (value: unknown): value is Record<string, unknown> =>

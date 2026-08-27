@@ -1,5 +1,5 @@
 import { and, eq, isNotNull, sql } from "drizzle-orm";
-import { heartbeatRuns, issues, type Db } from "@paperclipai/db";
+import { heartbeatRuns, issues, type Db } from "@thinkingmach/db";
 import { publishLiveEvent } from "./live-events.js";
 import { logger } from "../middleware/logger.js";
 

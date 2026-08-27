@@ -224,7 +224,7 @@ export const SLACK_TOOLS = [
     "files.completeUploadExternal",
     ["files:write"],
     "write",
-    "Upload a task attachment to an allowed Slack destination. Use a Paperclip attachment ID, never a local path or arbitrary URL.",
+    "Upload a task attachment to an allowed Slack destination. Use a ThinkingMach attachment ID, never a local path or arbitrary URL.",
     {
       channel,
       attachmentId: z.string().uuid(),

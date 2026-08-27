@@ -1,6 +1,6 @@
 # GitHub managed connection
 
-GitHub is a Paperclip Cloud-managed GitHub App connection with an advanced PAT
+GitHub is a ThinkingMach Cloud-managed GitHub App connection with an advanced PAT
 compatibility method. Cloud owns the fixed public OAuth callback and signed
 webhook inbox; provider tokens are sealed to the enrolled instance and stored
 only in its existing encrypted secret system.
@@ -9,14 +9,14 @@ only in its existing encrypted secret system.
 
 The Access step uses **Continue** to open the local setup screen.
 **Continue to GitHub** on that screen starts the provider handoff. The first
-button does not imply that the browser is leaving Paperclip yet.
+button does not imply that the browser is leaving ThinkingMach yet.
 
-A self-hosted instance needs one Paperclip Cloud approval before its first
+A self-hosted instance needs one ThinkingMach Cloud approval before its first
 managed connection. After approval, setup returns to step 2 and continues to
 GitHub without another instance approval or a service restart.
 
 If an unapproved enrollment link expires, return to setup and select
-**Continue**. Paperclip asks the server for a valid link. The server reuses a
+**Continue**. ThinkingMach asks the server for a valid link. The server reuses a
 live pending enrollment or replaces an expired one; this does not revoke or
 repeat an existing instance approval.
 
@@ -40,7 +40,7 @@ organization defaults, and are installed only for that agent.
 The connection installation is the credential owner's consent boundary. A
 personal setup may target every agent or a selected set, and runtime resolution
 considers only an enabled, active connection installed for the current agent.
-Within that boundary, Paperclip treats the run's server-resolved
+Within that boundary, ThinkingMach treats the run's server-resolved
 `responsibleUserId` as its credential principal, including for automated work;
 agents cannot choose or spoof this field. The owner must still be an active
 non-viewer company member at each use. A standing delegation is needed only
@@ -54,7 +54,7 @@ checked with GitHub's `/user` endpoint every 30 days, together with installation
 and repository summary refresh. Routine continuity requires no browser visit.
 
 If GitHub returns an expiring access token and rotating refresh token instead,
-Paperclip stores both encrypted and:
+ThinkingMach stores both encrypted and:
 
 - refreshes at least one hour before access expiry;
 - forces a rotation at least every 30 days while the instance is active;
@@ -71,7 +71,7 @@ installation-health failure, not as token expiry.
 
 OAuth completion verifies `/user`, every page of `/user/installations`, and every
 page of each installation's accessible repositories. Setup remains incomplete
-until at least one installation and repository are available. Paperclip stores
+until at least one installation and repository are available. ThinkingMach stores
 the authenticated username and a grant-scoped display snapshot containing only
 repository IDs, full names, installation IDs, and private-repository flags. GitHub stays authoritative:
 this snapshot never authorizes repository access.
@@ -93,7 +93,7 @@ refresh instead of presenting a stale list. The page links to GitHub's
 installation management page. Selected repositories are recommended; all-
 repository access retains its warning.
 
-Fresh local test-drives use production Paperclip Cloud. Instance enrollment
+Fresh local test-drives use production ThinkingMach Cloud. Instance enrollment
 and provider enablement are separate: enrollment alone does not enable GitHub
 OAuth. Production must advertise the `github.code` profile (see Cloud's
 `docs/github-connector-deploy-bootstrap.md`). If it is unavailable, setup
@@ -114,7 +114,7 @@ and any workflow `inputs`. The workflow must declare `workflow_dispatch`.
 The GitHub App installation or fine-grained PAT needs **Actions: Read and
 write** for the repository. App owners set that permission on the GitHub App
 registration; installation owners must approve an increase before it takes
-effect. Paperclip's action controls do not grant GitHub permissions.
+effect. ThinkingMach's action controls do not grant GitHub permissions.
 
 The tool also supports rerunning and cancelling runs and deleting run logs.
 It retains GitHub's destructive classification. Read tools include
@@ -125,10 +125,10 @@ and [workflow dispatch permissions](https://docs.github.com/en/rest/actions/work
 
 ## Webhooks
 
-Paperclip Cloud verifies `X-Hub-Signature-256` against the exact bounded request
+ThinkingMach Cloud verifies `X-Hub-Signature-256` against the exact bounded request
 body before parsing, deduplicates by `X-GitHub-Delivery`, and persists a minimal
 normalized event before returning `202`. Raw webhook payloads are discarded.
-When registering an active binding, Paperclip sends the current user token only
+When registering an active binding, ThinkingMach sends the current user token only
 inside the signed, payload-bound broker request so Cloud can verify access to
 that exact installation; Cloud neither logs nor persists that proof token.
 Deliveries fan out independently to every enrolled instance bound to the GitHub
@@ -138,7 +138,7 @@ The instance polls with backoff, stores a company-scoped idempotency receipt,
 and acknowledges only successful applications. A merged pull request updates
 its matching external-object snapshot and immediately runs the existing merge-
 confirmation resolver. It wakes the assignee only when that interaction's
-continuation policy requests it; unrelated Paperclip issues are not closed.
+continuation policy requests it; unrelated ThinkingMach issues are not closed.
 The periodic GitHub merge sweep remains the reconciliation fallback.
 
 Installation lifecycle events refresh or invalidate installation summaries and

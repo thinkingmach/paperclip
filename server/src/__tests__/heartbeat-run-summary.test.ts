@@ -945,8 +945,8 @@ describe("findHeartbeatRunCompletionComment", () => {
     expect(resolveHeartbeatRunResponse({
       resultJson,
       existingComment,
-      finalAgentMessage: { text: "PAPERCLIP_E2E_WARM_T3", sourceEventId: "final-event", channel: "final" },
-    })).toMatchObject({ text: "PAPERCLIP_E2E_WARM_T3", decision: { commentAction: "create" } });
+      finalAgentMessage: { text: "THINKINGMACH_E2E_WARM_T3", sourceEventId: "final-event", channel: "final" },
+    })).toMatchObject({ text: "THINKINGMACH_E2E_WARM_T3", decision: { commentAction: "create" } });
     // A final reply already materialized on a retry keeps precedence.
     expect(findHeartbeatRunCompletionComment([prepared, explicit], resultJson)).toEqual(explicit);
     // The body alone does not mark an ordinary agent comment as generated.

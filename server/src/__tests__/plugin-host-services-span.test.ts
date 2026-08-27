@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createHostClientHandlers } from "../../../packages/plugins/sdk/src/host-client-factory.js";
 import type { WorkerHostCallContext } from "../../../packages/plugins/sdk/src/protocol.js";
-import { SANDBOX_STARTUP_SPAN_ATTRS as A } from "@paperclipai/adapter-utils/acpx-engine/startup-timing";
+import { SANDBOX_STARTUP_SPAN_ATTRS as A } from "@thinkingmach/adapter-utils/acpx-engine/startup-timing";
 import {
   buildHostServices,
   clampProviderSpanAttributes,

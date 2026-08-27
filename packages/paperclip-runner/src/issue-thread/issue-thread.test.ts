@@ -56,7 +56,7 @@ function credentialLike(value: unknown): string[] {
     // would otherwise read as an `sk-` provider key.
     /(?<![A-Za-z0-9])sk-[a-z0-9]{8,}/i,
     /"api[_-]?key"\s*:/i,
-    /PAPERCLIP_API_KEY/,
+    /THINKINGMACH_API_KEY/,
   ];
   return patterns.filter((pattern) => pattern.test(serialized)).map(String);
 }
@@ -74,7 +74,7 @@ describe("Capability issue-thread fixtures", () => {
       const snapshot = capabilityIssueThreadFixture(slug);
       expect(snapshot.schema).toBe(CAPABILITY_ISSUE_THREAD_VIEW_SCHEMA);
       expect(snapshot.turns.length).toBeGreaterThan(0);
-      expect(snapshot.identity.controlPlaneLabel).toBe("Mock Paperclip");
+      expect(snapshot.identity.controlPlaneLabel).toBe("Mock ThinkingMach");
       expect(snapshot.issue.identifier.startsWith("MCK-")).toBe(true);
       for (const section of CAPABILITY_EVIDENCE_SECTIONS) {
         expect(Array.isArray(snapshot.evidence[section.id])).toBe(true);
@@ -207,7 +207,7 @@ describe("Capability issue-thread fixtures", () => {
       path: "docs/paperclip-runner-protocol.md",
       presentation: "document",
     });
-    expect(item.reference.preview).toContain("# Paperclip Runner Protocol");
+    expect(item.reference.preview).toContain("# ThinkingMach Runner Protocol");
     expect(allItems(capabilityIssueThreadFixture("thread-baseline", "fr-file-reference")))
       .toEqual(allItems(snapshot));
   });
@@ -387,7 +387,7 @@ describe("Capability live projection", () => {
         },
       ],
       process: null,
-      networkEvidence: { realPaperclipRequests: 0, childPaperclipEnvironmentKeys: [] },
+      networkEvidence: { realThinkingMachRequests: 0, childThinkingMachEnvironmentKeys: [] },
     } as CapabilityLiveSessionSnapshot;
   }
 

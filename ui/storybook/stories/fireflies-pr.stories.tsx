@@ -2,7 +2,7 @@ import { useEffect, useState, type ComponentProps, type ReactNode } from "react"
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { addons } from "storybook/preview-api";
 import { expect, userEvent, within } from "storybook/test";
-import { CONNECTABLE_APP_DEFINITIONS, type ToolCatalogEntry } from "@paperclipai/shared";
+import { CONNECTABLE_APP_DEFINITIONS, type ToolCatalogEntry } from "@thinkingmach/shared";
 import { ConnectionSetupFlow, OAuthConnectStateScreen } from "@/features/connections/ConnectionSetupFlow";
 import { ConnectorCard } from "@/pages/apps/Browse";
 import { AppLogo } from "@/pages/apps/AppLogo";

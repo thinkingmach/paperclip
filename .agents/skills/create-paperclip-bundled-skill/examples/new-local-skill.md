@@ -32,7 +32,7 @@ One markdown-only `SKILL.md` (trust level stays `markdown_only`):
 ---
 name: simplified-english
 description: Write user-facing comments, plans, and documents in ASD-STE100 Simplified Technical English — short, unambiguous sentences with approved words and one meaning each — so readers understand them the first time.
-key: paperclipai/optional/content/simplified-english
+key: thinkingmach/optional/content/simplified-english
 recommendedForRoles:
   - engineer
   - product
@@ -65,11 +65,11 @@ Note the frontmatter hits every builder rule: description is 40–300 chars,
 
 - Add `examples/rewrite-status-comment.md` showing a jargon-heavy status
   comment rewritten under the rules (before/after).
-- `pnpm --filter @paperclipai/skills-catalog build:manifest` → regenerates
+- `pnpm --filter @thinkingmach/skills-catalog build:manifest` → regenerates
   `generated/catalog.json` with the new entry.
-- Add `"paperclipai/optional/content/simplified-english"` to
+- Add `"thinkingmach/optional/content/simplified-english"` to
   `EXPECTED_OPTIONAL_KEYS` in `src/shipped-catalog.test.ts` (alphabetical).
-- `pnpm --filter @paperclipai/skills-catalog test` → green.
+- `pnpm --filter @thinkingmach/skills-catalog test` → green.
 
 ## Step 5 — PR
 

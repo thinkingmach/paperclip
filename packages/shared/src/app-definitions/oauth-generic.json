@@ -22,7 +22,7 @@
       ],
       "whenToUse": "Use credentials from your provider account.",
       "defaults": {},
-      "guidanceMd": "Register an OAuth client with the provider and add Paperclip's redirect URI.",
+      "guidanceMd": "Register an OAuth client with the provider and add ThinkingMach's redirect URI.",
       "riskTier": "S3",
       "credentialFields": [
         {

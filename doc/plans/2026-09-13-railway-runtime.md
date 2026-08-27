@@ -21,7 +21,7 @@ Container commands run a fixed system OpenSSH client with isolated temporary
 state, a dedicated vault-backed grant key, verified host trust and explicit
 container-instance membership. Enrollment is manual: hosted OAuth does not
 advertise SSH-key management scope, and provider-side key deletion can require
-2FA. Paperclip does not borrow a developer's CLI login or SSH directory.
+2FA. ThinkingMach does not borrow a developer's CLI login or SSH directory.
 
 Independent read-only security review accepted this architecture for local
 preview, subject to tests and live qualification. It required permanent blocks

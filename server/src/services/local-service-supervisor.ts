@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { promisify } from "node:util";
-import { resolvePaperclipInstanceRoot } from "../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../home-paths.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -61,11 +61,11 @@ function sanitizeServiceKeySegment(value: string, fallback: string): string {
 }
 
 function getRuntimeServicesDir() {
-  return path.resolve(resolvePaperclipInstanceRoot(), "runtime-services");
+  return path.resolve(resolveThinkingMachInstanceRoot(), "runtime-services");
 }
 
 function getRuntimeServiceLogsDir() {
-  return path.resolve(resolvePaperclipInstanceRoot(), "runtime-service-logs");
+  return path.resolve(resolveThinkingMachInstanceRoot(), "runtime-service-logs");
 }
 
 export function resolveLocalServiceLogPath(serviceKey: string) {
@@ -80,7 +80,7 @@ export function resolveLocalServiceLogPath(serviceKey: string) {
  *
  * The returned descriptor is intended to be passed directly to spawn(). The
  * child receives its own duplicate, so the caller can close this handle as soon
- * as spawn returns without tying the service's stdio lifetime to Paperclip's.
+ * as spawn returns without tying the service's stdio lifetime to ThinkingMach's.
  */
 export async function openLocalServiceLogFile(serviceKey: string) {
   await fs.mkdir(getRuntimeServiceLogsDir(), { recursive: true });

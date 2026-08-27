@@ -43,13 +43,13 @@ import { fileURLToPath } from "node:url";
 
 import type {
   AskUserQuestionsInteraction,
-  PaperclipPluginManifestV1,
+  ThinkingMachPluginManifestV1,
   RequestCheckboxConfirmationInteraction,
   RequestConfirmationInteraction,
   SuggestTasksInteraction,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
-import type { PaperclipPlugin } from "./define-plugin.js";
+import type { ThinkingMachPlugin } from "./define-plugin.js";
 import type {
   PluginApiRequestInput,
   PluginHealthDiagnostics,
@@ -151,7 +151,7 @@ export interface WorkerRpcHostOptions {
    *
    * The worker entrypoint should import its plugin and pass it here.
    */
-  plugin: PaperclipPlugin;
+  plugin: ThinkingMachPlugin;
 
   /**
    * Input stream to read JSON-RPC messages from.
@@ -280,7 +280,7 @@ export interface RunWorkerOptions {
  * ```
  */
 export function runWorker(
-  plugin: PaperclipPlugin,
+  plugin: ThinkingMachPlugin,
   moduleUrl: string,
   options?: RunWorkerOptions,
 ): WorkerRpcHost | void {
@@ -310,7 +310,7 @@ export function runWorker(
  * ```ts
  * // worker-bootstrap.ts
  * import plugin from "./worker.js";
- * import { startWorkerRpcHost } from "@paperclipai/plugin-sdk";
+ * import { startWorkerRpcHost } from "@thinkingmach/plugin-sdk";
  *
  * startWorkerRpcHost({ plugin });
  * ```
@@ -333,7 +333,7 @@ export function startWorkerRpcHost(options: WorkerRpcHostOptions): WorkerRpcHost
 
   let running = true;
   let initialized = false;
-  let manifest: PaperclipPluginManifestV1 | null = null;
+  let manifest: ThinkingMachPluginManifestV1 | null = null;
   let currentConfig: Record<string, unknown> = {};
   // The company whose config was last applied via configChanged. Used to fail
   // closed when a single-tenant plugin would be collapsed onto a second,
@@ -352,7 +352,7 @@ export function startWorkerRpcHost(options: WorkerRpcHostOptions): WorkerRpcHost
     (params: Record<string, unknown>, context: PluginPerformActionContext) => Promise<unknown>
   >();
   const toolHandlers = new Map<string, {
-    declaration: Pick<import("@paperclipai/shared").PluginToolDeclaration, "displayName" | "description" | "parametersSchema">;
+    declaration: Pick<import("@thinkingmach/shared").PluginToolDeclaration, "displayName" | "description" | "parametersSchema">;
     fn: (params: unknown, runCtx: ToolRunContext) => Promise<ToolResult>;
   }>();
 
@@ -1455,7 +1455,7 @@ export function startWorkerRpcHost(options: WorkerRpcHostOptions): WorkerRpcHost
       tools: {
         register(
           name: string,
-          declaration: Pick<import("@paperclipai/shared").PluginToolDeclaration, "displayName" | "description" | "parametersSchema">,
+          declaration: Pick<import("@thinkingmach/shared").PluginToolDeclaration, "displayName" | "description" | "parametersSchema">,
           fn: (params: unknown, runCtx: ToolRunContext) => Promise<ToolResult>,
         ): void {
           toolHandlers.set(name, { declaration, fn });

@@ -2,7 +2,7 @@
 
 import { act, createRef } from "react";
 import { createRoot } from "react-dom/client";
-import type { DocumentAnnotationThreadWithComments } from "@paperclipai/shared";
+import type { DocumentAnnotationThreadWithComments } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DocumentAnnotationPopover } from "./DocumentAnnotationPopover";
 

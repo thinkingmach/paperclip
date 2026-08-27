@@ -9,7 +9,7 @@ import { resolveGitHubOperationCredentials } from "../github-operation-credentia
 import { bindManagedNativeCredentialTurn, completeManagedNativeCredentialTurn } from "./managed-native-credentials.js";
 import { createLocalNativeQuestionBridge } from "./local-native-question-bridge.js";
 import { readVerifiedRemoteWorkspaceFile } from "./remote-deliverable-file.js";
-import { copyBackCodexAuth } from "@paperclipai/adapter-codex-local/server";
+import { copyBackCodexAuth } from "@thinkingmach/adapter-codex-local/server";
 import { nativeCompletionFeedback } from "./native-completion-feedback.js";
 import { hasAcknowledgedNativeReassignmentStopIntent, hasAcknowledgedNativeStopIntent } from "../acknowledged-native-stop.js";
 import { stoppedCodexTurnIsTextOnly } from "./stopped-codex-turn.js";
@@ -50,14 +50,14 @@ import type {
   AdapterExecutionResult,
   AdapterRuntimeEvent,
 } from "../../adapters/index.js";
-import type { NativeFinalizationResult } from "@paperclipai/shared";
+import type { NativeFinalizationResult } from "@thinkingmach/shared";
 import type {
   HarnessRuntimeRequestResolution,
   NativeExecutionInput,
   NativeRuntimeContextSnapshot,
   NativeSession,
   NativeSessionBackend,
-  PaperclipQuestionSet,
+  ThinkingMachQuestionSet,
   PersistedNativeSession,
   PrpEvent,
   PrpStructuredRunResult,
@@ -75,7 +75,7 @@ import {
   applyNativeSessionGoalControl,
   inspectWarmRunTransition,
   parseNativeExecutionInput,
-  parsePaperclipQuestionSet,
+  parseThinkingMachQuestionSet,
   resolveSourceCodexHome,
   readRunnerdArtifactBinding,
   retainedRunnerdMaintenanceIsIdle,
@@ -86,14 +86,14 @@ import {
   type RunnerProcessLaunchSpec,
   type NativeSessionGoalControl,
 } from "../../vendor/paperclip-runner/index.js";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
 import { createNativeSshCommandRunner } from "./native-ssh-command-runner.js";
-import type { CommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/command-managed-runtime";
+import type { CommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/command-managed-runtime";
 import {
-  resolvePaperclipRunnerTransport,
-  type PaperclipRunnerTransport,
-} from "@paperclipai/adapter-utils/runner-connectivity";
-import type { Db } from "@paperclipai/db";
+  resolveThinkingMachRunnerTransport,
+  type ThinkingMachRunnerTransport,
+} from "@thinkingmach/adapter-utils/runner-connectivity";
+import type { Db } from "@thinkingmach/db";
 import {
   and,
   desc,
@@ -117,11 +117,11 @@ import {
   issues,
   nativeRunFinalizations,
   nativeRunResults,
-} from "@paperclipai/db";
-import { PaperclipControlPlanePort } from "./paperclip-control-plane-port.js";
+} from "@thinkingmach/db";
+import { ThinkingMachControlPlanePort } from "./paperclip-control-plane-port.js";
 import { appendHeartbeatRunEvent } from "../heartbeat-run-events.js";
 import { nativeSha256 } from "./canonical.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 import { createAssignedMcpTools, getAssignedMcpGateway } from "./assigned-mcp-tools.js";
 import { getNativeReviewAssignment, readNativeReviewAssignmentContext } from "./native-review-participant.js";
 import { NativeChatAttachmentReadScope } from "./chat-attachment-read.js";
@@ -141,7 +141,7 @@ import { issueRecoveryActionService } from "../issue-recovery-actions.js";
 import { reportRunFailure } from "../run-failure-report.js";
 import { persistActivity, publishActivity } from "../activity-log.js";
 import { commitNativeStatusDecision } from "./status-decision-committer.js";
-import { resolvePaperclipInstanceRoot } from "../../home-paths.js";
+import { resolveThinkingMachInstanceRoot } from "../../home-paths.js";
 import { documentService } from "../documents.js";
 import { issueThreadInteractionService } from "../issue-thread-interactions.js";
 import { issueService } from "../issues.js";
@@ -152,7 +152,7 @@ import {
 } from "./status-arbiter.js";
 import { HttpError } from "../../errors.js";
 import { redactSensitiveText } from "../../redaction.js";
-import { resolvePaperclipRunnerBinary } from "./native-codex-runner.js";
+import { resolveThinkingMachRunnerBinary } from "./native-codex-runner.js";
 import {
   createNativeRunTrace,
   isNativeRunRootHistoricalSpan,
@@ -574,7 +574,7 @@ export function buildNativeProviderEnvironment(
   );
   const environment = { ...inherited, ...configured };
   if (assignedWorkspaceCwd?.trim()) {
-    environment.PAPERCLIP_WORKSPACE_CWD = assignedWorkspaceCwd;
+    environment.THINKINGMACH_WORKSPACE_CWD = assignedWorkspaceCwd;
   }
   return environment;
 }
@@ -609,7 +609,7 @@ type RuntimeQuestionFallback = {
     submitLabel?: string;
     supersedeOnUserComment: false;
     runtimeRequestId: string;
-    questionSet: PaperclipQuestionSet;
+    questionSet: ThinkingMachQuestionSet;
     questions: Array<{
       id: string;
       prompt: string;
@@ -652,9 +652,9 @@ export function runtimeQuestionFallbackFromEvent(
     typeof request.itemId !== "string"
   )
     return null;
-  let questionSet: PaperclipQuestionSet;
+  let questionSet: ThinkingMachQuestionSet;
   try {
-    questionSet = parsePaperclipQuestionSet(request.input);
+    questionSet = parseThinkingMachQuestionSet(request.input);
   } catch {
     return null;
   }
@@ -1321,7 +1321,7 @@ export async function synchronizeCompletedProviderPlan(input: {
         idempotencyKey: `runner-plan-approval:v1:${input.execution.binding.runId}:${planId}:${providerRevision}:${digest}`,
         sourceRunId: input.execution.binding.runId,
         title: `Review plan revision ${revision.revisionNumber}`,
-        summary: "Review the synchronized Paperclip plan.",
+        summary: "Review the synchronized ThinkingMach plan.",
         continuationPolicy: "wake_assignee",
         payload: {
           version: 1,
@@ -1414,10 +1414,10 @@ export async function synchronizeCompletedProviderPlan(input: {
 
 class SessionToolAuthorityEpoch {
   readonly runId: string;
-  #authority: PaperclipRunnerToolAuthority;
+  #authority: ThinkingMachRunnerToolAuthority;
   #revoked = false;
 
-  constructor(runId: string, authority: PaperclipRunnerToolAuthority, private readonly toolTrace?: NativeToolTrace) {
+  constructor(runId: string, authority: ThinkingMachRunnerToolAuthority, private readonly toolTrace?: NativeToolTrace) {
     this.runId = runId;
     this.#authority = authority;
   }
@@ -1437,7 +1437,7 @@ class SessionToolAuthorityEpoch {
     return this.#authority.definitions();
   }
 
-  async execute(call: Parameters<PaperclipRunnerToolAuthority["execute"]>[0]) {
+  async execute(call: Parameters<ThinkingMachRunnerToolAuthority["execute"]>[0]) {
     this.#assertCurrent();
     return this.toolTrace
       ? await this.toolTrace.execute(call, () => this.#authority.execute(call))
@@ -1530,9 +1530,9 @@ function legacyCompanyNativeSessionScopeKey(
 
 function runnerdStateBase(): string {
   return (
-    process.env.PAPERCLIP_RUNNER_STATE_DIR ??
+    process.env.THINKINGMACH_RUNNER_STATE_DIR ??
     resolve(
-      resolvePaperclipInstanceRoot(),
+      resolveThinkingMachInstanceRoot(),
       "runtime",
       "paperclip-runner",
       "durable-sessions",
@@ -4163,7 +4163,7 @@ async function verifyWarmTransitionRestart(input: {
     return deny();
   const root = scopedRunnerdStateRoot(input.execution);
   const snapshot = readWarmTransitionSnapshot(root);
-  const artifact = readRunnerdArtifactBinding(resolvePaperclipRunnerBinary());
+  const artifact = readRunnerdArtifactBinding(resolveThinkingMachRunnerBinary());
   const controller = await currentNativeControllerIdentity();
   const binding = input.execution.binding;
   let finalAuthorityCheck: (() => boolean) | undefined;
@@ -4465,7 +4465,7 @@ async function verifyWarmTransitionRestart(input: {
       )
         return false;
       const selected = readRunnerdArtifactBinding(
-        resolvePaperclipRunnerBinary(),
+        resolveThinkingMachRunnerBinary(),
       );
       if (
         selected.version !== artifact.version ||
@@ -5681,7 +5681,7 @@ export function verifyNativeHarnessBackup(input: {
 
 function nativeSessionCheckpointDirectory(): string {
   const directory = resolve(
-    resolvePaperclipInstanceRoot(),
+    resolveThinkingMachInstanceRoot(),
     "runtime",
     "paperclip-runner",
     "sessions",
@@ -6038,7 +6038,7 @@ export function nativeSessionFailureSourceCode(
 }
 
 const NATIVE_CLEANUP_OPERATOR_RECOVERY_MESSAGE =
-  "Send a new message to continue after Paperclip verifies that the previous provider and its tools have stopped. If cleanup cannot be verified, inspect the run and its environment. Clearing a task session does not resolve this quarantine. Automatic retries are stopped.";
+  "Send a new message to continue after ThinkingMach verifies that the previous provider and its tools have stopped. If cleanup cannot be verified, inspect the run and its environment. Clearing a task session does not resolve this quarantine. Automatic retries are stopped.";
 
 const PROVIDER_DURABLE_EVENT_TYPES = new Set([
   "harness.ready",
@@ -7087,7 +7087,7 @@ function startNativeSessionExecutionLeaseRenewal(input: {
   };
 }
 
-export async function executePaperclipNativeSession(input: {
+export async function executeThinkingMachNativeSession(input: {
   db: Db;
   execution: NativeExecutionInput;
   runnerInstanceId: string;
@@ -7105,7 +7105,7 @@ export async function executePaperclipNativeSession(input: {
   /** Test seam at the provider boundary; production uses a qualified package backend. */
   backend?: NativeSessionBackend;
   useRunnerd?: boolean;
-  /** Paperclip adapter identity used to scope the durable goal projection. */
+  /** ThinkingMach adapter identity used to scope the durable goal projection. */
   adapterType?: string;
   /** Internal, run-owned file inspection lifetime; never supplied by tool arguments. */
   chatAttachmentReadScope?: NativeChatAttachmentReadScope;
@@ -7166,7 +7166,7 @@ export async function executePaperclipNativeSession(input: {
   let executionFailure: unknown;
   try {
     if (!input.useRunnerd) {
-      return await executePaperclipNativeSessionWithinScope(input);
+      return await executeThinkingMachNativeSessionWithinScope(input);
     }
     // The session scope is unaffected by appending server-staged attachment
     // descriptors. Claim it before any workspace scrub/write so a duplicate
@@ -7229,7 +7229,7 @@ export async function executePaperclipNativeSession(input: {
         }),
       };
     }
-    return await executePaperclipNativeSessionWithinScope(preparedInput);
+    return await executeThinkingMachNativeSessionWithinScope(preparedInput);
   } catch (error) {
     executionFailure = error;
     throw error;
@@ -7269,8 +7269,8 @@ export async function executePaperclipNativeSession(input: {
   }
 }
 
-async function executePaperclipNativeSessionWithinScope(
-  input: Parameters<typeof executePaperclipNativeSession>[0],
+async function executeThinkingMachNativeSessionWithinScope(
+  input: Parameters<typeof executeThinkingMachNativeSession>[0],
 ): Promise<AdapterExecutionResult> {
   if (
     input.execution.provider.kind !== "codex" &&
@@ -7674,7 +7674,7 @@ async function executePaperclipNativeSessionWithinScope(
     resolve: resolveNativeRuntimeRequest,
   });
   let completedConversationReply: PrpEvent | null = null;
-  const controlPlane = new PaperclipControlPlanePort(
+  const controlPlane = new ThinkingMachControlPlanePort(
     input.db,
     {
       companyId: input.execution.binding.companyId,
@@ -7965,7 +7965,7 @@ async function executePaperclipNativeSessionWithinScope(
       // Old run-scoped environments still require process replacement. A
       // session-owned broker can change run authority without replacing it.
       const hasBrokerCapability = Boolean(
-        !input.managedGitHub && input.runnerEnvironment?.PAPERCLIP_GITHUB_BROKER_TOKEN,
+        !input.managedGitHub && input.runnerEnvironment?.THINKINGMACH_GITHUB_BROKER_TOKEN,
       );
       const credentialRunChanged =
         Boolean(entry.credentialRunId) !== hasBrokerCapability ||
@@ -7978,9 +7978,9 @@ async function executePaperclipNativeSessionWithinScope(
         Boolean(entry.githubAccess) !== Boolean(input.managedGitHub) ||
         entry.githubAccess?.ready === false ||
         entry.githubAuthenticationMode !==
-          input.runnerEnvironment?.PAPERCLIP_GITHUB_AUTH_MODE ||
+          input.runnerEnvironment?.THINKINGMACH_GITHUB_AUTH_MODE ||
         entry.networkAccess !==
-          (input.runnerEnvironment?.PAPERCLIP_RUNNER_NETWORK_ACCESS ===
+          (input.runnerEnvironment?.THINKINGMACH_RUNNER_NETWORK_ACCESS ===
             "enabled")
       ) {
         if (entry.busy) throw new Error("native_session_supervisor_busy");
@@ -8187,13 +8187,13 @@ async function executePaperclipNativeSessionWithinScope(
                 opencodeEnvironment: input.runnerEnvironment ?? process.env,
                 acpxEnvironment: input.runnerEnvironment ?? process.env,
                 opencodeRuntimeDirectory: resolve(
-                  resolvePaperclipInstanceRoot(),
+                  resolveThinkingMachInstanceRoot(),
                   "runtime",
                   "paperclip-runner",
                   "opencode",
                 ),
                 acpxRuntimeDirectory: resolve(
-                  resolvePaperclipInstanceRoot(),
+                  resolveThinkingMachInstanceRoot(),
                   "runtime",
                   "paperclip-runner",
                   "acpx",
@@ -8324,13 +8324,13 @@ async function executePaperclipNativeSessionWithinScope(
                   warmNativeSessions.set(warmSessionId, {
                     managedAiCredentialIdentity: input.managedAiCredentialIdentity,
                     githubAuthenticationMode:
-                      input.runnerEnvironment?.PAPERCLIP_GITHUB_AUTH_MODE,
+                      input.runnerEnvironment?.THINKINGMACH_GITHUB_AUTH_MODE,
                     networkAccess:
                       input.runnerEnvironment
-                        ?.PAPERCLIP_RUNNER_NETWORK_ACCESS === "enabled",
+                        ?.THINKINGMACH_RUNNER_NETWORK_ACCESS === "enabled",
                     githubAccess,
                     credentialRunId: !input.managedGitHub && input.runnerEnvironment
-                      ?.PAPERCLIP_GITHUB_BROKER_TOKEN
+                      ?.THINKINGMACH_GITHUB_BROKER_TOKEN
                       ? input.execution.binding.runId
                       : undefined,
                     session,
@@ -9395,7 +9395,7 @@ export function assertRemoteRunnerBuildMetadata(
   if (
     metadata.schema !== RUNNERD_BUILD_METADATA_SCHEMA ||
     metadata.binaryName !== "paperclip-runnerd" ||
-    metadata.packageName !== "@paperclipai/paperclip-runner" ||
+    metadata.packageName !== "@thinkingmach/paperclip-runner" ||
     metadata.binaryContractVersion !== RUNNERD_BINARY_CONTRACT_VERSION
   ) {
     throw new Error("runner_remote_artifact_contract_incompatible");
@@ -10174,7 +10174,7 @@ export function createRemoteRunnerProcessLauncher(input: {
       }
       // Do not keep runnerd as the foreground command of a provider RPC. Some
       // sandbox command/session transports impose a provider-side lifetime on
-      // that RPC even when Paperclip requests a longer timeout. Detach runnerd
+      // that RPC even when ThinkingMach requests a longer timeout. Detach runnerd
       // into its own session instead; its own bounded diagnostics directory and
       // durable PRP state remain the authorities, and the controller monitors
       // the exact persisted process identity below.
@@ -10417,7 +10417,7 @@ export async function createRunnerdBackend(input: {
   initializingSessionToolAuthorities.add(sessionScopeId);
   try {
     let retainedTransition: VerifiedWarmTransitionBinding | undefined;
-    // executePaperclipNativeSession holds the full session-scope claim and
+    // executeThinkingMachNativeSession holds the full session-scope claim and
     // verifies/migrates the durable root before it acquires the coordinator
     // lease. Avoid reclassifying the same root after that path has marked its
     // retained warm owner busy for this run. Direct backend construction still
@@ -10491,9 +10491,9 @@ async function createRunnerdBackendWithinSessionClaim(
   // the assigned gateway on the control plane instead of asking the sandbox to
   // reach the host's HTTP origin (which may be private or loopback-only).
   const relayAssignedMcp = remoteTarget !== null && input.execution.provider.kind === "codex";
-  const assignedMcpUrl = input.runnerEnvironment?.PAPERCLIP_NATIVE_MCP_URL;
-  const assignedMcpToken = input.runnerEnvironment?.PAPERCLIP_NATIVE_MCP_TOKEN;
-  const assignedMcpName = input.runnerEnvironment?.PAPERCLIP_NATIVE_MCP_NAME;
+  const assignedMcpUrl = input.runnerEnvironment?.THINKINGMACH_NATIVE_MCP_URL;
+  const assignedMcpToken = input.runnerEnvironment?.THINKINGMACH_NATIVE_MCP_TOKEN;
+  const assignedMcpName = input.runnerEnvironment?.THINKINGMACH_NATIVE_MCP_NAME;
   const hasAssignedMcp = Boolean(assignedMcpName || assignedMcpUrl || assignedMcpToken);
   if (relayAssignedMcp && hasAssignedMcp && (!assignedMcpName?.trim() || !assignedMcpUrl?.trim() || !assignedMcpToken?.trim())) {
     throw new Error("assigned native MCP launch binding is incomplete");
@@ -10512,7 +10512,7 @@ async function createRunnerdBackendWithinSessionClaim(
         workMode: input.execution.task.workMode,
       })
     : undefined;
-  const authority = new PaperclipRunnerToolAuthority(input.db, {
+  const authority = new ThinkingMachRunnerToolAuthority(input.db, {
     ...(nativeReview ? { nativeReview } : {}),
     connectorAssignments: connectorAssignments.filter((assignment) => pinnedSkills.has(assignment.skillKey)),
     assignedMcpTools,
@@ -10585,7 +10585,7 @@ async function createRunnerdBackendWithinSessionClaim(
       !lstatSync(configuredProviderPackRoot).isDirectory()
     ) {
       throw new Error(
-        "runner_remote_provider_artifact_incompatible: configure PAPERCLIP_RUNNER_REMOTE_PROVIDER_PACK_PATH with the build-owned provider pack",
+        "runner_remote_provider_artifact_incompatible: configure THINKINGMACH_RUNNER_REMOTE_PROVIDER_PACK_PATH with the build-owned provider pack",
       );
     }
     expectedProviderPackManifest = readRemoteProviderPackManifest(
@@ -10605,8 +10605,8 @@ async function createRunnerdBackendWithinSessionClaim(
   // When an explicit remote artifact is configured, prepareRemoteRunner stages
   // these exact bytes at remoteBinary before launch.
   const controllerRunnerBinary = remoteTarget
-    ? input.runnerRemoteBinaryPath?.trim() || resolvePaperclipRunnerBinary()
-    : resolvePaperclipRunnerBinary();
+    ? input.runnerRemoteBinaryPath?.trim() || resolveThinkingMachRunnerBinary()
+    : resolveThinkingMachRunnerBinary();
   const explicitRemoteCodex = input.runnerRemoteCodexPath?.trim() || null;
   const remoteCodexNpmSpec = input.runnerRemoteCodexNpmSpec?.trim() || null;
   if (explicitRemoteCodex && remoteCodexNpmSpec) {
@@ -10738,7 +10738,7 @@ async function createRunnerdBackendWithinSessionClaim(
     const version = parseCodexCliVersion(versionOutput);
     if (!version || !isSupportedRemoteCodexVersion(version)) {
       throw new Error(
-        `runner_remote_provider_artifact_incompatible: supported Codex versions ${REMOTE_CODEX_SUPPORTED_RANGE}, received ${version ?? "an unrecognized or prerelease version"}; install a supported stable Codex release or configure PAPERCLIP_RUNNER_REMOTE_CODEX_NPM_SPEC=@openai/codex@${REMOTE_PROVIDER_PACK_PINS.codex}`,
+        `runner_remote_provider_artifact_incompatible: supported Codex versions ${REMOTE_CODEX_SUPPORTED_RANGE}, received ${version ?? "an unrecognized or prerelease version"}; install a supported stable Codex release or configure THINKINGMACH_RUNNER_REMOTE_CODEX_NPM_SPEC=@openai/codex@${REMOTE_PROVIDER_PACK_PINS.codex}`,
       );
     }
     if (version !== REMOTE_PROVIDER_PACK_PINS.codex && !reportedCodexVersions.has(version)) {
@@ -11014,7 +11014,7 @@ async function createRunnerdBackendWithinSessionClaim(
           !archMatches
         ) {
           throw new Error(
-            "runner_remote_artifact_platform_mismatch: configure PAPERCLIP_RUNNER_REMOTE_BINARY_PATH for the remote OS and architecture",
+            "runner_remote_artifact_platform_mismatch: configure THINKINGMACH_RUNNER_REMOTE_BINARY_PATH for the remote OS and architecture",
           );
         }
       }
@@ -11109,7 +11109,7 @@ async function createRunnerdBackendWithinSessionClaim(
       );
       if (!preinstalledCodex) {
         throw new Error(
-          "runner_remote_codex_artifact_unavailable: install codex in the sandbox image or configure PAPERCLIP_RUNNER_REMOTE_CODEX_NPM_SPEC",
+          "runner_remote_codex_artifact_unavailable: install codex in the sandbox image or configure THINKINGMACH_RUNNER_REMOTE_CODEX_NPM_SPEC",
         );
       }
       await measureNativeRunnerSpan(
@@ -12077,14 +12077,14 @@ async function createRunnerdBackendWithinSessionClaim(
   if (relayAssignedMcp) {
     // The server-held tool authority owns this credential. Do not deliver a
     // duplicate HTTP MCP server or its bearer token to the remote provider.
-    delete effectiveRunnerEnvironmentBase.PAPERCLIP_NATIVE_MCP_NAME;
-    delete effectiveRunnerEnvironmentBase.PAPERCLIP_NATIVE_MCP_URL;
-    delete effectiveRunnerEnvironmentBase.PAPERCLIP_NATIVE_MCP_TOKEN;
+    delete effectiveRunnerEnvironmentBase.THINKINGMACH_NATIVE_MCP_NAME;
+    delete effectiveRunnerEnvironmentBase.THINKINGMACH_NATIVE_MCP_URL;
+    delete effectiveRunnerEnvironmentBase.THINKINGMACH_NATIVE_MCP_TOKEN;
   }
   // This authority bit is derived only from the selected execution target.
   // Never let an agent, environment binding, or host variable disable the
   // Codex sandbox for a local runner by supplying the same key.
-  delete effectiveRunnerEnvironmentBase.PAPERCLIP_RUNNER_EXTERNAL_SANDBOX;
+  delete effectiveRunnerEnvironmentBase.THINKINGMACH_RUNNER_EXTERNAL_SANDBOX;
   const effectiveRunnerEnvironment: NodeJS.ProcessEnv = remoteRuntimeRoot
     ? {
         ...effectiveRunnerEnvironmentBase,
@@ -12094,14 +12094,14 @@ async function createRunnerdBackendWithinSessionClaim(
         // grant and the provider cannot initialize its shell sandbox or edit.
         HOME: posix.join(remoteRunnerFilesystemRoot!, "codex-home"),
         CODEX_HOME: posix.join(remoteRunnerFilesystemRoot!, "codex-home"),
-        PAPERCLIP_WORKSPACE_CWD: remoteTarget!.remoteCwd,
+        THINKINGMACH_WORKSPACE_CWD: remoteTarget!.remoteCwd,
         ...(remoteTarget!.transport === "sandbox"
-          ? { PAPERCLIP_RUNNER_EXTERNAL_SANDBOX: "1" }
+          ? { THINKINGMACH_RUNNER_EXTERNAL_SANDBOX: "1" }
           : {}),
       }
     : {
         ...effectiveRunnerEnvironmentBase,
-        PAPERCLIP_WORKSPACE_CWD: input.execution.workspace.cwd,
+        THINKINGMACH_WORKSPACE_CWD: input.execution.workspace.cwd,
       };
   const archiveContinuityState = async () => {
     if (hasRetainedWarmTransitionEvidence(root)) {
@@ -12189,13 +12189,13 @@ async function createRunnerdBackendWithinSessionClaim(
     dynamicToolHandler: executeCurrentToolAuthority,
     acpxDynamicToolHandler: executeCurrentToolAuthority,
     opencodeRuntimeDirectory: resolve(
-      resolvePaperclipInstanceRoot(),
+      resolveThinkingMachInstanceRoot(),
       "runtime",
       "paperclip-runner",
       "opencode",
     ),
     acpxRuntimeDirectory: resolve(
-      resolvePaperclipInstanceRoot(),
+      resolveThinkingMachInstanceRoot(),
       "runtime",
       "paperclip-runner",
       "acpx",
@@ -12225,7 +12225,7 @@ async function createRunnerdBackendWithinSessionClaim(
               acpxRuntimeDirectory: remoteRunnerFilesystemRoot
                 ? posix.join(remoteRunnerFilesystemRoot, "acpx")
                 : resolve(
-                    resolvePaperclipInstanceRoot(),
+                    resolveThinkingMachInstanceRoot(),
                     "runtime",
                     "paperclip-runner",
                     "acpx",
@@ -12454,14 +12454,14 @@ async function createRunnerdBackendWithinSessionClaim(
                 target,
                 runnerIngressAuthorized: input.runnerIngressAuthorized === true,
               });
-              let transport: PaperclipRunnerTransport;
+              let transport: ThinkingMachRunnerTransport;
               if (requiredMode === "dial_wss") {
                 // Validate eligibility before staging any artifact.
                 transport = await measureNativeRunnerSpan(
                   input.trace,
                   "runner.transport.resolve",
                   () =>
-                    resolvePaperclipRunnerTransport({
+                    resolveThinkingMachRunnerTransport({
                       target,
                       runId:
                         attachmentIdentity?.runId ??
@@ -12499,7 +12499,7 @@ async function createRunnerdBackendWithinSessionClaim(
                   input.trace,
                   "runner.ingress.acquire",
                   () =>
-                    resolvePaperclipRunnerTransport({
+                    resolveThinkingMachRunnerTransport({
                       target,
                       runId:
                         attachmentIdentity?.runId ??

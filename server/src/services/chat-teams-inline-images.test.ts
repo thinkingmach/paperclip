@@ -436,7 +436,7 @@ describe("Teams inline images through pinned runtime/App HTTP", () => {
         const prepared = await prepareTeamsInlineImage(file(bytes, mime, name));
         expect(prepared).not.toBeNull();
         const result = await h.runtime.thread(d.thread).post({
-          markdown: "Picture on the Paperclip task.",
+          markdown: "Picture on the ThinkingMach task.",
           files: [prepared!],
         });
         expect(result.id).toBe("image-receipt-1");

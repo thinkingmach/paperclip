@@ -10,7 +10,7 @@ supersedes the dedicated-only exclusions below for DMs. Shared setup uses the
 project token and fixed `imessage.spectrum.photon.codes:443` gateway, reserves the
 project across non-archived endpoints, and derives a project-scoped conversation
 and checkpoint namespace. It never claims ownership of a pool phone number.
-Sender enrollment in Photon and identity linking in Paperclip are separate gates.
+Sender enrollment in Photon and identity linking in ThinkingMach are separate gates.
 Dedicated lines retain the original behavior. Allocation changes require a new
 channel. Native groups remain unavailable on shared channels at every boundary.
 
@@ -25,7 +25,7 @@ Add **iMessage Photon** (`imessage-photon`) behind the existing experimental
 chat-connectors UI gate, in Apps and each agent's Channels panel. Use Photon
 Cloud and one dedicated number per channel/agent. People initiate DMs and
 explicitly enabled groups; every authorized group message can start or continue
-work without a mention. Require linked Paperclip people by default. Unlinked
+work without a mention. Require linked ThinkingMach people by default. Unlinked
 senders require an explicit operator opt-in. Never infer authority from a phone
 number, email address, display name, or group membership, or merge those identities.
 
@@ -78,7 +78,7 @@ errors. Show the copyable number and discovered sender, support the existing
 identity-link confirmation. Only a linked sender's fresh message that creates a
 task and receives a successful publication completes setup. Credential verification
 alone does not. Optional group test: add number in Messages, discover group,
-enable it in Paperclip, send a fresh authorized request.
+enable it in ThinkingMach, send a fresh authorized request.
 
 Management shows agent/project/number, health, receive/send timestamps, discovered
 groups and participants/availability/enablement, linked people/revocation,
@@ -133,7 +133,7 @@ before binding finalization without title matching or duplicate resolution.
 Support text and policy-allowed images/documents/audio/video. Persist a closed
 line/chat/message/attachment/optional-part locator before fetching. Authenticate
 over selected line and verify attachment ownership via message/chat. Bound
-metadata, bytes, time and decoded dimensions. Keep Paperclip's configured limits,
+metadata, bytes, time and decoded dimensions. Keep ThinkingMach's configured limits,
 not Photon's larger allowance. Retry attachmentNotReady before agent wake,
 without duplicate comments. Preserve attachment-only input, captions, multiple
 images and multipart order; surface unavailable/rejected files in the task.

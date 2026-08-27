@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "imessage-photon",
   "name": "iMessage Photon",
-  "description": "Message a Paperclip agent from Apple Messages using Photon Cloud. Pro supports DMs; dedicated lines also support groups.",
+  "description": "Message a ThinkingMach agent from Apple Messages using Photon Cloud. Pro supports DMs; dedicated lines also support groups.",
   "categories": [
     "communication"
   ],
@@ -24,7 +24,7 @@
       "ownershipModes": [
         "customer"
       ],
-      "whenToUse": "Let people in iMessage Photon start and continue work with one Paperclip agent.",
+      "whenToUse": "Let people in iMessage Photon start and continue work with one ThinkingMach agent.",
       "credentialFields": [
         {
           "key": "projectSecret",
@@ -35,7 +35,7 @@
           "secret": true
         }
       ],
-      "guidanceMd": "Connect a Photon Cloud project. Pro shared lines support DMs after sender enrollment in Photon and identity linking in Paperclip. Dedicated lines also support individually enabled groups.",
+      "guidanceMd": "Connect a Photon Cloud project. Pro shared lines support DMs after sender enrollment in Photon and identity linking in ThinkingMach. Dedicated lines also support individually enabled groups.",
       "consoleLinks": {
         "register": "https://photon.codes/",
         "docs": "https://photon.codes/docs/spectrum-ts/providers/imessage/connection-and-routing"

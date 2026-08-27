@@ -1,14 +1,14 @@
 import path from "node:path";
 import fs from "node:fs";
 import { isDeepStrictEqual } from "node:util";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import { assertDistributionManifestCapabilities, readDistributionPluginCatalog, type DistributionPlugin } from "./distribution-plugin-catalog.js";
 
 /**
  * Bundled plugin auto-provisioning.
  *
  * Managed-cloud instances receive a `plugins.autoInstall` key list through
- * `PAPERCLIP_MANAGED_CONFIG` (parsed fail-closed at startup — see
+ * `THINKINGMACH_MANAGED_CONFIG` (parsed fail-closed at startup — see
  * `managed-config.ts`). Each key maps to a plugin bundled into
  * the release image under the bundled catalog root. Nobody "installs" on a
  * managed instance: the control plane provisions, tenants use.
@@ -40,7 +40,7 @@ export const DEFAULT_BUNDLED_CATALOG_ROOT = "/app/packages/plugins";
 /**
  * Env var that relocates the bundled catalog root (dev images, tests).
  */
-export const BUNDLED_CATALOG_ROOT_ENV_VAR = "PAPERCLIP_BUNDLED_PLUGIN_ROOT";
+export const BUNDLED_CATALOG_ROOT_ENV_VAR = "THINKINGMACH_BUNDLED_PLUGIN_ROOT";
 
 export interface BundledPluginCatalogEntry {
   /** Key the managed config's `plugins.autoInstall` list uses. */
@@ -92,7 +92,7 @@ export const BUNDLED_PLUGIN_CATALOG: readonly BundledPluginCatalogEntry[] = [
     key: "kubernetes",
     pluginKey: "paperclip.kubernetes-sandbox-provider",
     relativePath: "sandbox-providers/kubernetes",
-    pathOverrideEnvVar: "PAPERCLIP_KUBERNETES_PLUGIN_PATH",
+    pathOverrideEnvVar: "THINKINGMACH_KUBERNETES_PLUGIN_PATH",
   },
   {
     key: "modal",
@@ -208,7 +208,7 @@ interface RegistryPluginRow {
   pluginKey: string;
   status: string;
   version: string;
-  manifestJson: PaperclipPluginManifestV1;
+  manifestJson: ThinkingMachPluginManifestV1;
   packagePath?: string | null;
   lastError?: string | null;
 }
@@ -218,7 +218,7 @@ export interface BundledPluginProvisionerDeps {
     getByKey(pluginKey: string): Promise<RegistryPluginRow | null>;
     update(
       id: string,
-      data: { version?: string; manifest?: PaperclipPluginManifestV1; packagePath?: string; status?: "upgrade_pending" },
+      data: { version?: string; manifest?: ThinkingMachPluginManifestV1; packagePath?: string; status?: "upgrade_pending" },
     ): Promise<unknown>;
     updateStatus(id: string, input: { status: "ready"; lastError: string | null }): Promise<unknown>;
   };
@@ -226,7 +226,7 @@ export interface BundledPluginProvisionerDeps {
     installPlugin(options: { localPath: string }): Promise<{
       manifest: { id: string } | null;
     }>;
-    loadManifest(packagePath: string): Promise<PaperclipPluginManifestV1 | null>;
+    loadManifest(packagePath: string): Promise<ThinkingMachPluginManifestV1 | null>;
   };
   lifecycle: {
     load(pluginId: string): Promise<unknown>;
@@ -263,7 +263,7 @@ async function reconcileBundledPluginManifest(
   install: ResolvedBundledPlugin,
   deps: BundledPluginProvisionerDeps,
   bundleManifestExists: (localPath: string) => boolean,
-  verifiedManifest?: PaperclipPluginManifestV1,
+  verifiedManifest?: ThinkingMachPluginManifestV1,
 ): Promise<"upgrade_pending" | undefined> {
   try {
     // Managed reinstalls take the install path instead; this branch means the
@@ -389,7 +389,7 @@ export async function ensureBundledPlugins(
   const bundleManifestExists = deps.bundleManifestExists ?? defaultBundleManifestExists;
   for (const install of installs) {
     try {
-      let verifiedManifest: PaperclipPluginManifestV1 | undefined;
+      let verifiedManifest: ThinkingMachPluginManifestV1 | undefined;
       if (install.distribution) {
         const manifest = await deps.loader.loadManifest(install.localPath);
         if (manifest?.id !== install.pluginKey || manifest.version !== install.distribution.version) {

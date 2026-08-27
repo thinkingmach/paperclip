@@ -1,8 +1,8 @@
-import type { Environment } from "@paperclipai/shared";
+import type { Environment } from "@thinkingmach/shared";
 
 /**
  * True iff the environment row was provisioned by the platform (the
- * managed-config environment provisioner stamps `metadata.managedByPaperclip`).
+ * managed-config environment provisioner stamps `metadata.managedByThinkingMach`).
  * The server enforces the write floor on these rows — everything except env
  * vars is rejected — so the UI renders them locked instead of letting a
  * save fail at the API.
@@ -10,13 +10,13 @@ import type { Environment } from "@paperclipai/shared";
 export function isPlatformManagedEnvironment(
   environment: Pick<Environment, "metadata"> | null | undefined,
 ): boolean {
-  return environment?.metadata?.managedByPaperclip === true;
+  return environment?.metadata?.managedByThinkingMach === true;
 }
 
 /**
  * Display label for an environment in selectors and lists. Platform-managed
  * rows render their name alone: their name is the product name for the
- * default Paperclip environment, and the raw driver key ("sandbox") is
+ * default ThinkingMach environment, and the raw driver key ("sandbox") is
  * infrastructure vocabulary we don't surface next to it. User-created rows
  * keep the driver suffix so mixed lists (ssh vs sandbox) stay tellable apart.
  */

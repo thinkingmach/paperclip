@@ -5,7 +5,7 @@ import {
   type ChatPublicationBatchStatus,
   type ChatPublicationState,
   type ChatPublicationSummary,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 /** Explicit safe columns only. Never pass a transfer's encrypted private state. */
 export interface ChatFileTransferProjection {

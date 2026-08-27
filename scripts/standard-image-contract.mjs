@@ -51,9 +51,9 @@ export async function resolveStandardImageDigest(sha, fetchImpl = fetch, {
     }
     throw new Error("Registry retry budget exhausted");
   };
-  const { token } = await request("https://ghcr.io/token?service=ghcr.io&scope=repository:paperclipai/paperclip:pull", {}, response => response.json());
+  const { token } = await request("https://ghcr.io/token?service=ghcr.io&scope=repository:thinkingmach/paperclip:pull", {}, response => response.json());
   assert.ok(typeof token === "string" && token, "Missing public pull token");
-  const { raw, expected } = await request(`https://ghcr.io/v2/paperclipai/paperclip/manifests/sha-${sha}`, {
+  const { raw, expected } = await request(`https://ghcr.io/v2/thinkingmach/paperclip/manifests/sha-${sha}`, {
     authorization: `Bearer ${token}`, accept: "application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json",
   }, async response => {
     assert.ok(response.body, "Standard image index has no body");

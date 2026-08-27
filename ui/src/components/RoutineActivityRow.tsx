@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import type { ActivityEvent } from "@paperclipai/shared";
+import type { ActivityEvent } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 
 export type RoutineActivityEvent = Pick<ActivityEvent, "id" | "action" | "details" | "createdAt">;

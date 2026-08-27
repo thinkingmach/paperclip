@@ -560,7 +560,7 @@ describe("Codex protocol integrity propagation", () => {
         taskEnvelope: createCodexTaskEnvelope({
           objective: contract.objective,
         }),
-        environment: { PAPERCLIP_WORKSPACE_CWD: directory },
+        environment: { THINKINGMACH_WORKSPACE_CWD: directory },
         approvalPolicy: "never",
         transportFactory: () => bundle.transport,
       });

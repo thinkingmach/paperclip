@@ -39,7 +39,7 @@ need to unset them per command. A captured managed identity still takes
 precedence over repository configuration.
 
 Remote launchers prepend their directory to the execution target's effective
-`PATH`. An explicit remote `PATH` override is preserved; otherwise Paperclip
+`PATH`. An explicit remote `PATH` override is preserved; otherwise ThinkingMach
 reads the provider's environment before staging the launcher shell files.
 This keeps legacy NVM and user-local agent installations available alongside
 newer images with system-wide CLIs. The generated shell files retain that
@@ -57,7 +57,7 @@ Scripts that previously read a persistent `GH_TOKEN` must use managed `git`, `gh
 
 When no managed GitHub connection is installed for an agent, standard-trust
 local and SSH executions retain that execution host's existing Git and GitHub
-CLI credentials, configuration, credential helpers, and SSH agent. Paperclip
+CLI credentials, configuration, credential helpers, and SSH agent. ThinkingMach
 does not import controller credentials into an SSH target. Sandbox, plugin,
 and low-trust executions do not receive this compatibility fallback. Once a
 managed connection is configured, unavailable or revoked access never falls
@@ -67,7 +67,7 @@ while preserving the settled conversation.
 Runner network access is independent of GitHub credentials. The controller
 enables networking for standard-trust execution. Low-trust runs and runners
 without a controller network decision retain a restricted default. An operator
-can set `PAPERCLIP_RUNNER_NETWORK_ACCESS=disabled` to restrict normal execution;
+can set `THINKINGMACH_RUNNER_NETWORK_ACCESS=disabled` to restrict normal execution;
 user environment bindings cannot override that decision. Outer execution-
 environment network restrictions still apply. The controller projects the assigned worktree's Git metadata paths so
 Git can operate without exposing unrelated workspace or provider state. The
@@ -113,7 +113,7 @@ Run details show identity revisions and redacted GitHub results: responsible per
 
 Deploy the schema, server broker, launcher staging, and runtime environment contract together. Already-running processes retain their original environment; only newly dispatched processes receive the broker contract. Run-scoped capabilities remain valid only while their bound run is active.
 
-Focused coverage lives in `run-identity.test.ts`, `github-operation-credentials.test.ts`, and `github-launcher.test.ts`, alongside the native steering, gateway, routine, and callback-bridge suites. Live acceptance additionally requires two authenticated Paperclip users, two authorized GitHub accounts, and a designated disposable repository for push verification. Local commit metadata and mocked API results do not replace that live push test.
+Focused coverage lives in `run-identity.test.ts`, `github-operation-credentials.test.ts`, and `github-launcher.test.ts`, alongside the native steering, gateway, routine, and callback-bridge suites. Live acceptance additionally requires two authenticated ThinkingMach users, two authorized GitHub accounts, and a designated disposable repository for push verification. Local commit metadata and mocked API results do not replace that live push test.
 
 ### Release procedure
 

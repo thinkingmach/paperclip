@@ -1,7 +1,7 @@
-import { agentAppearanceSchema } from "@paperclipai/shared";
+import { agentAppearanceSchema } from "@thinkingmach/shared";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { approvalComments, approvals } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { approvalComments, approvals } from "@thinkingmach/db";
 import { notFound, unprocessable } from "../errors.js";
 import { redactCurrentUserText } from "../log-redaction.js";
 import { agentService } from "./agents.js";

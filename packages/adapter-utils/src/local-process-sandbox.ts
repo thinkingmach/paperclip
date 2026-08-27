@@ -169,7 +169,7 @@ function assertUnixSocketPathLength(socketPath: string): void {
   const pathBytes = Buffer.byteLength(socketPath);
   if (pathBytes > UNIX_SOCKET_PATH_MAX_BYTES) {
     throw new Error(
-      `Paperclip sandbox proxy socket path is ${pathBytes} bytes, exceeding the Linux limit of ${UNIX_SOCKET_PATH_MAX_BYTES}: ${socketPath}`,
+      `ThinkingMach sandbox proxy socket path is ${pathBytes} bytes, exceeding the Linux limit of ${UNIX_SOCKET_PATH_MAX_BYTES}: ${socketPath}`,
     );
   }
 }
@@ -191,7 +191,7 @@ async function createNetworkProxyTempDir(): Promise<string> {
       lastError = error;
     }
   }
-  throw new Error("Unable to create a Linux-safe Paperclip sandbox proxy socket directory.", { cause: lastError });
+  throw new Error("Unable to create a Linux-safe ThinkingMach sandbox proxy socket directory.", { cause: lastError });
 }
 
 function parseTrustedNetworkUrl(value: string): NetworkAllowlistRule | null {
@@ -247,16 +247,16 @@ async function startNetworkAllowlistProxy(
     try {
       target = new URL(request.url ?? "");
     } catch {
-      writeProxyError(response, 400, "invalid_request_url", "Paperclip sandbox proxy requires an absolute request URL.");
+      writeProxyError(response, 400, "invalid_request_url", "ThinkingMach sandbox proxy requires an absolute request URL.");
       return;
     }
     const port = target.port || (target.protocol === "https:" ? "443" : "80");
     if (target.protocol !== "http:") {
-      writeProxyError(response, 400, "https_requires_connect", "HTTPS targets must use CONNECT through the Paperclip sandbox proxy.");
+      writeProxyError(response, 400, "https_requires_connect", "HTTPS targets must use CONNECT through the ThinkingMach sandbox proxy.");
       return;
     }
     if (!isNetworkTargetAllowed(target.hostname, port, rules)) {
-      writeProxyError(response, 403, "network_target_denied", "Network target denied by Paperclip sandbox policy.");
+      writeProxyError(response, 403, "network_target_denied", "Network target denied by ThinkingMach sandbox policy.");
       return;
     }
     const upstream = http.request(target, {
@@ -276,7 +276,7 @@ async function startNetworkAllowlistProxy(
     if (!hostname || !/^\d+$/.test(port) || !isNetworkTargetAllowed(hostname, port, rules)) {
       clientSocket.end(connectProxyError(
         "network_target_denied",
-        "Network target denied by Paperclip sandbox policy.",
+        "Network target denied by ThinkingMach sandbox policy.",
       ));
       return;
     }

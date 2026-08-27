@@ -189,7 +189,7 @@ The repository cache storage ceiling is managed in GitHub Settings, separately
 from this workflow. Check it with:
 
 ```sh
-gh api repos/paperclipai/paperclip/actions/cache/storage-limit
+gh api repos/thinkingmach/paperclip/actions/cache/storage-limit
 ```
 
 Increasing the repository limit above 10 GB can require an organization owner to
@@ -203,7 +203,7 @@ After deploying this correction, remove any existing empty default-branch entry
 for the current lockfile key. List cache IDs, branches, and archive sizes first:
 
 ```sh
-gh api --paginate 'repos/paperclipai/paperclip/actions/caches?ref=refs/heads/master&key=node-cache-Linux-x64-pnpm-&per_page=100' \
+gh api --paginate 'repos/thinkingmach/paperclip/actions/caches?ref=refs/heads/master&key=node-cache-Linux-x64-pnpm-&per_page=100' \
   --jq '.actions_caches[] | {id, ref, key, size_in_bytes}'
 ```
 
@@ -215,13 +215,13 @@ an entry on another branch untouched, and does nothing if the old ID is absent:
 ```sh
 bad_cache_id=7559920987
 bad_cache_key=node-cache-Linux-x64-pnpm-c3096ecb02a34aaa9782baaadafcb731510e1dba10dd661618c3a2ee91e58fa5
-entries="$(gh api --paginate --slurp 'repos/paperclipai/paperclip/actions/caches?ref=refs/heads/master&per_page=100')"
+entries="$(gh api --paginate --slurp 'repos/thinkingmach/paperclip/actions/caches?ref=refs/heads/master&per_page=100')"
 if printf '%s\n' "$entries" | jq -e --argjson id "$bad_cache_id" --arg key "$bad_cache_key" '
   [.[].actions_caches[] | select(.id == $id)] |
   length == 1 and .[0].ref == "refs/heads/master" and
   .[0].key == $key and .[0].size_in_bytes == 216
 ' >/dev/null; then
-  gh api --method DELETE "repos/paperclipai/paperclip/actions/caches/$bad_cache_id"
+  gh api --method DELETE "repos/thinkingmach/paperclip/actions/caches/$bad_cache_id"
 fi
 ```
 

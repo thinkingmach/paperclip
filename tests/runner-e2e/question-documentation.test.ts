@@ -12,7 +12,7 @@ function recording() {
   const second: any = { id: "second", kind: "ask_user_questions", status: "pending", payload: { questionSet: { questions: [text] } } };
   const answeredFirst = { ...structuredClone(first), status: "answered", result: { answers: [{ questionId: "time", optionIds: ["pm"] }] } };
   const answeredSecond = { ...structuredClone(second), status: "answered", result: { answers: [{ questionId: "reference", optionIds: [], otherText: "Use AMBER123." }] } };
-  const runs = [1, 2, 3].map(id => ({ id: String(id), status: "succeeded", runtimeMode: "native", runnerProfileJson: { nativeExecutionInput: { task: { prompt: "Use Paperclip's request_human_input for durable task questions." } } } }));
+  const runs = [1, 2, 3].map(id => ({ id: String(id), status: "succeeded", runtimeMode: "native", runnerProfileJson: { nativeExecutionInput: { task: { prompt: "Use ThinkingMach's request_human_input for durable task questions." } } } }));
   const checkpoint = (phase: ContinuationCheckpoint["phase"], interactions: any[], count: number): ContinuationCheckpoint => ({
     phase, issue: { id: "task", status: phase === "final" ? "done" : "in_review" }, children: [], attachments: [], comments: [],
     interactions, runs: runs.slice(0, count),

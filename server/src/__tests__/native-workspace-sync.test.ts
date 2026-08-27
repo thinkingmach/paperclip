@@ -7,7 +7,7 @@ import {
   serializeDirectorySnapshot,
   captureDirectorySnapshot,
   disposeDirectorySnapshot,
-} from "@paperclipai/adapter-utils/workspace-restore-merge";
+} from "@thinkingmach/adapter-utils/workspace-restore-merge";
 
 import {
   classifyNativeWorkspaceInbound,
@@ -21,16 +21,16 @@ import {
 const digest = "a".repeat(64);
 
 describe("native workspace sync durable metadata", () => {
-  const originalPaperclipHome = process.env.PAPERCLIP_HOME;
-  const originalPaperclipInstanceId = process.env.PAPERCLIP_INSTANCE_ID;
+  const originalThinkingMachHome = process.env.THINKINGMACH_HOME;
+  const originalThinkingMachInstanceId = process.env.THINKINGMACH_INSTANCE_ID;
   const cleanupDirs: string[] = [];
 
   afterEach(async () => {
-    if (originalPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-    else process.env.PAPERCLIP_HOME = originalPaperclipHome;
-    if (originalPaperclipInstanceId === undefined)
-      delete process.env.PAPERCLIP_INSTANCE_ID;
-    else process.env.PAPERCLIP_INSTANCE_ID = originalPaperclipInstanceId;
+    if (originalThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+    else process.env.THINKINGMACH_HOME = originalThinkingMachHome;
+    if (originalThinkingMachInstanceId === undefined)
+      delete process.env.THINKINGMACH_INSTANCE_ID;
+    else process.env.THINKINGMACH_INSTANCE_ID = originalThinkingMachInstanceId;
     await Promise.all(
       cleanupDirs
         .splice(0)
@@ -155,8 +155,8 @@ describe("native workspace sync durable metadata", () => {
   it.each(["corrupt", "symlink", "foreign"] as const)("persists compact v2 manifests and rejects %s recovery storage", async (tamper) => {
     const paperclipHome = await mkdtemp(path.join(os.tmpdir(), "paperclip-native-manifest-"));
     cleanupDirs.push(paperclipHome);
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = "manifest-test";
+    process.env.THINKINGMACH_HOME = paperclipHome;
+    process.env.THINKINGMACH_INSTANCE_ID = "manifest-test";
     const workspace = path.join(paperclipHome, "workspace");
     await mkdir(workspace);
     await writeFile(path.join(workspace, "private-filename-雪"), "baseline");
@@ -206,8 +206,8 @@ describe("native workspace sync durable metadata", () => {
       path.join(os.tmpdir(), "paperclip-native-workspace-sync-"),
     );
     cleanupDirs.push(paperclipHome);
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = "descriptor-test";
+    process.env.THINKINGMACH_HOME = paperclipHome;
+    process.env.THINKINGMACH_INSTANCE_ID = "descriptor-test";
     const baseline = {
       exclude: [".paperclip-runtime"],
       entries: new Map([
@@ -274,8 +274,8 @@ describe("native workspace sync durable metadata", () => {
       path.join(os.tmpdir(), "paperclip-native-workspace-sync-repair-"),
     );
     cleanupDirs.push(paperclipHome);
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    process.env.PAPERCLIP_INSTANCE_ID = "descriptor-repair-test";
+    process.env.THINKINGMACH_HOME = paperclipHome;
+    process.env.THINKINGMACH_INSTANCE_ID = "descriptor-repair-test";
     const baseline = {
       exclude: [".paperclip-runtime"],
       entries: new Map([

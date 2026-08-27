@@ -47,7 +47,7 @@ export function telegramStopSubscriptionPlan(
       ? [...updates]
       : [...updates, "stopped_message_generation"];
   // Observed ip_address does not prove an operator supplied an explicit pin.
-  // Paperclip-managed webhook setup uses DNS; do not turn it into a new pin.
+  // ThinkingMach-managed webhook setup uses DNS; do not turn it into a new pin.
   return { ...settings, allowed_updates };
 }
 

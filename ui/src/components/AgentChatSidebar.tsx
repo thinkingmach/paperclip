@@ -3,7 +3,7 @@ import { SidebarNavItem } from "@/components/SidebarNavItem";
 import { AgentIcon } from "@/components/AgentIconPicker";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/context/SidebarContext";
-import type { Agent } from "@paperclipai/shared";
+import type { Agent } from "@thinkingmach/shared";
 import { agentRouteRef, cn } from "@/lib/utils";
 import { orderChatAgents } from "@/lib/recent-agent-chats";
 export function AgentChatSidebar({

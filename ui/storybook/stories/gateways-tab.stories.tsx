@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ToolMcpGatewayWithTokens } from "@paperclipai/shared";
+import type { ToolMcpGatewayWithTokens } from "@thinkingmach/shared";
 import { ToastProvider } from "@/context/ToastContext";
 import { queryKeys } from "@/lib/queryKeys";
 import { GatewaysTab } from "@/pages/tools/GatewaysTab";

@@ -1,11 +1,11 @@
-import type { AgentAppearance, CharacterPaletteId } from "@paperclipai/shared";
-import { CAP_V1_COLORS } from "@paperclipai/shared/cliplab/palette-tokens";
-import type { Definition } from "@paperclipai/shared/cliplab/model";
+import type { AgentAppearance, CharacterPaletteId } from "@thinkingmach/shared";
+import { CAP_V1_COLORS } from "@thinkingmach/shared/cliplab/palette-tokens";
+import type { Definition } from "@thinkingmach/shared/cliplab/model";
 
 /**
  * The onboarding hero's ClipLab definition: the studio's App export
  * (`ui/src/assets/cliplab/onboarding.character.json`, mirrored into the
- * shared package as PAPERCLIP_CHARACTER) played by the shared engine. Three sequences carry the arc; they are found by role rather
+ * shared package as THINKINGMACH_CHARACTER) played by the shared engine. Three sequences carry the arc; they are found by role rather
  * than by hard-coded id so a re-export from the studio only has to keep the
  * shape below, not the names.
  *

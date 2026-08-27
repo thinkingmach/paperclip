@@ -41,7 +41,7 @@ export function renderCaseOutcome(
   const failed = !valid || result.status === "failed";
   const reason =
     result.failureClass === "secret_leak"
-      ? /persisted Paperclip home/.test(result.error ?? "")
+      ? /persisted ThinkingMach home/.test(result.error ?? "")
         ? "Credential-persistence check failed"
         : "Secret / evidence safety check failed"
       : (result.failureClass?.replaceAll("_", " ") ??

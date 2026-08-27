@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import type { HeartbeatRun } from "@paperclipai/shared";
+import type { HeartbeatRun } from "@thinkingmach/shared";
 import { afterEach, expect, it, vi } from "vitest";
 import { LogViewer } from "./AgentDetail";
 import { LogViewer as ProductionLogViewer } from "./AgentDetail.production";

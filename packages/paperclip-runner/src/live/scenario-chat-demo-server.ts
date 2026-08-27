@@ -25,7 +25,7 @@ const TURN_DEADLINE_MS = 30_000;
 const SECURE_CAPABILITY_COOKIE = "__Host-paperclip_scenario-chat";
 const TAILNET_HTTP_CAPABILITY_COOKIE = "paperclip_scenario-chat";
 
-const FORBIDDEN_ENV_NAME = /^(?:PAPERCLIP_|GITHUB_|AWS_|GOOGLE_|AZURE_)|(?:API_KEY|TOKEN|SECRET|PASSWORD|DATABASE_URL|CODEX_HOME)$/i;
+const FORBIDDEN_ENV_NAME = /^(?:THINKINGMACH_|GITHUB_|AWS_|GOOGLE_|AZURE_)|(?:API_KEY|TOKEN|SECRET|PASSWORD|DATABASE_URL|CODEX_HOME)$/i;
 
 const CONTENT_TYPES: Record<string, string> = {
   ".css": "text/css; charset=utf-8",

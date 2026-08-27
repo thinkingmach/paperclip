@@ -167,9 +167,9 @@ function createRegisteredRepairFixture(
   fs.mkdirSync(configDir, { recursive: true });
   fs.mkdirSync(path.dirname(sourceConfigPath), { recursive: true });
   fs.writeFileSync(sourceConfigPath, "{}\n");
-  fs.writeFileSync(path.join(path.dirname(sourceConfigPath), ".env"), "PAPERCLIP_INSTANCE_ID=repair-source\n");
+  fs.writeFileSync(path.join(path.dirname(sourceConfigPath), ".env"), "THINKINGMACH_INSTANCE_ID=repair-source\n");
   fs.writeFileSync(path.join(configDir, "config.json"), "{}\n");
-  fs.writeFileSync(path.join(configDir, ".env"), `PAPERCLIP_INSTANCE_ID=${targetInstanceId}\n`);
+  fs.writeFileSync(path.join(configDir, ".env"), `THINKINGMACH_INSTANCE_ID=${targetInstanceId}\n`);
   if (options.withCli !== false) {
     fs.mkdirSync(path.dirname(cliRunner), { recursive: true });
     fs.mkdirSync(path.dirname(cliEntry), { recursive: true });
@@ -390,7 +390,7 @@ describe.sequential("execution workspace runtime control conflict and failure re
         fs.writeFileSync(attackerConfig, "{}\n");
         fs.writeFileSync(
           path.join(attackerDir, ".env"),
-          `PAPERCLIP_INSTANCE_ID=${variant === "foreign_instance" ? "foreign-source" : "repair-source"}\n`,
+          `THINKINGMACH_INSTANCE_ID=${variant === "foreign_instance" ? "foreign-source" : "repair-source"}\n`,
         );
         const diagnosticPath = variant === "instance_mismatch"
           ? fixture.sourceConfigPath
@@ -464,7 +464,7 @@ describe.sequential("execution workspace runtime control conflict and failure re
     }
   });
 
-  it("rejects repair when the registered base workspace has no runnable Paperclip CLI", async () => {
+  it("rejects repair when the registered base workspace has no runnable ThinkingMach CLI", async () => {
     const fixture = createRegisteredRepairFixture("paperclip-route-repair-no-cli-", { withCli: false });
     try {
       const res = await request(await createApp())
@@ -522,7 +522,7 @@ describe.sequential("execution workspace runtime control conflict and failure re
         workspaceCwd: fixture.workspaceCwd,
         executionWorkspaceId,
         companyId: "company-1",
-        env: { PAPERCLIP_WORKSPACE_HANDOFF_SECRET: "test-root-secret" },
+        env: { THINKINGMACH_WORKSPACE_HANDOFF_SECRET: "test-root-secret" },
       })?.instanceId).toBe(recordedInstanceId);
       mockEnsurePersistedExecutionWorkspaceAvailable.mockResolvedValue({ cwd: fixture.workspaceCwd });
       mockStartRuntimeServices.mockResolvedValue([{
@@ -536,9 +536,9 @@ describe.sequential("execution workspace runtime control conflict and failure re
           "--seed-mode", "full", "--yes", "--backup-target",
         ]));
         expect(options.env).toMatchObject({
-          PAPERCLIP_SEED_EXPECTED_COMPANY_ID: "company-1",
-          PAPERCLIP_WORKSPACE_BASE_CWD: fixture.baseCwd,
-          PAPERCLIP_PROJECT_WORKSPACE_ID: projectWorkspaceId,
+          THINKINGMACH_SEED_EXPECTED_COMPANY_ID: "company-1",
+          THINKINGMACH_WORKSPACE_BASE_CWD: fixture.baseCwd,
+          THINKINGMACH_PROJECT_WORKSPACE_ID: projectWorkspaceId,
         });
         const child = new EventEmitter() as EventEmitter & {
           stdout: PassThrough;

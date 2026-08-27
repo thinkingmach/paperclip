@@ -1,7 +1,7 @@
 import { AgentIdentity } from "@/components/AgentIdentity";
 import type { AvatarAgent } from "./AgentAvatar";
 import type { ReactNode } from "react";
-import { deriveOriginatingActor, type Issue } from "@paperclipai/shared";
+import { deriveOriginatingActor, type Issue } from "@thinkingmach/shared";
 import { Columns3 } from "lucide-react";
 import { pickTextColorForPillBg } from "@/lib/color-contrast";
 import { Button } from "@/components/ui/button";

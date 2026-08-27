@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { and, eq } from "drizzle-orm";
-import { activityLog, agents, companies, createDb, heartbeatRuns, issues } from "@paperclipai/db";
+import { activityLog, agents, companies, createDb, heartbeatRuns, issues } from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { documentService } from "../documents.js";
 import { issueService } from "../issues.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 
 describe("runner backlog task creation", () => {
   let temporary: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>>;
@@ -25,7 +25,7 @@ describe("runner backlog task creation", () => {
     await db.update(issues).set({ executionRunId: runId }).where(eq(issues.id, issueId));
     const enqueueWakeup = vi.fn().mockResolvedValue(null);
     const binding = { companyId, agentId, issueId, runId, enqueueWakeup };
-    return { companyId, agentId, issueId, runId, binding, enqueueWakeup, authority: new PaperclipRunnerToolAuthority(db, binding) };
+    return { companyId, agentId, issueId, runId, binding, enqueueWakeup, authority: new ThinkingMachRunnerToolAuthority(db, binding) };
   }
 
   it.each([false, true])("persists the plan without waking an assigned backlog task (conversation=%s)", async conversation => {
@@ -42,7 +42,7 @@ describe("runner backlog task creation", () => {
     const replacement = randomUUID();
     await db.insert(heartbeatRuns).values({ id: replacement, companyId: f.companyId, agentId: f.agentId, status: "running", runtimeMode: "native", nativeIssueId: f.issueId, invocationSource: "assignment", triggerDetail: "system" });
     await db.update(issues).set({ executionRunId: replacement }).where(eq(issues.id, f.issueId));
-    await expect(new PaperclipRunnerToolAuthority(db, { ...f.binding, runId: replacement }).execute(call)).resolves.toMatchObject({ task: { id: task!.id, status: "backlog" }, scheduledWakeIds: [] });
+    await expect(new ThinkingMachRunnerToolAuthority(db, { ...f.binding, runId: replacement }).execute(call)).resolves.toMatchObject({ task: { id: task!.id, status: "backlog" }, scheduledWakeIds: [] });
     expect(f.enqueueWakeup).not.toHaveBeenCalled();
     const events = await db.select().from(activityLog).where(and(eq(activityLog.entityId, task!.id), eq(activityLog.action, "issue.created")));
     expect(events).toHaveLength(1);

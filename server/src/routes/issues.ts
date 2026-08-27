@@ -1,10 +1,10 @@
-import { isNativeWorkspaceExportRepairCause } from "@paperclipai/shared";
+import { isNativeWorkspaceExportRepairCause } from "@thinkingmach/shared";
 import { retryNativeWorkspaceExport } from "../services/native-runtime/native-workspace-export-retry.js";
 import { queuedInteractionId, readQueuedInteractionResponse, hasQueuedInteractionResponse } from "../services/queued-interaction-response.js";
 import { deliverConversationComments, isConversation } from "../services/agent-conversations.js";
 import { issueRecoveryActionReadModel } from "../services/issue-recovery-actions.js";
 import { getExecutionBlocker } from "../services/execution-blocker.js";
-import { extractIssueReferenceIdentifiers, requiresExecutionReconciliation } from "@paperclipai/shared";
+import { extractIssueReferenceIdentifiers, requiresExecutionReconciliation } from "@thinkingmach/shared";
 import {
   validateExecutionReconciliation,
   markExecutionReconciliation,
@@ -30,7 +30,7 @@ import {
   notInArray,
   sql,
 } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import type { ChatChannelService } from "../services/chat-channels.js";
 import {
   activityLog,
@@ -58,7 +58,7 @@ import {
   pipelineStages,
   pipelines,
   projectWorkspaces,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   addIssueCommentSchema,
   acceptIssueThreadInteractionSchema,
@@ -142,8 +142,8 @@ import {
   issueWriteDenialResponse,
   type IssueWriteDenialCode,
   type IssueWriteDenialContext,
-} from "@paperclipai/shared";
-import { trackAgentTaskCompleted } from "@paperclipai/shared/telemetry";
+} from "@thinkingmach/shared";
+import { trackAgentTaskCompleted } from "@thinkingmach/shared/telemetry";
 import { getTelemetryClient } from "../telemetry.js";
 import { isUniqueViolation } from "../db-errors.js";
 import type { StorageService } from "../storage/types.js";
@@ -610,7 +610,7 @@ function resolveAttachmentResponseContentType(input: {
   );
 }
 
-function requiresPaperclipAttachmentMetadata(
+function requiresThinkingMachAttachmentMetadata(
   input: {
     type?: unknown;
     provider?: unknown;
@@ -4559,7 +4559,7 @@ export function issueRoutes(
     };
   }
 
-  async function canonicalizePaperclipArtifactMetadata(input: {
+  async function canonicalizeThinkingMachArtifactMetadata(input: {
     issue: { id: string; companyId: string };
     metadata: Record<string, unknown> | null | undefined;
   }) {
@@ -8213,7 +8213,7 @@ export function issueRoutes(
       },
     });
 
-    res.setHeader("X-Paperclip-Request-Cache", coordinated.cacheStatus);
+    res.setHeader("X-ThinkingMach-Request-Cache", coordinated.cacheStatus);
     if (!coordinated.response) {
       const body = {
         error: "Too many concurrent issue-list requests for this actor/client",
@@ -10794,8 +10794,8 @@ export function issueRoutes(
               : null),
         );
       }
-      if (requiresPaperclipAttachmentMetadata(createInput)) {
-        createInput.metadata = await canonicalizePaperclipArtifactMetadata({
+      if (requiresThinkingMachAttachmentMetadata(createInput)) {
+        createInput.metadata = await canonicalizeThinkingMachArtifactMetadata({
           issue,
           metadata: req.body.metadata ?? null,
         });
@@ -11207,13 +11207,13 @@ export function issueRoutes(
       )
         return;
       if (createdByRunId !== undefined) patch.createdByRunId = createdByRunId;
-      if (requiresPaperclipAttachmentMetadata(patch, existing)) {
+      if (requiresThinkingMachAttachmentMetadata(patch, existing)) {
         if (patch.metadata !== undefined) {
-          patch.metadata = await canonicalizePaperclipArtifactMetadata({
+          patch.metadata = await canonicalizeThinkingMachArtifactMetadata({
             issue,
             metadata: patch.metadata ?? null,
           });
-        } else if (!requiresPaperclipAttachmentMetadata(existing)) {
+        } else if (!requiresThinkingMachAttachmentMetadata(existing)) {
           res
             .status(422)
             .json({ error: "Attachment-backed artifact metadata is required" });

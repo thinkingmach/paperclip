@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { RequestConfirmationInteraction } from "@paperclipai/shared";
+import type { RequestConfirmationInteraction } from "@thinkingmach/shared";
 import { TaskChatThread } from "@/components/TaskChatThread";
 import { IssueThreadInteractionCard } from "@/components/IssueThreadInteractionCard";
 import {
@@ -16,7 +16,7 @@ import { within, userEvent } from "storybook/test";
 import { toolsApi } from "@/api/tools";
 import { issuesApi } from "@/api/issues";
 import { ReviewQueueCard } from "@/pages/apps/ReviewQueueCard";
-import type { ToolActionRequestListItem } from "@paperclipai/shared";
+import type { ToolActionRequestListItem } from "@thinkingmach/shared";
 import { storybookAgentMap } from "../fixtures/paperclipData";
 
 const readRequest: RequestConfirmationInteraction = {

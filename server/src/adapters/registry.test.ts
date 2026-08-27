@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { assertValidAdapterLoginCapability } from "@paperclipai/adapter-utils";
+import { assertValidAdapterLoginCapability } from "@thinkingmach/adapter-utils";
 import { listServerAdapters, requireServerAdapter } from "./registry.js";
-import * as executionTarget from "@paperclipai/adapter-utils/execution-target";
+import * as executionTarget from "@thinkingmach/adapter-utils/execution-target";
 import { BUILTIN_ADAPTER_TYPES } from "./builtin-adapter-types.js";
 
 const { probeInstallation } = vi.hoisted(() => ({ probeInstallation: vi.fn() }));
-vi.mock("@paperclipai/paperclip-runner/live", () => ({ probeAcpxClaudeInstallation: probeInstallation }));
+vi.mock("@thinkingmach/paperclip-runner/live", () => ({ probeAcpxClaudeInstallation: probeInstallation }));
 
 // The registry registers a login capability for the two built-in interactive
 // adapters. The test checks the scalar values and the presence of the required

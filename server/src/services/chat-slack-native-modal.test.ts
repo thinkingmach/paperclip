@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
-import type { AskUserQuestionsInteraction } from "@paperclipai/shared";
+import type { AskUserQuestionsInteraction } from "@thinkingmach/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildChatQuestionFormModal,
@@ -27,7 +27,7 @@ const channelId = "C-MODAL";
 const threadTs = "1788.100";
 const messageTs = "1788.200";
 const userId = "U-OPERATOR";
-const botUserId = "U-PAPERCLIP-BOT";
+const botUserId = "U-THINKINGMACH-BOT";
 type SubmitCallback = NonNullable<ChatSdkRuntimeCallbacks["onModalSubmit"]>;
 type SubmitEvent = Parameters<SubmitCallback>[0];
 
@@ -192,7 +192,7 @@ function submission(view: SlackView) {
   )!;
   return {
     type: "view_submission",
-    team: { id: "T-PAPERCLIP" },
+    team: { id: "T-THINKINGMACH" },
     user: { id: userId, username: "operator", name: "Operator Name" },
     view: {
       id: "V-MODAL",
@@ -280,9 +280,9 @@ describe("Slack native multi-question modal adapter-to-runtime boundary", () => 
           user: {
             id: params.get("user"),
             name: "paperclip-agent",
-            real_name: "Paperclip Agent",
+            real_name: "ThinkingMach Agent",
             is_bot: true,
-            profile: { display_name: "Paperclip Agent" },
+            profile: { display_name: "ThinkingMach Agent" },
           },
         };
       } else if (method === "views.open") {
@@ -352,7 +352,7 @@ describe("Slack native multi-question modal adapter-to-runtime boundary", () => 
       const response = await runtime.handleWebhook(
         signedRequest({
           type: "block_actions",
-          team: { id: "T-PAPERCLIP" },
+          team: { id: "T-THINKINGMACH" },
           user: { id: userId, username: "operator", name: "Operator Name" },
           channel: { id: channelId },
           container: {
@@ -386,7 +386,7 @@ describe("Slack native multi-question modal adapter-to-runtime boundary", () => 
     };
   }
 
-  it("round-trips the actual Paperclip modal, opaque metadata and Slack state into canonical answers", async () => {
+  it("round-trips the actual ThinkingMach modal, opaque metadata and Slack state into canonical answers", async () => {
     const test = await harness();
     const view = await test.open();
     expect(view.callback_id).toBe(test.form.draft.submitActionId);

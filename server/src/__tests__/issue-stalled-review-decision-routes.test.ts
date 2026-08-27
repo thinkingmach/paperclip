@@ -18,7 +18,7 @@ import {
   issueRecoveryActions,
   issueThreadInteractions,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { errorHandler } from "../middleware/index.js";
 import { issueRoutes } from "../routes/issues.js";
 import {

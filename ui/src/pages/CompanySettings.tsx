@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   type InteractionResolverGovernance,
   type IssueThreadInteractionKind,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useCompany } from "../context/CompanyContext";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { useOptionalToastActions } from "../context/ToastContext";

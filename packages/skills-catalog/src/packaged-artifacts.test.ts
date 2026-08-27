@@ -38,7 +38,7 @@ describe("skills catalog package artifacts", () => {
     let metadata = readPackMetadata(createPackDestination());
 
     if (!metadata.files.some((entry) => entry.path === "dist/generated/catalog.json")) {
-      execFileSync("pnpm", ["--filter", "@paperclipai/skills-catalog", "build"], {
+      execFileSync("pnpm", ["--filter", "@thinkingmach/skills-catalog", "build"], {
         cwd: packageRoot,
         stdio: "ignore",
       });

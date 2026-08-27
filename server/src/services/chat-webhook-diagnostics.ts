@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { randomUUID } from "node:crypto";
 import type { RequestHandler } from "express";
-import { CHAT_PROVIDERS, type ChatProvider } from "@paperclipai/shared";
+import { CHAT_PROVIDERS, type ChatProvider } from "@thinkingmach/shared";
 import { logger } from "../middleware/logger.js";
 
 const SLACK_RETRY_REASONS = [

@@ -2,7 +2,7 @@
 import { z } from "zod";
 import * as pipelineSchemas from "./pipelines-schemas.js";
 import * as caseSchemas from "./cases-schemas.js";
-import * as sharedSchemas from "@paperclipai/shared";
+import * as sharedSchemas from "@thinkingmach/shared";
 
 export const experimentalApiPaths: readonly [string, string, z.ZodTypeAny | undefined][] = [
   ["get", "/api/companies/{companyId}/pipelines", undefined],

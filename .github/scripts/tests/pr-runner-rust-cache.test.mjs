@@ -34,7 +34,7 @@ test("the PR lane restores the Rust cache under the same key the master push wri
 test("the PR lane pins the compiler before the key is computed", () => {
   const select = pr.indexOf("      - name: Select the pinned Runner Rust toolchain");
   const cache = pr.indexOf("      - name: Restore Runner Rust dependencies (read only)");
-  const verify = pr.indexOf("      - name: Verify Paperclip Runner\n");
+  const verify = pr.indexOf("      - name: Verify ThinkingMach Runner\n");
   assert.ok(select >= 0 && cache > select && verify > cache);
   const setup = pr.slice(select, cache);
   assert.match(setup, /working-directory: packages\/paperclip-runner/);
@@ -48,7 +48,7 @@ test("the PR lane pins the compiler before the key is computed", () => {
 
 test("a pull request never writes to or evicts the master cache entry", () => {
   const step = pr.split("      - name: Restore Runner Rust dependencies (read only)")[1]
-    .split("      - name: Verify Paperclip Runner\n")[0];
+    .split("      - name: Verify ThinkingMach Runner\n")[0];
   assert.equal(step.match(/^\s*save-if: (.+)$/m)?.[1], "false");
   assert.doesNotMatch(step, /^\s*if:/m, "the restore must not be conditional; a miss is already free");
   assert.doesNotMatch(prWorkflow, /uses: Swatinem\/rust-cache@[0-9a-f]{40}[\s\S]*?save-if: (?!false)/);

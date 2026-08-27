@@ -6,8 +6,8 @@ ongoing configuration. These conventions apply to Slack, Discord, Telegram,
 AgentMail, and other providers according to their supported capabilities.
 
 Make connecting an agent feel like a short, understandable sequence of actions.
-At every point, the person should know what to do, where to do it, what Paperclip
-has observed, and what happens next. These are Paperclip product conventions
+At every point, the person should know what to do, where to do it, what ThinkingMach
+has observed, and what happens next. These are ThinkingMach product conventions
 extracted from a live Slack setup iteration, not a requirement to reproduce
 Slack's screens or six steps for every provider.
 
@@ -18,13 +18,13 @@ Before changing a flow, identify:
 - What the user is connecting: agent, provider app/bot/mailbox, and workspace or destination.
 - How credentials are obtained and which ones this transport actually needs.
 - Whether inbound delivery needs a public HTTPS callback, an outbound socket, polling, or another mechanism.
-- How an external person becomes a Paperclip identity, and how a new person requests organization access.
+- How an external person becomes a ThinkingMach identity, and how a new person requests organization access.
 - The simplest supported first message and how subsequent replies reach the same conversation.
 
 Inspect the current implementation and verify provider-dependent details against
 current official documentation when implementing them. Do not infer capabilities
 from another provider's wizard or from similar-looking credentials. For
-Paperclip code changes, follow the repository's [design system](../../DESIGN.md) and
+ThinkingMach code changes, follow the repository's [design system](../../DESIGN.md) and
 [connection authoring runbook](./CONNECTOR-PLAYBOOK.md); use its existing components and tokens.
 
 For examples of how these principles transfer across providers, read
@@ -36,7 +36,7 @@ Use these stages where applicable: choose agent, create/configure the provider
 app, supply credentials, verify inbound delivery, connect your personal account,
 and try a conversation. Merge or omit stages that have no distinct user action.
 Separate creating an app from entering its credentials when the user must leave
-Paperclip between those actions. Keep personal account linking separate from
+ThinkingMach between those actions. Keep personal account linking separate from
 the message test: they establish different things.
 
 A step keeps its number and purpose throughout the flow. Do not turn “Add
@@ -80,7 +80,7 @@ private-network HTTPS URL alone is not proof of public reachability.
 
 Only show prerequisites relevant to the chosen transport and deployment. Do not
 require a public URL for a connector that does not use public callbacks. When
-relevant, explain that Paperclip Cloud supplies HTTPS and link self-hosters to
+relevant, explain that ThinkingMach Cloud supplies HTTPS and link self-hosters to
 maintained setup documentation instead of embedding a long server tutorial.
 
 Generated manifests, webhook URLs, and diagnostic settings should not dominate
@@ -119,7 +119,7 @@ workspace selection, consent, installation, or credential copying may still be
 necessary. Do not put credentials into creation links.
 
 An action such as “Create Slack app” should open the provider immediately. If it
-also advances Paperclip, let the handoff register first—a short delay around one
+also advances ThinkingMach, let the handoff register first—a short delay around one
 second was effective for Slack. Prevent duplicate activation and cancel pending
 navigation if the user leaves or goes back. Keep “I already created the app” as
 a clear secondary path. A successful click is not proof that installation or
@@ -152,14 +152,14 @@ in warnings, logs, URLs, or diagnostic screenshots.
 
 Screenshots must depict the exact credential and current provider screen.
 Identify them as provider screenshots in a caption/container so they cannot be
-mistaken for live Paperclip controls. Remove obsolete or misleading screenshots.
+mistaken for live ThinkingMach controls. Remove obsolete or misleading screenshots.
 Use a troubleshooting modal only when it adds guidance beyond the inline steps;
 delete redundant “Can't find it?” links when the page already explains the path.
 
 ## 7. Separate connection setup, identity linking, and membership
 
 Installing a bot connects a provider resource. Linking an external identity
-connects a person to their Paperclip permissions. Organization membership is a
+connects a person to their ThinkingMach permissions. Organization membership is a
 separate approval boundary. Make all three understandable without exposing
 implementation details to the user.
 
@@ -168,9 +168,9 @@ explicit choices. Integrate the configuring user's identity link into onboarding
 and show how other people can join later from the Access tab:
 
 - Provide the actual connect command or equivalent provider-supported action, with copy support. It should discover identity without starting agent work.
-- Update the UI live when the external identity is observed. Show the candidate identity, target Paperclip account, and an explicit ownership confirmation.
+- Update the UI live when the external identity is observed. Show the candidate identity, target ThinkingMach account, and an explicit ownership confirmation.
 - Use an amber container while linking is required/pending, then green after successful linking. Include text/icons so color is not the only signal.
-- Explain that future messages use that person's current Paperclip permissions.
+- Explain that future messages use that person's current ThinkingMach permissions.
 - Let other people follow a private, expiring confirmation link and sign in. Nonmembers can request access; approval precedes confirmation. They should not need another bot or shared credentials.
 
 Preserve authentication, bootstrap, feature-rollout, token, and company-access
@@ -255,7 +255,7 @@ do not grant permissions, tools, or exemptions from approval rules.
 Keep the provider-guidance registry separate from transport and agent identity.
 Slack is the first enabled profile; qualify each additional provider before
 enabling guidance or exposing the field. Questions, approvals, task creation,
-assignment, delegation, and origin-thread completion use normal Paperclip
+assignment, delegation, and origin-thread completion use normal ThinkingMach
 workflows. Identify missing workflow capabilities separately rather than adding
 a connector-specific task lifecycle.
 
@@ -289,7 +289,7 @@ links, credential validation, or test-message instructions.
 | Credential acquisition | Bot token and Signing Secret live on different screens. | Use the provider's exact credential labels and locations. An API key, bot token, application secret, and signing secret are not interchangeable. |
 | Reachability | HTTP callbacks need provider-reachable HTTPS. | Derive the prerequisite from the actual delivery mechanism. Outbound sockets or polling do not automatically require an inbound public URL. |
 | First message | Prefer a real @mention for normal conversation. | Prefer the provider's simplest supported trigger. Never offer a mention if privacy rules or the adapter prevent receiving it. |
-| Identity link | A private connect action links a person to their Paperclip account. | Use a provider-supported private interaction or equivalent verified confirmation. Do not assume slash commands, ephemeral replies, or DMs exist everywhere. |
+| Identity link | A private connect action links a person to their ThinkingMach account. | Use a provider-supported private interaction or equivalent verified confirmation. Do not assume slash commands, ephemeral replies, or DMs exist everywhere. |
 | Ongoing scope | “Allowed Channels” makes the policy concrete. | Use the relevant destination noun: channels, groups, repositories, chats, or mailboxes. Show only scope controls the integration enforces. |
 
 ### Discord example
@@ -313,11 +313,11 @@ personal linking distinct from sending a task request.
 ### AgentMail / email example
 
 Use mailbox and sender language rather than bot/channel terminology. If the
-integration provisions the mailbox inside Paperclip, do not invent an external
+integration provisions the mailbox inside ThinkingMach, do not invent an external
 app-creation step. Supply the actual email address and a short copyable test
 subject/body, and explain how replies continue the conversation. Verify how the
 integration authenticates senders and grants authority; a displayed From address
-alone must not automatically establish a Paperclip identity. Apply the same
+alone must not automatically establish a ThinkingMach identity. Apply the same
 pending/success feedback, optional test, and member-access boundaries using the
 email integration's actual mechanisms.
 
@@ -351,4 +351,4 @@ Chat connections in the catalog keep **Finish setup** visible for drafts. Put
 **Manage** and **Remove connection** in a three-dot menu on every connection row,
 including drafts. Confirm removal, explain that existing tasks remain, and keep
 the dialog available for retry if removal fails. Use the existing provider lifecycle
-action; removing a Paperclip connection does not delete the provider app or bot.
+action; removing a ThinkingMach connection does not delete the provider app or bot.

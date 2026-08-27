@@ -14,12 +14,12 @@ import {
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
-  derivePaperclipViteHmrPort,
+  deriveThinkingMachViteHmrPort,
   type DeploymentExposure,
   type DeploymentMode,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type { InspectDatabaseBackupHealthOptions } from "./services/database-backup-health.js";
 import type { StorageService } from "./storage/types.js";
 import { httpLogger, errorHandler } from "./middleware/index.js";
@@ -168,7 +168,7 @@ import { setPluginEventBus } from "./services/activity-log.js";
 import { createPluginDevWatcher } from "./services/plugin-dev-watcher.js";
 import { createPluginHostServiceCleanup } from "./services/plugin-host-service-cleanup.js";
 import { pluginRegistryService } from "./services/plugin-registry.js";
-import { createHostClientHandlers } from "@paperclipai/plugin-sdk";
+import { createHostClientHandlers } from "@thinkingmach/plugin-sdk";
 import type { BetterAuthSessionResult } from "./auth/better-auth.js";
 import { createCachedViteHtmlRenderer } from "./vite-html-renderer.js";
 import {
@@ -211,7 +211,7 @@ export function isDatabaseConnectionUnavailableError(err: unknown): boolean {
 }
 
 export function resolveViteHmrPort(serverPort: number): number {
-  return derivePaperclipViteHmrPort(serverPort);
+  return deriveThinkingMachViteHmrPort(serverPort);
 }
 
 export function resolveViteHmrHost(bindHost: string): string | undefined {
@@ -232,7 +232,7 @@ export function resolveViteHmrProtocol(
 ): "ws" | "wss" | undefined {
   if (!value) return undefined;
   if (value === "ws" || value === "wss") return value;
-  throw new Error("PAPERCLIP_VITE_HMR_PROTOCOL must be ws or wss");
+  throw new Error("THINKINGMACH_VITE_HMR_PROTOCOL must be ws or wss");
 }
 
 export function listenViteHmrServer(
@@ -492,7 +492,7 @@ export async function createApp(
       req: ExpressRequest,
     ) => Promise<BetterAuthSessionResult | null>;
     /**
-     * `plugins.autoInstall` from the managed config (PAPERCLIP_MANAGED_CONFIG).
+     * `plugins.autoInstall` from the managed config (THINKINGMACH_MANAGED_CONFIG).
      * `null`/absent ⇒ self-hosted: only the built-in kubernetes bundle is
      * ensured, exactly as before. A managed list is resolved against the
      * bundled catalog fail-to-start (see services/bundled-plugins.ts).
@@ -592,7 +592,7 @@ export async function createApp(
   });
   // Provider-authenticated ingress is intentionally outside the board
   // mutation guard. The Chat SDK adapter verifies the provider signature
-  // before Paperclip persists or acts on any event.
+  // before ThinkingMach persists or acts on any event.
   const emailChannels = emailChannelService(db, { heartbeat: connectionIntentHeartbeat, storage: opts.storageService, publicBaseUrl: opts.chatWebhookPublicBaseUrl ?? opts.authPublicBaseUrl });
   app.use(emailWebhookRoutes(emailChannels));
   app.use(chatWebhookRoutes(chatChannels));
@@ -782,8 +782,8 @@ export async function createApp(
     }),
   );
   const trustedLocalStdioRuntimeHost =
-    process.env.PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST ??
-    process.env.PAPERCLIP_TOOL_RUNTIME_TRUSTED_HOST ??
+    process.env.THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST ??
+    process.env.THINKINGMACH_TOOL_RUNTIME_TRUSTED_HOST ??
     null;
   api.use(costRoutes(db, { pluginWorkerManager: workerManager }));
   api.use(activityRoutes(db));
@@ -1022,7 +1022,7 @@ export async function createApp(
     } else {
       console.warn("[paperclip] UI dist not found; running in API-only mode");
     }
-    if (process.env.PAPERCLIP_MANAGED_RUNTIME_EXPOSURE === "tailscale_https") {
+    if (process.env.THINKINGMACH_MANAGED_RUNTIME_EXPOSURE === "tailscale_https") {
       // The managed-runtime supervisor waits for the app port AND its derived
       // Vite HMR companion port to bind before publishing the service. Static
       // mode has no Vite, so bind the same placeholder listener dev mode uses
@@ -1047,14 +1047,14 @@ export async function createApp(
     const hmrPort = resolveViteHmrPort(opts.serverPort);
     const hmrHost = resolveViteHmrHost(opts.bindHost);
     const hmrProtocol = resolveViteHmrProtocol(
-      process.env.PAPERCLIP_VITE_HMR_PROTOCOL,
+      process.env.THINKINGMACH_VITE_HMR_PROTOCOL,
     );
     const hmrServer = createHttpServer((_req, res) => {
       res.writeHead(426, { "Content-Type": "text/plain" });
       res.end("Upgrade Required");
     });
     const { createServer: createViteServer } = await import("vite");
-    const configuredViteCacheDir = process.env.PAPERCLIP_VITE_CACHE_DIR?.trim();
+    const configuredViteCacheDir = process.env.THINKINGMACH_VITE_CACHE_DIR?.trim();
     const vite = await createViteServer({
       root: uiRoot,
       ...(configuredViteCacheDir
@@ -1259,7 +1259,7 @@ export async function createApp(
   // installed bundle only records the `ready` status and does not spawn a
   // worker (see activateReadyPlugin in services/plugin-lifecycle.ts).
   //
-  // Managed instances (`plugins.autoInstall` from PAPERCLIP_MANAGED_CONFIG)
+  // Managed instances (`plugins.autoInstall` from THINKINGMACH_MANAGED_CONFIG)
   // drive the key list from the control plane; self-hosted instances keep
   // the pre-existing behavior of ensuring only the kubernetes bundle.
   //

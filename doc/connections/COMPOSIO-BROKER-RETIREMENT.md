@@ -2,7 +2,7 @@
 
 September 21, 2026
 
-Composio now has one Paperclip catalog method: direct MCP. Connect with Composio Connect or an externally configured MCP session URL and headers. The existing Access → Connect setup, OAuth, permissions, per-action Test, and gateway execution are unchanged. Connect underlying apps in Composio; Paperclip does not create per-app child connections.
+Composio now has one ThinkingMach catalog method: direct MCP. Connect with Composio Connect or an externally configured MCP session URL and headers. The existing Access → Connect setup, OAuth, permissions, per-action Test, and gateway execution are unchanged. Connect underlying apps in Composio; ThinkingMach does not create per-app child connections.
 
 The project API-key method, toolkit-management API routes, Services tab, connected-account synchronization, and session-minting broker have been removed. There is no automatic credential or grant migration.
 
@@ -20,6 +20,6 @@ Used the existing isolated connector lab with fresh development data, rebuilt UI
 
 Functional result: catalog refresh and real gateway Test passed. UX result: the existing Permissions/Test flow remained usable and no broker Services tab appeared. This focused regression does not repeat every provider's original acceptance matrix or claim new account authorization.
 
-A fresh real-agent follow-up also passed: `COMPOSIO_SEARCH_TOOLS` discovered `DEEPWIKI_MCP_READ_WIKI_STRUCTURE`, then `COMPOSIO_MULTI_EXECUTE_TOOL` returned the Paperclip documentation hierarchy (13 top-level sections, 62 subsections; one success, zero errors). The gateway audit independently records both invocations as succeeded on the new run. No provider accounts were modified. Server/UI typechecks, token gates, UI build, Storybook build, and the focused tests passed; the full local suite was intentionally not run.
+A fresh real-agent follow-up also passed: `COMPOSIO_SEARCH_TOOLS` discovered `DEEPWIKI_MCP_READ_WIKI_STRUCTURE`, then `COMPOSIO_MULTI_EXECUTE_TOOL` returned the ThinkingMach documentation hierarchy (13 top-level sections, 62 subsections; one success, zero errors). The gateway audit independently records both invocations as succeeded on the new run. No provider accounts were modified. Server/UI typechecks, token gates, UI build, Storybook build, and the focused tests passed; the full local suite was intentionally not run.
 
 The retired-record UI was also exercised with a disposable, credential-free legacy fixture in the isolated lab. The list showed Retired rather than Paused; details displayed replacement/removal guidance without obsolete runtime controls. Add Composio MCP connection opened the normal Access → Connect flow with the direct MCP URL and authentication fields. The fixture was removed through the normal confirmation UI afterward.

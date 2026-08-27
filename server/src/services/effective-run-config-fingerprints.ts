@@ -66,7 +66,7 @@ export interface EffectiveRunConfigFingerprintDiff {
 const OMIT = Symbol("omit-from-effective-run-config-fingerprint");
 const REDACTED_VALUE: EffectiveRunConfigCanonicalValue = { type: "redacted", present: true };
 
-const GENERATED_RUNTIME_ENV_KEY_RE = /^PAPERCLIP_/;
+const GENERATED_RUNTIME_ENV_KEY_RE = /^THINKINGMACH_/;
 const SENSITIVE_CONFIG_KEY_RE =
   /(?:api[_-]?key|access[_-]?token|auth(?:orization)?|bearer|cookie|credential|jwt|password|passwd|private[_-]?key|secret|token)$/i;
 const VOLATILE_CONFIG_KEYS = new Set([

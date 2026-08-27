@@ -59,7 +59,7 @@ image digest. See `tests/runner-e2e/README.md` for the image publication workflo
 pnpm -C packages/plugins/sandbox-providers/daytona build
 HIRING_AI_LIVE=1 HIRING_AI_ENVIRONMENT=daytona \
   HIRING_AI_TEST_URL=http://127.0.0.1:3100 \
-  HIRING_AI_DAYTONA_IMAGE=ghcr.io/paperclipai/paperclip-daytona-runner@sha256:YOUR_DIGEST \
+  HIRING_AI_DAYTONA_IMAGE=ghcr.io/thinkingmach/paperclip-daytona-runner@sha256:YOUR_DIGEST \
   pnpm exec playwright test --config tests/hiring-ai-connections/playwright.config.ts --grep 'daytona:'
 ```
 
@@ -87,8 +87,8 @@ Add these settings to the disposable instance's `instances/default/.env`, alongs
 the native API-tools flag, and restart test-drive:
 
 ```dotenv
-PAPERCLIP_RUNNER_REMOTE_PROVIDER_PACK_PATH=/tmp/hiring-native-artifacts/provider-pack
-PAPERCLIP_RUNNER_REMOTE_BINARY_PATH=/tmp/hiring-native-artifacts/paperclip-runnerd
+THINKINGMACH_RUNNER_REMOTE_PROVIDER_PACK_PATH=/tmp/hiring-native-artifacts/provider-pack
+THINKINGMACH_RUNNER_REMOTE_BINARY_PATH=/tmp/hiring-native-artifacts/paperclip-runnerd
 ```
 
 Run the Daytona command with `HIRING_AI_RUNNER=native` and
@@ -108,7 +108,7 @@ pnpm exec vitest run server/src/__tests__/agent-hire-ai-connections.test.ts \
   server/src/services/execution-recovery-attempt.test.ts \
   server/src/services/native-runtime/runner-api.integration.test.ts \
   ui/src/features/connections/ConnectionIntentInteractionBody.test.tsx
-pnpm --filter @paperclipai/ui exec storybook dev -p 6010 -c storybook/.storybook --ci --no-open
+pnpm --filter @thinkingmach/ui exec storybook dev -p 6010 -c storybook/.storybook --ci --no-open
 HIRING_AI_STORYBOOK_URL=http://127.0.0.1:6010 \
   pnpm exec playwright test --config tests/hiring-ai-connections/playwright.config.ts --grep storybook
 ```

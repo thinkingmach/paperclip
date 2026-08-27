@@ -6,7 +6,7 @@ Run the repeatable baseline from the repository root:
 pnpm exec playwright test --config tests/perf/issue-detail/playwright.config.ts
 ```
 
-The rig starts an isolated seeded Paperclip instance, runs five samples for each scenario/profile, and writes median-ready raw data plus a Markdown table to `test-results/issue-detail-perf/`.
+The rig starts an isolated seeded ThinkingMach instance, runs five samples for each scenario/profile, and writes median-ready raw data plus a Markdown table to `test-results/issue-detail-perf/`.
 
 Scenarios:
 
@@ -21,7 +21,7 @@ Profiles:
 Override the sample count (minimum five) or port when needed:
 
 ```sh
-PAPERCLIP_ISSUE_PERF_RUNS=7 PAPERCLIP_ISSUE_PERF_PORT=3210 pnpm exec playwright test --config tests/perf/issue-detail/playwright.config.ts
+THINKINGMACH_ISSUE_PERF_RUNS=7 THINKINGMACH_ISSUE_PERF_PORT=3210 pnpm exec playwright test --config tests/perf/issue-detail/playwright.config.ts
 ```
 
 Outputs include `baseline.md`, `baseline.json`, and a Chrome trace for the first run of each scenario/profile. Open `*.trace.json` in Chrome DevTools Performance to inspect the `issue-detail:*` user-timing marks.
@@ -43,7 +43,7 @@ offset; total scroll offset legitimately changes when history is prepended.
 To run against an existing **disposable local test-drive instance**:
 
 ```sh
-PAPERCLIP_ISSUE_PERF_BASE_URL=http://127.0.0.1:3102 \
+THINKINGMACH_ISSUE_PERF_BASE_URL=http://127.0.0.1:3102 \
   pnpm exec playwright test --config tests/perf/issue-detail/playwright.config.ts layout-stability.spec.ts
 ```
 
@@ -51,16 +51,16 @@ The suite creates its own company and fixtures. The URL override accepts only
 loopback origins and rejects remote hosts. Use a disposable local instance,
 not a shared or production instance. Without the override, the harness starts its own
 isolated instance as before. Live provider walkthroughs additionally require a
-configured native Paperclip runner and Codex authentication; deterministic
+configured native ThinkingMach runner and Codex authentication; deterministic
 browser fixtures do not substitute for watching an actual provider run.
 
-For the live walkthrough, first assign a disposable task to a native Paperclip
+For the live walkthrough, first assign a disposable task to a native ThinkingMach
 runner configured with the Codex provider. Its scratch project should contain
 a small `sum.mjs` fixture. The script sends a paced job, scrolls up, disconnects
 and reconnects, steers a follow-up, and records through completion:
 
 ```sh
-PAPERCLIP_LAYOUT_LIVE_URL=http://127.0.0.1:3102/LAY/issues/LAY-8 \
+THINKINGMACH_LAYOUT_LIVE_URL=http://127.0.0.1:3102/LAY/issues/LAY-8 \
   node tests/perf/issue-detail/live-feed.walkthrough.mjs
 ```
 

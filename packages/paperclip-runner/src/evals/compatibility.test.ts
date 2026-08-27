@@ -3,25 +3,25 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
-  PAPERCLIP_RUNNER_BUILD_METADATA,
-  PAPERCLIP_RUNNERD_BUILD_METADATA_SCHEMA,
+  THINKINGMACH_RUNNER_BUILD_METADATA,
+  THINKINGMACH_RUNNERD_BUILD_METADATA_SCHEMA,
 } from "./build-metadata.js";
 import {
-  PaperclipRunnerEvalCompatibilityError,
-  assertPaperclipRunnerEvalCompatibility,
-  type PaperclipRunnerEvalCompatibilityRequirement,
+  ThinkingMachRunnerEvalCompatibilityError,
+  assertThinkingMachRunnerEvalCompatibility,
+  type ThinkingMachRunnerEvalCompatibilityRequirement,
 } from "./compatibility.js";
 
-function compatible(): PaperclipRunnerEvalCompatibilityRequirement {
+function compatible(): ThinkingMachRunnerEvalCompatibilityRequirement {
   return {
     consumer: "paperclip-evals",
-    packageVersion: PAPERCLIP_RUNNER_BUILD_METADATA.package.version,
+    packageVersion: THINKINGMACH_RUNNER_BUILD_METADATA.package.version,
     runnerd: {
-      schema: PAPERCLIP_RUNNERD_BUILD_METADATA_SCHEMA,
+      schema: THINKINGMACH_RUNNERD_BUILD_METADATA_SCHEMA,
       binaryName: "paperclip-runnerd",
-      packageName: "@paperclipai/paperclip-runner",
-      packageVersion: PAPERCLIP_RUNNER_BUILD_METADATA.package.version,
-      binaryContractVersion: PAPERCLIP_RUNNER_BUILD_METADATA.contracts.runnerdArtifact,
+      packageName: "@thinkingmach/paperclip-runner",
+      packageVersion: THINKINGMACH_RUNNER_BUILD_METADATA.package.version,
+      binaryContractVersion: THINKINGMACH_RUNNER_BUILD_METADATA.contracts.runnerdArtifact,
       nativeExecutionVersion: 1,
       harnessDriverVersion: 1,
       prp: { name: "paperclip.runner", minimumVersion: 1, maximumVersion: 1 },
@@ -29,8 +29,8 @@ function compatible(): PaperclipRunnerEvalCompatibilityRequirement {
     nativeExecutionVersion: 1,
     prp: { minimumVersion: 1, maximumVersion: 1 },
     catalog: {
-      version: PAPERCLIP_RUNNER_BUILD_METADATA.semanticCatalog.version,
-      sha256: PAPERCLIP_RUNNER_BUILD_METADATA.semanticCatalog.sha256,
+      version: THINKINGMACH_RUNNER_BUILD_METADATA.semanticCatalog.version,
+      sha256: THINKINGMACH_RUNNER_BUILD_METADATA.semanticCatalog.sha256,
     },
     driver: {
       contractVersion: 1,
@@ -54,17 +54,17 @@ function compatible(): PaperclipRunnerEvalCompatibilityRequirement {
   };
 }
 
-describe("Paperclip Evals integration compatibility", () => {
+describe("ThinkingMach Evals integration compatibility", () => {
   it("keeps build metadata synchronized with package semver", () => {
     const packageJson = JSON.parse(readFileSync(
       fileURLToPath(new URL("../../package.json", import.meta.url)),
       "utf8",
     ));
-    expect(PAPERCLIP_RUNNER_BUILD_METADATA.package.version).toBe(packageJson.version);
+    expect(THINKINGMACH_RUNNER_BUILD_METADATA.package.version).toBe(packageJson.version);
   });
 
   it("negotiates package, binary, PRP, catalog, and driver V1", () => {
-    expect(assertPaperclipRunnerEvalCompatibility(compatible())).toMatchObject({
+    expect(assertThinkingMachRunnerEvalCompatibility(compatible())).toMatchObject({
       schema: "paperclip-runner/evals-integration/v1",
       consumer: "paperclip-evals",
       negotiatedPrpVersion: 1,
@@ -87,11 +87,11 @@ describe("Paperclip Evals integration compatibility", () => {
     requirement.driver.descriptor.capabilities.dynamicTools = false;
 
     try {
-      assertPaperclipRunnerEvalCompatibility(requirement);
+      assertThinkingMachRunnerEvalCompatibility(requirement);
       throw new Error("expected compatibility failure");
     } catch (error) {
-      expect(error).toBeInstanceOf(PaperclipRunnerEvalCompatibilityError);
-      expect((error as PaperclipRunnerEvalCompatibilityError).issues.map((item) => item.code))
+      expect(error).toBeInstanceOf(ThinkingMachRunnerEvalCompatibilityError);
+      expect((error as ThinkingMachRunnerEvalCompatibilityError).issues.map((item) => item.code))
         .toEqual([
           "package_version_mismatch",
           "binary_package_version_mismatch",
@@ -111,7 +111,7 @@ describe("Paperclip Evals integration compatibility", () => {
     const requirement = compatible();
     requirement.driver.descriptor.protocolVersion = "prp.v2";
 
-    expect(() => assertPaperclipRunnerEvalCompatibility(requirement)).toThrow(
+    expect(() => assertThinkingMachRunnerEvalCompatibility(requirement)).toThrow(
       expect.objectContaining({
         issues: [expect.objectContaining({ code: "driver_protocol_version_mismatch" })],
       }),

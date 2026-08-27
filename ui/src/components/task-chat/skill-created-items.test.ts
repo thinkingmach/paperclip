@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ActivityEvent } from "@paperclipai/shared";
+import type { ActivityEvent } from "@thinkingmach/shared";
 import { skillCreatedItems } from "./skill-created-items";
 
 const event = (overrides: Partial<ActivityEvent> = {}): ActivityEvent => ({

@@ -1,6 +1,6 @@
 import { agentAvatarUrl } from "@/lib/agent-avatar-url";
 import { useState } from "react";
-import { resolveAgentAppearance, type AgentAppearance, type AgentAvatarSize, type CharacterState } from "@paperclipai/shared";
+import { resolveAgentAppearance, type AgentAppearance, type AgentAvatarSize, type CharacterState } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import { deriveInitials } from "./Identity";
 

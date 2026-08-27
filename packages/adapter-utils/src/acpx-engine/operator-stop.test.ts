@@ -20,7 +20,7 @@ async function setup(tool?: string) {
     runId: 'stop-test', agent: { id: 'agent', companyId: 'company' }, runtime: {},
     config: { agent: 'custom', agentCommand: `${JSON.stringify(process.execPath)} ${JSON.stringify(fixture)}`, mode: 'persistent',
       stateDir: path.join(root, 'state'), cwd: root, graceSec: 5,
-      env: { PAPERCLIP_STOP_FIXTURE_ROOT: root, ...(tool ? { PAPERCLIP_STOP_FIXTURE_TOOL: tool } : {}) } },
+      env: { THINKINGMACH_STOP_FIXTURE_ROOT: root, ...(tool ? { THINKINGMACH_STOP_FIXTURE_TOOL: tool } : {}) } },
     context: {}, signal: abort.signal,
     onLog: async (_stream: string, text: string) => { await fs.appendFile(path.join(root, 'logs'), text); if (text.includes('Waiting for Stop.')) ready(); },
   } as unknown as AdapterExecutionContext;
@@ -94,7 +94,7 @@ it.each(['missing session', 'changed configuration'])('starts a new turn when th
 it('keeps the Stop deadline active after cancellation returns until provider exit', async () => {
   const { ctx, abort, started, execute } = await setup();
   ctx.config.graceSec = 1;
-  ctx.config.env = { ...(ctx.config.env as object), PAPERCLIP_STOP_FIXTURE_HANG_ON_CLOSE: '1' };
+  ctx.config.env = { ...(ctx.config.env as object), THINKINGMACH_STOP_FIXTURE_HANG_ON_CLOSE: '1' };
   let providerPid: number | undefined;
   ctx.onSpawn = async ({ pid }) => { providerPid = pid; };
   const running = execute(ctx);

@@ -483,7 +483,7 @@ export class AcpxRuntimeHost {
             mcpServers: [
               ...(toolBridge ? [{ name: "paperclip", url: toolBridge.url,
                 bearerToken: toolBridge.secret, runnerOwned: true }] : []),
-              // This is Paperclip's authenticated gateway, not a direct upstream
+              // This is ThinkingMach's authenticated gateway, not a direct upstream
               // binding. Its existing grants and approval checks remain authoritative.
               ...(nativeMcp ? [{ name: nativeMcp.name, url: nativeMcp.url,
                 bearerToken: nativeMcp.token, runnerOwned: true }] : []),

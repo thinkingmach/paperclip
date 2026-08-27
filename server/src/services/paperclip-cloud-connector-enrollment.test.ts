@@ -4,33 +4,33 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
-  completePaperclipCloudConnectorEnrollment,
-  loadPaperclipCloudConnectorIdentity,
+  completeThinkingMachCloudConnectorEnrollment,
+  loadThinkingMachCloudConnectorIdentity,
   paperclipCloudConnectorEnrollmentStatus,
   paperclipCloudConnectorIdentityPath,
-  startPaperclipCloudConnectorEnrollment,
+  startThinkingMachCloudConnectorEnrollment,
 } from "./paperclip-cloud-connector-enrollment.js";
 import { paperclipCloudConnectorConfigFromEnv } from "./paperclip-cloud-connector.js";
-import { reconcilePaperclipCloudConnectorEnrollmentStatus } from "./paperclip-cloud-connector-status.js";
+import { reconcileThinkingMachCloudConnectorEnrollmentStatus } from "./paperclip-cloud-connector-status.js";
 
-describe("Paperclip Cloud self-host enrollment", () => {
+describe("ThinkingMach Cloud self-host enrollment", () => {
   let root = "";
   let previousHome: string | undefined;
   let previousInstance: string | undefined;
 
   beforeEach(() => {
     root = mkdtempSync(path.join(os.tmpdir(), "paperclip-cloud-connector-"));
-    previousHome = process.env.PAPERCLIP_HOME;
-    previousInstance = process.env.PAPERCLIP_INSTANCE_ID;
-    process.env.PAPERCLIP_HOME = root;
-    process.env.PAPERCLIP_INSTANCE_ID = "connector-test";
+    previousHome = process.env.THINKINGMACH_HOME;
+    previousInstance = process.env.THINKINGMACH_INSTANCE_ID;
+    process.env.THINKINGMACH_HOME = root;
+    process.env.THINKINGMACH_INSTANCE_ID = "connector-test";
   });
 
   afterEach(() => {
-    if (previousHome === undefined) delete process.env.PAPERCLIP_HOME;
-    else process.env.PAPERCLIP_HOME = previousHome;
-    if (previousInstance === undefined) delete process.env.PAPERCLIP_INSTANCE_ID;
-    else process.env.PAPERCLIP_INSTANCE_ID = previousInstance;
+    if (previousHome === undefined) delete process.env.THINKINGMACH_HOME;
+    else process.env.THINKINGMACH_HOME = previousHome;
+    if (previousInstance === undefined) delete process.env.THINKINGMACH_INSTANCE_ID;
+    else process.env.THINKINGMACH_INSTANCE_ID = previousInstance;
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -50,24 +50,24 @@ describe("Paperclip Cloud self-host enrollment", () => {
       const token = String(body.request);
       const claims = JSON.parse(Buffer.from(token.split(".")[1]!, "base64url").toString("utf8")) as Record<string, unknown>;
       expect(claims).toMatchObject({
-        iss: loadPaperclipCloudConnectorIdentity()?.instanceId,
+        iss: loadThinkingMachCloudConnectorIdentity()?.instanceId,
         aud: "https://my.example.test/v1/connector/enrollment-claims",
         env: "development",
         op: "enroll",
       });
       expect(typeof claims.ah).toBe("string");
       return Response.json({
-        id: loadPaperclipCloudConnectorIdentity()?.instanceId,
+        id: loadThinkingMachCloudConnectorIdentity()?.instanceId,
         environment: "development",
         origins: ["https://private.example.test"],
       });
     });
 
-    const pending = await startPaperclipCloudConnectorEnrollment({
+    const pending = await startThinkingMachCloudConnectorEnrollment({
       origin: "https://private.example.test",
       env: {
-        PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my.example.test",
-        PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "development",
+        THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my.example.test",
+        THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "development",
       },
       request: request as typeof fetch,
     });
@@ -77,15 +77,15 @@ describe("Paperclip Cloud self-host enrollment", () => {
     expect(statSync(paperclipCloudConnectorIdentityPath()).mode & 0o777).toBe(0o600);
     expect(readFileSync(paperclipCloudConnectorIdentityPath(), "utf8")).not.toContain("approval-code");
 
-    await expect(completePaperclipCloudConnectorEnrollment({
+    await expect(completeThinkingMachCloudConnectorEnrollment({
       enrollmentId: "enroll-test",
       approvalCode: "approval-code",
       state: "wrong-state",
       request: request as typeof fetch,
     })).rejects.toThrow(/Invalid or expired/);
 
-    const state = loadPaperclipCloudConnectorIdentity()?.pending?.returnState;
-    const active = await completePaperclipCloudConnectorEnrollment({
+    const state = loadThinkingMachCloudConnectorIdentity()?.pending?.returnState;
+    const active = await completeThinkingMachCloudConnectorEnrollment({
       enrollmentId: "enroll-test",
       approvalCode: "approval-code",
       state: state!,
@@ -100,7 +100,7 @@ describe("Paperclip Cloud self-host enrollment", () => {
       expect(String(input)).toBe("https://my.example.test/v1/connector/instance-status");
       return Response.json({ active: false, status: "suspended" });
     });
-    await expect(reconcilePaperclipCloudConnectorEnrollmentStatus({}, statusRequest as typeof fetch)).resolves.toMatchObject({
+    await expect(reconcileThinkingMachCloudConnectorEnrollmentStatus({}, statusRequest as typeof fetch)).resolves.toMatchObject({
       configured: false,
       status: "suspended",
       instanceId: active.instanceId,
@@ -108,7 +108,7 @@ describe("Paperclip Cloud self-host enrollment", () => {
   });
 
   it("rejects non-loopback plain HTTP destinations before creating keys", async () => {
-    await expect(startPaperclipCloudConnectorEnrollment({
+    await expect(startThinkingMachCloudConnectorEnrollment({
       origin: "http://private.example.test",
       request: vi.fn() as typeof fetch,
     })).rejects.toThrow(/requires HTTPS/);
@@ -122,11 +122,11 @@ describe("Paperclip Cloud self-host enrollment", () => {
     "https://my.example.test/connections/enroll?id=enroll-test#fragment",
     "https://user@my.example.test/connections/enroll?id=enroll-test",
   ])("rejects an imprecise broker verification destination: %s", async (verificationUrl) => {
-    await expect(startPaperclipCloudConnectorEnrollment({
+    await expect(startThinkingMachCloudConnectorEnrollment({
       origin: "https://private.example.test",
       env: {
-        PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my.example.test",
-        PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "development",
+        THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my.example.test",
+        THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "development",
       },
       request: vi.fn(async () => Response.json({
         enrollmentId: "enroll-test",
@@ -154,31 +154,31 @@ describe("Paperclip Cloud self-host enrollment", () => {
       companyId: "company-test",
       initiatedBy: "user:admin-test",
       env: {
-        PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my.example.test",
-        PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "development",
+        THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my.example.test",
+        THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "development",
       },
       request: request as typeof fetch,
     };
 
-    const first = startPaperclipCloudConnectorEnrollment(values);
+    const first = startThinkingMachCloudConnectorEnrollment(values);
     await vi.waitFor(() => expect(request).toHaveBeenCalledOnce());
-    const second = startPaperclipCloudConnectorEnrollment(values);
+    const second = startThinkingMachCloudConnectorEnrollment(values);
     releaseBroker();
 
     const [firstStatus, secondStatus] = await Promise.all([first, second]);
     expect(request).toHaveBeenCalledOnce();
     expect(firstStatus).toMatchObject({ status: "pending", verificationUrl: expect.stringContaining("enroll-shared") });
     expect(secondStatus).toEqual(firstStatus);
-    expect(loadPaperclipCloudConnectorIdentity()?.pending).toMatchObject({
+    expect(loadThinkingMachCloudConnectorIdentity()?.pending).toMatchObject({
       enrollmentId: "enroll-shared",
       companyId: "company-test",
       initiatedBy: "user:admin-test",
     });
-    await expect(startPaperclipCloudConnectorEnrollment({
+    await expect(startThinkingMachCloudConnectorEnrollment({
       ...values,
       initiatedBy: "user:another-admin",
     })).rejects.toThrow(/another administrator/);
-    await expect(startPaperclipCloudConnectorEnrollment({
+    await expect(startThinkingMachCloudConnectorEnrollment({
       ...values,
       companyId: "another-company",
     })).rejects.toThrow(/another company/);
@@ -191,7 +191,7 @@ describe("Paperclip Cloud self-host enrollment", () => {
       environment: "production",
     });
     expect(paperclipCloudConnectorEnrollmentStatus({
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
     })).toMatchObject({ environment: "staging" });
   });
 
@@ -202,15 +202,15 @@ describe("Paperclip Cloud self-host enrollment", () => {
       verificationUrl: "https://my.paperclip.app/connections/enroll?id=enroll-production",
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
     }, { status: 201 }));
-    await startPaperclipCloudConnectorEnrollment({
+    await startThinkingMachCloudConnectorEnrollment({
       origin,
-      env: { PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app" },
+      env: { THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app" },
       request: productionRequest as typeof fetch,
     });
-    const productionIdentity = loadPaperclipCloudConnectorIdentity()!;
+    const productionIdentity = loadThinkingMachCloudConnectorIdentity()!;
 
     expect(paperclipCloudConnectorEnrollmentStatus({
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
     })).toEqual({
       configured: false,
       status: "unverified",
@@ -229,12 +229,12 @@ describe("Paperclip Cloud self-host enrollment", () => {
         expiresAt: new Date(Date.now() + 60_000).toISOString(),
       }, { status: 201 });
     });
-    const stagingStatus = await startPaperclipCloudConnectorEnrollment({
+    const stagingStatus = await startThinkingMachCloudConnectorEnrollment({
       origin,
-      env: { PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app" },
+      env: { THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app" },
       request: stagingRequest as typeof fetch,
     });
-    const stagingIdentity = loadPaperclipCloudConnectorIdentity()!;
+    const stagingIdentity = loadThinkingMachCloudConnectorIdentity()!;
 
     expect(stagingStatus).toMatchObject({
       status: "pending",
@@ -251,8 +251,8 @@ describe("Paperclip Cloud self-host enrollment", () => {
   it("fails closed when the configured target changes during callback or after activation", async () => {
     const origin = "https://private.example.test";
     const productionEnv = {
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app",
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "production",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "production",
     };
     const request = vi.fn(async (input: string | URL | Request) => {
       if (String(input).endsWith("/v1/connector/enrollments")) {
@@ -263,56 +263,56 @@ describe("Paperclip Cloud self-host enrollment", () => {
         }, { status: 201 });
       }
       return Response.json({
-        id: loadPaperclipCloudConnectorIdentity()?.instanceId,
+        id: loadThinkingMachCloudConnectorIdentity()?.instanceId,
         environment: "production",
         origins: [origin],
       });
     });
-    await startPaperclipCloudConnectorEnrollment({ origin, env: productionEnv, request: request as typeof fetch });
-    const pending = loadPaperclipCloudConnectorIdentity()!;
+    await startThinkingMachCloudConnectorEnrollment({ origin, env: productionEnv, request: request as typeof fetch });
+    const pending = loadThinkingMachCloudConnectorIdentity()!;
     const changedTargetRequest = vi.fn();
 
-    await expect(completePaperclipCloudConnectorEnrollment({
+    await expect(completeThinkingMachCloudConnectorEnrollment({
       enrollmentId: "enroll-production",
       approvalCode: "approval-code",
       state: pending.pending!.returnState,
       env: {
-        PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
-        PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
+        THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+        THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
       },
       request: changedTargetRequest as typeof fetch,
     })).rejects.toThrow(/Invalid or expired/);
     expect(changedTargetRequest).not.toHaveBeenCalled();
 
-    await completePaperclipCloudConnectorEnrollment({
+    await completeThinkingMachCloudConnectorEnrollment({
       enrollmentId: "enroll-production",
       approvalCode: "approval-code",
       state: pending.pending!.returnState,
       env: productionEnv,
       request: request as typeof fetch,
     });
-    const activeIdentity = loadPaperclipCloudConnectorIdentity()!;
+    const activeIdentity = loadThinkingMachCloudConnectorIdentity()!;
     const activeSwitchRequest = vi.fn();
     const stagingEnv = {
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
     };
 
-    await expect(startPaperclipCloudConnectorEnrollment({
+    await expect(startThinkingMachCloudConnectorEnrollment({
       origin,
       env: stagingEnv,
       request: activeSwitchRequest as typeof fetch,
     })).rejects.toThrow(/another target/);
     expect(activeSwitchRequest).not.toHaveBeenCalled();
-    expect(loadPaperclipCloudConnectorIdentity()).toEqual(activeIdentity);
+    expect(loadThinkingMachCloudConnectorIdentity()).toEqual(activeIdentity);
     expect(paperclipCloudConnectorConfigFromEnv(stagingEnv)).toBeNull();
   });
 
   it("treats managed environment identity as an atomic override of local identity", async () => {
     const origin = "https://private.example.test";
     const productionEnv = {
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app",
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "production",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "production",
     };
     const request = vi.fn(async (input: string | URL | Request) => {
       if (String(input).endsWith("/v1/connector/enrollments")) {
@@ -323,29 +323,29 @@ describe("Paperclip Cloud self-host enrollment", () => {
         }, { status: 201 });
       }
       return Response.json({
-        id: loadPaperclipCloudConnectorIdentity()?.instanceId,
+        id: loadThinkingMachCloudConnectorIdentity()?.instanceId,
         environment: "production",
         origins: [origin],
       });
     });
-    await startPaperclipCloudConnectorEnrollment({ origin, env: productionEnv, request: request as typeof fetch });
-    const pending = loadPaperclipCloudConnectorIdentity()!;
-    await completePaperclipCloudConnectorEnrollment({
+    await startThinkingMachCloudConnectorEnrollment({ origin, env: productionEnv, request: request as typeof fetch });
+    const pending = loadThinkingMachCloudConnectorIdentity()!;
+    await completeThinkingMachCloudConnectorEnrollment({
       enrollmentId: "enroll-production",
       approvalCode: "approval-code",
       state: pending.pending!.returnState,
       env: productionEnv,
       request: request as typeof fetch,
     });
-    const localIdentity = loadPaperclipCloudConnectorIdentity()!;
+    const localIdentity = loadThinkingMachCloudConnectorIdentity()!;
 
     const managedEnv = {
-      PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID: "managed-staging-instance",
-      PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "managed-signing-key",
-      PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "managed-sealing-key",
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
-      PAPERCLIP_PUBLIC_URL: "https://managed-stack.example.test",
+      THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID: "managed-staging-instance",
+      THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "managed-signing-key",
+      THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "managed-sealing-key",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+      THINKINGMACH_PUBLIC_URL: "https://managed-stack.example.test",
     };
     expect(paperclipCloudConnectorEnrollmentStatus(managedEnv)).toEqual({
       configured: true,
@@ -362,13 +362,13 @@ describe("Paperclip Cloud self-host enrollment", () => {
       signPrivateKey: "managed-signing-key",
       sealPrivateKey: "managed-sealing-key",
     });
-    expect(loadPaperclipCloudConnectorIdentity()).toEqual(localIdentity);
+    expect(loadThinkingMachCloudConnectorIdentity()).toEqual(localIdentity);
 
     for (const omitted of [
-      "PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID",
-      "PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY",
-      "PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY",
-      "PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT",
+      "THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID",
+      "THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY",
+      "THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY",
+      "THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT",
     ] as const) {
       const partialManagedEnv: NodeJS.ProcessEnv = { ...managedEnv };
       delete partialManagedEnv[omitted];
@@ -379,7 +379,7 @@ describe("Paperclip Cloud self-host enrollment", () => {
         environment: "staging",
       });
       expect(() => paperclipCloudConnectorConfigFromEnv(partialManagedEnv)).toThrow(/incomplete/);
-      expect(loadPaperclipCloudConnectorIdentity()).toEqual(localIdentity);
+      expect(loadThinkingMachCloudConnectorIdentity()).toEqual(localIdentity);
     }
 
     expect(paperclipCloudConnectorConfigFromEnv(productionEnv)).toMatchObject({
@@ -393,20 +393,20 @@ describe("Paperclip Cloud self-host enrollment", () => {
 
   it("rejects known Cloud broker and environment mismatches", () => {
     const managedIdentity = {
-      PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID: "managed-instance",
-      PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "managed-signing-key",
-      PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "managed-sealing-key",
+      THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID: "managed-instance",
+      THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "managed-signing-key",
+      THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "managed-sealing-key",
     };
     const mismatches = [
       {
         ...managedIdentity,
-        PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app",
-        PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
+        THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my.paperclip.app",
+        THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
       },
       {
         ...managedIdentity,
-        PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
-        PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "production",
+        THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+        THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "production",
       },
     ];
     for (const env of mismatches) {
@@ -414,41 +414,41 @@ describe("Paperclip Cloud self-host enrollment", () => {
       expect(() => paperclipCloudConnectorConfigFromEnv(env)).toThrow(/do not match/);
     }
     expect(() => paperclipCloudConnectorEnrollmentStatus({
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
     })).toThrow(/do not match/);
   });
 
   it("does not create or complete self-host enrollment with managed identity configuration", async () => {
     const origin = "https://private.example.test";
     const localEnv = {
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
     };
     const enrollmentRequest = vi.fn(async () => Response.json({
       enrollmentId: "enroll-local",
       verificationUrl: "https://my-staging.paperclip.app/connections/enroll?id=enroll-local",
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
     }, { status: 201 }));
-    await startPaperclipCloudConnectorEnrollment({
+    await startThinkingMachCloudConnectorEnrollment({
       origin,
       env: localEnv,
       request: enrollmentRequest as typeof fetch,
     });
-    const pendingIdentity = loadPaperclipCloudConnectorIdentity()!;
+    const pendingIdentity = loadThinkingMachCloudConnectorIdentity()!;
     const managedEnv = {
       ...localEnv,
-      PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID: "managed-staging-instance",
-      PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "managed-signing-key",
-      PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "managed-sealing-key",
+      THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID: "managed-staging-instance",
+      THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "managed-signing-key",
+      THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "managed-sealing-key",
     };
     const managedRequest = vi.fn();
 
-    await expect(startPaperclipCloudConnectorEnrollment({
+    await expect(startThinkingMachCloudConnectorEnrollment({
       origin,
       env: managedEnv,
       request: managedRequest as typeof fetch,
     })).rejects.toThrow(/unavailable with managed identity/);
-    await expect(completePaperclipCloudConnectorEnrollment({
+    await expect(completeThinkingMachCloudConnectorEnrollment({
       enrollmentId: "enroll-local",
       approvalCode: "approval-code",
       state: pendingIdentity.pending!.returnState,
@@ -456,16 +456,16 @@ describe("Paperclip Cloud self-host enrollment", () => {
       request: managedRequest as typeof fetch,
     })).rejects.toThrow(/Invalid or expired/);
     expect(managedRequest).not.toHaveBeenCalled();
-    expect(loadPaperclipCloudConnectorIdentity()).toEqual(pendingIdentity);
+    expect(loadThinkingMachCloudConnectorIdentity()).toEqual(pendingIdentity);
   });
 
-  it("does not treat legacy Paperclip ID keys as a Cloud enrollment", () => {
+  it("does not treat legacy ThinkingMach ID keys as a Cloud enrollment", () => {
     expect(paperclipCloudConnectorEnrollmentStatus({
-      PAPERCLIP_ID_CONNECTOR_INSTANCE_ID: "legacy-instance",
-      PAPERCLIP_ID_CONNECTOR_SIGN_PRIVATE_KEY: "legacy-signing-key",
-      PAPERCLIP_ID_CONNECTOR_SEAL_PRIVATE_KEY: "legacy-sealing-key",
-      PAPERCLIP_ID_CONNECTOR_ENVIRONMENT: "production",
-      PAPERCLIP_ID_CONNECTOR_BASE_URL: "https://id.paperclip.app",
+      THINKINGMACH_ID_CONNECTOR_INSTANCE_ID: "legacy-instance",
+      THINKINGMACH_ID_CONNECTOR_SIGN_PRIVATE_KEY: "legacy-signing-key",
+      THINKINGMACH_ID_CONNECTOR_SEAL_PRIVATE_KEY: "legacy-sealing-key",
+      THINKINGMACH_ID_CONNECTOR_ENVIRONMENT: "production",
+      THINKINGMACH_ID_CONNECTOR_BASE_URL: "https://id.paperclip.app",
     })).toMatchObject({
       configured: false,
       status: "not_configured",

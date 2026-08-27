@@ -1,7 +1,7 @@
 import { chmod, lstat, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import { resolvePaperclipInstanceRootForAdapter } from "@paperclipai/adapter-utils/server-utils";
+import { resolveThinkingMachInstanceRootForAdapter } from "@thinkingmach/adapter-utils/server-utils";
 import { readSubscriptionAccountId, writeCodexAuthCacheEntry } from "./codex-auth-cache.js";
 import { copyBackCodexAuth } from "./codex-auth-copyback.js";
 import {
@@ -78,9 +78,9 @@ function toSafeRunSegment(value: string | null): string {
  */
 export function resolveProofHomeRoot(env: NodeJS.ProcessEnv = process.env, companyId: string): string {
   const safeCompanyId = requireSafeSegment(companyId, "companyId");
-  const instanceRoot = resolvePaperclipInstanceRootForAdapter({
-    homeDir: nonEmpty(env.PAPERCLIP_HOME) ?? undefined,
-    instanceId: nonEmpty(env.PAPERCLIP_INSTANCE_ID) ?? undefined,
+  const instanceRoot = resolveThinkingMachInstanceRootForAdapter({
+    homeDir: nonEmpty(env.THINKINGMACH_HOME) ?? undefined,
+    instanceId: nonEmpty(env.THINKINGMACH_INSTANCE_ID) ?? undefined,
     env,
   });
   return path.resolve(instanceRoot, "companies", safeCompanyId, PROOF_ROOT_DIR_NAME);
@@ -100,10 +100,10 @@ export interface DeriveProofHomeInput {
 export function deriveProofHome(input: DeriveProofHomeInput = {}): string {
   const env = input.env ?? process.env;
   const companyId = requireSafeSegment(
-    input.companyId ?? nonEmpty(env.PAPERCLIP_COMPANY_ID) ?? "",
+    input.companyId ?? nonEmpty(env.THINKINGMACH_COMPANY_ID) ?? "",
     "companyId",
   );
-  const runSegment = toSafeRunSegment(input.runId ?? nonEmpty(env.PAPERCLIP_RUN_ID));
+  const runSegment = toSafeRunSegment(input.runId ?? nonEmpty(env.THINKINGMACH_RUN_ID));
   const root = resolveProofHomeRoot(env, companyId);
   return path.resolve(root, `${runSegment}-${randomUUID()}`);
 }
@@ -214,7 +214,7 @@ export async function installDeviceLoginCredential(
   const { sandboxAuthBytes, log } = input;
   const env = input.env ?? process.env;
   const companyId = requireSafeSegment(
-    input.companyId ?? nonEmpty(env.PAPERCLIP_COMPANY_ID) ?? "",
+    input.companyId ?? nonEmpty(env.THINKINGMACH_COMPANY_ID) ?? "",
     "companyId",
   );
   const proofHome = path.resolve(input.proofHome);
@@ -280,7 +280,7 @@ export async function removeProofHome(
 ): Promise<void> {
   const env = input.env ?? process.env;
   const companyId = requireSafeSegment(
-    input.companyId ?? nonEmpty(env.PAPERCLIP_COMPANY_ID) ?? "",
+    input.companyId ?? nonEmpty(env.THINKINGMACH_COMPANY_ID) ?? "",
     "companyId",
   );
   const resolved = path.resolve(proofHome);

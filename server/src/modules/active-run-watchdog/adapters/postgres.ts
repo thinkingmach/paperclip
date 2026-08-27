@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, gt, gte, inArray, notInArray, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   agentWakeupRequests,
@@ -7,7 +7,7 @@ import {
   heartbeatRunWatchdogDecisions,
   heartbeatRuns,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { parseObject } from "../../../adapters/utils.js";
 import { visibleIssueCondition } from "../../../services/issue-visibility.js";
 import { logActivity } from "../../../services/activity-log.js";

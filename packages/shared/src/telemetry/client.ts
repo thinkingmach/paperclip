@@ -9,10 +9,10 @@ import type {
   TelemetryState,
 } from "./types.js";
 import { type ResolvedTelemetryCaps, resolveCaps } from "./config.js";
-import { PAPERCLIP_EVENTS } from "./generated/paperclip-telemetry.js";
+import { THINKINGMACH_EVENTS } from "./generated/paperclip-telemetry.js";
 
 const DEFAULT_ENDPOINTS = [
-  "https://telemetry.paperclip.ing/ingest",
+  "https://telemetry.thinkingmach.com/ingest",
   "https://rusqrrg391.execute-api.us-east-1.amazonaws.com/ingest",
 ] as const;
 // Queue-pressure valve: auto-flush once this many events are buffered. This is
@@ -112,7 +112,7 @@ export class TelemetryClient {
   }
 
   /**
-   * Tracks first-party Paperclip telemetry events registered in the generated
+   * Tracks first-party ThinkingMach telemetry events registered in the generated
    * backend event schema.
    */
   track<K extends TelemetryEventName>(eventName: K, ...args: TrackArgs<K>): void {
@@ -128,7 +128,7 @@ export class TelemetryClient {
    * client would discard anyway.
    */
   isRegisteredEventName(eventName: string): boolean {
-    return Object.hasOwn(PAPERCLIP_EVENTS, eventName);
+    return Object.hasOwn(THINKINGMACH_EVENTS, eventName);
   }
 
   /**

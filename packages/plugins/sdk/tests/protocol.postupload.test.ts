@@ -6,7 +6,7 @@ import type { PluginPostUploadCommand, PluginSyncOperation } from "../src/protoc
 // an OPTIONAL, ordered `postUploadCommands` array whose absence is
 // indistinguishable from today's behavior. The field is a structured control
 // command — `{ command; cwd?; timeoutMs? }` — never free interpolation, and per
-// Security Condition C1 may be authored ONLY by Paperclip/adapter code.
+// Security Condition C1 may be authored ONLY by ThinkingMach/adapter code.
 describe("PluginSyncOperation.postUploadCommands", () => {
   it("test_plugin_sync_operation_carries_ordered_post_upload_commands", () => {
     const commands: PluginPostUploadCommand[] = [

@@ -143,7 +143,7 @@ describe("CloudAccessGate", () => {
     mockHealthApi.get.mockResolvedValue({ deploymentMode: "authenticated", deploymentExposure: "public", bootstrapStatus: "bootstrap_pending" });
     mockAuthApi.getSession.mockResolvedValue({ user: { id: "invitee" } });
     const root = renderGate(container, true);
-    await waitForText(container, "This Paperclip is waiting on its first admin");
+    await waitForText(container, "This ThinkingMach is waiting on its first admin");
     expect(container.textContent).not.toContain("Outlet content");
     unmountRoot(root);
   });
@@ -191,11 +191,11 @@ describe("CloudAccessGate", () => {
     mockAuthApi.getSession.mockResolvedValue(null);
 
     const root = renderGate(container);
-    await waitForText(container, "Finish setting up this Paperclip");
+    await waitForText(container, "Finish setting up this ThinkingMach");
 
-    expect(container.textContent).toContain("Finish setting up this Paperclip");
+    expect(container.textContent).toContain("Finish setting up this ThinkingMach");
     expect(container.textContent).toContain("Sign in / Create account");
-    expect(container.textContent).toContain("npx paperclipai auth bootstrap-ceo");
+    expect(container.textContent).toContain("npx thinkingmach auth bootstrap-ceo");
     expect(mockAccessApi.getCurrentBoardAccess).not.toHaveBeenCalled();
 
     unmountRoot(root);
@@ -252,9 +252,9 @@ describe("CloudAccessGate", () => {
     });
 
     const root = renderGate(container);
-    await waitForText(container, "This Paperclip is waiting on its first admin");
+    await waitForText(container, "This ThinkingMach is waiting on its first admin");
 
-    expect(container.textContent).toContain("This Paperclip is waiting on its first admin");
+    expect(container.textContent).toContain("This ThinkingMach is waiting on its first admin");
     expect(container.textContent).toContain("invite-only mode");
     expect(container.textContent).not.toContain("Claim this instance");
     expect(container.textContent).not.toContain("Sign in / Create account");

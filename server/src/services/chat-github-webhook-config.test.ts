@@ -90,7 +90,7 @@ describe("GitHub App webhook reconnect", () => {
     "fails closed when the applied configuration does not match",
     async (value) => {
       await expect(resync(async () => json(value))).rejects.toThrow(
-        "did not confirm the expected secure Paperclip webhook",
+        "did not confirm the expected secure ThinkingMach webhook",
       );
     },
   );

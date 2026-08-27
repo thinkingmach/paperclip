@@ -19,7 +19,7 @@ const PROMPT_INJECTION_PATTERNS: Array<{ code: string; re: RegExp }> = [
 ];
 
 type ToolActionSigningSecretEnv = Partial<
-  Record<"PAPERCLIP_TOOL_ACTION_SIGNING_SECRET" | "PAPERCLIP_AGENT_JWT_SECRET" | "BETTER_AUTH_SECRET", string | undefined>
+  Record<"THINKINGMACH_TOOL_ACTION_SIGNING_SECRET" | "THINKINGMACH_AGENT_JWT_SECRET" | "BETTER_AUTH_SECRET", string | undefined>
 >;
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
@@ -47,8 +47,8 @@ function scanPromptInjection(value: unknown): string[] {
 export class ToolActionSigningSecretMissingError extends Error {
   constructor() {
     super(
-      "PAPERCLIP_TOOL_ACTION_SIGNING_SECRET is not configured; signed tool action approvals cannot be issued. " +
-        "Set PAPERCLIP_TOOL_ACTION_SIGNING_SECRET in this instance's environment (worktrees inherit it from .paperclip/.env).",
+      "THINKINGMACH_TOOL_ACTION_SIGNING_SECRET is not configured; signed tool action approvals cannot be issued. " +
+        "Set THINKINGMACH_TOOL_ACTION_SIGNING_SECRET in this instance's environment (worktrees inherit it from .paperclip/.env).",
     );
     this.name = "ToolActionSigningSecretMissingError";
   }
@@ -60,7 +60,7 @@ export class ToolActionSigningSecretMissingError extends Error {
 export const TOOL_ACTION_REQUEST_SIGNING_GRACE_MS = 2 * 60 * 1000;
 
 export function resolveToolActionSigningSecret(env: ToolActionSigningSecretEnv = process.env as ToolActionSigningSecretEnv) {
-  const secret = env.PAPERCLIP_TOOL_ACTION_SIGNING_SECRET?.trim();
+  const secret = env.THINKINGMACH_TOOL_ACTION_SIGNING_SECRET?.trim();
   if (!secret) {
     throw new ToolActionSigningSecretMissingError();
   }

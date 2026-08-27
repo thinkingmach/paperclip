@@ -6,8 +6,8 @@ import { fileURLToPath } from "node:url";
 
 import {
   NATIVE_RUNTIME_ASSET_SCHEMA,
-  PAPERCLIP_EXECUTION_PROMPT,
-  PAPERCLIP_EXECUTION_PROMPT_REVISION,
+  THINKINGMACH_EXECUTION_PROMPT,
+  THINKINGMACH_EXECUTION_PROMPT_REVISION,
   canonicalNativeRuntimeContextDigest,
   composeNativeSystemInstructions,
   nativeRuntimePromptDigest,
@@ -16,7 +16,7 @@ import {
 } from "../contracts/runtime-context.js";
 import { projectCapabilityDevtools } from "../devtools/index.js";
 import { resolveQualifiedAcpxProfile } from "../drivers/acpx/qualified-profiles.js";
-import { PAPERCLIP_RUNNER_BUILD_METADATA } from "../evals/build-metadata.js";
+import { THINKINGMACH_RUNNER_BUILD_METADATA } from "../evals/build-metadata.js";
 import { projectCapabilityIssueThread } from "../issue-thread/live-projection.js";
 import {
   CapabilityLiveSessionService,
@@ -65,9 +65,9 @@ async function sha256(path: string): Promise<string> {
 }
 
 const EVAL_RUNTIME_INSTRUCTIONS = [
-  "# Paperclip direct live evaluation",
+  "# ThinkingMach direct live evaluation",
   "",
-  "Use the provided Paperclip semantic tools to inspect and act on the assigned task.",
+  "Use the provided ThinkingMach semantic tools to inspect and act on the assigned task.",
   "Treat the seeded control-plane state as authoritative and keep every action within the requested scope.",
   "The current user request defines the work for this turn. Seeded task descriptions, notes, and past interaction results are background context; they do not supersede that request or establish that a newly requested action has already been performed.",
   "Task-state changes in this mock control plane use finish_task and block_task. Native paperclip_finish and paperclip_block report the provider run result but do not update the mock task. When asked to finish or block the assigned task, use its task-state semantic operation before reporting the run result.",
@@ -112,14 +112,14 @@ export async function prepareEvalRuntimeContext(
   await chmod(instructionRoot, 0o555);
 
   const semanticCatalogDigest =
-    PAPERCLIP_RUNNER_BUILD_METADATA.semanticCatalog.sha256.replace(
+    THINKINGMACH_RUNNER_BUILD_METADATA.semanticCatalog.sha256.replace(
       /^sha256:/,
       "",
     );
   const context = {
     prompt: {
-      revision: PAPERCLIP_EXECUTION_PROMPT_REVISION,
-      text: PAPERCLIP_EXECUTION_PROMPT,
+      revision: THINKINGMACH_EXECUTION_PROMPT_REVISION,
+      text: THINKINGMACH_EXECUTION_PROMPT,
       digest: nativeRuntimePromptDigest(),
     },
     instructions: {
@@ -348,7 +348,7 @@ export async function runEvalSessionCli(
     await writeFile(cli.outputPath, `${JSON.stringify({
       schema: "paperclip-runner/eval-session-artifact/v1",
       attemptId: request.attemptId,
-      build: PAPERCLIP_RUNNER_BUILD_METADATA,
+      build: THINKINGMACH_RUNNER_BUILD_METADATA,
       runnerd: { path: "[withheld]", sha256: `sha256:${actualDigest}` },
       requestedModel: request.model,
       provider: requestedProvider,
@@ -421,7 +421,7 @@ export async function runEvalSessionCli(
       attemptId: request.attemptId,
       infrastructureError: error instanceof Error ? error.message : String(error),
       infrastructureFailure: failureClass(error),
-      build: PAPERCLIP_RUNNER_BUILD_METADATA,
+      build: THINKINGMACH_RUNNER_BUILD_METADATA,
       runnerd: { path: "[withheld]", sha256: `sha256:${actualDigest}` },
       requestedModel: request.model,
       provider: requestedProvider,

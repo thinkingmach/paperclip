@@ -1,9 +1,9 @@
 import { randomUUID, createHash } from "node:crypto";
-import { definePlugin } from "@paperclipai/plugin-sdk";
+import { definePlugin } from "@thinkingmach/plugin-sdk";
 import type {
   PluginContext, PluginEnvironmentAcquireLeaseParams, PluginEnvironmentDriverBaseParams,
   PluginEnvironmentExecuteParams, PluginEnvironmentLease, PluginEnvironmentReleaseLeaseParams,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import { CreateosApiError, CreateosClient, object } from "./client.js";
 import { parseConfig, resolveApiKey } from "./config.js";
 import { CreateosCleanupError, execute, shellQuote } from "./execute.js";

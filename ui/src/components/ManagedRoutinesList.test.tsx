@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import { appearanceForPalette, agentAvatarUrl, resolveAgentAppearance } from "@paperclipai/shared";
+import { appearanceForPalette, agentAvatarUrl, resolveAgentAppearance } from "@thinkingmach/shared";
 import { ManagedRoutinesList } from "./ManagedRoutinesList";
 
 vi.mock("@/lib/router", () => ({ Link: ({ to, children, ...props }: { to: string; children: ReactNode }) => <a href={to} {...props}>{children}</a> }));

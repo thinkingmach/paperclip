@@ -1,4 +1,4 @@
-import type { DecisionInput, DecisionOption } from "@paperclipai/shared";
+import type { DecisionInput, DecisionOption } from "@thinkingmach/shared";
 import { api } from "./client";
 
 /**
@@ -6,7 +6,7 @@ import { api } from "./client";
  * and resolved by the board. Open decisions surface in the attention feed as a
  * `decision` source; decided/expired history is fetched directly here. Response
  * DTOs mirror the P3 service (`server/src/services/decisions.ts`) and are kept
- * UI-local rather than in `@paperclipai/shared` on purpose — only the option /
+ * UI-local rather than in `@thinkingmach/shared` on purpose — only the option /
  * input / effect specs are shared (they round-trip on create).
  */
 

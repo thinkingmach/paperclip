@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Send } from "lucide-react";
-import type { ToolMcpGatewayTokenCreated } from "@paperclipai/shared";
+import type { ToolMcpGatewayTokenCreated } from "@thinkingmach/shared";
 import { Link, Navigate, useNavigate, useParams } from "@/lib/router";
 import { useCompany } from "@/context/CompanyContext";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";

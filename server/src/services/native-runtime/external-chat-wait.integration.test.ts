@@ -36,7 +36,7 @@ import {
   toolApplications,
   toolConnections,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   PrpStructuredRunResult,
   PrpTerminalState,
@@ -44,7 +44,7 @@ import type {
 
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { finalizeNativeRun } from "./native-run-finalizer.js";
-import { PaperclipControlPlanePort } from "./paperclip-control-plane-port.js";
+import { ThinkingMachControlPlanePort } from "./paperclip-control-plane-port.js";
 import {
   authorizeNativeChatReviewPresentation,
   hasMaterializedNativeReviewResponse,
@@ -60,19 +60,19 @@ import {
   isExternalChatWaitAuthorizationContention,
   resolveExternalChatResponseWaitAuthorization,
 } from "./chat-attachment-reuse.js";
-import { attestReviewedExternalChatRun, buildPaperclipWakePayload } from "../heartbeat.js";
+import { attestReviewedExternalChatRun, buildThinkingMachWakePayload } from "../heartbeat.js";
 import { questionResponseDeliveryValues } from "../question-response-delivery.js";
 import { resolveExternalChatQuestionResponse } from "./external-chat-question-response.js";
 import { materializeExternalChatQuestionResponseInput } from "./external-chat-question-response-input.js";
 import * as nativeInteractionBridge from "./native-interaction-bridge.js";
-import type { AskUserQuestionsInteraction } from "@paperclipai/shared";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import type { AskUserQuestionsInteraction } from "@thinkingmach/shared";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 import { createLocalDiskStorageProvider } from "../../storage/local-disk-provider.js";
 import { createStorageService } from "../../storage/service.js";
 import { subscribeAllCompanyLiveEvents } from "../live-events.js";
 
 describe("native external-chat response wait", () => {
-  const externalTestDatabaseUrl = process.env.PAPERCLIP_TEST_DATABASE_URL;
+  const externalTestDatabaseUrl = process.env.THINKINGMACH_TEST_DATABASE_URL;
   let temporary: Awaited<
     ReturnType<typeof startEmbeddedPostgresTestDatabase>
   > | null = null;
@@ -228,7 +228,7 @@ describe("native external-chat response wait", () => {
         provider === "github" ? "paperclip/test-repository" : "telegram-user",
       label:
         provider === "github"
-          ? "Paperclip test repository"
+          ? "ThinkingMach test repository"
           : "Telegram direct message",
       availability: "available",
       enabled: true,
@@ -319,7 +319,7 @@ describe("native external-chat response wait", () => {
       })
       .where(eq(heartbeatRuns.id, runId));
 
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId,
       issueId,
       runId,
@@ -726,8 +726,8 @@ describe("native external-chat response wait", () => {
       })
       .where(eq(chatDeliveries.id, fixture.deliveryId));
     const interactionSvc = issueThreadInteractionService(db);
-    const previousPublicUrl = process.env.PAPERCLIP_PUBLIC_URL;
-    process.env.PAPERCLIP_PUBLIC_URL = withLink
+    const previousPublicUrl = process.env.THINKINGMACH_PUBLIC_URL;
+    process.env.THINKINGMACH_PUBLIC_URL = withLink
       ? "https://board.paperclip.example"
       : "http://127.0.0.1:3103";
     let interaction: Awaited<ReturnType<typeof interactionSvc.create>>;
@@ -759,8 +759,8 @@ describe("native external-chat response wait", () => {
       );
     } finally {
       if (previousPublicUrl === undefined)
-        delete process.env.PAPERCLIP_PUBLIC_URL;
-      else process.env.PAPERCLIP_PUBLIC_URL = previousPublicUrl;
+        delete process.env.THINKINGMACH_PUBLIC_URL;
+      else process.env.THINKINGMACH_PUBLIC_URL = previousPublicUrl;
     }
     const publicationKey = `interaction:${interaction.id}:${fixture.endpointId}`;
     const [publication] = await db
@@ -1135,7 +1135,7 @@ describe("native external-chat response wait", () => {
       },
     );
     fixture.context.paperclipExternalChatExecutionBound = true;
-    fixture.context.paperclipWake = await buildPaperclipWakePayload({
+    fixture.context.paperclipWake = await buildThinkingMachWakePayload({
       db,
       companyId: fixture.companyId,
       agentId: fixture.agentId,
@@ -1173,7 +1173,7 @@ describe("native external-chat response wait", () => {
       const body = Buffer.from("Cobalt\n");
       const filename = "answer.txt";
       await writeFile(path.join(workspaceRoot, filename), body);
-      const runner = new PaperclipRunnerToolAuthority(db, {
+      const runner = new ThinkingMachRunnerToolAuthority(db, {
         ...fixture,
         workspaceRoot,
         storage,
@@ -2613,7 +2613,7 @@ describe("native external-chat response wait", () => {
       .update(issues)
       .set({ executionRunId: runId })
       .where(eq(issues.id, fixture.issueId));
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: fixture.companyId,
       issueId: fixture.issueId,
       agentId: fixture.agentId,
@@ -3342,7 +3342,7 @@ describe("native external-chat response wait", () => {
       .update(issues)
       .set({ executionRunId: runId })
       .where(eq(issues.id, fixture.issueId));
-    const port = new PaperclipControlPlanePort(db, {
+    const port = new ThinkingMachControlPlanePort(db, {
       companyId: fixture.companyId,
       issueId: fixture.issueId,
       agentId: fixture.agentId,

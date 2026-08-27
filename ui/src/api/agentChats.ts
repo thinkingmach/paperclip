@@ -1,4 +1,4 @@
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 import { api } from "./client";
 export const agentChatsApi = {
   get: (companyId: string, agentRef: string) =>

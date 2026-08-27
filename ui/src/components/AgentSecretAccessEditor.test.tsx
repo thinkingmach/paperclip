@@ -3,7 +3,7 @@
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { CompanySecret, EnvSecretRefBinding } from "@paperclipai/shared";
+import type { CompanySecret, EnvSecretRefBinding } from "@thinkingmach/shared";
 
 const mockSecretPickerRender = vi.hoisted(() => vi.fn());
 

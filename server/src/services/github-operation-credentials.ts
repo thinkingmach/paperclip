@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { isUuidLike } from "@paperclipai/shared";
+import { isUuidLike } from "@thinkingmach/shared";
 import {
   agents,
   heartbeatRuns,
@@ -7,7 +7,7 @@ import {
   projects,
   runIdentityContexts,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { forbidden } from "../errors.js";
 import { captureRunIdentity } from "./run-identity.js";
 import {

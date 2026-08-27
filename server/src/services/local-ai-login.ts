@@ -2,9 +2,9 @@ import { randomUUID } from "node:crypto";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { and, eq, inArray, lte, sql } from "drizzle-orm";
-import { adapterAuthSessions, ADAPTER_AUTH_SESSION_ACTIVE_STATES, environments, type Db } from "@paperclipai/db";
-import type { AiConnectionLoginIntent, LocalAiLoginAttempt, LocalAiLoginStatus } from "@paperclipai/shared";
-import { resolvePaperclipInstanceRoot } from "../home-paths.js";
+import { adapterAuthSessions, ADAPTER_AUTH_SESSION_ACTIVE_STATES, environments, type Db } from "@thinkingmach/db";
+import type { AiConnectionLoginIntent, LocalAiLoginAttempt, LocalAiLoginStatus } from "@thinkingmach/shared";
+import { resolveThinkingMachInstanceRoot } from "../home-paths.js";
 import { notFound, unprocessable } from "../errors.js";
 import { aiConnectionService } from "./ai-connections.js";
 import { readVerifiedLocalAiCredential } from "./local-ai-credentials.js";
@@ -13,7 +13,7 @@ import { logActivity } from "./activity-log.js";
 const LOCAL_LOGIN_METHOD = "local_subscription";
 const ATTEMPT_DURATION_MS = 30 * 60 * 1000;
 function loginHome(id: string) {
-  return path.join(resolvePaperclipInstanceRoot(), "ai-local-logins", id);
+  return path.join(resolveThinkingMachInstanceRoot(), "ai-local-logins", id);
 }
 const shellQuote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
 function presentAttempt(id: string, expiresAt: Date, provider: string): LocalAiLoginAttempt {

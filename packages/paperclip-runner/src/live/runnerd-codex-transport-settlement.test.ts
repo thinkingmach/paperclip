@@ -1,7 +1,7 @@
 // The retained-settlement maintenance suite below moved out of
 // runnerd-codex-transport.test.ts. Vitest schedules whole files onto
 // workers, so that single 8.9k-line file serialized ~400s of tests and was
-// the wall-clock critical path of the PR "Verify Paperclip Runner (vitest)"
+// the wall-clock critical path of the PR "Verify ThinkingMach Runner (vitest)"
 // lane; this family alone accounts for ~160s of it. Keeping it in its own
 // file lets the worker pool and --shard run it alongside the rest of the
 // transport suite instead of after it. Every case provisions its own
@@ -50,7 +50,7 @@ import {
 
 // Explicit private-artifact test lane; production/default dist is never changed.
 const defaultCapabilityRunnerdBinary = () =>
-  process.env.PAPERCLIP_ATTACH_TRANSITION_RUNNER ??
+  process.env.THINKINGMACH_ATTACH_TRANSITION_RUNNER ??
   qualifiedCapabilityRunnerdBinary();
 
 function maintenanceFixtureBackendName(fixtureId: string): string {

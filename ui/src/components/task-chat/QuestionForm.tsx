@@ -7,9 +7,9 @@ import {
   Search,
 } from "lucide-react";
 import type {
-  PaperclipQuestionResponse,
-  PaperclipQuestionSet,
-} from "@paperclipai/adapter-utils";
+  ThinkingMachQuestionResponse,
+  ThinkingMachQuestionSet,
+} from "@thinkingmach/adapter-utils";
 import type { MentionOption } from "@/components/MarkdownEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,8 +26,8 @@ import {
 import { TaskChatRichInput } from "./TaskChatRichInput";
 import { matchSafeQuestionValidationPattern } from "./question-validation-pattern";
 
-type Question = PaperclipQuestionSet["questions"][number];
-type Answer = PaperclipQuestionResponse["answers"][string];
+type Question = ThinkingMachQuestionSet["questions"][number];
+type Answer = ThinkingMachQuestionResponse["answers"][string];
 
 /**
  * A form-level message, tagged with whether answering a question resolves it.
@@ -41,14 +41,14 @@ type FormError = { message: string; fromMissingAnswer?: boolean };
 
 export interface QuestionFormProps {
   id: string;
-  questionSet: PaperclipQuestionSet;
-  initialResponse?: PaperclipQuestionResponse | null;
+  questionSet: ThinkingMachQuestionSet;
+  initialResponse?: ThinkingMachQuestionResponse | null;
   implicitCustomAnswer?: boolean;
   draftKey?: string;
   disabled?: boolean;
   imageUploadHandler?: (file: File) => Promise<string>;
   mentions?: MentionOption[];
-  onSubmit: (response: PaperclipQuestionResponse) => void | Promise<void>;
+  onSubmit: (response: ThinkingMachQuestionResponse) => void | Promise<void>;
   /**
    * Resolves the request itself (a timeline card cancelling the interaction).
    * Inside the composer takeover the form falls back to dismissing the
@@ -190,8 +190,8 @@ export function QuestionResponseSummary({
   questionSet,
   response,
 }: {
-  questionSet: PaperclipQuestionSet;
-  response: PaperclipQuestionResponse;
+  questionSet: ThinkingMachQuestionSet;
+  response: ThinkingMachQuestionResponse;
 }) {
   return (
     <dl className="grid gap-2 text-sm">

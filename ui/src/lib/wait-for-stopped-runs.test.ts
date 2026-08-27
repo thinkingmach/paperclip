@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { HeartbeatRun } from "@paperclipai/shared";
+import type { HeartbeatRun } from "@thinkingmach/shared";
 import { waitForStoppedRuns } from "./wait-for-stopped-runs";
 
 function run(id: string, status: HeartbeatRun["status"]) {

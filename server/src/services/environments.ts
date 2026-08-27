@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { and, desc, eq, inArray, isNull, ne, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   builtInManagedResources,
@@ -13,7 +13,7 @@ import {
   instanceSettings,
   issues,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   ENVIRONMENT_DRIVERS,
   ENVIRONMENT_LEASE_CLEANUP_STATUSES,
@@ -29,7 +29,7 @@ import {
   type EnvironmentLeasePolicy,
   type EnvironmentLeaseStatus,
   type UpdateEnvironment,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { conflict, forbidden } from "../errors.js";
 import { logActivity } from "./activity-log.js";
 import { isCloudManagedInstance } from "./cloud-instance.js";
@@ -43,7 +43,7 @@ type EnvironmentRow = typeof environments.$inferSelect;
 type EnvironmentLeaseRow = typeof environmentLeases.$inferSelect;
 const DEFAULT_LOCAL_ENVIRONMENT_NAME = "Local";
 const DEFAULT_LOCAL_ENVIRONMENT_DESCRIPTION =
-  "Default execution environment for Paperclip runs on this machine.";
+  "Default execution environment for ThinkingMach runs on this machine.";
 
 const DEFAULT_KUBERNETES_ENVIRONMENT_NAME = "Kubernetes Sandbox";
 const DEFAULT_KUBERNETES_ENVIRONMENT_DESCRIPTION =
@@ -79,7 +79,7 @@ export interface KubernetesEnvironmentConfigInput {
    * environment config and validated by the sandbox config schema.
    */
   timeoutMs?: number;
-  adapters?: import("@paperclipai/shared").AdapterRegistryEntry[];
+  adapters?: import("@thinkingmach/shared").AdapterRegistryEntry[];
   [key: string]: unknown;
 }
 
@@ -107,7 +107,7 @@ export interface ManagedSandboxEnvironmentInput {
   stockVersion?: string;
   /**
    * Asserts the caller's deployment gives no operator any path to hand-edit
-   * this row (currently only true for the PAPERCLIP_MANAGED_CONFIG applier,
+   * this row (currently only true for the THINKINGMACH_MANAGED_CONFIG applier,
    * where `enableManagedSandboxOnly` removes the tenant's own environment
    * choice entirely). When set, a plain content-hash mismatch against a real
    * prior binding is treated as ordinary stock drift instead of an operator
@@ -274,7 +274,7 @@ function managedMetadataKeys(
   bindings: Array<{ defaultsJson: Record<string, unknown> }>,
 ): string[] {
   const keys = new Set([
-    "managedByPaperclip",
+    "managedByThinkingMach",
     "managedSandboxProvider",
     KUBERNETES_MANAGED_MARKER,
     ...Object.keys(desiredMetadata),
@@ -321,7 +321,7 @@ function mergeManagedEnvironmentMetadata(
 
 export function environmentService(db: Db) {
   /**
-   * Idempotently ensure THE Paperclip-managed sandbox environment for this
+   * Idempotently ensure THE ThinkingMach-managed sandbox environment for this
    * instance, configured for an arbitrary sandbox provider plugin. Mirrors
    * `ensureLocalEnvironment`; the partial unique index
    * `environments_managed_sandbox_idx` enforces at most one managed sandbox
@@ -342,7 +342,7 @@ export function environmentService(db: Db) {
       provider: input.provider,
     };
     const desiredMetadata: Record<string, unknown> = {
-      managedByPaperclip: true,
+      managedByThinkingMach: true,
       managedSandboxProvider: input.provider,
       ...(input.extraMetadata ?? {}),
     };
@@ -390,7 +390,7 @@ export function environmentService(db: Db) {
         const keys = managedMetadataKeys(desiredMetadata, bindings);
 
         let row = sandboxRows.find(
-          (candidate) => (candidate.metadata as Record<string, unknown> | null)?.managedByPaperclip === true,
+          (candidate) => (candidate.metadata as Record<string, unknown> | null)?.managedByThinkingMach === true,
         ) ?? sandboxRows.find((candidate) => candidate.name === input.name) ?? null;
 
         const writeBindings = async (
@@ -507,7 +507,7 @@ export function environmentService(db: Db) {
             .for("update")
             .then(
               (rows) => rows.find(
-                (candidate) => (candidate.metadata as Record<string, unknown> | null)?.managedByPaperclip === true,
+                (candidate) => (candidate.metadata as Record<string, unknown> | null)?.managedByThinkingMach === true,
               ) ?? null,
             );
           if (!row) throw new Error("Failed to ensure managed sandbox environment");
@@ -565,7 +565,7 @@ export function environmentService(db: Db) {
         );
         if (operatorReaffirmedArchive) stockStatus = "operator_modified";
 
-        // `platformFullyManaged` callers (currently: the PAPERCLIP_MANAGED_CONFIG
+        // `platformFullyManaged` callers (currently: the THINKINGMACH_MANAGED_CONFIG
         // applier) assert that nothing in their deployment can hand-edit this
         // row — the product gives a cloud-harness tenant no path to it, unlike
         // the general self-hosted contract this function otherwise protects
@@ -579,7 +579,7 @@ export function environmentService(db: Db) {
         //
         // Two things the bypass must never touch:
         // - A row with NO matching binding. `row` can be a same-name sandbox
-        //   row that was never Paperclip-managed (the fallback lookup above).
+        //   row that was never ThinkingMach-managed (the fallback lookup above).
         //   It also reads as `operator_modified`, but there is no prior
         //   platform pass to have drifted from — adopting it would overwrite
         //   a tenant-created environment and stamp it managed. Require a
@@ -587,7 +587,7 @@ export function environmentService(db: Db) {
         //   just documented.
         // - Archive-reaffirmation. A `sandbox_image` update must never
         //   resurrect a row something else deliberately kept archived after
-        //   Paperclip's own provider-unavailability archival, so that path
+        //   ThinkingMach's own provider-unavailability archival, so that path
         //   still skips below regardless of this flag.
         if (
           input.platformFullyManaged &&
@@ -606,7 +606,7 @@ export function environmentService(db: Db) {
           let baselineHash = baseline?.stockHash ?? latestStockHash;
 
           // Provider unavailability is an operational state transition, not
-          // an operator edit. If the binding records that Paperclip archived
+          // an operator edit. If the binding records that ThinkingMach archived
           // this row, restore only its availability status. Keep every other
           // operator-modified field intact and leave the stock update pending.
           // A manually archived row still has an active binding baseline, so
@@ -752,7 +752,7 @@ export function environmentService(db: Db) {
   };
 
   /**
-   * Archive the Paperclip-managed sandbox row when its provider became
+   * Archive the ThinkingMach-managed sandbox row when its provider became
    * unavailable (plugin missing, not ready, or its worker not running), so
    * run scheduling stops selecting an environment whose lease acquisition
    * cannot succeed (`resolveEnvironment` rejects non-active rows).
@@ -778,7 +778,7 @@ export function environmentService(db: Db) {
         .for("update")
         .then(
           (rows) => rows.find(
-            (row) => (row.metadata as Record<string, unknown> | null)?.managedByPaperclip === true,
+            (row) => (row.metadata as Record<string, unknown> | null)?.managedByThinkingMach === true,
           ) ?? null,
         );
       if (!existing || existing.status !== "active") return null;
@@ -819,7 +819,7 @@ export function environmentService(db: Db) {
         .then((rows) => rows[0] ?? null);
       if (!archived) return null;
 
-      // Archival is a Paperclip-owned availability transition. Record only
+      // Archival is a ThinkingMach-owned availability transition. Record only
       // that status change in each installed baseline. Deriving the new hash
       // from defaultsJson keeps operator-modified row fields out of stock.
       for (const binding of bindings) {
@@ -915,7 +915,7 @@ export function environmentService(db: Db) {
      * instance.
      *
      * On a cloud-managed instance an existing row is additionally ADOPTED —
-     * stamped `managedByPaperclip: true` (other metadata preserved) — so the
+     * stamped `managedByThinkingMach: true` (other metadata preserved) — so the
      * single local slot is platform-owned there by construction, mirroring
      * `ensureManagedSandboxEnvironment`'s adoption of the sandbox slot. This
      * is what lets the environment-routes write floor treat a local row's
@@ -937,7 +937,7 @@ export function environmentService(db: Db) {
             config: {},
             envVars: {},
             metadata: {
-              managedByPaperclip: true,
+              managedByThinkingMach: true,
               defaultForInstance: true,
             },
             createdAt: now,
@@ -966,11 +966,11 @@ export function environmentService(db: Db) {
         throw new Error("Failed to ensure local environment");
       }
       const existingMetadata = (existing.metadata ?? {}) as Record<string, unknown>;
-      if (isCloudManagedInstance() && existingMetadata.managedByPaperclip !== true) {
+      if (isCloudManagedInstance() && existingMetadata.managedByThinkingMach !== true) {
         const adopted = await db
           .update(environments)
           .set({
-            metadata: { ...existingMetadata, managedByPaperclip: true },
+            metadata: { ...existingMetadata, managedByThinkingMach: true },
             updatedAt: new Date(),
           })
           .where(eq(environments.id, existing.id))
@@ -1033,7 +1033,7 @@ export function environmentService(db: Db) {
 
     /**
      * Find the platform-managed sandbox environment (the single
-     * `managedByPaperclip`-marked slot row), if one exists. Read-only
+     * `managedByThinkingMach`-marked slot row), if one exists. Read-only
      * counterpart to `ensureManagedSandboxEnvironment`. The default
      * (active-only) form serves the managed-sandbox-only run guard — which
      * must fail closed rather than create a config-less environment when
@@ -1059,7 +1059,7 @@ export function environmentService(db: Db) {
         )
         .orderBy(desc(environments.updatedAt));
       const match = rows.find(
-        (row) => (row.metadata as Record<string, unknown> | null)?.managedByPaperclip === true,
+        (row) => (row.metadata as Record<string, unknown> | null)?.managedByThinkingMach === true,
       );
       return match ? toEnvironment(match) : null;
     },

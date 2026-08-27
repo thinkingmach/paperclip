@@ -1,9 +1,9 @@
 import { useWorkspaceIsolationControls } from "@/hooks/useWorkspaceIsolationControls";
 import { AgentAvatar } from "@/components/AgentAvatar";
-import { normalizeLegacyRunnerProvider } from "@paperclipai/adapter-utils";
+import { normalizeLegacyRunnerProvider } from "@thinkingmach/adapter-utils";
 import { memo, useState, useEffect, useRef, useCallback, useMemo, type ChangeEvent, type CSSProperties, type DragEvent, type RefObject } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { AgentEnvConfig, EnvBinding, IssueWorkMode } from "@paperclipai/shared";
+import type { AgentEnvConfig, EnvBinding, IssueWorkMode } from "@thinkingmach/shared";
 import { useDialog } from "../context/DialogContext";
 import { useCompany } from "../context/CompanyContext";
 import { executionWorkspacesApi } from "../api/execution-workspaces";
@@ -47,32 +47,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Maximize2,
-  Minimize2,
-  MoreHorizontal,
-  ChevronRight,
-  ChevronDown,
-  Check,
-  CircleDot,
-  Minus,
-  ArrowUp,
-  ArrowDown,
-  AlertTriangle,
-  Tag,
-  Calendar,
-  Paperclip,
-  FileText,
-  Flag,
-  PauseCircle,
-  Loader2,
-  ListTree,
-  X,
-  Eye,
-  ShieldAlert,
-  ShieldCheck,
-  ScanEye,
-} from "lucide-react";
+import { Maximize2, Minimize2, MoreHorizontal, ChevronRight, ChevronDown, Check, CircleDot, Minus, ArrowUp, ArrowDown, AlertTriangle, Tag, Calendar, Paperclip, FileText, Flag, PauseCircle, Loader2, ListTree, X, Eye, ShieldAlert, ShieldCheck, ScanEye,  } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "../lib/utils";
 import { extractProviderIdWithFallback } from "../lib/model-utils";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AdapterLoginCapability } from "@paperclipai/adapter-utils";
+import type { AdapterLoginCapability } from "@thinkingmach/adapter-utils";
 import { validateAdapterModule } from "./plugin-loader.js";
 
 // A minimal external adapter module. The loader calls `createServerAdapter()`

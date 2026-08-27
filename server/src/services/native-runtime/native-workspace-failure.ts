@@ -1,4 +1,4 @@
-import { classifyWorkspaceRestoreFailure } from "@paperclipai/adapter-utils/workspace-restore-merge";
+import { classifyWorkspaceRestoreFailure } from "@thinkingmach/adapter-utils/workspace-restore-merge";
 
 export type NativeWorkspaceFailureCode =
   | "workspace_sync_out_failed"

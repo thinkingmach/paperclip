@@ -7,7 +7,7 @@ import {
   createDb,
   heartbeatRunEvents,
   heartbeatRuns,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 
 describe("P6-18 / MIG-01..04 native finalization migration", () => {

@@ -41,7 +41,7 @@ function annotations(regions, mobile = false) {
 
 function globalSidebar() {
   const items = ["New Task", "Search", "Dashboard", "Inbox", "Tasks", "Projects", "Routines", "Artifacts", "Agents", "Skills", "Connectors", "Audit"];
-  return `<g data-region="global-navigation">${tx(24, 38, "Paperclip", 20, "#000", 'font-weight="700"')}${items.map((item, index) => {
+  return `<g data-region="global-navigation">${tx(24, 38, "ThinkingMach", 20, "#000", 'font-weight="700"')}${items.map((item, index) => {
     const y = 78 + index * 46;
     return `${item === "Connectors" ? rc(12, y - 28, 216, 38, 'fill="#e6e6e6"') : ""}${circle(32, y - 10, 6, 'fill="#e6e6e6"')}${tx(52, y - 5, item, 14, item === "Connectors" ? "#000" : "#666", item === "Connectors" ? 'font-weight="600"' : "")}`;
   }).join("\n")}${tx(24, 744, "Acme Company", 14, "#000", 'font-weight="600"')}${tx(24, 772, "Dana · Admin", 12, "#666")}${ln(240, 0, 240, 800)}</g>`;
@@ -68,7 +68,7 @@ function heading(screen, step = "") {
 const setupData = {
   Slack: {
     bot: "Maya → Slack bot @maya", identity: "Workspace app · one bot identity",
-    delivery: "Direct verified webhook", deliveryNote: "Advanced: Paperclip relay or Slack Socket Mode",
+    delivery: "Direct verified webhook", deliveryNote: "Advanced: ThinkingMach relay or Slack Socket Mode",
     secrets: ["Bot/OAuth token  •••• 7K2M", "Signing secret   •••• C19Q"],
     steps: ["Create app from generated manifest", "Install app to workspace or Grid org", "Return token/secret or finish OAuth", "Invite @maya to allowed channels"],
     verify: [["Bot + workspace", "Ready"], ["Signed event", "Ready"], ["Scopes + events", "Ready"], ["Channel membership", "Test next"]],
@@ -103,7 +103,7 @@ const setupData = {
 const settingsData = {
   Slack: {
     reach: ["Workspace · Acme", "#customer-support · Invited", "#product-feedback · Invited", "DMs · On"],
-    boundary: ["Root @maya → Slack thread", "One thread ↔ one Paperclip issue", "Bound replies need no mention"],
+    boundary: ["Root @maya → Slack thread", "One thread ↔ one ThinkingMach issue", "Bound replies need no mention"],
     capabilities: ["Agent Sessions + native stream · On", "Block Kit actions + modals · On", "Files + emoji/reactions · On", "Slash commands · Off", "Ephemeral denials · On"],
     security: ["OAuth workspace install", "Signature · Healthy", "Token rotation · Supported", "Socket Mode · Off"],
     fallback: "Missing scope → disable feature + Reinstall with scope"
@@ -111,9 +111,9 @@ const settingsData = {
   GitHub: {
     reach: ["acme/api · Installed", "acme/web · Installed", "acme/legacy · Excluded", "GitHub.com"],
     boundary: ["Issue or PR conversation ↔ issue", "Review comment thread ↔ separate issue", "Discussions · Not in launch"],
-    capabilities: ["Mention activation · On", "Receipt reaction · On", "One edited GFM progress comment", "Files → Paperclip links", "Labels/trusted authors · Advanced"],
+    capabilities: ["Mention activation · On", "Receipt reaction · On", "One edited GFM progress comment", "Files → ThinkingMach links", "Labels/trusted authors · Advanced"],
     security: ["GitHub App installation", "Webhook signature · Healthy", "Self-message suppression · Ready", "Code/tool access · Separate connection"],
-    fallback: "No stream/buttons/modals/DM → GFM text + Paperclip URL"
+    fallback: "No stream/buttons/modals/DM → GFM text + ThinkingMach URL"
   },
   "Microsoft Teams": {
     reach: ["Tenant · Acme", "Support team / General · Allowed", "Personal scope · On", "Group chats · On"],
@@ -148,7 +148,7 @@ const interactionData = {
   ],
   "Microsoft Teams": [
     ["Human", "Channel root @Maya · or DM/group message", "Conversation type selects the boundary"],
-    ["Ingress", "Verify bot activity + tenant/member", "Persist, scope-check, resolve Paperclip actor"],
+    ["Ingress", "Verify bot activity + tenant/member", "Persist, scope-check, resolve ThinkingMach actor"],
     ["Binding", "Channel post thread or active conversation", "Create one PAP issue; explicit New task in DM"],
     ["Turns", "Replies, files, Adaptive Card/task module", "Mention/RSC delivery and current permissions apply"],
     ["Output", "DM native stream; group/channel buffered", "Targeted → DM/text fallback; safe output only"]
@@ -167,7 +167,7 @@ function setupDesktop(screen) {
   const checkRows = d.verify.map((row, index) => status(532 + (index % 2) * 338, 642 + Math.floor(index / 2) * 28, row[0], row[1])).join("\n");
   return baseSvg(1280, 800, `${globalSidebar()}${topbar(`CONNECTORS  ›  Connect ${screen.provider}`)}${setupContext(screen.provider)}${heading(screen, "Provider handoff")}
     ${rc(504, 172, 720, 72, 'fill="#e6e6e6"')}${circle(536, 208, 18, 'fill="#fff"')}${tx(568, 202, d.bot, 14, "#000", 'font-weight="700"')}${tx(568, 226, d.identity, 12, "#666")}
-    ${rc(504, 264, 344, 132)}${tx(528, 294, "IN PAPERCLIP", 12, "#666", 'font-weight="600"')}${tx(528, 324, d.delivery, 14, "#000", 'font-weight="700"')}${tx(528, 350, d.deliveryNote, 12, "#666")}${tx(528, 378, "Public endpoint copied · deployment detected", 12, "#666")}
+    ${rc(504, 264, 344, 132)}${tx(528, 294, "IN THINKINGMACH", 12, "#666", 'font-weight="600"')}${tx(528, 324, d.delivery, 14, "#000", 'font-weight="700"')}${tx(528, 350, d.deliveryNote, 12, "#666")}${tx(528, 378, "Public endpoint copied · deployment detected", 12, "#666")}
     ${rc(504, 412, 344, 172)}${tx(528, 442, "CREDENTIAL REFERENCES", 12, "#666", 'font-weight="600"')}${textLines(528, 472, d.secrets, 12, "#000", 26)}${tx(528, 558, "Values stay masked after save", 12, "#666")}
     ${rc(872, 264, 352, 320)}${tx(896, 294, "AT THE PROVIDER", 12, "#666", 'font-weight="600"')}${d.steps.map((step, index) => `${circle(912, 332 + index * 46, 12, 'fill="#e6e6e6"')}${tx(912, 336 + index * 46, index + 1, 12, "#000", 'text-anchor="middle"')}${tx(938, 336 + index * 46, step, 12, "#000", 'font-weight="600"')}`).join("\n")}${button(896, 510, 304, "Open provider setup  ↗")}
     ${rc(504, 604, 720, 92, 'fill="#e6e6e6"')}${tx(528, 628, "VERIFICATION", 12, "#666", 'font-weight="600"')}${checkRows}
@@ -194,7 +194,7 @@ function interactionsDesktop(screen) {
     const y = 218 + index * 98;
     return `${rc(504, y, 720, 82, index === 2 ? 'fill="#e6e6e6"' : 'fill="#fff"')}${rc(520, y + 17, 104, 48, 'fill="#fff"')}${tx(572, y + 47, row[0], 12, "#000", 'text-anchor="middle" font-weight="700"')}${tx(650, y + 32, row[1], 14, "#000", 'font-weight="600"')}${tx(650, y + 59, row[2], 12, "#666")}${index < rows.length - 1 ? `<path d="M 860 ${y + 82} L 860 ${y + 98}"/><polygon points="860,${y + 98} 854,${y + 89} 866,${y + 89}" fill="#000" stroke="none"/>` : ""}`;
   }).join("\n");
-  return baseSvg(1280, 800, `${globalSidebar()}${topbar(`CONNECTORS  ›  Maya on ${screen.provider}  ›  Interaction model`)}${detailContext(screen.provider, "Conversations")}${heading(screen)}${tx(504, 188, "NATIVE EVENT", 12, "#666", 'font-weight="600"')}${tx(650, 188, "PROVIDER + PAPERCLIP RESULT", 12, "#666", 'font-weight="600"')}${rendered}${tx(504, 732, "All paths use durable delivery, current authorization, one task binding, and safe outbound projection.", 12, "#666")}${annotations(rows.map((_, index) => ({x:496,y:210+index*98,w:736,h:98})) )}`);
+  return baseSvg(1280, 800, `${globalSidebar()}${topbar(`CONNECTORS  ›  Maya on ${screen.provider}  ›  Interaction model`)}${detailContext(screen.provider, "Conversations")}${heading(screen)}${tx(504, 188, "NATIVE EVENT", 12, "#666", 'font-weight="600"')}${tx(650, 188, "PROVIDER + THINKINGMACH RESULT", 12, "#666", 'font-weight="600"')}${rendered}${tx(504, 732, "All paths use durable delivery, current authorization, one task binding, and safe outbound projection.", 12, "#666")}${annotations(rows.map((_, index) => ({x:496,y:210+index*98,w:736,h:98})) )}`);
 }
 
 function mobileHeader(label) {
@@ -216,7 +216,7 @@ function setupMobile(screen) {
   const d = setupData[screen.provider];
   return baseSvg(375, 812, `${mobileHeader("Connectors")}${mobileTitle(screen, "Setup")}
     ${rc(16, 166, 343, 72, 'fill="#e6e6e6"')}${tx(36, 196, d.bot, 14, "#000", 'font-weight="700"')}${tx(36, 220, d.identity, 12, "#666")}
-    ${rc(16, 254, 343, 92)}${tx(36, 282, "IN PAPERCLIP", 12, "#666", 'font-weight="600"')}${tx(36, 310, d.delivery, 14, "#000", 'font-weight="700"')}${tx(36, 332, d.deliveryNote.slice(0, 48), 12, "#666")}
+    ${rc(16, 254, 343, 92)}${tx(36, 282, "IN THINKINGMACH", 12, "#666", 'font-weight="600"')}${tx(36, 310, d.delivery, 14, "#000", 'font-weight="700"')}${tx(36, 332, d.deliveryNote.slice(0, 48), 12, "#666")}
     ${rc(16, 362, 343, 188)}${tx(36, 390, "AT THE PROVIDER", 12, "#666", 'font-weight="600"')}${d.steps.map((step,index)=>`${circle(44,420+index*30,9,'fill="#e6e6e6"')}${tx(44,424+index*30,index+1,12,"#000",'text-anchor="middle"')}${tx(64,424+index*30,step.length>40?step.slice(0,39)+"…":step,12,"#000")}`).join("\n")}
     ${rc(16, 566, 343, 72)}${tx(36, 594, "MASKED CREDENTIALS", 12, "#666", 'font-weight="600"')}${tx(36, 620, d.secrets.join("  ·  ").slice(0, 48), 12, "#000")}
     ${rc(16, 654, 343, 66, 'fill="#e6e6e6"')}${tx(36, 682, "Verification", 12, "#666", 'font-weight="600"')}${tx(36, 706, d.verify.map(row=>`${row[0]} ${row[1]}`).join(" · ").slice(0, 52), 12, "#000")}

@@ -7,7 +7,7 @@ import type {
   MoveFolderItemRequest,
   MoveFolderRequest,
   UpdateFolderRequest,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { api } from "./client";
 
 export const foldersApi = {

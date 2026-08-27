@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { ProjectRepository } from "@paperclipai/shared";
+import type { ProjectRepository } from "@thinkingmach/shared";
 import { GitBranch, LockKeyhole, Plus, X } from "lucide-react";
 import { GithubIcon } from "./icons/github-icon";
 import { SearchableSelect } from "./SearchableSelect";

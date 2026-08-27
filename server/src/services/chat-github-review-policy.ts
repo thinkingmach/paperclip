@@ -7,7 +7,7 @@ import {
   type GitHubReviewConclusion,
   type GitHubReviewEventContext,
   type GitHubReviewPolicy,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export function effectiveGitHubReviewPolicy(
   configuration: GitHubChatConfiguration,
@@ -239,9 +239,9 @@ export function githubReviewPrompt(
   revision: number,
 ): string {
   return [
-    "GitHub channel request for the assigned Paperclip agent. Continue this ordinary Paperclip task.",
+    "GitHub channel request for the assigned ThinkingMach agent. Continue this ordinary ThinkingMach task.",
     `Review configuration revision: ${revision}.`,
-    "Use this task's GitHub bot tools. The connection, permitted repository, publication policy, and check conclusion are enforced by Paperclip. Never substitute personal credentials.",
+    "Use this task's GitHub bot tools. The connection, permitted repository, publication policy, and check conclusion are enforced by ThinkingMach. Never substitute personal credentials.",
     policy.prompts[context.event],
     policy.instructions,
     "Assessment rubric (0–5):",

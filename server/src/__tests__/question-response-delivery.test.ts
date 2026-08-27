@@ -21,7 +21,7 @@ import {
   issueQuestionResponseDeliveries,
   issueThreadInteractions,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

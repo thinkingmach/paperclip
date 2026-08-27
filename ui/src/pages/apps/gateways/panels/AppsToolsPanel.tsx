@@ -1,4 +1,4 @@
-import type { ToolProfileWithDetails } from "@paperclipai/shared";
+import type { ToolProfileWithDetails } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { cn } from "@/lib/utils";
 import { allowedToolsLabel, type GatewayAppRow, gatewayAppDisplayName } from "../gateway-helpers";

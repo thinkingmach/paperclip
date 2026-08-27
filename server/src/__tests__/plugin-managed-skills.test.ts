@@ -8,8 +8,8 @@ import {
   createDb,
   pluginManagedResources,
   plugins,
-} from "@paperclipai/db";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -34,14 +34,14 @@ function issuePrefix(id: string) {
   return `T${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 }
 
-function manifest(): PaperclipPluginManifestV1 {
+function manifest(): ThinkingMachPluginManifestV1 {
   return {
     id: "paperclip.managed-skills-test",
     apiVersion: 1,
     version: "0.1.0",
     displayName: "Managed Skills Test",
     description: "Test plugin",
-    author: "Paperclip",
+    author: "ThinkingMach",
     categories: ["automation"],
     capabilities: ["skills.managed"],
     entrypoints: { worker: "./dist/worker.js" },
@@ -89,13 +89,13 @@ describeEmbeddedPostgres("plugin-managed skills", () => {
     const pluginId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: issuePrefix(companyId),
     });
     await db.insert(plugins).values({
       id: pluginId,
       pluginKey: pluginManifest.id,
-      packageName: "@paperclipai/plugin-managed-skills-test",
+      packageName: "@thinkingmach/plugin-managed-skills-test",
       version: pluginManifest.version,
       apiVersion: pluginManifest.apiVersion,
       categories: pluginManifest.categories,

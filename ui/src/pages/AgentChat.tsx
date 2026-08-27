@@ -10,7 +10,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useParams } from "@/lib/router";
 import { agentRouteRef } from "@/lib/utils";
 import { TaskDetailSurface } from "./IssueDetail";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 
 export function AgentChat() {
   const { agentRef = "" } = useParams<{ agentRef: string }>();

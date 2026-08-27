@@ -4,7 +4,7 @@ import type {
   IssueQueuedCommentQueue,
   IssueQueuedCommentQueueState,
   IssueQueuedCommentSteeringDisposition,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 function record(value: unknown): Record<string, unknown> | null {
   return typeof value === "object" && value !== null && !Array.isArray(value)

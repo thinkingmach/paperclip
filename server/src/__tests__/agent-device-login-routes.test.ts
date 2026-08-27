@@ -4,7 +4,7 @@ import { lstat, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { withAccountHomeSecretMutationLock } from "@paperclipai/adapter-codex-local/server";
+import { withAccountHomeSecretMutationLock } from "@thinkingmach/adapter-codex-local/server";
 import { AdapterAuthSessionConflictError } from "../services/device-login-service.js";
 import type {
   AdapterAuthSessionRow,
@@ -202,8 +202,8 @@ vi.mock("../middleware/logger.js", () => ({
 // Retain the production readiness helper while making the promotion decision
 // observable. This lets the route test prove that a resolved but rejected
 // Decision H outcome becomes a failed terminal rather than authenticated.
-vi.mock("@paperclipai/adapter-codex-local/server", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@paperclipai/adapter-codex-local/server")>();
+vi.mock("@thinkingmach/adapter-codex-local/server", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@thinkingmach/adapter-codex-local/server")>();
   return {
     ...actual,
     promoteDeviceLoginCredential: mockDeviceLoginPromotion,
@@ -921,8 +921,8 @@ describe("adapter device-login routes", () => {
     // company home.
     const instanceRoot = await mkdtemp(path.join(os.tmpdir(), "paperclip-login-binding-"));
     try {
-      vi.stubEnv("PAPERCLIP_HOME", instanceRoot);
-      vi.stubEnv("PAPERCLIP_INSTANCE_ID", "default");
+      vi.stubEnv("THINKINGMACH_HOME", instanceRoot);
+      vi.stubEnv("THINKINGMACH_INSTANCE_ID", "default");
       const companyHome = path.join(instanceRoot, "instances", "default", "companies", COMPANY_1, "codex-home");
       await mkdir(companyHome, { recursive: true });
       await writeFile(
@@ -971,8 +971,8 @@ describe("adapter device-login routes", () => {
     // client deliberately binds nothing.
     const instanceRoot = await mkdtemp(path.join(os.tmpdir(), "paperclip-login-binding-same-"));
     try {
-      vi.stubEnv("PAPERCLIP_HOME", instanceRoot);
-      vi.stubEnv("PAPERCLIP_INSTANCE_ID", "default");
+      vi.stubEnv("THINKINGMACH_HOME", instanceRoot);
+      vi.stubEnv("THINKINGMACH_INSTANCE_ID", "default");
       const companyHome = path.join(instanceRoot, "instances", "default", "companies", COMPANY_1, "codex-home");
       await mkdir(companyHome, { recursive: true });
       await writeFile(

@@ -11,23 +11,23 @@ import {
 } from "./posthog-live-lib.mjs";
 
 const COMPLETE_ENV = {
-  PAPERCLIP_API_URL: "https://paperclip.example.test/api",
-  INTEGRATIONS_POSTHOG_PAPERCLIP_E2E_EMAIL: "operator@example.test",
-  INTEGRATIONS_POSTHOG_PAPERCLIP_DEV_LOGIN_PASSWORD: "not-a-real-password",
+  THINKINGMACH_API_URL: "https://paperclip.example.test/api",
+  INTEGRATIONS_POSTHOG_THINKINGMACH_E2E_EMAIL: "operator@example.test",
+  INTEGRATIONS_POSTHOG_THINKINGMACH_DEV_LOGIN_PASSWORD: "not-a-real-password",
   INTEGRATIONS_POSTHOG_POSTHOG_PROJECT_ID: "483530",
 };
 
 test("preflight reports only missing binding names", () => {
   assert.throws(
     () => preflightPosthogLive({
-      PAPERCLIP_API_URL: "https://paperclip.example.test/api",
-      INTEGRATIONS_POSTHOG_PAPERCLIP_DEV_LOGIN_PASSWORD: "present",
+      THINKINGMACH_API_URL: "https://paperclip.example.test/api",
+      INTEGRATIONS_POSTHOG_THINKINGMACH_DEV_LOGIN_PASSWORD: "present",
     }),
     (error) => {
       assert.ok(error instanceof PosthogLivePreflightError);
       assert.equal(error.code, "missing_environment");
       assert.deepEqual(error.details.missing, [
-        "INTEGRATIONS_POSTHOG_PAPERCLIP_E2E_EMAIL",
+        "INTEGRATIONS_POSTHOG_THINKINGMACH_E2E_EMAIL",
         "INTEGRATIONS_POSTHOG_POSTHOG_PROJECT_ID",
       ]);
       assert.doesNotMatch(error.message, /present/);
@@ -43,7 +43,7 @@ test("preflight rejects credential-bearing and non-HTTPS remote URLs", () => {
     "http://example.test",
   ]) {
     assert.throws(
-      () => preflightPosthogLive({ ...COMPLETE_ENV, PAPERCLIP_API_URL: baseUrl }),
+      () => preflightPosthogLive({ ...COMPLETE_ENV, THINKINGMACH_API_URL: baseUrl }),
       (error) => error instanceof PosthogLivePreflightError && error.code === "unsafe_base_url",
     );
   }
@@ -53,14 +53,14 @@ test("preflight rejects credential-bearing and non-HTTPS remote URLs", () => {
   );
 });
 
-test("preflight derives the current Paperclip origin and accepts an explicit target", () => {
+test("preflight derives the current ThinkingMach origin and accepts an explicit target", () => {
   assert.equal(preflightPosthogLive(COMPLETE_ENV).baseUrl, "https://paperclip.example.test");
   assert.equal(
     preflightPosthogLive(COMPLETE_ENV, { baseUrl: "https://other-paperclip.example.test" }).baseUrl,
     "https://other-paperclip.example.test",
   );
   assert.throws(
-    () => preflightPosthogLive({ ...COMPLETE_ENV, PAPERCLIP_API_URL: "" }),
+    () => preflightPosthogLive({ ...COMPLETE_ENV, THINKINGMACH_API_URL: "" }),
     (error) => error instanceof PosthogLivePreflightError && error.code === "missing_base_url",
   );
 });
@@ -125,29 +125,29 @@ test("browser loading happens only after binding and health preflight", async ()
 test("project proof extraction retains only the expected id and name", () => {
   const result = {
     data: {
-      content: [{ type: "text", text: JSON.stringify({ id: 483530, name: "Paperclip", token: "discard-me" }) }],
+      content: [{ type: "text", text: JSON.stringify({ id: 483530, name: "ThinkingMach", token: "discard-me" }) }],
     },
   };
-  assert.deepEqual(extractProjectSummary(result, "483530"), { id: "483530", name: "Paperclip" });
+  assert.deepEqual(extractProjectSummary(result, "483530"), { id: "483530", name: "ThinkingMach" });
   assert.equal(extractProjectSummary(result, "42"), null);
 
   assert.deepEqual(
     parseSanitizedAgentProof(
-      '{"projectId":"483530","projectName":"Paperclip","invocationId":"inv-123"}',
+      '{"projectId":"483530","projectName":"ThinkingMach","invocationId":"inv-123"}',
       "483530",
     ),
-    { projectId: "483530", projectName: "Paperclip", invocationId: "inv-123" },
+    { projectId: "483530", projectName: "ThinkingMach", invocationId: "inv-123" },
   );
   assert.equal(
     parseSanitizedAgentProof(
-      'Done: {"projectId":"483530","projectName":"Paperclip","invocationId":"inv-123"}',
+      'Done: {"projectId":"483530","projectName":"ThinkingMach","invocationId":"inv-123"}',
       "483530",
     ),
     null,
   );
   assert.equal(
     parseSanitizedAgentProof(
-      '{"projectId":"483530","projectName":"Paperclip","invocationId":"inv-123","token":"unsafe"}',
+      '{"projectId":"483530","projectName":"ThinkingMach","invocationId":"inv-123","token":"unsafe"}',
       "483530",
     ),
     null,

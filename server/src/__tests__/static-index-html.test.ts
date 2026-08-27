@@ -20,14 +20,14 @@ describe("static SPA fallback HTML", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-cloud-html-"));
     tempDirs.push(dir);
     fs.writeFileSync(path.join(dir, "index.html"), "<html><body>App</body></html>");
-    vi.stubEnv("PAPERCLIP_CLOUD_UI_SNIPPET", '<script src="https://example.com/chat.js"></script>');
-    vi.stubEnv("PAPERCLIP_CLOUD_UI_SNIPPET_B64", Buffer.from('<script src="https://example.com/legacy.js"></script>').toString("base64"));
-    vi.stubEnv("PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN", undefined);
-    vi.stubEnv("PAPERCLIP_MANAGED_CONFIG", undefined);
+    vi.stubEnv("THINKINGMACH_CLOUD_UI_SNIPPET", '<script src="https://example.com/chat.js"></script>');
+    vi.stubEnv("THINKINGMACH_CLOUD_UI_SNIPPET_B64", Buffer.from('<script src="https://example.com/legacy.js"></script>').toString("base64"));
+    vi.stubEnv("THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN", undefined);
+    vi.stubEnv("THINKINGMACH_MANAGED_CONFIG", undefined);
     expect(readBrandedStaticIndexHtml(dir)).not.toContain("chat.js");
-    vi.stubEnv("PAPERCLIP_MANAGED_CONFIG", "{}");
+    vi.stubEnv("THINKINGMACH_MANAGED_CONFIG", "{}");
     expect(readBrandedStaticIndexHtml(dir)).not.toContain("chat.js");
-    vi.stubEnv("PAPERCLIP_CLOUD_UI_SNIPPET", undefined);
+    vi.stubEnv("THINKINGMACH_CLOUD_UI_SNIPPET", undefined);
     expect(readBrandedStaticIndexHtml(dir)).not.toContain("legacy.js");
   });
 

@@ -9,13 +9,13 @@ import {
   readSshEnvLabFixtureStatus,
   startSshEnvLabFixture,
   stopSshEnvLabFixture,
-} from "@paperclipai/adapter-utils/ssh";
-import { resolvePaperclipInstanceId, resolvePaperclipInstanceRoot } from "../config/home.js";
+} from "@thinkingmach/adapter-utils/ssh";
+import { resolveThinkingMachInstanceId, resolveThinkingMachInstanceRoot } from "../config/home.js";
 
 export function resolveEnvLabSshStatePath(instanceId?: string): string {
-  const resolvedInstanceId = resolvePaperclipInstanceId(instanceId);
+  const resolvedInstanceId = resolveThinkingMachInstanceId(instanceId);
   return path.resolve(
-    resolvePaperclipInstanceRoot(resolvedInstanceId),
+    resolveThinkingMachInstanceRoot(resolvedInstanceId),
     "env-lab",
     "ssh-fixture",
     "state.json",
@@ -215,12 +215,12 @@ export async function envLabDoctorCommand(opts: { instance?: string; json?: bool
   // paths, so it works from any working directory. It passes an inert `argv`
   // value, so no shell reads the argument. See `doc/CLI.md`, "safe invocation".
   //
-  // The doctor diagnoses the instance that `resolvePaperclipInstanceId` selects
-  // from `opts.instance` or the `PAPERCLIP_INSTANCE_ID` environment variable.
+  // The doctor diagnoses the instance that `resolveThinkingMachInstanceId` selects
+  // from `opts.instance` or the `THINKINGMACH_INSTANCE_ID` environment variable.
   // The hint pins that resolved instance, so a contributor who pastes the hint
-  // in a shell without `PAPERCLIP_INSTANCE_ID` stops the diagnosed fixture, not
+  // in a shell without `THINKINGMACH_INSTANCE_ID` stops the diagnosed fixture, not
   // the default instance.
-  const cleanupInstance = resolvePaperclipInstanceId(opts.instance);
+  const cleanupInstance = resolveThinkingMachInstanceId(opts.instance);
   p.log.message(`Cleanup: ${pc.dim(buildEnvLabCleanupCommand({ instance: cleanupInstance }))}`);
 }
 
@@ -230,28 +230,28 @@ export function registerEnvLabCommands(program: Command) {
   envLab
     .command("up")
     .description("Start the default SSH env-lab fixture")
-    .option("-i, --instance <id>", "Paperclip instance id (default: current/default)")
+    .option("-i, --instance <id>", "ThinkingMach instance id (default: current/default)")
     .option("--json", "Print machine-readable fixture details")
     .action(envLabUpCommand);
 
   envLab
     .command("status")
     .description("Show the current SSH env-lab fixture state")
-    .option("-i, --instance <id>", "Paperclip instance id (default: current/default)")
+    .option("-i, --instance <id>", "ThinkingMach instance id (default: current/default)")
     .option("--json", "Print machine-readable fixture details")
     .action(envLabStatusCommand);
 
   envLab
     .command("down")
     .description("Stop the default SSH env-lab fixture")
-    .option("-i, --instance <id>", "Paperclip instance id (default: current/default)")
+    .option("-i, --instance <id>", "ThinkingMach instance id (default: current/default)")
     .option("--json", "Print machine-readable stop details")
     .action(envLabDownCommand);
 
   envLab
     .command("doctor")
     .description("Check SSH fixture prerequisites and current status")
-    .option("-i, --instance <id>", "Paperclip instance id (default: current/default)")
+    .option("-i, --instance <id>", "ThinkingMach instance id (default: current/default)")
     .option("--json", "Print machine-readable diagnostic details")
     .action(envLabDoctorCommand);
 }

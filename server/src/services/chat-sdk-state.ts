@@ -15,7 +15,7 @@ export interface ChatSdkStateScope {
   endpointId: string;
 }
 
-/** A versioned row returned by the Paperclip persistence implementation. */
+/** A versioned row returned by the ThinkingMach persistence implementation. */
 export interface ChatSdkStateRecord {
   expiresAt: Date | null;
   value: unknown;
@@ -59,7 +59,7 @@ interface StateEnvelope {
   value: unknown;
 }
 
-export interface PaperclipChatSdkStateOptions extends ChatSdkStateScope {
+export interface ThinkingMachChatSdkStateOptions extends ChatSdkStateScope {
   maxValueBytes?: number;
   now?: () => Date;
   persistence: ChatSdkStatePersistence;
@@ -111,18 +111,18 @@ function decodeEnvelope(
 }
 
 /**
- * Chat SDK StateAdapter backed by Paperclip's injected, company-scoped CAS
+ * Chat SDK StateAdapter backed by ThinkingMach's injected, company-scoped CAS
  * persistence. Instances are endpoint-scoped and never own or close the shared
  * database connection.
  */
-export class PaperclipChatSdkStateAdapter implements StateAdapter {
+export class ThinkingMachChatSdkStateAdapter implements StateAdapter {
   private readonly scope: ChatSdkStateScope;
   private readonly persistence: ChatSdkStatePersistence;
   private readonly now: () => Date;
   private readonly maxValueBytes: number;
   private connected = false;
 
-  constructor(options: PaperclipChatSdkStateOptions) {
+  constructor(options: ThinkingMachChatSdkStateOptions) {
     assertBoundedIdentifier(
       "companyId",
       options.companyId,
@@ -470,7 +470,7 @@ export class PaperclipChatSdkStateAdapter implements StateAdapter {
   private ensureConnected(): void {
     if (!this.connected) {
       throw new Error(
-        "PaperclipChatSdkStateAdapter is not connected. Call connect() first.",
+        "ThinkingMachChatSdkStateAdapter is not connected. Call connect() first.",
       );
     }
   }
@@ -602,8 +602,8 @@ export class PaperclipChatSdkStateAdapter implements StateAdapter {
   }
 }
 
-export function createPaperclipChatSdkState(
-  options: PaperclipChatSdkStateOptions,
-): PaperclipChatSdkStateAdapter {
-  return new PaperclipChatSdkStateAdapter(options);
+export function createThinkingMachChatSdkState(
+  options: ThinkingMachChatSdkStateOptions,
+): ThinkingMachChatSdkStateAdapter {
+  return new ThinkingMachChatSdkStateAdapter(options);
 }

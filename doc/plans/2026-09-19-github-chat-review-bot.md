@@ -7,7 +7,7 @@ Status: Design approved on 2026-09-19. Functional implementation and private-rep
 
 Freshly fetched origin/master worktrees:
 
-- Paperclip: `codex/github-chat-review-bot`, base `04546c82d`.
+- ThinkingMach: `codex/github-chat-review-bot`, base `04546c82d`.
 - Cloud: `codex/github-chat-review-ingress`, base `6072ef7`; ingress implementation `c74f786`.
 - Docs: `codex/github-low-trust-docs`, base `480c133`; trust guide update `0eedb32`.
 
@@ -20,8 +20,8 @@ rollout and merging are outside scope.
 
 ## Product invariants
 
-A GitHub bot represents one permanently assigned Paperclip agent. Mentions,
-comments, and configured PR events create or continue ordinary Paperclip tasks.
+A GitHub bot represents one permanently assigned ThinkingMach agent. Mentions,
+comments, and configured PR events create or continue ordinary ThinkingMach tasks.
 Existing execution, identity, permissions, budgets, activity, and tools apply.
 There is no second review scheduler or execution engine.
 
@@ -31,7 +31,7 @@ ownership across follow-ups, but resolve each initiating actor's current authori
 through existing run-identity rules. Record external sender and causal event.
 Linked human requests use responsible-user resolution. Automatic events use the
 explicitly configured responsible member, initially the configuring member. Store
-PR author and webhook sender separately; neither grants Paperclip authority.
+PR author and webhook sender separately; neither grants ThinkingMach authority.
 
 Unlinked-person access is off by default. Enabling it requires a sponsor and the
 existing restricted guest permission profile. Guests remain nonmembers and never
@@ -44,7 +44,7 @@ must not enable reviews or broaden permissions.
 Use the shared design system, setup sidebar, visible field help, step-owned
 footer, and saved/resumable progress. Steps:
 
-1. Choose the permanent agent assignment. Warn immediately if the selected agent is not configured for `low_trust_review`; link the maintained Paperclip Docs trust guide. Do not silently change permissions. Verify boundary and sandbox prerequisites separately.
+1. Choose the permanent agent assignment. Warn immediately if the selected agent is not configured for `low_trust_review`; link the maintained ThinkingMach Docs trust guide. Do not silently change permissions. Verify boundary and sandbox prerequisites separately.
 2. Connect GitHub App, preferring manifest registration; support existing App
    credentials and reconnect. Explain public HTTPS before registration. Keep raw
    manifests, URLs, and recovery diagnostics behind supporting links.
@@ -61,7 +61,7 @@ footer, and saved/resumable progress. Steps:
    the verified account. If missing/expired, reuse normal personal GitHub sign-in
    or reconnect and return to this step. No at-mention identity challenge.
 7. Configure responsible user, guest access, events, prompts, and publication.
-8. Copy a mention, observe its Paperclip task/response, or finish without testing.
+8. Copy a mention, observe its ThinkingMach task/response, or finish without testing.
 
 ### Reusing personal GitHub identity
 
@@ -89,7 +89,7 @@ confirmation. Only existing members are selected here: company invitations and
 membership approval remain outside bot setup.
 
 An operator can explicitly allow an external GitHub account without granting
-Paperclip membership. Look up and confirm the provider account, store its stable
+ThinkingMach membership. Look up and confirm the provider account, store its stable
 GitHub ID (not just its mutable handle), and require a currently authorized
 responsible sponsor. Signed webhook actor identity must match the allowed ID;
 this authorizes a restricted guest execution and never links the external person
@@ -160,7 +160,7 @@ Save immutable prompt revisions with execution context. Templates supplement
 agent instructions; provider text is untrusted and cannot change authority,
 connection selection, or the rating policy.
 
-Connection defaults have per-repository overrides in Paperclip UI:
+Connection defaults have per-repository overrides in ThinkingMach UI:
 
 | Setting | Default / controls |
 | --- | --- |
@@ -211,7 +211,7 @@ webhook delivery, task wakeup, and publication mechanisms. Deduplicate deliverie
 combine rapid pushes, and reject stale results from updating the latest summary
 or check. Handle retries and restarts without duplicated comments.
 
-The stable `Paperclip Review` check is tied to the exact PR head. Execution
+The stable `ThinkingMach Review` check is tied to the exact PR head. Execution
 controls queued/running/error states; validated results determine score success
 or failure. New commits require a new assessment. If automatic work is disallowed,
 show that an authorized manual review is required. Document how to require this
@@ -276,7 +276,7 @@ files, and auto-fix are deferred.
 The approved setup and management UI, database migration, task admission, bot
 capability bridge, structured assessment/publication outbox, and narrow Cloud
 routes are implemented in the worktrees named above. The UI warns for standard
-agents and links the existing Paperclip Docs low-trust guide; a separate Docs
+agents and links the existing ThinkingMach Docs low-trust guide; a separate Docs
 worktree adds GitHub-specific guidance to that guide.
 
 Verified so far:
@@ -327,7 +327,7 @@ branch `codex/qa-discount-regression` at `76028b7` deliberately breaks percentag
 conversion and fails the expected test; it has not been pushed or opened as a PR.
 This fixture does not count as an agent evaluation result.
 
-Qualification is incomplete. The remaining broad Paperclip tests are running.
+Qualification is incomplete. The remaining broad ThinkingMach tests are running.
 Chrome reports that an extension popup blocks automation on the GitHub setup
 page; the user has been asked to dismiss it. No GitHub App installation, real
 agent PR-review run, live tool invocation, live review/check, or staging deployment
@@ -367,11 +367,11 @@ application build, Storybook build, server/UI typechecks, and token gates passed
 
 After the user completed GitHub's access confirmation, a fresh manifest submitted
 through the embedded browser successfully registered
-[Paperclip Review QA260920](https://github.com/apps/paperclip-review-qa260920).
+[ThinkingMach Review QA260920](https://github.com/apps/paperclip-review-qa260920).
 The App was installed as installation `163220189`, selecting only the disposable
 private repository `cryppadotta/paperclip-github-review-qa-20260919` (ID
 `1377781534`). No other repositories were selected. The manifest callback vaulted
-the App credentials and resumed the saved Paperclip bot.
+the App credentials and resumed the saved ThinkingMach bot.
 
 Live signed delivery was observed at `2026-09-20T11:28:48.689Z`. Setup retrieved
 the installation repository list, saved the enabled repository, and verified

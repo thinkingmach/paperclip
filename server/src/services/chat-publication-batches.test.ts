@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ChatPublicationSummary } from "@paperclipai/shared";
+import type { ChatPublicationSummary } from "@thinkingmach/shared";
 import {
   chatFileTransferResolutionActions,
   projectChatFileTransfer,

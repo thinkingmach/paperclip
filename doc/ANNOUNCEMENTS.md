@@ -1,19 +1,19 @@
 # In-app announcements
 
-Paperclip displays one optional announcement card in the board UI. Its feed is
-`https://pages.paperclip.ing/announcements/v1/current.json`. The instance fetches
+ThinkingMach displays one optional announcement card in the board UI. Its feed is
+`https://pages.thinkingmach.com/announcements/v1/current.json`. The instance fetches
 JSON on demand and renders it with native components.
 
 ## Operator configuration
 
-- `PAPERCLIP_ANNOUNCEMENTS_ENABLED=false` disables fetching and display.
-- `PAPERCLIP_ANNOUNCEMENTS_FEED_URL` overrides the public HTTPS manifest URL.
+- `THINKINGMACH_ANNOUNCEMENTS_ENABLED=false` disables fetching and display.
+- `THINKINGMACH_ANNOUNCEMENTS_FEED_URL` overrides the public HTTPS manifest URL.
   Credentials, query strings, private destinations and redirects are rejected.
 
 Announcements are independent of telemetry. Feed/media requests originate from
 the instance without account IDs, company data, cookies or event tracking. The
 host sees ordinary server network request metadata. The browser requests only
-its own Paperclip API.
+its own ThinkingMach API.
 
 ## Authoring and publishing
 
@@ -24,10 +24,10 @@ The shared `announcementManifestSchema` defines the format:
   "schemaVersion": 1,
   "announcement": {
     "id": "2026-09-projects",
-    "eyebrow": "New in Paperclip",
+    "eyebrow": "New in ThinkingMach",
     "title": "Your next idea starts here",
     "description": "Bring your agents and work together in a project.",
-    "secondaryLink": { "kind": "external", "label": "Learn more", "url": "https://paperclip.ing" },
+    "secondaryLink": { "kind": "external", "label": "Learn more", "url": "https://thinkingmach.com" },
     "primaryAction": { "kind": "route", "label": "Open projects", "path": "/projects" }
   }
 }
@@ -36,7 +36,7 @@ The shared `announcementManifestSchema` defines the format:
 Content is plain text. Every manifest object rejects unknown fields, including
 misspellings in actions and media. Optional fields: `image: { path, alt }`,
 `animation: { path, alt }`, `expiresAt` (ISO
-timestamp), and `minimumPaperclipVersion` (stable `major.minor.patch`). Internal
+timestamp), and `minimumThinkingMachVersion` (stable `major.minor.patch`). Internal
 actions accept stable pages in `ANNOUNCEMENT_APP_ROUTES` and use the selected
 company. External HTTPS links open a new tab. Actions only navigate.
 
@@ -55,11 +55,11 @@ then run:
 node cli/node_modules/tsx/dist/cli.mjs scripts/publish-announcements.ts announcements --dry-run
 ```
 
-Set `PAPERCLIP_PAGE_BUCKET`, optionally `PAPERCLIP_PAGE_BASE_URL`, and the page
-uploader's namespaced `PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID` and
-`PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY` (optional `PAPERCLIP_PAGE_AWS_SESSION_TOKEN`),
-or `PAPERCLIP_PAGE_AWS_PROFILE`. Ambient AWS credentials also work.
-For a host serving a subdirectory, `PAPERCLIP_PAGE_DEFAULT_PREFIX` prepends a
+Set `THINKINGMACH_PAGE_BUCKET`, optionally `THINKINGMACH_PAGE_BASE_URL`, and the page
+uploader's namespaced `THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID` and
+`THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY` (optional `THINKINGMACH_PAGE_AWS_SESSION_TOKEN`),
+or `THINKINGMACH_PAGE_AWS_PROFILE`. Ambient AWS credentials also work.
+For a host serving a subdirectory, `THINKINGMACH_PAGE_DEFAULT_PREFIX` prepends a
 validated path to both S3 keys and public URLs. Use lowercase letters, numbers
 and hyphens in each segment, without leading/trailing slashes.
 
@@ -86,7 +86,7 @@ ETags improve fetching but never determine redisplay.
 
 An announcement can show a self-contained **HTML/CSS animation** in its hero
 area. The headline, description, close button and actions remain native
-Paperclip controls. Add an `animation` alongside the required static `image`:
+ThinkingMach controls. Add an `animation` alongside the required static `image`:
 
 ```json
 "image": { "path": "assets/<image-sha256>.png", "alt": "A team working together" },
@@ -105,7 +105,7 @@ requests and imports are blocked by CSP; keep all styling self-contained.
 The publisher and server use the same strict DOMPurify allowlist and reject
 unsupported markup rather than publishing a silently changed animation.
 
-Paperclip verifies the digest, validates the HTML, and renders the result in an
+ThinkingMach verifies the digest, validates the HTML, and renders the result in an
 opaque sandboxed iframe with no permissions. A Content Security Policy blocks
 scripts and network resources both inside the card and on direct API visits.
 The browser fetches HTML from its own authenticated instance; it never loads
@@ -115,12 +115,12 @@ See [iframe sandboxing](https://developer.mozilla.org/en-US/docs/Web/HTML/Refere
 
 The animation plays automatically without playback controls. The static image
 stays visible while loading and on failure. With reduced motion enabled,
-Paperclip does not request or play the animation. Also include a
+ThinkingMach does not request or play the animation. Also include a
 `prefers-reduced-motion` CSS rule in authored documents for standalone previews.
 Animations share the feed's constrained host, three-second server timeout,
 bounded cache, request deduplication and fifteen-minute failure cooldown.
 Dismissal and ID reuse rules are identical for animated and static cards.
-Older Paperclip builds that do not recognize `animation` treat that feed as
+Older ThinkingMach builds that do not recognize `animation` treat that feed as
 unsupported and quietly show no card.
 
 The complete authoring example is `announcements/examples/animated/`. Preview
@@ -147,15 +147,15 @@ cannot overwrite the production manifest. With no source directory it uses
 `announcements/examples/staging/`, including a sample banner. Commands default
 to dry-run unless `--publish` is supplied.
 
-For Paperclip's existing preview host, use the branch preview area that
+For ThinkingMach's existing preview host, use the branch preview area that
 CloudFront already has permission to read:
 
 ```sh
 aws sso login --profile paperclip-dev
-export PAPERCLIP_PAGE_AWS_PROFILE=paperclip-dev
-export PAPERCLIP_PAGE_BUCKET=paperclipai-runner-e2e-history-078455283791-us-east-1
-export PAPERCLIP_PAGE_BASE_URL=https://d1p6rlowie26tp.cloudfront.net
-export PAPERCLIP_PAGE_DEFAULT_PREFIX=storybook/branches/codex-announcements
+export THINKINGMACH_PAGE_AWS_PROFILE=paperclip-dev
+export THINKINGMACH_PAGE_BUCKET=thinkingmach-runner-e2e-history-078455283791-us-east-1
+export THINKINGMACH_PAGE_BASE_URL=https://d1p6rlowie26tp.cloudfront.net
+export THINKINGMACH_PAGE_DEFAULT_PREFIX=storybook/branches/codex-announcements
 
 # Copy the public fixture into an ignored directory and edit current.json there.
 mkdir -p .paperclip
@@ -174,16 +174,16 @@ prefix, then verify its matching cache behavior as described above.
 
 Create a test-drive configuration in this worktree. Put the feed override in
 the **selected instance's `.env`**, not just the invoking shell: test-drive
-deliberately clears inherited `PAPERCLIP_*` variables.
+deliberately clears inherited `THINKINGMACH_*` variables.
 
 ```sh
 mkdir -p .paperclip/announcement-test-drive/instances/default
 # On a new test directory, create this file. On reuse, update these entries
 # while preserving the file's existing keys.
 cat > .paperclip/announcement-test-drive/instances/default/.env <<'EOF'
-PAPERCLIP_ANNOUNCEMENTS_FEED_URL=https://d1p6rlowie26tp.cloudfront.net/storybook/branches/codex-announcements/announcements/staging/my-preview/v1/current.json
-PAPERCLIP_ANNOUNCEMENTS_ENABLED=true
-PAPERCLIP_DB_BACKUP_ENABLED=false
+THINKINGMACH_ANNOUNCEMENTS_FEED_URL=https://d1p6rlowie26tp.cloudfront.net/storybook/branches/codex-announcements/announcements/staging/my-preview/v1/current.json
+THINKINGMACH_ANNOUNCEMENTS_ENABLED=true
+THINKINGMACH_DB_BACKUP_ENABLED=false
 HEARTBEAT_SCHEDULER_ENABLED=false
 EOF
 
@@ -248,7 +248,7 @@ removes a visible card when its deadline arrives.
 
 ## Timing and persistence
 
-Show after three seconds when opening or returning to Paperclip, after company
+Show after three seconds when opening or returning to ThinkingMach, after company
 selection and onboarding. Dialogs and toasts take priority. Phones show it above
 bottom navigation. No automatic timeout, outside-click dismissal or carousel.
 Tab visibility controls the return check: moving focus to the address bar or

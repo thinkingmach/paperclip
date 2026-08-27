@@ -14,9 +14,9 @@
  */
 
 import { and, desc, eq } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { authUsers, instanceUserRoles, workspaceRuntimeServices } from "@paperclipai/db";
-import type { WorkspaceReadiness } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { authUsers, instanceUserRoles, workspaceRuntimeServices } from "@thinkingmach/db";
+import type { WorkspaceReadiness } from "@thinkingmach/shared";
 import {
   buildWorkspaceHandoffExchangeUrl,
   issueWorkspaceHandoffTicket,
@@ -24,7 +24,7 @@ import {
   sanitizeWorkspaceHandoffRedirectPath,
   WORKSPACE_HANDOFF_TICKET_TTL_SECONDS,
 } from "../auth/workspace-login-handoff.js";
-import { resolvePaperclipInstanceId } from "../home-paths.js";
+import { resolveThinkingMachInstanceId } from "../home-paths.js";
 import {
   probeManagedWorkspaceReadiness,
   resolveManagedWorkspaceIdentity,
@@ -181,7 +181,7 @@ export async function issueWorkspaceLoginHandoff(input: {
     companyId: identity.companyId,
     instanceId: identity.instanceId,
     origin,
-    issuerInstanceId: resolvePaperclipInstanceId(),
+    issuerInstanceId: resolveThinkingMachInstanceId(),
     next: sanitizeWorkspaceHandoffRedirectPath(input.next),
     ttlSeconds: input.ttlSeconds ?? WORKSPACE_HANDOFF_TICKET_TTL_SECONDS,
     now: input.now,

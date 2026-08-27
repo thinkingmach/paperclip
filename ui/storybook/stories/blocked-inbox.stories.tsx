@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Issue, IssueBlockedInboxAttention } from "@paperclipai/shared";
+import type { Issue, IssueBlockedInboxAttention } from "@thinkingmach/shared";
 import { BlockedInboxView } from "@/components/BlockedInboxView";
 import { BlockedReasonChip } from "@/components/BlockedReasonChip";
 import { defaultIssueFilterState } from "@/lib/issue-filters";

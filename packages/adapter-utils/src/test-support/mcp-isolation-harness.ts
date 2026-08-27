@@ -12,7 +12,7 @@ export interface CommandResult {
 }
 
 export async function createMcpIsolationRoot(prefix: string): Promise<string> {
-  const parent = process.env.PAPERCLIP_RUN_SCRATCH_DIR ?? os.tmpdir();
+  const parent = process.env.THINKINGMACH_RUN_SCRATCH_DIR ?? os.tmpdir();
   await fs.mkdir(parent, { recursive: true });
   return fs.mkdtemp(path.join(parent, prefix));
 }

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Agent, Company, InstanceExperimentalSettings } from "@paperclipai/shared";
+import type { Agent, Company, InstanceExperimentalSettings } from "@thinkingmach/shared";
 import {
   assertTestDriveDatabaseIsolation,
   bootstrapTestDrive,
@@ -17,7 +17,7 @@ import {
   type TestDriveHarness,
 } from "../commands/test-drive.js";
 import type { RunOptions, StartedServer } from "../commands/run.js";
-import type { PaperclipConfig } from "../config/schema.js";
+import type { ThinkingMachConfig } from "../config/schema.js";
 
 const ORIGINAL_ENV = { ...process.env };
 const cleanupDirectories: string[] = [];
@@ -108,33 +108,33 @@ describe("test-drive data isolation", () => {
     expect(fs.readFileSync(marker, "utf8")).toBe("keep");
   });
 
-  it("discards inherited Paperclip routing while preserving a custom key source", async () => {
+  it("discards inherited ThinkingMach routing while preserving a custom key source", async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-test-drive-env-"));
     cleanupDirectories.push(root);
-    process.env.PAPERCLIP_HOME = "/normal/home";
-    process.env.PAPERCLIP_CONFIG = "/normal/config.json";
-    process.env.PAPERCLIP_IN_WORKTREE = "true";
-    process.env.PAPERCLIP_TEST_PROVIDER_KEY = "secret-value";
+    process.env.THINKINGMACH_HOME = "/normal/home";
+    process.env.THINKINGMACH_CONFIG = "/normal/config.json";
+    process.env.THINKINGMACH_IN_WORKTREE = "true";
+    process.env.THINKINGMACH_TEST_PROVIDER_KEY = "secret-value";
     process.env.DATABASE_URL = "postgres://normal-instance";
 
     const prepared = await prepareTestDriveEnvironment(
-      { dataDir: root, apiKeyEnv: "PAPERCLIP_TEST_PROVIDER_KEY" },
+      { dataDir: root, apiKeyEnv: "THINKINGMACH_TEST_PROVIDER_KEY" },
       os.tmpdir(),
     );
 
     expect(prepared.dataDir).toBe(path.resolve(root));
     expect(prepared.linkedWorktree).toBe(false);
-    expect(process.env.PAPERCLIP_HOME).toBe(path.resolve(root));
-    expect(process.env.PAPERCLIP_CONFIG).toBe(
+    expect(process.env.THINKINGMACH_HOME).toBe(path.resolve(root));
+    expect(process.env.THINKINGMACH_CONFIG).toBe(
       path.join(path.resolve(root), "instances", "default", "config.json"),
     );
-    expect(process.env.PAPERCLIP_IN_WORKTREE).toBe("false");
-    expect(process.env.PAPERCLIP_DISABLE_CWD_ENV_FILE).toBe("true");
-    expect(process.env.PAPERCLIP_DEPLOYMENT_MODE).toBe("local_trusted");
-    expect(process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE).toBe("private");
-    expect(process.env.PAPERCLIP_BIND).toBe("loopback");
+    expect(process.env.THINKINGMACH_IN_WORKTREE).toBe("false");
+    expect(process.env.THINKINGMACH_DISABLE_CWD_ENV_FILE).toBe("true");
+    expect(process.env.THINKINGMACH_DEPLOYMENT_MODE).toBe("local_trusted");
+    expect(process.env.THINKINGMACH_DEPLOYMENT_EXPOSURE).toBe("private");
+    expect(process.env.THINKINGMACH_BIND).toBe("loopback");
     expect(process.env.HOST).toBe("127.0.0.1");
-    expect(process.env.PAPERCLIP_TEST_PROVIDER_KEY).toBe("secret-value");
+    expect(process.env.THINKINGMACH_TEST_PROVIDER_KEY).toBe("secret-value");
     expect(process.env.DATABASE_URL).toBeUndefined();
     expect(Number(process.env.PORT)).toBeGreaterThanOrEqual(3100);
   });
@@ -155,7 +155,7 @@ describe("test-drive data isolation", () => {
   it("rejects an explicitly reused PostgreSQL configuration", () => {
     const externalConfig = {
       database: { mode: "postgres" },
-    } as PaperclipConfig;
+    } as ThinkingMachConfig;
     expect(() => assertTestDriveDatabaseIsolation(
       "/tmp/reused/config.json",
       {},
@@ -166,7 +166,7 @@ describe("test-drive data isolation", () => {
   it("accepts an embedded configuration", () => {
     const embeddedConfig = {
       database: { mode: "embedded-postgres" },
-    } as PaperclipConfig;
+    } as ThinkingMachConfig;
     expect(() => assertTestDriveDatabaseIsolation(
       "/tmp/reused/config.json",
       {},
@@ -267,14 +267,14 @@ describe("test-drive bootstrap validation", () => {
   });
 
   it("removes literal keys from the JavaScript argv view", () => {
-    const splitArgv = ["node", "paperclipai", "test-drive", "--api-key", "literal-secret"];
-    const joinedArgv = ["node", "paperclipai", "test-drive", "--api-key=literal-secret"];
+    const splitArgv = ["node", "thinkingmach", "test-drive", "--api-key", "literal-secret"];
+    const joinedArgv = ["node", "thinkingmach", "test-drive", "--api-key=literal-secret"];
 
     redactTestDriveArgv("literal-secret", splitArgv);
     redactTestDriveArgv("literal-secret", joinedArgv);
 
-    expect(splitArgv).toEqual(["node", "paperclipai", "test-drive", "--api-key", "[REDACTED]"]);
-    expect(joinedArgv).toEqual(["node", "paperclipai", "test-drive", "--api-key=[REDACTED]"]);
+    expect(splitArgv).toEqual(["node", "thinkingmach", "test-drive", "--api-key", "[REDACTED]"]);
+    expect(joinedArgv).toEqual(["node", "thinkingmach", "test-drive", "--api-key=[REDACTED]"]);
   });
 });
 
@@ -456,9 +456,9 @@ describe("test-drive foreground lifecycle", () => {
   };
 
   it("skips service-manager integration for an auto-created directory and opens after initialization", async () => {
-    process.env.PAPERCLIP_HOME = "/tmp/test-drive-lifecycle";
-    process.env.PAPERCLIP_INSTANCE_ID = "default";
-    process.env.PAPERCLIP_IN_WORKTREE = "false";
+    process.env.THINKINGMACH_HOME = "/tmp/test-drive-lifecycle";
+    process.env.THINKINGMACH_INSTANCE_ID = "default";
+    process.env.THINKINGMACH_IN_WORKTREE = "false";
     process.env.ANTHROPIC_API_KEY = "secret";
     const events: string[] = [];
     let runOptions: RunOptions | undefined;
@@ -490,15 +490,15 @@ describe("test-drive foreground lifecycle", () => {
       bind: "loopback",
       installService: false,
       skipServiceManagerCheck: true,
-      introLabel: "paperclipai test-drive",
+      introLabel: "thinkingmach test-drive",
     });
     expect(events).toEqual(["listening", "initialized", "browser"]);
   });
 
   it("retains the managed-instance collision guard for an explicitly reused directory", async () => {
-    process.env.PAPERCLIP_HOME = "/tmp/test-drive-reused";
-    process.env.PAPERCLIP_INSTANCE_ID = "default";
-    process.env.PAPERCLIP_IN_WORKTREE = "false";
+    process.env.THINKINGMACH_HOME = "/tmp/test-drive-reused";
+    process.env.THINKINGMACH_INSTANCE_ID = "default";
+    process.env.THINKINGMACH_IN_WORKTREE = "false";
     let runOptions: RunOptions | undefined;
     const api = {
       get: vi.fn(async <T>() => [company("existing", "Existing")] as T),
@@ -522,9 +522,9 @@ describe("test-drive foreground lifecycle", () => {
   it("uses the credential snapshot captured before downstream server initialization", async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-test-drive-credential-"));
     cleanupDirectories.push(root);
-    process.env.PAPERCLIP_HOME = root;
-    process.env.PAPERCLIP_INSTANCE_ID = "default";
-    process.env.PAPERCLIP_IN_WORKTREE = "false";
+    process.env.THINKINGMACH_HOME = root;
+    process.env.THINKINGMACH_INSTANCE_ID = "default";
+    process.env.THINKINGMACH_IN_WORKTREE = "false";
     process.env.ANTHROPIC_API_KEY = "upstream-secret";
     const { api, calls } = freshBootstrapApi();
 
@@ -545,9 +545,9 @@ describe("test-drive foreground lifecycle", () => {
   });
 
   it("redacts a literal key from downstream errors", async () => {
-    process.env.PAPERCLIP_HOME = "/tmp/test-drive-redaction";
-    process.env.PAPERCLIP_INSTANCE_ID = "default";
-    process.env.PAPERCLIP_IN_WORKTREE = "false";
+    process.env.THINKINGMACH_HOME = "/tmp/test-drive-redaction";
+    process.env.THINKINGMACH_INSTANCE_ID = "default";
+    process.env.THINKINGMACH_IN_WORKTREE = "false";
 
     await expect(testDriveCommand({
       apiKey: "literal-secret",
@@ -562,9 +562,9 @@ describe("test-drive foreground lifecycle", () => {
   });
 
   it("redacts a custom environment key when its option name has whitespace", async () => {
-    process.env.PAPERCLIP_HOME = "/tmp/test-drive-custom-env-redaction";
-    process.env.PAPERCLIP_INSTANCE_ID = "default";
-    process.env.PAPERCLIP_IN_WORKTREE = "false";
+    process.env.THINKINGMACH_HOME = "/tmp/test-drive-custom-env-redaction";
+    process.env.THINKINGMACH_INSTANCE_ID = "default";
+    process.env.THINKINGMACH_IN_WORKTREE = "false";
     process.env.CUSTOM_TEST_DRIVE_KEY = "custom-secret";
 
     await expect(testDriveCommand({
@@ -580,9 +580,9 @@ describe("test-drive foreground lifecycle", () => {
   });
 
   it("honors --no-browser after successful initialization", async () => {
-    process.env.PAPERCLIP_HOME = "/tmp/test-drive-no-browser";
-    process.env.PAPERCLIP_INSTANCE_ID = "default";
-    process.env.PAPERCLIP_IN_WORKTREE = "false";
+    process.env.THINKINGMACH_HOME = "/tmp/test-drive-no-browser";
+    process.env.THINKINGMACH_INSTANCE_ID = "default";
+    process.env.THINKINGMACH_IN_WORKTREE = "false";
     const api = {
       get: vi.fn(async <T>() => [company("existing", "Existing")] as T),
       post: vi.fn(),

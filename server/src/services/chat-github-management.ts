@@ -1,6 +1,6 @@
 import { githubBotCredentials } from "./chat-github-client.js";
 import { toolAccessPolicyService } from "./tool-access-policy.js";
-import { agents, toolCatalogEntries } from "@paperclipai/db";
+import { agents, toolCatalogEntries } from "@thinkingmach/db";
 import { GITHUB_BOT_TOOLS, syncGitHubBotTools } from "./chat-github-tools.js";
 import { and, desc, eq, sql } from "drizzle-orm";
 import {
@@ -14,12 +14,12 @@ import {
   connectionGrants,
   toolConnections,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   defaultGitHubReviewPolicy,
   updateGitHubChatConfigurationSchema,
   type GitHubChatConfiguration,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { badRequest, conflict, forbidden, notFound } from "../errors.js";
 import { toolAccessService } from "./tool-access.js";
 import { logActivity } from "./activity-log.js";
@@ -286,7 +286,7 @@ export function githubChatManagementService(db: Db, fetchImpl = fetch) {
         .for("update");
       if (prior?.status === "linked" && prior.paperclipUserId !== userId)
         throw conflict(
-          "This GitHub account is already linked to another Paperclip member",
+          "This GitHub account is already linked to another ThinkingMach member",
         );
       const [grant] = await tx
         .select()
@@ -477,7 +477,7 @@ export function githubChatManagementService(db: Db, fetchImpl = fetch) {
           !!agent &&
           ["paperclip_runner", "codex_local"].includes(agent.adapterType),
         detail:
-          "Use Paperclip Runner or Codex with managed MCP tools. Low-trust execution also requires a valid scoped boundary and isolated sandbox; the test task proves runtime execution.",
+          "Use ThinkingMach Runner or Codex with managed MCP tools. Low-trust execution also requires a valid scoped boundary and isolated sandbox; the test task proves runtime execution.",
       });
       const [savedConfig] = await db
         .select()

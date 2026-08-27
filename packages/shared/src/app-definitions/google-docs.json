@@ -18,7 +18,7 @@
   "docsUrl": "https://developers.google.com/workspace/docs/api/reference/mcp",
   "setupPrerequisite": {
     "title": "Google Developer Preview access required",
-    "description": "Google must register both the Workspace email used to authorize Paperclip and the Google Cloud project that owns the OAuth client. Registration is limited to those emails and projects; it does not enable unrelated Paperclip customers.",
+    "description": "Google must register both the Workspace email used to authorize ThinkingMach and the Google Cloud project that owns the OAuth client. Registration is limited to those emails and projects; it does not enable unrelated ThinkingMach customers.",
     "steps": [
       "Apply with the Workspace email that will sign in and the Google Cloud project that owns the OAuth client.",
       "Wait for the Google Group notification and then Google's final project-registration email, usually within a couple of days.",
@@ -31,7 +31,7 @@
   "methods": [
     {
       "key": "paperclip-read",
-      "label": "Connect with Paperclip",
+      "label": "Connect with ThinkingMach",
       "transport": "mcp_remote",
       "auth": "oauth",
       "oauthStrategy": "paperclip_cloud_connector",
@@ -48,7 +48,7 @@
       "ownershipModes": [
         "platform_shared"
       ],
-      "whenToUse": "Use Paperclip-managed OAuth for read-only Docs access.",
+      "whenToUse": "Use ThinkingMach-managed OAuth for read-only Docs access.",
       "defaults": {
         "serverUrl": "https://docsmcp.googleapis.com/mcp/v1",
         "scopesHint": [
@@ -94,7 +94,7 @@
           "prompt": "consent"
         }
       },
-      "guidanceMd": "Enable the Drive, Docs, and Docs MCP APIs, then register Paperclip's callback URI.",
+      "guidanceMd": "Enable the Drive, Docs, and Docs MCP APIs, then register ThinkingMach's callback URI.",
       "consoleLinks": {
         "register": "https://console.cloud.google.com/auth/clients",
         "docs": "https://developers.google.com/workspace/guides/configure-mcp-servers"
@@ -106,7 +106,7 @@
     },
     {
       "key": "paperclip-write",
-      "label": "Connect with Paperclip",
+      "label": "Connect with ThinkingMach",
       "transport": "mcp_remote",
       "auth": "oauth",
       "oauthStrategy": "paperclip_cloud_connector",
@@ -123,7 +123,7 @@
       "ownershipModes": [
         "platform_shared"
       ],
-      "whenToUse": "Use Paperclip-managed OAuth to read and update Docs.",
+      "whenToUse": "Use ThinkingMach-managed OAuth to read and update Docs.",
       "defaults": {
         "serverUrl": "https://docsmcp.googleapis.com/mcp/v1",
         "scopesHint": [
@@ -172,7 +172,7 @@
           "prompt": "consent"
         }
       },
-      "guidanceMd": "Enable the Drive, Docs, and Docs MCP APIs, then register Paperclip's callback URI.",
+      "guidanceMd": "Enable the Drive, Docs, and Docs MCP APIs, then register ThinkingMach's callback URI.",
       "consoleLinks": {
         "register": "https://console.cloud.google.com/auth/clients",
         "docs": "https://developers.google.com/workspace/guides/configure-mcp-servers"

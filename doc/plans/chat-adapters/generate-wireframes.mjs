@@ -20,22 +20,22 @@ const screens = [
     notes: ["Filter by Tools, Channels, or Connected.", "Slack, Teams, Discord, Telegram, and GitHub form the initial supported set.", "Maturity and deployment state control the available action."],
   },
   {
-    id: "02", slug: "connection-method", title: "Connect Slack", subtitle: "Choose how Slack and Paperclip should communicate.", context: "Apps", active: "Setup", kind: "choice",
+    id: "02", slug: "connection-method", title: "Connect Slack", subtitle: "Choose how Slack and ThinkingMach should communicate.", context: "Apps", active: "Setup", kind: "choice",
     panels: [
-      ["Agent uses Slack", "Give selected agents Slack tools.", "Agents call Slack during Paperclip runs.", "Uses tool permissions and grants."],
-      ["People talk to an agent", "Install one Paperclip agent as a Slack bot.", "Messages become Paperclip task turns.", "Uses channel identity and access rules."],
+      ["Agent uses Slack", "Give selected agents Slack tools.", "Agents call Slack during ThinkingMach runs.", "Uses tool permissions and grants."],
+      ["People talk to an agent", "Install one ThinkingMach agent as a Slack bot.", "Messages become ThinkingMach task turns.", "Uses channel identity and access rules."],
       ["Separate connections", "These methods do not share credentials.", "Choose the direction before setup.", "Recommended: channel connection"],
     ],
-    notes: ["Two directions are named before credentials are requested.", "The channel method binds one bot to one Paperclip agent.", "Credentials and permissions remain independent."],
+    notes: ["Two directions are named before credentials are requested.", "The channel method binds one bot to one ThinkingMach agent.", "Credentials and permissions remain independent."],
   },
   {
-    id: "03", slug: "choose-agent-identity", title: "Choose the agent", subtitle: "This Slack bot will always represent one Paperclip agent.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 1 of 7 · Agent & identity",
+    id: "03", slug: "choose-agent-identity", title: "Choose the agent", subtitle: "This Slack bot will always represent one ThinkingMach agent.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 1 of 7 · Agent & identity",
     panels: [
-      ["Paperclip agent", "Maya · Support lead", "Active · Codex runtime", "Change agent"],
+      ["ThinkingMach agent", "Maya · Support lead", "Active · Codex runtime", "Change agent"],
       ["Slack bot preview", "Maya", "@maya-support", "Avatar from agent profile"],
       ["One bot per agent", "Add another Slack app for another agent.", "Native mentions select the agent.", "No hidden dispatcher bot."],
     ],
-    notes: ["Only active, invokable agents can be selected.", "Provider bot identity is previewed beside the Paperclip agent.", "Multiple agents require multiple native bot identities."],
+    notes: ["Only active, invokable agents can be selected.", "Provider bot identity is previewed beside the ThinkingMach agent.", "Multiple agents require multiple native bot identities."],
   },
   {
     id: "04", slug: "provider-installation", title: "Install the Slack bot", subtitle: "Bring your own Slack app and verify every connection layer.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 2 of 7 · Provider installation",
@@ -44,7 +44,7 @@ const screens = [
       ["2 · Save credentials", "Bot token · Secret reference", "Signing secret · Secret reference", "Values are hidden after save"],
       ["3 · Verify", "Bot identity · Passed", "Webhook signature · Passed", "Scopes · 1 action needed"],
     ],
-    notes: ["BYO app setup is the required release path.", "Secrets are stored as Paperclip secret references.", "Credential, signature, scope, and reachability checks are separate."],
+    notes: ["BYO app setup is the required release path.", "Secrets are stored as ThinkingMach secret references.", "Credential, signature, scope, and reachability checks are separate."],
   },
   {
     id: "05", slug: "conversation-reach", title: "Choose where Maya listens", subtitle: "Allow exact resources and make activation behavior predictable.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 3 of 7 · Conversation reach",
@@ -53,22 +53,22 @@ const screens = [
       ["Thread activation", "Mention Maya in the channel root", "Bot opens thread + one issue", "Continue in thread without mentions"],
       ["Direct messages", "One task per Slack DM thread", "Proactive DMs: Off", "Linked users and guests allowed"],
     ],
-    notes: ["Resource ids, not display names, enforce reach.", "Root mention → native thread → one Paperclip issue is the thread-capable default.", "GitHub binds an existing thread; Telegram uses its stable chat or topic."],
+    notes: ["Resource ids, not display names, enforce reach.", "Root mention → native thread → one ThinkingMach issue is the thread-capable default.", "GitHub binds an existing thread; Telegram uses its stable chat or topic."],
   },
   {
-    id: "06", slug: "people-permissions", title: "Choose who people act as", subtitle: "Every external message receives a bounded Paperclip identity.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 4 of 7 · People & permissions",
+    id: "06", slug: "people-permissions", title: "Choose who people act as", subtitle: "Every external message receives a bounded ThinkingMach identity.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 4 of 7 · People & permissions",
     panels: [
       ["Endpoint sponsor", "Dana · Company admin", "Provides a maximum authority envelope", "Change sponsor"],
-      ["Linked people", "Act as their Paperclip user", "Current permissions checked each action", "Invite identity link"],
+      ["Linked people", "Act as their ThinkingMach user", "Current permissions checked each action", "Invite identity link"],
       ["Unlinked people", "Sponsored restricted guest", "May message this task and attach files", "Cannot govern, approve, hire, or reassign"],
     ],
     notes: ["The endpoint sponsor is visible before activation.", "Linked users are reauthorized with current permissions.", "Guest authority is an intersection and excludes governance."],
   },
   {
-    id: "07", slug: "output-interactions", title: "Choose channel behavior", subtitle: "Expose useful progress without exposing Paperclip internals.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 5 of 7 · Output & interactions",
+    id: "07", slug: "output-interactions", title: "Choose channel behavior", subtitle: "Expose useful progress without exposing ThinkingMach internals.", context: "Apps", active: "Setup", kind: "wizard", step: "Step 5 of 7 · Output & interactions",
     panels: [
       ["Acknowledgement & progress", "React with eyes when supported", "Safe milestones: On", "Update every 4 seconds at most"],
-      ["Rich output", "Final text, approved files, cards", "Buttons, dropdowns, modals: On", "Unsupported: text + Paperclip link"],
+      ["Rich output", "Final text, approved files, cards", "Buttons, dropdowns, modals: On", "Unsupported: text + ThinkingMach link"],
       ["Overlapping messages", "Queue messages on this task", "Other modes: Burst · Debounce · Drop", "Concurrent mode requires explicit selection"],
     ],
     notes: ["Milestones never include reasoning or raw tool traces.", "Every rich feature has a named text/link fallback.", "Queue is the default concurrency policy."],
@@ -119,13 +119,13 @@ const screens = [
     notes: ["Inbound settings name their task/run consequence.", "Outbound settings show provider fallback order.", "Saving creates a versioned policy with a change preview."],
   },
   {
-    id: "13", slug: "conversations-tasks", title: "Conversations", subtitle: "Every bot-owned external thread maps to one Paperclip issue.", context: "Apps", active: "Conversations", kind: "table",
+    id: "13", slug: "conversations-tasks", title: "Conversations", subtitle: "Every bot-owned external thread maps to one ThinkingMach issue.", context: "Apps", active: "Conversations", kind: "table",
     panels: [
       ["#customer-support · Refund workflow", "PAP-1842 · In progress", "4 participants · 8m ago", "Subscribed"],
       ["DM with Ari Stone", "PAP-1839 · Waiting for input", "Linked user · 24m ago", "Subscribed"],
       ["#product-feedback · Import CSV", "PAP-1804 · Done", "Detached yesterday", "Open history"],
     ],
-    notes: ["Rows pair one external thread with exactly one endpoint-owned Paperclip issue.", "Filters cover active, waiting, failed, detached, and DMs.", "Detach preserves history and unlocks assignment."],
+    notes: ["Rows pair one external thread with exactly one endpoint-owned ThinkingMach issue.", "Filters cover active, waiting, failed, detached, and DMs.", "Detach preserves history and unlocks assignment."],
   },
   {
     id: "14", slug: "deliveries-diagnostics", title: "Activity and deliveries", subtitle: "Diagnose accepted, ignored, retried, and failed external events.", context: "Apps", active: "Activity", kind: "table",
@@ -137,7 +137,7 @@ const screens = [
     notes: ["One ledger covers inbound, outbound, and interactive actions.", "Rows expose dedupe, attempt, timing, and task without payload secrets.", "Replay is idempotent and limited to eligible failures."],
   },
   {
-    id: "15", slug: "agent-channels", title: "Maya · Channels", subtitle: "Every place this Paperclip agent can be reached.", context: "Agent", active: "Channels", kind: "agent",
+    id: "15", slug: "agent-channels", title: "Maya · Channels", subtitle: "Every place this ThinkingMach agent can be reached.", context: "Agent", active: "Channels", kind: "agent",
     panels: [
       ["Slack · @maya-support", "Acme · 2 allowed channels", "Healthy · Root mention opens thread", "7 active tasks"],
       ["Telegram · @maya_helper_bot", "Support group + DMs", "Needs attention · Token expires", "3 active tasks"],
@@ -152,25 +152,25 @@ const screens = [
       ["Ari S. · External participant", "The refund step is timing out again.", "Linked as Ari Stone", "8 minutes ago"],
       ["Maya · Agent output", "I found the failing retry boundary…", "Publication: Delivered to Slack", "Artifact: retry-analysis.md"],
     ],
-    notes: ["A source banner explains the binding and assignment lock.", "External attribution never impersonates a Paperclip user.", "The composer defaults internal; Send to channel is explicit and previewed."],
+    notes: ["A source banner explains the binding and assignment lock.", "External attribution never impersonates a ThinkingMach user.", "The composer defaults internal; Send to channel is explicit and previewed."],
   },
   {
     id: "17", slug: "identity-link", title: "Link your Slack identity", subtitle: "Confirm who you will act as when messaging Maya.", context: "Identity", active: "Link", kind: "link",
     panels: [
       ["Slack identity", "Ari S. · Acme workspace", "Requested by @maya-support", "Expires in 9 minutes"],
-      ["Paperclip identity", "Ari Stone · ari@acme.example", "Company: Acme", "Signed in"],
+      ["ThinkingMach identity", "Ari Stone · ari@acme.example", "Company: Acme", "Signed in"],
       ["After linking", "Future actions use current permissions", "This does not share Slack credentials", "You can revoke from endpoint Access"],
     ],
     notes: ["Both identities and company are visible before confirmation.", "Authentication returns to the same single-use intent.", "Expired, used, revoked, and mismatch states fail safely."],
   },
   {
-    id: "18", slug: "self-hosted-relay", title: "Ingress for this instance", subtitle: "Use direct HTTPS or an outbound relay for a private Paperclip.", context: "Apps", active: "Overview", kind: "relay",
+    id: "18", slug: "self-hosted-relay", title: "Ingress for this instance", subtitle: "Use direct HTTPS or an outbound relay for a private ThinkingMach.", context: "Apps", active: "Overview", kind: "relay",
     panels: [
-      ["Direct HTTPS", "Recommended when Paperclip is public", "Provider sends to this instance", "Current: Not reachable"],
+      ["Direct HTTPS", "Recommended when ThinkingMach is public", "Provider sends to this instance", "Current: Not reachable"],
       ["Outbound relay", "Private instance opens one connection", "Encrypted bounded delivery envelopes", "Current: Connected"],
       ["Relay health", "Owner: chat-adapters-dev", "Heartbeat: 12 seconds ago", "Backlog: 0 · Key rotated 8d ago"],
     ],
-    notes: ["Mode comparison starts with detected reachability.", "Enrollment reveals a one-time secret only once.", "Health distinguishes relay receipt from Paperclip processing."],
+    notes: ["Mode comparison starts with detected reachability.", "Enrollment reveals a one-time secret only once.", "Health distinguishes relay receipt from ThinkingMach processing."],
   },
   {
     id: "19", slug: "adapter-state-matrix", title: "Adapter and state matrix", subtitle: "One UI system covers provider shapes and operational fallbacks.", context: "Apps", active: "Reference", kind: "matrix",
@@ -237,7 +237,7 @@ function desktopSidebar(screen) {
   return `
   <g data-region="navigation">
     <rect x="0" y="0" width="240" height="800" />
-    ${text(24, 40, "Paperclip", 20, "#000", 'font-weight="600"')}
+    ${text(24, 40, "ThinkingMach", 20, "#000", 'font-weight="600"')}
     ${text(24, 72, screen.context, 12, "#666", 'font-weight="600"')}
     ${appItems.map((item, i) => {
       const y = 96 + i * 48;
@@ -290,7 +290,7 @@ function desktopGeneric(screen) {
         ? `<g transform="translate(1088,680)"><rect width="120" height="40" rx="4" fill="#000" />${text(60, 25, "Continue", 14, "#fff", 'font-weight="600" text-anchor="middle"')}</g><g transform="translate(952,680)"><rect width="120" height="40" rx="4" />${text(60, 25, "Back", 14, "#000", 'text-anchor="middle"')}</g>`
         : `<g transform="translate(1088,104)"><rect width="120" height="40" rx="4" fill="#000" />${text(60, 25, screen.id === "15" ? "Add channel" : "Save", 14, "#fff", 'font-weight="600" text-anchor="middle"')}</g>`;
   const lower = screen.kind === "table"
-    ? `<g transform="translate(${contentX},544)"><rect width="928" height="136" rx="8" fill="#e6e6e6" />${text(24, 32, "Selected details", 14, "#000", 'font-weight="600"')}${multiline(24, 64, ["Exact provider and Paperclip identifiers", "Current state, last event, and safe operator actions", "Sensitive payload values remain redacted"], 12, "#666", 24)}</g>`
+    ? `<g transform="translate(${contentX},544)"><rect width="928" height="136" rx="8" fill="#e6e6e6" />${text(24, 32, "Selected details", 14, "#000", 'font-weight="600"')}${multiline(24, 64, ["Exact provider and ThinkingMach identifiers", "Current state, last event, and safe operator actions", "Sensitive payload values remain redacted"], 12, "#666", 24)}</g>`
     : `<g transform="translate(${contentX},544)"><rect width="928" height="96" rx="8" fill="#e6e6e6" />${text(24, 32, screen.notes[0], 14, "#000", 'font-weight="600"')}${text(24, 64, screen.notes[1], 12, "#666")}</g>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family="-apple-system, system-ui, sans-serif" fill="#fff" stroke="#000" stroke-width="1.5">
   <!-- ${screen.id} · ${esc(screen.title)} · Desktop 1280×800 -->
@@ -327,7 +327,7 @@ function desktopTask(screen) {
 
 function desktopLink(screen) {
   const cards = screen.panels.map((p,i)=>desktopCard(280+i*312,248,288,248,p,i)).join("\n");
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family="-apple-system, system-ui, sans-serif" fill="#fff" stroke="#000" stroke-width="1.5"><rect width="1280" height="800"/>${text(48,48,"Paperclip",20,"#000",'font-weight="600"')}<circle cx="1232" cy="40" r="16" fill="#e6e6e6"/>${text(640,144,screen.title,28,"#000",'font-weight="700" text-anchor="middle"')}${text(640,176,screen.subtitle,14,"#666",'text-anchor="middle"')}${cards}<g transform="translate(488,544)"><rect width="304" height="48" rx="4" fill="#000"/>${text(152,30,"Confirm identity link",14,"#fff",'font-weight="600" text-anchor="middle"')}</g>${text(640,624,"Single use · Expires in 9 minutes · Revoke from endpoint Access",12,"#666",'text-anchor="middle"')}${annotations([{x:272,y:104,w:936,h:88},{x:272,y:240,w:304,h:264},{x:584,y:240,w:304,h:264},{x:480,y:536,w:320,h:64},{x:376,y:600,w:528,h:40}])}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family="-apple-system, system-ui, sans-serif" fill="#fff" stroke="#000" stroke-width="1.5"><rect width="1280" height="800"/>${text(48,48,"ThinkingMach",20,"#000",'font-weight="600"')}<circle cx="1232" cy="40" r="16" fill="#e6e6e6"/>${text(640,144,screen.title,28,"#000",'font-weight="700" text-anchor="middle"')}${text(640,176,screen.subtitle,14,"#666",'text-anchor="middle"')}${cards}<g transform="translate(488,544)"><rect width="304" height="48" rx="4" fill="#000"/>${text(152,30,"Confirm identity link",14,"#fff",'font-weight="600" text-anchor="middle"')}</g>${text(640,624,"Single use · Expires in 9 minutes · Revoke from endpoint Access",12,"#666",'text-anchor="middle"')}${annotations([{x:272,y:104,w:936,h:88},{x:272,y:240,w:304,h:264},{x:584,y:240,w:304,h:264},{x:480,y:536,w:320,h:64},{x:376,y:600,w:528,h:40}])}</svg>`;
 }
 
 function desktopMatrix(screen) {
@@ -372,7 +372,7 @@ function mobileTask(screen) {
 }
 
 function mobileLink(screen) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="375" height="812" viewBox="0 0 375 812" font-family="-apple-system, system-ui, sans-serif" fill="#fff" stroke="#000" stroke-width="1.5"><rect width="375" height="812"/>${text(16,40,"Paperclip",14,"#000",'font-weight="600"')}${text(16,96,screen.title,20,"#000",'font-weight="600"')}${mobileSubtitle(120,screen.subtitle)}${screen.panels.map((p,i)=>mobileCard(152+i*152,p,i)).join("\n")}<g transform="translate(16,624)"><rect width="343" height="48" rx="4" fill="#000"/>${text(171,30,"Confirm identity link",14,"#fff",'font-weight="600" text-anchor="middle"')}</g>${text(187,704,"Single use · Expires in 9 minutes",12,"#666",'text-anchor="middle"')}${annotations([{x:8,y:72,w:359,h:56},{x:8,y:144,w:359,h:160},{x:8,y:296,w:359,h:160},{x:8,y:616,w:359,h:64},{x:8,y:688,w:359,h:40}],true)}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="375" height="812" viewBox="0 0 375 812" font-family="-apple-system, system-ui, sans-serif" fill="#fff" stroke="#000" stroke-width="1.5"><rect width="375" height="812"/>${text(16,40,"ThinkingMach",14,"#000",'font-weight="600"')}${text(16,96,screen.title,20,"#000",'font-weight="600"')}${mobileSubtitle(120,screen.subtitle)}${screen.panels.map((p,i)=>mobileCard(152+i*152,p,i)).join("\n")}<g transform="translate(16,624)"><rect width="343" height="48" rx="4" fill="#000"/>${text(171,30,"Confirm identity link",14,"#fff",'font-weight="600" text-anchor="middle"')}</g>${text(187,704,"Single use · Expires in 9 minutes",12,"#666",'text-anchor="middle"')}${annotations([{x:8,y:72,w:359,h:56},{x:8,y:144,w:359,h:160},{x:8,y:296,w:359,h:160},{x:8,y:616,w:359,h:64},{x:8,y:688,w:359,h:40}],true)}</svg>`;
 }
 
 function mobileMatrix(screen) {
@@ -395,7 +395,7 @@ function flowSvg() {
   }
   arrows.push(`<path d="M 1008 208 C 1104 232, 1104 248, 48 264" fill="none" stroke="#000" stroke-dasharray="6 3"/>`);
   arrows.push(`<path d="M 768 544 C 768 640, 1008 640, 1008 600" fill="none" stroke="#000" stroke-dasharray="6 3"/>`);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family="-apple-system, system-ui, sans-serif" fill="#fff" stroke="#000" stroke-width="1.5"><rect width="1280" height="800"/>${text(48,40,"Chat adapters · Paperclip product flow",28,"#000",'font-weight="700"')}${text(48,72,"Solid arrows follow the primary review path; dashed arrows mark management, identity, relay, diagnostics, and detach branches.",14,"#666")}${cells}${arrows}${annotations([{x:40,y:88,w:1168,h:312},{x:40,y:416,w:1168,h:312}])}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family="-apple-system, system-ui, sans-serif" fill="#fff" stroke="#000" stroke-width="1.5"><rect width="1280" height="800"/>${text(48,40,"Chat adapters · ThinkingMach product flow",28,"#000",'font-weight="700"')}${text(48,72,"Solid arrows follow the primary review path; dashed arrows mark management, identity, relay, diagnostics, and detach branches.",14,"#666")}${cells}${arrows}${annotations([{x:40,y:88,w:1168,h:312},{x:40,y:416,w:1168,h:312}])}</svg>`;
 }
 
 function viewerHtml() {
@@ -442,7 +442,7 @@ function viewerHtml() {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Paperclip chat adapters — planning review</title>
+<title>ThinkingMach chat adapters — planning review</title>
 ${style}
 <style>
   .doc-links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
@@ -476,9 +476,9 @@ ${style}
     </details>
     <main>
       <header class="hero">
-        <div class="crumb">Paperclip · Chat adapters · Planning artifact</div>
-        <h1>Connect one Paperclip agent to every place people already work</h1>
-        <p>This package defines the administration, agent, task, identity-link, and relay surfaces for durable external chat endpoints. Paperclip remains the control plane; provider channels are communication media.</p>
+        <div class="crumb">ThinkingMach · Chat adapters · Planning artifact</div>
+        <h1>Connect one ThinkingMach agent to every place people already work</h1>
+        <p>This package defines the administration, agent, task, identity-link, and relay surfaces for durable external chat endpoints. ThinkingMach remains the control plane; provider channels are communication media.</p>
         <div class="doc-links">
           <a href="2026-09-03-chat-adapters-architecture.md">Read architecture plan</a>
           <a href="2026-09-03-chat-adapters-research-notes.md">Read research appendix</a>
@@ -491,7 +491,7 @@ ${style}
           <span class="pill">Click any wireframe to zoom</span>
         </div>
       </header>
-      <div class="notice" role="note"><p><b>Review convention:</b> red dashed marks and numbered circles are annotations only. They are not proposed Paperclip interface elements.</p></div>
+      <div class="notice" role="note"><p><b>Review convention:</b> red dashed marks and numbered circles are annotations only. They are not proposed ThinkingMach interface elements.</p></div>
       <section id="flow" class="flow-section">
         <div class="lede">Navigation and product flow</div>
         <h2>From Apps discovery to an externally bound task</h2>
@@ -508,17 +508,17 @@ ${style}
         <h2>Review checklist</h2>
         <div class="notes">
           <ul>
-            <li><b>Paperclip invariant:</b> agents, tasks, runs, permissions, approvals, budgets, artifacts, and audit history remain authoritative in Paperclip.</li>
-            <li><b>Provider model:</b> one installed native bot identity maps to exactly one Paperclip agent endpoint.</li>
+            <li><b>ThinkingMach invariant:</b> agents, tasks, runs, permissions, approvals, budgets, artifacts, and audit history remain authoritative in ThinkingMach.</li>
+            <li><b>Provider model:</b> one installed native bot identity maps to exactly one ThinkingMach agent endpoint.</li>
             <li><b>First supported set:</b> Slack, Microsoft Teams, Discord, Telegram, and GitHub.</li>
-            <li><b>Thread model:</b> a root mention creates/opens a provider thread and one endpoint-owned Paperclip issue where supported; GitHub binds an existing issue/PR/discussion thread; Telegram uses the stable chat/topic boundary.</li>
+            <li><b>Thread model:</b> a root mention creates/opens a provider thread and one endpoint-owned ThinkingMach issue where supported; GitHub binds an existing issue/PR/discussion thread; Telegram uses the stable chat/topic boundary.</li>
             <li><b>Chat SDK coverage:</b> events, streaming, cards, actions, modals, commands, emoji, files, DMs, ephemeral output, and overlap policies appear in screens 07, 12, 14, and 19.</li>
-            <li><b>Research pins:</b> Paperclip <code>b84964e5a2fa8b1e6498a1ccb471f6adba97d470</code>; Vercel Chat SDK <code>51322dde8f4aafd8a7fc7a20cbfd7ae45cafaa5c</code>; OpenTag <code>6a770d862349f8e996c23c145aef6d6275914a23</code>.</li>
+            <li><b>Research pins:</b> ThinkingMach <code>b84964e5a2fa8b1e6498a1ccb471f6adba97d470</code>; Vercel Chat SDK <code>51322dde8f4aafd8a7fc7a20cbfd7ae45cafaa5c</code>; OpenTag <code>6a770d862349f8e996c23c145aef6d6275914a23</code>.</li>
             <li><b>Current-state screenshots:</b> omitted because no deterministic local fixture was used; no reference UI has been invented.</li>
           </ul>
         </div>
       </section>
-      <div class="footer">Generated from Paperclip's bundled <code>wireframe</code> skill viewer template. Wires use black 1.5 strokes, white surfaces, grayscale placeholders, an 8px rhythm, and 12/14/20/28 type sizes. Red is reserved for review annotations.</div>
+      <div class="footer">Generated from ThinkingMach's bundled <code>wireframe</code> skill viewer template. Wires use black 1.5 strokes, white surfaces, grayscale placeholders, an 8px rhythm, and 12/14/20/28 type sizes. Red is reserved for review annotations.</div>
     </main>
   </div>
   <div class="lightbox" id="lb" aria-hidden="true">

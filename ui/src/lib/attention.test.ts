@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import type { AttentionFeed, AttentionItem, AttentionSourceKind } from "@paperclipai/shared";
+import type { AttentionFeed, AttentionItem, AttentionSourceKind } from "@thinkingmach/shared";
 import {
   ATTENTION_GROUP_BY_KEY,
   ATTENTION_GROUP_BY_OPTIONS,

@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarClock, Plus, Webhook } from "lucide-react";
-import type { RoutineTrigger } from "@paperclipai/shared";
+import type { RoutineTrigger } from "@thinkingmach/shared";
 import { useSearchParams } from "@/lib/router";
 import { routinesApi } from "@/api/routines";
 import { queryKeys } from "@/lib/queryKeys";
@@ -573,7 +573,7 @@ function WebhookSettings({
       {trigger.signingMode === "hmac_sha256" && (
         <p className="text-sm text-muted-foreground">
           Sign the timestamp, a period, and the exact JSON body with
-          HMAC-SHA256. Send X-Paperclip-Timestamp and X-Paperclip-Signature:
+          HMAC-SHA256. Send X-ThinkingMach-Timestamp and X-ThinkingMach-Signature:
           sha256=&lt;signature&gt;.
         </p>
       )}

@@ -47,7 +47,7 @@ describe("dev server status helpers", () => {
 
     expect(
       readPersistedDevServerStatus({
-        PAPERCLIP_DEV_SERVER_STATUS_FILE: filePath,
+        THINKINGMACH_DEV_SERVER_STATUS_FILE: filePath,
       }),
     ).toEqual({
       dirty: true,
@@ -91,7 +91,7 @@ describe("dev server status helpers", () => {
 
     expect(
       readPersistedDevServerStatus({
-        PAPERCLIP_DEV_SERVER_STATUS_FILE: filePath,
+        THINKINGMACH_DEV_SERVER_STATUS_FILE: filePath,
       }),
     ).toBeNull();
   });
@@ -103,7 +103,7 @@ describe("dev server status helpers", () => {
       pendingMigrations: [],
     });
 
-    const env = { PAPERCLIP_DEV_SERVER_STATUS_FILE: filePath };
+    const env = { THINKINGMACH_DEV_SERVER_STATUS_FILE: filePath };
     expect(
       writeDevServerRestartRequest(
         {
@@ -127,7 +127,7 @@ describe("dev server status helpers", () => {
 
   it("correlates restart request cleanup so stale consumers cannot remove a replacement", () => {
     const filePath = createTempStatusFile({ dirty: true });
-    const env = { PAPERCLIP_DEV_SERVER_STATUS_FILE: filePath };
+    const env = { THINKINGMACH_DEV_SERVER_STATUS_FILE: filePath };
     expect(
       writeDevServerRestartRequest(
         {
@@ -156,7 +156,7 @@ describe("dev server status helpers", () => {
 
   it("immediately recovers an owner-less lock from an interrupted publisher", () => {
     const filePath = createTempStatusFile({ dirty: true });
-    const env = { PAPERCLIP_DEV_SERVER_STATUS_FILE: filePath };
+    const env = { THINKINGMACH_DEV_SERVER_STATUS_FILE: filePath };
     const requestPath = getDevServerRestartRequestFilePath(env)!;
     const lockPath = `${requestPath}.lock`;
     mkdirSync(lockPath);
@@ -180,7 +180,7 @@ describe("dev server status helpers", () => {
 
   it("preserves the request instead of throwing when a live writer holds the lock", () => {
     const filePath = createTempStatusFile({ dirty: true });
-    const env = { PAPERCLIP_DEV_SERVER_STATUS_FILE: filePath };
+    const env = { THINKINGMACH_DEV_SERVER_STATUS_FILE: filePath };
     writeDevServerRestartRequest(
       {
         requestedAt: "2026-09-04T12:00:02.000Z",

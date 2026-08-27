@@ -88,7 +88,7 @@ function escapeSafeTelegramBoundary(
 }
 
 /**
- * Streams only an already-projected, externally publishable payload. Paperclip
+ * Streams only an already-projected, externally publishable payload. ThinkingMach
  * never passes run logs, tool events, or model reasoning through this helper.
  * Adapters may use a native stream or their own bounded post/edit fallback.
  * The complete approved answer is already available: do not simulate model

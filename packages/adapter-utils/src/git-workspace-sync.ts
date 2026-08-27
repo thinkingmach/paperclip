@@ -84,9 +84,9 @@ export const GIT_ARCHIVE_EXCLUDES = [".git", ".git/*"] as const;
  */
 export const GIT_SYNC_COMMIT_IDENTITY_ARGS = [
   "-c",
-  "user.name=Paperclip",
+  "user.name=ThinkingMach",
   "-c",
-  "user.email=noreply@paperclip.ing",
+  "user.email=noreply@thinkingmach.com",
 ] as const;
 
 function shellQuote(value: string) {
@@ -163,7 +163,7 @@ export async function disposeGitWorkspaceSnapshot(snapshot: GitWorkspaceSnapshot
 
 /** Snapshot deadlines include disk backpressure. Operators can allow up to 24h. */
 export function workspaceSnapshotTimeoutMs(): number {
-  const configured = Number(process.env.PAPERCLIP_WORKSPACE_GIT_SNAPSHOT_TIMEOUT_MS);
+  const configured = Number(process.env.THINKINGMACH_WORKSPACE_GIT_SNAPSHOT_TIMEOUT_MS);
   return Number.isFinite(configured) && configured >= 1000 ? Math.min(configured, 86_400_000) : 30 * 60_000;
 }
 
@@ -909,7 +909,7 @@ export async function integrateImportedGitHead(input: {
         localDir: input.localDir,
         currentHead,
         importedHead: input.importedHead,
-        syncLabel: "Paperclip remote git sync",
+        syncLabel: "ThinkingMach remote git sync",
       });
       try {
         await runLocalGit(input.localDir, ["update-ref", headRef, graftCommit, currentHead], {
@@ -951,7 +951,7 @@ export async function integrateImportedGitHead(input: {
         "-p",
         input.importedHead,
         "-m",
-        `Paperclip remote git sync merge ${input.importedHead.slice(0, 12)}`,
+        `ThinkingMach remote git sync merge ${input.importedHead.slice(0, 12)}`,
       ],
       {
         timeout: 60_000,

@@ -14,7 +14,7 @@ import {
   sql,
 } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   chatConversations,
@@ -25,7 +25,7 @@ import {
   heartbeatRuns,
   issueComments,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { projectSafeChatPublication } from "./chat-publication-projection.js";
 import { safeChatTaskUrl } from "./chat-task-url.js";
 import { hasChatRunOwnedProviderInteraction } from "./chat-interaction-arbitration.js";
@@ -87,7 +87,7 @@ export async function resolveChatRunPresentationAuthorizationReason(
   if (bindings.length === 0) return "internal_agent_write";
   // A native question/confirmation is the provider-visible result of its
   // originating run. Keep the runner's final presentation as an internal
-  // Paperclip comment even if a fast provider answer resolves the interaction
+  // ThinkingMach comment even if a fast provider answer resolves the interaction
   // before this check; otherwise model metadata can appear as a noisy sibling
   // beside the card or its continuation response.
   if (await hasChatRunOwnedProviderInteraction(db, input)) {
@@ -157,27 +157,27 @@ export function safeMilestoneText(input: {
   const taskUrl = safeChatTaskUrl(input.publicBaseUrl, input.issueId);
   const recovery =
     input.milestone === "waiting_for_input"
-      ? `${input.agentName} needs a Paperclip admin to safely recover this turn before more work can start.`
+      ? `${input.agentName} needs a ThinkingMach admin to safely recover this turn before more work can start.`
       : input.errorCode === "low_trust_isolation_unavailable"
-        ? `${input.agentName} couldn't safely start this turn because this task was started for an unlinked external guest and isolated guest execution isn't available. Ask a Paperclip admin to create a private identity link for this account or enable isolated guest execution, then start a new task.`
+        ? `${input.agentName} couldn't safely start this turn because this task was started for an unlinked external guest and isolated guest execution isn't available. Ask a ThinkingMach admin to create a private identity link for this account or enable isolated guest execution, then start a new task.`
         : input.errorCode === "native_provider_usage_limit"
-          ? `${input.agentName} couldn't complete this turn because the model provider's usage allowance is exhausted. A Paperclip admin needs to restore capacity before retrying.`
+          ? `${input.agentName} couldn't complete this turn because the model provider's usage allowance is exhausted. A ThinkingMach admin needs to restore capacity before retrying.`
           : input.errorCode === "native_event_replay_conflict"
-            ? `${input.agentName} couldn't safely continue this turn. A Paperclip admin needs to review the run before it can be retried.`
+            ? `${input.agentName} couldn't safely continue this turn. A ThinkingMach admin needs to review the run before it can be retried.`
             : input.errorCode === "native_session_cleanup_quarantined"
-              ? `${input.agentName} couldn't start this turn because an earlier session needs recovery. Your request is saved. Ask a Paperclip admin to recover that session before retrying; sending the request again won't repair it.`
+              ? `${input.agentName} couldn't start this turn because an earlier session needs recovery. Your request is saved. Ask a ThinkingMach admin to recover that session before retrying; sending the request again won't repair it.`
               : `${input.agentName} stopped before completing this turn.`;
   return `${recovery}${
     taskUrl
-      ? ` Open the task in Paperclip: ${taskUrl}`
-      : " Open the task in Paperclip for details."
+      ? ` Open the task in ThinkingMach: ${taskUrl}`
+      : " Open the task in ThinkingMach for details."
   }`;
 }
 
 /**
  * Projects a bounded sample of native activity into the existing run working
  * lane. The selector intentionally reads only event identity, type, sequence,
- * and time; native messages and payloads stay inside Paperclip.
+ * and time; native messages and payloads stay inside ThinkingMach.
  */
 async function enqueueSafeNativeChatProgress(
   db: Db,
@@ -551,7 +551,7 @@ async function enqueueSafeNativeChatProgress(
 
 /**
  * Project only coarse run lifecycle into bound external conversations. Raw
- * output, errors, tool events, and reasoning stay in Paperclip. Idempotency is
+ * output, errors, tool events, and reasoning stay in ThinkingMach. Idempotency is
  * keyed by run, milestone, and endpoint so polling and restarts are harmless.
  */
 export async function enqueueChatRunMilestones(

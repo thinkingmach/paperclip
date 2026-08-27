@@ -1,11 +1,11 @@
 import { Router, type Request } from "express";
-import { companies, type Db } from "@paperclipai/db";
+import { companies, type Db } from "@thinkingmach/db";
 import {
   patchInstanceSettingsSchema,
   patchInstanceExperimentalSettingsSchema,
   patchInstanceGeneralSettingsSchema,
   startTaskDrainRequestSchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { forbidden } from "../errors.js";
 import {
   cloudTenantPrimaryCompanyId,

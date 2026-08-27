@@ -16,7 +16,7 @@ describe("chat endpoint lifecycle health presentation", () => {
     ["verifying", "Connection verification is in progress."],
     ["attention", "Connection needs attention."],
     ["revoked", "Connection access is revoked. Reconnect to verify access."],
-    ["archived", "Connection has been removed from Paperclip."],
+    ["archived", "Connection has been removed from ThinkingMach."],
   ])("prioritizes %s over stale connected health", (status, message) => {
     const presentation = connectionHealthPresentation({
       status,

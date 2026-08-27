@@ -6,7 +6,7 @@ import {
   parseMarkdown,
   stringifyMarkdown,
 } from "chat";
-import type { SafeChatPublicationPayload } from "@paperclipai/shared";
+import type { SafeChatPublicationPayload } from "@thinkingmach/shared";
 import {
   nativePublicationTextFits,
   renderPublicationTransportText,

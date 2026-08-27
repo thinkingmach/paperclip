@@ -3,13 +3,13 @@ import { describe, expect, it } from "vitest";
 import {
   HONEYCOMB_RUN_HASH_ATTRIBUTE,
   buildHoneycombRunQueryUrl,
-  hashPaperclipRunId,
+  hashThinkingMachRunId,
 } from "./honeycomb-run-link";
 
 describe("Honeycomb run links", () => {
   it("uses the same 12-character SHA-256 run hash as the tracer", async () => {
     await expect(
-      hashPaperclipRunId("abc", webcrypto.subtle as unknown as SubtleCrypto),
+      hashThinkingMachRunId("abc", webcrypto.subtle as unknown as SubtleCrypto),
     ).resolves.toBe("ba7816bf8f01");
   });
 

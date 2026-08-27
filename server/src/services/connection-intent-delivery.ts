@@ -1,6 +1,6 @@
 import { connectionIntentService } from "./connection-intents.js";
 import { and, eq, isNull, lte, asc, notInArray, desc, sql } from "drizzle-orm";
-import { connectionIntentDeliveries, issueThreadInteractions, issues, agentWakeupRequests, companyMemberships, heartbeatRuns, chatConversations, chatEndpoints, type Db } from "@paperclipai/db";
+import { connectionIntentDeliveries, issueThreadInteractions, issues, agentWakeupRequests, companyMemberships, heartbeatRuns, chatConversations, chatEndpoints, type Db } from "@thinkingmach/db";
 import type { heartbeatService } from "./heartbeat.js";
 import { issueService } from "./issues.js";
 import { issueRecoveryActionService } from "./issue-recovery-actions.js";
@@ -106,7 +106,7 @@ export function connectionIntentDeliveryService(db: Db, heartbeat: Pick<Heartbea
 
   async function deliver(interactionId: string) {
     // Deterministic acceptance-test failpoint: preserve committed outcomes across a server restart.
-    if (process.env.NODE_ENV === "test" && process.env.PAPERCLIP_TEST_CONNECTION_DELIVERY_HOLD === "1") return;
+    if (process.env.NODE_ENV === "test" && process.env.THINKINGMACH_TEST_CONNECTION_DELIVERY_HOLD === "1") return;
     const now = new Date();
     // The retry deadline is also the worker lease. A crashed worker is reclaimed.
     const [claimed] = await db.update(connectionIntentDeliveries)

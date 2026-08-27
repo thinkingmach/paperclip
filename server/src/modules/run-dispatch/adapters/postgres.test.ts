@@ -15,8 +15,8 @@ import {
   issueRecoveryActions,
   issueTreeHolds,
   issues,
-} from "@paperclipai/db";
-import { ISSUE_CONTINUATION_SUMMARY_DOCUMENT_KEY } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import { ISSUE_CONTINUATION_SUMMARY_DOCUMENT_KEY } from "@thinkingmach/shared";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -73,7 +73,7 @@ describeEmbeddedPostgres("run-dispatch postgres adapter", () => {
     const agentId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",

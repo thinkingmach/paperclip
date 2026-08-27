@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { activityLog, agents, companies, createDb, issues, type Db } from "@paperclipai/db";
+import { activityLog, agents, companies, createDb, issues, type Db } from "@thinkingmach/db";
 import { HttpError } from "../errors.js";
 import {
   assertIssueReviewVerdictActorAllowed,

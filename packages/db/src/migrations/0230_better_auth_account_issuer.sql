@@ -8,7 +8,7 @@
 -- values mirror Better Auth's own issuer helpers: `local:credential` for
 -- email/password accounts (createLocalAccountIssuer) and
 -- `local:oauth:<provider_id>` for social accounts that do not declare an
--- issuer of their own (createOAuthAccountIssuer). Paperclip only enables
+-- issuer of their own (createOAuthAccountIssuer). ThinkingMach only enables
 -- email/password today, so in practice every existing row takes the first
 -- branch; the second keeps the backfill total rather than leaving a NULL
 -- behind that would abort the SET NOT NULL.

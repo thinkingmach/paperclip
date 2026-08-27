@@ -23,11 +23,11 @@
 
 import type {
   AdapterExecutionTarget,
-  AdapterExecutionTargetPaperclipBridgeHandle,
+  AdapterExecutionTargetThinkingMachBridgeHandle,
   AdapterExecutionTargetProcessSessionBridgeHandle,
   AdapterManagedRuntimeAsset,
   PreparedAdapterExecutionTargetRuntime,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import type {
   AcpRunContext,
   AcquiredRunResources,
@@ -131,9 +131,9 @@ export interface SandboxRunSiteOptions {
   readonly onReuseLog: () => Promise<void>;
 
   /** Start the host-side paperclip callback bridge. */
-  readonly startPaperclipBridge: (
+  readonly startThinkingMachBridge: (
     runtimeRootDir: string | null,
-  ) => Promise<AdapterExecutionTargetPaperclipBridgeHandle | null>;
+  ) => Promise<AdapterExecutionTargetThinkingMachBridgeHandle | null>;
   /** Start the host-side process-session bridge with a deferred launch env. */
   readonly startProcessSessionBridge: (input: {
     runtimeRootDir: string | null;
@@ -147,11 +147,11 @@ export interface SandboxRunSiteOptions {
    * a contribution; the site calls this capability at the sequencing point.
    */
   readonly finalizeLaunchEnv: (contributions: readonly LaunchEnvironmentContribution[]) => Record<string, string>;
-  readonly onPaperclipBridgeLog: () => Promise<void>;
+  readonly onThinkingMachBridgeLog: () => Promise<void>;
 
   /** Stop both bridges and run the managed-home copy-back on teardown. */
   readonly stopBridges: (input: {
-    controlBridge: AdapterExecutionTargetPaperclipBridgeHandle | null;
+    controlBridge: AdapterExecutionTargetThinkingMachBridgeHandle | null;
     agentBridge: AdapterExecutionTargetProcessSessionBridgeHandle | null;
   }) => Promise<void>;
 }
@@ -179,7 +179,7 @@ export interface SandboxRunSite {
    * rethrows a partial-bring-up failure, so an abandon path can stop the bridge
    * that started when its sibling threw.
    */
-  readonly controlBridge: AdapterExecutionTargetPaperclipBridgeHandle | null;
+  readonly controlBridge: AdapterExecutionTargetThinkingMachBridgeHandle | null;
   /** The process-session bridge the run started, or null before `startTransport`. */
   readonly agentBridge: AdapterExecutionTargetProcessSessionBridgeHandle | null;
   /**
@@ -213,7 +213,7 @@ export function createSandboxRunSite(options: SandboxRunSiteOptions): SandboxRun
   // a run keeps its lease across its whole lifetime.
   let leaseRelease: (() => void) | null = null;
   let staged: StagedWorkspace | null = null;
-  let controlBridge: AdapterExecutionTargetPaperclipBridgeHandle | null = null;
+  let controlBridge: AdapterExecutionTargetThinkingMachBridgeHandle | null = null;
   let agentBridge: AdapterExecutionTargetProcessSessionBridgeHandle | null = null;
 
   return {
@@ -334,7 +334,7 @@ export function createSandboxRunSite(options: SandboxRunSiteOptions): SandboxRun
       // process-session bridge awaits right before its launch.
       const stagedRootDir = staged?.stagedRuntime.runtimeRootDir ?? null;
       const paperclipStart = options.measureBridgeStep("bridge.paperclip", () =>
-        options.startPaperclipBridge(stagedRootDir),
+        options.startThinkingMachBridge(stagedRootDir),
       );
       // The single sequencing point (paperclip env → process-session launch),
       // memoized so the merge runs exactly once whether the process-session bridge
@@ -351,7 +351,7 @@ export function createSandboxRunSite(options: SandboxRunSiteOptions): SandboxRun
           const contributions: LaunchEnvironmentContribution[] = [];
           if (paperclip) {
             contributions.push({ scope: "run", env: paperclip.env } as unknown as RunScopedContribution);
-            await options.onPaperclipBridgeLog();
+            await options.onThinkingMachBridgeLog();
           }
           launchEnv = options.finalizeLaunchEnv(contributions);
           return launchEnv;
@@ -412,7 +412,7 @@ export function createSandboxRunSite(options: SandboxRunSiteOptions): SandboxRun
       return staged;
     },
 
-    get controlBridge(): AdapterExecutionTargetPaperclipBridgeHandle | null {
+    get controlBridge(): AdapterExecutionTargetThinkingMachBridgeHandle | null {
       return controlBridge;
     },
 

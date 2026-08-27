@@ -4,7 +4,7 @@ import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Agent } from "@paperclipai/shared";
+import type { Agent } from "@thinkingmach/shared";
 import { queryKeys } from "../../lib/queryKeys";
 import { AgentSkillsTab } from "./AgentSkillsTab";
 import { TooltipProvider } from "../../components/ui/tooltip";
@@ -15,7 +15,7 @@ vi.mock("./AgentSkillRow", () => ({ AgentSkillRow: ({ variant, data }: { variant
 import { toDesiredSkillPayload } from "./AgentSkillsTab";
 
 describe("toDesiredSkillPayload", () => {
-  const skillKey = "paperclipai/paperclip/paperclip";
+  const skillKey = "thinkingmach/paperclip/paperclip";
   const versionId = "22222222-2222-4222-8222-222222222222";
 
   it("includes saved version pins while beta skills are enabled", () => {
@@ -35,7 +35,7 @@ describe("toDesiredSkillPayload", () => {
 it("removes a connector from editable library rows when its automatic assignment arrives", async () => {
   const client = new QueryClient({ defaultOptions: { queries: { staleTime: Infinity, retry: false } } });
   const agent = { id: "agent-1", companyId: "company-1", adapterType: "codex_local", adapterConfig: {} } as Agent;
-  const key = "paperclipai/paperclip/agentmail";
+  const key = "thinkingmach/paperclip/agentmail";
   const snapshot = { adapterType: "codex_local", supported: true, mode: "ephemeral", desiredSkills: [], entries: [], warnings: [] };
   client.setQueryData(queryKeys.agents.skills(agent.id), snapshot);
   client.setQueryData(queryKeys.companySkills.list(agent.companyId), [{ id: "skill-1", key, name: "agentmail", categories: [], sourceKind: "bundled", sourceType: "bundled" }]);

@@ -4,7 +4,7 @@ import {
   type GitHubChatConfiguration,
   type GitHubReviewAssessment,
   type GitHubReviewEventContext,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   githubReviewConclusion,
   githubReviewLineIsInPatch,

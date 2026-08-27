@@ -143,7 +143,7 @@ export interface RunnerTaskFixture {
     optionLabel: string;
     expectedMarker: string;
   };
-  /** Restart the isolated Paperclip server after the waiting turn settles. */
+  /** Restart the isolated ThinkingMach server after the waiting turn settles. */
   restartServerBeforeQuestionAnswer?: boolean;
   toolReviewDecision?: "approve" | "decline" | "always" | "restart";
   buildPlanMarkers?(nonce: string): {
@@ -208,7 +208,7 @@ export type RunnerE2ECostStatus =
 
 export interface RunnerE2ERuntimeUsage {
   provider: RunnerEnvironmentId;
-  /** Sum of the selected Paperclip heartbeat-run spans. */
+  /** Sum of the selected ThinkingMach heartbeat-run spans. */
   agentRunDurationMs: number;
   /** Sum of provider lease windows when the environment exposes leases. */
   leaseDurationMs: number | null;

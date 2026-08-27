@@ -166,7 +166,7 @@ section() {
 conventional='^(feat|fix)(\([^)]*\))?!?: '
 mkdir -p "$(dirname "$out_file")"
 {
-  printf '# Paperclip stable draft — from beta %s\n\n' "$beta_version"
+  printf '# ThinkingMach stable draft — from beta %s\n\n' "$beta_version"
   printf '> Auto-generated at beta publish from `git log %s..%s` (baseline: %s).\n' "${range_cmd_start}" "${source_short}" "${range_label}"
   printf '> Edit freely during the soak: rewrite for release-notes voice,\n'
   printf '> fold noise, and call out anything a self-hoster must act on.\n'

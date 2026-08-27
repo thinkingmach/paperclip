@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "discord",
   "name": "Discord",
-  "description": "Let people start and continue Paperclip work with an agent from Discord.",
+  "description": "Let people start and continue ThinkingMach work with an agent from Discord.",
   "categories": [
     "communication"
   ],
@@ -25,7 +25,7 @@
       "ownershipModes": [
         "customer"
       ],
-      "whenToUse": "Let people in Discord start and continue work with one Paperclip agent.",
+      "whenToUse": "Let people in Discord start and continue work with one ThinkingMach agent.",
       "credentialFields": [
         {
           "key": "botToken",
@@ -52,7 +52,7 @@
           "secret": false
         }
       ],
-      "guidanceMd": "Create one dedicated Discord application and bot, enable the Message Content intent, install it in one server with the documented bot permissions, then connect its bot token, Application ID, and server ID. Paperclip starts one Discord thread per root bot mention and keeps the linked Paperclip task authoritative.",
+      "guidanceMd": "Create one dedicated Discord application and bot, enable the Message Content intent, install it in one server with the documented bot permissions, then connect its bot token, Application ID, and server ID. ThinkingMach starts one Discord thread per root bot mention and keeps the linked ThinkingMach task authoritative.",
       "consoleLinks": {
         "register": "https://discord.com/developers/applications",
         "docs": "https://discord.com/developers/docs/quick-start/getting-started"

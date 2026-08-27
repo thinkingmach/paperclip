@@ -1,7 +1,7 @@
 import type { AdapterExecutionTarget } from "./execution-target.js";
 
-export const PAPERCLIP_RUNNER_INGRESS_PORT = 43_127;
-export const PAPERCLIP_RUNNER_CONNECT_PATH_PREFIX = "/api/runner/v1/connect";
+export const THINKINGMACH_RUNNER_INGRESS_PORT = 43_127;
+export const THINKINGMACH_RUNNER_CONNECT_PATH_PREFIX = "/api/runner/v1/connect";
 
 export interface SecretHeader {
   readonly name: string;
@@ -17,7 +17,7 @@ export interface RunnerIngressEndpoint {
   close(): Promise<void>;
 }
 
-export type PaperclipRunnerTransport =
+export type ThinkingMachRunnerTransport =
   | {
       readonly mode: "local_loopback";
       readonly connectUrl: string;
@@ -48,31 +48,31 @@ type RunnerIngressAuthorization =
       readonly enableRunnerPreviewIngress: boolean;
     };
 
-export class PaperclipRunnerTransportError extends Error {
+export class ThinkingMachRunnerTransportError extends Error {
   readonly code:
     | "runner_transport_ineligible"
     | "runner_direct_wss_failed"
     | "runner_ingress_unavailable";
 
   constructor(
-    code: PaperclipRunnerTransportError["code"],
+    code: ThinkingMachRunnerTransportError["code"],
     message: string,
     options?: ErrorOptions,
   ) {
     super(`${code}: ${message}`, options);
-    this.name = "PaperclipRunnerTransportError";
+    this.name = "ThinkingMachRunnerTransportError";
     this.code = code;
   }
 }
 
 function connectPath(runId: string): string {
   if (!runId || runId.includes("/") || runId.includes("?") || runId.includes("#")) {
-    throw new PaperclipRunnerTransportError(
+    throw new ThinkingMachRunnerTransportError(
       "runner_transport_ineligible",
       "Runner run id is not safe for a WebSocket route.",
     );
   }
-  return `${PAPERCLIP_RUNNER_CONNECT_PATH_PREFIX}/${encodeURIComponent(runId)}`;
+  return `${THINKINGMACH_RUNNER_CONNECT_PATH_PREFIX}/${encodeURIComponent(runId)}`;
 }
 
 export function buildDirectRunnerConnectUrl(input: {
@@ -83,20 +83,20 @@ export function buildDirectRunnerConnectUrl(input: {
   try {
     url = new URL(input.runnerPublicUrl);
   } catch (error) {
-    throw new PaperclipRunnerTransportError(
+    throw new ThinkingMachRunnerTransportError(
       "runner_direct_wss_failed",
       "The configured runner public URL is invalid.",
       { cause: error },
     );
   }
   if (url.protocol !== "wss:") {
-    throw new PaperclipRunnerTransportError(
+    throw new ThinkingMachRunnerTransportError(
       "runner_direct_wss_failed",
       "Remote runner connectivity requires a wss: runner public URL.",
     );
   }
   if (url.username || url.password || url.search || url.hash) {
-    throw new PaperclipRunnerTransportError(
+    throw new ThinkingMachRunnerTransportError(
       "runner_direct_wss_failed",
       "Runner public URLs cannot contain userinfo, a query string, or a fragment.",
     );
@@ -105,7 +105,7 @@ export function buildDirectRunnerConnectUrl(input: {
   return url.toString();
 }
 
-export async function resolvePaperclipRunnerTransport(input: {
+export async function resolveThinkingMachRunnerTransport(input: {
   target: AdapterExecutionTarget;
   runId: string;
   localConnectUrl: string;
@@ -116,7 +116,7 @@ export async function resolvePaperclipRunnerTransport(input: {
     port: number;
     path: string;
   }) => Promise<RunnerIngressEndpoint>;
-} & RunnerIngressAuthorization): Promise<PaperclipRunnerTransport> {
+} & RunnerIngressAuthorization): Promise<ThinkingMachRunnerTransport> {
   if (input.target.kind === "local") {
     return { mode: "local_loopback", connectUrl: input.localConnectUrl };
   }
@@ -126,7 +126,7 @@ export async function resolvePaperclipRunnerTransport(input: {
     input.target.providerKey === "daytona" &&
     input.target.effectiveCapabilities?.runnerWebSocketIngress !== true
   ) {
-    throw new PaperclipRunnerTransportError(
+    throw new ThinkingMachRunnerTransportError(
       "runner_ingress_unavailable",
       "Daytona runner execution requires provider WebSocket ingress capability.",
     );
@@ -139,15 +139,15 @@ export async function resolvePaperclipRunnerTransport(input: {
     const ingressAuthorized =
       input.runnerIngressAuthorized ?? input.enableRunnerPreviewIngress ?? false;
     if (!ingressAuthorized) {
-      throw new PaperclipRunnerTransportError(
+      throw new ThinkingMachRunnerTransportError(
         "runner_ingress_unavailable",
-        "Runner ingress is not authorized for this Paperclip Runner run.",
+        "Runner ingress is not authorized for this ThinkingMach Runner run.",
       );
     }
     const getRunnerIngressEndpoint =
       input.getRunnerIngressEndpoint ?? input.target.getRunnerIngressEndpoint;
     if (!input.target.leaseId || !getRunnerIngressEndpoint) {
-      throw new PaperclipRunnerTransportError(
+      throw new ThinkingMachRunnerTransportError(
         "runner_ingress_unavailable",
         "The sandbox runner ingress provider is unavailable for this lease.",
       );
@@ -155,13 +155,13 @@ export async function resolvePaperclipRunnerTransport(input: {
     const path = connectPath(input.runId);
     const ingress = await getRunnerIngressEndpoint({
       leaseId: input.target.leaseId,
-      port: PAPERCLIP_RUNNER_INGRESS_PORT,
+      port: THINKINGMACH_RUNNER_INGRESS_PORT,
       path,
     });
     return {
       mode: "provider_ingress",
       listenAddress: "0.0.0.0",
-      listenPort: PAPERCLIP_RUNNER_INGRESS_PORT,
+      listenPort: THINKINGMACH_RUNNER_INGRESS_PORT,
       listenPath: path,
       ingress,
     };
@@ -180,7 +180,7 @@ export async function resolvePaperclipRunnerTransport(input: {
     };
   }
 
-  throw new PaperclipRunnerTransportError(
+  throw new ThinkingMachRunnerTransportError(
     "runner_transport_ineligible",
     "The remote execution target has neither runner WebSocket ingress nor an explicit runner public URL.",
   );

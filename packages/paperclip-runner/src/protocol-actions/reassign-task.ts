@@ -19,7 +19,7 @@ export const reassignTaskAction = {
     "idempotency": "required",
     "disabledByDefault": false,
     "realBindingStatus": "live_codex",
-    "realServiceBinding": "PaperclipRunnerToolAuthority.reassign_task",
+    "realServiceBinding": "ThinkingMachRunnerToolAuthority.reassign_task",
     "prpEvidence": "semantic-operation item event plus company-entity state diff and audit record",
     "prpBindingStatus": "bound",
     "legacyAliases": []

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { IssueReviewAttention } from "@paperclipai/shared";
+import type { IssueReviewAttention } from "@thinkingmach/shared";
 import { boundExternalChatProvider } from "../native-runtime/external-chat-provider.js";
 import { extractWakeCommentIds } from "../../modules/run-dispatch/index.js";
 import { withRecoveryContext } from "./status-only-context.js";

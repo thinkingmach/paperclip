@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { getConnectableAppDefinition, MEMORY_CONNECTOR_IDS, INSTANCE_FEATURE_KEYS, instanceExperimentalSettingsSchema, type MemoryConnectorId } from "@paperclipai/shared";
+import { getConnectableAppDefinition, MEMORY_CONNECTOR_IDS, INSTANCE_FEATURE_KEYS, instanceExperimentalSettingsSchema, type MemoryConnectorId } from "@thinkingmach/shared";
 import { queryKeys } from "@/lib/queryKeys";
 import { ConnectionSetupCompletionScreen, ConnectionSetupFlow, OAuthConnectStateScreen } from "@/features/connections/ConnectionSetupFlow";
 import { ConnectorCard } from "@/pages/apps/Browse";
@@ -81,7 +81,7 @@ function MemoryReview({ provider = "mem0", scenario = "catalog" }: { provider?: 
           : selection && ready ? <>
             <div hidden={Boolean(signIn)}><ConnectionSetupFlow key={selection} serviceSlug={selection} onComplete={() => setCompleted(true)} onCancel={() => setSelection(null)} /></div>
             {signIn && app ? <div className="space-y-4">
-              <p role="note" className="text-sm text-muted-foreground">Storybook sign-in simulation. Continue to simulate provider approval and return to Paperclip.</p>
+              <p role="note" className="text-sm text-muted-foreground">Storybook sign-in simulation. Continue to simulate provider approval and return to ThinkingMach.</p>
               <OAuthConnectStateScreen entry={app} phase="entry" onRetry={() => { signIn.complete(); setSignIn(null); }} onBack={() => { setSignIn(null); setSelection(null); }} onCancel={() => { setSignIn(null); setSelection(null); }} />
             </div> : null}
           </>

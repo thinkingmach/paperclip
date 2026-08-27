@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type RefObject } from "react";
-import { resolveAgentAppearance, type CharacterState } from "@paperclipai/shared";
+import { resolveAgentAppearance, type CharacterState } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import { characterSlot } from "@/lib/agent-character-slot";
 import { AgentAvatar, avatarSizeClasses, type AgentAvatarProps } from "./AgentAvatar";
-import type { createCharacter } from "@paperclipai/shared/cliplab/runtime";
+import type { createCharacter } from "@thinkingmach/shared/cliplab/runtime";
 
 type Player = ReturnType<typeof createCharacter>;
 export interface AgentCharacterProps extends Omit<AgentAvatarProps, "pose"> {
@@ -38,7 +38,7 @@ export function AgentCharacter({ agent, appearance, size = 256, state = "idle", 
     if (!active || owner !== slotId.current) return;
     let disposed = false;
     setReady(false);
-    void Promise.all([import("@paperclipai/shared/cliplab/runtime"), import("@paperclipai/shared/cliplab/definition")]).then(([runtime, library]) => {
+    void Promise.all([import("@thinkingmach/shared/cliplab/runtime"), import("@thinkingmach/shared/cliplab/definition")]).then(([runtime, library]) => {
       if (disposed || !host.current) return;
       player.current = runtime.createCharacter(host.current, library.characterDefinition(identity, muted), {
         animation: library.animationId(state), trackingRegion: trackingRegion?.current ?? root.current ?? undefined,
@@ -50,7 +50,7 @@ export function AgentCharacter({ agent, appearance, size = 256, state = "idle", 
   }, [active, owner, trackingRegion, trackingScope, size, followCursor, followRotation]);
   useEffect(() => {
     if (!player.current) return;
-    void import("@paperclipai/shared/cliplab/definition").then(library => {
+    void import("@thinkingmach/shared/cliplab/definition").then(library => {
       player.current?.setDefinition(library.characterDefinition(identity, muted));
       player.current?.setAnimation(library.animationId(state));
     });

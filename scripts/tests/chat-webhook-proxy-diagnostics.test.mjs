@@ -86,11 +86,11 @@ async function harness(t, options = {}) {
   upstream.listen(0, "127.0.0.1");
   await once(upstream, "listening");
   let server;
-  if (process.env.PAPERCLIP_WEBHOOK_PROXY_UNDER_TEST) {
+  if (process.env.THINKINGMACH_WEBHOOK_PROXY_UNDER_TEST) {
     // Optional integration against the ignored local proxy; the portable suite
     // needs no live deployment/configuration or ignored workspace artifacts.
     const source = readFileSync(
-      process.env.PAPERCLIP_WEBHOOK_PROXY_UNDER_TEST,
+      process.env.THINKINGMACH_WEBHOOK_PROXY_UNDER_TEST,
       "utf8",
     ).replace(/^import .*;\r?\n/gm, "");
     const wrappedHttp = {
@@ -124,7 +124,7 @@ async function harness(t, options = {}) {
         },
       },
       observeChatWebhookProxyRejection,
-      { env: { PAPERCLIP_QA_FAIL_ONCE_GITHUB_PATH: options.faultPath } },
+      { env: { THINKINGMACH_QA_FAIL_ONCE_GITHUB_PATH: options.faultPath } },
     );
   } else {
     server = http.createServer(
@@ -367,7 +367,7 @@ for (const failure of ["client_abort", "response_error"]) {
   );
 }
 
-if (process.env.PAPERCLIP_WEBHOOK_PROXY_UNDER_TEST) {
+if (process.env.THINKINGMACH_WEBHOOK_PROXY_UNDER_TEST) {
   test(
     "wired proxy preserves its 1 MiB streaming limit and accepted timing",
     { timeout: 5_000 },

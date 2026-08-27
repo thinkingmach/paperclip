@@ -1,17 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  BookOpen,
-  Brain,
-  ChevronsLeftRightEllipsis,
-  CircleHelp,
-  FilePenLine,
-  MessageSquareReply,
-  Network,
-  Search,
-  SearchCode,
-  Terminal,
-  Wrench,
-} from "lucide-react";
+import { BookOpen, Brain, ChevronsLeftRightEllipsis, CircleHelp, FilePenLine, MessageSquareReply, Network, Search, SearchCode, Terminal, Wrench,  } from "lucide-react";
 import { McpIcon } from "./McpIcon";
 import {
   humanizeToolName,
@@ -50,7 +38,7 @@ describe("tool activity vocabulary", () => {
       icon: McpIcon,
       runningLabel: "Searching tasks",
       completedLabel: "Searched tasks",
-      sourceLabel: "Paperclip",
+      sourceLabel: "ThinkingMach",
       confidence: "exact",
     });
   });
@@ -91,7 +79,7 @@ describe("tool activity vocabulary", () => {
     }
   });
 
-  it("gives anticipated provider tools and Paperclip operations purpose-specific labels", () => {
+  it("gives anticipated provider tools and ThinkingMach operations purpose-specific labels", () => {
     const anticipated = [
       "ToolSearch", "NotebookRead", "NotebookEdit", "TaskOutput", "TaskStop", "SendMessage",
       "EnterPlanMode", "ExitPlanMode", "LSP", "TodoWrite", "ReportFindings", "Skill",

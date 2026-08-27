@@ -748,7 +748,7 @@ test.describe("Board send delivery refresh", () => {
         }),
       );
       // Only the publication API is simulated. Task creation and safe file
-      // uploads use this test's isolated Paperclip instance, never Teams.
+      // uploads use this test's isolated ThinkingMach instance, never Teams.
       await page.route(`**${publicationsPath}`, (route) => {
         expect(route.request().method()).toBe("POST");
         posts.push(bodyOf(route));

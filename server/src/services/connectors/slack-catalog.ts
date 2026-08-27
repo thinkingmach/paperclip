@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { and, eq, isNull, sql } from "drizzle-orm";
-import { SLACK_TOOLS } from "@paperclipai/shared";
+import { SLACK_TOOLS } from "@thinkingmach/shared";
 import {
   chatEndpoints,
   toolConnections,
@@ -10,7 +10,7 @@ import {
   toolProfileEntries,
   toolProfileBindings,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   ToolGatewayDescriptor,
   ToolGatewaySession,

@@ -16,7 +16,7 @@ afterEach(() => {
   window.sessionStorage.clear();
 });
 
-describe("Paperclip Cloud OAuth handoff", () => {
+describe("ThinkingMach Cloud OAuth handoff", () => {
   it("uses the fixed same-origin endpoint and never navigates to the legacy confirmation URL", async () => {
     const request = vi.fn(async () => Response.json({
       authorizationUrl: "https://provider.example.test/authorize?state=one",

@@ -1,5 +1,5 @@
 import { Router, type Request } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   createStatusCardSchema,
   listStatusCardsQuerySchema,
@@ -8,7 +8,7 @@ import {
   STATUS_CARD_AGENT_MAX_INTEREST_PROMPT_LENGTH,
   writeStatusCardQuerySchema,
   writeStatusCardSummarySchema,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { forbidden, notFound, unprocessable } from "../errors.js";
 import { validate } from "../middleware/validate.js";
 import { authorizationDeniedDetails } from "../services/authorization.js";

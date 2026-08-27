@@ -144,9 +144,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                         "protocolVersion": GENERATED_ACPX_SIDECAR_PROTOCOL_VERSION,
                         "id": id, "ok": true,
                         "result": {
-                            "name": std::env::var("PAPERCLIP_NATIVE_MCP_NAME").ok(),
-                            "url": std::env::var("PAPERCLIP_NATIVE_MCP_URL").ok(),
-                            "hasToken": std::env::var("PAPERCLIP_NATIVE_MCP_TOKEN").is_ok(),
+                            "name": std::env::var("THINKINGMACH_NATIVE_MCP_NAME").ok(),
+                            "url": std::env::var("THINKINGMACH_NATIVE_MCP_URL").ok(),
+                            "hasToken": std::env::var("THINKINGMACH_NATIVE_MCP_TOKEN").is_ok(),
                             "hasUnrelatedSecret": std::env::var("UNRELATED_EVAL_SECRET").is_ok(),
                         }
                     }),
@@ -749,7 +749,7 @@ fn bootstrap_success(
                     && params.get("turnId").and_then(Value::as_str) == Some("turn-1")
                     && params.get("result").is_none()
                     && params.pointer("/error/message").and_then(Value::as_str)
-                        == Some("Paperclip semantic operation failed")
+                        == Some("ThinkingMach semantic operation failed")
                     && !params.to_string().contains("violet-internal-diagnostic-4821")
             } else {
                 mode != "resolutions-wrong-ack"

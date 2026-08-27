@@ -1,15 +1,15 @@
 import { createHash } from "node:crypto";
 
 import { and, asc, eq, inArray } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   assets,
   heartbeatRuns,
   issueAttachments,
   issueComments,
   issues,
-} from "@paperclipai/db";
-import type { SourceTrustMetadata } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { SourceTrustMetadata } from "@thinkingmach/shared";
 
 import { createRunSecretRedactionRegistry } from "../run-secret-redaction.js";
 import { sanitizeQuarantinedCommentForHigherTrust } from "../source-trust.js";
@@ -224,7 +224,7 @@ function attachmentImportNotice(
   const reasons = entries
     .map(([reason, count]) => `${reason.replaceAll("_", " ")}: ${count}`)
     .join(", ");
-  return `Paperclip could not import every attachment from this exact external message: ${omitted} attachment${omitted === 1 ? " was" : "s were"} omitted (${reasons}). Treat omitted attachments as unavailable; do not infer their contents or substitute an older workspace file.`;
+  return `ThinkingMach could not import every attachment from this exact external message: ${omitted} attachment${omitted === 1 ? " was" : "s were"} omitted (${reasons}). Treat omitted attachments as unavailable; do not infer their contents or substitute an older workspace file.`;
 }
 
 function bindingDigest(input: {
@@ -470,7 +470,7 @@ async function currentWakeCommentsSnapshot(
       filename: attachment.filename?.trim() || "attachment",
       contentType: attachment.contentType,
       byteSize: attachment.byteSize,
-      // This closed reader intentionally has no general Paperclip API key.
+      // This closed reader intentionally has no general ThinkingMach API key.
       // Inline wake attachments are staged separately by the native harness;
       // overflow attachments remain visible as metadata so the agent can be
       // truthful rather than claiming it inspected bytes it cannot access.

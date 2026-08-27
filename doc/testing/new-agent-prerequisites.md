@@ -5,7 +5,7 @@ Reviewed against the adapter builders, runtime probes, and provider documentatio
 | Adapter | Setup connection/prerequisites | Model and effort in setup |
 | --- | --- | --- |
 | Claude Code / Codex | Existing subscription/API connection step | Searchable model; supported effort options |
-| Paperclip Runner | The selected Codex, Claude ACPX, or OpenCode connection | Provider model; no generic effort setting |
+| ThinkingMach Runner | The selected Codex, Claude ACPX, or OpenCode connection | Provider model; no generic effort setting |
 | Cursor CLI | `CURSOR_API_KEY`, existing organization secret, or host `agent login` | Model; no generic effort (Cursor uses modes) |
 | Cursor Cloud | Enter a new `CURSOR_API_KEY` and repository URL; optional starting branch/ref. The key is saved as a new organization secret; setup does not reuse existing keys. | Account-default model; no generic effort |
 | Gemini CLI | `GEMINI_API_KEY`, existing organization secret, or supported host login | Model; no effort control |

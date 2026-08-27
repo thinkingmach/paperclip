@@ -42,8 +42,8 @@ async function createTask(page: Page, prefix: string, agentName: string, title: 
 }
 
 const coordination = native
-  ? `Use the native Paperclip tools. First get_task_context to verify the current task and your identity. For hiring use call_api with operationId POST /api/companies/{companyId}/agent-hires and the requested JSON body. Use create_task for subtasks. Do not use shell commands or raw HTTP. Never read or print credentials. For completion call paperclip_finish exactly once with reportedWorkDisposition done, summary describing the completed work, completionClaim {contractRevision:"1",objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]}, evidence [], and verification []. Wait for that tool to succeed before your final response.`
-  : `Use the injected PAPERCLIP_API_URL and PAPERCLIP_API_KEY for every API request. Include Authorization: Bearer $PAPERCLIP_API_KEY and X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID. Never print credentials or the environment. Verify GET /api/agents/me identifies you before writes; stop if it does not. You must act as the agent, not the local board. Use standard Paperclip APIs or the managed API tool, and do not install a CLI. Do not read or modify unrelated files. For completion use PATCH /api/issues/$PAPERCLIP_TASK_ID with status done and a comment.`;
+  ? `Use the native ThinkingMach tools. First get_task_context to verify the current task and your identity. For hiring use call_api with operationId POST /api/companies/{companyId}/agent-hires and the requested JSON body. Use create_task for subtasks. Do not use shell commands or raw HTTP. Never read or print credentials. For completion call paperclip_finish exactly once with reportedWorkDisposition done, summary describing the completed work, completionClaim {contractRevision:"1",objectiveSatisfied:true,criteria:[{criterionId:"objective",status:"satisfied",evidenceRefs:[]}],remainingWork:[]}, evidence [], and verification []. Wait for that tool to succeed before your final response.`
+  : `Use the injected THINKINGMACH_API_URL and THINKINGMACH_API_KEY for every API request. Include Authorization: Bearer $THINKINGMACH_API_KEY and X-ThinkingMach-Run-Id: $THINKINGMACH_RUN_ID. Never print credentials or the environment. Verify GET /api/agents/me identifies you before writes; stop if it does not. You must act as the agent, not the local board. Use standard ThinkingMach APIs or the managed API tool, and do not install a CLI. Do not read or modify unrelated files. For completion use PATCH /api/issues/$THINKINGMACH_TASK_ID with status done and a comment.`;
 
 for (const source of ["anthropic", "openai"] as const) {
   test(`${environment}: ${runner}: ${providers[source].label} hires both providers, delegates, and repairs missing auth in the task`, async ({ page, request }, testInfo) => {
@@ -62,7 +62,7 @@ for (const source of ["anthropic", "openai"] as const) {
     let environmentId: string | undefined;
     if (environment === "daytona") {
       if (!process.env.DAYTONA_API_KEY || !process.env.HIRING_AI_DAYTONA_IMAGE) throw new Error("Daytona requires DAYTONA_API_KEY and HIRING_AI_DAYTONA_IMAGE");
-      const installed = (await api("/plugins")).find((plugin: any) => plugin.packageName === "@paperclipai/plugin-daytona");
+      const installed = (await api("/plugins")).find((plugin: any) => plugin.packageName === "@thinkingmach/plugin-daytona");
       if (!installed) await api("/plugins/install", "POST", { packageName: path.resolve(import.meta.dirname, "../../packages/plugins/sandbox-providers/daytona"), isLocalPath: true });
       else expect(installed.status).toBe("ready");
       const secret = await api(`/companies/${company.id}/secrets`, "POST", { name: `Daytona QA ${nonce}`, key: "DAYTONA_API_KEY", value: process.env.DAYTONA_API_KEY });
@@ -84,7 +84,7 @@ for (const source of ["anthropic", "openai"] as const) {
     const title = `Hire both providers ${nonce}`;
     const child = native
       ? `Use create_task with idempotencyKey self-${nonce}, title ${JSON.stringify(selfTitle)}, assigneeActorId ${manager.id}, and description ${JSON.stringify(simplePrompt("SELF"))}.`
-      : `Create a subtask with title ${JSON.stringify(selfTitle)}, parentId equal to PAPERCLIP_TASK_ID, assigneeAgentId ${manager.id}, status todo, and description ${JSON.stringify(simplePrompt("SELF"))}.`;
+      : `Create a subtask with title ${JSON.stringify(selfTitle)}, parentId equal to THINKINGMACH_TASK_ID, assigneeAgentId ${manager.id}, status todo, and description ${JSON.stringify(simplePrompt("SELF"))}.`;
     const prompt = `${coordination}\nPerform exactly these three operations, then mark this manager task done with links. Do not wait for the child and do not configure AI connections.\n1. POST /api/companies/${company.id}/agent-hires with ${JSON.stringify(hire(source, sameName))}.\n2. POST the same endpoint with ${JSON.stringify(hire(target, crossName))}. It is expected that ${providers[target].label} has no connection yet; hiring must still succeed. Do not provide runtimeConfig.aiConnection or credentials for either hire; the server must select defaults.\n3. ${child} The board will assign tasks to the two hires separately.`;
     const evidence: Record<string, unknown> = { companyId: company.id, prefix: company.issuePrefix, managerId: manager.id, account, source, target, runner, environment, environmentId };
     console.log(`Fixture ${JSON.stringify(evidence)}`);

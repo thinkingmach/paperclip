@@ -14,7 +14,7 @@ describe("humanizeConnectionDisplayName", () => {
   });
 
   it("drops the `Plugin:` prefix and title-cases the package leaf", () => {
-    expect(humanizeConnectionDisplayName("Plugin: paperclipai.plugin-briefs")).toBe("Briefs");
+    expect(humanizeConnectionDisplayName("Plugin: thinkingmach.plugin-briefs")).toBe("Briefs");
     expect(humanizeConnectionDisplayName("Plugin: acme.plugin-weekly-report")).toBe(
       "Weekly Report",
     );

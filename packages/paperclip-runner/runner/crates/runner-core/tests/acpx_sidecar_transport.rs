@@ -217,7 +217,7 @@ fn preserves_only_allowlisted_stderr_categories_when_the_process_exits() {
 
 #[test]
 fn assigned_gateway_binding_reaches_qualified_sidecar_without_unrelated_secrets() {
-    const CHILD: &str = "PAPERCLIP_TEST_MCP_ENV_CHILD";
+    const CHILD: &str = "THINKINGMACH_TEST_MCP_ENV_CHILD";
     if std::env::var_os(CHILD).is_none() {
         let status = std::process::Command::new(std::env::current_exe().unwrap())
             .args([
@@ -226,10 +226,10 @@ fn assigned_gateway_binding_reaches_qualified_sidecar_without_unrelated_secrets(
                 "--nocapture",
             ])
             .env(CHILD, "1")
-            .env("PAPERCLIP_NATIVE_MCP_NAME", "paperclip-assigned")
-            .env("PAPERCLIP_NATIVE_MCP_URL", "http://127.0.0.1:3100/mcp")
+            .env("THINKINGMACH_NATIVE_MCP_NAME", "paperclip-assigned")
+            .env("THINKINGMACH_NATIVE_MCP_URL", "http://127.0.0.1:3100/mcp")
             .env(
-                "PAPERCLIP_NATIVE_MCP_TOKEN",
+                "THINKINGMACH_NATIVE_MCP_TOKEN",
                 "fixture-token-never-returned-in-test-output",
             )
             .env("UNRELATED_EVAL_SECRET", "must-not-cross-boundary")

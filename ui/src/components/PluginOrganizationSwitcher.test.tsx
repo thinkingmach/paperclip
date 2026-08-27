@@ -4,7 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PluginOrganizationSwitcherProps } from "@paperclipai/plugin-sdk/ui";
+import type { PluginOrganizationSwitcherProps } from "@thinkingmach/plugin-sdk/ui";
 import { PluginOrganizationSwitcher } from "./PluginOrganizationSwitcher";
 import { registerPluginReactComponent, registerPluginWebComponent, type ResolvedPluginSlot } from "@/plugins/slots";
 

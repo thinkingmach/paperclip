@@ -54,18 +54,18 @@ async function createApp(actor: Record<string, unknown>) {
 describe("POST /api/companies Cloud floor", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
-    delete process.env.PAPERCLIP_MANAGED_CONFIG;
+    delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
+    delete process.env.THINKINGMACH_MANAGED_CONFIG;
     mockCompanyService.create.mockResolvedValue(createdCompany);
   });
 
   afterEach(() => {
-    delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
-    delete process.env.PAPERCLIP_MANAGED_CONFIG;
+    delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
+    delete process.env.THINKINGMACH_MANAGED_CONFIG;
   });
 
   it("returns 403 cloud_managed before creating a second company on Cloud", async () => {
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
     const app = await createApp({
       type: "board",
       source: "cloud_tenant",
@@ -82,7 +82,7 @@ describe("POST /api/companies Cloud floor", () => {
   });
 
   it("applies the Cloud floor before request-body validation", async () => {
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
     const app = await createApp({
       type: "board",
       source: "cloud_tenant",

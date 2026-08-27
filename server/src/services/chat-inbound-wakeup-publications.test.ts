@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { agentWakeupRequests, chatActions } from "@paperclipai/db";
+import type { agentWakeupRequests, chatActions } from "@thinkingmach/db";
 import { describe, expect, it } from "vitest";
 import { createDurableChatWakeupRequest } from "./durable-chat-wakeup.js";
 import {
@@ -84,7 +84,7 @@ describe("durable inbound queue notice", () => {
       "Your follow-up is queued.",
     );
     expect(inboundWakePublicationText("not_started")).toBe(
-      "This follow-up was not started. Open the task in Paperclip for details.",
+      "This follow-up was not started. Open the task in ThinkingMach for details.",
     );
     expect(inboundWakePublicationText("removed")).toBe(
       "This queued message was removed.",

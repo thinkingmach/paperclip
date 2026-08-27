@@ -914,7 +914,7 @@
     },
     {
       "id": "co-runid-header-01",
-      "title": "Modifying calls carry the X-Paperclip-Run-Id audit header",
+      "title": "Modifying calls carry the X-ThinkingMach-Run-Id audit header",
       "group": "co",
       "legacyGroup": 2,
       "sourceKind": "eval_case",
@@ -2182,7 +2182,7 @@
     },
     {
       "id": "rf-api-review-changes-01",
-      "title": "Reviewer requests changes with a non-done status and lets Paperclip reassign",
+      "title": "Reviewer requests changes with a non-done status and lets ThinkingMach reassign",
       "group": "rf",
       "legacyGroup": 13,
       "sourceKind": "eval_case",

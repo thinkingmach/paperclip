@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PaperclipPluginManifestV1 } from "@paperclipai/shared";
+import type { ThinkingMachPluginManifestV1 } from "@thinkingmach/shared";
 import { listReadyPluginEnvironmentDrivers } from "../services/plugin-environment-driver.js";
 import type { PluginWorkerManager } from "../services/plugin-worker-manager.js";
 
@@ -17,13 +17,13 @@ vi.mock("../services/plugin-registry.js", () => ({
 const PLUGIN_ID = "plugin-capability";
 const PLUGIN_KEY = "paperclip.capability-sandbox-provider";
 
-const manifest: PaperclipPluginManifestV1 = {
+const manifest: ThinkingMachPluginManifestV1 = {
   id: PLUGIN_KEY,
   apiVersion: 1,
   version: "1.0.0",
   displayName: "Capability Sandbox Provider",
   description: "Sandbox provider that declares fine-grained capabilities.",
-  author: "Paperclip",
+  author: "ThinkingMach",
   categories: ["automation"],
   capabilities: ["environment.drivers.register"],
   entrypoints: { worker: "dist/worker.js" },

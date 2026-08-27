@@ -113,7 +113,7 @@ export function AccessEditor({
         </p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="allowed-members">Paperclip members</Label>
+        <Label htmlFor="allowed-members">ThinkingMach members</Label>
         <select
           id="allowed-members"
           className={selectClass}
@@ -142,7 +142,7 @@ export function AccessEditor({
             setMessage("");
           }}
         >
-          Add Paperclip member
+          Add ThinkingMach member
         </Button>
         <Button
           variant="outline"
@@ -175,8 +175,8 @@ export function AccessEditor({
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   {person.kind === "member"
-                    ? "Paperclip member · uses their current permissions"
-                    : "Restricted guest · no Paperclip membership or personal credentials"}
+                    ? "ThinkingMach member · uses their current permissions"
+                    : "Restricted guest · no ThinkingMach membership or personal credentials"}
                 </p>
               </div>
               <Button
@@ -261,13 +261,13 @@ export function AccessEditor({
           <DialogHeader>
             <DialogTitle>
               {adding === "member"
-                ? "Add Paperclip member"
+                ? "Add ThinkingMach member"
                 : "Allow GitHub user"}
             </DialogTitle>
             <DialogDescription>
               {adding === "member"
-                ? "Choose an existing company member. They use their own Paperclip permissions and linked GitHub account."
-                : "Allow a specific GitHub account to mention this bot, without inviting them to Paperclip."}
+                ? "Choose an existing company member. They use their own ThinkingMach permissions and linked GitHub account."
+                : "Allow a specific GitHub account to mention this bot, without inviting them to ThinkingMach."}
             </DialogDescription>
           </DialogHeader>
           {adding === "member" ? (

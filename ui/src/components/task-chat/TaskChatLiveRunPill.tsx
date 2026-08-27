@@ -1,4 +1,4 @@
-import type { ExecutionProjection } from "@paperclipai/shared";
+import type { ExecutionProjection } from "@thinkingmach/shared";
 import { Loader2 } from "lucide-react";
 import type { TranscriptEntry } from "../../adapters";
 import { cn } from "@/lib/utils";

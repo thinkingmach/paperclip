@@ -17,7 +17,7 @@ scale 1, muted false. It is a real downloadable fixture, not a screenshot or
 placeholder. Production resolves the selected agent's persisted
 appearance and uses `agentAvatarUrl(appearance, 512, 1, "rest")` for its image and
 download. Do not select a new palette at render time. Uploaded status is only the
-user's confirmation; Paperclip has not verified the Slack icon.
+user's confirmation; ThinkingMach has not verified the Slack icon.
 
 Provider instructions checked against Slack's official documentation:
 - https://docs.slack.dev/surfaces/app-home/#using-the-about-tab

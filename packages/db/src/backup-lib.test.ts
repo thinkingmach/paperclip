@@ -488,10 +488,10 @@ describeEmbeddedPostgres("runDatabaseBackup", () => {
       const backupDir = createTempDir("paperclip-db-copy-fk-backup-");
       const sourceSql = postgres(sourceConnectionString, { max: 1, onnotice: () => {} });
       const restoreSql = postgres(restoreConnectionString, { max: 1, onnotice: () => {} });
-      const originalPgDumpPath = process.env.PAPERCLIP_PG_DUMP_PATH;
-      const originalPsqlPath = process.env.PAPERCLIP_PSQL_PATH;
-      process.env.PAPERCLIP_PG_DUMP_PATH = "/bin/false";
-      process.env.PAPERCLIP_PSQL_PATH = "/bin/false";
+      const originalPgDumpPath = process.env.THINKINGMACH_PG_DUMP_PATH;
+      const originalPsqlPath = process.env.THINKINGMACH_PSQL_PATH;
+      process.env.THINKINGMACH_PG_DUMP_PATH = "/bin/false";
+      process.env.THINKINGMACH_PSQL_PATH = "/bin/false";
 
       try {
         await sourceSql.unsafe(`
@@ -542,14 +542,14 @@ describeEmbeddedPostgres("runDatabaseBackup", () => {
         expect(rows).toEqual([{ note: "child emitted before parent", name: "parent" }]);
       } finally {
         if (originalPgDumpPath === undefined) {
-          delete process.env.PAPERCLIP_PG_DUMP_PATH;
+          delete process.env.THINKINGMACH_PG_DUMP_PATH;
         } else {
-          process.env.PAPERCLIP_PG_DUMP_PATH = originalPgDumpPath;
+          process.env.THINKINGMACH_PG_DUMP_PATH = originalPgDumpPath;
         }
         if (originalPsqlPath === undefined) {
-          delete process.env.PAPERCLIP_PSQL_PATH;
+          delete process.env.THINKINGMACH_PSQL_PATH;
         } else {
-          process.env.PAPERCLIP_PSQL_PATH = originalPsqlPath;
+          process.env.THINKINGMACH_PSQL_PATH = originalPsqlPath;
         }
         await sourceSql.end();
         await restoreSql.end();
@@ -570,7 +570,7 @@ describeEmbeddedPostgres("runDatabaseBackup", () => {
         await fs.promises.writeFile(
           backupFile,
           [
-            "-- Paperclip database backup",
+            "-- ThinkingMach database backup",
             "-- Created: 2026-04-06T00:00:00.000Z",
             "",
             "BEGIN;",

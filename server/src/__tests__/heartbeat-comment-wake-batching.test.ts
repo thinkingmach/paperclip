@@ -28,7 +28,7 @@ import {
   nativeRunFinalizations,
   toolApplications,
   toolConnections,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { runningProcesses } from "../adapters/index.js";
 import { heartbeatService } from "../services/heartbeat.ts";
 import { issueThreadInteractionService } from "../services/issue-thread-interactions.js";
@@ -227,7 +227,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -349,7 +349,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -473,7 +473,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -710,7 +710,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -866,7 +866,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -1011,7 +1011,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -1222,7 +1222,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -1463,7 +1463,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -1660,7 +1660,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -1876,7 +1876,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
       try {
         await db.insert(companies).values({
           id: companyId,
-          name: "Paperclip",
+          name: "ThinkingMach",
           issuePrefix,
           requireBoardApprovalForNewAgents: false,
           defaultResponsibleUserId: "responsible-user",
@@ -2288,7 +2288,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
           "Preserve the original request's exact-output constraints literally.",
         );
         expect(String(gateway.getAgentPayloads()[0]?.message ?? "")).toContain(
-          "Do not narrate Paperclip workflow, checkout, status, or completion bookkeeping.",
+          "Do not narrate ThinkingMach workflow, checkout, status, or completion bookkeeping.",
         );
         const continuationWake = parseWakePayloadFromMessage(
           gateway.getAgentPayloads()[0]?.message,
@@ -2360,7 +2360,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -2579,7 +2579,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -2767,7 +2767,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -2953,7 +2953,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -3118,7 +3118,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -3176,7 +3176,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
       const firstPayload = gateway.getAgentPayloads()[0] ?? {};
       expect(firstPayload.paperclip).toBeUndefined();
       expect(String(firstPayload.message ?? "")).toContain(
-        "## Paperclip Wake Payload",
+        "## ThinkingMach Wake Payload",
       );
       expect(String(firstPayload.message ?? "")).toContain(
         "Do not switch to another issue until you have handled this wake.",
@@ -3283,7 +3283,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -3490,7 +3490,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -3641,7 +3641,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     try {
       await db.insert(companies).values({
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
@@ -3784,13 +3784,13 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     const runId = randomUUID();
     const issuePrefix = `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
     // Pin scheduling suppression off with the runtimeEnv test seam. Do not rely
-    // on the ambient PAPERCLIP_IN_WORKTREE value: startNextQueuedRunForAgent
+    // on the ambient THINKINGMACH_IN_WORKTREE value: startNextQueuedRunForAgent
     // no-ops under suppression and would leave the promoted wake at "queued".
     const heartbeat = heartbeatService(db, { runtimeEnv: {} });
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -3922,14 +3922,14 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     await db.insert(companies).values([
       {
         id: companyId,
-        name: "Paperclip",
+        name: "ThinkingMach",
         issuePrefix,
         requireBoardApprovalForNewAgents: false,
         defaultResponsibleUserId: "responsible-user",
       },
       {
         id: otherCompanyId,
-        name: "Other Paperclip",
+        name: "Other ThinkingMach",
         issuePrefix: otherIssuePrefix,
         requireBoardApprovalForNewAgents: false,
       },
@@ -4021,13 +4021,13 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
     const runId = randomUUID();
     const issuePrefix = `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
     // Pin scheduling suppression off with the runtimeEnv test seam. Do not rely
-    // on the ambient PAPERCLIP_IN_WORKTREE value: startNextQueuedRunForAgent
+    // on the ambient THINKINGMACH_IN_WORKTREE value: startNextQueuedRunForAgent
     // no-ops under suppression and would leave the promoted wake at "queued".
     const heartbeat = heartbeatService(db, { runtimeEnv: {} });
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",
@@ -4180,7 +4180,7 @@ describeEmbeddedPostgres("heartbeat comment wake batching", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       // No defaultResponsibleUserId: the company default must not resolve this wake.

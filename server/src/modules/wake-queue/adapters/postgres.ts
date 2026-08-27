@@ -3,8 +3,8 @@ import { instanceSettingsService } from "../../../services/instance-settings.js"
 import { currentConversationCommentCondition } from "../../../services/agent-conversations.js";
 import { getExecutionBlocker } from "../../../services/execution-blocker.js";
 import { and, asc, eq, inArray, isNull, notInArray, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { extractIssueReferenceIdentifiers } from "@paperclipai/shared";
+import type { Db } from "@thinkingmach/db";
+import { extractIssueReferenceIdentifiers } from "@thinkingmach/shared";
 import {
   activityLog,
   agentWakeupRequests,
@@ -16,7 +16,7 @@ import {
   issueRelations,
   issues,
   nativeRunFinalizations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { hasConversationContinuationPolicy } from "../../../services/conversation-continuation.js";
 import { legacyExecutionNeedsReconciliation } from "../../../services/legacy-execution-recovery.js";
 import {

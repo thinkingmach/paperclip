@@ -1,4 +1,4 @@
-import { isPaperclipExternalChatContractTurn, normalizePaperclipWakePayload } from "@paperclipai/adapter-utils/server-utils";
+import { isThinkingMachExternalChatContractTurn, normalizeThinkingMachWakePayload } from "@thinkingmach/adapter-utils/server-utils";
 
 /** Only new, authorized events belong in an already retained provider conversation.
  * Full bootstrap input is kept separately for an actual provider resume failure.
@@ -11,7 +11,7 @@ export function buildNativeContinuationPrompt(input: {
   /** The constructor opts plain-text chat into the existing resume protocol. */
   allowExternalChat?: boolean;
 }): string | null {
-  const wake = normalizePaperclipWakePayload(input.wakePayload);
+  const wake = normalizeThinkingMachWakePayload(input.wakePayload);
   const continuation = wake?.executionContinuation;
   const delta = continuation?.resumeDelta;
   if (!wake || !delta || delta.baseRunId !== input.previousRunId) return null;
@@ -30,7 +30,7 @@ export function buildNativeContinuationPrompt(input: {
         ((comment as Record<string, unknown>).attachments as unknown[]).length > 0)));
   const externalChat = input.allowExternalChat === true &&
     wake.externalChatProvider === "slack" &&
-    isPaperclipExternalChatContractTurn(input.wakePayload) &&
+    isThinkingMachExternalChatContractTurn(input.wakePayload) &&
     !hasAttachmentContext && wake.commentIds.length > 0 &&
     wake.latestCommentId === wake.commentIds.at(-1) &&
     new Set(wake.commentIds).size === wake.commentIds.length &&

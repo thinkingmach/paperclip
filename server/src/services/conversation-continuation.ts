@@ -1,5 +1,5 @@
 import { and, desc, eq, inArray, isNotNull, or, sql } from "drizzle-orm";
-import { environmentLeases, heartbeatRunEvents, heartbeatRuns, issueRecoveryActions, type Db } from "@paperclipai/db";
+import { environmentLeases, heartbeatRunEvents, heartbeatRuns, issueRecoveryActions, type Db } from "@thinkingmach/db";
 import { readProcessStartedAt } from "./hot-restart.js";
 
 // These adapters accept a conversation turn. Retrying a process or webhook can

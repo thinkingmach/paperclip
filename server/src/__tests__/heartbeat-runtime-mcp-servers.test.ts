@@ -19,12 +19,12 @@ import {
   toolProfileBindings,
   toolProfileEntries,
   toolProfiles,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
 } from "./helpers/embedded-postgres.js";
-import { buildPaperclipRuntimeMcpServers, createManagedMcpRunConfig } from "../services/heartbeat.js";
+import { buildThinkingMachRuntimeMcpServers, createManagedMcpRunConfig } from "../services/heartbeat.js";
 
 import { toolAccessService } from "../services/tool-access.js";
 
@@ -34,7 +34,7 @@ const describeEmbeddedPostgres = embeddedPostgresSupport.supported ? describe : 
 describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
   let db!: ReturnType<typeof createDb>;
   let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
-  const originalApiUrl = process.env.PAPERCLIP_API_URL;
+  const originalApiUrl = process.env.THINKINGMACH_API_URL;
 
   beforeAll(async () => {
     tempDb = await startEmbeddedPostgresTestDatabase("paperclip-heartbeat-runtime-mcp-");
@@ -42,8 +42,8 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
   }, 20_000);
 
   afterEach(async () => {
-    if (originalApiUrl === undefined) delete process.env.PAPERCLIP_API_URL;
-    else process.env.PAPERCLIP_API_URL = originalApiUrl;
+    if (originalApiUrl === undefined) delete process.env.THINKINGMACH_API_URL;
+    else process.env.THINKINGMACH_API_URL = originalApiUrl;
     await db.delete(toolMcpGatewayTokens);
     await db.delete(activityLog);
     await db.delete(toolAccessAuditEvents);
@@ -66,7 +66,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
   });
 
   it("provisions one aggregate gateway and omits unavailable access without blocking any runtime", async () => {
-    process.env.PAPERCLIP_API_URL = "https://paperclip.example.test";
+    process.env.THINKINGMACH_API_URL = "https://paperclip.example.test";
     const [company] = await db.insert(companies).values({
       name: `Runtime MCP ${randomUUID()}`,
       issuePrefix: `RM${randomUUID().slice(0, 5).toUpperCase()}`,
@@ -135,8 +135,8 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
     });
 
     const before = Date.now();
-    const first = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
-    const second = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
+    const first = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
+    const second = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
 
     expect(first).toHaveLength(1);
     expect(first[0]).toMatchObject({
@@ -166,7 +166,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
     expect(JSON.stringify(tokens)).not.toContain(first[0]!.token);
 
     await expect(
-      buildPaperclipRuntimeMcpServers({
+      buildThinkingMachRuntimeMcpServers({
         db,
         agent: agent!,
         runId: randomUUID(),
@@ -180,7 +180,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
       .where(eq(toolConnections.id, installedConnection!.id));
     const unavailableReports: Array<Array<{ id: string; name: string }>> = [];
     await expect(
-      buildPaperclipRuntimeMcpServers({
+      buildThinkingMachRuntimeMcpServers({
         db,
         agent: agent!,
         runId: randomUUID(),
@@ -207,7 +207,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
   });
 
   it("preserves exact permissions when an aggregate assignment exceeds the public 250-entry edit limit", async () => {
-    process.env.PAPERCLIP_API_URL = "https://paperclip.example.test";
+    process.env.THINKINGMACH_API_URL = "https://paperclip.example.test";
     const [company] = await db.insert(companies).values({
       name: "Large MCP assignment",
       issuePrefix: `LM${randomUUID().slice(0, 5).toUpperCase()}`,
@@ -258,7 +258,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
       companyId: company!.id, connectionId: connection!.id, targetType: "agent", targetId: agent!.id,
     });
 
-    const servers = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
+    const servers = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
     expect(servers).toHaveLength(1);
     const [gateway] = await db.select().from(toolMcpGateways);
     const generatedEntries = await db.select().from(toolProfileEntries)
@@ -279,13 +279,13 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
     expect(effective.allowedToolNames).not.toContain("unassigned");
     expect(effective.allowedToolNames).not.toContain("new_after_snapshot");
 
-    const reused = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
+    const reused = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId: randomUUID() });
     expect(reused[0]!.connectionId).toBe(servers[0]!.connectionId);
     expect(await db.select().from(toolMcpGateways)).toHaveLength(1);
   });
 
   it("exposes only the dedicated GitHub connection when a personal connection is also installed", async () => {
-    process.env.PAPERCLIP_API_URL = "https://paperclip.example.test";
+    process.env.THINKINGMACH_API_URL = "https://paperclip.example.test";
     const [company] = await db.insert(companies).values({
       name: `Runtime GitHub identity ${randomUUID()}`,
       issuePrefix: `RG${randomUUID().slice(0, 5).toUpperCase()}`,
@@ -400,7 +400,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
       contextSnapshot: {},
     }).returning();
 
-    const servers = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId: run!.id });
+    const servers = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId: run!.id });
 
     expect(servers).toHaveLength(1);
     const [runtimeGateway] = await db.select().from(toolMcpGateways);
@@ -468,7 +468,7 @@ describeEmbeddedPostgres("heartbeat runtime MCP servers", () => {
       contextSnapshot: {},
     });
 
-    const servers = await buildPaperclipRuntimeMcpServers({ db, agent: agent!, runId });
+    const servers = await buildThinkingMachRuntimeMcpServers({ db, agent: agent!, runId });
 
     expect(servers).toEqual([]);
     const [activity] = await db

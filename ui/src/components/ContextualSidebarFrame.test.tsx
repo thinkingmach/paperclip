@@ -11,7 +11,7 @@ const mockNavigate = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/router", () => ({ useNavigate: () => mockNavigate }));
 vi.mock("@/context/CompanyContext", () => ({
-  useCompany: () => ({ selectedCompany: { name: "Paperclip", issuePrefix: "PAP" } }),
+  useCompany: () => ({ selectedCompany: { name: "ThinkingMach", issuePrefix: "PAP" } }),
 }));
 vi.mock("@/context/SidebarContext", () => ({
   useSidebar: () => ({ isMobile: false, setSidebarOpen: vi.fn(), collapsed: true, peeking: false }),
@@ -48,7 +48,7 @@ describe("ContextualSidebarFrame", () => {
 
   it("renders the contextual identity and uses a safe fallback", () => {
     const root = render();
-    expect(container.textContent).toContain("Paperclip");
+    expect(container.textContent).toContain("ThinkingMach");
     expect(container.textContent).toContain("Settings");
 
     act(() => {

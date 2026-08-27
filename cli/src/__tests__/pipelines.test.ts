@@ -34,8 +34,8 @@ async function run(args: string[]): Promise<void> {
 describe("pipeline CLI commands", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    delete process.env.PAPERCLIP_API_KEY;
-    delete process.env.PAPERCLIP_API_URL;
+    delete process.env.THINKINGMACH_API_KEY;
+    delete process.env.THINKINGMACH_API_URL;
     vi.spyOn(console, "log").mockImplementation(() => {});
   });
 

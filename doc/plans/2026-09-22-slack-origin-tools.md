@@ -51,7 +51,7 @@ must be reported accurately and retain bounded history search.
   and verifies resolution waits, then retains identity/revocation enforcement.
 - Live staging on `4e00210da`: a linked Slack request read the channel decision,
   cited its source, created exactly two assigned backlog tasks through normal
-  Paperclip tools, and added an eyes reaction. The quoted malicious task request
+  ThinkingMach tools, and added an eyes reaction. The quoted malicious task request
   was ignored. This fixture was posted by the linked tester; a live unlinked
   participant is not yet qualified (automated coverage uses unlinked sources).
 - Bounded search scanned 35 top-level messages, returned four matches with source
@@ -75,7 +75,7 @@ must be reported accurately and retain bounded history search.
   responses and no invitations were sent. Leaf's independent signing secret was
   configured through its managed environment with explicit operator permission.
 - Approval continuation exposed a missing return path: its result appeared in
-  Paperclip but not Slack. The fix verifies the durable tool-review wake and every
+  ThinkingMach but not Slack. The fix verifies the durable tool-review wake and every
   referenced action's source before authorizing publication, and separates wakes
   from different source runs. Authority/dedup integration and 81 gateway/response
   tests pass. Live retest on `bef1a0fad` passed: an approved deletion executed

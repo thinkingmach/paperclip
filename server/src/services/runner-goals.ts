@@ -1,14 +1,14 @@
 import { randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { and, desc, eq, inArray } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   agentSessionGoalActions,
   agentTaskSessions,
   heartbeatRuns,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   RunnerGoalActionAccepted,
   RunnerGoalActionRequest,
@@ -16,7 +16,7 @@ import type {
   RunnerGoalPendingAction,
   RunnerGoalProjection,
   RunnerGoalSnapshot,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { queueLiveRunnerPrpCommand } from "../realtime/runner-prp-ws.js";
 import { dispatchLiveRunnerGoalControl } from "./runner-goal-control-broker.js";
 import { publishLiveEvent } from "./live-events.js";
@@ -89,7 +89,7 @@ function capabilityForAgent(agent: AgentBinding): RunnerGoalCapability {
       ? "Unsupported by OpenCode."
       : provider === "acpx"
         ? "This ACP agent does not advertise a structured session goal extension."
-        : "This Paperclip runner provider does not expose a durable session goal lifecycle.";
+        : "This ThinkingMach runner provider does not expose a durable session goal lifecycle.";
     return {
       availability: "unsupported",
       verified: true,
@@ -110,7 +110,7 @@ function capabilityForAgent(agent: AgentBinding): RunnerGoalCapability {
   const reason = agent.adapterType === "opencode_local"
     ? "Unsupported by OpenCode."
     : directAcp
-      ? "This direct ACP adapter has no live session goal controller. Use Paperclip Runner with a supported provider."
+      ? "This direct ACP adapter has no live session goal controller. Use ThinkingMach Runner with a supported provider."
     : (agent.adapterType === "claude_local" || agent.adapterType === "codex_local") && sessionMode === "oneshot"
       ? "Session goals require a persistent ACP session."
     : agent.adapterType === "claude_local"

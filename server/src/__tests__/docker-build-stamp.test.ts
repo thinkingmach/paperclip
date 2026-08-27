@@ -8,9 +8,9 @@ import { describe, expect, it } from "vitest";
  *
  * The server build runs scripts/write-build-stamp.mjs, which stamps the built
  * commit into dist/build-info.json. The build context has no .git, so the
- * script reads PAPERCLIP_BUILD_COMMIT instead. Docker exposes an ARG to the
+ * script reads THINKINGMACH_BUILD_COMMIT instead. Docker exposes an ARG to the
  * next RUN as an environment variable, but an ARG goes out of scope at the end
- * of its stage. So the build stage must declare `ARG PAPERCLIP_BUILD_COMMIT`
+ * of its stage. So the build stage must declare `ARG THINKINGMACH_BUILD_COMMIT`
  * before the server build; the production ARG alone stamps nothing, because
  * the server build already ran in the earlier stage.
  *
@@ -46,7 +46,7 @@ it("keeps per-build runtime metadata out of the weekly CLI-install cache", () =>
   expect(entrypoint).toBeGreaterThan(tools);
   expect(epoch).toBeGreaterThanOrEqual(0);
   expect(epoch).toBeLessThan(tools);
-  for (const name of ["PAPERCLIP_BUILD_VERSION", "PAPERCLIP_BUILD_COMMIT"]) {
+  for (const name of ["THINKINGMACH_BUILD_VERSION", "THINKINGMACH_BUILD_COMMIT"]) {
     const declarations = [...production.matchAll(new RegExp(`^ARG ${name}\\b`, "gm"))];
     expect(declarations).toHaveLength(1);
     expect(declarations[0].index).toBeGreaterThan(entrypoint);
@@ -56,22 +56,22 @@ it("keeps per-build runtime metadata out of the weekly CLI-install cache", () =>
 });
 
 describe("docker build-stamp wiring", () => {
-  it("declares PAPERCLIP_BUILD_COMMIT in the build stage before the server build", () => {
+  it("declares THINKINGMACH_BUILD_COMMIT in the build stage before the server build", () => {
     const build = stageBody(dockerfile, "build");
-    const argIdx = build.search(/^ARG PAPERCLIP_BUILD_COMMIT\b/m);
-    const serverBuildIdx = build.search(/^RUN pnpm --filter @paperclipai\/server build\b/m);
-    expect(argIdx, "build stage must declare ARG PAPERCLIP_BUILD_COMMIT").toBeGreaterThanOrEqual(0);
+    const argIdx = build.search(/^ARG THINKINGMACH_BUILD_COMMIT\b/m);
+    const serverBuildIdx = build.search(/^RUN pnpm --filter @thinkingmach\/server build\b/m);
+    expect(argIdx, "build stage must declare ARG THINKINGMACH_BUILD_COMMIT").toBeGreaterThanOrEqual(0);
     expect(serverBuildIdx, "build stage must run the server build").toBeGreaterThanOrEqual(0);
     expect(
       argIdx,
-      "ARG PAPERCLIP_BUILD_COMMIT must precede the server build so the stamp script reads it",
+      "ARG THINKINGMACH_BUILD_COMMIT must precede the server build so the stamp script reads it",
     ).toBeLessThan(serverBuildIdx);
   });
 
-  it("passes PAPERCLIP_BUILD_COMMIT as a build-arg for standard and explicit preview builds", () => {
+  it("passes THINKINGMACH_BUILD_COMMIT as a build-arg for standard and explicit preview builds", () => {
     for (const [name, source] of [["standard", workflow], ["preview", previewWorkflow]]) {
       expect(source, `${name} must pass the source commit into the image build`)
-        .toMatch(/^\s*PAPERCLIP_BUILD_COMMIT=\$\{\{ (?:github.sha|inputs.source_ref) \}\}$/m);
+        .toMatch(/^\s*THINKINGMACH_BUILD_COMMIT=\$\{\{ (?:github.sha|inputs.source_ref) \}\}$/m);
     }
   });
 });
@@ -89,7 +89,7 @@ describe("Docker Rust dependency cache", () => {
     expect(dependencies).toContain("FROM rust-chef AS runner-deps");
     expect(dependencies).toContain("COPY --from=runner-plan /tmp/runner-recipe.json /tmp/runner-recipe.json");
     expect(dependencies).toContain("cargo chef cook --release --locked --package paperclip-runner-core --bin paperclip-runnerd");
-    expect(dependencies).not.toMatch(/COPY .*\.\/runner|COPY .*\.\/protocol|COPY \. \.|PAPERCLIP_BUILD_COMMIT/);
+    expect(dependencies).not.toMatch(/COPY .*\.\/runner|COPY .*\.\/protocol|COPY \. \.|THINKINGMACH_BUILD_COMMIT/);
   });
 
   it("rebuilds real workspace code and embedded protocol inputs after cooking dependencies", () => {

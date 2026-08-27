@@ -2,7 +2,7 @@
  * Registers `/sw.js` and keeps the installed worker fresh on a long-lived tab.
  *
  * Browsers only re-fetch a service-worker script on navigation or on a ~24h
- * timer. Paperclip is a parked-tab SPA — a tab can stay open for weeks without
+ * timer. ThinkingMach is a parked-tab SPA — a tab can stay open for weeks without
  * a single navigation — so without explicit update checks an old worker (and
  * the app shell it cached) can outlive a deploy indefinitely. The symptom is
  * invisible: the tab just keeps running the old bundle.

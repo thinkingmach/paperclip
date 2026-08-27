@@ -40,7 +40,7 @@ export interface CapabilityDevtoolsSnapshot {
 }
 
 const SECRET =
-  /(bearer\s+[a-z0-9._-]+|(?:^|[^a-z0-9])(?:sk|pcp)_[a-z0-9._-]{8,}|api[_-]?key\s*[:=]|PAPERCLIP_API_KEY|OPENAI_API_KEY)/i;
+  /(bearer\s+[a-z0-9._-]+|(?:^|[^a-z0-9])(?:sk|pcp)_[a-z0-9._-]{8,}|api[_-]?key\s*[:=]|THINKINGMACH_API_KEY|OPENAI_API_KEY)/i;
 const SECRET_KEY =
   /(^|[_-])(authorization|api[_-]?key|token|secret|password)($|[_-])|^(apiKey|accessToken|refreshToken)$/i;
 

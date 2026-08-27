@@ -1,19 +1,19 @@
 {
-  "name": "@paperclipai/adapter-hermes-gateway",
+  "name": "@thinkingmach/adapter-hermes-gateway",
   "version": "0.1.0",
-  "description": "Deprecated compatibility shim for Hermes Gateway; use @paperclipai/hermes-paperclip-adapter/gateway",
+  "description": "Deprecated compatibility shim for Hermes Gateway; use @thinkingmach/hermes-paperclip-adapter/gateway",
   "type": "module",
   "license": "MIT",
-  "author": "Paperclip",
+  "author": "ThinkingMach",
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/adapters/hermes-gateway"
   },
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
-  "homepage": "https://github.com/paperclipai/paperclip/tree/master/packages/adapters/hermes#readme",
+  "homepage": "https://github.com/thinkingmach/paperclip/tree/master/packages/adapters/hermes#readme",
   "keywords": [
     "paperclip",
     "hermes",
@@ -68,7 +68,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@paperclipai/hermes-paperclip-adapter": "workspace:*"
+    "@thinkingmach/hermes-paperclip-adapter": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

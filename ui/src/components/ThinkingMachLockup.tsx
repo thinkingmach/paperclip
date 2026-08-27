@@ -1,12 +1,12 @@
 import type { SVGProps } from "react";
 
-interface PaperclipLockupProps extends Omit<SVGProps<SVGSVGElement>, "children"> {
+interface ThinkingMachLockupProps extends Omit<SVGProps<SVGSVGElement>, "children"> {
   decorative?: boolean;
   title?: string;
 }
 
 /**
- * The full Paperclip lockup — mark plus wordmark — from the brand asset
+ * The full ThinkingMach lockup — mark plus wordmark — from the brand asset
  * (`paperclip_lockup_dark_mode alt.svg`). The export is white-filled for dark
  * chrome; here every path fills `currentColor`, so the one geometry follows
  * the theme the way the brand system expects ("one vocabulary, two surfaces").
@@ -15,12 +15,12 @@ interface PaperclipLockupProps extends Omit<SVGProps<SVGSVGElement>, "children">
  *
  * Size it with a height class (`h-5 w-auto`); width follows the aspect.
  */
-export function PaperclipLockup({
+export function ThinkingMachLockup({
   decorative = false,
-  title = "Paperclip",
+  title = "ThinkingMach",
   className,
   ...rest
-}: PaperclipLockupProps) {
+}: ThinkingMachLockupProps) {
   return (
     <svg
       {...rest}

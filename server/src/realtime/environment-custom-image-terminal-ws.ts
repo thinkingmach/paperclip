@@ -1,7 +1,7 @@
 import type { IncomingMessage, Server as HttpServer } from "node:http";
 import { createRequire } from "node:module";
 import type { Duplex } from "node:stream";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { conflict, unprocessable } from "../errors.js";
 import { logger } from "../middleware/logger.js";
 import {

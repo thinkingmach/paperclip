@@ -79,7 +79,7 @@ describe("managed GitHub launcher environment", () => {
     });
     for (const cli of ["git", "gh"]) {
       const result = await fixture.runner.execute({
-        command: path.join(env.PAPERCLIP_GITHUB_LAUNCHER_DIR, cli), args: ["--version"], env,
+        command: path.join(env.THINKINGMACH_GITHUB_LAUNCHER_DIR, cli), args: ["--version"], env,
       });
       expect(result.exitCode, result.stderr).toBe(0);
       expect(result.stdout).toMatch(cli === "git" ? /^git version / : /^gh started\n$/);
@@ -101,7 +101,7 @@ describe("managed GitHub launcher environment", () => {
     const identity = { GIT_AUTHOR_NAME: "Captured Author", GIT_AUTHOR_EMAIL: "author@example.test",
       GIT_COMMITTER_NAME: "Captured Committer", GIT_COMMITTER_EMAIL: "committer@example.test" };
     for (const profile of [".profile", ".bash_profile", ".bashrc", ".zshenv", ".zprofile", ".zshrc"]) {
-      const script = await readFile(path.join(env.PAPERCLIP_GITHUB_LAUNCHER_DIR, profile), "utf8");
+      const script = await readFile(path.join(env.THINKINGMACH_GITHUB_LAUNCHER_DIR, profile), "utf8");
       for (const captured of [false, true]) {
         const result = await fixture.runner.execute({ command: "sh", args: ["-c", `${script}\n${readIdentity}`],
           env: { ...env, ...(captured ? identity : {}) } });
@@ -121,9 +121,9 @@ describe("managed GitHub launcher environment", () => {
       networkAccess: true,
     });
 
-    expect(env.PAPERCLIP_RUNNER_NETWORK_ACCESS).toBe("enabled");
-    expect(env.PAPERCLIP_GIT_METADATA_ROOTS).toBe("[]");
-    expect(JSON.parse(env.PAPERCLIP_RUNNER_NETWORK_ROOTS!)).not.toHaveLength(0);
+    expect(env.THINKINGMACH_RUNNER_NETWORK_ACCESS).toBe("enabled");
+    expect(env.THINKINGMACH_GIT_METADATA_ROOTS).toBe("[]");
+    expect(JSON.parse(env.THINKINGMACH_RUNNER_NETWORK_ROOTS!)).not.toHaveLength(0);
     expect(fixture.runner.execute).toHaveBeenCalledWith(expect.objectContaining({ cwd: fixture.root }));
   });
 
@@ -143,7 +143,7 @@ describe("managed GitHub launcher environment", () => {
       target, cwd: controllerCwd, env: {}, hostCredentials: false, networkAccess: true,
     });
 
-    expect(JSON.parse(env.PAPERCLIP_GIT_METADATA_ROOTS!)).toEqual([await realpath(path.join(fixture.root, ".git"))]);
+    expect(JSON.parse(env.THINKINGMACH_GIT_METADATA_ROOTS!)).toEqual([await realpath(path.join(fixture.root, ".git"))]);
   });
 
   it("uses target Git configuration without importing controller credentials", async () => {
@@ -159,21 +159,21 @@ describe("managed GitHub launcher environment", () => {
     });
     const env = await prepareGitHubExecutionEnvironment({
       target: fixture.target, cwd: fixture.root, env: {
-        PAPERCLIP_GIT_METADATA_ROOTS: '["/injected"]',
-        PAPERCLIP_RUNNER_NETWORK_ROOTS: '["/injected"]',
-        PAPERCLIP_GITHUB_HOST_HOME: "/injected",
-        PAPERCLIP_GITHUB_AUTH_MODE: "managed",
-        PAPERCLIP_RUNNER_NETWORK_ACCESS: "disabled",
+        THINKINGMACH_GIT_METADATA_ROOTS: '["/injected"]',
+        THINKINGMACH_RUNNER_NETWORK_ROOTS: '["/injected"]',
+        THINKINGMACH_GITHUB_HOST_HOME: "/injected",
+        THINKINGMACH_GITHUB_AUTH_MODE: "managed",
+        THINKINGMACH_RUNNER_NETWORK_ACCESS: "disabled",
       }, hostCredentials: true, networkAccess: true,
     });
-    expect(env.PAPERCLIP_GIT_METADATA_ROOTS).not.toContain("/injected");
-    expect(env.PAPERCLIP_RUNNER_NETWORK_ROOTS).not.toContain("/injected");
-    expect(env.PAPERCLIP_GITHUB_AUTH_MODE).toBe("host");
-    expect(env.PAPERCLIP_RUNNER_NETWORK_ACCESS).toBe("enabled");
-    expect(env.PAPERCLIP_GITHUB_HOST_HOME).toBe(fixture.root);
+    expect(env.THINKINGMACH_GIT_METADATA_ROOTS).not.toContain("/injected");
+    expect(env.THINKINGMACH_RUNNER_NETWORK_ROOTS).not.toContain("/injected");
+    expect(env.THINKINGMACH_GITHUB_AUTH_MODE).toBe("host");
+    expect(env.THINKINGMACH_RUNNER_NETWORK_ACCESS).toBe("enabled");
+    expect(env.THINKINGMACH_GITHUB_HOST_HOME).toBe(fixture.root);
     expect(env.GH_CONFIG_DIR).toBe(path.join(fixture.root, ".config/gh"));
     expect(env.GH_TOKEN).toBeUndefined();
-    expect(env.PAPERCLIP_GITHUB_LAUNCHER_DIR).toBeUndefined();
+    expect(env.THINKINGMACH_GITHUB_LAUNCHER_DIR).toBeUndefined();
   });
 
   it("preserves local host credential helpers and validates worktree metadata", async () => {
@@ -185,13 +185,13 @@ describe("managed GitHub launcher environment", () => {
     const env = await prepareGitHubExecutionEnvironment({ target: null, cwd: path.join(root, "repo"), env: {}, hostCredentials: true, networkAccess: true });
     expect(env.GH_TOKEN).toBe("legacy-token");
     expect(env.GIT_CONFIG_GLOBAL).toBeUndefined();
-    expect(env.PAPERCLIP_GIT_METADATA_ROOTS).toContain("/repo/.git");
+    expect(env.THINKINGMACH_GIT_METADATA_ROOTS).toContain("/repo/.git");
     const config = await exec("git", ["config", "credential.helper"], { cwd: root, env: { ...process.env, ...env } });
     expect(config.stdout.trim()).toBe("store");
     const isolated = await prepareGitHubExecutionEnvironment({ target: null, cwd: root, env: {}, hostCredentials: false, networkAccess: false });
     expect(isolated.GH_TOKEN).toBeUndefined();
-    expect(isolated.PAPERCLIP_RUNNER_NETWORK_ACCESS).toBe("disabled");
-    expect(isolated.PAPERCLIP_GITHUB_HOST_HOME).toBeUndefined();
+    expect(isolated.THINKINGMACH_RUNNER_NETWORK_ACCESS).toBe("disabled");
+    expect(isolated.THINKINGMACH_GITHUB_HOST_HOME).toBeUndefined();
   });
 
   it.each(["nvm/current/bin", "usr/local/bin", "tools with 'quotes'/bin"])(
@@ -202,7 +202,7 @@ describe("managed GitHub launcher environment", () => {
       const env = await prepareGitHubOperationLaunchers({
         runId: "run-layout", target: fixture.target, cwd: "/controller", env: {},
       });
-      expect(env.PATH).toBe(`${env.PAPERCLIP_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
+      expect(env.PATH).toBe(`${env.THINKINGMACH_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
       for (const cli of ["claude", "codex"]) {
         await ensureAdapterExecutionTargetCommandResolvable(cli, fixture.target, fixture.root, env);
         const result = await runAdapterExecutionTargetProcess("run-layout", fixture.target, "bash", [
@@ -210,13 +210,13 @@ describe("managed GitHub launcher environment", () => {
         ], { cwd: fixture.root, env, timeoutSec: 5, graceSec: 1, onLog: async () => {} });
         expect(result.exitCode, result.stderr).toBe(0);
         expect(result.stdout.trim().split("\n")).toEqual([
-          `${env.PAPERCLIP_GITHUB_LAUNCHER_DIR}/git`,
-          `${env.PAPERCLIP_GITHUB_LAUNCHER_DIR}/gh`,
+          `${env.THINKINGMACH_GITHUB_LAUNCHER_DIR}/git`,
+          `${env.THINKINGMACH_GITHUB_LAUNCHER_DIR}/gh`,
           `${cli} started`,
         ]);
       }
       for (const profile of [".profile", ".bash_profile", ".bashrc", ".zshenv", ".zprofile", ".zshrc"]) {
-        const script = await readFile(path.join(env.PAPERCLIP_GITHUB_LAUNCHER_DIR, profile), "utf8");
+        const script = await readFile(path.join(env.THINKINGMACH_GITHUB_LAUNCHER_DIR, profile), "utf8");
         const result = await fixture.runner.execute({ command: "sh", args: ["-c", `${script}\nprintf '%s' "$PATH"`] });
         expect(result.stdout).toBe(env.PATH);
       }
@@ -232,7 +232,7 @@ describe("managed GitHub launcher environment", () => {
     const env = await prepareGitHubOperationLaunchers({
       runId: "run-explicit", target: fixture.target, cwd: fixture.root, env: { PATH: fixture.remotePath },
     });
-    expect(env.PATH).toBe(`${env.PAPERCLIP_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
+    expect(env.PATH).toBe(`${env.THINKINGMACH_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
     expect(fixture.runner.execute.mock.calls.every(([input]) => !input.args?.join(" ").includes("$PATH"))).toBe(true);
   });
 
@@ -242,7 +242,7 @@ describe("managed GitHub launcher environment", () => {
     const env = await prepareGitHubOperationLaunchers({
       runId: "run-inherited", target: fixture.target, cwd: fixture.root, env: { PATH: process.env.PATH! },
     });
-    expect(env.PATH).toBe(`${env.PAPERCLIP_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
+    expect(env.PATH).toBe(`${env.THINKINGMACH_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
   });
 
   it("keeps an explicit empty remote PATH empty apart from the managed wrappers", async () => {
@@ -250,7 +250,7 @@ describe("managed GitHub launcher environment", () => {
     const env = await prepareGitHubOperationLaunchers({
       runId: "run-empty", target: fixture.target, cwd: fixture.root, env: { PATH: "" },
     });
-    expect(env.PATH).toBe(env.PAPERCLIP_GITHUB_LAUNCHER_DIR);
+    expect(env.PATH).toBe(env.THINKINGMACH_GITHUB_LAUNCHER_DIR);
     expect(fixture.runner.execute.mock.calls.every(([input]) => !input.args?.join(" ").includes("$PATH"))).toBe(true);
     const result = await fixture.runner.execute({ command: "/bin/sh", args: ["-c", "command -v claude"], env });
     expect(result.exitCode).not.toBe(0);
@@ -265,7 +265,7 @@ describe("managed GitHub launcher environment", () => {
       spec: { host: "sandbox.example.test", port: 22, username: "runner", remoteCwd: fixture.root,
         remoteWorkspacePath: fixture.root, privateKey: null, knownHosts: null, strictHostKeyChecking: true } };
     const env = await prepareGitHubOperationLaunchers({ runId: "run-ssh", target, cwd: fixture.root, env: {} });
-    expect(env.PATH).toBe(`${env.PAPERCLIP_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
+    expect(env.PATH).toBe(`${env.THINKINGMACH_GITHUB_LAUNCHER_DIR}:${fixture.remotePath}`);
     expect(fixture.runner.execute.mock.calls[0]?.[0].env).toBeUndefined();
   });
 

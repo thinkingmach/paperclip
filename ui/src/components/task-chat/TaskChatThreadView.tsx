@@ -1,7 +1,7 @@
 import { TaskChatProjectCreatedCard } from "./TaskChatProjectCreatedCard";
 import { TaskChatSkillCreatedCard } from "./TaskChatSkillCreatedCard";
 import { useMemo, type ReactNode } from "react";
-import type { IssueAttachment } from "@paperclipai/shared";
+import type { IssueAttachment } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import { useStreamlinedTaskChatPresentation } from "./presentation-mode";
 import type {

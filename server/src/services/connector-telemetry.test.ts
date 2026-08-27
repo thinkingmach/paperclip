@@ -1,4 +1,4 @@
-import { toolConnections, toolInvocations, type Db } from "@paperclipai/db";
+import { toolConnections, toolInvocations, type Db } from "@thinkingmach/db";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const track = vi.fn();

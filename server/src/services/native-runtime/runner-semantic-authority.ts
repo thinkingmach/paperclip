@@ -1,6 +1,6 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
 
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   documentRevisions,
@@ -9,20 +9,20 @@ import {
   issueComments,
   issueDocuments,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
-  PaperclipSemanticDispatcher,
-  type PaperclipJsonValue,
-  type PaperclipSemanticActionBinding,
-  type PaperclipSemanticActionId,
-  type PaperclipSemanticAuthorizationRecord,
-  type PaperclipSemanticRunContext,
-  type PaperclipSemanticToolCall,
-  type PaperclipSemanticToolDefinition,
-  type PaperclipSemanticToolResult,
+  ThinkingMachSemanticDispatcher,
+  type ThinkingMachJsonValue,
+  type ThinkingMachSemanticActionBinding,
+  type ThinkingMachSemanticActionId,
+  type ThinkingMachSemanticAuthorizationRecord,
+  type ThinkingMachSemanticRunContext,
+  type ThinkingMachSemanticToolCall,
+  type ThinkingMachSemanticToolDefinition,
+  type ThinkingMachSemanticToolResult,
 } from "../../vendor/paperclip-runner/index.js";
 
-export interface PaperclipRunnerSemanticBinding {
+export interface ThinkingMachRunnerSemanticBinding {
   readonly companyId: string;
   readonly issueId: string;
   readonly runId: string;
@@ -35,7 +35,7 @@ const READ_OPERATION_IDS = [
   "list_documents",
   "read_document",
   "list_document_revisions",
-] as const satisfies readonly PaperclipSemanticActionId[];
+] as const satisfies readonly ThinkingMachSemanticActionId[];
 
 type BoundContext = {
   readonly run: typeof heartbeatRuns.$inferSelect;
@@ -56,8 +56,8 @@ function requiredString(value: unknown): string {
   return value;
 }
 
-function jsonValue(value: unknown): PaperclipJsonValue {
-  return JSON.parse(JSON.stringify(value)) as PaperclipJsonValue;
+function jsonValue(value: unknown): ThinkingMachJsonValue {
+  return JSON.parse(JSON.stringify(value)) as ThinkingMachJsonValue;
 }
 
 function activeAgentStatus(status: string): "active" | "inactive" {
@@ -71,15 +71,15 @@ function activeAgentStatus(status: string): "active" | "inactive" {
  * This first server slice binds only same-task read operations. A catalog
  * entry remains undiscoverable until a later PR adds its guarded binding.
  */
-export class PaperclipRunnerSemanticAuthority {
+export class ThinkingMachRunnerSemanticAuthority {
   readonly #db: Db;
-  readonly #binding: PaperclipRunnerSemanticBinding;
-  readonly #dispatcher: PaperclipSemanticDispatcher;
+  readonly #binding: ThinkingMachRunnerSemanticBinding;
+  readonly #dispatcher: ThinkingMachSemanticDispatcher;
 
-  constructor(db: Db, binding: PaperclipRunnerSemanticBinding) {
+  constructor(db: Db, binding: ThinkingMachRunnerSemanticBinding) {
     this.#db = db;
     this.#binding = structuredClone(binding);
-    this.#dispatcher = new PaperclipSemanticDispatcher({
+    this.#dispatcher = new ThinkingMachSemanticDispatcher({
       contextProvider: (runId) => this.#context(runId),
       bindings: READ_OPERATION_IDS.map((operationId) =>
         this.#readBinding(operationId),
@@ -88,24 +88,24 @@ export class PaperclipRunnerSemanticAuthority {
   }
 
   listAlwaysAvailableTools(): Promise<
-    readonly PaperclipSemanticToolDefinition[]
+    readonly ThinkingMachSemanticToolDefinition[]
   > {
     return this.#dispatcher.listAlwaysAvailableTools(this.#binding.runId);
   }
 
   dispatch(
-    call: Omit<PaperclipSemanticToolCall, "runId">,
-  ): Promise<PaperclipSemanticToolResult> {
+    call: Omit<ThinkingMachSemanticToolCall, "runId">,
+  ): Promise<ThinkingMachSemanticToolResult> {
     return this.#dispatcher.dispatch({ ...call, runId: this.#binding.runId });
   }
 
-  authorizationRecords(): readonly PaperclipSemanticAuthorizationRecord[] {
+  authorizationRecords(): readonly ThinkingMachSemanticAuthorizationRecord[] {
     return this.#dispatcher.authorizationRecords();
   }
 
   #readBinding(
     operationId: (typeof READ_OPERATION_IDS)[number],
-  ): PaperclipSemanticActionBinding {
+  ): ThinkingMachSemanticActionBinding {
     return {
       operationId,
       execute: async (invocation) => {
@@ -276,7 +276,7 @@ export class PaperclipRunnerSemanticAuthority {
     };
   }
 
-  async #context(requestedRunId: string): Promise<PaperclipSemanticRunContext> {
+  async #context(requestedRunId: string): Promise<ThinkingMachSemanticRunContext> {
     if (requestedRunId !== this.#binding.runId) {
       throw new Error("paperclip_runner_semantic_run_mismatch");
     }
@@ -299,7 +299,7 @@ export class PaperclipRunnerSemanticAuthority {
         executionRunId: context.issue.executionRunId,
         status: context.issue.status,
         workMode: context.issue
-          .workMode as PaperclipSemanticRunContext["activeTask"]["workMode"],
+          .workMode as ThinkingMachSemanticRunContext["activeTask"]["workMode"],
       },
       delegatedClaims: [],
     };

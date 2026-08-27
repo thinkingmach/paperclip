@@ -1,6 +1,6 @@
 # Bundled UI Fonts
 
-Paperclip bundles Inter for the board UI so screenshots and packaged installs use
+ThinkingMach bundles Inter for the board UI so screenshots and packaged installs use
 the same sans-serif text stack without relying on host font packages.
 
 ## Inter

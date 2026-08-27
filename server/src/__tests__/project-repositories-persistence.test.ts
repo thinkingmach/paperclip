@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { companies, companyMemberships, companySecrets, connectionGrants, connectionGrantMembers, toolApplications, toolConnections, createDb, projects as projectTable } from "@paperclipai/db";
+import { companies, companyMemberships, companySecrets, connectionGrants, connectionGrantMembers, toolApplications, toolConnections, createDb, projects as projectTable } from "@thinkingmach/db";
 import { eq } from "drizzle-orm";
 import { toolAccessService } from "../services/tool-access.js";
 import { projectService } from "../services/projects.js";

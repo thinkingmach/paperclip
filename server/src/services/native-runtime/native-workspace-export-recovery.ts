@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, gt, inArray, ne, or, sql } from "drizzle-orm";
-import { completionContracts, heartbeatRuns, issues, issueRecoveryActions, nativeRunFinalizations, nativeRunResults, workspaceOperations, type Db } from "@paperclipai/db";
+import { completionContracts, heartbeatRuns, issues, issueRecoveryActions, nativeRunFinalizations, nativeRunResults, workspaceOperations, type Db } from "@thinkingmach/db";
 import { publishLiveEvent } from "../live-events.js";
 import { buildHeartbeatRunStatusLiveEventPayload } from "../heartbeat-run-status-payload.js";
 import { appendHeartbeatRunEvent } from "../heartbeat-run-events.js";

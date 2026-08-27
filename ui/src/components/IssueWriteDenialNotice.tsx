@@ -4,7 +4,7 @@ import {
   type IssueWriteDenialCode,
   type IssueWriteDenialContext,
   type IssueWriteDenialTone,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { cn } from "../lib/utils";
 
 /**

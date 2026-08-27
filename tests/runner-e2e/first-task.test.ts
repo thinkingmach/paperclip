@@ -56,7 +56,7 @@ function recording(caseId = "task-reply-accept"): FirstTaskEvidence {
     tasks: [task],
     agents: [{ id: "agent" }],
     comments: [
-      { id: "greeting", authorAgentId: "agent", body: "Welcome to Paperclip" },
+      { id: "greeting", authorAgentId: "agent", body: "Welcome to ThinkingMach" },
     ],
     interactions: [
       {
@@ -747,8 +747,8 @@ Accept the card above and I write it. This task stays in review until then.`;
         adapterConfig: {
           paperclipSkillSync: {
             desiredSkills: [
-              "paperclipai/paperclip/paperclip",
-              "paperclipai/paperclip/first-task",
+              "thinkingmach/paperclip/paperclip",
+              "thinkingmach/paperclip/first-task",
             ],
           },
         },
@@ -759,7 +759,7 @@ Accept the card above and I write it. This task stays in review until then.`;
             desiredSkills: string[];
           }
         ).desiredSkills,
-      ).toEqual(["paperclipai/paperclip/first-task"]);
+      ).toEqual(["thinkingmach/paperclip/first-task"]);
       expect(patch).not.toHaveProperty("instructionsBundle");
       expect(
         (patch.adapterConfig.env as Record<string, unknown>)[

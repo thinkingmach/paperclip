@@ -1,4 +1,4 @@
-import type { CreateConfigValues } from "@paperclipai/adapter-utils";
+import type { CreateConfigValues } from "@thinkingmach/adapter-utils";
 
 function parseJsonObject(text: string): Record<string, unknown> | null {
   const trimmed = text.trim();
@@ -41,7 +41,7 @@ export function buildOpenClawGatewayConfig(v: CreateConfigValues): Record<string
     if (parsed.length > 0) ac.scopes = parsed;
   }
 
-  // Paperclip API override
+  // ThinkingMach API override
   if (v.paperclipApiUrl) ac.paperclipApiUrl = v.paperclipApiUrl;
 
   // Headers — parse headersJson first, then inject authToken on top

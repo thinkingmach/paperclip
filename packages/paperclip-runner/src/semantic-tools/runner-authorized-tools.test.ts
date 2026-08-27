@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import type { PaperclipSemanticToolDefinition } from "./types.js";
-import { createPaperclipRunnerAuthorizedToolSet } from "./runner-authorized-tools.js";
+import type { ThinkingMachSemanticToolDefinition } from "./types.js";
+import { createThinkingMachRunnerAuthorizedToolSet } from "./runner-authorized-tools.js";
 
 function definition(
   name: "get_task_context" | "get_task_history",
-): PaperclipSemanticToolDefinition {
+): ThinkingMachSemanticToolDefinition {
   return {
     name,
     description:
@@ -26,7 +26,7 @@ function definition(
 
 describe("runner authorized tool projection", () => {
   it("matches the Rust catalog digest vector", () => {
-    const set = createPaperclipRunnerAuthorizedToolSet([
+    const set = createThinkingMachRunnerAuthorizedToolSet([
       definition("get_task_context"),
     ]);
 
@@ -47,7 +47,7 @@ describe("runner authorized tool projection", () => {
 
   it("matches Rust number canonicalization at JavaScript's decimal boundary", () => {
     const base = definition("get_task_context");
-    const set = createPaperclipRunnerAuthorizedToolSet([
+    const set = createThinkingMachRunnerAuthorizedToolSet([
       {
         ...base,
         inputSchema: {
@@ -66,18 +66,18 @@ describe("runner authorized tool projection", () => {
   });
 
   it("uses operation identity order and rejects duplicates", () => {
-    const reverse = createPaperclipRunnerAuthorizedToolSet([
+    const reverse = createThinkingMachRunnerAuthorizedToolSet([
       definition("get_task_history"),
       definition("get_task_context"),
     ]);
-    const ordered = createPaperclipRunnerAuthorizedToolSet([
+    const ordered = createThinkingMachRunnerAuthorizedToolSet([
       definition("get_task_context"),
       definition("get_task_history"),
     ]);
 
     expect(reverse).toEqual(ordered);
     expect(() =>
-      createPaperclipRunnerAuthorizedToolSet([
+      createThinkingMachRunnerAuthorizedToolSet([
         definition("get_task_context"),
         definition("get_task_context"),
       ]),

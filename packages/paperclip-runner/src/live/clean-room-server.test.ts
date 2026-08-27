@@ -278,7 +278,7 @@ class FakeCleanRoomTransport implements CodexAppServerTransport {
       },
     });
     this.state.diagnostic?.(
-      `codex app-server: PAPERCLIP_API_KEY=${CANARIES.environment} ${CANARIES.diagnostic}`,
+      `codex app-server: THINKINGMACH_API_KEY=${CANARIES.environment} ${CANARIES.diagnostic}`,
     );
     const reply = await this.#call(turnId, "report_progress", {
       idempotencyKey: `canary-${turnId}`,
@@ -625,7 +625,7 @@ describe("Capability clean-room chat server", () => {
     })).toThrow("requires exact model claude-sonnet-5");
 
     const keys = [
-      "PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID",
+      "THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID",
       "ANTHROPIC_API_KEY",
       "ANTHROPIC_MANAGED_AGENT_ID",
       "ANTHROPIC_MANAGED_AGENT_VERSION",
@@ -633,7 +633,7 @@ describe("Capability clean-room chat server", () => {
     ] as const;
     const prior = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
     try {
-      process.env.PAPERCLIP_CLAUDE_MANAGED_PROFILE_ID = "managed-qualified";
+      process.env.THINKINGMACH_CLAUDE_MANAGED_PROFILE_ID = "managed-qualified";
       process.env.ANTHROPIC_API_KEY = "test-only-key";
       process.env.ANTHROPIC_MANAGED_AGENT_ID = "agent-qualified";
       process.env.ANTHROPIC_MANAGED_ENVIRONMENT_ID = "environment-qualified";
@@ -675,7 +675,7 @@ describe("Capability clean-room chat server", () => {
     expect(opened.view.mode).toBe("live");
     expect(opened.view.identity.agentLabel).toBe("Real Codex");
     expect(opened.view.identity.runnerLabel).toBe("Real runnerd");
-    expect(opened.view.identity.controlPlaneLabel).toBe("Mock Paperclip");
+    expect(opened.view.identity.controlPlaneLabel).toBe("Mock ThinkingMach");
     expect(opened.view.identity.replaySource).toBeNull();
     expect(opened.view.replay).toBeNull();
     expect(opened.view.composer.state).toBe("ready");
@@ -725,8 +725,8 @@ describe("Capability clean-room chat server", () => {
     );
 
     expect(guard?.outcome).toBe("no_real_paperclip_request");
-    expect(guard?.reason).toContain("Real Paperclip API requests: 0");
-    expect(guard?.reason).toContain("Child PAPERCLIP_* environment keys: none");
+    expect(guard?.reason).toContain("Real ThinkingMach API requests: 0");
+    expect(guard?.reason).toContain("Child THINKINGMACH_* environment keys: none");
     // Every request this test made went to its own loopback server.
     expect(requestedUrls.every((url) => url.startsWith(origin))).toBe(true);
   });
@@ -745,7 +745,7 @@ describe("Capability clean-room chat server", () => {
       // `sk-`, and an unanchored probe reads that as a provider key.
       /(?<![A-Za-z0-9])sk-[a-z0-9]{8,}/i,
       /"api[_-]?key"\s*:/i,
-      /PAPERCLIP_API_KEY/,
+      /THINKINGMACH_API_KEY/,
       /OPENAI_API_KEY/,
     ]) {
       expect(pattern.test(serialized), String(pattern)).toBe(false);

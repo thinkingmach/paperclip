@@ -105,7 +105,7 @@ export type TeamsPersonalRecipientBinding = Readonly<
   }
 >;
 
-// A route-free ID is Paperclip's durable identity. The pinned SDK's routed
+// A route-free ID is ThinkingMach's durable identity. The pinned SDK's routed
 // form may omit its personal suffix. Neither that omission nor any prefix
 // (including a:) establishes personal scope; only the admitted proof does.
 function conversationFromThread(threadId: string): string | null {

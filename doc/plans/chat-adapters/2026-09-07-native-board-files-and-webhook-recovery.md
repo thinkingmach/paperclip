@@ -79,7 +79,7 @@ batch does not claim a downloaded-byte checksum of the provider copies.
 
 GitHub visibly posted the Board text and two honest private-task file notices;
 it did not claim to upload bytes or expose a private Board URL. The selected
-files were available on the Paperclip task after reopening it. GitHub's App
+files were available on the ThinkingMach task after reopening it. GitHub's App
 transport limitation remains explicit, not a passed native image-upload claim.
 
 Each send produced exactly one canonical comment and three ordered published
@@ -469,7 +469,7 @@ endpoints remain active. A read-only recheck confirms Maya still uses
 run rows retain `native` / `codex_app_server`. No model defaults were changed.
 
 The attempted live post-restart reaction smoke did not complete. Browser click
-and scroll calls returned without a visible effect in Slack and Paperclip,
+and scroll calls returned without a visible effect in Slack and ThinkingMach,
 including a newly opened Board catalog tab. One browser-automation session reset
 and the documented alternate interaction API did not restore input. Navigation,
 rendered snapshots, and screenshots remained available. No new Slack reaction
@@ -481,7 +481,7 @@ The new early-reaction path therefore has the database/integration coverage
 above, but no passed post-deployment live reaction smoke. Snapshot 13's actual
 document/image and reaction results remain valid evidence for that version;
 they are not relabeled as snapshot 14 results. Browser-input recovery is a
-testing-tool limitation, not an established Slack or Paperclip product defect.
+testing-tool limitation, not an established Slack or ThinkingMach product defect.
 Model-driven follow-ups still require restored Codex capacity; Teams still
 requires the eligible tenant/admin setup. The isolated server is left running,
 with the public webhook-only proxy and private Board boundary unchanged.
@@ -538,7 +538,7 @@ evidence that credentials leaked in the tested branch.
 ## Slack accepted-upload receipt recovery
 
 The bounded share lookup still had a process-interruption gap: after Slack
-accepted a file, Paperclip could lose the returned file IDs before confirming
+accepted a file, ThinkingMach could lose the returned file IDs before confirming
 the share's real message timestamp. The follow-up records those exact IDs in
 a private, attempt-bound `slack_file_upload_receipt` action immediately after
 the successful upload response, before the eventual-consistency lookup. It

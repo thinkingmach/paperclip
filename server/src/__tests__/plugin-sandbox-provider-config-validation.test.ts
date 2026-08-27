@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { validatePluginSandboxProviderConfig } from "../services/plugin-environment-driver.ts";
 import type { PluginWorkerManager } from "../services/plugin-worker-manager.ts";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 
 const mockList = vi.fn();
 

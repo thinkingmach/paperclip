@@ -1,7 +1,7 @@
 import { RepositoryEditor as ProductionRepositoryEditor } from "@/components/RepositoryEditor";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { CONNECTABLE_APP_DEFINITIONS } from "@paperclipai/shared";
+import { CONNECTABLE_APP_DEFINITIONS } from "@thinkingmach/shared";
 import { Check, GitBranch, Link, LockKeyhole, Folder, Plus, X } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github-icon";
 import { SearchableSelect } from "@/components/SearchableSelect";

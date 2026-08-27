@@ -2,7 +2,7 @@
 
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import type { ActivityEvent } from "@paperclipai/shared";
+import type { ActivityEvent } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FeedCard } from "./FeedCard";
 

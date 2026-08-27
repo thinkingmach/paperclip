@@ -1,7 +1,7 @@
 /**
- * esbuild configuration for building the paperclipai CLI for npm.
+ * esbuild configuration for building the thinkingmach CLI for npm.
  *
- * Bundles all workspace packages (@paperclipai/*) into a single file.
+ * Bundles all workspace packages (@thinkingmach/*) into a single file.
  * External npm packages remain as regular dependencies.
  */
 
@@ -29,9 +29,9 @@ const workspacePaths = [
 ];
 
 // Workspace packages that should NOT be bundled — they'll be published
-// to npm and resolved at runtime (e.g. @paperclipai/server uses dynamic import).
+// to npm and resolved at runtime (e.g. @thinkingmach/server uses dynamic import).
 const externalWorkspacePackages = new Set([
-  "@paperclipai/server",
+  "@thinkingmach/server",
 ]);
 
 // Collect all external (non-workspace) npm package names
@@ -41,7 +41,7 @@ for (const p of workspacePaths) {
   for (const name of Object.keys(pkg.dependencies || {})) {
     if (externalWorkspacePackages.has(name)) {
       externals.add(name);
-    } else if (!name.startsWith("@paperclipai/") && !bundledCliNpmDependencies.has(name)) {
+    } else if (!name.startsWith("@thinkingmach/") && !bundledCliNpmDependencies.has(name)) {
       externals.add(name);
     }
   }

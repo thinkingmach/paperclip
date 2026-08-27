@@ -1,5 +1,5 @@
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
-import { chatConversations, chatEndpoints, heartbeatRuns, issueComments, issues, type Db } from "@paperclipai/db";
+import { chatConversations, chatEndpoints, heartbeatRuns, issueComments, issues, type Db } from "@thinkingmach/db";
 import { persistActivity, publishActivity, type ActivityPublication } from "./activity-log.js";
 
 /** Both run finalization and provider publication can arrive first. Re-read

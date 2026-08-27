@@ -3,7 +3,7 @@ import { capabilityCanonicalOperationsForSurface } from "../../catalog/canonical
 
 import {
   acpxRuntimePermissionPolicy,
-  claudePaperclipPermissionRules,
+  claudeThinkingMachPermissionRules,
   decideAcpxPermission,
 } from "./permission-policy.js";
 
@@ -12,32 +12,32 @@ describe("ACPX permission policy", () => {
     const reads = capabilityCanonicalOperationsForSurface("live").filter(action => action.sideEffectClass === "read");
     expect(reads.some(action => action.operationId === "get_approval")).toBe(true);
     for (const action of reads) {
-      expect(claudePaperclipPermissionRules([{ name: action.operationId }], mode)).toEqual([`mcp__paperclip__${action.operationId}`]);
+      expect(claudeThinkingMachPermissionRules([{ name: action.operationId }], mode)).toEqual([`mcp__paperclip__${action.operationId}`]);
     }
-    expect(claudePaperclipPermissionRules([{ name: "get_approval" }], "deny-all")).toEqual([]);
+    expect(claudeThinkingMachPermissionRules([{ name: "get_approval" }], "deny-all")).toEqual([]);
   });
   it("uses only catalogued reads assigned to this run, regardless of tool hints", () => {
     const tools = [
       "paperclip__get_task_context", "read_document", "write_document",
       "call_api", "request_approval", "unknown_read", "mcp__other__get_task_context",
     ].map((name) => ({ name, annotations: { readOnlyHint: true, effect: "read" } }));
-    expect(claudePaperclipPermissionRules(tools, "approve-reads")).toEqual([
+    expect(claudeThinkingMachPermissionRules(tools, "approve-reads")).toEqual([
       "mcp__paperclip__get_task_context", "mcp__paperclip__read_document",
     ]);
-    expect(claudePaperclipPermissionRules([], "approve-reads")).toEqual([]);
+    expect(claudeThinkingMachPermissionRules([], "approve-reads")).toEqual([]);
   });
 
-  it("allows assigned Paperclip mutations without admitting unknown or external tools", () => {
+  it("allows assigned ThinkingMach mutations without admitting unknown or external tools", () => {
     const tools = ["paperclip__write_document", "create_task", "reassign_task", "request_approval",
       "write_document", "mcp__other__create_task", "Bash", "unknown_write", "mcp__paperclip__create_task",
       "decide_approval", "control_workspace_service", "call_api", "create_skill", "schedule_wake"]
       .map(name => ({ name, annotations: { readOnlyHint: true } }));
-    expect(claudePaperclipPermissionRules(tools, "approve-paperclip")).toEqual([
+    expect(claudeThinkingMachPermissionRules(tools, "approve-paperclip")).toEqual([
       "mcp__paperclip__create_task", "mcp__paperclip__reassign_task",
       "mcp__paperclip__request_approval", "mcp__paperclip__write_document",
     ]);
-    expect(claudePaperclipPermissionRules([], "approve-paperclip")).toEqual([]);
-    expect(claudePaperclipPermissionRules(tools, "deny-all")).toEqual([]);
+    expect(claudeThinkingMachPermissionRules([], "approve-paperclip")).toEqual([]);
+    expect(claudeThinkingMachPermissionRules(tools, "deny-all")).toEqual([]);
   });
 
   it("maps each configured mode to a closed ACP runtime policy", () => {

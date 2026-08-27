@@ -322,7 +322,7 @@ async function runPgDumpBackup(opts: {
   backupFile: string;
   connectTimeout: number;
 }): Promise<void> {
-  const pgDumpBin = process.env.PAPERCLIP_PG_DUMP_PATH || "pg_dump";
+  const pgDumpBin = process.env.THINKINGMACH_PG_DUMP_PATH || "pg_dump";
   const child = spawn(
     pgDumpBin,
     [
@@ -353,7 +353,7 @@ async function runPgDumpBackup(opts: {
 }
 
 async function restoreWithPsql(opts: RunDatabaseRestoreOptions, connectTimeout: number): Promise<void> {
-  const psqlBin = process.env.PAPERCLIP_PSQL_PATH || "psql";
+  const psqlBin = process.env.THINKINGMACH_PSQL_PATH || "psql";
   const child = spawn(
     psqlBin,
     [
@@ -587,7 +587,7 @@ export async function runDatabaseBackup(opts: RunDatabaseBackupOptions): Promise
       emit(STATEMENT_BREAKPOINT);
     };
 
-    emit("-- Paperclip database backup");
+    emit("-- ThinkingMach database backup");
     emit(`-- Created: ${new Date().toISOString()}`);
     emit("");
     emitStatement("BEGIN;");

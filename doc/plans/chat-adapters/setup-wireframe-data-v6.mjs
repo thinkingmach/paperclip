@@ -7,7 +7,7 @@ export const setupFlows = [
         id: "13",
         slug: "slack-add",
         title: "Connect a Slack app",
-        subtitle: "Bring your own Slack app using Paperclip's prepared manifest.",
+        subtitle: "Bring your own Slack app using ThinkingMach's prepared manifest.",
         rail: ["Agent selected", "Connect Slack app", "Try Maya"],
         active: 1,
         mode: "default",
@@ -48,11 +48,11 @@ export const setupFlows = [
         ],
         primary: "Open Slack",
         actions: [
-          ["Open Slack", "Opens the installed workspace while Paperclip waits for the root mention and thread reply to complete setup."]
+          ["Open Slack", "Opens the installed workspace while ThinkingMach waits for the root mention and thread reply to complete setup."]
         ],
         annotations: [
           "The body is only the three actions needed to test the real Slack interaction.",
-          "The instructions teach the root-mention-to-thread Paperclip task boundary.",
+          "The instructions teach the root-mention-to-thread ThinkingMach task boundary.",
           "There is one action: open Slack and perform the test."
         ],
         rationale: "Installation health and automatic verification do not belong on an instruction screen."
@@ -67,7 +67,7 @@ export const setupFlows = [
         id: "16",
         slug: "github-create",
         title: "Create Maya in GitHub",
-        subtitle: "Create a dedicated GitHub App from Paperclip's prepared manifest.",
+        subtitle: "Create a dedicated GitHub App from ThinkingMach's prepared manifest.",
         rail: ["Agent selected", "Create GitHub App", "Choose repositories", "Try Maya"],
         active: 1,
         mode: "default",
@@ -78,7 +78,7 @@ export const setupFlows = [
         primary: "Create in GitHub",
         secondary: "Use an existing GitHub App",
         actions: [
-          ["Create in GitHub", "Posts Paperclip's App Manifest to GitHub. GitHub returns to Paperclip after creation, and Paperclip stores the returned App credentials."],
+          ["Create in GitHub", "Posts ThinkingMach's App Manifest to GitHub. GitHub returns to ThinkingMach after creation, and ThinkingMach stores the returned App credentials."],
           ["Use an existing GitHub App", "Opens the advanced path for an App the organization already owns."]
         ],
         annotations: [
@@ -103,14 +103,14 @@ export const setupFlows = [
         ],
         primary: "Install in GitHub",
         actions: [
-          ["Install in GitHub", "Opens GitHub's App installation page and returns the installation and selected repository IDs to Paperclip."]
+          ["Install in GitHub", "Opens GitHub's App installation page and returns the installation and selected repository IDs to ThinkingMach."]
         ],
         annotations: [
           "The screen contains only GitHub's installation decisions.",
           "Repository scope stays in GitHub's native approval UI.",
           "One button begins the complete provider-owned installation step."
         ],
-        rationale: "There is no Paperclip form to duplicate GitHub's repository picker."
+        rationale: "There is no ThinkingMach form to duplicate GitHub's repository picker."
       },
       {
         id: "46",
@@ -123,11 +123,11 @@ export const setupFlows = [
         instructions: [
           ["Open an issue or pull request", "Use one of the repositories selected during installation."],
           ["Mention Maya", "Add a comment: “@paperclip-maya help me test this.”"],
-          ["Continue", "Add another comment in the same issue or pull request to continue the same Paperclip task."]
+          ["Continue", "Add another comment in the same issue or pull request to continue the same ThinkingMach task."]
         ],
         primary: "Open GitHub",
         actions: [
-          ["Open GitHub", "Opens an installed repository while Paperclip waits for the first signed mention to complete setup."]
+          ["Open GitHub", "Opens an installed repository while ThinkingMach waits for the first signed mention to complete setup."]
         ],
         annotations: [
           "The body is only the native GitHub test sequence.",
@@ -144,9 +144,9 @@ export const setupFlows = [
         rail: ["Agent selected", "Configure existing App", "Choose repositories", "Try Maya"],
         active: 1,
         mode: "advanced",
-        copyValue: ["Webhook URL and secret", "Copy Paperclip webhook settings"],
+        copyValue: ["Webhook URL and secret", "Copy ThinkingMach webhook settings"],
         instructions: [
-          ["Update the webhook", "In the GitHub App settings, paste Paperclip's URL and generated secret, then make the webhook active."],
+          ["Update the webhook", "In the GitHub App settings, paste ThinkingMach's URL and generated secret, then make the webhook active."],
           ["Set permissions and events", "Grant Issues: write, Pull requests: write, Metadata: read; subscribe to Issue comment and Pull request review comment."],
           ["Create a private key", "In the App settings, click Generate a private key and download the PEM file."]
         ],
@@ -157,14 +157,14 @@ export const setupFlows = [
         primary: "Connect and verify",
         secondary: "Back",
         actions: [
-          ["Copy Paperclip webhook settings", "Copies the endpoint URL and generated webhook secret needed in the existing GitHub App settings."],
+          ["Copy ThinkingMach webhook settings", "Copies the endpoint URL and generated webhook secret needed in the existing GitHub App settings."],
           ["Connect and verify", "Stores the PEM file write-only, authenticates as the App, and verifies webhook, events, and least-privilege permissions."],
           ["Back", "Returns to the credential-free App Manifest path."]
         ],
         annotations: [
           "The copy control provides the exact values the operator must paste into GitHub.",
           "The instructions list every provider change required for an existing App.",
-          "Only App ID and private key return to Paperclip; the generated webhook secret is already stored.",
+          "Only App ID and private key return to ThinkingMach; the generated webhook secret is already stored.",
           "Verification happens as part of Connect rather than on another screen."
         ],
         rationale: "Existing Apps lack the manifest callback, so this advanced page contains the complete minimum manual configuration."
@@ -183,7 +183,7 @@ export const setupFlows = [
         rail: ["Agent selected", "Create Teams app", "Install Maya", "Try Maya"],
         active: 1,
         mode: "default",
-        code: "npx @paperclipai/teams-connect --setup PC-7K4M",
+        code: "npx @thinkingmach/teams-connect --setup PC-7K4M",
         instructions: [
           ["Copy and run the command", "Run it in a terminal on a computer where you can sign in to Microsoft 365."],
           ["Sign in to Microsoft", "Approve the Microsoft login when the browser opens. The command creates the bot and returns here when it is ready."]
@@ -191,7 +191,7 @@ export const setupFlows = [
         primary: "Copy setup command",
         secondary: "Set up Microsoft manually",
         actions: [
-          ["Copy setup command", "Copies a one-time Paperclip command that invokes Microsoft's Teams Developer CLI, signs the operator in, creates the Teams App and bot registration, and sends the resulting identity to this setup draft."],
+          ["Copy setup command", "Copies a one-time ThinkingMach command that invokes Microsoft's Teams Developer CLI, signs the operator in, creates the Teams App and bot registration, and sends the resulting identity to this setup draft."],
           ["Set up Microsoft manually", "Opens the Azure/Teams manual fallback for tenants that cannot run the guided command."]
         ],
         annotations: [
@@ -220,7 +220,7 @@ export const setupFlows = [
         annotations: [
           "The install link replaces package download and upload on the normal path.",
           "The body contains only the two actions performed in Microsoft Teams.",
-          "Tenant approval is handled by Microsoft's install experience, not another Paperclip choice."
+          "Tenant approval is handled by Microsoft's install experience, not another ThinkingMach choice."
         ],
         rationale: "Microsoft's CLI returns an install link, so normal setup should use it directly."
       },
@@ -235,11 +235,11 @@ export const setupFlows = [
         instructions: [
           ["Open an installed channel", "Start a new post rather than replying to an unrelated post."],
           ["Mention Maya", "Post “@Maya help me test this.”"],
-          ["Continue in replies", "Reply once beneath that post; the post and its replies are one Paperclip task."]
+          ["Continue in replies", "Reply once beneath that post; the post and its replies are one ThinkingMach task."]
         ],
         primary: "Open Microsoft Teams",
         actions: [
-          ["Open Microsoft Teams", "Opens Teams while Paperclip waits for the first authenticated mention and reply to complete setup."]
+          ["Open Microsoft Teams", "Opens Teams while ThinkingMach waits for the first authenticated mention and reply to complete setup."]
         ],
         annotations: [
           "The body is only the Teams channel test sequence.",
@@ -256,10 +256,10 @@ export const setupFlows = [
         rail: ["Agent selected", "Configure Microsoft", "Install Maya", "Try Maya"],
         active: 1,
         mode: "advanced",
-        copyValue: ["Messaging endpoint", "Copy Paperclip endpoint"],
+        copyValue: ["Messaging endpoint", "Copy ThinkingMach endpoint"],
         instructions: [
           ["Create the Microsoft identity", "Create a single-tenant Entra App registration and a client secret."],
-          ["Create the bot", "Create an Azure Bot with that App ID, enable the Microsoft Teams channel, and paste Paperclip's messaging endpoint."],
+          ["Create the bot", "Create an Azure Bot with that App ID, enable the Microsoft Teams channel, and paste ThinkingMach's messaging endpoint."],
           ["Enter the identity below", "Copy Application ID and Directory ID from Entra; paste the client secret value before leaving Microsoft."]
         ],
         fields: [
@@ -270,14 +270,14 @@ export const setupFlows = [
         primary: "Connect and create Teams app",
         secondary: "Back",
         actions: [
-          ["Copy Paperclip endpoint", "Copies the public messaging endpoint that must be entered on the Azure Bot resource."],
+          ["Copy ThinkingMach endpoint", "Copies the public messaging endpoint that must be entered on the Azure Bot resource."],
           ["Connect and create Teams app", "Stores the client secret write-only, verifies Microsoft bot authentication, and creates the installable Teams app and install link."],
           ["Back", "Returns to the guided one-command setup."]
         ],
         annotations: [
-          "The copy control provides the one Paperclip value required by Microsoft.",
+          "The copy control provides the one ThinkingMach value required by Microsoft.",
           "Every instruction is a portal operation the tenant administrator must perform.",
-          "The three fields are the minimum identity values Paperclip needs to send as the bot.",
+          "The three fields are the minimum identity values ThinkingMach needs to send as the bot.",
           "Connect verifies the identity and produces the same install step as the default flow."
         ],
         rationale: "The manual fallback is longer because Microsoft has no manifest callback equivalent; no optional Azure choices are exposed."
@@ -331,14 +331,14 @@ export const setupFlows = [
         ],
         primary: "Open Maya in Telegram",
         actions: [
-          ["Open Maya in Telegram", "Opens the bot's t.me link while Paperclip waits for the first verified private message to complete setup."]
+          ["Open Maya in Telegram", "Opens the bot's t.me link while ThinkingMach waits for the first verified private message to complete setup."]
         ],
         annotations: [
           "The minimum proof is one private message; group and forum reach can be added after connection.",
           "The body contains only the two Telegram actions required for the test.",
           "There is one action: open the bot and send the message."
         ],
-        rationale: "A private chat is Telegram's shortest path from BotFather token to a working Paperclip conversation."
+        rationale: "A private chat is Telegram's shortest path from BotFather token to a working ThinkingMach conversation."
       }
     ]
   }

@@ -3,7 +3,7 @@ import express from "express";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { companies, companyMemberships, createDb, issues } from "@paperclipai/db";
+import { companies, companyMemberships, createDb, issues } from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,

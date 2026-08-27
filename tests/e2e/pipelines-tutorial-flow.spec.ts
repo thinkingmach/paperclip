@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { expect, request as pwRequest, test, type APIRequestContext, type APIResponse, type Locator, type Page } from "@playwright/test";
 import { createLocalAgentJwt } from "../../server/src/agent-auth-jwt";
 
-const PORT = Number(process.env.PAPERCLIP_E2E_PORT ?? 3199);
+const PORT = Number(process.env.THINKINGMACH_E2E_PORT ?? 3199);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 
 type Stage = { id: string; key: string; name: string; kind: string; position: number };
@@ -109,7 +109,7 @@ async function createPipelineWriterAgentKey(board: APIRequestContext, companyId:
 
   const runId = randomUUID();
   const token = createLocalAgentJwt(approved.createdAgentId, companyId, "process", runId);
-  if (!token) throw new Error("PAPERCLIP_AGENT_JWT_SECRET is required for pipeline writer JWT setup");
+  if (!token) throw new Error("THINKINGMACH_AGENT_JWT_SECRET is required for pipeline writer JWT setup");
   return { agentId: approved.createdAgentId, runId, token };
 }
 
@@ -287,7 +287,7 @@ test.describe("Pipelines tutorial UI flow", () => {
       baseURL: BASE_URL,
       extraHTTPHeaders: {
         Authorization: `Bearer ${key.token}`,
-        "X-Paperclip-Run-Id": key.runId,
+        "X-ThinkingMach-Run-Id": key.runId,
       },
     });
 

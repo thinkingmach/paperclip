@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { beforeAll, afterAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { createDb, companies, agents, issues, heartbeatRuns, documents, documentRevisions, issueDocuments, issueThreadInteractions } from "@paperclipai/db";
+import { createDb, companies, agents, issues, heartbeatRuns, documents, documentRevisions, issueDocuments, issueThreadInteractions } from "@thinkingmach/db";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { handoffPlanContext } from "./handoff-plan-context.js";
 

@@ -5,7 +5,7 @@ import path from "node:path";
 import express from "express";
 import request from "supertest";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { companies, createDb } from "@paperclipai/db";
+import { companies, createDb } from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -731,7 +731,7 @@ describeEmbeddedPostgres("company import transfer routes", () => {
     // caller can find the earlier import instead of reading it as data loss.
     mockCompanyService.getById.mockResolvedValue({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: "PAPA",
     });
     const redeclared = await request(app).post("/api/companies/import/transfers").send(body);
@@ -740,7 +740,7 @@ describeEmbeddedPostgres("company import transfer routes", () => {
     expect(redeclared.body.alreadyCompleted).toBe(true);
     expect(redeclared.body.missingParts).toEqual([]);
     expect(mockCompanyService.getById).toHaveBeenCalledWith(companyId);
-    expect(redeclared.body.company).toEqual({ id: companyId, name: "Paperclip", issuePrefix: "PAPA" });
+    expect(redeclared.body.company).toEqual({ id: companyId, name: "ThinkingMach", issuePrefix: "PAPA" });
 
     // A company deleted since the apply (or an attach that never happened)
     // degrades to company: null, never a 500.

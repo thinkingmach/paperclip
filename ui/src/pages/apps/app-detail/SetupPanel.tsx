@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
-import type { ToolCatalogEntry, ToolConnection } from "@paperclipai/shared";
+import type { ToolCatalogEntry, ToolConnection } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";

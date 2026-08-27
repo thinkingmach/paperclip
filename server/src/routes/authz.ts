@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { SecretBindingTargetType } from "@paperclipai/shared";
+import type { SecretBindingTargetType } from "@thinkingmach/shared";
 import { forbidden, HttpError, unauthorized } from "../errors.js";
 import { logger } from "../middleware/logger.js";
 import { responsibleUserAuthzShadowMode } from "../services/authorization.js";

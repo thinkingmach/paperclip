@@ -5,7 +5,7 @@ import type {
   ChatPublicationState,
   ChatFileTransferPhase,
   IssueAttachment,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   chatEndpointsApi,
   type ChatProvider,
@@ -50,7 +50,7 @@ type PublicationFeedback = {
 const publicationFeedback: Record<ChatPublicationState, PublicationFeedback> = {
   awaiting_consent: {
     title: "Waiting for file consent",
-    body: "The recipient must accept the file card in Microsoft Teams. The file is not delivered yet; this send identity is kept while Paperclip waits.",
+    body: "The recipient must accept the file card in Microsoft Teams. The file is not delivered yet; this send identity is kept while ThinkingMach waits.",
     tone: "info",
   },
   published: {
@@ -60,17 +60,17 @@ const publicationFeedback: Record<ChatPublicationState, PublicationFeedback> = {
   },
   pending: {
     title: "Queued for channel",
-    body: "Delivery is still pending. Your draft is kept until Paperclip confirms publication.",
+    body: "Delivery is still pending. Your draft is kept until ThinkingMach confirms publication.",
     tone: "info",
   },
   streaming: {
     title: "Publishing to channel",
-    body: "Delivery is still in progress. Your draft is kept until Paperclip confirms publication.",
+    body: "Delivery is still in progress. Your draft is kept until ThinkingMach confirms publication.",
     tone: "info",
   },
   retry: {
     title: "Delivery retry scheduled",
-    body: "Paperclip will retry this publication. Your draft and retry identity are kept.",
+    body: "ThinkingMach will retry this publication. Your draft and retry identity are kept.",
     tone: "warn",
   },
   delivery_unknown: {
@@ -612,7 +612,7 @@ function ConnectedTaskComposer({
               </legend>
               <p className="text-xs text-muted-foreground">
                 {binding.provider === "github"
-                  ? "GitHub Apps cannot upload file bytes in comments. Checked files stay on the Paperclip task; GitHub receives an authenticated task link when this Board has a public URL, or a private-task notice otherwise."
+                  ? "GitHub Apps cannot upload file bytes in comments. Checked files stay on the ThinkingMach task; GitHub receives an authenticated task link when this Board has a public URL, or a private-task notice otherwise."
                   : binding.provider === "microsoft-teams" &&
                       !showingRetainedFiles
                     ? "In personal Teams chats, recipients accept each file before upload. Channels and group chats receive supported images directly; other files stay on the task, with a task link or private-task notice."
@@ -777,7 +777,7 @@ function ConnectedTaskComposer({
               {publicationStatus.isError && (
                 <p role="alert" className="text-muted-foreground">
                   Delivery status could not be refreshed. Your draft is kept;
-                  Paperclip will check again without sending another update.
+                  ThinkingMach will check again without sending another update.
                 </p>
               )}
               {currentPublication.redactedError && (
@@ -828,7 +828,7 @@ function ConnectedTaskComposer({
             <p className="text-xs text-muted-foreground">
               {binding.provider === "slack"
                 ? "Your message is posted to Slack with your name and starts the agent."
-                : "Ordinary board comments remain Paperclip-only."}
+                : "Ordinary board comments remain ThinkingMach-only."}
             </p>
             <Button
               size="sm"

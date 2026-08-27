@@ -77,7 +77,7 @@ export async function runTurn<TTerminal>(steps: TurnSteps<TTerminal>): Promise<T
   const cancel = () => {
     controller.abort(steps.signal?.reason);
     if (started && !cancellation) {
-      cancellation = started.cancel("Paperclip operator stop");
+      cancellation = started.cancel("ThinkingMach operator stop");
       // The result is observed below; do not create an unhandled rejection
       // while the runtime drains its event stream.
       void cancellation.catch(() => {});

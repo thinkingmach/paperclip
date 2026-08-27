@@ -35,7 +35,7 @@ import { RoutineVariablesEditor, RoutineVariablesHint } from "../RoutineVariable
 import { RoutineTriggerCard } from "../RoutineTriggerCard";
 import { EnvironmentVariablesEditor } from "../environment-variables-editor";
 import { createDefaultNewTrigger, useRoutineDetail } from "./context";
-import type { EnvBinding, RoutineDetail as RoutineDetailType } from "@paperclipai/shared";
+import type { EnvBinding, RoutineDetail as RoutineDetailType } from "@thinkingmach/shared";
 
 const concurrencyPolicyOptions = [
   {
@@ -99,7 +99,7 @@ const triggerKinds = ["schedule", "webhook"];
 const signingModes = ["app_webhook", "bearer", "hmac_sha256", "github_hmac", "none"];
 const signingModeDescriptions: Record<string, string> = {
   bearer: "Send Authorization: Bearer <secret> with each request.",
-  hmac_sha256: "Send X-Paperclip-Timestamp and X-Paperclip-Signature: sha256=<hex>, signing timestamp + a dot + the exact JSON body.",
+  hmac_sha256: "Send X-ThinkingMach-Timestamp and X-ThinkingMach-Signature: sha256=<hex>, signing timestamp + a dot + the exact JSON body.",
   github_hmac: "Accept GitHub-style X-Hub-Signature-256 header (HMAC over raw body, no timestamp).",
   app_webhook: "Accept a bearer token or an HMAC-SHA256 signature over the exact request body in X-Hub-Signature or X-Hub-Signature-256.",
   fireflies_hmac: "Signed webhook (legacy).",
@@ -564,7 +564,7 @@ export function TriggersSection() {
           <div>
             <p className="font-medium">{secretMessage.title}</p>
             <p className="text-xs text-muted-foreground">
-              Save this now. Paperclip will not show the secret value again.
+              Save this now. ThinkingMach will not show the secret value again.
             </p>
           </div>
           <div className="space-y-3">
@@ -675,7 +675,7 @@ export function SecretsSection() {
     <div className="space-y-4">
       <div className="rounded-md border border-border bg-muted/20 px-4 py-3 text-xs text-muted-foreground">
         Routine secrets apply to every task this routine creates. They override matching keys in
-        project and agent env. <span className="font-mono">PAPERCLIP_*</span> names are reserved.
+        project and agent env. <span className="font-mono">THINKINGMACH_*</span> names are reserved.
       </div>
 
 

@@ -21,25 +21,25 @@ describe("Codex app-server transport limits", () => {
       createSanitizedCodexEnvironment({
         PATH: "/safe/bin",
         GH_TOKEN: "github-token",
-        PAPERCLIP_GIT_TOKEN: "github-token",
+        THINKINGMACH_GIT_TOKEN: "github-token",
         GIT_TERMINAL_PROMPT: "0",
         GIT_CONFIG_COUNT: "1",
         GIT_CONFIG_KEY_0: "credential.https://github.com.helper",
         GIT_CONFIG_VALUE_0: "!trusted-helper",
         GIT_CONFIG_KEY_1: "must.not.cross",
         GIT_CONFIG_VALUE_1: "must-not-cross",
-        PAPERCLIP_RUNNER_EXTERNAL_SANDBOX: "1",
+        THINKINGMACH_RUNNER_EXTERNAL_SANDBOX: "1",
         DATABASE_URL: "must-not-cross",
       }),
     ).toEqual({
       PATH: "/safe/bin",
       GH_TOKEN: "github-token",
-      PAPERCLIP_GIT_TOKEN: "github-token",
+      THINKINGMACH_GIT_TOKEN: "github-token",
       GIT_TERMINAL_PROMPT: "0",
       GIT_CONFIG_COUNT: "1",
       GIT_CONFIG_KEY_0: "credential.https://github.com.helper",
       GIT_CONFIG_VALUE_0: "!trusted-helper",
-      PAPERCLIP_RUNNER_EXTERNAL_SANDBOX: "1",
+      THINKINGMACH_RUNNER_EXTERNAL_SANDBOX: "1",
     });
 
     const invalid = createSanitizedCodexEnvironment({

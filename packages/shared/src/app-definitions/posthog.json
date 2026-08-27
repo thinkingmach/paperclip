@@ -106,7 +106,7 @@
               "label": "Individual tools"
             }
           ],
-          "helperMd": "Paperclip uses individual tools so every action can be governed. CLI mode remains unavailable until nested execution is governed.",
+          "helperMd": "ThinkingMach uses individual tools so every action can be governed. CLI mode remains unavailable until nested execution is governed.",
           "transport": {
             "location": "query",
             "name": "mode"
@@ -226,7 +226,7 @@
               "label": "Individual tools"
             }
           ],
-          "helperMd": "Paperclip uses individual tools so every action can be governed. CLI mode remains unavailable until nested execution is governed.",
+          "helperMd": "ThinkingMach uses individual tools so every action can be governed. CLI mode remains unavailable until nested execution is governed.",
           "transport": {
             "location": "query",
             "name": "mode"

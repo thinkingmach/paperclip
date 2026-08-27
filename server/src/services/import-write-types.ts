@@ -13,7 +13,7 @@ import type {
   IssuePriority,
   IssueStatus,
   SourceTrustMetadata,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 /** A resolved issue row with a pre-generated id, ready for batch insert. */
 export interface ImportIssueRow {

@@ -18,8 +18,8 @@ import {
   heartbeatRuns,
   issues,
   nativeRunFinalizations,
-} from "@paperclipai/db";
-import type { NativeExecutionInputV1 } from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/db";
+import type { NativeExecutionInputV1 } from "@thinkingmach/paperclip-runner";
 import { describe, expect, it, vi } from "vitest";
 import { nativeSha256 } from "./canonical.js";
 import {
@@ -34,15 +34,15 @@ import {
 
 // These are captured from the actual private runner in the package's fresh
 // controller/runner loss-window test, not hand-authored protocol receipts.
-// Generate with PAPERCLIP_ATTACH_TRANSITION_FIXTURE_DIRECTORY, then explicitly
-// supply that directory and a fresh migrated PAPERCLIP_TEST_DATABASE_URL here.
+// Generate with THINKINGMACH_ATTACH_TRANSITION_FIXTURE_DIRECTORY, then explicitly
+// supply that directory and a fresh migrated THINKINGMACH_TEST_DATABASE_URL here.
 // The post-admission backend is mocked: this qualifies classifier→server route
 // admission, not a second provider execution or end-to-end restart.
 const fixtureDirectory =
-  process.env.PAPERCLIP_WARM_TRANSITION_FIXTURE_DIRECTORY;
+  process.env.THINKINGMACH_WARM_TRANSITION_FIXTURE_DIRECTORY;
 const managedFixtureDirectory =
-  process.env.PAPERCLIP_WARM_TRANSITION_MANAGED_FIXTURE_DIRECTORY;
-const databaseUrl = process.env.PAPERCLIP_TEST_DATABASE_URL;
+  process.env.THINKINGMACH_WARM_TRANSITION_MANAGED_FIXTURE_DIRECTORY;
+const databaseUrl = process.env.THINKINGMACH_TEST_DATABASE_URL;
 const generated =
   fixtureDirectory && databaseUrl ? describe.sequential : describe.skip;
 
@@ -116,7 +116,7 @@ vi.mock("../../realtime/runner-prp-ws.js", () => ({
   registerRunnerPrpAuthority: seam.register,
 }));
 vi.mock("./paperclip-runner-tool-authority.js", () => ({
-  PaperclipRunnerToolAuthority: class {
+  ThinkingMachRunnerToolAuthority: class {
     definitions() {
       return Promise.resolve([]);
     }
@@ -275,8 +275,8 @@ generated(
       ).toBe(true);
       const directory = await mkdtemp(join(tmpdir(), "native-warm-admission-"));
       const oldEnvironment = {
-        state: process.env.PAPERCLIP_RUNNER_STATE_DIR,
-        binary: process.env.PAPERCLIP_RUNNER_BINARY,
+        state: process.env.THINKINGMACH_RUNNER_STATE_DIR,
+        binary: process.env.THINKINGMACH_RUNNER_BINARY,
       };
       const db = createDb(databaseUrl!);
       const companyId = randomUUID();
@@ -287,8 +287,8 @@ generated(
       let releaseLock: (() => void) | undefined;
       let lockHolder: Promise<void> | undefined;
       try {
-        process.env.PAPERCLIP_RUNNER_STATE_DIR = directory;
-        process.env.PAPERCLIP_RUNNER_BINARY = fixture.artifact.path;
+        process.env.THINKINGMACH_RUNNER_STATE_DIR = directory;
+        process.env.THINKINGMACH_RUNNER_BINARY = fixture.artifact.path;
         const priorExecution = executionFor(
           fixture,
           companyId,
@@ -580,7 +580,7 @@ generated(
             ]),
           );
           await chmod(alternative, 0o700);
-          process.env.PAPERCLIP_RUNNER_BINARY = alternative;
+          process.env.THINKINGMACH_RUNNER_BINARY = alternative;
         }
         if (fault === "bootstrap_claim")
           claim = { ...claim, kind: "bootstrap_incomplete" };
@@ -840,11 +840,11 @@ generated(
         } finally {
           await db.$client.end({ timeout: 1 });
           if (oldEnvironment.state === undefined)
-            delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
-          else process.env.PAPERCLIP_RUNNER_STATE_DIR = oldEnvironment.state;
+            delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
+          else process.env.THINKINGMACH_RUNNER_STATE_DIR = oldEnvironment.state;
           if (oldEnvironment.binary === undefined)
-            delete process.env.PAPERCLIP_RUNNER_BINARY;
-          else process.env.PAPERCLIP_RUNNER_BINARY = oldEnvironment.binary;
+            delete process.env.THINKINGMACH_RUNNER_BINARY;
+          else process.env.THINKINGMACH_RUNNER_BINARY = oldEnvironment.binary;
           await rm(directory, { recursive: true, force: true });
         }
       }

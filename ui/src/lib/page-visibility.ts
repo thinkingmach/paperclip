@@ -34,7 +34,7 @@ export function getPageVisibility(): PageVisibility {
   return { visible: true, focused };
 }
 
-/** Stable header value for `X-Paperclip-Tab-Visible`: "focused" | "visible" | "hidden". */
+/** Stable header value for `X-ThinkingMach-Tab-Visible`: "focused" | "visible" | "hidden". */
 export function getVisibilityHeaderValue(state: PageVisibility = getPageVisibility()): string {
   if (!state.visible) return "hidden";
   return state.focused ? "focused" : "visible";

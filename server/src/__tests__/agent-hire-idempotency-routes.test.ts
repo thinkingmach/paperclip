@@ -13,7 +13,7 @@ import {
   createDb,
   heartbeatRuns,
   principalPermissionGrants,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { getEmbeddedPostgresTestSupport, startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { errorHandler } from "../middleware/index.js";
 import { agentRoutes } from "../routes/agents.js";

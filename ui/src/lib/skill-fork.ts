@@ -3,7 +3,7 @@ import type {
   CompanySkillOriginalSummary,
   CompanySkillSourceType,
   CompanySkillUsageAgent,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 /**
  * Pure logic for the Skill Studio "Edit a copy" fork flow (PAP-13112). Kept

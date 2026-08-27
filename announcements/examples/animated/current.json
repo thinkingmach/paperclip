@@ -7,12 +7,12 @@
     "description": "Set a goal, bring in your agents, and follow the work as it moves forward.",
     "image": {
       "path": "assets/6ac073cb3447e26f856b15ec058bb9d4d036b0babff60af88ee0dd49cabfa124.png",
-      "alt": "Paperclip. Ideas become work."
+      "alt": "ThinkingMach. Ideas become work."
     },
     "secondaryLink": {
       "kind": "external",
       "label": "Learn more",
-      "url": "https://paperclip.ing"
+      "url": "https://thinkingmach.com"
     },
     "primaryAction": {
       "kind": "route",

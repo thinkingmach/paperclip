@@ -8,7 +8,7 @@ import {
   type Sandbox,
   type SandboxCreateParams,
 } from "modal";
-import { definePlugin } from "@paperclipai/plugin-sdk";
+import { definePlugin } from "@thinkingmach/plugin-sdk";
 import type {
   PluginEnvironmentAcquireLeaseParams,
   PluginEnvironmentDestroyLeaseParams,
@@ -23,7 +23,7 @@ import type {
   PluginEnvironmentResumeLeaseParams,
   PluginEnvironmentValidateConfigParams,
   PluginEnvironmentValidationResult,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 
 const DEFAULT_WORKDIR = "/workspace/paperclip";
 const DEFAULT_SANDBOX_TIMEOUT_MS = 3_600_000;
@@ -94,7 +94,7 @@ function resolveAuth(config: ModalDriverConfig): { tokenId: string; tokenSecret:
   // The plugin worker runs in a child process that does not inherit host env
   // vars (see PluginWorkerManager.spawnProcess), so MODAL_TOKEN_ID /
   // MODAL_TOKEN_SECRET cannot be read here. Credentials must come from the
-  // environment config, which Paperclip stores as company secrets.
+  // environment config, which ThinkingMach stores as company secrets.
   const tokenId = config.tokenId ?? "";
   const tokenSecret = config.tokenSecret ?? "";
   if (!tokenId && !tokenSecret) return null;
@@ -319,7 +319,7 @@ async function getSandboxOrNull(
 function warnIfUnsupportedNode(logger: { warn: (msg: string) => void } | undefined): void {
   const major = Number.parseInt(process.versions.node.split(".")[0] ?? "0", 10);
   if (Number.isFinite(major) && major < 24) {
-    const message = `Modal sandbox provider is running on Node ${process.versions.node}; Paperclip requires Node 24+. Upgrade the host runtime before using this plugin.`;
+    const message = `Modal sandbox provider is running on Node ${process.versions.node}; ThinkingMach requires Node 24+. Upgrade the host runtime before using this plugin.`;
     logger?.warn(message);
   }
 }

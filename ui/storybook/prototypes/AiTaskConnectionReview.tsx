@@ -1,7 +1,7 @@
 import { AiReviewBoundary } from "./AiReviewFrame";
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { APP_DEFINITIONS, type ConnectionIntentInteraction } from "@paperclipai/shared";
+import { APP_DEFINITIONS, type ConnectionIntentInteraction } from "@thinkingmach/shared";
 import { ConnectionIntentInteractionBody } from "@/features/connections/ConnectionIntentInteractionBody";
 import { ConnectionSetupFlow, type ConnectionSetupFlowProps } from "@/features/connections/ConnectionSetupFlow";
 import { pendingConnectionIntentInteraction } from "@/fixtures/issueThreadInteractionFixtures";

@@ -5,13 +5,13 @@ import path from "node:path";
 import assert from "node:assert/strict";
 
 const env = process.env;
-const headers = { Authorization: `Bearer ${env.PAPERCLIP_API_KEY}`, "X-Paperclip-Run-Id": env.PAPERCLIP_RUN_ID, "Content-Type": "application/json" };
+const headers = { Authorization: `Bearer ${env.THINKINGMACH_API_KEY}`, "X-ThinkingMach-Run-Id": env.THINKINGMACH_RUN_ID, "Content-Type": "application/json" };
 const api = async (route, method = "GET", body) => {
-  const response = await fetch(`${env.PAPERCLIP_API_URL}/api${route}`, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  const response = await fetch(`${env.THINKINGMACH_API_URL}/api${route}`, { method, headers, body: body ? JSON.stringify(body) : undefined });
   assert(response.ok, `${response.status}: ${await response.clone().text()}`);
   return response.json();
 };
-const run = await api(`/heartbeat-runs/${env.PAPERCLIP_RUN_ID}`);
+const run = await api(`/heartbeat-runs/${env.THINKINGMACH_RUN_ID}`);
 const issueId = run.contextSnapshot.issueId;
 const repositories = await readdir(path.join(process.cwd(), ".paperclip-repositories"));
 const repo = path.join(process.cwd(), ".paperclip-repositories", repositories.find((name) => !name.includes(".clone-")));

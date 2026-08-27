@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
-import type { Issue, IssueComment } from "@paperclipai/shared";
+import type { Issue, IssueComment } from "@thinkingmach/shared";
 import { issuesApi } from "@/api/issues";
 import { queryKeys } from "@/lib/queryKeys";
 import { getNextIssueCommentPageParam, ISSUE_COMMENT_PAGE_SIZE } from "@/lib/optimistic-issue-comments";

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AGENT_PALETTE_IDS, appearanceForPalette, type AgentPaletteId } from "@paperclipai/shared";
+import { AGENT_PALETTE_IDS, appearanceForPalette, type AgentPaletteId } from "@thinkingmach/shared";
 import { OnboardingCharacter } from "../../src/components/onboarding/OnboardingCharacter";
 import { Button } from "../../src/components/ui/button";
 

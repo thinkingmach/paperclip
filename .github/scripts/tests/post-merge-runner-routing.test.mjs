@@ -6,7 +6,7 @@ import { runInNewContext } from "node:vm";
 const fleet = "runs-on/fleet=paperclip-post-merge-x64/env=public-ci";
 const sha = "a".repeat(40);
 const base = {
-  repository: "paperclipai/paperclip", repository_id: "1170821064",
+  repository: "thinkingmach/paperclip", repository_id: "1170821064",
   ref: "refs/heads/master", event_name: "push", sha,
 };
 const expectedJobs = {
@@ -94,7 +94,7 @@ test("Cloud readiness bookkeeping never waits for the AWS verification fleet", (
     bodies.set(name, body);
     assert.match(body, /^    runs-on: ubuntu-latest$/m);
     assert.doesNotMatch(body, /^ +continue-on-error:|^ +if:.*always\(\)/m);
-    assert.match(body, /^    if: github.repository == 'paperclipai\/paperclip' && github.ref == 'refs\/heads\/master'$/m);
+    assert.match(body, /^    if: github.repository == 'thinkingmach\/paperclip' && github.ref == 'refs\/heads\/master'$/m);
     assert.match(body, /^ +SOURCE_SHA: \$\{\{ github.sha \}\}$/m);
     assert.equal(body.match(/^    needs: (.+)$/m)?.[1] ?? null, needs, `${name} prerequisites`);
   }

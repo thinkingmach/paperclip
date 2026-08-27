@@ -11,14 +11,14 @@ import { describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 
 import {
-  createPaperclipCloudConnector,
-  invalidatePaperclipCloudConnectorCapabilities,
+  createThinkingMachCloudConnector,
+  invalidateThinkingMachCloudConnectorCapabilities,
   GMAIL_CONNECTOR_SCOPES,
   GOOGLE_WORKSPACE_CONNECTOR_PROFILES,
   paperclipCloudConnectorCapabilitiesFromEnv,
   paperclipCloudConnectorConfigFromEnv,
-  PaperclipCloudConnectorError,
-  type PaperclipCloudConnectorConfig,
+  ThinkingMachCloudConnectorError,
+  type ThinkingMachCloudConnectorConfig,
 } from "./paperclip-cloud-connector.js";
 
 const instanceId = "inst_test";
@@ -48,14 +48,14 @@ function config() {
       environment: "staging",
       signPrivateKey: rawPrivateKey(signing.privateKey),
       sealPrivateKey: rawPrivateKey(sealing.privateKey),
-    } satisfies PaperclipCloudConnectorConfig,
+    } satisfies ThinkingMachCloudConnectorConfig,
     sealPublicKey: sealing.publicKey,
   };
 }
 
-describe("Paperclip Cloud connector", () => {
+describe("ThinkingMach Cloud connector", () => {
   async function rejection(response: Response) {
-    const connector = createPaperclipCloudConnector({
+    const connector = createThinkingMachCloudConnector({
       config: config().config,
       request: vi.fn(async () => response) as typeof fetch,
     });
@@ -71,7 +71,7 @@ describe("Paperclip Cloud connector", () => {
       status: originRejectionContract.status,
     }))).toMatchObject({
       code: "CONNECTOR_REQUEST_FAILED", status: 400,
-      message: "Paperclip Cloud connector rejected the request (operation=session, status=400, reason=RETURN_ORIGIN_NOT_ENROLLED)",
+      message: "ThinkingMach Cloud connector rejected the request (operation=session, status=400, reason=RETURN_ORIGIN_NOT_ENROLLED)",
     });
   });
 
@@ -80,10 +80,10 @@ describe("Paperclip Cloud connector", () => {
       error: "RETURN_ORIGIN_NOT_ENROLLED",
       message: "DO_NOT_REPORT private-state access-secret https://private.example.test",
     }, { status: 400 }));
-    expect(error).toBeInstanceOf(PaperclipCloudConnectorError);
+    expect(error).toBeInstanceOf(ThinkingMachCloudConnectorError);
     expect(error).toMatchObject({
       code: "CONNECTOR_REQUEST_FAILED", status: 400,
-      message: "Paperclip Cloud connector rejected the request (operation=session, status=400, reason=RETURN_ORIGIN_NOT_ENROLLED)",
+      message: "ThinkingMach Cloud connector rejected the request (operation=session, status=400, reason=RETURN_ORIGIN_NOT_ENROLLED)",
     });
     expect(JSON.stringify(error)).not.toMatch(/DO_NOT_REPORT|private-state|access-secret|private\.example/);
   });
@@ -97,7 +97,7 @@ describe("Paperclip Cloud connector", () => {
     const error = await rejection(new Response(body, { status: 409 }));
     expect(error).toMatchObject({
       code: "REAUTHORIZATION_REQUIRED", status: 409,
-      message: "Paperclip Cloud connector rejected the request (operation=session, status=409, reason=UNKNOWN_BROKER_ERROR)",
+      message: "ThinkingMach Cloud connector rejected the request (operation=session, status=409, reason=UNKNOWN_BROKER_ERROR)",
     });
   });
 
@@ -145,25 +145,25 @@ describe("Paperclip Cloud connector", () => {
   it("refreshes capabilities after enrollment and rejects stale cache writes", async () => {
     const keys = config().config;
     const env = {
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: keys.baseUrl,
-      PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID: keys.instanceId,
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: keys.environment,
-      PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: keys.signPrivateKey,
-      PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: keys.sealPrivateKey,
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: keys.baseUrl,
+      THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID: keys.instanceId,
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: keys.environment,
+      THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: keys.signPrivateKey,
+      THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: keys.sealPrivateKey,
     };
     let completeOldRequest!: (response: Response) => void;
     const request = vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(Response.json({ status: "pending", active: false }))
       .mockImplementationOnce(() => new Promise<Response>((resolve) => { completeOldRequest = resolve; }))
       .mockResolvedValue(Response.json({ status: "active", active: true, profiles: ["gmail.read"] }));
-    invalidatePaperclipCloudConnectorCapabilities();
+    invalidateThinkingMachCloudConnectorCapabilities();
     try {
       await expect(paperclipCloudConnectorCapabilitiesFromEnv(env)).resolves.toEqual([]);
       await expect(paperclipCloudConnectorCapabilitiesFromEnv(env)).resolves.toEqual([]);
       expect(request).toHaveBeenCalledTimes(1);
-      invalidatePaperclipCloudConnectorCapabilities();
+      invalidateThinkingMachCloudConnectorCapabilities();
       const oldRequest = paperclipCloudConnectorCapabilitiesFromEnv(env);
-      invalidatePaperclipCloudConnectorCapabilities();
+      invalidateThinkingMachCloudConnectorCapabilities();
       await expect(paperclipCloudConnectorCapabilitiesFromEnv(env)).resolves.toEqual(["gmail.read"]);
       completeOldRequest(Response.json({ status: "pending", active: false }));
       await expect(oldRequest).resolves.toEqual([]);
@@ -171,7 +171,7 @@ describe("Paperclip Cloud connector", () => {
       expect(request).toHaveBeenCalledTimes(3);
     } finally {
       request.mockRestore();
-      invalidatePaperclipCloudConnectorCapabilities();
+      invalidateThinkingMachCloudConnectorCapabilities();
     }
   });
 
@@ -186,7 +186,7 @@ describe("Paperclip Cloud connector", () => {
       expect(claims.scp).toEqual(scopes);
       return Response.json({ confirmationUrl: "https://my.example.test/connections/confirm?session=chat", expiresAt: "2099-01-01T00:00:00Z" });
     });
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
     await connector.startAuthorization({ subject, companyId, profile,
       returnUri: "https://paperclip.example.test/api/tools/oauth/cloud-connector/callback", returnState: "chat-state" });
     expect(request).toHaveBeenCalledOnce();
@@ -224,7 +224,7 @@ describe("Paperclip Cloud connector", () => {
         expiresAt: "2026-08-21T20:00:00.000Z",
       }, { status: 201 });
     });
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
 
     await expect(connector.startAuthorization({
       subject,
@@ -242,7 +242,7 @@ describe("Paperclip Cloud connector", () => {
 
   it("prefers a validated HTTPS provider URL over the legacy confirmation URL", async () => {
     const keys = config();
-    const connector = createPaperclipCloudConnector({
+    const connector = createThinkingMachCloudConnector({
       config: keys.config,
       request: vi.fn(async () => Response.json({
         confirmationUrl: "https://my.example.test/connections/confirm?session=broker-state",
@@ -264,7 +264,7 @@ describe("Paperclip Cloud connector", () => {
 
   it("accepts the fixed Google authorization endpoint for Google profiles", async () => {
     const keys = config();
-    const connector = createPaperclipCloudConnector({
+    const connector = createThinkingMachCloudConnector({
       config: keys.config,
       request: vi.fn(async () => Response.json({
         confirmationUrl: "https://my.example.test/connections/confirm?session=broker-state",
@@ -294,7 +294,7 @@ describe("Paperclip Cloud connector", () => {
     ["not a URL", "not-a-url"],
   ])("rejects a malformed direct provider URL: %s", async (_label, authorizationUrl) => {
     const keys = config();
-    const connector = createPaperclipCloudConnector({
+    const connector = createThinkingMachCloudConnector({
       config: keys.config,
       request: vi.fn(async () => Response.json({
         confirmationUrl: "https://my.example.test/connections/confirm?session=broker-state",
@@ -329,7 +329,7 @@ describe("Paperclip Cloud connector", () => {
       expect(claims.sh).toBe(createHash("sha256").update(body.binding).digest("base64url"));
       return Response.json({ active: true, installationId: "42" });
     });
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
 
     await expect(connector.setWebhookBinding({
       subject,
@@ -355,7 +355,7 @@ describe("Paperclip Cloud connector", () => {
 
   it("keeps legacy session responses compatible and rejects malformed handoff descriptors", async () => {
     const keys = config();
-    const legacy = createPaperclipCloudConnector({
+    const legacy = createThinkingMachCloudConnector({
       config: keys.config,
       request: vi.fn(async () => Response.json({
         confirmationUrl: "https://my.example.test/connections/confirm?session=broker-state",
@@ -369,7 +369,7 @@ describe("Paperclip Cloud connector", () => {
       returnState: "state-legacy",
     })).resolves.not.toHaveProperty("handoff");
 
-    const malformed = createPaperclipCloudConnector({
+    const malformed = createThinkingMachCloudConnector({
       config: keys.config,
       request: vi.fn(async () => Response.json({
         confirmationUrl: "https://my.example.test/connections/confirm?session=broker-state",
@@ -408,7 +408,7 @@ describe("Paperclip Cloud connector", () => {
       scopes: [...GMAIL_CONNECTOR_SCOPES],
       sealed,
     }));
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
 
     await expect(connector.claim({
       subject,
@@ -445,7 +445,7 @@ describe("Paperclip Cloud connector", () => {
       expect(claims.rid).toBe("local-oauth-state-drive");
       return Response.json({ claimId: "clm_drive", scopes: credentials.scopes, sealed });
     });
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
 
     await expect(connector.claim({
       subject,
@@ -479,7 +479,7 @@ describe("Paperclip Cloud connector", () => {
         profiles: ["gmail.read", "drive.write", "unknown.profile", "gmail.read"],
       });
     });
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
     await expect(connector.getCapabilities()).resolves.toEqual(["gmail.read", "drive.write"]);
   });
 
@@ -492,7 +492,7 @@ describe("Paperclip Cloud connector", () => {
       new Response("detail must not escape", { status: 403 }),
     ];
     for (const response of responses) {
-      const connector = createPaperclipCloudConnector({
+      const connector = createThinkingMachCloudConnector({
         config: keys.config,
         request: vi.fn(async () => response) as typeof fetch,
       });
@@ -519,14 +519,14 @@ describe("Paperclip Cloud connector", () => {
       expect(claims).not.toHaveProperty("scp");
       return Response.json({ active: true, status: "active" });
     });
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
 
     await expect(connector.getInstanceStatus()).resolves.toBe("active");
   });
 
   it("treats an unknown Cloud enrollment as removed without exposing Cloud detail", async () => {
     const keys = config();
-    const connector = createPaperclipCloudConnector({
+    const connector = createThinkingMachCloudConnector({
       config: keys.config,
       request: vi.fn(async () => new Response("unknown instance detail", { status: 401 })) as typeof fetch,
     });
@@ -539,10 +539,10 @@ describe("Paperclip Cloud connector", () => {
     const request = vi.fn(async () => new Response(JSON.stringify({
       error: "provider rejected access-secret refresh-secret",
     }), { status: 502 }));
-    const connector = createPaperclipCloudConnector({ config: keys.config, request: request as typeof fetch });
+    const connector = createThinkingMachCloudConnector({ config: keys.config, request: request as typeof fetch });
 
     const error = await connector.refresh({ subject, companyId, refreshToken: "refresh-secret" }).catch((caught) => caught);
-    expect(error).toBeInstanceOf(PaperclipCloudConnectorError);
+    expect(error).toBeInstanceOf(ThinkingMachCloudConnectorError);
     expect(String(error)).not.toContain("access-secret");
     expect(String(error)).not.toContain("refresh-secret");
     expect(request).toHaveBeenCalledOnce();
@@ -551,23 +551,23 @@ describe("Paperclip Cloud connector", () => {
   it("requires an all-or-nothing environment configuration and loopback for HTTP", () => {
     expect(paperclipCloudConnectorConfigFromEnv({})).toBeNull();
     expect(() => paperclipCloudConnectorConfigFromEnv({
-      PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID: instanceId,
+      THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID: instanceId,
     })).toThrowError(/incomplete/);
     expect(() => paperclipCloudConnectorConfigFromEnv({
-      PAPERCLIP_CLOUD_CONNECTOR_INSTANCE_ID: instanceId,
-      PAPERCLIP_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "key",
-      PAPERCLIP_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "key",
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "development",
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "http://my.example.test",
+      THINKINGMACH_CLOUD_CONNECTOR_INSTANCE_ID: instanceId,
+      THINKINGMACH_CLOUD_CONNECTOR_SIGN_PRIVATE_KEY: "key",
+      THINKINGMACH_CLOUD_CONNECTOR_SEAL_PRIVATE_KEY: "key",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "development",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "http://my.example.test",
     })).toThrowError(/HTTPS/);
     const legacyError = (() => {
       try {
         paperclipCloudConnectorConfigFromEnv({
-          PAPERCLIP_ID_CONNECTOR_INSTANCE_ID: instanceId,
-          PAPERCLIP_ID_CONNECTOR_SIGN_PRIVATE_KEY: "key",
-          PAPERCLIP_ID_CONNECTOR_SEAL_PRIVATE_KEY: "key",
-          PAPERCLIP_ID_CONNECTOR_ENVIRONMENT: "development",
-          PAPERCLIP_ID_CONNECTOR_BASE_URL: "https://id.paperclip.app",
+          THINKINGMACH_ID_CONNECTOR_INSTANCE_ID: instanceId,
+          THINKINGMACH_ID_CONNECTOR_SIGN_PRIVATE_KEY: "key",
+          THINKINGMACH_ID_CONNECTOR_SEAL_PRIVATE_KEY: "key",
+          THINKINGMACH_ID_CONNECTOR_ENVIRONMENT: "development",
+          THINKINGMACH_ID_CONNECTOR_BASE_URL: "https://id.paperclip.app",
         });
         return null;
       } catch (error) {
@@ -580,8 +580,8 @@ describe("Paperclip Cloud connector", () => {
 
   it("keeps gallery capability discovery available during incomplete enrollment", async () => {
     await expect(paperclipCloudConnectorCapabilitiesFromEnv({
-      PAPERCLIP_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
-      PAPERCLIP_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
+      THINKINGMACH_CLOUD_CONNECTOR_BASE_URL: "https://my-staging.paperclip.app",
+      THINKINGMACH_CLOUD_CONNECTOR_ENVIRONMENT: "staging",
     })).resolves.toEqual([]);
   });
 });
@@ -590,7 +590,7 @@ function seal(
   payload: unknown,
   recipientPublicKey: KeyObject,
   purpose: "initial" | "access",
-  configValue: PaperclipCloudConnectorConfig,
+  configValue: ThinkingMachCloudConnectorConfig,
   profile: keyof typeof GOOGLE_WORKSPACE_CONNECTOR_PROFILES,
 ) {
   const ephemeral = generateKeyPairSync("x25519");

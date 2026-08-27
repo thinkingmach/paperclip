@@ -139,7 +139,7 @@ required; no bypass or self-approval.
 ### Prior checkpoint — September 10: deferred-wake extraction reconciliation
 
 Published `7c6d36e0d7d343709f10b533a0c29dc2409f7b2b` passes all 24 jobs in
-[fresh CI](https://github.com/paperclipai/paperclip/actions/runs/34434501548).
+[fresh CI](https://github.com/thinkingmach/paperclip/actions/runs/34434501548).
 Greptile reviews that exact head at **5/5**, without actionable findings.
 The normal exact-head guarded squash merge then fails because master advanced
 to `6dd48cad4` (the deferred-wake module extraction) during the checks.
@@ -164,7 +164,7 @@ paused until normal merge succeeds.
 ### Prior checkpoint — September 10: Stop-registration review correction
 
 Master reconciliation is published as `a95d42e58afa35cf4ecf1a39cbd96f06523b90ec`.
-Its complete [CI run](https://github.com/paperclipai/paperclip/actions/runs/34433249742)
+Its complete [CI run](https://github.com/thinkingmach/paperclip/actions/runs/34433249742)
 passes all 24 jobs, including both required aggregates, at 03:42 UTC.
 Greptile's exact-head review is **4/5**, with a confirmed Stop-registration
 race. This is a merge hold, not permission to merge because CI is green.
@@ -190,7 +190,7 @@ below 500 files. Live qualification remains paused and no live binary changed.
 ### Prior checkpoint — September 10: final master reconciliation
 
 The published head `3e4e1c1cee05737fd5193e141ccd52f8815c7854` passes its
-complete [CI run](https://github.com/paperclipai/paperclip/actions/runs/34415826820),
+complete [CI run](https://github.com/thinkingmach/paperclip/actions/runs/34415826820),
 including Build and both required aggregates, at September 9, 23:28:50 UTC.
 The previously failing ambiguous-replacement and descendant-lineage cases
 both pass under Linux CI's unchanged default concurrency. This does not erase
@@ -922,7 +922,7 @@ Enabling this option is not evidence that the missing Slack A would be recovered
 
 GitHub D's delay is now explained more precisely by provider records: the first
 attempt was classified `failed to connect to host` (recorded code 502, empty
-response), then Paperclip's existing scheduled recovery requested the successful
+response), then ThinkingMach's existing scheduled recovery requested the successful
 redelivery. The roughly 60-second detection cadence accounts for most of that
 wait, not model execution. Faster failure recovery remains a performance followup
 requiring actual App API-budget/backoff qualification; do not simply multiply
@@ -972,9 +972,9 @@ the combined suite and next cutover. Telegram native draft Stop remains
 unobserved, and Teams still needs a work-tenant/admin installation.
 
 Two actual chat PRs now exist, in dependency order:
-[foundation #13100](https://github.com/paperclipai/paperclip/pull/13100),
+[foundation #13100](https://github.com/thinkingmach/paperclip/pull/13100),
 136 files at `29c48d25…`, then
-[integration #13038](https://github.com/paperclipai/paperclip/pull/13038),
+[integration #13038](https://github.com/thinkingmach/paperclip/pull/13038),
 366 files at `f9250078…`. Checks and fresh reviews are pending; no merge is
 claimed. Later live fixes must be included and exact-head gates renewed.
 
@@ -1091,7 +1091,7 @@ has admitted no new runs since the cutover.
   Short replies took 13–16 seconds; 120–220-word replies took 32–60 seconds.
   Queue correctness is verified; model-response latency still needs work.
 - **GitHub:** fresh issue #5 correctly reported the private TXT unavailable
-  and supplied a working stable Paperclip task link. Uploading the exact
+  and supplied a working stable ThinkingMach task link. Uploading the exact
   152-byte file through the actual Board UI produced the correct fields.
   However, a passive `response_wake` triggered an unwanted continuation that
   marked CHA-45 done despite “keep open.” A durable passive Board-wait fix
@@ -1169,7 +1169,7 @@ text test. Preserve the failed guild form and historical quarantined epochs.
 Discord DM CHA-41 passed fresh new/status and true FIFO A/B/C. C began 102ms
 after B finished; all three responses updated their own single bot message.
 However, `/paperclip close` only completed the external conversation. It
-confirmed “This task is closed” while the Paperclip task remained in progress.
+confirmed “This task is closed” while the ThinkingMach task remained in progress.
 Generic productive-run recovery immediately restarted that task, lost its
 external-chat wait context, and began a roughly 30-second response-wake loop.
 The pause contains the loop, not fixes it. Epicurus is taking the source-bound
@@ -1271,10 +1271,10 @@ recovery records; fresh successful tasks do not establish their recovery.
 Finish production-quality Slack, GitHub, Microsoft Teams and Telegram chat,
 plus the user's explicitly added Discord connector. Test real conversations,
 files/images, interactions, races, queues, reactions, retries and the quality
-of the experience. External chat is transport; Paperclip owns tasks, runs,
+of the experience. External chat is transport; ThinkingMach owns tasks, runs,
 permissions and audit. Do not narrow completion to whichever tests pass.
 
-- Live stress work stays in `/Users/dotta/paperclipai/branches/chat-adapters`,
+- Live stress work stays in `/Users/dotta/thinkingmach/branches/chat-adapters`,
   branch `codex/chat-adapters`. Preserve user changes and protected runtime.
   The user explicitly authorized a separate landing worktree on September 9;
   this supersedes the earlier no-new-worktree/no-PR-tending restrictions for
@@ -1459,7 +1459,7 @@ npm consumers. Packaging contracts pass 22/22. The earlier isolated helper
 stage at patch snapshot `1a0a77025` was not a full server install. A new stage
 at source `d5b154e1c7` freshly compiled all 17 runtime packages, applied the real
 production bundle helper, packed and installed local tarballs with npm 10.9.7,
-and verified all 21 patched files. All Paperclip sibling registry probes were
+and verified all 21 patched files. All ThinkingMach sibling registry probes were
 rejected; installed siblings resolve to the exact local tarballs and module
 imports remain inside the consumer. Compiled-server imports and synthetic
 Slack stream/Telegram Stop transport pass. The retained qualified runner was
@@ -1897,7 +1897,7 @@ to avoid same-agent queue contention. See permanent log for source/message IDs.
 
 GitHub generic private attachment URLs can be unavailable to the App even when
 the signed-in human can read them. Never forward browser cookies or guess file
-contents. The new deterministic fallback appends an authorized Paperclip task
+contents. The new deterministic fallback appends an authorized ThinkingMach task
 link; it does not make those provider files generically downloadable.
 
 Slack once took about 61.5 seconds and Telegram once 234.435 seconds before

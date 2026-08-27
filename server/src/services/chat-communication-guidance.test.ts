@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CHAT_PROVIDERS, updateChatEndpointSchema } from "@paperclipai/shared";
+import { CHAT_PROVIDERS, updateChatEndpointSchema } from "@thinkingmach/shared";
 import { buildChatCommunicationGuidance } from "./chat-communication-guidance.js";
 
 describe("initial medium communication guidance", () => {

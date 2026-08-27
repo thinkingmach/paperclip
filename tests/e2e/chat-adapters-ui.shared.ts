@@ -11,7 +11,7 @@ import {
 /**
  * Deterministic browser coverage for the native chat-connector UI.
  *
- * Provider APIs are deliberately not contacted here. The shared Paperclip
+ * Provider APIs are deliberately not contacted here. The shared ThinkingMach
  * server supplies the company, agent, and connector catalog, while a small
  * stateful route fixture emulates the chat-control-plane responses. Live
  * provider webhook and credential qualification belongs in the manual runbook
@@ -149,9 +149,9 @@ export const PROVIDER_LIFECYCLE_COPY: Record<
   },
   telegram: {
     reconnect:
-      "Reconnect verifies this same BotFather bot and automatically refreshes its Paperclip webhook and command menu.",
+      "Reconnect verifies this same BotFather bot and automatically refreshes its ThinkingMach webhook and command menu.",
     remove:
-      "queues durable removal of its Telegram webhook and command menu. After Telegram confirms that cleanup, Paperclip retires the saved token",
+      "queues durable removal of its Telegram webhook and command menu. After Telegram confirms that cleanup, ThinkingMach retires the saved token",
   },
 };
 
@@ -924,7 +924,7 @@ export async function fillProviderSetup(page: Page, provider: ProviderCase) {
     ) as { webApplicationInfo?: { id?: string; resource?: string } };
     expect(manifest.webApplicationInfo).toEqual({
       id: clientId,
-      resource: "https://paperclip.ing",
+      resource: "https://thinkingmach.com",
     });
     await expect(
       page.getByRole("button", { name: "Copy manifest settings" }),
@@ -969,7 +969,7 @@ features:
     messages_tab_enabled: true
     messages_tab_read_only_enabled: false
   agent_view:
-    agent_description: "Work with a Paperclip agent in a task-backed conversation."
+    agent_description: "Work with a ThinkingMach agent in a task-backed conversation."
   bot_user:
     display_name: "maya"
   slash_commands:
@@ -1133,7 +1133,7 @@ export async function expectMinimumProviderSetup(page: Page, provider: ProviderC
       ],
       webApplicationInfo: {
         id: "<application-client-id>",
-        resource: "https://paperclip.ing",
+        resource: "https://thinkingmach.com",
       },
     });
     expect(manifest).not.toContain("api://paperclip-chat/");

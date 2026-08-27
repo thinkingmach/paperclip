@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { agents, agentWakeupRequests, companies, createDb, heartbeatRuns, issueComments, issueRecoveryActions, issueThreadInteractions, issues } from "@paperclipai/db";
+import { agents, agentWakeupRequests, companies, createDb, heartbeatRuns, issueComments, issueRecoveryActions, issueThreadInteractions, issues } from "@thinkingmach/db";
 import { heartbeatService } from "../services/heartbeat.js";
 import { recoveryService } from "../services/recovery/service.js";
 import { startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";

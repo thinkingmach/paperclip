@@ -4,7 +4,7 @@ import type {
   Agent,
   CatalogTeamImportPreviewResult,
   CompanyPortabilityCollisionStrategy,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   ApplyProgress,
   ApplySuccess,
@@ -72,7 +72,7 @@ function makePreview(errors: string[] = []): CatalogTeamImportPreviewResult {
     portabilityPreview: {
       include: { company: false, agents: true, projects: true, issues: false, skills: true },
       targetCompanyId: "company-storybook",
-      targetCompanyName: "Paperclip",
+      targetCompanyName: "ThinkingMach",
       collisionStrategy: "rename",
       selectedAgentSlugs: ["ceo", "cto", "cmo"],
       plan: {
@@ -348,7 +348,7 @@ export const InstallSuccess: Story = {
         result={{
           team: baseTeam,
           portabilityImport: {
-            company: { id: "company-storybook", name: "Paperclip", action: "unchanged" },
+            company: { id: "company-storybook", name: "ThinkingMach", action: "unchanged" },
             agents: [
               { slug: "ceo", id: "a1", action: "created", name: "CEO", reason: null },
               { slug: "cto", id: "a2", action: "created", name: "CTO", reason: null },

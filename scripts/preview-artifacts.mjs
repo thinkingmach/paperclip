@@ -19,7 +19,7 @@ export function validateRequest(sha, requestId) {
 }
 
 export function previewManifest(pkg, sha) {
-  if (!["@paperclipai/shared", "@paperclipai/db"].includes(pkg.name)) throw new Error("Unexpected preview package.");
+  if (!["@thinkingmach/shared", "@thinkingmach/db"].includes(pkg.name)) throw new Error("Unexpected preview package.");
   const version = versionFor(sha);
   const exact = structuredClone(pkg);
   for (const section of ["dependencies", "optionalDependencies", "peerDependencies"]) {
@@ -30,13 +30,13 @@ export function previewManifest(pkg, sha) {
   const result = materializePublishManifest({ ...exact, version });
   result.gitHead = sha;
   result.paperclipPreviewCommit = sha;
-  if (pkg.name === "@paperclipai/db") result.dependencies = { ...result.dependencies, "@paperclipai/shared": version };
+  if (pkg.name === "@thinkingmach/db") result.dependencies = { ...result.dependencies, "@thinkingmach/shared": version };
   return result;
 }
 
 export function assertMetadata(pkg, name, sha) {
   if (pkg?.publishConfig !== undefined || pkg?.name !== name || pkg.version !== versionFor(sha) || pkg.gitHead !== sha || pkg.paperclipPreviewCommit !== sha ||
-      (name === "@paperclipai/db" && pkg.dependencies?.["@paperclipai/shared"] !== versionFor(sha))) {
+      (name === "@thinkingmach/db" && pkg.dependencies?.["@thinkingmach/shared"] !== versionFor(sha))) {
     throw new Error("Preview package identity or dependency pin mismatch.");
   }
 }
@@ -78,17 +78,17 @@ export async function planArtifacts(sha, { migrator = false, image = true, fetch
   versionFor(sha);
   return {
     image: image && !await imageExists(sha, fetchImpl),
-    packages: migrator && !(await packageExists("@paperclipai/shared", sha, fetchImpl) && await packageExists("@paperclipai/db", sha, fetchImpl)),
+    packages: migrator && !(await packageExists("@thinkingmach/shared", sha, fetchImpl) && await packageExists("@thinkingmach/db", sha, fetchImpl)),
   };
 }
 
 export async function imageExists(sha, fetchImpl = fetch) {
   versionFor(sha);
-  const tokenRes = await fetchImpl("https://ghcr.io/token?service=ghcr.io&scope=repository:paperclipai/paperclip:pull", { signal: AbortSignal.timeout(30_000) });
+  const tokenRes = await fetchImpl("https://ghcr.io/token?service=ghcr.io&scope=repository:thinkingmach/paperclip:pull", { signal: AbortSignal.timeout(30_000) });
   if (!tokenRes.ok) throw new Error(`GHCR lookup failed: HTTP ${tokenRes.status}`);
   const { token } = await tokenRes.json();
   if (typeof token !== "string") throw new Error("GHCR did not return a pull token.");
-  const base = "https://ghcr.io/v2/paperclipai/paperclip";
+  const base = "https://ghcr.io/v2/thinkingmach/paperclip";
   const headers = { Authorization: `Bearer ${token}`, Accept: "application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.docker.distribution.manifest.v2+json" };
   const get = (url) => fetchImpl(url, { headers, redirect: "error", signal: AbortSignal.timeout(30_000) });
   let res = await get(`${base}/manifests/sha-${sha}-cloud`);
@@ -123,7 +123,7 @@ export async function imageExists(sha, fetchImpl = fetch) {
 /** Publication loads image data, but never runs a container or source scripts. */
 export async function publishImage(file, sha, { exec = execFileSync, fetchImpl = fetch } = {}) {
   versionFor(sha);
-  const image = `ghcr.io/paperclipai/paperclip:sha-${sha}-cloud`;
+  const image = `ghcr.io/thinkingmach/paperclip:sha-${sha}-cloud`;
   if (await imageExists(sha, fetchImpl)) { console.log("Reusing the verified SHA cloud image."); return; }
   exec("docker", ["load", "--input", path.resolve(file)], { encoding: "utf8", maxBuffer: 8 * 1024 * 1024 });
   const [metadata] = JSON.parse(exec("docker", ["image", "inspect", image], { encoding: "utf8", maxBuffer: 8 * 1024 * 1024 }));
@@ -141,7 +141,7 @@ export function packPreview(source, output, sha, { exec = execFileSync } = {}) {
   if (exec("git", ["rev-parse", "HEAD"], { cwd: source, encoding: "utf8" }).trim() !== sha) throw new Error("Source checkout differs from the requested commit.");
   mkdirSync(output, { recursive: true });
   for (const short of ["shared", "db"]) {
-    exec("pnpm", ["--filter", `@paperclipai/${short}`, "build"], { cwd: source, stdio: "inherit" });
+    exec("pnpm", ["--filter", `@thinkingmach/${short}`, "build"], { cwd: source, stdio: "inherit" });
     const packageDir = path.join(source, "packages", short);
     const originalText = readFileSync(path.join(packageDir, "package.json"), "utf8");
     const original = JSON.parse(originalText);
@@ -160,14 +160,14 @@ export function packPreview(source, output, sha, { exec = execFileSync } = {}) {
     }
     const packed = JSON.parse(exec("npx", ["--yes", "npm@10.9.7", "pack", "--ignore-scripts", "--json", "--pack-destination", output], { cwd: staging, encoding: "utf8", maxBuffer: 8 * 1024 * 1024 }));
     renameSync(path.join(output, path.basename(packed[0].filename)), path.join(output, `${short}.tgz`));
-    assertMetadata(tarManifest(readFileSync(path.join(output, `${short}.tgz`))), `@paperclipai/${short}`, sha);
+    assertMetadata(tarManifest(readFileSync(path.join(output, `${short}.tgz`))), `@thinkingmach/${short}`, sha);
   }
 }
 
 export async function publishPreview(dir, sha, { fetchImpl = fetch, exec = execFileSync, sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
   // Validate the entire pair before publishing either immutable package.
   const packages = ["shared", "db"].map((short) => {
-    const name = `@paperclipai/${short}`;
+    const name = `@thinkingmach/${short}`;
     const file = path.resolve(dir, `${short}.tgz`);
     const bytes = readFileSync(file);
     assertMetadata(tarManifest(bytes), name, sha);
@@ -214,7 +214,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       const [sha, requestId] = args;
       validateRequest(sha, requestId);
       if (!await imageExists(sha)) throw new Error("Cloud image is still missing.");
-      if (process.env.PREVIEW_MIGRATOR === "true" && !(await packageExists("@paperclipai/shared", sha) && await packageExists("@paperclipai/db", sha))) throw new Error("Preview packages are still missing.");
+      if (process.env.PREVIEW_MIGRATOR === "true" && !(await packageExists("@thinkingmach/shared", sha) && await packageExists("@thinkingmach/db", sha))) throw new Error("Preview packages are still missing.");
       mkdirSync("stack-deploy-result", { recursive: true });
       writeFileSync("stack-deploy-result/result.json", JSON.stringify({ version: 1, stage: "build", requestId, sha, status: "ready" }) + "\n");
     } else throw new Error("Expected plan, plan-migrator, pack, publish, publish-image, or result.");

@@ -5,7 +5,7 @@ import { conversationNativeDecision, isConversation } from "../agent-conversatio
 import { randomUUID } from "node:crypto";
 import { preserveNativeWorkspaceExportLease } from "./native-workspace-export-resume.js";
 import { and, eq, inArray, isNotNull, isNull, or, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   approvals,
   agentWakeupRequests,
@@ -21,9 +21,9 @@ import {
   statusDecisions,
   workAssessments,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { classifyNativeEvidence } from "./evidence-classifier.js";
-import type { PrpIgnoredAttentionRequest } from "@paperclipai/paperclip-runner";
+import type { PrpIgnoredAttentionRequest } from "@thinkingmach/paperclip-runner";
 import {
   arbitrateNativeStatus,
   NATIVE_STATUS_ARBITER_POLICY_VERSION,

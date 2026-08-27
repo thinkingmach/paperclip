@@ -107,7 +107,7 @@ stories were inspected in the browser.
 Run from the worktree:
 
 ```sh
-pnpm --filter @paperclipai/ui exec storybook dev -p 6016 -c storybook/.storybook --no-open
+pnpm --filter @thinkingmach/ui exec storybook dev -p 6016 -c storybook/.storybook --no-open
 ```
 
 Open `http://localhost:6016/?path=/story/tasks-execution-controls--running-empty`.
@@ -120,8 +120,8 @@ verification belongs to the isolated browser suite below.
 ## Automated verification
 
 ```sh
-pnpm exec vitest run --project @paperclipai/ui ui/src/components/task-chat/TaskChatComposer.test.tsx ui/src/components/TaskChatThread.test.tsx ui/src/pages/IssueDetail.test.tsx ui/src/lib/wait-for-stopped-runs.test.ts
-pnpm exec vitest run --project @paperclipai/server server/src/__tests__/issue-tree-control-routes.test.ts
+pnpm exec vitest run --project @thinkingmach/ui ui/src/components/task-chat/TaskChatComposer.test.tsx ui/src/components/TaskChatThread.test.tsx ui/src/pages/IssueDetail.test.tsx ui/src/lib/wait-for-stopped-runs.test.ts
+pnpm exec vitest run --project @thinkingmach/server server/src/__tests__/issue-tree-control-routes.test.ts
 pnpm check:token-gates
 pnpm build-storybook
 pnpm -r typecheck
@@ -151,13 +151,13 @@ paths:
 
 ```sh
 cargo build --manifest-path packages/paperclip-runner/runner/Cargo.toml --bin paperclip-runnerd --bin fake-codex-app-server
-PAPERCLIP_STOP_FAKE_CODEX="$PWD/packages/paperclip-runner/runner/target/debug/fake-codex-app-server" \
-PAPERCLIP_RUNNER_BINARY="$PWD/packages/paperclip-runner/runner/target/debug/paperclip-runnerd" \
+THINKINGMACH_STOP_FAKE_CODEX="$PWD/packages/paperclip-runner/runner/target/debug/fake-codex-app-server" \
+THINKINGMACH_RUNNER_BINARY="$PWD/packages/paperclip-runner/runner/target/debug/paperclip-runnerd" \
 pnpm exec playwright test --config tests/e2e/playwright-composer-stop.config.ts
 ```
 
 The suite boots a disposable local-trusted instance on port 3199 (override with
-`PAPERCLIP_E2E_PORT`). It never attaches to an existing server. Native coverage
+`THINKINGMACH_E2E_PORT`). It never attaches to an existing server. Native coverage
 is explicitly skipped without the fixture; it must not use a logged-in provider
 as a fallback. Test companies are archived during cleanup.
 

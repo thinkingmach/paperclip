@@ -17,7 +17,7 @@ import {
   toolCatalogEntries,
   toolConnections,
   toolInvocations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { toolAccessService } from "../services/tool-access.js";
 import { createToolGatewayService } from "../services/tool-gateway.js";
 import { canonicalToolArguments, signToolArguments } from "../services/tool-content-guards.js";
@@ -44,7 +44,7 @@ describeEmbeddedPostgres("tool review queue vs unsigned ask-first request", () =
   });
 
   it("hides an unsigned pending request from the queue, keeps it pending, and lets approve succeed once it is signed", async () => {
-    vi.stubEnv("PAPERCLIP_TOOL_ACTION_SIGNING_SECRET", signingSecret);
+    vi.stubEnv("THINKINGMACH_TOOL_ACTION_SIGNING_SECRET", signingSecret);
     const [company] = await db.insert(companies).values({
       name: `Review Queue ${randomUUID()}`,
       issuePrefix: `RQ${randomUUID().slice(0, 6).toUpperCase()}`,

@@ -4,7 +4,7 @@ import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { CompanyLiveEventHandler } from "@/context/LiveUpdatesProvider";
-import type { LiveEvent, SummarySlotIssueRef } from "@paperclipai/shared";
+import type { LiveEvent, SummarySlotIssueRef } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { __liveUpdatesTestUtils } from "@/context/LiveUpdatesProvider";
 import { useSummaryDraftStream } from "./useSummaryDraftStream";

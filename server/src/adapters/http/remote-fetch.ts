@@ -4,7 +4,7 @@ import {
 } from "../../services/remote-http-fetch.js";
 import { parseRemoteHttpEndpoint } from "../../services/remote-http-endpoint-guard.js";
 
-const PRIVATE_ENDPOINT_ALLOWLIST_ENV = "PAPERCLIP_HTTP_ADAPTER_PRIVATE_ENDPOINT_ALLOWLIST";
+const PRIVATE_ENDPOINT_ALLOWLIST_ENV = "THINKINGMACH_HTTP_ADAPTER_PRIVATE_ENDPOINT_ALLOWLIST";
 
 export class HttpAdapterEndpointError extends Error {
   readonly code: string;

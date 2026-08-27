@@ -72,7 +72,7 @@ export const createProjectAction = {
     "idempotency": "required",
     "disabledByDefault": false,
     "realBindingStatus": "live_codex",
-    "realServiceBinding": "PaperclipRunnerToolAuthority",
+    "realServiceBinding": "ThinkingMachRunnerToolAuthority",
     "prpEvidence": "Authenticated project tools, persisted projects and repository workspaces, and run-bound activity.",
     "prpBindingStatus": "bound",
     "legacyAliases": []

@@ -1,24 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  AlertCircle,
-  AlertTriangle,
-  ArrowLeft,
-  CheckCircle2,
-  ChevronRight,
-  ExternalLink,
-  FileText,
-  FileWarning,
-  Folder,
-  FolderOpen,
-  FolderSearch,
-  Layers,
-  Link2,
-  Loader2,
-  Search,
-  ShieldAlert,
-  X,
-} from "lucide-react";
+import { AlertCircle, AlertTriangle, ArrowLeft, CheckCircle2, ChevronRight, ExternalLink, FileText, FileWarning, Folder, FolderOpen, FolderSearch, Layers, Link2, Loader2, Search, ShieldAlert, X,  } from "lucide-react";
 import type {
   CompanySkill,
   CompanySkillProjectBrowseEntry,
@@ -26,8 +8,8 @@ import type {
   CompanySkillProjectScanResult,
   Project,
   ProjectWorkspace,
-} from "@paperclipai/shared";
-import { normalizeAgentUrlKey } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { normalizeAgentUrlKey } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { ApiError } from "../../api/client";
 import { companySkillsApi } from "../../api/companySkills";

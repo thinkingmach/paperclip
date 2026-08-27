@@ -18,7 +18,7 @@ export function parseRunnerLiveCampaignCostLimit(
   const parsed = Number(value ?? "12");
   if (!Number.isFinite(parsed) || parsed <= 0) {
     throw new Error(
-      "PAPERCLIP_EVAL_MAX_CAMPAIGN_COST_USD must be a positive finite number",
+      "THINKINGMACH_EVAL_MAX_CAMPAIGN_COST_USD must be a positive finite number",
     );
   }
   return parsed;

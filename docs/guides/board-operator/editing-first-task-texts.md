@@ -16,7 +16,7 @@ The text for a new organization's first task lives in `server/src/onboarding-ass
 | `chief-of-staff/AGENTS.md` | The first agent's chief-of-staff persona. |
 | `README.md` | A maintainer reference for the files, placeholders, toggle, and update behavior. |
 
-The templates support `{{agentName}}`, `{{organizationName}}`, and `{{proposalMode}}`. Paperclip fills them when it creates the first agent and first task. The proposal mode is `confirmation` or `plan`; the full policy lives in the skill.
+The templates support `{{agentName}}`, `{{organizationName}}`, and `{{proposalMode}}`. ThinkingMach fills them when it creates the first agent and first task. The proposal mode is `confirmation` or `plan`; the full policy lives in the skill.
 
 ## How the first-task flow works
 
@@ -45,4 +45,4 @@ Open **Settings > Experimental** and find **First task: propose with a plan docu
 - **Off:** the chief of staff answers a single-task request with one confirmation card.
 - **On:** the chief of staff writes a short plan document and adds a checkbox card.
 
-Paperclip reads this setting once, when it creates an organization's first task. Changing it later does not alter an existing first task.
+ThinkingMach reads this setting once, when it creates an organization's first task. Changing it later does not alter an existing first task.

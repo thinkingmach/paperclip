@@ -18,12 +18,12 @@ run was rewritten or replayed to manufacture a successful result.
 Starting from Connectors → Browse → Manage, the linked Board operator disabled
 only the existing authorized test destination in Settings, sent one message in
 the provider's existing test conversation through the signed-in in-app browser,
-and inspected Paperclip Activity and the provider. Returning to Settings proved
+and inspected ThinkingMach Activity and the provider. Returning to Settings proved
 the disabled state persisted; the original setting was then restored.
 
 | Provider | Disabled setting                         | Send time (UTC) | Observed result                                                                                                                           |
 | -------- | ---------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Slack    | `#pc-chat-live-0905b`                    | 17:56:10.018    | Activity: filtered, “Destination is not enabled in Paperclip”; no reaction/reply                                                          |
+| Slack    | `#pc-chat-live-0905b`                    | 17:56:10.018    | Activity: filtered, “Destination is not enabled in ThinkingMach”; no reaction/reply                                                          |
 | GitHub   | `cryppadotta/paperclip-chat-e2e-enabled` | 18:01:08.615    | Saved comment persisted after reload; signed webhook acknowledged at 18:01:10; content rejected before durable ingress; no reaction/reply |
 | Discord  | Clawd `#general`                         | 18:02:53.827    | Activity: filtered, same destination explanation; no reaction/reply                                                                       |
 | Telegram | Allow direct messages                    | 18:03:55.816    | Activity: filtered, same destination explanation; no reply                                                                                |
@@ -113,8 +113,8 @@ the test. From Connectors → Browse → Manage GitHub → Settings, disabled on
 navigating out to the repository's issue list and reopening the issue:
 [issuecomment-5574403287](https://github.com/cryppadotta/paperclip-chat-e2e-enabled/issues/2#issuecomment-5574403287).
 
-Paperclip Activity showed “message ignored”, “Destination is not enabled in
-Paperclip”, and **Sep 7, 2026, 1:25:02 PM** (local time). The rendered row was
+ThinkingMach Activity showed “message ignored”, “Destination is not enabled in
+ThinkingMach”, and **Sep 7, 2026, 1:25:02 PM** (local time). The rendered row was
 readable with no clipping at the observed desktop viewport. The initial
 Activity visit preceded the new receipt appearing; revisiting the tab showed
 it. This does not establish instantaneous live refresh or all transition

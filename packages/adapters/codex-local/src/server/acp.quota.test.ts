@@ -5,7 +5,7 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { afterEach, expect, it } from "vitest";
 import { classifyCodexTerminalSessionFailure, createCodexAcpExecutor } from "./acp.js";
-import type { AcpxEngineExecutorOptions } from "@paperclipai/adapter-utils/acpx-engine/execute";
+import type { AcpxEngineExecutorOptions } from "@thinkingmach/adapter-utils/acpx-engine/execute";
 
 const repoRoot = fileURLToPath(new URL("../../../../..", import.meta.url));
 const fixture = path.join(repoRoot, "scripts/mcp-fixtures/servers/acp-echo-agent.mjs");
@@ -41,8 +41,8 @@ async function executeFailure(
       stateDir: path.join(root, "state"),
       env: {
         CODEX_HOME: path.join(root, "codex-home"),
-        PAPERCLIP_ACPX_TYPED_FAILURE_CANARY: title,
-        PAPERCLIP_ACPX_TYPED_FAILURE_CATEGORY: category,
+        THINKINGMACH_ACPX_TYPED_FAILURE_CANARY: title,
+        THINKINGMACH_ACPX_TYPED_FAILURE_CATEGORY: category,
       },
     },
     context: {},

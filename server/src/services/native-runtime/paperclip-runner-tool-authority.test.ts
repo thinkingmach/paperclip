@@ -14,18 +14,18 @@ import {
   issueComments,
   issueThreadInteractions,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { initializeRunIdentity, reserveSteeredIdentity, reconcileSteeredIdentity } from "../run-identity.js";
 import { documentService } from "../documents.js";
 import { issueService } from "../issues.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 import { createAssignedMcpTools } from "./assigned-mcp-tools.js";
 import type { ToolGatewayService } from "../tool-gateway.js";
 import { READ_CURRENT_WAKE_COMMENTS_TOOL_NAME } from "./current-wake-comments.js";
 import { CAPABILITY_SEMANTIC_TOOL_CATALOG, runnerCodexDynamicToolsFit } from "../../vendor/paperclip-runner/index.js";
 
-describe("PaperclipRunnerToolAuthority", () => {
+describe("ThinkingMachRunnerToolAuthority", () => {
   let temporary: Awaited<
     ReturnType<typeof startEmbeddedPostgresTestDatabase>
   > | null = null;
@@ -36,8 +36,8 @@ describe("PaperclipRunnerToolAuthority", () => {
   const runId = "00000000-0000-4000-8000-000000000104";
 
   beforeEach(() => {
-    vi.stubEnv("PAPERCLIP_RUNNER_API_TOOLS_ENABLED", undefined);
-    vi.stubEnv("PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS", undefined);
+    vi.stubEnv("THINKINGMACH_RUNNER_API_TOOLS_ENABLED", undefined);
+    vi.stubEnv("THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS", undefined);
   });
   afterEach(() => vi.unstubAllEnvs());
 
@@ -93,7 +93,7 @@ describe("PaperclipRunnerToolAuthority", () => {
   });
 
   it("advertises only real bindings and reads the bound task", async () => {
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -170,7 +170,7 @@ describe("PaperclipRunnerToolAuthority", () => {
 
   it("returns public task URLs from the current claimed origin in context and search results", async () => {
     const origin = vi.spyOn(cloudIdentity, "runtimeCanonicalOrigin").mockReturnValue("https://board.example");
-    const authority = new PaperclipRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
+    const authority = new ThinkingMachRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
     try {
       expect(await authority.execute({ tool: "get_task_context", callId: "public-task-url", arguments: {} }))
         .toMatchObject({ activeTask: { id: issueId, url: `https://board.example/issues/${issueId}` } });
@@ -206,7 +206,7 @@ describe("PaperclipRunnerToolAuthority", () => {
         hiddenAt: new Date(), createdAt: new Date(Date.now() + 1000) })),
     ]);
     try {
-      const authority = new PaperclipRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
+      const authority = new ThinkingMachRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
       const context = await authority.execute({ tool: "get_task_context", callId: "context-existing-children", arguments: {} });
       expect(context).toMatchObject({
         childTasks: expect.arrayContaining([
@@ -226,11 +226,11 @@ describe("PaperclipRunnerToolAuthority", () => {
   });
 
   it("advertises API tools by default and preserves direct-chat file tools when disabled", () => {
-    const previousEnabled = process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED;
+    const previousEnabled = process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED;
     const previousCompanies =
-      process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS;
+      process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS;
     const createAuthority = () =>
-      new PaperclipRunnerToolAuthority(db, {
+      new ThinkingMachRunnerToolAuthority(db, {
         companyId,
         agentId,
         issueId,
@@ -247,8 +247,8 @@ describe("PaperclipRunnerToolAuthority", () => {
     ];
 
     try {
-      delete process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED;
-      delete process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS;
+      delete process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED;
+      delete process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS;
       const defaultNames = createAuthority()
         .definitions()
         .map((tool) => tool.name);
@@ -259,8 +259,8 @@ describe("PaperclipRunnerToolAuthority", () => {
       expect(defaultNames).toContain("call_api");
       expect(defaultNames).toContain("hire_agent");
 
-      process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED = "true";
-      process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS = companyId;
+      process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED = "true";
+      process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS = companyId;
       const enabledNames = createAuthority()
         .definitions()
         .map((tool) => tool.name);
@@ -278,7 +278,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       expect(hireSchema.properties).not.toHaveProperty("adapterConfig");
       expect(hireSchema.properties).not.toHaveProperty("env");
 
-      process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED = "false";
+      process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED = "false";
       const disabledNames = createAuthority().definitions().map((tool) => tool.name);
       expect(disabledNames).toEqual(expect.arrayContaining(requiredChatFileTools));
       for (const name of ["search_api", "call_api", "hire_agent"]) {
@@ -286,25 +286,25 @@ describe("PaperclipRunnerToolAuthority", () => {
       }
     } finally {
       if (previousEnabled === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED;
+        delete process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED;
       } else {
-        process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED = previousEnabled;
+        process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED = previousEnabled;
       }
       if (previousCompanies === undefined) {
-        delete process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS;
+        delete process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS;
       } else {
-        process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS = previousCompanies;
+        process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS = previousCompanies;
       }
     }
   });
 
   it("dispatches hire_agent with fixed caller context and replays its API receipt", async () => {
-    const previousEnabled = process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED;
-    const previousCompanies = process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS;
-    const previousSecret = process.env.PAPERCLIP_AGENT_JWT_SECRET;
-    process.env.PAPERCLIP_AGENT_JWT_SECRET = "hire-agent-test-secret";
-    process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED = "true";
-    process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS = companyId;
+    const previousEnabled = process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED;
+    const previousCompanies = process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS;
+    const previousSecret = process.env.THINKINGMACH_AGENT_JWT_SECRET;
+    process.env.THINKINGMACH_AGENT_JWT_SECRET = "hire-agent-test-secret";
+    process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED = "true";
+    process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS = companyId;
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ id: randomUUID(), status: "active" }), {
         status: 201,
@@ -312,7 +312,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       }),
     );
     try {
-      const authority = new PaperclipRunnerToolAuthority(db, {
+      const authority = new ThinkingMachRunnerToolAuthority(db, {
         companyId,
         agentId,
         issueId,
@@ -354,17 +354,17 @@ describe("PaperclipRunnerToolAuthority", () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
     } finally {
       fetchMock.mockRestore();
-      if (previousEnabled === undefined) delete process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED;
-      else process.env.PAPERCLIP_RUNNER_API_TOOLS_ENABLED = previousEnabled;
-      if (previousCompanies === undefined) delete process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS;
-      else process.env.PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS = previousCompanies;
-      if (previousSecret === undefined) delete process.env.PAPERCLIP_AGENT_JWT_SECRET;
-      else process.env.PAPERCLIP_AGENT_JWT_SECRET = previousSecret;
+      if (previousEnabled === undefined) delete process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED;
+      else process.env.THINKINGMACH_RUNNER_API_TOOLS_ENABLED = previousEnabled;
+      if (previousCompanies === undefined) delete process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS;
+      else process.env.THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS = previousCompanies;
+      if (previousSecret === undefined) delete process.env.THINKINGMACH_AGENT_JWT_SECRET;
+      else process.env.THINKINGMACH_AGENT_JWT_SECRET = previousSecret;
     }
   });
 
   it("advertises structured human input in ask mode", () => {
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -389,7 +389,7 @@ describe("PaperclipRunnerToolAuthority", () => {
         (tool) => tool.operationId === "request_human_input",
       )!;
       const originalSnapshot = structuredClone(original);
-      const authority = new PaperclipRunnerToolAuthority(db, {
+      const authority = new ThinkingMachRunnerToolAuthority(db, {
         companyId,
         agentId,
         issueId,
@@ -400,13 +400,13 @@ describe("PaperclipRunnerToolAuthority", () => {
         JSON.stringify(authority.definitions()),
       ).find((tool: { name: string }) => tool.name === "request_human_input");
       expect(advertised.description).toContain(
-        "current Paperclip task bound to this run",
+        "current ThinkingMach task bound to this run",
       );
       expect(advertised.description).toContain(
         "payload.questions for choices",
       );
       expect(advertised.description).toContain(
-        "Paperclip renders it and authenticates the response",
+        "ThinkingMach renders it and authenticates the response",
       );
       expect(advertised.description).toContain(
         "Preserve existing review gates",
@@ -465,7 +465,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       .update(issues)
       .set({ executionRunId: binding.runId })
       .where(eq(issues.id, binding.issueId));
-    const authority = new PaperclipRunnerToolAuthority(db, binding);
+    const authority = new ThinkingMachRunnerToolAuthority(db, binding);
     const advertised = authority
       .definitions()
       .find((tool) => tool.name === "request_human_input")!;
@@ -597,7 +597,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       linkedByAgentId: agentId,
     });
 
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -622,9 +622,9 @@ describe("PaperclipRunnerToolAuthority", () => {
       gatewayPublicId: "fixture", bearerToken: "fixture-token",
     });
     const binding = { companyId, agentId, issueId, runId, workspaceRoot: "/tmp/fixture-workspace" };
-    const baseline = new PaperclipRunnerToolAuthority(db, binding).definitions();
+    const baseline = new ThinkingMachRunnerToolAuthority(db, binding).definitions();
     expect(runnerCodexDynamicToolsFit([...baseline, ...assignedMcpTools.definitions()])).toBe(false);
-    const authority = new PaperclipRunnerToolAuthority(db, { ...binding, assignedMcpTools });
+    const authority = new ThinkingMachRunnerToolAuthority(db, { ...binding, assignedMcpTools });
     const tools = authority.definitions();
     expect(runnerCodexDynamicToolsFit(tools)).toBe(true);
     expect(tools).toEqual(expect.arrayContaining(baseline));
@@ -647,7 +647,7 @@ describe("PaperclipRunnerToolAuthority", () => {
   it("relays assigned MCP calls only while the native run still owns its task", async () => {
     const tool = { name: "app_mem0_recall", description: "Recall memory", inputSchema: { type: "object" } };
     const execute = vi.fn().mockResolvedValue({ content: "synthetic memory" });
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId, agentId, issueId, runId,
       assignedMcpTools: { definitions: () => [tool], has: (name) => name === tool.name, execute },
     });
@@ -673,7 +673,7 @@ describe("PaperclipRunnerToolAuthority", () => {
   });
 
   it("does not advertise delegation tools during pre-acceptance planning", () => {
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -689,7 +689,7 @@ describe("PaperclipRunnerToolAuthority", () => {
   });
 
   it("writes progress through the real issue service and replays idempotently", async () => {
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -741,7 +741,7 @@ describe("PaperclipRunnerToolAuthority", () => {
   });
 
   it("creates checkbox interactions through the real interaction service", async () => {
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -798,7 +798,7 @@ describe("PaperclipRunnerToolAuthority", () => {
   });
 
   it("writes a real revisioned document and replays the mutation receipt", async () => {
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -870,7 +870,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       "plan",
     );
     expect(plan).not.toBeNull();
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -964,7 +964,7 @@ describe("PaperclipRunnerToolAuthority", () => {
   it("creates ordinary children, preserves blockers, and deduplicates across runs", async () => {
     const wakes: Array<{ agentId: string; options: Record<string, unknown> }> =
       [];
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -1086,7 +1086,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       .set({ executionRunId: nextRunId })
       .where(eq(issues.id, issueId));
     const retryWakes: Array<unknown> = [];
-    const retryAuthority = new PaperclipRunnerToolAuthority(db, {
+    const retryAuthority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,
@@ -1221,7 +1221,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       .update(issues)
       .set({ executionRunId: guardedRunId })
       .where(eq(issues.id, guardedIssueId));
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId: guardedIssueId,
@@ -1290,7 +1290,7 @@ describe("PaperclipRunnerToolAuthority", () => {
     const [message] = await db.insert(issueComments).values({
       companyId, issueId, body: "New instruction", authorUserId: "person-b",
     }).returning();
-    const authority = new PaperclipRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
+    const authority = new ThinkingMachRunnerToolAuthority(db, { companyId, agentId, issueId, runId });
     const call = { tool: "create_task", callId: "identity-child", arguments: {
       idempotencyKey: "identity-child", title: "Keep the initiating identity",
       responsibleUserId: "forged-user", originIdentityContextId: "forged-context",
@@ -1320,7 +1320,7 @@ describe("PaperclipRunnerToolAuthority", () => {
       .update(heartbeatRuns)
       .set({ status: "succeeded" })
       .where(eq(heartbeatRuns.id, runId));
-    const authority = new PaperclipRunnerToolAuthority(db, {
+    const authority = new ThinkingMachRunnerToolAuthority(db, {
       companyId,
       agentId,
       issueId,

@@ -33,7 +33,7 @@ describe("client context store", () => {
         persona: "agent",
         agentId: "agent-123",
         agentName: "Agent One",
-        apiKeyEnvVarName: "PAPERCLIP_AGENT_TOKEN",
+        apiKeyEnvVarName: "THINKINGMACH_AGENT_TOKEN",
       },
       contextPath,
     );
@@ -48,7 +48,7 @@ describe("client context store", () => {
       persona: "agent",
       agentId: "agent-123",
       agentName: "Agent One",
-      apiKeyEnvVarName: "PAPERCLIP_AGENT_TOKEN",
+      apiKeyEnvVarName: "THINKINGMACH_AGENT_TOKEN",
     });
   });
 
@@ -92,7 +92,7 @@ describe("client context store", () => {
             apiBase: "http://localhost:3101",
             companyId: "company-legacy",
             persona: "board",
-            apiKeyEnvVarName: "PAPERCLIP_BOARD_TOKEN",
+            apiKeyEnvVarName: "THINKINGMACH_BOARD_TOKEN",
           },
         },
       }),
@@ -105,7 +105,7 @@ describe("client context store", () => {
       apiBase: "http://localhost:3101",
       companyId: "company-legacy",
       persona: "board",
-      apiKeyEnvVarName: "PAPERCLIP_BOARD_TOKEN",
+      apiKeyEnvVarName: "THINKINGMACH_BOARD_TOKEN",
     });
   });
 

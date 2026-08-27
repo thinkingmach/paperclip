@@ -11,7 +11,7 @@ import {
   shouldArmIssueDetailInboxQuickArchive,
   withIssueDetailHeaderSeed,
 } from "./issueDetailBreadcrumb";
-import type { Issue } from "@paperclipai/shared";
+import type { Issue } from "@thinkingmach/shared";
 
 const sessionStorageMock = (() => {
   const store = new Map<string, string>();
@@ -78,7 +78,7 @@ describe("issueDetailBreadcrumb", () => {
         goalId: null,
         goalIds: [],
         goals: [],
-        name: "Paperclip App",
+        name: "ThinkingMach App",
         description: null,
         status: "in_progress",
         leadAgentId: null,
@@ -182,7 +182,7 @@ describe("issueDetailBreadcrumb", () => {
       status: "todo",
       priority: "medium",
       projectId: "project-1",
-      projectName: "Paperclip App",
+      projectName: "ThinkingMach App",
       originKind: "manual",
       originId: null,
     });
@@ -205,7 +205,7 @@ describe("issueDetailBreadcrumb", () => {
       status: "todo",
       priority: "medium",
       projectId: "project-1",
-      projectName: "Paperclip App",
+      projectName: "ThinkingMach App",
       originKind: "manual",
       originId: null,
     });

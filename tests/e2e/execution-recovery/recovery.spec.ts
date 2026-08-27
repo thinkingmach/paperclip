@@ -111,7 +111,7 @@ for (const journey of [
       const port = await listenOnFetchAllowedPort(fixture);
       const env = {
         ...process.env,
-        PAPERCLIP_RECOVERY_CEO_LINEAGE: journey === "ceo_lineage" ? "1" : "0",
+        THINKINGMACH_RECOVERY_CEO_LINEAGE: journey === "ceo_lineage" ? "1" : "0",
         IN_FEED_FIXTURE_KEY: "not-a-real-model-key",
         NODE_ENV: "test",
         PATH: `${root}/tests/e2e/fixtures/recovery-bin:${process.env.PATH}`,
@@ -144,13 +144,13 @@ for (const journey of [
         .poll(
           () =>
             logs.match(
-              /Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/,
+              /ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/,
             )?.[1],
           { timeout: 100_000 },
         )
         .toBeTruthy();
       let base = logs.match(
-        /Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/,
+        /ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/,
       )![1]!;
       const api = async (path: string, method = "GET", data?: unknown) => {
         const response = await page.request.fetch(`${base}/api${path}`, {
@@ -260,7 +260,7 @@ for (const journey of [
         base + prefix + "/company/settings/instance/experimental",
       );
       const nativeRunnerToggle = page.getByRole("switch", {
-        name: "Toggle Paperclip Runner experimental setting",
+        name: "Toggle ThinkingMach Runner experimental setting",
       });
       // Fresh instances may already enable the native runner. Configure the
       // desired state instead of blindly toggling the current default off.
@@ -276,7 +276,7 @@ for (const journey of [
         .toBe(true);
       await page.goto(base + prefix + `/agents/${agent.id}/configuration`);
       await page.getByRole("button", { name: "Codex", exact: true }).click();
-      await page.getByRole("button", { name: /Paperclip Runner/ }).click();
+      await page.getByRole("button", { name: /ThinkingMach Runner/ }).click();
       await page
         .getByRole("button", { name: /^Save(?: changes)?$/ })
         .first()
@@ -470,14 +470,14 @@ for (const journey of [
               logs
                 .slice(startOffset)
                 .match(
-                  /Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/,
+                  /ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/,
                 )?.[1],
             { timeout: 100_000 },
           )
           .toBeTruthy();
         base = logs
           .slice(startOffset)
-          .match(/Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
+          .match(/ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
         expect((await api("/health")).serverInfo.git.branchName).toBe(
           health.serverInfo.git.branchName,
         );

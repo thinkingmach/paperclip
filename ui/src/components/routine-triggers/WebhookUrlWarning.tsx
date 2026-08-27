@@ -4,7 +4,7 @@ import { webhookUrlWarningReason } from "@/lib/webhook-url-warning";
 const warnings = {
   loopback: {
     title: "Other apps can’t reach this localhost URL",
-    message: "This address points back to the machine sending the request. Services such as GitHub can’t use it to reach Paperclip on your computer.",
+    message: "This address points back to the machine sending the request. Services such as GitHub can’t use it to reach ThinkingMach on your computer.",
   },
   private: {
     title: "This webhook URL appears to be private",
@@ -32,7 +32,7 @@ export function WebhookUrlWarning({ url }: { url: string }) {
     <div className="space-y-2">
       <p>{warning.message}</p>
       <p>You can continue for local or private-network use. For public senders, use a publicly reachable HTTPS URL.</p>
-      <a className="underline underline-offset-4" href="https://docs.paperclip.ing/reference/deploy/https/" target="_blank" rel="noopener noreferrer">Learn how to set up HTTPS and public access</a>
+      <a className="underline underline-offset-4" href="https://docs.thinkingmach.com/reference/deploy/https/" target="_blank" rel="noopener noreferrer">Learn how to set up HTTPS and public access</a>
     </div>
   </InlineBanner>;
 }

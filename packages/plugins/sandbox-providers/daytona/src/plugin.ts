@@ -9,7 +9,7 @@ import type {
   Resources,
   Sandbox,
 } from "@daytonaio/sdk";
-import { decodeChannelBytes, definePlugin, NOOP_PLUGIN_TRACER, PluginEnvironmentCreationCleanupError, readEnvironmentCreationCleanupError } from "@paperclipai/plugin-sdk";
+import { decodeChannelBytes, definePlugin, NOOP_PLUGIN_TRACER, PluginEnvironmentCreationCleanupError, readEnvironmentCreationCleanupError } from "@thinkingmach/plugin-sdk";
 import type {
   PluginContext,
   PluginEnvironmentCreationCleanup,
@@ -43,7 +43,7 @@ import type {
   PluginEnvironmentValidateConfigParams,
   PluginEnvironmentValidationResult,
   PluginSyncOperation,
-} from "@paperclipai/plugin-sdk";
+} from "@thinkingmach/plugin-sdk";
 import { performSyncIn, performSyncOut, withProviderSpan } from "./file-sync.js";
 import { DEFAULT_DAYTONA_OPERATION_TIMEOUT_MS } from "./manifest.js";
 
@@ -51,7 +51,7 @@ import { DEFAULT_DAYTONA_OPERATION_TIMEOUT_MS } from "./manifest.js";
 // The session runs the login command on a real pseudo-terminal, streams the
 // terminal output, and delivers the delayed browser code plus the Enter byte. A
 // later phase binds the opener to `sandbox.process` and wraps it with the
-// `createLoginPtyTransport` factory from `@paperclipai/adapter-utils` to
+// `createLoginPtyTransport` factory from `@thinkingmach/adapter-utils` to
 // build the transport the login runner drives.
 export {
   createDaytonaLoginPtySessionOpener,
@@ -685,7 +685,7 @@ function leaseMetadata(input: {
     ...(input.resumedLease
       ? { resumedFromState: input.resumedFromState ?? null }
       : {}),
-    // Record the resources Paperclip attempted to request so future diagnosis
+    // Record the resources ThinkingMach attempted to request so future diagnosis
     // can compare requested allocation against what Daytona provisioned.
     ...(input.config.cpu != null ? { cpu: input.config.cpu } : {}),
     ...(input.config.memory != null ? { memory: input.config.memory } : {}),
@@ -709,7 +709,7 @@ function expiresAtForMinutes(minutes: number): string {
 }
 
 // Configure a provider-side time-to-live so Daytona destroys the sandbox at or
-// before the caller-requested deadline, even after a Paperclip crash or outage.
+// before the caller-requested deadline, even after a ThinkingMach crash or outage.
 // `setTtl` counts wall-clock time regardless of the sandbox state, so the destroy
 // happens even when the sandbox is stopped, paused, or archived. The function
 // returns the real provider destroy time (`autoDestroyAt`) as evidence of the
@@ -2269,7 +2269,7 @@ const plugin = definePlugin({
         const shellCommand = await detectSandboxShellCommand(sandbox, toTimeoutSeconds(Math.max(1, deadline - Date.now())));
         assertActive();
         // Configure a provider-side destroy time at or before a caller deadline, so
-        // an abandoned sandbox self-destroys even if Paperclip is down. The lease
+        // an abandoned sandbox self-destroys even if ThinkingMach is down. The lease
         // carries the real provider expiry (or none) as evidence of the bound.
         phase = "expiry";
         const expiresAt = await configureSandboxExpiry({

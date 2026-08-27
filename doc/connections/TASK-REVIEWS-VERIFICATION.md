@@ -1,6 +1,6 @@
 # Connection review verification — 2026-09-08
 
-Implementation workspace: `/Users/dotta/paperclipai/branches/codex/reviews-in-task`.
+Implementation workspace: `/Users/dotta/thinkingmach/branches/codex/reviews-in-task`.
 Branch: `codex/reviews-in-task`, rebased on `master` at `8f099c3f8`.
 The original verification below predates that rebase; final checks are recorded in the PR.
 
@@ -108,7 +108,7 @@ remain separate from this deterministic evidence.
 
 ## Native Codex approval and continuation
 
-A real native Paperclip Runner agent used `gpt-5.6-sol` with existing local
+A real native ThinkingMach Runner agent used `gpt-5.6-sol` with existing local
 ChatGPT authentication. Its initial run discovered the installed MCP fixture
 action, called it with `query: "10 most recent pages"`, and yielded to a pending
 server-owned review. The operator approved in the browser. The server executed

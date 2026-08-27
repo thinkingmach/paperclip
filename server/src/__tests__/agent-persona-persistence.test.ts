@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { eq, sql } from "drizzle-orm";
-import { agents, companies, createDb } from "@paperclipai/db";
-import { agentAppearanceSchema, appearanceForPalette, legacyAgentAppearance } from "@paperclipai/shared";
+import { agents, companies, createDb } from "@thinkingmach/db";
+import { agentAppearanceSchema, appearanceForPalette, legacyAgentAppearance } from "@thinkingmach/shared";
 import { startEmbeddedPostgresTestDatabase } from "./helpers/embedded-postgres.js";
 import { agentService } from "../services/agents.js";
 

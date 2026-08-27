@@ -109,7 +109,7 @@ export function renderPublicCampaignSummary(campaign: RunnerE2ECampaign) {
   </style>
 </head>
 <body>
-  <header><div class="brand"><span class="mark">P</span><span>Paperclip</span></div><div class="campaign">Trusted history publication</div></header>
+  <header><div class="brand"><span class="mark">P</span><span>ThinkingMach</span></div><div class="campaign">Trusted history publication</div></header>
   <main>
     <p class="eyebrow">Runner full-stack E2E</p>
     <h1>Campaign summary</h1>

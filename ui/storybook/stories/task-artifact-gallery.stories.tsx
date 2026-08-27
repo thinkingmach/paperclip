@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { IssueAttachment, IssueWorkProduct } from "@paperclipai/shared";
+import type { IssueAttachment, IssueWorkProduct } from "@thinkingmach/shared";
 import { IssuePropertiesArtifactsTab } from "@/components/issue-properties/IssuePropertiesArtifactsTab";
 import { RichWorkProductCard } from "@/components/task-chat/RichWorkProductCard";
 import { ImageGalleryModal, type GalleryMediaItem } from "@/components/ImageGalleryModal";
@@ -19,7 +19,7 @@ import trail from "../fixtures/artifact-media/paper-trail.mp4?url";
 import manilaImage from "../fixtures/artifact-media/manila-ledger.png?url";
 import nightImage from "../fixtures/artifact-media/night-pills.png?url";
 
-const issue = createIssue({ id: "artifact-gallery-story", identifier: "DEMO-101", title: "Explore Paperclip Ships styles", status: "done" });
+const issue = createIssue({ id: "artifact-gallery-story", identifier: "DEMO-101", title: "Explore ThinkingMach Ships styles", status: "done" });
 const date = new Date("2026-09-22T18:03:00Z");
 const media = [["Paper Trail", trail], ["Big Type", type], ["Ticket Board", tickets], ["Night Pills", night], ["Manila Ledger", manila]];
 function product(title: string, index: number, overrides: Partial<IssueWorkProduct> = {}): IssueWorkProduct {
@@ -31,13 +31,13 @@ function product(title: string, index: number, overrides: Partial<IssueWorkProdu
     createdAt: new Date(date.getTime() - index * 1000), updatedAt: date, ...overrides,
   } as IssueWorkProduct;
 }
-const videos = [...media, ["Motion concept — Sep 21", manila], ["Motion concept — Sep 19", night], ["Motion concept — Sep 18", tickets]].map(([name, src], index) => product(`Paperclip Ships — ${name}`, index, {
+const videos = [...media, ["Motion concept — Sep 21", manila], ["Motion concept — Sep 19", night], ["Motion concept — Sep 18", tickets]].map(([name, src], index) => product(`ThinkingMach Ships — ${name}`, index, {
   createdByRunId: index < 5 ? "style-exploration" : "first-concepts",
   metadata: { contentType: "video/mp4", contentPath: src, openPath: src, originalFilename: `${name.toLowerCase().replaceAll(" ", "-")}.mp4`, byteSize: 128_000 },
 }));
 const files = [
-  product("Style exploration notes.txt", 20, { metadata: { contentType: "text/plain", byteSize: 2400, downloadPath: "data:text/plain,Five%20Paperclip%20Ships%20style%20directions", contentPath: "data:text/plain,Five%20Paperclip%20Ships%20style%20directions" } }),
-  product("Preview the daily ships page", 21, { type: "preview_url", url: "https://paperclip.ing", metadata: null }),
+  product("Style exploration notes.txt", 20, { metadata: { contentType: "text/plain", byteSize: 2400, downloadPath: "data:text/plain,Five%20ThinkingMach%20Ships%20style%20directions", contentPath: "data:text/plain,Five%20ThinkingMach%20Ships%20style%20directions" } }),
+  product("Preview the daily ships page", 21, { type: "preview_url", url: "https://thinkingmach.com", metadata: null }),
   product("Source package is still being prepared", 22, { status: "pending" }),
 ];
 const images = [manilaImage, nightImage].map((src, index) => product(index ? "Night Pills — cover image" : "Manila Ledger — cover image", index + 10, {
@@ -73,7 +73,7 @@ function GalleryStory({ scenario = "videos", width = 480 }: { scenario?: Scenari
           <div className="mx-auto flex max-w-6xl flex-wrap items-start gap-8">
             <div className="flex min-w-0 flex-1 flex-col gap-3" style={{ minWidth: 240 }}>
               <p className="font-mono text-xs text-muted-foreground">Media artifacts · Design review</p>
-              <h1 className="text-xl font-semibold">Paperclip Ships artifacts</h1>
+              <h1 className="text-xl font-semibold">ThinkingMach Ships artifacts</h1>
               <p className="max-w-md text-sm text-muted-foreground">Eight video outputs across two runs. Compare previews at a glance, then click anywhere on a tile to watch it.</p>
               <p className="max-w-md text-xs text-muted-foreground">Illustrative offline clips inspired by the task’s five style directions. These stories use the production artifact components.</p>
               {scenario === "rows" ? <div className="flex flex-col gap-2"><TaskChatBubble item={{ id: "clip-comment", kind: "message", author: "agent", text: "Video ready to review." }} attachments={[{ id: "chat-clip", issueCommentId: "clip-comment", contentPath: trail, contentType: "video/mp4", originalFilename: "paper-trail.mp4", byteSize: 128000 } as IssueAttachment]} />{workProducts.map((wp) => <RichWorkProductCard key={wp.id} workProduct={wp} href={workProductHref(wp)} variant="compact" />)}</div> : null}

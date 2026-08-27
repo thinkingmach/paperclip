@@ -2,17 +2,17 @@ import type { HarnessDriverDescriptor } from "../contracts/harness-driver.js";
 import type { NativeSessionCapabilities } from "../contracts/types.js";
 import { negotiateProtocolVersion } from "../protocol/replay-contract.js";
 import {
-  PAPERCLIP_RUNNER_BUILD_METADATA,
-  PAPERCLIP_RUNNER_EVAL_INTEGRATION_SCHEMA,
+  THINKINGMACH_RUNNER_BUILD_METADATA,
+  THINKINGMACH_RUNNER_EVAL_INTEGRATION_SCHEMA,
 } from "./build-metadata.js";
-import type { PaperclipRunnerdBuildMetadata } from "./runnerd-artifact.js";
+import type { ThinkingMachRunnerdBuildMetadata } from "./runnerd-artifact.js";
 
 export type RequiredHarnessDriverCapability = Exclude<
   keyof NativeSessionCapabilities,
   "unsupported"
 >;
 
-export type PaperclipRunnerEvalCompatibilityIssueCode =
+export type ThinkingMachRunnerEvalCompatibilityIssueCode =
   | "package_version_mismatch"
   | "binary_package_version_mismatch"
   | "binary_contract_version_mismatch"
@@ -25,18 +25,18 @@ export type PaperclipRunnerEvalCompatibilityIssueCode =
   | "driver_protocol_version_mismatch"
   | "driver_capability_unsupported";
 
-export interface PaperclipRunnerEvalCompatibilityIssue {
-  code: PaperclipRunnerEvalCompatibilityIssueCode;
+export interface ThinkingMachRunnerEvalCompatibilityIssue {
+  code: ThinkingMachRunnerEvalCompatibilityIssueCode;
   component: "package" | "binary" | "nativeExecution" | "prp" | "catalog" | "driver";
   expected: string;
   received: string;
   message: string;
 }
 
-export interface PaperclipRunnerEvalCompatibilityRequirement {
+export interface ThinkingMachRunnerEvalCompatibilityRequirement {
   consumer: string;
   packageVersion: string;
-  runnerd: PaperclipRunnerdBuildMetadata;
+  runnerd: ThinkingMachRunnerdBuildMetadata;
   nativeExecutionVersion: number;
   prp: { minimumVersion: number; maximumVersion: number };
   catalog: { version: number; sha256: string };
@@ -47,8 +47,8 @@ export interface PaperclipRunnerEvalCompatibilityRequirement {
   };
 }
 
-export interface PaperclipRunnerEvalCompatibilityReceipt {
-  schema: typeof PAPERCLIP_RUNNER_EVAL_INTEGRATION_SCHEMA;
+export interface ThinkingMachRunnerEvalCompatibilityReceipt {
+  schema: typeof THINKINGMACH_RUNNER_EVAL_INTEGRATION_SCHEMA;
   consumer: string;
   packageVersion: string;
   runnerdPackageVersion: string;
@@ -58,19 +58,19 @@ export interface PaperclipRunnerEvalCompatibilityReceipt {
   driverVersion: string;
 }
 
-export class PaperclipRunnerEvalCompatibilityError extends Error {
+export class ThinkingMachRunnerEvalCompatibilityError extends Error {
   readonly code = "paperclip_runner_eval_incompatible" as const;
 
   constructor(
     readonly consumer: string,
-    readonly issues: readonly PaperclipRunnerEvalCompatibilityIssue[],
+    readonly issues: readonly ThinkingMachRunnerEvalCompatibilityIssue[],
   ) {
     super(
-      `Paperclip runner eval compatibility check failed for ${consumer}: ${issues
+      `ThinkingMach runner eval compatibility check failed for ${consumer}: ${issues
         .map((issue) => `${issue.code}: ${issue.message}`)
         .join("; ")}`,
     );
-    this.name = "PaperclipRunnerEvalCompatibilityError";
+    this.name = "ThinkingMachRunnerEvalCompatibilityError";
     this.issues = Object.freeze(issues.map((issue) => Object.freeze({ ...issue })));
   }
 }
@@ -80,14 +80,14 @@ export class PaperclipRunnerEvalCompatibilityError extends Error {
  * Every independently versioned input is checked and all mismatches are
  * returned together so remediation is actionable.
  */
-export function assertPaperclipRunnerEvalCompatibility(
-  requirement: PaperclipRunnerEvalCompatibilityRequirement,
-): PaperclipRunnerEvalCompatibilityReceipt {
-  const expected = PAPERCLIP_RUNNER_BUILD_METADATA;
-  const issues: PaperclipRunnerEvalCompatibilityIssue[] = [];
+export function assertThinkingMachRunnerEvalCompatibility(
+  requirement: ThinkingMachRunnerEvalCompatibilityRequirement,
+): ThinkingMachRunnerEvalCompatibilityReceipt {
+  const expected = THINKINGMACH_RUNNER_BUILD_METADATA;
+  const issues: ThinkingMachRunnerEvalCompatibilityIssue[] = [];
   const issue = (
-    code: PaperclipRunnerEvalCompatibilityIssueCode,
-    component: PaperclipRunnerEvalCompatibilityIssue["component"],
+    code: ThinkingMachRunnerEvalCompatibilityIssueCode,
+    component: ThinkingMachRunnerEvalCompatibilityIssue["component"],
     expectedValue: string | number,
     receivedValue: string | number,
     message: string,
@@ -228,11 +228,11 @@ export function assertPaperclipRunnerEvalCompatibility(
   }
 
   if (issues.length > 0) {
-    throw new PaperclipRunnerEvalCompatibilityError(requirement.consumer, issues);
+    throw new ThinkingMachRunnerEvalCompatibilityError(requirement.consumer, issues);
   }
 
   return {
-    schema: PAPERCLIP_RUNNER_EVAL_INTEGRATION_SCHEMA,
+    schema: THINKINGMACH_RUNNER_EVAL_INTEGRATION_SCHEMA,
     consumer: requirement.consumer,
     packageVersion: expected.package.version,
     runnerdPackageVersion: requirement.runnerd.packageVersion,

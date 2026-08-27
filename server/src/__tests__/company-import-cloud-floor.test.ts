@@ -90,19 +90,19 @@ function expectNoImportWork() {
 describe("company import Cloud floor", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
-    delete process.env.PAPERCLIP_MANAGED_CONFIG;
-    delete process.env.PAPERCLIP_HIDDEN_SETTINGS;
+    delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
+    delete process.env.THINKINGMACH_MANAGED_CONFIG;
+    delete process.env.THINKINGMACH_HIDDEN_SETTINGS;
   });
 
   afterEach(() => {
-    delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
-    delete process.env.PAPERCLIP_MANAGED_CONFIG;
-    delete process.env.PAPERCLIP_HIDDEN_SETTINGS;
+    delete process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN;
+    delete process.env.THINKINGMACH_MANAGED_CONFIG;
+    delete process.env.THINKINGMACH_HIDDEN_SETTINGS;
   });
 
   it("returns 403 cloud_managed on every import route on a cloud-managed instance", async () => {
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
     const app = await createApp(boardAdmin);
 
     for (const route of IMPORT_ROUTES) {
@@ -116,7 +116,7 @@ describe("company import Cloud floor", () => {
   });
 
   it("floors on the managed-config signal alone", async () => {
-    process.env.PAPERCLIP_MANAGED_CONFIG = JSON.stringify({ v: 1, mode: "cloud" });
+    process.env.THINKINGMACH_MANAGED_CONFIG = JSON.stringify({ v: 1, mode: "cloud" });
     const app = await createApp(boardAdmin);
 
     const res = await request(app).post("/api/companies/import").send({});
@@ -127,7 +127,7 @@ describe("company import Cloud floor", () => {
   });
 
   it("applies the floor before auth and request-body validation", async () => {
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
     // An agent actor never passes the import routes' own assertBoard, and the
     // body is not schema-valid either — the floor must still answer first so a
     // Cloud caller sees one consistent refusal.
@@ -143,7 +143,7 @@ describe("company import Cloud floor", () => {
   });
 
   it("floors every import route with settings_operator_managed when company.import is hidden", async () => {
-    process.env.PAPERCLIP_HIDDEN_SETTINGS = "company.import";
+    process.env.THINKINGMACH_HIDDEN_SETTINGS = "company.import";
     const app = await createApp(boardAdmin);
 
     for (const route of IMPORT_ROUTES) {
@@ -157,7 +157,7 @@ describe("company import Cloud floor", () => {
   });
 
   it("keeps import open when only other company pages are hidden", async () => {
-    process.env.PAPERCLIP_HIDDEN_SETTINGS = "company.secrets,company.members";
+    process.env.THINKINGMACH_HIDDEN_SETTINGS = "company.secrets,company.members";
     const app = await createApp(boardAdmin);
 
     const res = await request(app).get("/api/companies/import/jobs/unknown-job");
@@ -167,7 +167,7 @@ describe("company import Cloud floor", () => {
   });
 
   it("keeps company export open on a cloud-managed instance", async () => {
-    process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
+    process.env.THINKINGMACH_CLOUD_TENANT_SERVER_TOKEN = "tenant-secret";
     mockPortabilityService.exportBundle.mockResolvedValue({ ok: true });
     const app = await createApp(boardAdmin);
 

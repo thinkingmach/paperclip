@@ -1,14 +1,14 @@
 {
-  "name": "@paperclipai/adapter-codex-local",
-  "version": "0.3.1",
+  "name": "@thinkingmach/adapter-codex-local",
+  "version": "0.3.3",
   "license": "MIT",
-  "homepage": "https://github.com/paperclipai/paperclip",
+  "homepage": "https://github.com/thinkingmach/paperclip",
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/adapters/codex-local"
   },
   "type": "module",
@@ -53,8 +53,8 @@
   },
   "dependencies": {
     "@agentclientprotocol/codex-acp": "^1.6.2",
-    "@paperclipai/adapter-utils": "workspace:*",
-    "@paperclipai/shared": "workspace:*",
+    "@thinkingmach/adapter-utils": "workspace:*",
+    "@thinkingmach/shared": "workspace:*",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {

@@ -1,8 +1,8 @@
 {
-  "name": "@paperclipai/paperclip-eval-kernel",
+  "name": "@thinkingmach/paperclip-eval-kernel",
   "version": "0.1.0",
   "private": true,
-  "description": "Provider-neutral evaluation matrix kernel without Paperclip scenario content",
+  "description": "Provider-neutral evaluation matrix kernel without ThinkingMach scenario content",
   "type": "module",
   "files": [
     "dist",

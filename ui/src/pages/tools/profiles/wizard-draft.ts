@@ -1,4 +1,4 @@
-import type { ToolProfileWithDetails } from "@paperclipai/shared";
+import type { ToolProfileWithDetails } from "@thinkingmach/shared";
 import type { TemplateKey } from "./profile-model";
 
 /**

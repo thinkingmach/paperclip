@@ -20,7 +20,7 @@ export function resolveBrowserBuildCommit(
 }
 
 export function readBrowserBuildCommit(repositoryDirectory: string): string | null {
-  return resolveBrowserBuildCommit(process.env.PAPERCLIP_BUILD_COMMIT, () =>
+  return resolveBrowserBuildCommit(process.env.THINKINGMACH_BUILD_COMMIT, () =>
     execFileSync("git", ["rev-parse", "HEAD"], {
       cwd: repositoryDirectory,
       encoding: "utf8",

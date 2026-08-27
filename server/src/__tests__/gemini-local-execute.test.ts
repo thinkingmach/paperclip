@@ -2,17 +2,17 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { execute } from "@paperclipai/adapter-gemini-local/server";
+import { execute } from "@thinkingmach/adapter-gemini-local/server";
 
 async function writeFakeGeminiCommand(commandPath: string): Promise<void> {
   const script = `#!/usr/bin/env node
 const fs = require("node:fs");
 
-const capturePath = process.env.PAPERCLIP_TEST_CAPTURE_PATH;
+const capturePath = process.env.THINKINGMACH_TEST_CAPTURE_PATH;
 const payload = {
   argv: process.argv.slice(2),
   paperclipEnvKeys: Object.keys(process.env)
-    .filter((key) => key.startsWith("PAPERCLIP_"))
+    .filter((key) => key.startsWith("THINKINGMACH_"))
     .sort(),
 };
 if (capturePath) {
@@ -115,8 +115,8 @@ describe("gemini execute", () => {
           command: commandPath,
           cwd: workspace,
           env: { HOME: configuredHome },
-          paperclipRuntimeSkills: [{
-            key: "paperclipai/paperclip/paperclip",
+          thinkingmachRuntimeSkills: [{
+            key: "thinkingmach/paperclip/paperclip",
             runtimeName: "paperclip",
             source: skillSource,
           }],
@@ -173,7 +173,7 @@ describe("gemini execute", () => {
           cwd: workspace,
           model: "gemini-2.5-pro",
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -197,19 +197,19 @@ describe("gemini execute", () => {
       const promptFlagIndex = capture.argv.indexOf("--prompt");
       const promptArg = promptFlagIndex >= 0 ? capture.argv[promptFlagIndex + 1] : "";
       expect(promptArg).toContain("Follow the paperclip heartbeat.");
-      expect(promptArg).toContain("Paperclip runtime note:");
+      expect(promptArg).toContain("ThinkingMach runtime note:");
       expect(capture.paperclipEnvKeys).toEqual(
         expect.arrayContaining([
-          "PAPERCLIP_AGENT_ID",
-          "PAPERCLIP_API_KEY",
-          "PAPERCLIP_API_URL",
-          "PAPERCLIP_COMPANY_ID",
-          "PAPERCLIP_RUN_ID",
+          "THINKINGMACH_AGENT_ID",
+          "THINKINGMACH_API_KEY",
+          "THINKINGMACH_API_URL",
+          "THINKINGMACH_COMPANY_ID",
+          "THINKINGMACH_RUN_ID",
         ]),
       );
-      expect(invocationPrompt).toContain("Paperclip runtime note:");
-      expect(invocationPrompt).toContain("PAPERCLIP_API_URL");
-      expect(invocationPrompt).toContain("Paperclip API access note:");
+      expect(invocationPrompt).toContain("ThinkingMach runtime note:");
+      expect(invocationPrompt).toContain("THINKINGMACH_API_URL");
+      expect(invocationPrompt).toContain("ThinkingMach API access note:");
       expect(invocationPrompt).toContain("run_shell_command");
       expect(result.question).toBeNull();
     } finally {
@@ -242,7 +242,7 @@ describe("gemini execute", () => {
           engine: "cli",
           command: commandPath,
           cwd: workspace,
-          env: { PAPERCLIP_TEST_CAPTURE_PATH: capturePath },
+          env: { THINKINGMACH_TEST_CAPTURE_PATH: capturePath },
         },
         context: {},
         authToken: "t",
@@ -439,7 +439,7 @@ describe("gemini execute", () => {
           cwd: workspace,
           model: "gemini-2.5-pro",
           env: {
-            PAPERCLIP_TEST_CAPTURE_PATH: capturePath,
+            THINKINGMACH_TEST_CAPTURE_PATH: capturePath,
           },
           promptTemplate: "Follow the paperclip heartbeat.",
         },
@@ -448,7 +448,7 @@ describe("gemini execute", () => {
           taskId: "issue-1",
           wakeReason: "issue_commented",
           wakeCommentId: "comment-2",
-          paperclipWake: {
+          thinkingmachWake: {
             reason: "issue_commented",
             issue: {
               id: "issue-1",
@@ -490,7 +490,7 @@ describe("gemini execute", () => {
       const promptArg = promptFlagIndex >= 0 ? capture.argv[promptFlagIndex + 1] : "";
       expect(capture.argv).toContain("--resume");
       expect(capture.argv).toContain("gemini-session-1");
-      expect(promptArg).toContain("## Paperclip Resume Delta");
+      expect(promptArg).toContain("## ThinkingMach Resume Delta");
       expect(promptArg).toContain("Do not switch to another issue until you have handled this wake.");
       expect(promptArg).toContain("Second comment");
       expect(promptArg).not.toContain("Follow the paperclip heartbeat.");

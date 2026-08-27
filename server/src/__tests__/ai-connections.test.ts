@@ -8,14 +8,14 @@ import { mkdtemp, rm, access, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { and, eq, sql } from "drizzle-orm";
-import { createDb, companies, agents, heartbeatRuns, companyMemberships, connectionGrants, connectionGrantDelegations, connectionGrantMembers, toolConnections, toolConnectionInstalls, aiConnectionDefaults, aiProviderDefaults, adapterAuthSessions, environments, issues, issueThreadInteractions, issueRecoveryActions, connectionIntentDeliveries, agentWakeupRequests, companySecrets } from "@paperclipai/db";
-import { startEmbeddedPostgresTestDatabase } from "@paperclipai/db/test-embedded-postgres";
+import { createDb, companies, agents, heartbeatRuns, companyMemberships, connectionGrants, connectionGrantDelegations, connectionGrantMembers, toolConnections, toolConnectionInstalls, aiConnectionDefaults, aiProviderDefaults, adapterAuthSessions, environments, issues, issueThreadInteractions, issueRecoveryActions, connectionIntentDeliveries, agentWakeupRequests, companySecrets } from "@thinkingmach/db";
+import { startEmbeddedPostgresTestDatabase } from "@thinkingmach/db/test-embedded-postgres";
 import { aiConnectionService } from "../services/ai-connections.js";
-import * as executionTarget from "@paperclipai/adapter-utils/execution-target";
+import * as executionTarget from "@thinkingmach/adapter-utils/execution-target";
 import { prepareManagedAiRuntime, assertManagedAiProjectAuth } from "../services/ai-connection-runtime.js";
 import { toolAccessService } from "../services/tool-access.js";
 import { secretService } from "../services/secrets.js";
-import { aiConnectionBindingSchema, connectionPurposeTransportSchema, isAiConnectionCompatible } from "@paperclipai/shared";
+import { aiConnectionBindingSchema, connectionPurposeTransportSchema, isAiConnectionCompatible } from "@thinkingmach/shared";
 import express from "express";
 import request from "supertest";
 import { aiConnectionRoutes, canInstallSharedAiConnectionForNewAgent, responsibleUserForAiRequest } from "../routes/ai-connections.js";
@@ -34,8 +34,8 @@ const create = (userId: string, name: string, ownership: "personal" | "shared" =
 
 beforeAll(async () => {
   home = await mkdtemp(path.join(os.tmpdir(), "paperclip-ai-tests-"));
-  vi.stubEnv("PAPERCLIP_HOME", home);
-  vi.stubEnv("PAPERCLIP_INSTANCE_ID", "ai-connection-fixture");
+  vi.stubEnv("THINKINGMACH_HOME", home);
+  vi.stubEnv("THINKINGMACH_INSTANCE_ID", "ai-connection-fixture");
   database = await startEmbeddedPostgresTestDatabase("paperclip-ai-db-");
   db = createDb(database.connectionString);
   service = aiConnectionService(db);

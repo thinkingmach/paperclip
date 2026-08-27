@@ -43,7 +43,7 @@ for (const dependency of Object.keys({
   ...(evalKernelManifest.optionalDependencies ?? {}),
   ...(evalKernelManifest.peerDependencies ?? {}),
 })) {
-  if (dependency === "@paperclipai/paperclip-runner") {
+  if (dependency === "@thinkingmach/paperclip-runner") {
     violations.push("generic eval kernel must use structural callbacks, not a runner runtime dependency");
   }
 }

@@ -3,12 +3,12 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AcpRuntimeOptions } from "acpx/runtime";
-import type { AdapterExecutionContext, AdapterRuntimeMcpAccess } from "@paperclipai/adapter-utils";
+import type { AdapterExecutionContext, AdapterRuntimeMcpAccess } from "@thinkingmach/adapter-utils";
 import {
   prepareAdapterExecutionTargetRuntime,
-  startAdapterExecutionTargetPaperclipBridge,
+  startAdapterExecutionTargetThinkingMachBridge,
   startAdapterExecutionTargetProcessSessionBridge,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 
 // This file is a characterization test. It pins the engine boundary's CURRENT
 // behavior; it never changes production code. Each test states the observed
@@ -35,12 +35,12 @@ import {
 // exercises them end-to-end against a local runner). This lets the staging
 // tests assert the exact `runtimeRootDir`/`workspaceLocalDir`/`assets` the
 // engine threads without changing any real behavior for the other tests.
-vi.mock("@paperclipai/adapter-utils/execution-target", async (importActual) => {
-  const actual = await importActual<typeof import("@paperclipai/adapter-utils/execution-target")>();
+vi.mock("@thinkingmach/adapter-utils/execution-target", async (importActual) => {
+  const actual = await importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>();
   return {
     ...actual,
     prepareAdapterExecutionTargetRuntime: vi.fn(actual.prepareAdapterExecutionTargetRuntime),
-    startAdapterExecutionTargetPaperclipBridge: vi.fn(actual.startAdapterExecutionTargetPaperclipBridge),
+    startAdapterExecutionTargetThinkingMachBridge: vi.fn(actual.startAdapterExecutionTargetThinkingMachBridge),
     startAdapterExecutionTargetProcessSessionBridge: vi.fn(actual.startAdapterExecutionTargetProcessSessionBridge),
   };
 });
@@ -261,7 +261,7 @@ function throwingHandoffContext(): Record<string, unknown> {
 function stubBridges() {
   const paperclipStops: Array<ReturnType<typeof vi.fn>> = [];
   const processStops: Array<ReturnType<typeof vi.fn>> = [];
-  vi.mocked(startAdapterExecutionTargetPaperclipBridge).mockImplementation(async () => {
+  vi.mocked(startAdapterExecutionTargetThinkingMachBridge).mockImplementation(async () => {
     const stop = vi.fn(async () => {});
     paperclipStops.push(stop);
     return { env: {}, stop } as never;
@@ -535,7 +535,7 @@ describe("composed ACPX run: engine-boundary result form per exit path", () => {
     // bridge resolves a live handle. This is the second engine-boundary throw path;
     // the abandon path must stop the started sibling so no bridge leaks.
     const stop = vi.fn(async () => {});
-    vi.mocked(startAdapterExecutionTargetPaperclipBridge).mockImplementationOnce(async () => {
+    vi.mocked(startAdapterExecutionTargetThinkingMachBridge).mockImplementationOnce(async () => {
       throw new Error("paperclip bridge boom");
     });
     vi.mocked(startAdapterExecutionTargetProcessSessionBridge).mockImplementationOnce(

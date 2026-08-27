@@ -9,7 +9,7 @@ import type {
   ResolvedWorkspaceResource,
   WorkspaceFileAvailabilityResponse,
   WorkspaceFileAvailabilityResult,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type { FileResourceQuery } from "@/api/file-resources";
 
 const mockAvailability = vi.hoisted(() => vi.fn());
@@ -300,7 +300,7 @@ describe("WorkspaceFileMarkdownBody availability gating", () => {
           workspaceKind: "project_workspace",
           workspaceId: WORKSPACE_ID,
           projectId: PROJECT_ID,
-          projectName: "Paperclip App",
+          projectName: "ThinkingMach App",
         }),
       },
     ]));

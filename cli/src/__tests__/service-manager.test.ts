@@ -17,7 +17,7 @@ const temporaryDirectories: string[] = [];
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map((directory) => fs.rm(directory, { recursive: true, force: true })));
-  delete process.env.PAPERCLIP_SERVICE_MANAGED;
+  delete process.env.THINKINGMACH_SERVICE_MANAGED;
 });
 
 async function temporaryDirectory(): Promise<string> {
@@ -28,10 +28,10 @@ async function temporaryDirectory(): Promise<string> {
 
 describe("service definition generation", () => {
   it("generates a stable systemd notify unit without secrets", () => {
-    const unit = renderSystemdUnit({ instanceId: "team-a", shimPath: "/home/alice/.local/bin/paperclipai", homeDir: "/home/alice/.paperclip" });
+    const unit = renderSystemdUnit({ instanceId: "team-a", shimPath: "/home/alice/.local/bin/thinkingmach", homeDir: "/home/alice/.paperclip" });
     expect(unit).toContain("Type=notify");
     expect(unit).toContain("NotifyAccess=all");
-    expect(unit).toContain('ExecStart="/home/alice/.local/bin/paperclipai" run --instance "team-a"');
+    expect(unit).toContain('ExecStart="/home/alice/.local/bin/thinkingmach" run --instance "team-a"');
     expect(unit).toContain("Restart=always");
     expect(unit).toContain("TimeoutStopSec=300");
     expect(unit).not.toContain("API_KEY");
@@ -40,25 +40,25 @@ describe("service definition generation", () => {
   it("escapes systemd variable and specifier expansion in configured values", () => {
     const unit = renderSystemdUnit({
       instanceId: "team-$USER-%i",
-      shimPath: "/home/$USER/%i/paperclipai",
+      shimPath: "/home/$USER/%i/thinkingmach",
       homeDir: "/home/$USER/%i/.paperclip",
     });
 
-    expect(unit).toContain('ExecStart="/home/$$USER/%%i/paperclipai" run --instance "team-$$USER-%%i"');
-    expect(unit).toContain('Environment="PAPERCLIP_HOME=/home/$$USER/%%i/.paperclip"');
+    expect(unit).toContain('ExecStart="/home/$$USER/%%i/thinkingmach" run --instance "team-$$USER-%%i"');
+    expect(unit).toContain('Environment="THINKINGMACH_HOME=/home/$$USER/%%i/.paperclip"');
   });
 
   it.each([
-    ["instanceId", { instanceId: "team-a\nExecStartPre=/tmp/attack", shimPath: "/home/alice/.local/bin/paperclipai", homeDir: "/home/alice/.paperclip" }],
-    ["shimPath", { instanceId: "team-a", shimPath: "/home/alice/bin/paperclipai\r\nExecStartPre=/tmp/attack", homeDir: "/home/alice/.paperclip" }],
-    ["homeDir", { instanceId: "team-a", shimPath: "/home/alice/.local/bin/paperclipai", homeDir: "/home/alice/.paperclip\nEnvironment=ATTACK=1" }],
+    ["instanceId", { instanceId: "team-a\nExecStartPre=/tmp/attack", shimPath: "/home/alice/.local/bin/thinkingmach", homeDir: "/home/alice/.paperclip" }],
+    ["shimPath", { instanceId: "team-a", shimPath: "/home/alice/bin/thinkingmach\r\nExecStartPre=/tmp/attack", homeDir: "/home/alice/.paperclip" }],
+    ["homeDir", { instanceId: "team-a", shimPath: "/home/alice/.local/bin/thinkingmach", homeDir: "/home/alice/.paperclip\nEnvironment=ATTACK=1" }],
   ])("rejects line breaks in the systemd %s", (_field, input) => {
     expect(() => renderSystemdUnit(input)).toThrow("Systemd service values must not contain line breaks");
   });
 
   it("generates a launchd agent with keepalive and instance logs", () => {
-    const plist = renderLaunchdPlist({ instanceId: "team-a", shimPath: "/Users/alice/.local/bin/paperclipai", homeDir: "/Users/alice/.paperclip", stdoutPath: "/Users/alice/.paperclip/instances/team-a/logs/service.log", stderrPath: "/Users/alice/.paperclip/instances/team-a/logs/service.err.log" });
-    expect(plist).toContain("ing.paperclip.paperclipai.team-a");
+    const plist = renderLaunchdPlist({ instanceId: "team-a", shimPath: "/Users/alice/.local/bin/thinkingmach", homeDir: "/Users/alice/.paperclip", stdoutPath: "/Users/alice/.paperclip/instances/team-a/logs/service.log", stderrPath: "/Users/alice/.paperclip/instances/team-a/logs/service.err.log" });
+    expect(plist).toContain("ing.paperclip.thinkingmach.team-a");
     expect(plist).toContain("<key>RunAtLoad</key><true/>");
     expect(plist).toContain("<key>KeepAlive</key><true/>");
     expect(plist).toContain("service.err.log");
@@ -73,7 +73,7 @@ describe("systemd drift regeneration", () => {
       calls.push([command, ...args].join(" "));
       return { stdout: "", stderr: "" };
     };
-    const manager = new SystemdServiceManager("default", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/paperclipai"), userHome);
+    const manager = new SystemdServiceManager("default", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/thinkingmach"), userHome);
     await fs.mkdir(path.dirname(manager.definitionPath), { recursive: true });
     await fs.writeFile(manager.definitionPath, "stale\n", "utf8");
 
@@ -91,7 +91,7 @@ describe("systemd drift regeneration", () => {
       if (command === "systemctl" && args.includes("stop")) throw new Error("stop failed");
       return { stdout: "", stderr: "" };
     };
-    const manager = new SystemdServiceManager("default", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/paperclipai"), userHome);
+    const manager = new SystemdServiceManager("default", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/thinkingmach"), userHome);
     await fs.mkdir(path.dirname(manager.definitionPath), { recursive: true });
     await fs.writeFile(manager.definitionPath, manager.renderDefinition(), "utf8");
 
@@ -117,7 +117,7 @@ describe("service adapter dispatch", () => {
   it("returns a foreground-run skip on unsupported hosts", async () => {
     const runner: CommandRunner = async () => { throw new Error("no bus"); };
     const detection = await detectServiceManager({ platform: "linux", instanceId: "default", runner });
-    expect(detection).toEqual({ supported: false, reason: expect.stringContaining("paperclipai run") });
+    expect(detection).toEqual({ supported: false, reason: expect.stringContaining("thinkingmach run") });
   });
 });
 
@@ -127,27 +127,27 @@ describe("launchd lifecycle", () => {
     const calls: string[] = [];
     const runner: CommandRunner = async (command, args) => {
       calls.push([command, ...args].join(" "));
-      if (args[0] === "print-disabled") return { stdout: `\"ing.paperclip.paperclipai.team-a\" => true`, stderr: "" };
+      if (args[0] === "print-disabled") return { stdout: `\"ing.paperclip.thinkingmach.team-a\" => true`, stderr: "" };
       return { stdout: "", stderr: "" };
     };
-    const manager = new LaunchdServiceManager("team-a", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/paperclipai"), userHome);
+    const manager = new LaunchdServiceManager("team-a", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/thinkingmach"), userHome);
 
     await manager.start();
 
-    expect(calls).toContain(`launchctl disable gui/${process.getuid?.() ?? 0}/ing.paperclip.paperclipai.team-a`);
-    expect(calls).not.toContain(`launchctl enable gui/${process.getuid?.() ?? 0}/ing.paperclip.paperclipai.team-a`);
+    expect(calls).toContain(`launchctl disable gui/${process.getuid?.() ?? 0}/ing.paperclip.thinkingmach.team-a`);
+    expect(calls).not.toContain(`launchctl enable gui/${process.getuid?.() ?? 0}/ing.paperclip.thinkingmach.team-a`);
   });
 
   it("preserves disabled state when the service name contains regex metacharacters", async () => {
     const userHome = await temporaryDirectory();
     const calls: string[] = [];
-    const serviceName = "ing.paperclip.paperclipai.team[qa]+";
+    const serviceName = "ing.paperclip.thinkingmach.team[qa]+";
     const runner: CommandRunner = async (command, args) => {
       calls.push([command, ...args].join(" "));
       if (args[0] === "print-disabled") return { stdout: `"${serviceName}" => true`, stderr: "" };
       return { stdout: "", stderr: "" };
     };
-    const manager = new LaunchdServiceManager("team[qa]+", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/paperclipai"), userHome);
+    const manager = new LaunchdServiceManager("team[qa]+", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/thinkingmach"), userHome);
 
     await manager.start();
 
@@ -162,13 +162,13 @@ describe("launchd lifecycle", () => {
       calls.push([command, ...args].join(" "));
       return { stdout: "", stderr: "" };
     };
-    const manager = new LaunchdServiceManager("team-a", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/paperclipai"), userHome);
+    const manager = new LaunchdServiceManager("team-a", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/thinkingmach"), userHome);
 
     await manager.install({ startNow: false, startOnLogin: false });
     await manager.stop();
 
-    expect(calls).toContain(`launchctl disable gui/${process.getuid?.() ?? 0}/ing.paperclip.paperclipai.team-a`);
-    expect(calls).toContain(`launchctl bootout gui/${process.getuid?.() ?? 0}/ing.paperclip.paperclipai.team-a`);
+    expect(calls).toContain(`launchctl disable gui/${process.getuid?.() ?? 0}/ing.paperclip.thinkingmach.team-a`);
+    expect(calls).toContain(`launchctl bootout gui/${process.getuid?.() ?? 0}/ing.paperclip.thinkingmach.team-a`);
     expect(calls.some((call) => call.includes("launchctl kill"))).toBe(false);
   });
 
@@ -179,16 +179,16 @@ describe("launchd lifecycle", () => {
       calls.push([command, ...args].join(" "));
       return { stdout: "", stderr: "" };
     };
-    const manager = new LaunchdServiceManager("team-a", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/paperclipai"), userHome);
+    const manager = new LaunchdServiceManager("team-a", runner, path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/thinkingmach"), userHome);
 
     await manager.uninstall();
 
-    expect(calls).toContain(`launchctl disable gui/${process.getuid?.() ?? 0}/ing.paperclip.paperclipai.team-a`);
+    expect(calls).toContain(`launchctl disable gui/${process.getuid?.() ?? 0}/ing.paperclip.thinkingmach.team-a`);
   });
 });
 
 describe("single-writer guard", () => {
-  const activeManager = { status: async () => ({ active: true, serviceName: "paperclipai.service" }) } as unknown as ServiceManager;
+  const activeManager = { status: async () => ({ active: true, serviceName: "thinkingmach.service" }) } as unknown as ServiceManager;
   const detector = async () => ({ supported: true as const, manager: activeManager });
 
   it("refuses a second foreground writer", async () => {
@@ -200,13 +200,13 @@ describe("single-writer guard", () => {
   });
 
   it("allows the supervisor-owned process", async () => {
-    process.env.PAPERCLIP_SERVICE_MANAGED = "1";
+    process.env.THINKINGMACH_SERVICE_MANAGED = "1";
     await expect(assertForegroundRunAllowed("default", false, detector)).resolves.toBeUndefined();
   });
 
   it("refuses to replace a symlinked service definition", async () => {
     const userHome = await temporaryDirectory();
-    const manager = new SystemdServiceManager("default", async () => ({ stdout: "", stderr: "" }), path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/paperclipai"), userHome);
+    const manager = new SystemdServiceManager("default", async () => ({ stdout: "", stderr: "" }), path.join(userHome, ".paperclip"), path.join(userHome, ".local/bin/thinkingmach"), userHome);
     await fs.mkdir(path.dirname(manager.definitionPath), { recursive: true });
     const target = path.join(userHome, "target.service"); await fs.writeFile(target, "preserve\n"); await fs.symlink(target, manager.definitionPath);
     await expect(manager.install({ startNow: false, startOnLogin: false })).rejects.toThrow("unsafe service definition");

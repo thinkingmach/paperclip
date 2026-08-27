@@ -29,7 +29,7 @@ const MAX_JSON_SAFE_INTEGER: u64 = 9_007_199_254_740_991;
 #[serde(rename_all = "kebab-case")]
 pub enum AcpxPermissionMode {
     ApproveAll,
-    ApprovePaperclip,
+    ApproveThinkingMach,
     ApproveReads,
     DenyAll,
 }
@@ -599,7 +599,7 @@ impl AcpxProviderSession {
             let message = if is_reserved_terminal_operation(&result.operation_id) {
                 reserved_terminal_feedback(&result.result)
             } else {
-                "Paperclip semantic operation failed".to_owned()
+                "ThinkingMach semantic operation failed".to_owned()
             };
             json!({
                 "callId":result.call_id,
@@ -732,7 +732,7 @@ impl AcpxProviderSession {
     /// Reaps an active provider generation at a controller-owned suspension
     /// boundary without waiting for the provider's graceful close protocol.
     ///
-    /// A governed Paperclip result can settle the run while the model is still
+    /// A governed ThinkingMach result can settle the run while the model is still
     /// waiting for its semantic-tool callback to unwind. In that state the
     /// ordinary sidecar close path may wait for the callback longer than the
     /// server process that owns this runner. Process-group termination closes
@@ -855,7 +855,7 @@ impl AcpxProviderSession {
 fn reserved_terminal_feedback(result: &Value) -> String {
     const MAX_FEEDBACK_CHARS: usize = 2_000;
     if result.get("success").and_then(Value::as_bool) != Some(false) {
-        return "Paperclip semantic operation failed".to_owned();
+        return "ThinkingMach semantic operation failed".to_owned();
     }
     let text = result
         .get("contentItems")
@@ -864,13 +864,13 @@ fn reserved_terminal_feedback(result: &Value) -> String {
         .filter(|item| item.get("type").and_then(Value::as_str) == Some("inputText"))
         .and_then(|item| item.get("text"))
         .and_then(Value::as_str)
-        .unwrap_or("Paperclip semantic operation failed");
+        .unwrap_or("ThinkingMach semantic operation failed");
     let mut bounded = text.chars().take(MAX_FEEDBACK_CHARS).collect::<String>();
     if text.chars().count() > MAX_FEEDBACK_CHARS {
         bounded.push_str("…");
     }
     if bounded.trim().is_empty() {
-        "Paperclip semantic operation failed".to_owned()
+        "ThinkingMach semantic operation failed".to_owned()
     } else {
         bounded
     }
@@ -936,7 +936,7 @@ fn reserved_terminal_tool_set() -> Result<AuthorizedToolSet, LocalRunnerError> {
     let result_schema: Value = serde_json::from_str(include_str!(
         "../../../../protocol/schemas/result.schema.json"
     ))
-    .map_err(|_| LocalRunnerError::invalid("embedded Paperclip result schema is invalid"))?;
+    .map_err(|_| LocalRunnerError::invalid("embedded ThinkingMach result schema is invalid"))?;
     // Older sidecars echo the validated report as their semantic result. The
     // server-backed path instead returns the controller's tool acknowledgement.
     // Inputs remain constrained to the report schema in both paths.
@@ -964,14 +964,14 @@ fn reserved_terminal_tool_set() -> Result<AuthorizedToolSet, LocalRunnerError> {
         AuthorizedTool {
             operation_id: PRP_COMPLETION_TOOL_NAME.to_owned(),
             version: 1,
-            description: "Return the authoritative Paperclip completion result.".to_owned(),
+            description: "Return the authoritative ThinkingMach completion result.".to_owned(),
             input_schema: result_schema.clone(),
             response_schema: response_schema.clone(),
         },
         AuthorizedTool {
             operation_id: PRP_BLOCK_TOOL_NAME.to_owned(),
             version: 1,
-            description: "Return the authoritative Paperclip blocked result.".to_owned(),
+            description: "Return the authoritative ThinkingMach blocked result.".to_owned(),
             input_schema: result_schema.clone(),
             response_schema,
         },
@@ -1012,13 +1012,13 @@ fn validate_prp_run_result(value: &Value) -> Result<(), LocalRunnerError> {
     let schema: Value = serde_json::from_str(include_str!(
         "../../../../protocol/schemas/result.schema.json"
     ))
-    .map_err(|_| LocalRunnerError::invalid("embedded Paperclip result schema is invalid"))?;
+    .map_err(|_| LocalRunnerError::invalid("embedded ThinkingMach result schema is invalid"))?;
     let validator = jsonschema::validator_for(&schema).map_err(|_| {
-        LocalRunnerError::invalid("embedded Paperclip result schema cannot compile")
+        LocalRunnerError::invalid("embedded ThinkingMach result schema cannot compile")
     })?;
     if !validator.is_valid(value) {
         return Err(LocalRunnerError::invalid(
-            "ACPX reserved semantic result failed the Paperclip result schema",
+            "ACPX reserved semantic result failed the ThinkingMach result schema",
         ));
     }
     Ok(())
@@ -1315,7 +1315,7 @@ mod permission_mode_tests {
     #[test]
     fn paperclip_permission_mode_round_trips_without_widening_legacy_modes() {
         for (name, mode) in [
-            ("approve-paperclip", AcpxPermissionMode::ApprovePaperclip),
+            ("approve-paperclip", AcpxPermissionMode::ApproveThinkingMach),
             ("approve-reads", AcpxPermissionMode::ApproveReads),
             ("approve-all", AcpxPermissionMode::ApproveAll),
             ("deny-all", AcpxPermissionMode::DenyAll),

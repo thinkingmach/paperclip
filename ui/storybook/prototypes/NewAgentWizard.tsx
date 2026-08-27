@@ -23,17 +23,17 @@ import { useCompany } from "@/context/CompanyContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import { agentsApi } from "@/api/agents";
-import type { AdapterEnvironmentTestResult, Agent } from "@paperclipai/shared";
+import type { AdapterEnvironmentTestResult, Agent } from "@thinkingmach/shared";
 import { storybookAgents, storybookHiredAgent } from "../fixtures/paperclipData";
 import { PREVIEW_AGENT_ID, PREVIEW_COMPANY_ID, runtimeTestResult, useNewAgentFixtures, type TestOutcome, type TestState } from "./new-agent-fixtures";
 import { stepMotion } from "@/components/onboarding/onboarding-motion";
-import { models as claudeModels } from "@paperclipai/adapter-claude-local";
-import { models as codexModels } from "@paperclipai/adapter-codex-local";
-import { models as openCodeModels } from "@paperclipai/adapter-opencode-local";
-import { models as cursorModels } from "@paperclipai/adapter-cursor-local";
-import { models as geminiModels } from "@paperclipai/adapter-gemini-local";
-import { models as grokModels } from "@paperclipai/adapter-grok-local";
-import { models as kimiModels } from "@paperclipai/adapter-kimi-local";
+import { models as claudeModels } from "@thinkingmach/adapter-claude-local";
+import { models as codexModels } from "@thinkingmach/adapter-codex-local";
+import { models as openCodeModels } from "@thinkingmach/adapter-opencode-local";
+import { models as cursorModels } from "@thinkingmach/adapter-cursor-local";
+import { models as geminiModels } from "@thinkingmach/adapter-gemini-local";
+import { models as grokModels } from "@thinkingmach/adapter-grok-local";
+import { models as kimiModels } from "@thinkingmach/adapter-kimi-local";
 
 const modelLists = {
   claude_local: claudeModels, codex_local: codexModels, opencode_local: openCodeModels,
@@ -181,7 +181,7 @@ export function NewAgentWizard({ initialScreen = "name", initialAdapter = null, 
     try {
       const result = await agentsApi.testEnvironment(PREVIEW_COMPANY_ID, selected, {
         adapterConfig,
-        environmentId: environment === "Paperclip Computer" ? "environment-storybook-sandbox"
+        environmentId: environment === "ThinkingMach Computer" ? "environment-storybook-sandbox"
           : environment === "Local machine" ? "environment-storybook-local" : null,
       });
       if (testRun.current !== run) return;
@@ -285,7 +285,7 @@ export function NewAgentWizard({ initialScreen = "name", initialAdapter = null, 
             <PillGuy state="dormant" className="size-14 shrink-0" />
             <div className="flex min-w-0 flex-col gap-2">
               <div className="flex flex-wrap items-center gap-3"><h1 ref={heading} tabIndex={-1} className="break-words text-2xl font-semibold tracking-tight outline-none">{name || "Darnold"}</h1><Badge variant="outline">{screen === "saved" ? "Configured" : "Setup in progress"}</Badge></div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground"><AdapterMark adapter={brandAdapter} /><span>{getAdapterDisplay(brandAdapter).label}</span>{isRunner && <Badge variant="outline">{runnerProvider === "Codex (app server)" ? "Native app server runner" : runnerProvider === "Claude (ACPX)" ? "ACPX runner" : "Paperclip Runner"}</Badge>}</div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground"><AdapterMark adapter={brandAdapter} /><span>{getAdapterDisplay(brandAdapter).label}</span>{isRunner && <Badge variant="outline">{runnerProvider === "Codex (app server)" ? "Native app server runner" : runnerProvider === "Claude (ACPX)" ? "ACPX runner" : "ThinkingMach Runner"}</Badge>}</div>
             </div>
           </div>
         </div>
@@ -350,7 +350,7 @@ export function NewAgentWizard({ initialScreen = "name", initialAdapter = null, 
             {selected === "kimi_local" && draft.apiKey && <TextField label="Kimi API model name" value={draft.kimiModel} onChange={kimiModel => setDraft({ kimiModel })} placeholder="kimi-for-coding" required />}
           </Section>
           {selected !== "cursor_cloud" && <Section title="Environment">
-            <SelectField label="Environment" hideLabel value={environment} onChange={value => { setEnvironments(previous => ({ ...previous, [selected]: value })); resetTest(); }} options={["Organization default", "Paperclip Computer", "Local machine"]} />
+            <SelectField label="Environment" hideLabel value={environment} onChange={value => { setEnvironments(previous => ({ ...previous, [selected]: value })); resetTest(); }} options={["Organization default", "ThinkingMach Computer", "Local machine"]} />
           </Section>}
           </fieldset>
           <RuntimeTestCard state={testState} result={testResult} error={error} onTest={() => void runTest()} />

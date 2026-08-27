@@ -1,6 +1,6 @@
 # MCP Access Governance Demo Script
 
-This is the end-to-end demo for the MCP Access Governance launch. It walks the three required cases — **read**, **approval-gated write**, **denied/destructive** — against the real [`@paperclipai/kv-demo-mcp-server`](../packages/kv-demo-mcp-server/README.md) package. The server is a standalone Node process that exposes four key/value MCP tools and a tiny web UI over the same in-memory store, so you can call a tool from an agent and watch the value appear in a browser tab in real time.
+This is the end-to-end demo for the MCP Access Governance launch. It walks the three required cases — **read**, **approval-gated write**, **denied/destructive** — against the real [`@thinkingmach/kv-demo-mcp-server`](../packages/kv-demo-mcp-server/README.md) package. The server is a standalone Node process that exposes four key/value MCP tools and a tiny web UI over the same in-memory store, so you can call a tool from an agent and watch the value appear in a browser tab in real time.
 
 Audience: CTO sign-off, QA repro, and the recorded walkthrough that goes with the release notes. Time to run live: about 10 minutes.
 
@@ -10,21 +10,21 @@ Pair this script with [MCP-ACCESS-GOVERNANCE.md](./MCP-ACCESS-GOVERNANCE.md) for
 
 Before you start the recording:
 
-- Paperclip running in `local_trusted` or `authenticated/private` mode. Public mode is fine as long as the Paperclip process can reach `http://127.0.0.1:8848` (we connect over `remote_http`, so no trusted runtime worker is required).
+- ThinkingMach running in `local_trusted` or `authenticated/private` mode. Public mode is fine as long as the ThinkingMach process can reach `http://127.0.0.1:8848` (we connect over `remote_http`, so no trusted runtime worker is required).
 - A company with at least one agent identity to act as the caller. That agent must have an **active heartbeat run** for the gateway-call steps (Steps 6, 7, 9, 11). The simplest way to keep one alive during recording is to assign a placeholder task to the agent before the demo starts; the agent's heartbeat run stays in `running` while it works.
-- The KV demo server package built (`pnpm --filter @paperclipai/kv-demo-mcp-server build`).
+- The KV demo server package built (`pnpm --filter @thinkingmach/kv-demo-mcp-server build`).
 - Board API key (`$BOARD_API_KEY`) exported. Company ID (`$COMPANY_ID`) exported. Agent ID (`$AGENT_ID`) for the caller exported.
-- Paperclip URL (`$PAPERCLIP_URL`) exported.
+- ThinkingMach URL (`$THINKINGMACH_URL`) exported.
 - The Tools & Access UI open at `/<prefix>/companies/<companyId>/tools`.
 - A browser tab open on the **Values UI** at `http://127.0.0.1:8848/` (you will open this in Step 1).
 
-All API requests use `Authorization: Bearer $BOARD_API_KEY` for board calls. Gateway calls use a dedicated session token via the `X-Paperclip-Tool-Gateway-Token` header — they do not use `Authorization`. See Step 5 for how the token is minted.
+All API requests use `Authorization: Bearer $BOARD_API_KEY` for board calls. Gateway calls use a dedicated session token via the `X-ThinkingMach-Tool-Gateway-Token` header — they do not use `Authorization`. See Step 5 for how the token is minted.
 
 ## Step 0 — Frame the demo
 
 Spoken intro:
 
-> "Paperclip ships an MCP gateway that sits between every agent and every upstream tool. Three things happen on every call: we pick the tool against a profile, we evaluate policies, and we record an audit event. I'm going to connect a tiny key/value MCP server I'm running on this laptop, then run a read, a write that needs approval, and a destructive call that gets denied. The KV server has a web UI on the same port that shows its values — so when the agent's write lands, you'll see it appear in the browser. The data lives in the server; the policy decisions and the audit log live in Paperclip."
+> "ThinkingMach ships an MCP gateway that sits between every agent and every upstream tool. Three things happen on every call: we pick the tool against a profile, we evaluate policies, and we record an audit event. I'm going to connect a tiny key/value MCP server I'm running on this laptop, then run a read, a write that needs approval, and a destructive call that gets denied. The KV server has a web UI on the same port that shows its values — so when the agent's write lands, you'll see it appear in the browser. The data lives in the server; the policy decisions and the audit log live in ThinkingMach."
 
 Show the Tools & Access overview tab. Point at:
 
@@ -37,7 +37,7 @@ Show the Tools & Access overview tab. Point at:
 In a side terminal, launch the server and leave it running for the rest of the demo:
 
 ```sh
-pnpm --filter @paperclipai/kv-demo-mcp-server start
+pnpm --filter @thinkingmach/kv-demo-mcp-server start
 ```
 
 Expected stderr:
@@ -64,7 +64,7 @@ API equivalent for the recording (the wizard hits these two routes back-to-back)
 CONNECT=$(curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/apps/connect" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/apps/connect" \
   -d '{
     "link": "http://127.0.0.1:8848/mcp",
     "name": "KV demo"
@@ -91,7 +91,7 @@ Finish the wizard (allow reads, ask-first on `kv_set`, leave `kv_delete` quarant
 curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/apps/$CONNECTION_ID/finish" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/apps/$CONNECTION_ID/finish" \
   -d '{
     "enabledCatalogEntryIds": '"$READ_ENTRY_IDS"',
     "askFirstCatalogEntryIds": ["'"$WRITE_ENTRY_ID"'"],
@@ -105,7 +105,7 @@ curl -fsS -X POST \
 
 export PROFILE_ID=$(curl -fsS \
   -H "Authorization: Bearer $BOARD_API_KEY" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/profiles/effective/agents/$AGENT_ID" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/profiles/effective/agents/$AGENT_ID" \
   | jq -r '.profileIds[0]')
 ```
 
@@ -116,7 +116,7 @@ Expected: `connectionStatus: "active"`, one profile bound to the company, one `r
 ```sh
 curl -fsS \
   -H "Authorization: Bearer $BOARD_API_KEY" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/profiles/effective/agents/$AGENT_ID" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/profiles/effective/agents/$AGENT_ID" \
   | jq '{profileIds, allowedToolNames}'
 ```
 
@@ -131,7 +131,7 @@ Grab the most recent active run for the demo agent:
 ```sh
 export RUN_ID=$(curl -fsS \
   -H "Authorization: Bearer $BOARD_API_KEY" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/heartbeat-runs?agentId=$AGENT_ID&limit=20" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/heartbeat-runs?agentId=$AGENT_ID&limit=20" \
   | jq -r '[.[] | select(.status == "running")] | first | .id')
 
 test -n "$RUN_ID" || { echo "No active run for agent — start one before recording"; exit 1; }
@@ -143,7 +143,7 @@ Mint the session:
 SESSION=$(curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/sessions" \
+  "$THINKINGMACH_URL/api/tool-gateway/sessions" \
   -d '{
     "companyId": "'"$COMPANY_ID"'",
     "agentId": "'"$AGENT_ID"'",
@@ -157,13 +157,13 @@ In production, the agent obtains this token from its own run bootstrap (agent JW
 
 ## Step 5 — The read tool (allowed)
 
-Gateway calls use the session token via `X-Paperclip-Tool-Gateway-Token`. The body uses `tool` (string) and `parameters` (object).
+Gateway calls use the session token via `X-ThinkingMach-Tool-Gateway-Token`. The body uses `tool` (string) and `parameters` (object).
 
 ```sh
 curl -fsS -X POST \
-  -H "X-Paperclip-Tool-Gateway-Token: $GATEWAY_TOKEN" \
+  -H "X-ThinkingMach-Tool-Gateway-Token: $GATEWAY_TOKEN" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/tools/call" \
+  "$THINKINGMACH_URL/api/tool-gateway/tools/call" \
   -d '{ "tool": "kv_list", "parameters": {} }' \
   | jq '{invocationId, status, tool, result}'
 ```
@@ -176,9 +176,9 @@ Switch to the **Audit** tab in the UI. Refresh. The newest row is `tool_gateway.
 
 ```sh
 curl -i -X POST \
-  -H "X-Paperclip-Tool-Gateway-Token: $GATEWAY_TOKEN" \
+  -H "X-ThinkingMach-Tool-Gateway-Token: $GATEWAY_TOKEN" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/tools/call" \
+  "$THINKINGMACH_URL/api/tool-gateway/tools/call" \
   -d '{ "tool": "kv_delete", "parameters": { "key": "demo/launch" } }'
 ```
 
@@ -199,7 +199,7 @@ Either `quarantined_catalog_entry` (catalog quarantine, the path we set up in St
 
 Spoken note:
 
-> "The agent doesn't know whether the tool was denied by the profile, by a policy, or by quarantine. It just knows the call failed and the reason code. The operator sees the full decision in the audit row. The KV server was never touched — the gateway short-circuited before the request left Paperclip."
+> "The agent doesn't know whether the tool was denied by the profile, by a policy, or by quarantine. It just knows the call failed and the reason code. The operator sees the full decision in the audit row. The KV server was never touched — the gateway short-circuited before the request left ThinkingMach."
 
 ## Step 7 — The agent call that triggers approval
 
@@ -207,9 +207,9 @@ Spoken note:
 
 ```sh
 CALL=$(curl -sS -w '\n%{http_code}' -X POST \
-  -H "X-Paperclip-Tool-Gateway-Token: $GATEWAY_TOKEN" \
+  -H "X-ThinkingMach-Tool-Gateway-Token: $GATEWAY_TOKEN" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/tools/call" \
+  "$THINKINGMACH_URL/api/tool-gateway/tools/call" \
   -d '{ "tool": "kv_set", "parameters": { "key": "demo/launch", "value": "shipped" } }')
 
 STATUS=$(echo "$CALL" | tail -1)
@@ -231,7 +231,7 @@ Approve via the API for the recording (the UI button does the same thing). The a
 curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/action-requests/$ACTION_REQUEST_ID/approve" \
+  "$THINKINGMACH_URL/api/tool-gateway/action-requests/$ACTION_REQUEST_ID/approve" \
   -d '{ "companyId": "'"$COMPANY_ID"'" }' \
   | jq '{id, status, resolvedAt, resolvedByUserId, canonicalArgumentsHash}'
 ```
@@ -244,9 +244,9 @@ The agent retries the same call with `approvedActionRequestId` set to the action
 
 ```sh
 curl -fsS -X POST \
-  -H "X-Paperclip-Tool-Gateway-Token: $GATEWAY_TOKEN" \
+  -H "X-ThinkingMach-Tool-Gateway-Token: $GATEWAY_TOKEN" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/tools/call" \
+  "$THINKINGMACH_URL/api/tool-gateway/tools/call" \
   -d '{
     "tool": "kv_set",
     "parameters": { "key": "demo/launch", "value": "shipped" },
@@ -265,9 +265,9 @@ Replay the read to close the loop — the agent's view of the world now matches 
 
 ```sh
 curl -fsS -X POST \
-  -H "X-Paperclip-Tool-Gateway-Token: $GATEWAY_TOKEN" \
+  -H "X-ThinkingMach-Tool-Gateway-Token: $GATEWAY_TOKEN" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-gateway/tools/call" \
+  "$THINKINGMACH_URL/api/tool-gateway/tools/call" \
   -d '{ "tool": "kv_get", "parameters": { "key": "demo/launch" } }' \
   | jq '{invocationId, status, tool, result}'
 ```
@@ -282,7 +282,7 @@ Skip this on a 5-minute recording. Include it for the 10-minute version because 
 curl -fsS -X POST \
   -H "Authorization: Bearer $BOARD_API_KEY" \
   -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/action-requests/$ACTION_REQUEST_ID/trust-rule" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/action-requests/$ACTION_REQUEST_ID/trust-rule" \
   -d '{
     "name": "Trust kv_set demo/launch from the demo agent",
     "approvalThreshold": 2,
@@ -306,7 +306,7 @@ Pull the audit timeline for the demo:
 ```sh
 curl -fsS \
   -H "Authorization: Bearer $BOARD_API_KEY" \
-  "$PAPERCLIP_URL/api/tool-gateway/audit?companyId=$COMPANY_ID&limit=20" \
+  "$THINKINGMACH_URL/api/tool-gateway/audit?companyId=$COMPANY_ID&limit=20" \
   | jq '[.[] | {createdAt, action, tool: .details.tool, decision: .details.decision, reasonCode: .details.reasonCode}]'
 ```
 
@@ -331,10 +331,10 @@ The KV server keeps state in process memory. Restart the server to drop everythi
 
 ```sh
 # In the side terminal running the KV server, press Ctrl+C, then start it again.
-pnpm --filter @paperclipai/kv-demo-mcp-server start
+pnpm --filter @thinkingmach/kv-demo-mcp-server start
 ```
 
-The next `kv_list` call returns an empty `entries` array. The Values UI shows the empty table again. Paperclip's audit history is untouched — it still records that the calls happened, just against a server that has since reset.
+The next `kv_list` call returns an empty `entries` array. The Values UI shows the empty table again. ThinkingMach's audit history is untouched — it still records that the calls happened, just against a server that has since reset.
 
 If the port is still bound after `Ctrl+C` (the process is gone but TCP timewait is pending), find any leftover process and stop it:
 
@@ -343,24 +343,24 @@ lsof -nP -iTCP:8848 -sTCP:LISTEN
 kill <pid>
 ```
 
-### Paperclip-side cleanup (for a fully clean state)
+### ThinkingMach-side cleanup (for a fully clean state)
 
 Run these if you want the connection and application out of the way as well. Skip them if you plan to keep the demo around for repeat recordings; the smoke replay still works as long as the KV server is running.
 
 ```sh
 # Revoke the trust rule (if you created one in Step 11)
 curl -fsS -X POST -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/companies/$COMPANY_ID/tools/trust-rules/$TRUST_RULE_POLICY_ID/revoke" \
+  "$THINKINGMACH_URL/api/companies/$COMPANY_ID/tools/trust-rules/$TRUST_RULE_POLICY_ID/revoke" \
   -d '{ "reason": "Demo cleanup." }' | jq '{id, enabled}'
 
 # Disable the connection
 curl -fsS -X PATCH -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-connections/$CONNECTION_ID" \
+  "$THINKINGMACH_URL/api/tool-connections/$CONNECTION_ID" \
   -d '{ "enabled": false, "status": "disabled" }' | jq '{id, enabled, status}'
 
 # Archive the application
 curl -fsS -X PATCH -H "Authorization: Bearer $BOARD_API_KEY" -H "Content-Type: application/json" \
-  "$PAPERCLIP_URL/api/tool-applications/$APPLICATION_ID" \
+  "$THINKINGMACH_URL/api/tool-applications/$APPLICATION_ID" \
   -d '{ "status": "archived" }' | jq '{id, status}'
 ```
 
@@ -374,9 +374,9 @@ Audit history is retained; the connection and application stay archived for the 
 
 ## What lives where
 
-The demo is also the clearest way to show the data boundary between Paperclip and the upstream MCP server.
+The demo is also the clearest way to show the data boundary between ThinkingMach and the upstream MCP server.
 
-| Concern | Stored in the KV demo server | Stored in Paperclip |
+| Concern | Stored in the KV demo server | Stored in ThinkingMach |
 | --- | --- | --- |
 | Key/value entries | In-memory `Map`, lost on restart. | Not stored. The gateway only sees the MCP request/response envelope. |
 | Connection record (URL, optional token) | Not stored. | Persisted in `tool_connections`. The optional `KV_DEMO_TOKEN` becomes a secret. |

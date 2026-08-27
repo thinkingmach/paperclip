@@ -11,7 +11,7 @@ import {
   buildRoutineMentionHref,
   buildSkillMentionHref,
   buildUserMentionHref,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { ThemeProvider } from "../context/ThemeContext";
 import { MarkdownBody } from "./MarkdownBody";
 import { queryKeys } from "../lib/queryKeys";
@@ -125,7 +125,7 @@ describe("MarkdownBody", () => {
       <QueryClientProvider client={new QueryClient()}>
         <ThemeProvider>
           <MarkdownBody>
-            {`[@Taylor](${buildUserMentionHref("user-123")}) [@CodexCoder](${buildAgentMentionHref("agent-123", "code")}) [@Paperclip App](${buildProjectMentionHref("project-456", "#336699")}) [/release-changelog](${buildSkillMentionHref("skill-789", "release-changelog")}) [/routine:Weekly review](${buildRoutineMentionHref("routine-123")})`}
+            {`[@Taylor](${buildUserMentionHref("user-123")}) [@CodexCoder](${buildAgentMentionHref("agent-123", "code")}) [@ThinkingMach App](${buildProjectMentionHref("project-456", "#336699")}) [/release-changelog](${buildSkillMentionHref("skill-789", "release-changelog")}) [/routine:Weekly review](${buildRoutineMentionHref("routine-123")})`}
           </MarkdownBody>
         </ThemeProvider>
       </QueryClientProvider>,
@@ -420,7 +420,7 @@ describe("MarkdownBody", () => {
 
   it("renders wiki links with a custom resolver when enabled", () => {
     const html = renderMarkdown(
-      "See [[wiki/entities/paperclip|Paperclip]] and [[wiki/entities/dotta-b]].",
+      "See [[wiki/entities/paperclip|ThinkingMach]] and [[wiki/entities/dotta-b]].",
       [],
       {
         enableWikiLinks: true,
@@ -431,7 +431,7 @@ describe("MarkdownBody", () => {
     expect(html).toContain('href="/wiki/page/wiki/entities/paperclip.md"');
     expect(html).toContain('data-paperclip-wiki-link="true"');
     expect(html).toContain('data-paperclip-wiki-target="wiki/entities/paperclip"');
-    expect(html).toContain(">Paperclip</a>");
+    expect(html).toContain(">ThinkingMach</a>");
     expect(html).toContain('href="/wiki/page/wiki/entities/dotta-b.md"');
     expect(html).toContain(">wiki/entities/dotta-b</a>");
     expect(html).not.toContain("[[wiki/entities/paperclip");
@@ -507,7 +507,7 @@ describe("MarkdownBody", () => {
   });
 
   it("opens GitHub links in a new tab", () => {
-    const html = renderMarkdown("[pr](https://github.com/paperclipai/paperclip/pull/4099)");
+    const html = renderMarkdown("[pr](https://github.com/thinkingmach/paperclip/pull/4099)");
 
     expect(html).toContain('target="_blank"');
     expect(html).toContain('rel="noopener noreferrer"');
@@ -522,21 +522,21 @@ describe("MarkdownBody", () => {
   });
 
   it("prefixes GitHub markdown links with the GitHub icon glued to the first character", () => {
-    const html = renderMarkdown("[https://github.com/paperclipai/paperclip/pull/4099](https://github.com/paperclipai/paperclip/pull/4099)");
+    const html = renderMarkdown("[https://github.com/thinkingmach/paperclip/pull/4099](https://github.com/thinkingmach/paperclip/pull/4099)");
 
-    expect(html).toContain('<a href="https://github.com/paperclipai/paperclip/pull/4099"');
+    expect(html).toContain('<a href="https://github.com/thinkingmach/paperclip/pull/4099"');
     expect(html).toContain('class="lucide lucide-github mr-1 inline h-3.5 w-3.5 align-(--va-0_125em)"');
     // The icon and first character "h" must sit in a no-wrap span so the
     // icon can never be orphaned on the previous line from the URL text.
     expect(html).toMatch(/<span style="white-space:nowrap">.*lucide-github.*?<\/svg>h<\/span>/);
-    expect(html).toContain("ttps://github.com/paperclipai/paperclip/pull/4099");
+    expect(html).toContain("ttps://github.com/thinkingmach/paperclip/pull/4099");
     expect(html).not.toContain("lucide-external-link");
   });
 
   it("prefixes GitHub autolinks with the GitHub icon", () => {
-    const html = renderMarkdown("See https://github.com/paperclipai/paperclip/issues/1778");
+    const html = renderMarkdown("See https://github.com/thinkingmach/paperclip/issues/1778");
 
-    expect(html).toContain('<a href="https://github.com/paperclipai/paperclip/issues/1778"');
+    expect(html).toContain('<a href="https://github.com/thinkingmach/paperclip/issues/1778"');
     expect(html).toContain('class="lucide lucide-github mr-1 inline h-3.5 w-3.5 align-(--va-0_125em)"');
   });
 

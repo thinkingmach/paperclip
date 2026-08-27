@@ -7,7 +7,7 @@
  * public deployments. The server logs the refusal and exits nonzero so
  * whatever supervises the deployment can act.
  *
- * In supervised managed-cloud deployments (`PAPERCLIP_CLOUD_API_ORIGIN`
+ * In supervised managed-cloud deployments (`THINKINGMACH_CLOUD_API_ORIGIN`
  * set), two of these refusals are a routine provisioning phase rather
  * than an incident: a freshly created stack's app container boots
  * before the harness has migrated the empty database or finished
@@ -62,7 +62,7 @@ export function migrationRefusalError(
   // supervisor migrates and restarts it (observed: ~11 events per
   // container, hundreds per fleet roll). It still refuses, logs, and
   // exits nonzero; only the Sentry capture is skipped — and only when
-  // `PAPERCLIP_CLOUD_API_ORIGIN` marks the deployment as supervised
+  // `THINKINGMACH_CLOUD_API_ORIGIN` marks the deployment as supervised
   // (`shouldReportStartupFailure`). Self-hosted deployments keep
   // reporting.
   if (state.appliedMigrations.length > 0) {
@@ -83,6 +83,6 @@ export function shouldReportStartupFailure(
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
   if (!(error instanceof StartupRefusalError)) return true;
-  const cloudOrigin = env.PAPERCLIP_CLOUD_API_ORIGIN?.trim();
+  const cloudOrigin = env.THINKINGMACH_CLOUD_API_ORIGIN?.trim();
   return !cloudOrigin;
 }

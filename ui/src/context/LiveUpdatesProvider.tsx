@@ -28,7 +28,7 @@ import type {
   Issue,
   IssueComment,
   LiveEvent,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import type { RunForIssue } from "../api/activity";
 import type { ActiveRunForIssue, LiveRunForIssue } from "../api/heartbeats";
 import type { CompanyUserDirectoryResponse } from "../api/access";

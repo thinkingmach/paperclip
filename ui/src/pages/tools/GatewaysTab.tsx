@@ -6,7 +6,7 @@ import type {
   ToolMcpGatewayTokenCreated,
   ToolMcpGatewayWithTokens,
   ToolProfileWithDetails,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Check, ChevronDown, Copy, KeyRound, Link as LinkIcon, Plus, RotateCcw, X } from "lucide-react";
 import { agentsApi } from "@/api/agents";
 import { projectsApi } from "@/api/projects";

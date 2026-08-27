@@ -18,7 +18,7 @@ export const createSkillAction = {
     "idempotency": "required",
     "disabledByDefault": false,
     "realBindingStatus": "live_codex",
-    "realServiceBinding": "PaperclipRunnerToolAuthority",
+    "realServiceBinding": "ThinkingMachRunnerToolAuthority",
     "prpEvidence": "Authenticated company skill API, saved skill and initial version, and task-bound creation activity.",
     "prpBindingStatus": "bound",
     "legacyAliases": []

@@ -1,5 +1,5 @@
 import { AlertTriangle, ExternalLink, Loader2, Lock, RefreshCw } from "lucide-react";
-import type { PipelineCaseLiveness } from "@paperclipai/shared";
+import type { PipelineCaseLiveness } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/router";
 import { cn } from "../lib/utils";

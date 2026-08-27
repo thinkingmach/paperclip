@@ -37,7 +37,7 @@ export function seedOnboardingDraft(): void {
     ONBOARDING_STORAGE_KEY,
     JSON.stringify({
       step: ONBOARDING_ARC_ENTRY_STEP,
-      companyName: "Paperclip Storybook",
+      companyName: "ThinkingMach Storybook",
       agentName: "Darnold",
       agentRole: "general",
       // No `adapterType`. This draft describes a run standing on step 3, and a

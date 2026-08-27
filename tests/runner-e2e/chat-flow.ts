@@ -2,7 +2,7 @@ import { expect, type Page } from "@playwright/test";
 import { pollUntil, type RunnerApi } from "./api.js";
 import type {
   AskUserQuestionsPayload,
-  PaperclipQuestionSetPayload,
+  ThinkingMachQuestionSetPayload,
 } from "../../packages/shared/src/types/issue.js";
 import type { LiveFixtureValues } from "./live-fixtures.js";
 import type { MatrixExecution } from "./types.js";
@@ -185,7 +185,7 @@ export function createChatIdleFailureDetector(minimumProviderRuns: number) {
 /** Match the shared question form's durable/native presentation, including custom labels. */
 export function chatQuestionPresentation(
   payload: AskUserQuestionsPayload,
-): PaperclipQuestionSetPayload {
+): ThinkingMachQuestionSetPayload {
   if (payload.questionSet) return payload.questionSet;
   return {
     schema: "paperclip.question_set.v1",
@@ -581,7 +581,7 @@ export async function runChatFlow(input: ChatFlowInput) {
       });
       const teammate = await api.post<{ id: string }>(`/api/companies/${f.company.id}/agents`, {
         ...config, name: "Riley Reassignment", role: "engineer", reportsTo: f.agent.id,
-        instructionsBundle: { entryFile: "AGENTS.md", files: { "AGENTS.md": "Complete the assigned work and save the requested Paperclip document." } },
+        instructionsBundle: { entryFile: "AGENTS.md", files: { "AGENTS.md": "Complete the assigned work and save the requested ThinkingMach document." } },
       });
       const queued = await api.post<ChatIssue>(`/api/companies/${f.company.id}/issues`, {
         title: `Later checklist ${nonce}`, description: `Preserve this deferred scope ${draftMarker}.`,
@@ -589,7 +589,7 @@ export async function runChatFlow(input: ChatFlowInput) {
       });
       const ready = await api.post<ChatIssue>(`/api/companies/${f.company.id}/issues`, {
         title: `Ready checklist ${nonce}`, status: "todo",
-        description: `Write a short launch checklist as a Paperclip document attached to this task, including ${marker}. Complete this task after saving it.`,
+        description: `Write a short launch checklist as a ThinkingMach document attached to this task, including ${marker}. Complete this task after saving it.`,
       });
       await turn(`Assign the existing Ready checklist ${nonce} task to Riley Reassignment so Riley completes it. Also move the existing Later checklist ${nonce} task from you to Riley, keeping it in backlog. Preserve both tasks and their descriptions. Explain the handoff briefly here. Do not create replacement tasks or start the backlog work.`, 2);
       const observedTasks = await tasks();
@@ -650,7 +650,7 @@ export async function runChatFlow(input: ChatFlowInput) {
               (c) => c.authorAgentId && isChatClarificationReply(c.body),
             ),
         ).toBe(true);
-        const clarification = `It is the garden club; use the existing Garden ${nonce} project. Make one assigned task for yourself to write a two-sentence welcome note. Include ${marker} in that note, save it as a Paperclip document attached to that execution task, and finish that execution task. Please get it started now.`;
+        const clarification = `It is the garden club; use the existing Garden ${nonce} project. Make one assigned task for yourself to write a two-sentence welcome note. Include ${marker} in that note, save it as a ThinkingMach document attached to that execution task, and finish that execution task. Please get it started now.`;
         if (pendingQuestions?.length) {
           for (const [index, question] of pendingQuestions.entries()) {
             const textInput = page
@@ -699,7 +699,7 @@ export async function runChatFlow(input: ChatFlowInput) {
           .getByText("Plan mode", { exact: true })
           .click();
         await turn(
-          `Let's plan a two-sentence garden club welcome note. The finished welcome note itself must contain the exact phrase ${draftMarker}. Write a plan in the plan panel that includes this requirement, and present it for approval. When I approve the final revision, create a suitable repository-free project and an assigned task for yourself, copy the plan into that task, and have it save the note as a Paperclip document attached to that execution task and finish. Do not create the project or task before approval.`,
+          `Let's plan a two-sentence garden club welcome note. The finished welcome note itself must contain the exact phrase ${draftMarker}. Write a plan in the plan panel that includes this requirement, and present it for approval. When I approve the final revision, create a suitable repository-free project and an assigned task for yourself, copy the plan into that task, and have it save the note as a ThinkingMach document attached to that execution task and finish. Do not create the project or task before approval.`,
           1,
         );
         const draft = await api.get<Plan>(
@@ -745,7 +745,7 @@ export async function runChatFlow(input: ChatFlowInput) {
           .locator('[contenteditable="true"],textarea')
           .first()
           .fill(
-            `Revise the plan: the finished welcome note itself must contain the exact phrase ${marker} instead of ${draftMarker}. Include that requirement in the revised plan. The execution task should save that welcome note as a Paperclip document attached to that task. Present this revised plan for approval; wait for that approval before handing it off as agreed.`,
+            `Revise the plan: the finished welcome note itself must contain the exact phrase ${marker} instead of ${draftMarker}. Include that requirement in the revised plan. The execution task should save that welcome note as a ThinkingMach document attached to that task. Present this revised plan for approval; wait for that approval before handing it off as agreed.`,
           );
         await reviseButton.click();
         await idle(2);
@@ -805,7 +805,7 @@ export async function runChatFlow(input: ChatFlowInput) {
           ),
         ).toHaveLength(0);
         await turn(
-          `Create a project called Repository Discussion ${nonce} for work spanning https://github.com/octocat/Hello-World and https://github.com/octocat/Spoon-Knife. These existing public repositories are not in our catalog; register both URLs. Then make one assigned task for yourself to write a two-sentence description of the intended project as a Paperclip document attached to that execution task, containing ${marker}, and complete that task. No code changes or remote repository creation are needed.`,
+          `Create a project called Repository Discussion ${nonce} for work spanning https://github.com/octocat/Hello-World and https://github.com/octocat/Spoon-Knife. These existing public repositories are not in our catalog; register both URLs. Then make one assigned task for yourself to write a two-sentence description of the intended project as a ThinkingMach document attached to that execution task, containing ${marker}, and complete that task. No code changes or remote repository creation are needed.`,
           2,
         );
       }

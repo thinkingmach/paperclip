@@ -15,9 +15,9 @@ import {
   toolProfileBindings,
   toolProfileEntries,
   toolProfiles,
-} from "@paperclipai/db";
-import type { AdapterRuntimeMcpServer } from "@paperclipai/adapter-utils";
-import type { PaperclipSkillEntry } from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/db";
+import type { AdapterRuntimeMcpServer } from "@thinkingmach/adapter-utils";
+import type { ThinkingMachSkillEntry } from "@thinkingmach/adapter-utils/server-utils";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -54,12 +54,12 @@ async function waitForRunToFinish(
 describeEmbeddedPostgres("heartbeat runtime skill version pins", () => {
   let db!: ReturnType<typeof createDb>;
   let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
-  let oldPaperclipHome: string | undefined;
-  let oldPaperclipApiUrl: string | undefined;
-  let paperclipHome: string | null = null;
+  let oldThinkingMachHome: string | undefined;
+  let oldThinkingMachApiUrl: string | undefined;
+  let thinkingmachHome: string | null = null;
   const capturedRuns: Array<{
     agentId: string;
-    skills: PaperclipSkillEntry[];
+    skills: ThinkingMachSkillEntry[];
     mcpServers: AdapterRuntimeMcpServer[];
     config: Record<string, unknown>;
     serializedRuntimeInput: string;
@@ -69,14 +69,14 @@ describeEmbeddedPostgres("heartbeat runtime skill version pins", () => {
   beforeAll(async () => {
     tempDb = await startEmbeddedPostgresTestDatabase("heartbeat-runtime-skills-");
     db = createDb(tempDb.connectionString);
-    oldPaperclipHome = process.env.PAPERCLIP_HOME;
-    paperclipHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-skills-home-"));
-    process.env.PAPERCLIP_HOME = paperclipHome;
-    // The server normalizes PAPERCLIP_API_URL into its own env at boot
+    oldThinkingMachHome = process.env.THINKINGMACH_HOME;
+    thinkingmachHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-runtime-skills-home-"));
+    process.env.THINKINGMACH_HOME = thinkingmachHome;
+    // The server normalizes THINKINGMACH_API_URL into its own env at boot
     // (server/src/index.ts); heartbeat gateway delivery requires it, so pin
     // a deterministic value for tests that never boot the full server.
-    oldPaperclipApiUrl = process.env.PAPERCLIP_API_URL;
-    process.env.PAPERCLIP_API_URL = "http://127.0.0.1:3100/api";
+    oldThinkingMachApiUrl = process.env.THINKINGMACH_API_URL;
+    process.env.THINKINGMACH_API_URL = "http://127.0.0.1:3100/api";
     registerServerAdapter({
       type: TEST_ADAPTER_TYPE,
       execute: async (ctx) => {
@@ -88,7 +88,7 @@ describeEmbeddedPostgres("heartbeat runtime skill version pins", () => {
         await ctx.onLog("stdout", `${serializedRuntimeInput}\n`);
         capturedRuns.push({
           agentId: ctx.agent.id,
-          skills: (ctx.config.paperclipRuntimeSkills ?? []) as PaperclipSkillEntry[],
+          skills: (ctx.config.thinkingmachRuntimeSkills ?? []) as ThinkingMachSkillEntry[],
           mcpServers: ctx.runtimeMcp?.getServers() ?? [],
           config: ctx.config,
           serializedRuntimeInput,
@@ -134,12 +134,12 @@ describeEmbeddedPostgres("heartbeat runtime skill version pins", () => {
 
   afterAll(async () => {
     unregisterServerAdapter(TEST_ADAPTER_TYPE);
-    if (oldPaperclipHome === undefined) delete process.env.PAPERCLIP_HOME;
-    else process.env.PAPERCLIP_HOME = oldPaperclipHome;
-    if (oldPaperclipApiUrl === undefined) delete process.env.PAPERCLIP_API_URL;
-    else process.env.PAPERCLIP_API_URL = oldPaperclipApiUrl;
-    if (paperclipHome) {
-      await fs.rm(paperclipHome, { recursive: true, force: true });
+    if (oldThinkingMachHome === undefined) delete process.env.THINKINGMACH_HOME;
+    else process.env.THINKINGMACH_HOME = oldThinkingMachHome;
+    if (oldThinkingMachApiUrl === undefined) delete process.env.THINKINGMACH_API_URL;
+    else process.env.THINKINGMACH_API_URL = oldThinkingMachApiUrl;
+    if (thinkingmachHome) {
+      await fs.rm(thinkingmachHome, { recursive: true, force: true });
     }
     await tempDb?.cleanup();
   });
@@ -156,7 +156,7 @@ describeEmbeddedPostgres("heartbeat runtime skill version pins", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix,
       requireBoardApprovalForNewAgents: false,
       defaultResponsibleUserId: "responsible-user",

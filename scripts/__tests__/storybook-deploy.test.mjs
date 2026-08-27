@@ -7,7 +7,7 @@ const ownerFile = ".github/** @cryppadotta @devinfoley @nickyleach @forgottendev
 function fixture(overrides = {}) {
   const calls = [];
   const context = {
-    repo: { owner: "paperclipai", repo: "paperclip" },
+    repo: { owner: "thinkingmach", repo: "paperclip" },
     eventName: "workflow_dispatch",
     ref: "refs/heads/codex/example",
     actor: "cryppadotta",
@@ -57,7 +57,7 @@ test("comments, teams, emails and partial account matches do not grant access", 
   for (const codeowners of [
     "# @cryppadotta\n.github/** @other",
     ".github/** @other # @cryppadotta",
-    ".github/** @paperclipai/cryppadotta",
+    ".github/** @thinkingmach/cryppadotta",
     ".github/** cryppadotta@example.com",
     ".github/** @cryppadotta-extra",
     "",

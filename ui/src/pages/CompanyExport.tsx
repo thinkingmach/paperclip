@@ -7,7 +7,7 @@ import type {
   CompanyPortabilityExportResult,
   CompanyPortabilityManifest,
   Project,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { useNavigate, useLocation } from "@/lib/router";
 import { useCompany } from "../context/CompanyContext";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
@@ -39,14 +39,7 @@ import { useAgentOrder } from "../hooks/useAgentOrder";
 import { useProjectOrder } from "../hooks/useProjectOrder";
 import { buildPortableSidebarOrder } from "../lib/company-portability-sidebar";
 import { getPortableFileDataUrl, getPortableFileText, isPortableImageFile } from "../lib/portable-files";
-import {
-  Download,
-  LoaderCircle,
-  Package,
-  RotateCcw,
-  Search,
-  X,
-} from "lucide-react";
+import { Download, LoaderCircle, Package, RotateCcw, Search, X,  } from "lucide-react";
 import {
   type FileTreeNode,
   type FileTreeTone,
@@ -92,7 +85,7 @@ function checkedSlugs(checkedFiles: Set<string>): {
  * since the file has a known, simple structure produced by our own
  * renderYamlBlock.
  */
-function filterPaperclipYaml(yaml: string, checkedFiles: Set<string>): string {
+function filterThinkingMachYaml(yaml: string, checkedFiles: Set<string>): string {
   const slugs = checkedSlugs(checkedFiles);
   const lines = yaml.split("\n");
   const out: string[] = [];
@@ -443,7 +436,7 @@ function generateReadmeFromSelection(
 
   lines.push("## What's Inside");
   lines.push("");
-  lines.push("This is an [Agent Company](https://paperclip.ing) package.");
+  lines.push("This is an [Agent Company](https://thinkingmach.com) package.");
   lines.push("");
 
   const counts: Array<[string, number]> = [];
@@ -487,13 +480,13 @@ function generateReadmeFromSelection(
   lines.push("## Getting Started");
   lines.push("");
   lines.push("```bash");
-  lines.push("npx paperclipai company import this-github-url-or-folder");
+  lines.push("npx thinkingmach company import this-github-url-or-folder");
   lines.push("```");
   lines.push("");
-  lines.push("See [Paperclip](https://paperclip.ing) for more information.");
+  lines.push("See [ThinkingMach](https://thinkingmach.com) for more information.");
   lines.push("");
   lines.push("---");
-  lines.push(`Exported from [Paperclip](https://paperclip.ing) on ${new Date().toISOString().split("T")[0]}`);
+  lines.push(`Exported from [ThinkingMach](https://thinkingmach.com) on ${new Date().toISOString().split("T")[0]}`);
   lines.push("");
 
   return lines.join("\n");
@@ -910,7 +903,7 @@ export function CompanyExport() {
     // Filter .paperclip.yaml
     const yamlPath = exportData.paperclipExtensionPath;
     if (yamlPath && typeof exportData.files[yamlPath] === "string") {
-      filtered[yamlPath] = filterPaperclipYaml(exportData.files[yamlPath], checkedFiles);
+      filtered[yamlPath] = filterThinkingMachYaml(exportData.files[yamlPath], checkedFiles);
     }
 
     // Regenerate README.md based on checked selection

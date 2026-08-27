@@ -1,8 +1,8 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 
-const controlPath = process.env.PAPERCLIP_REVIEW_RESTART_FILE;
-if (!controlPath) throw new Error("PAPERCLIP_REVIEW_RESTART_FILE is required");
+const controlPath = process.env.THINKINGMACH_REVIEW_RESTART_FILE;
+if (!controlPath) throw new Error("THINKINGMACH_REVIEW_RESTART_FILE is required");
 let child: ChildProcess;
 let stopping = false;
 let restarting = false;

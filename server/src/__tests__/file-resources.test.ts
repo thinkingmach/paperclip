@@ -7,7 +7,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { activityLog, agents, companies, createDb, executionWorkspaces, goals, issues, projects, projectWorkspaces, type Db } from "@paperclipai/db";
+import { activityLog, agents, companies, createDb, executionWorkspaces, goals, issues, projects, projectWorkspaces, type Db } from "@thinkingmach/db";
 import { eq } from "drizzle-orm";
 import { errorHandler } from "../middleware/index.js";
 import {

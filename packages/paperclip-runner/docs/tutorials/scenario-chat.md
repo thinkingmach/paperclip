@@ -1,13 +1,13 @@
 # Scenario chat Tutorial: Chat With the Mock Control Plane
 
 **Time to first success: about 3 minutes.** One command opens a chat where you
-send prompts to a Capability scenario and watch exactly how the mock Paperclip
+send prompts to a Capability scenario and watch exactly how the mock ThinkingMach
 control plane was used on every turn. The tutorial runs from the repository
-root. It starts no Paperclip service, contacts no Paperclip control plane, and
+root. It starts no ThinkingMach service, contacts no ThinkingMach control plane, and
 holds no provider credential.
 
 Scenario chat extends the Capability browser surface; it does not integrate the runner
-into Paperclip. Real integration is future upload integration and requires separate approval. See
+into ThinkingMach. Real integration is future upload integration and requires separate approval. See
 [the future binding boundary reference](../capability-future-binding-boundary.md).
 
 ## What you need
@@ -18,13 +18,13 @@ into Paperclip. Real integration is future upload integration and requires separ
 Install the package workspace from the repository root:
 
 ```sh
-pnpm install --filter @paperclipai/paperclip-runner --lockfile=false --offline --ignore-scripts --dev
+pnpm install --filter @thinkingmach/paperclip-runner --lockfile=false --offline --ignore-scripts --dev
 ```
 
 ## 1. Open the chat (about 1 minute)
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner run demo:scenarios
+pnpm --filter @thinkingmach/paperclip-runner run demo:scenarios
 ```
 
 Open <http://127.0.0.1:4183/scenario-explorer/#/chat/ap-mcp-gate-01>.
@@ -107,8 +107,8 @@ confirmation: it reproduces an identical timeline.
 ## 6. Run the tests and record the evidence
 
 ```sh
-pnpm --filter @paperclipai/paperclip-runner run test:scenarios
-pnpm --filter @paperclipai/paperclip-runner run test:browser:scenarios
+pnpm --filter @thinkingmach/paperclip-runner run test:scenarios
+pnpm --filter @thinkingmach/paperclip-runner run test:browser:scenarios
 # Recorded evidence generation is deferred from this release.
 ```
 

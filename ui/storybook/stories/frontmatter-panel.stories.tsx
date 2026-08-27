@@ -62,7 +62,7 @@ allowed-tools:
   - Grep
   - Bash
 metadata:
-  author: Paperclip
+  author: ThinkingMach
   version: 2`;
 
 const meta: Meta<typeof Harness> = {
@@ -142,7 +142,7 @@ allowed-tools:
   - Read
   - Grep
 metadata:
-  author: Paperclip`,
+  author: ThinkingMach`,
     hasFrontmatter: true,
     fileName: "reference/notes.md",
   },

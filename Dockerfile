@@ -130,17 +130,17 @@ RUN find packages/paperclip-runner/runner packages/paperclip-runner/protocol -ty
   && touch -d @0 packages/paperclip-runner/rust-toolchain.toml
 # Both the browser bundle and server stamp need the source commit. Declare it
 # after the stable dependency layers, before either application build.
-ARG PAPERCLIP_BUILD_COMMIT=""
-RUN pnpm --filter @paperclipai/ui build
-RUN pnpm --filter @paperclipai/plugin-sdk build
+ARG THINKINGMACH_BUILD_COMMIT=""
+RUN pnpm --filter @thinkingmach/ui build
+RUN pnpm --filter @thinkingmach/plugin-sdk build
 # The server build runs scripts/write-build-stamp.mjs, which stamps the built
 # commit into dist/build-info.json. The build context has no .git, so the
-# script reads PAPERCLIP_BUILD_COMMIT instead. Docker exposes an ARG to the
+# script reads THINKINGMACH_BUILD_COMMIT instead. Docker exposes an ARG to the
 # next RUN as an environment variable. The production stage below declares the
 # same ARG again for the runtime fallback; an ARG goes out of scope at the
 # end of its stage. Empty for local `docker build`, which then writes no stamp.
 ENV NODE_OPTIONS=--max-old-space-size=4096
-RUN pnpm --filter @paperclipai/server build
+RUN pnpm --filter @thinkingmach/server build
 RUN test -f server/dist/index.js || (echo "ERROR: server build output missing" && exit 1)
 RUN rm -rf packages/paperclip-runner/runner/target
 
@@ -174,22 +174,22 @@ COPY --chown=node:node --from=build /app /app
 # mention them; declaring these earlier invalidates the weekly tool cache.
 # The build stage still receives the commit before writing dist/build-info.json.
 # Empty for local builds, preserving the server's normal version fallbacks.
-ARG PAPERCLIP_BUILD_VERSION=""
-ARG PAPERCLIP_BUILD_COMMIT=""
+ARG THINKINGMACH_BUILD_VERSION=""
+ARG THINKINGMACH_BUILD_COMMIT=""
 ENV NODE_ENV=production \
   HOME=/paperclip \
   HOST=0.0.0.0 \
   PORT=3100 \
   SERVE_UI=true \
-  PAPERCLIP_HOME=/paperclip \
-  PAPERCLIP_INSTANCE_ID=default \
-  PAPERCLIP_BUILD_VERSION=${PAPERCLIP_BUILD_VERSION} \
-  PAPERCLIP_BUILD_COMMIT=${PAPERCLIP_BUILD_COMMIT} \
+  THINKINGMACH_HOME=/paperclip \
+  THINKINGMACH_INSTANCE_ID=default \
+  THINKINGMACH_BUILD_VERSION=${THINKINGMACH_BUILD_VERSION} \
+  THINKINGMACH_BUILD_COMMIT=${THINKINGMACH_BUILD_COMMIT} \
   USER_UID=${USER_UID} \
   USER_GID=${USER_GID} \
-  PAPERCLIP_CONFIG=/paperclip/instances/default/config.json \
-  PAPERCLIP_DEPLOYMENT_MODE=authenticated \
-  PAPERCLIP_DEPLOYMENT_EXPOSURE=private \
+  THINKINGMACH_CONFIG=/paperclip/instances/default/config.json \
+  THINKINGMACH_DEPLOYMENT_MODE=authenticated \
+  THINKINGMACH_DEPLOYMENT_EXPOSURE=private \
   OPENCODE_ALLOW_ALL_MODELS=true \
   GEMINI_SANDBOX=false
 
@@ -207,7 +207,7 @@ CMD ["node", "--import", "./server/node_modules/tsx/dist/loader.mjs", "server/di
 
 # Cloud image variant (build with `--target cloud`): the production image
 # plus built bundled sandbox-provider plugins. Managed instances receive a
-# `plugins.autoInstall` key list through PAPERCLIP_MANAGED_CONFIG and
+# `plugins.autoInstall` key list through THINKINGMACH_MANAGED_CONFIG and
 # install those plugins from the bundled catalog at boot
 # (server/src/services/bundled-plugins.ts), which requires each plugin's
 # dist/ to exist in the image — the default image ships only their source,

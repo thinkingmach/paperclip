@@ -26,7 +26,7 @@ const read = tool(
 const command = tool(
   "command",
   "exec_command",
-  "pnpm --filter @paperclipai/ui typecheck",
+  "pnpm --filter @thinkingmach/ui typecheck",
   "completed",
   "Typecheck passed.",
 );
@@ -167,7 +167,7 @@ const scenarios: Array<{
       tool(
         "mcp",
         "mcp__github__get_pull_request",
-        "paperclipai/paperclip #13255",
+        "thinkingmach/paperclip #13255",
       ),
     ],
   },

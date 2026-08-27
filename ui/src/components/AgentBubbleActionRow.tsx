@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import type {
   FeedbackDataSharingPreference,
   FeedbackVoteValue,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { cn, formatShortDate } from "../lib/utils";
 import { timeAgo } from "../lib/timeAgo";
 import { useCopyAction, useCopyToast } from "../lib/use-copy-action";
@@ -333,7 +333,7 @@ export function IssueChatFeedbackButtons({
           <DialogHeader>
             <DialogTitle>Save your feedback sharing preference</DialogTitle>
             <DialogDescription>
-              Choose whether voted AI outputs can be shared with Paperclip Labs. This
+              Choose whether voted AI outputs can be shared with ThinkingMach Labs. This
               answer becomes the default for future thumbs up and thumbs down votes.
             </DialogDescription>
           </DialogHeader>

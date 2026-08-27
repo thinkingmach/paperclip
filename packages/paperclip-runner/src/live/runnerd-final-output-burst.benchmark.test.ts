@@ -19,14 +19,14 @@ import {
 
 // Opt in explicitly; never build/stage runnerd or invoke a real provider here.
 // Run from packages/paperclip-runner:
-// PAPERCLIP_FINAL_BURST_BENCHMARK=1 pnpm exec vitest run src/live/runnerd-final-output-burst.benchmark.test.ts
-// PAPERCLIP_FINAL_BURST_BINARY optionally selects an isolated comparison build;
+// THINKINGMACH_FINAL_BURST_BENCHMARK=1 pnpm exec vitest run src/live/runnerd-final-output-burst.benchmark.test.ts
+// THINKINGMACH_FINAL_BURST_BINARY optionally selects an isolated comparison build;
 // the selected binary is still copied privately and verified unchanged.
 // This is an opt-in local filesystem benchmark, not a CPU-isolated performance
 // assertion. Repetitions share the host's background load and filesystem caches.
-const enabled = process.env.PAPERCLIP_FINAL_BURST_BENCHMARK === "1";
+const enabled = process.env.THINKINGMACH_FINAL_BURST_BENCHMARK === "1";
 const repetitions = Number(
-  process.env.PAPERCLIP_FINAL_BURST_REPETITIONS ?? "1",
+  process.env.THINKINGMACH_FINAL_BURST_REPETITIONS ?? "1",
 );
 if (
   enabled &&
@@ -59,8 +59,8 @@ it.skipIf(!enabled).each(cases)(
       const sourceCodexHome = join(root, "empty-codex-home");
       const providerState = join(root, "fixture-state.json");
       await mkdir(sourceCodexHome);
-      const staged = process.env.PAPERCLIP_FINAL_BURST_BINARY
-        ? resolve(process.env.PAPERCLIP_FINAL_BURST_BINARY)
+      const staged = process.env.THINKINGMACH_FINAL_BURST_BINARY
+        ? resolve(process.env.THINKINGMACH_FINAL_BURST_BINARY)
         : defaultCapabilityRunnerdBinary();
       const runnerBinary = join(root, "paperclip-runnerd");
       const binarySha256 = digest(await readFile(staged));

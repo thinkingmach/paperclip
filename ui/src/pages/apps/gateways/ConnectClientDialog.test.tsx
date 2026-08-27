@@ -8,7 +8,7 @@ import type {
   ToolMcpGatewayToken,
   ToolMcpGatewayTokenCreated,
   ToolMcpGatewayWithTokens,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ConnectClientDialog } from "./ConnectClientDialog";
 
@@ -127,7 +127,7 @@ function gateway(token: ToolMcpGatewayToken): ToolMcpGatewayWithTokens {
       label: "VS Code",
       config: {
         servers: {
-          Paperclip: {
+          ThinkingMach: {
             url: "/api/tool-gateway/gateways/public-1/mcp",
             headers: { Authorization: "Bearer pcgw_..." },
           },
@@ -175,7 +175,7 @@ describe("ConnectClientDialog", () => {
     });
     await new Promise((resolve) => window.setTimeout(resolve, 0));
 
-    expect(container.textContent).toContain("does not give it access to Paperclip or skills");
+    expect(container.textContent).toContain("does not give it access to ThinkingMach or skills");
     const copyButton = [...container.querySelectorAll("button")].find((button) => button.textContent?.trim() === "Copy");
     if (!copyButton) throw new Error("snippet copy button missing");
     copyButton.click();

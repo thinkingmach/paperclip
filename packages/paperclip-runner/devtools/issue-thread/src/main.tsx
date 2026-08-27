@@ -9,7 +9,7 @@ import "./evalbook-site.css";
 // inline executable script or network fetch is needed to load an attempt.
 const reportData = document.getElementById("paperclip-eval-report");
 if (reportData !== null) {
-  window.__PAPERCLIP_EVAL_REPORT__ = JSON.parse(
+  window.__THINKINGMACH_EVAL_REPORT__ = JSON.parse(
     reportData.textContent ?? "null",
   );
 }

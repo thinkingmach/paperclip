@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
-  buildPaperclipTaskMarkdown,
+  buildThinkingMachTaskMarkdown,
   mergeCoalescedContextSnapshot,
   summarizeHeartbeatRunContextSnapshot,
   summarizeHeartbeatRunListResultJson,
 } from "../services/heartbeat.js";
 
-describe("buildPaperclipTaskMarkdown", () => {
+describe("buildThinkingMachTaskMarkdown", () => {
   it.each(["standard", "planning", "ask"])("selects directives only from explicit %s mode, even when a plan is requested", (workMode) => {
     for (const prose of [
       { title: "Prepare rollout steps", description: "Describe the steps." },
@@ -14,7 +14,7 @@ describe("buildPaperclipTaskMarkdown", () => {
       { title: "Implement the change now", description: "No planning needed; everything is approved." },
     ]) {
       for (const includeDescription of [true, false]) {
-        const prompt = buildPaperclipTaskMarkdown({
+        const prompt = buildThinkingMachTaskMarkdown({
           issue: { id: "task", identifier: null, workMode, ...prose },
           includeDescription,
         })!;
@@ -35,7 +35,7 @@ describe("buildPaperclipTaskMarkdown", () => {
     };
     for (const includeDescription of [true, false]) {
       for (const workMode of ["standard", "planning", "ask"]) {
-        const prompt = buildPaperclipTaskMarkdown({
+        const prompt = buildThinkingMachTaskMarkdown({
           issue: { id: "task", identifier: null, title: "Handoff", workMode, description: null },
           taskPlan,
           includeDescription,
@@ -48,13 +48,13 @@ describe("buildPaperclipTaskMarkdown", () => {
         if (workMode === "ask") expect(prompt).toContain("Answer the question directly");
       }
     }
-    expect(buildPaperclipTaskMarkdown({
+    expect(buildThinkingMachTaskMarkdown({
       issue: { id: "chat", identifier: null, title: "Chat", conversationAgentId: "agent" },
       taskPlan,
     })).not.toContain("ACCEPTANCE_PHRASE");
   });
   it("hands an accepted chat plan to assigned project tasks using the approved revision", () => {
-    const prompt = buildPaperclipTaskMarkdown({
+    const prompt = buildThinkingMachTaskMarkdown({
       issue: { id: "chat", identifier: null, title: "Agent chat", workMode: "planning", conversationAgentId: "agent", description: null },
       interaction: { kind: "request_confirmation", status: "accepted" },
       acceptedPlan: { documentId: "plan-document", revisionId: "approved-revision", revisionNumber: 2 },
@@ -67,7 +67,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it.each(["ask", "new-comment", "unbound-confirmation"])("does not treat %s as plan handoff authorization", (kind) => {
-    const prompt = buildPaperclipTaskMarkdown({
+    const prompt = buildThinkingMachTaskMarkdown({
       issue: { id: "chat", identifier: null, title: "Agent chat", workMode: kind === "ask" ? "ask" : "planning", conversationAgentId: "agent", description: null },
       interaction: { kind: "request_confirmation", status: "accepted" },
       ...(kind === "unbound-confirmation" ? {} : { acceptedPlan: { documentId: "plan-document", revisionId: "approved-revision", revisionNumber: 2 } }),
@@ -77,7 +77,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("surfaces every coalesced wake comment in provider order", () => {
-    const markdown = buildPaperclipTaskMarkdown({
+    const markdown = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-burst",
         identifier: "PAP-5000",
@@ -110,7 +110,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("surfaces exact wake-comment attachment descriptors and inspection guidance", () => {
-    const markdown = buildPaperclipTaskMarkdown({
+    const markdown = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-attachments",
         identifier: "PAP-5001",
@@ -150,8 +150,8 @@ describe("buildPaperclipTaskMarkdown", () => {
     expect(markdown).toContain(
       '"contentPath":"/api/attachments/attachment-text/content"',
     );
-    expect(markdown).toContain("PAPERCLIP_API_URL");
-    expect(markdown).toContain("PAPERCLIP_API_KEY");
+    expect(markdown).toContain("THINKINGMACH_API_URL");
+    expect(markdown).toContain("THINKINGMACH_API_KEY");
     expect(markdown).toContain("never invoke `npx`");
     expect(markdown).toContain(
       "Do not infer file contents from filenames or metadata",
@@ -161,7 +161,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   it.each(["slack", "discord", "telegram", "microsoft-teams", "github"])(
     "directs %s file replies through the bundled artifact handoff",
     (externalChatProvider) => {
-      const markdown = buildPaperclipTaskMarkdown({
+      const markdown = buildThinkingMachTaskMarkdown({
         issue: {
           id: "issue-file-reply",
           title: "Send the requested image and file",
@@ -186,7 +186,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   );
 
   it("omits external file handoff instructions from non-chat tasks", () => {
-    const markdown = buildPaperclipTaskMarkdown({
+    const markdown = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-internal",
         title: "An internal task",
@@ -201,7 +201,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   it.each(["slack", "discord", "telegram", "microsoft-teams", "github"])(
     "directs native %s files through scoped tools without legacy credentials",
     (externalChatProvider) => {
-      const markdown = buildPaperclipTaskMarkdown({
+      const markdown = buildThinkingMachTaskMarkdown({
         issue: {
           id: "native-files",
           title: "Inspect and share requested files",
@@ -245,7 +245,7 @@ describe("buildPaperclipTaskMarkdown", () => {
       expect(markdown).toContain("do not suppress transport-managed progress");
       expect(markdown).toContain('"id":"native-attachment"');
       expect(markdown).not.toContain("paperclip-upload-artifact.sh");
-      expect(markdown).not.toContain("PAPERCLIP_API_KEY");
+      expect(markdown).not.toContain("THINKINGMACH_API_KEY");
       expect(markdown).not.toContain("/api/attachments/");
     },
   );
@@ -254,7 +254,7 @@ describe("buildPaperclipTaskMarkdown", () => {
     { nativeRunner: false, externalChatProvider: "slack" },
     { nativeRunner: true, externalChatProvider: null },
   ])("keeps native media batching out of unrelated instruction paths: %j", (mode) => {
-    const markdown = buildPaperclipTaskMarkdown({
+    const markdown = buildThinkingMachTaskMarkdown({
       issue: { id: "other-workflow", identifier: null, title: "Other work" },
       ...mode,
     });
@@ -263,7 +263,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("does not imply that GitHub chat grants attachment or repository-tool access", () => {
-    const markdown = buildPaperclipTaskMarkdown({
+    const markdown = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-github-chat",
         identifier: "PAP-5002",
@@ -288,7 +288,7 @@ describe("buildPaperclipTaskMarkdown", () => {
       "do not ask for another chat connection",
     );
     expect(markdown).toContain(
-      "attach the file directly to this Paperclip task or paste the needed text",
+      "attach the file directly to this ThinkingMach task or paste the needed text",
     );
     expect(markdown).toContain(
       "Never borrow browser cookies or forward credentials to an attachment URL",
@@ -296,7 +296,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("adds planning directives for assignment and comment task context", () => {
-    const assignment = buildPaperclipTaskMarkdown({
+    const assignment = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-1",
         identifier: "PAP-3404",
@@ -309,7 +309,7 @@ describe("buildPaperclipTaskMarkdown", () => {
     expect(assignment).toContain("- Work mode: \"planning\"");
     expect(assignment).toContain("Make the plan only. Do not write code or perform implementation work.");
 
-    const commentWake = buildPaperclipTaskMarkdown({
+    const commentWake = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-1",
         identifier: "PAP-3404",
@@ -325,7 +325,7 @@ describe("buildPaperclipTaskMarkdown", () => {
 
     expect(commentWake).toContain("Update the plan only. Do not write code or perform implementation work.");
 
-    const acceptedConfirmation = buildPaperclipTaskMarkdown({
+    const acceptedConfirmation = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-1",
         identifier: "PAP-3404",
@@ -346,7 +346,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("adds accepted-plan continuation guidance for standard-work issues when the wake is flagged as a plan continuation", () => {
-    const acceptedConfirmation = buildPaperclipTaskMarkdown({
+    const acceptedConfirmation = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-2",
         identifier: "PAP-415",
@@ -365,7 +365,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("adds answer-only guidance for ask-mode issues", () => {
-    const assignment = buildPaperclipTaskMarkdown({
+    const assignment = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-ask",
         identifier: "PAP-416",
@@ -383,7 +383,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("adds dry-run containment guidance for skill-test issues", () => {
-    const assignment = buildPaperclipTaskMarkdown({
+    const assignment = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-skill-test",
         identifier: "PAP-417",
@@ -414,11 +414,11 @@ describe("buildPaperclipTaskMarkdown", () => {
       },
     };
 
-    const full = buildPaperclipTaskMarkdown(input);
+    const full = buildThinkingMachTaskMarkdown(input);
     expect(full).toContain("Issue description:");
     expect(full).toContain("Full multi-paragraph brief that the session already received.");
 
-    const compact = buildPaperclipTaskMarkdown({ ...input, includeDescription: false });
+    const compact = buildThinkingMachTaskMarkdown({ ...input, includeDescription: false });
     expect(compact).not.toContain("Issue description:");
     expect(compact).not.toContain("Full multi-paragraph brief");
     expect(compact).toContain("- Issue: \"PAP-3404\"");
@@ -426,7 +426,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("makes the latest wake comment the immediate follow-up request", () => {
-    const commentWake = buildPaperclipTaskMarkdown({
+    const commentWake = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-follow-up",
         identifier: "PAP-418",
@@ -448,7 +448,7 @@ describe("buildPaperclipTaskMarkdown", () => {
   });
 
   it("prefers ordinary comment planning guidance over stale accepted confirmation state", () => {
-    const commentWake = buildPaperclipTaskMarkdown({
+    const commentWake = buildThinkingMachTaskMarkdown({
       issue: {
         id: "issue-1",
         identifier: "PAP-3404",

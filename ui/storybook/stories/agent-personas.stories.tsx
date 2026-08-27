@@ -2,7 +2,7 @@ import { agentAvatarUrl } from "@/lib/agent-avatar-url";
 import { expect, waitFor } from "storybook/test";
 import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AGENT_PALETTE_IDS, AGENT_AVATAR_SIZES, CHARACTER_STATES, appearanceForPalette, type CharacterState } from "@paperclipai/shared";
+import { AGENT_PALETTE_IDS, AGENT_AVATAR_SIZES, CHARACTER_STATES, appearanceForPalette, type CharacterState } from "@thinkingmach/shared";
 import { AgentAvatar, avatarSizeClasses } from "../../src/components/AgentAvatar";
 import { AgentCharacter } from "../../src/components/AgentCharacter";
 import { AgentIdentity } from "../../src/components/AgentIdentity";
@@ -14,7 +14,7 @@ const meta = {
   title: "Agents/Personas",
   component: AgentCharacter,
   args: { appearance, size: 256, state: "listening", label: "Chief of Staff" },
-  parameters: { docs: { description: { component: "Persistent cap-v1 identities. Avatars request on-demand PNGs from Paperclip; the hero alone loads ClipLab. Development Storybook uses PAPERCLIP_STORYBOOK_API_URL. Published Storybook packages PNGs from the same API renderer automatically during its build, including every preset and both densities; no running API is required." } } },
+  parameters: { docs: { description: { component: "Persistent cap-v1 identities. Avatars request on-demand PNGs from ThinkingMach; the hero alone loads ClipLab. Development Storybook uses THINKINGMACH_STORYBOOK_API_URL. Published Storybook packages PNGs from the same API renderer automatically during its build, including every preset and both densities; no running API is required." } } },
   argTypes: {
     state: { control: "select", options: CHARACTER_STATES },
     size: { control: "select", options: AGENT_AVATAR_SIZES },
@@ -89,7 +89,7 @@ export const ImageFailure: Story = {
   },
 };
 export const CacheMissLoading: Story = {
-  render: () => <div className="flex items-center gap-4"><AgentAvatar agent={agent} size={64} /><span className="text-sm">The image slot keeps its dimensions while Paperclip renders a cold cache entry.</span></div>,
+  render: () => <div className="flex items-center gap-4"><AgentAvatar agent={agent} size={64} /><span className="text-sm">The image slot keeps its dimensions while ThinkingMach renders a cold cache entry.</span></div>,
 };
 function WebGLFailure() {
   const region = useRef<HTMLDivElement>(null);
@@ -110,7 +110,7 @@ function SnapshotPair({ size = 256, state = "rest", density = 2 }: SnapshotPairP
   useEffect(() => {
     let disposed = false;
     let cleanup: (() => void) | undefined;
-    void Promise.all([import("@paperclipai/shared/cliplab/renderer"), import("@paperclipai/shared/cliplab/definition")]).then(([{ CharacterRenderer }, library]) => {
+    void Promise.all([import("@thinkingmach/shared/cliplab/renderer"), import("@thinkingmach/shared/cliplab/definition")]).then(([{ CharacterRenderer }, library]) => {
       if (disposed || !host.current) return;
       const canvas = document.createElement("canvas");
       canvas.className = "size-full";

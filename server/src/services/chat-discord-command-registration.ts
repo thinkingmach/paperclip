@@ -97,18 +97,18 @@ function freezeState(
 }
 
 /** The public marker is an identifier, never a credential or standalone proof. */
-export function discordPaperclipCommandDefinition(publicOwnerId: string) {
+export function discordThinkingMachCommandDefinition(publicOwnerId: string) {
   if (!ownerId.safeParse(publicOwnerId).success)
     throw new Error("Invalid Discord command owner identifier");
   return {
     type: 1,
     name: "paperclip",
-    description: `Paperclip session controls [pc:${publicOwnerId}]`,
+    description: `ThinkingMach session controls [pc:${publicOwnerId}]`,
     options: [
       {
         type: 1,
         name: "status",
-        description: "Show the current Paperclip task",
+        description: "Show the current ThinkingMach task",
       },
       {
         type: 1,
@@ -131,8 +131,8 @@ export function discordPaperclipCommandDefinition(publicOwnerId: string) {
 // One explicitly shipped prior definition. This is maintenance evidence only:
 // it never enables command handling before a current definition is confirmed.
 function priorCloseCopyDefinition(id: string) {
-  const definition = discordPaperclipCommandDefinition(id);
-  definition.options[2]!.description = "Close the current Paperclip task";
+  const definition = discordThinkingMachCommandDefinition(id);
+  definition.options[2]!.description = "Close the current ThinkingMach task";
   return definition;
 }
 
@@ -142,7 +142,7 @@ function definitionDigest(id: string, priorCloseCopy = false): string {
       JSON.stringify(
         priorCloseCopy
           ? priorCloseCopyDefinition(id)
-          : discordPaperclipCommandDefinition(id),
+          : discordThinkingMachCommandDefinition(id),
       ),
     )
     .digest("hex");
@@ -274,7 +274,7 @@ function exactDefinition(
     JSON.stringify(
       priorCloseCopy
         ? priorCloseCopyDefinition(id)
-        : discordPaperclipCommandDefinition(id),
+        : discordThinkingMachCommandDefinition(id),
     )
   );
 }
@@ -338,7 +338,7 @@ async function request(
             ? {}
             : {
                 body: JSON.stringify(
-                  discordPaperclipCommandDefinition(
+                  discordThinkingMachCommandDefinition(
                     (input.state as DiscordCommandRegistration).ownerId,
                   ),
                 ),

@@ -17,12 +17,12 @@ import {
   issues,
   nativeRunFinalizations,
   nativeRunResults,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   PrpEvent,
   PrpStructuredRunResult,
   PrpTerminalState,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 import { NativeSessionProtocolIntegrityError } from "../../vendor/paperclip-runner/index.js";
 
 import {
@@ -35,7 +35,7 @@ import {
 } from "../../realtime/runner-prp-ws.js";
 import { NativeRunCoordinatorStore } from "./native-run-coordinator-store.js";
 import { runnerPrpCoordinator } from "./runner-prp-coordinator.js";
-import { PaperclipRunnerSemanticAuthority } from "./runner-semantic-authority.js";
+import { ThinkingMachRunnerSemanticAuthority } from "./runner-semantic-authority.js";
 import { nativeSha256 } from "./canonical.js";
 
 const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
@@ -302,7 +302,7 @@ describeEmbeddedPostgres("hidden runner PRP coordinator", () => {
 
   it("rechecks task ownership and returns semantic receipts", async () => {
     const seed = await seedNativeRun();
-    const authority = new PaperclipRunnerSemanticAuthority(db, {
+    const authority = new ThinkingMachRunnerSemanticAuthority(db, {
       companyId: seed.companyId,
       issueId: seed.issueId,
       runId: seed.runId,

@@ -39,7 +39,7 @@ describe("shouldSyncCompanySelectionFromRoute", () => {
 
 describe("resolveArchivedCompanyBounce", () => {
   const archived = { id: "old", name: "Old Co", issuePrefix: "OLD", status: "archived" };
-  const active = { id: "pap", name: "Paperclip", issuePrefix: "PAP", status: "active" };
+  const active = { id: "pap", name: "ThinkingMach", issuePrefix: "PAP", status: "active" };
   const other = { id: "ret", name: "Retail", issuePrefix: "RET", status: "active" };
 
   it("bounces a cold arrival on an archived company's URL to the active selection", () => {
@@ -92,7 +92,7 @@ describe("resolveArchivedCompanyBounce", () => {
 
 describe("resolveCompanyArchiveDeparture", () => {
   const justArchived = { id: "old", name: "Old Co", issuePrefix: "OLD", status: "archived" };
-  const active = { id: "pap", name: "Paperclip", issuePrefix: "PAP", status: "active" };
+  const active = { id: "pap", name: "ThinkingMach", issuePrefix: "PAP", status: "active" };
   const alsoArchived = { id: "ret", name: "Retail", issuePrefix: "RET", status: "archived" };
   const portfolioUrl = "https://my.paperclip.app/orgs?manage=1";
 

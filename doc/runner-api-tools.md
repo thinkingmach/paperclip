@@ -10,10 +10,10 @@ initial prompt.
 
 The escape hatch is enabled by default. No environment variable is required.
 The native `hire_agent` tool shares this availability policy.
-Set `PAPERCLIP_RUNNER_API_TOOLS_ENABLED=false` on the server to disable these
+Set `THINKINGMACH_RUNNER_API_TOOLS_ENABLED=false` on the server to disable these
 tools. An explicit `true` also enables them; other explicit values fail closed.
 
-Operators can restrict availability with `PAPERCLIP_RUNNER_API_TOOLS_COMPANY_IDS`,
+Operators can restrict availability with `THINKINGMACH_RUNNER_API_TOOLS_COMPANY_IDS`,
 a comma-separated list of company UUIDs. An unset list allows every company;
 an explicitly empty list allows none. IDs must match exactly. This restriction
 also applies when the enabled flag is unset.
@@ -80,7 +80,7 @@ change count too. Attaching an asset converts its reservation to actual stored
 bytes; deleting the asset frees that capacity. Small binary snapshots also need
 storage admission. Ordinary inline text/JSON and existing-asset pages do not.
 
-Operators can set `PAPERCLIP_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES` to a positive
+Operators can set `THINKINGMACH_RUNNER_API_COMPANY_CAPTURE_MAX_BYTES` to a positive
 safe integer of at least 1 GiB. Invalid values fall back to 20 GiB. No zero or
 unlimited setting is accepted. This quota covers API snapshots, not all company
 attachments. Storage capacity and backend limits still apply.
@@ -137,7 +137,7 @@ exports or binary API downloads. It does not raise attachment upload limits or
 limit files an agent creates and edits inside its workspace. Saved asset downloads
 stream from storage and support byte ranges, including video seeking.
 
-`PAPERCLIP_ATTACHMENT_MAX_BYTES` separately defaults to 10 MiB for uploads and
+`THINKINGMACH_ATTACHMENT_MAX_BYTES` separately defaults to 10 MiB for uploads and
 native file handoffs. `call_api` uploads also have their own 10 MiB limit. Several
 upload and handoff paths buffer complete files in memory; raising those defaults
 to GiB sizes requires streaming ingestion and corresponding admission/budget

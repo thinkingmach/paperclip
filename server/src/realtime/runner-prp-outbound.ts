@@ -1,5 +1,5 @@
 import WebSocket from "ws";
-import type { RunnerIngressEndpoint } from "@paperclipai/adapter-utils/runner-connectivity";
+import type { RunnerIngressEndpoint } from "@thinkingmach/adapter-utils/runner-connectivity";
 import type {
   DurablePrpControlPlane,
   PrpWireConnection,
@@ -243,7 +243,7 @@ export interface RunnerPrpOutboundHandle {
 }
 
 /**
- * Keep a Paperclip-originated provider-ingress WebSocket attached to one PRP
+ * Keep a ThinkingMach-originated provider-ingress WebSocket attached to one PRP
  * authority. Authentication is the readiness signal; HTTP success alone is not.
  */
 export function connectRunnerPrpIngress(input: {

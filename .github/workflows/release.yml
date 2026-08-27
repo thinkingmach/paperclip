@@ -73,7 +73,7 @@ env:
   # a real incident and the job failing is correct.
   #
   # Raised to 30 minutes on 2026-09-14, when 10 was not enough twice in a
-  # row: @paperclipai/server was accepted at 17:49:09 and became visible at
+  # row: @thinkingmach/server was accepted at 17:49:09 and became visible at
   # 18:04:29 — five minutes after the poll gave up. Each timeout aborts the
   # release mid-batch, leaving that version half-published, and because the
   # next version number is derived from what is already on npm the retry
@@ -94,11 +94,11 @@ jobs:
     # falls back to GitHub-hosted runners, including raced merge dispatches.
     name: Check preview artifacts
     if: github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch' && (inputs.channel == 'preview' || inputs.channel == 'cloud-migrator') && !inputs.dry_run
-    runs-on: ${{ vars.AWS_POST_MERGE_CI_ENABLED == 'true' && github.repository == 'paperclipai/paperclip' && github.repository_id == '1170821064' && github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.event_name == 'workflow_dispatch' && inputs.channel == 'cloud-migrator' && github.sha != '' && inputs.source_ref == github.sha && 'runs-on/fleet=paperclip-post-merge-x64/env=public-ci' || 'ubuntu-latest' }}
+    runs-on: ${{ vars.AWS_POST_MERGE_CI_ENABLED == 'true' && github.repository == 'thinkingmach/paperclip' && github.repository_id == '1170821064' && github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.event_name == 'workflow_dispatch' && inputs.channel == 'cloud-migrator' && github.sha != '' && inputs.source_ref == github.sha && 'runs-on/fleet=paperclip-post-merge-x64/env=public-ci' || 'ubuntu-latest' }}
     permissions:
       contents: read
     # Preserve the previous hosted default; only AWS needs the Fleet limit.
-    timeout-minutes: ${{ vars.AWS_POST_MERGE_CI_ENABLED == 'true' && github.repository == 'paperclipai/paperclip' && github.repository_id == '1170821064' && github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.event_name == 'workflow_dispatch' && inputs.channel == 'cloud-migrator' && github.sha != '' && inputs.source_ref == github.sha && 10 || 360 }}
+    timeout-minutes: ${{ vars.AWS_POST_MERGE_CI_ENABLED == 'true' && github.repository == 'thinkingmach/paperclip' && github.repository_id == '1170821064' && github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.event_name == 'workflow_dispatch' && inputs.channel == 'cloud-migrator' && github.sha != '' && inputs.source_ref == github.sha && 10 || 360 }}
     outputs:
       image: ${{ steps.plan.outputs.image }}
       packages: ${{ steps.plan.outputs.packages }}
@@ -122,7 +122,7 @@ jobs:
     name: Build preview migrator
     needs: plan_preview
     if: needs.plan_preview.outputs.packages == 'true'
-    runs-on: ${{ vars.AWS_POST_MERGE_CI_ENABLED == 'true' && github.repository == 'paperclipai/paperclip' && github.repository_id == '1170821064' && github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.event_name == 'workflow_dispatch' && inputs.channel == 'cloud-migrator' && github.sha != '' && inputs.source_ref == github.sha && 'runs-on/fleet=paperclip-post-merge-x64/env=public-ci' || 'ubuntu-latest' }}
+    runs-on: ${{ vars.AWS_POST_MERGE_CI_ENABLED == 'true' && github.repository == 'thinkingmach/paperclip' && github.repository_id == '1170821064' && github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.event_name == 'workflow_dispatch' && inputs.channel == 'cloud-migrator' && github.sha != '' && inputs.source_ref == github.sha && 'runs-on/fleet=paperclip-post-merge-x64/env=public-ci' || 'ubuntu-latest' }}
     timeout-minutes: 30
     permissions:
       contents: read
@@ -233,12 +233,12 @@ jobs:
           push: false
           provenance: false # Docker archives cannot carry registry attestations.
           outputs: type=docker,dest=${{ runner.temp }}/preview-image.tar
-          tags: ghcr.io/paperclipai/paperclip:sha-${{ inputs.source_ref }}-cloud
+          tags: ghcr.io/thinkingmach/paperclip:sha-${{ inputs.source_ref }}-cloud
           build-args: |
             CLOUD_BUNDLED_PLUGINS=daytona
             CLOUD_BUNDLED_SERVER_DEPS=@sentry/node
-            PAPERCLIP_BUILD_COMMIT=${{ inputs.source_ref }}
-            PAPERCLIP_BUILD_VERSION=0.0.0-preview.g${{ inputs.source_ref }}
+            THINKINGMACH_BUILD_COMMIT=${{ inputs.source_ref }}
+            THINKINGMACH_BUILD_VERSION=0.0.0-preview.g${{ inputs.source_ref }}
             CLI_TOOLS_CACHE_EPOCH=${{ env.TOOLS_EPOCH }}
           labels: |
             org.opencontainers.image.revision=${{ inputs.source_ref }}
@@ -316,7 +316,7 @@ jobs:
 
   verify_canary:
     name: Reuse exact-source verification
-    if: github.repository == 'paperclipai/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.repository == 'thinkingmach/paperclip' && github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 50
     permissions:
@@ -441,8 +441,8 @@ jobs:
     permissions:
       contents: read
     env:
-      PAPERCLIPAI_VERSION: ${{ needs.publish_canary.outputs.canary_version }}
-      PAPERCLIP_PLAYWRIGHT_CHANNEL: chrome
+      THINKINGMACH_VERSION: ${{ needs.publish_canary.outputs.canary_version }}
+      THINKINGMACH_PLAYWRIGHT_CHANNEL: chrome
 
     steps:
       - name: Checkout repository
@@ -466,7 +466,7 @@ jobs:
 
       - name: Smoke exact published canary through onboarding
         env:
-          PAPERCLIP_CANARY_SMOKE_SERVER_LOG: ${{ runner.temp }}/canary-onboarding-server.log
+          THINKINGMACH_CANARY_SMOKE_SERVER_LOG: ${{ runner.temp }}/canary-onboarding-server.log
         run: pnpm run test:canary-onboarding-smoke
 
       - name: Upload failed canary onboarding diagnostics
@@ -1157,7 +1157,7 @@ jobs:
 
           beta_version="${beta_tag#beta/v}"
           echo "beta_version=${beta_version}" >> "$GITHUB_OUTPUT"
-          publish_time="$(npm view "paperclipai@${beta_version}" time --json 2>/dev/null \
+          publish_time="$(npm view "thinkingmach@${beta_version}" time --json 2>/dev/null \
             | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const t=JSON.parse(d);process.stdout.write(typeof t === "string" ? t : (t[process.argv[1]] ?? ""))})' "$beta_version" || true)"
           if [ -z "$publish_time" ]; then
             fail_or_justify "could not determine the npm publish time of beta ${beta_version}."

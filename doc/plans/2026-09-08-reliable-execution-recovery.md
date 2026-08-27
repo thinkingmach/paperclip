@@ -48,7 +48,7 @@ Finish the runner build before browser acceptance. Do not rebuild generated prov
 
 ```sh
 pnpm exec playwright test --config tests/e2e/execution-recovery/playwright.config.ts recovery.spec.ts
-pnpm --filter @paperclipai/ui build-storybook
+pnpm --filter @thinkingmach/ui build-storybook
 RECOVERY_STORYBOOK_URL=http://127.0.0.1:6108 pnpm exec playwright test --config tests/e2e/execution-recovery/playwright.config.ts storybook.spec.ts
 ```
 

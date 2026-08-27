@@ -7,7 +7,7 @@ const workflow = readFileSync(new URL("../../workflows/release-verify.yml", impo
 const typecheck = workflow.split("  typecheck:\n")[1].split("  general_tests:\n")[0];
 const cache = typecheck.split("      - name: Cache typecheck Rust dependencies\n")[1].split("      - name: Validate release package manifest")[0];
 const sha = "a".repeat(40);
-const github = { repository: "paperclipai/paperclip", event_name: "push", ref: "refs/heads/master", sha };
+const github = { repository: "thinkingmach/paperclip", event_name: "push", ref: "refs/heads/master", sha };
 for (const [name, overrides, ref, allowed] of [
   ["exact master push", {}, sha, true],
   ["PR", { event_name: "pull_request", ref: "refs/pull/1/merge" }, sha, false],

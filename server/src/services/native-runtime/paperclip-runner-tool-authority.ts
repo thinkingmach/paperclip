@@ -10,13 +10,13 @@ import { isConnectorTool, executeConnectorTool, type ConnectorAssignment } from 
 import { resolveNativeRuntimeMcpSnapshot } from "./runtime-context.js";
 import { connectionIntentService } from "../connection-intents.js";
 import { RUNTIME_CONNECTION_TOOL_DEFINITIONS } from "../connection-tool-definitions.js";
-import { connectionsSearchInputSchema, connectionRequestInputSchema, CONNECTION_INTENT_AGENT_GUIDANCE } from "@paperclipai/shared";
+import { connectionsSearchInputSchema, connectionRequestInputSchema, CONNECTION_INTENT_AGENT_GUIDANCE } from "@thinkingmach/shared";
 import { createHash } from "node:crypto";
-import { paperclipChatFilePreparationDelivery } from "@paperclipai/adapter-utils/chat-file-delivery";
+import { paperclipChatFilePreparationDelivery } from "@thinkingmach/adapter-utils/chat-file-delivery";
 import {
-  isPaperclipExternalChatContractTurn,
-  normalizePaperclipWakePayload,
-} from "@paperclipai/adapter-utils/server-utils";
+  isThinkingMachExternalChatContractTurn,
+  normalizeThinkingMachWakePayload,
+} from "@thinkingmach/adapter-utils/server-utils";
 import { runnerApiToolsEnabled } from "./runner-api-rollout.js";
 import { openRunnerApiWorkspaceFile } from "./runner-api-files.js";
 import { basename } from "node:path";
@@ -30,7 +30,7 @@ import { searchRunnerApi } from "./runner-api-catalog.js";
 import { executeRunnerApi, validateRunnerApiCall, RUNNER_API_MAX_BYTES, type RunnerApiFile } from "./runner-api-client.js";
 import { acquireRunnerApiResponseSlot, runnerApiCompanyCaptureMaxBytes, RUNNER_API_RESPONSE_MAX_BYTES, RUNNER_API_RESPONSE_RUN_MAX_BYTES, RunnerApiResponseLimitError } from "./runner-api-response-limits.js";
 import { and, desc, eq, isNull, notInArray, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   activityLog,
   assets,
@@ -46,7 +46,7 @@ import {
   issueDocuments,
   issues,
   issueThreadInteractions,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { CAPABILITY_SEMANTIC_TOOL_CATALOG, runnerCodexDynamicToolsFit } from "../../vendor/paperclip-runner/index.js";
 import { agentService } from "../agents.js";
 import { approvalService } from "../approvals.js";
@@ -152,12 +152,12 @@ function canonicalJson(value: unknown): string {
   return JSON.stringify(value) ?? "null";
 }
 
-export class PaperclipRunnerToolAuthority {
+export class ThinkingMachRunnerToolAuthority {
   constructor(readonly db: Db, readonly binding: Binding) {}
 
   definitions(): Array<Record<string, unknown>> {
     if (this.binding.nativeReview) {
-      // Scope Paperclip control-plane actions. Provider file and shell access
+      // Scope ThinkingMach control-plane actions. Provider file and shell access
       // still follow the configured agent/environment policy, including tests.
       return [
         ...CAPABILITY_SEMANTIC_TOOL_CATALOG
@@ -195,7 +195,7 @@ export class PaperclipRunnerToolAuthority {
         name: descriptor.operationId,
         description:
           descriptor.operationId === "register_deliverable"
-            ? "Prepare one verified workspace file for Paperclip's final task or external-chat response. This records the attachment, work product, and explicit same-run selection; it does not confirm provider delivery."
+            ? "Prepare one verified workspace file for ThinkingMach's final task or external-chat response. This records the attachment, work product, and explicit same-run selection; it does not confirm provider delivery."
             : descriptor.description,
         inputSchema:
           descriptor.operationId === "register_deliverable"
@@ -255,7 +255,7 @@ export class PaperclipRunnerToolAuthority {
       if (!(this.binding.connectorAssignments ?? []).some((assignment) => assignment.tools.some((tool) => tool.name === call.tool))) throw forbidden("Connector tool is not available to this run");
       const { run } = await this.#boundContext();
       const snapshot = record(run.contextSnapshot);
-      if (call.tool.startsWith("agentmail_") && (isPaperclipExternalChatContractTurn(snapshot.paperclipWake) || String(snapshot.source ?? "").startsWith("chat:") || snapshot.paperclipExternalChatQuestionResponse)) throw forbidden("Restricted chat runs cannot use email actions");
+      if (call.tool.startsWith("agentmail_") && (isThinkingMachExternalChatContractTurn(snapshot.paperclipWake) || String(snapshot.source ?? "").startsWith("chat:") || snapshot.paperclipExternalChatQuestionResponse)) throw forbidden("Restricted chat runs cannot use email actions");
       return executeConnectorTool(this.db, this.binding, call.tool, call.arguments);
     }
     if (RUNTIME_CONNECTION_TOOL_DEFINITIONS.some((tool) => tool.name === call.tool)) {
@@ -369,7 +369,7 @@ export class PaperclipRunnerToolAuthority {
     }
     switch (call.tool) {
       case "create_skill": {
-        const apiUrl = this.binding.apiUrl ?? process.env.PAPERCLIP_API_URL;
+        const apiUrl = this.binding.apiUrl ?? process.env.THINKINGMACH_API_URL;
         const token = createLocalAgentJwt(this.binding.agentId, this.binding.companyId, context.actor.adapterType, this.binding.runId, context.run.responsibleUserId);
         if (!apiUrl || !token) throw new Error("Skill tool authentication is unavailable");
         return callCreateSkillTool({ arguments: input, apiUrl, token, companyId: this.binding.companyId });
@@ -377,7 +377,7 @@ export class PaperclipRunnerToolAuthority {
       case "create_project":
       case "list_project_repositories":
       case "list_projects": {
-        const apiUrl = this.binding.apiUrl ?? process.env.PAPERCLIP_API_URL;
+        const apiUrl = this.binding.apiUrl ?? process.env.THINKINGMACH_API_URL;
         const token = createLocalAgentJwt(this.binding.agentId, this.binding.companyId, context.actor.adapterType, this.binding.runId, context.run.responsibleUserId);
         if (!apiUrl || !token) throw new Error("Project tool authentication is unavailable");
         return callProjectTool({ name: call.tool, arguments: input, apiUrl, token,
@@ -526,10 +526,10 @@ export class PaperclipRunnerToolAuthority {
     const bound = await this.#boundContext();
     const context = { ...this.binding, issueIdentifier: bound.issue.identifier, workMode: bound.issue.workMode };
     const { input, operation } = validateRunnerApiCall(value, context);
-    const apiUrl = this.binding.apiUrl ?? process.env.PAPERCLIP_API_URL;
-    if (!apiUrl) throw new Error("Paperclip API origin is unavailable");
+    const apiUrl = this.binding.apiUrl ?? process.env.THINKINGMACH_API_URL;
+    if (!apiUrl) throw new Error("ThinkingMach API origin is unavailable");
     const token = createLocalAgentJwt(this.binding.agentId, this.binding.companyId, bound.actor.adapterType, this.binding.runId, bound.run.responsibleUserId);
-    if (!token) throw new Error("Paperclip run authentication is unavailable");
+    if (!token) throw new Error("ThinkingMach run authentication is unavailable");
     const execute = async () => {
       let reservationId: string | undefined;
       let storageAttempted = false;
@@ -784,7 +784,7 @@ export class PaperclipRunnerToolAuthority {
       if (review.interaction.status !== expectedStatus) throw badRequest("This review already has a different decision.");
       return { interactionId: review.interaction.id, status: expectedStatus, deduplicated: true };
     }
-    const apiUrl = this.binding.apiUrl ?? process.env.PAPERCLIP_API_URL;
+    const apiUrl = this.binding.apiUrl ?? process.env.THINKINGMACH_API_URL;
     const token = createLocalAgentJwt(this.binding.agentId, this.binding.companyId,
       context.actor.adapterType, this.binding.runId, context.run.responsibleUserId);
     if (!apiUrl || !token) throw new Error("Review tool authentication is unavailable");
@@ -792,7 +792,7 @@ export class PaperclipRunnerToolAuthority {
     // wakes and request-changes continuation have one implementation.
     const response = await fetch(`${apiUrl.replace(/\/$/, "")}/api/issues/${this.binding.issueId}/interactions/${review.interaction.id}/${input.decision}`, {
       method: "POST", redirect: "error", signal: AbortSignal.timeout(30_000),
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "X-Paperclip-Run-Id": this.binding.runId },
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "X-ThinkingMach-Run-Id": this.binding.runId },
       body: JSON.stringify(input.decision === "reject" ? { reason } : {}),
     });
     if (!response.ok) throw new Error(`Review decision was not accepted (${response.status}): ${(await response.text()).slice(0, 2_000)}`);
@@ -1501,10 +1501,10 @@ export class PaperclipRunnerToolAuthority {
           operationId === REUSE_CHAT_ATTACHMENT_TOOL_NAME;
         const snapshot = record(context.run.contextSnapshot);
         const wake = snapshot.paperclipWake;
-        const normalized = normalizePaperclipWakePayload(wake);
+        const normalized = normalizeThinkingMachWakePayload(wake);
         let provider =
           normalized?.issue?.id === this.binding.issueId &&
-          isPaperclipExternalChatContractTurn(wake)
+          isThinkingMachExternalChatContractTurn(wake)
             ? normalized.externalChatProvider
             : null;
         if (

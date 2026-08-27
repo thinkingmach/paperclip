@@ -3,7 +3,7 @@
 import type { ComponentProps } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
-import type { ExecutionWorkspace, Issue } from "@paperclipai/shared";
+import type { ExecutionWorkspace, Issue } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { IssueWorkspaceCard } from "./IssueWorkspaceCard";
 

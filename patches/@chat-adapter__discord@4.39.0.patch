@@ -5,7 +5,7 @@ index 8cd0ed50d..c01277fbe 100644
 @@ -1,4 +1,7 @@
  import { AsyncLocalStorage } from 'node:async_hooks';
 +import type { ModalElement } from 'chat';
-+/** Closed Paperclip native modal renderer; unsupported shapes throw. */
++/** Closed ThinkingMach native modal renderer; unsupported shapes throw. */
 +export declare function modalToDiscordPayload(modal: ModalElement, contextId: string): Record<string, unknown>;
  import { BaseFormatConverter, AdapterPostableMessage, Root, Logger, CardElement, Adapter, ChatInstance, UserInfo, WebhookOptions, RawMessage, EmojiValue, FetchOptions, FetchResult, ThreadInfo, Message, Attachment, FormattedContent, ListThreadsOptions, ListThreadsResult, ChannelInfo } from 'chat';
  import { Interaction, ChatInputCommandInteraction, MessageComponentInteraction, User, Client, Message as Message$1 } from 'discord.js';
@@ -174,7 +174,7 @@ index a42b61d58..a56ddef52 100644
      value: customId.slice(idx + 1)
    };
  }
-+// Paperclip modal v1: a durable opaque submit token plus Chat SDK's ephemeral
++// ThinkingMach modal v1: a durable opaque submit token plus Chat SDK's ephemeral
 +// context key. Neither the Discord interaction token nor user input is encoded.
 +function decodeDiscordModalId(value) {
 +  if (typeof value !== "string") return null;
@@ -968,7 +968,7 @@ index a42b61d58..a56ddef52 100644
 +        if (Date.now() < acknowledgementStartedAt + 2500)
 +          await interaction.reply({
 +            content:
-+              "This form could not be opened. Open the linked Paperclip task.",
++              "This form could not be opened. Open the linked ThinkingMach task.",
 +            flags: DiscordInteractionResponseFlag.Ephemeral,
 +            allowedMentions: { parse: [] },
 +          });
@@ -982,7 +982,7 @@ index a42b61d58..a56ddef52 100644
 +      ) {
 +        await interaction.reply({
 +          content:
-+            "This action is no longer available. Open the linked Paperclip task or ask an operator to link this account.",
++            "This action is no longer available. Open the linked ThinkingMach task or ask an operator to link this account.",
 +          flags: DiscordInteractionResponseFlag.Ephemeral,
 +        });
 +      }
@@ -1050,7 +1050,7 @@ index a42b61d58..a56ddef52 100644
 +        ? correction.message
 +        : response?.action === "clear"
 +          ? "Your response was received."
-+          : "This response was not accepted. Open the linked Paperclip task or reopen the question to try again.",
++          : "This response was not accepted. Open the linked ThinkingMach task or reopen the question to try again.",
 +      flags: DiscordInteractionResponseFlag.Ephemeral,
 +      allowedMentions: { parse: [] },
 +      ...(safeCorrection
@@ -1696,7 +1696,7 @@ index a42b61d58..a56ddef52 100644
    }
 +  /**
 +   * Idempotently create or recover the public thread rooted at a guild
-+   * message. Paperclip uses this after a process interruption between its
++   * message. ThinkingMach uses this after a process interruption between its
 +   * durable admission receipt and Discord's thread-creation response.
 +   */
 +  async ensureRootThread(channelId, messageId, content) {
@@ -3185,7 +3185,7 @@ index a42b61d58..a56ddef52 100644
 +          error.code === "chat_discord_gateway_action_rejected"
 +        ) {
 +          this.logger.info(
-+            "Discord Gateway action was not acknowledged after Paperclip rejected it",
++            "Discord Gateway action was not acknowledged after ThinkingMach rejected it",
 +            context,
 +          );
 +          return false;

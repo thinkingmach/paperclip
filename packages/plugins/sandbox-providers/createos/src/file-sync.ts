@@ -5,7 +5,7 @@ import { createReadStream, createWriteStream, promises as fs } from "node:fs";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import * as tar from "tar";
-import type { PluginEnvironmentSyncInParams, PluginEnvironmentSyncResult } from "@paperclipai/plugin-sdk";
+import type { PluginEnvironmentSyncInParams, PluginEnvironmentSyncResult } from "@thinkingmach/plugin-sdk";
 import { CreateosClient, identifier } from "./client.js";
 import { execute, shellQuote } from "./execute.js";
 

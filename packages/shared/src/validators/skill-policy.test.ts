@@ -53,7 +53,7 @@ describe("normalizeSkillPolicySourceLocator", () => {
 
   it.each([
     "/srv/company/skills/pr-gardening",
-    "@paperclipai/skill-pack",
+    "@thinkingmach/skill-pack",
     "https://gist.github.com/Owner/abc123",
     "https://raw.githubusercontent.com/Owner/Repo/main/SKILL.md",
     "https://docs.example/skill#installation",

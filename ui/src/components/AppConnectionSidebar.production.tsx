@@ -1,7 +1,7 @@
 import { ChevronLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { humanizeConnectionDisplayName } from "@paperclipai/shared";
-import type { ToolApplication, ToolConnection } from "@paperclipai/shared";
+import { humanizeConnectionDisplayName } from "@thinkingmach/shared";
+import type { ToolApplication, ToolConnection } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { toolsApi } from "@/api/tools";
 import { useCompany } from "@/context/CompanyContext";

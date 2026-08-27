@@ -7,7 +7,7 @@ import type {
   EmailThreadSummary,
   EmailSendInput,
   EmailEndpointSetupInput,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 export const emailApi = {
   connect: (companyId: string, input: EmailConnectionInput) =>
     api.post<ToolConnection>(

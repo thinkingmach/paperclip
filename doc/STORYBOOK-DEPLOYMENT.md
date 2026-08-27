@@ -6,7 +6,7 @@ existing private S3 bucket behind CloudFront. It does not deploy to GitHub Pages
 ## Current destination
 
 - AWS account: `078455283791`, region `us-east-1`
-- Bucket: `paperclipai-runner-e2e-history-078455283791-us-east-1`
+- Bucket: `thinkingmach-runner-e2e-history-078455283791-us-east-1`
 - Allowed upload prefix: `storybook/branches/`
 - Distribution: `E3GTU28BBO2SFR`
 - Public origin: `https://d1p6rlowie26tp.cloudfront.net`
@@ -40,7 +40,7 @@ Set repository variables:
 | --- | --- |
 | `STORYBOOK_AWS_ROLE_ARN` | `arn:aws:iam::078455283791:role/paperclip-storybook-github` |
 | `STORYBOOK_AWS_REGION` | `us-east-1` |
-| `STORYBOOK_S3_BUCKET` | `paperclipai-runner-e2e-history-078455283791-us-east-1` |
+| `STORYBOOK_S3_BUCKET` | `thinkingmach-runner-e2e-history-078455283791-us-east-1` |
 | `STORYBOOK_PUBLIC_BASE_URL` | `https://d1p6rlowie26tp.cloudfront.net` |
 
 No stored AWS access keys are needed. Leave the runner dashboard variables and

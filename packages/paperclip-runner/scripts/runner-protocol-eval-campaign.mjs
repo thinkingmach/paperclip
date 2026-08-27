@@ -73,7 +73,7 @@ export function credentialForConfig(config, grokAuthenticationMode = "api_key") 
     if (config.acpxAgent === "claude") return "ANTHROPIC_API_KEY";
     if (config.acpxAgent === "grok") {
       return validateGrokAuthenticationMode(grokAuthenticationMode) === "subscription"
-        ? "PAPERCLIP_ACPX_GROK_AUTH_JSON_SECRET"
+        ? "THINKINGMACH_ACPX_GROK_AUTH_JSON_SECRET"
         : "XAI_API_KEY";
     }
     if (config.acpxAgent === "codex") return "OPENAI_API_KEY";
@@ -727,8 +727,8 @@ async function main() {
       maxParallel: Number(argument(args, "--max-parallel", "100")),
       grokAuthenticationMode: argument(args, "--grok-authentication", "api_key"),
       source: {
-        paperclipSha: process.env.PAPERCLIP_PROTOCOL_EVAL_SOURCE_SHA ?? null,
-        evalsSha: process.env.PAPERCLIP_PROTOCOL_EVALS_SHA ?? null,
+        paperclipSha: process.env.THINKINGMACH_PROTOCOL_EVAL_SOURCE_SHA ?? null,
+        evalsSha: process.env.THINKINGMACH_PROTOCOL_EVALS_SHA ?? null,
       },
     });
     await mkdir(dirname(output), { recursive: true });
@@ -758,14 +758,14 @@ async function main() {
       campaignOut: resolve(argument(args, "--campaign-out")),
       source: {
         paperclip: {
-          sha: process.env.PAPERCLIP_PROTOCOL_EVAL_SOURCE_SHA,
-          ref: process.env.PAPERCLIP_PROTOCOL_EVAL_SOURCE_REF,
+          sha: process.env.THINKINGMACH_PROTOCOL_EVAL_SOURCE_SHA,
+          ref: process.env.THINKINGMACH_PROTOCOL_EVAL_SOURCE_REF,
         },
         evals: {
-          repository: "paperclipai/paperclip-evals",
-          sha: process.env.PAPERCLIP_PROTOCOL_EVALS_SHA,
+          repository: "thinkingmach/paperclip-evals",
+          sha: process.env.THINKINGMACH_PROTOCOL_EVALS_SHA,
         },
-        workflowRunUrl: process.env.PAPERCLIP_PROTOCOL_EVAL_WORKFLOW_URL,
+        workflowRunUrl: process.env.THINKINGMACH_PROTOCOL_EVAL_WORKFLOW_URL,
       },
     });
     console.log(json(campaign.totals).trim());

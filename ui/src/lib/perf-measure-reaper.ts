@@ -4,7 +4,7 @@
  * `detail.devtools` and are named after components). React never clears them, so
  * on a long-lived tab they accumulate into *millions* of native
  * `PerformanceMeasure` entries — gigabytes of memory that `performance.memory`
- * does not even report. On a busy Paperclip tab this was measured at ~340
+ * does not even report. On a busy ThinkingMach tab this was measured at ~340
  * measures/sec, reaching 12M+ entries after ~12h and dominating the tab's
  * footprint.
  *

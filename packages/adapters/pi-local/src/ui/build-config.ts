@@ -1,4 +1,4 @@
-import { buildAdapterEnvConfig, type CreateConfigValues } from "@paperclipai/adapter-utils";
+import { buildAdapterEnvConfig, type CreateConfigValues } from "@thinkingmach/adapter-utils";
 
 export function buildPiLocalConfig(v: CreateConfigValues): Record<string, unknown> {
   const ac: Record<string, unknown> = {};

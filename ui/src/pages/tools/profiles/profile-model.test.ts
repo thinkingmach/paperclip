@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from "vitest";
-import type { ToolCatalogEntry, ToolProfileEntry } from "@paperclipai/shared";
+import type { ToolCatalogEntry, ToolProfileEntry } from "@thinkingmach/shared";
 import {
   appCheckState,
   appSelectionLabel,

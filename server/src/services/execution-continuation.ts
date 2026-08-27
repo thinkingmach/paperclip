@@ -8,8 +8,8 @@ import {
   issueThreadInteractions,
   issues,
   type Db,
-} from "@paperclipai/db";
-import type { ExecutionContinuationEnvelope } from "@paperclipai/shared";
+} from "@thinkingmach/db";
+import type { ExecutionContinuationEnvelope } from "@thinkingmach/shared";
 import { sanitizeQuarantinedCommentForHigherTrust } from "./source-trust.js";
 import { hasConversationContinuationPolicy } from "./conversation-continuation.js";
 import { queuedCommentIdsFromWakePayload } from "./issue-queued-comment-queue.js";
@@ -404,7 +404,7 @@ export async function buildExecutionContinuation(input: {
         status: row.status,
         result: row.result,
       })), ...await childReviewOutcomes(db, companyId, issueId)],
-    // Low-trust evidence only: renderPaperclipWakePrompt removes completedWork
+    // Low-trust evidence only: renderThinkingMachWakePrompt removes completedWork
     // from requestContext and encodes it in the fenced, non-authoritative
     // continuation-evidence section. It cannot supply objective or authority.
     completedWork: input.summary ??

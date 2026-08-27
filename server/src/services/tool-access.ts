@@ -1,5 +1,5 @@
 import { COGNEE_STDIO_TEMPLATE, cogneeCloudUrl } from "./cognee-connection.js";
-import { isMemoryConnectorId, isRemoteMcpConnectorMethod, connectionPurposeTransportSchema } from "@paperclipai/shared";
+import { isMemoryConnectorId, isRemoteMcpConnectorMethod, connectionPurposeTransportSchema } from "@thinkingmach/shared";
 import { instanceSettingsService } from "./instance-settings.js";
 import { githubBotRequest } from "./chat-github-client.js";
 import { syncConnectionCredentialBindings } from "./connection-credential-bindings.js";
@@ -27,7 +27,7 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import {
   agents,
   connectionGrantMembers,
@@ -66,7 +66,7 @@ import {
   toolProfiles,
   toolRuntimeMetricCounters,
   toolRuntimeSlots,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   AppDefinition,
   ConnectionGrantKind,
@@ -149,7 +149,7 @@ import type {
   UnbindToolProfileBinding,
   VercelConnectCredentialReference,
   VercelConnectGrantReference,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   CLASS3_STATIC_LEASE_ALLOWLIST,
   GITHUB_CONNECTOR_PROFILES,
@@ -167,19 +167,19 @@ import {
   resolveConnectionMethodServerUrl,
   type GitHubConnectorProfileId,
   type GoogleWorkspaceConnectorProfileId,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   checkMcpRemoteHeaderName,
   checkMcpRemoteHeaderValue,
   mcpRemoteHeaderNameFromConfigPath,
   mcpRemoteHeaderRejectionMessage,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   checkOAuthEndpointUrl,
   oauthEndpointUrlRejectionMessage,
   type OAuthEndpointKind,
   type OAuthEndpointUrlRejection,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import {
   badRequest,
   conflict,
@@ -217,7 +217,7 @@ import {
 } from "./remote-url-credentials.js";
 import { secretService } from "./secrets.js";
 import { agentmailApi } from "./agentmail-api.js";
-import type { ConfigureRailwaySsh, RailwaySshSetup } from "@paperclipai/shared";
+import type { ConfigureRailwaySsh, RailwaySshSetup } from "@thinkingmach/shared";
 import { generateRailwaySshKey, RAILWAY_SSH_SECRET_PATH, validateRailwayKnownHosts } from "./railway-ssh.js";
 import { createRailwayClient, discoverRailwayWorkspace, isRailwayConnection, isRailwayEndpoint, isRailwayToolBlocked, normalizeRailwayToolName, RAILWAY_TOOLS, RAILWAY_TOOL_PREFIX, railwayRisk, RailwayError } from "./railway.js";
 import { toolAccessPolicyService } from "./tool-access-policy.js";
@@ -240,15 +240,15 @@ import {
   ToolRuntimeSupervisorError,
 } from "./tool-runtime-supervisor.js";
 import { listConnectionLifecycleEvents } from "./tool-connection-activity.js";
-import { isRetiredComposioConnection, RETIRED_COMPOSIO_MESSAGE } from "@paperclipai/shared";
+import { isRetiredComposioConnection, RETIRED_COMPOSIO_MESSAGE } from "@thinkingmach/shared";
 import {
-  appWithPaperclipCloudConnectorAvailability,
+  appWithThinkingMachCloudConnectorAvailability,
   paperclipCloudConnectorCapabilitiesFromEnv,
-  createPaperclipCloudConnector,
-  isPaperclipCloudConnectorStrategy,
+  createThinkingMachCloudConnector,
+  isThinkingMachCloudConnectorStrategy,
   paperclipCloudConnectorConfigFromEnv,
-  PaperclipCloudConnectorError,
-  type PaperclipCloudConnector,
+  ThinkingMachCloudConnectorError,
+  type ThinkingMachCloudConnector,
 } from "./paperclip-cloud-connector.js";
 import {
   createVercelConnectClient,
@@ -288,13 +288,13 @@ const OAUTH_REFRESH_LEASE_POLL_MS = 25;
  *
  * A generic remote MCP connection points at an arbitrary authorization server,
  * so everything that server says about a failure is attacker-chosen: `error`,
- * `error_description`, `error_uri`, and the response body. Paperclip surfaces
+ * `error_description`, `error_uri`, and the response body. ThinkingMach surfaces
  * connection failures to the operator through API responses, board UI copy,
  * audit rows and logs, so reflecting any of that text would let a hostile
  * provider plant secrets, ANSI escapes, or instructions ("paste your recovery
- * key here") into Paperclip's own voice.
+ * key here") into ThinkingMach's own voice.
  *
- * The rule is therefore: the operator only ever reads text Paperclip authored.
+ * The rule is therefore: the operator only ever reads text ThinkingMach authored.
  * The provider's `error` code survives — as a *label* in structured `details`,
  * never in a message — and only when it is one of the codes the RFCs define,
  * because a label is still untrusted input. Everything else is dropped, and an
@@ -335,9 +335,9 @@ const MAX_OAUTH_PROVIDER_ERROR_LENGTH = 64;
 const OAUTH_PROVIDER_ERROR_PATTERN = /^[a-z0-9_-]+$/;
 
 /**
- * Stable, Paperclip-authored operator copy for each allowlisted provider error.
+ * Stable, ThinkingMach-authored operator copy for each allowlisted provider error.
  * Deliberately keyed on the code alone: the calling context is already carried
- * by the Paperclip `code` in `details`, so one table serves the callback,
+ * by the ThinkingMach `code` in `details`, so one table serves the callback,
  * token-exchange and registration paths without any of them composing a message
  * out of provider text.
  */
@@ -349,18 +349,18 @@ const OAUTH_PROVIDER_ERROR_MESSAGES: Record<string, string> = {
     "The authorization server needs consent to be granted. Try connecting again.",
   interaction_required:
     "The authorization server needs to be signed in to interactively. Try connecting again.",
-  invalid_client: "The authorization server rejected Paperclip's OAuth client.",
+  invalid_client: "The authorization server rejected ThinkingMach's OAuth client.",
   invalid_client_metadata:
-    "The authorization server rejected Paperclip's client registration details.",
+    "The authorization server rejected ThinkingMach's client registration details.",
   invalid_grant:
     "The authorization server rejected the authorization code or refresh token.",
   invalid_redirect_uri:
-    "The authorization server rejected Paperclip's callback URL.",
+    "The authorization server rejected ThinkingMach's callback URL.",
   invalid_request:
     "The authorization server rejected the request as malformed.",
   invalid_scope: "The authorization server rejected the requested permissions.",
   invalid_software_statement:
-    "The authorization server rejected Paperclip's client registration details.",
+    "The authorization server rejected ThinkingMach's client registration details.",
   login_required:
     "The authorization server needs to be signed in to. Try connecting again.",
   server_error:
@@ -368,20 +368,20 @@ const OAUTH_PROVIDER_ERROR_MESSAGES: Record<string, string> = {
   temporarily_unavailable:
     "The authorization server is temporarily unavailable. Try again shortly.",
   unapproved_software_statement:
-    "The authorization server rejected Paperclip's client registration details.",
+    "The authorization server rejected ThinkingMach's client registration details.",
   unauthorized_client:
-    "The authorization server refused to authorize Paperclip's OAuth client.",
+    "The authorization server refused to authorize ThinkingMach's OAuth client.",
   unsupported_grant_type:
-    "The authorization server does not support the grant Paperclip uses.",
+    "The authorization server does not support the grant ThinkingMach uses.",
   unsupported_response_type:
-    "The authorization server does not support the sign-in flow Paperclip uses.",
+    "The authorization server does not support the sign-in flow ThinkingMach uses.",
 };
 
 /**
  * Reduce a provider-supplied `error` to a bounded, allowlisted label safe to
  * keep in structured `details`. Returns `null` only when the provider sent no
  * `error` at all, so the caller can tell "silent failure" from "said something
- * Paperclip does not recognize".
+ * ThinkingMach does not recognize".
  */
 function normalizeOAuthProviderError(value: unknown): string | null {
   if (typeof value !== "string" || value.length === 0) return null;
@@ -397,7 +397,7 @@ function normalizeOAuthProviderError(value: unknown): string | null {
     : UNRECOGNIZED_OAUTH_PROVIDER_ERROR;
 }
 
-/** Paperclip's own message for a provider failure, never the provider's. */
+/** ThinkingMach's own message for a provider failure, never the provider's. */
 function oauthProviderErrorMessage(
   providerError: string | null,
   fallback: string,
@@ -408,7 +408,7 @@ function oauthProviderErrorMessage(
 
 /**
  * Where this deployment publishes its Client ID Metadata Document. The document's
- * own URL is the `client_id` Paperclip presents, so this path is a stable part of
+ * own URL is the `client_id` ThinkingMach presents, so this path is a stable part of
  * the deployment's public contract with every authorization server that has seen
  * it — changing it invalidates existing CIMD registrations.
  */
@@ -416,10 +416,10 @@ export const OAUTH_CLIENT_ID_METADATA_DOCUMENT_PATH =
   "/api/tools/oauth/client-metadata";
 
 /**
- * Resolve the URL Paperclip would use as a CIMD client id, but only when its
+ * Resolve the URL ThinkingMach would use as a CIMD client id, but only when its
  * hostname is not known to resolve into a private network.
  *
- * An authorization server fetches this URL from outside Paperclip's network and
+ * An authorization server fetches this URL from outside ThinkingMach's network and
  * will normally apply an SSRF guard. Tailscale/MagicDNS names are HTTPS but
  * resolve into 100.64.0.0/10, so presenting one as a client id can only produce
  * an `invalid_client` response. A local DNS failure remains inconclusive because
@@ -465,7 +465,7 @@ export async function resolveOAuthClientIdMetadataDocumentUrl(
 }
 
 /**
- * Paperclip's client metadata for CIMD (RFC 7591 metadata, served rather than
+ * ThinkingMach's client metadata for CIMD (RFC 7591 metadata, served rather than
  * registered). Only the callback for this deployment appears in it, so an
  * authorization server that fetches it can see exactly one legal redirect target.
  */
@@ -475,7 +475,7 @@ export function oauthClientIdMetadataDocument(input: {
 }): Record<string, unknown> {
   return {
     client_id: input.clientId,
-    client_name: `Paperclip (${new URL(input.redirectUri).host})`,
+    client_name: `ThinkingMach (${new URL(input.redirectUri).host})`,
     client_uri: new URL("/", input.clientId).toString(),
     redirect_uris: [input.redirectUri],
     grant_types: ["authorization_code", "refresh_token"],
@@ -505,7 +505,7 @@ type OAuthProviderEndpoints = {
   /**
    * RFC 8707 resource indicator: the MCP endpoint the token is for. Sent on both
    * authorization and token requests so the authorization server can audience-
-   * restrict the access token to this server rather than to everything Paperclip
+   * restrict the access token to this server rather than to everything ThinkingMach
    * has ever connected.
    */
   resource?: string | null;
@@ -649,9 +649,9 @@ type ToolAccessServiceOptions = {
   /** Test seam for protocol fixtures. Production uses the DNS-pinned transport. */
   remoteHttpRequest?: (url: string, init: RequestInit) => Promise<Response>;
   /** Test seam for the centrally registered Gmail OAuth broker. */
-  paperclipCloudConnector?: PaperclipCloudConnector | null;
+  paperclipCloudConnector?: ThinkingMachCloudConnector | null;
   /** @deprecated Use paperclipCloudConnector. */
-  paperclipIdGmailConnector?: PaperclipCloudConnector | null;
+  paperclipIdGmailConnector?: ThinkingMachCloudConnector | null;
   /** Test seam for Vercel Connect without live vendor traffic. */
   vercelConnectClient?: VercelConnectClient | null;
 };
@@ -741,7 +741,7 @@ const APPROVED_STDIO_TEMPLATES: Record<
   }
 > = {
   "paperclip.echo-calculator-time": {
-    name: "Paperclip Echo / Calculator / Time fixture",
+    name: "ThinkingMach Echo / Calculator / Time fixture",
     tools: [
       {
         name: "echo",
@@ -782,7 +782,7 @@ const APPROVED_STDIO_TEMPLATES: Record<
     ],
   },
   "paperclip.synthetic-todo-kv": {
-    name: "Paperclip Synthetic Todo / KV fixture",
+    name: "ThinkingMach Synthetic Todo / KV fixture",
     tools: [
       {
         name: "list_items",
@@ -947,15 +947,15 @@ const TOOL_EXAMPLES: ToolExampleDefinition[] = [
     description:
       "Installs a deterministic local MCP fixture and grants only its read-only catalog entries.",
     applicationKey: "paperclip.examples.safe-read-only-todo-kv",
-    applicationName: "Paperclip example: Safe read-only Todo / KV",
+    applicationName: "ThinkingMach example: Safe read-only Todo / KV",
     applicationDescription:
       "Deterministic MCP fixture for first-run tool governance checks.",
-    connectionName: "Paperclip example: Safe read-only Todo / KV",
+    connectionName: "ThinkingMach example: Safe read-only Todo / KV",
     templateId: "paperclip.synthetic-todo-kv",
     profileKey: "paperclip.examples.safe-read-only-todo-kv.profile",
     profileName: "Example safe read-only tools",
     profileDescription:
-      "Allows only the read-only tools from the Paperclip Todo / KV example fixture.",
+      "Allows only the read-only tools from the ThinkingMach Todo / KV example fixture.",
   },
 ];
 
@@ -1014,7 +1014,7 @@ function connectionMethodFor(app: AppDefinition, methodKey?: string | null) {
   const toolMethods = app.methods.filter(
     (candidate) =>
       candidate.purpose !== "channel" && candidate.transport !== "chat_sdk"
-      && (availableMethods.has(candidate) || isPaperclipCloudConnectorStrategy(candidate.oauthStrategy)),
+      && (availableMethods.has(candidate) || isThinkingMachCloudConnectorStrategy(candidate.oauthStrategy)),
   );
   const method = normalizedMethodKey
     ? (toolMethods.find((candidate) => candidate.key === normalizedMethodKey) ??
@@ -2527,7 +2527,7 @@ export async function loadGitHubTokenRepositories(
         headers: {
           ...headers,
           accept: "application/vnd.github+json",
-          "user-agent": "Paperclip",
+          "user-agent": "ThinkingMach",
           "x-github-api-version": "2022-11-28",
         },
         signal: AbortSignal.timeout(15_000),
@@ -2598,7 +2598,7 @@ export async function loadGitHubGrantMetadata(
       headers: {
         accept: "application/vnd.github+json",
         authorization: `Bearer ${accessToken}`,
-        "user-agent": "Paperclip",
+        "user-agent": "ThinkingMach",
         "x-github-api-version": "2022-11-28",
       },
       signal: AbortSignal.timeout(15_000),
@@ -2723,7 +2723,7 @@ export async function loadGitHubGrantMetadata(
       ? `https://github.com/apps/${resolvedAppSlug}/installations/new`
       : "https://github.com/settings/installations";
     throw unprocessable(
-      "GitHub access is required. Install Paperclip and grant at least one repository before refreshing access.",
+      "GitHub access is required. Install ThinkingMach and grant at least one repository before refreshing access.",
       {
         code: "github_installation_required",
         installationUrl,
@@ -2808,7 +2808,7 @@ function descriptorHash(
 
 /**
  * Did this error come from the OAuth endpoint gate (PAP-17099)? Such a refusal
- * is Paperclip's own decision about an unsafe address, so it must keep its code
+ * is ThinkingMach's own decision about an unsafe address, so it must keep its code
  * and its 422 instead of being folded into a generic upstream failure.
  */
 function originOf(value: string | null | undefined): string | null {
@@ -3047,23 +3047,23 @@ export function toolAccessService(
     options.paperclipCloudConnector !== undefined ||
     options.paperclipIdGmailConnector !== undefined;
   let cachedCloudConnector = configuredCloudConnector ?? null;
-  const currentCloudConnector = (): PaperclipCloudConnector | null => {
+  const currentCloudConnector = (): ThinkingMachCloudConnector | null => {
     if (cachedCloudConnector || connectorWasProvided)
       return cachedCloudConnector;
     const config = paperclipCloudConnectorConfigFromEnv();
     cachedCloudConnector = config
-      ? createPaperclipCloudConnector({ config, now: () => now().getTime() })
+      ? createThinkingMachCloudConnector({ config, now: () => now().getTime() })
       : null;
     return cachedCloudConnector;
   };
   async function appForConnectionSetup(app: AppDefinition): Promise<AppDefinition> {
-    if (!app.methods.some((method) => isPaperclipCloudConnectorStrategy(method.oauthStrategy))) {
+    if (!app.methods.some((method) => isThinkingMachCloudConnectorStrategy(method.oauthStrategy))) {
       return app;
     }
     const profiles = connectorWasProvided
       ? (await currentCloudConnector()?.getCapabilities() ?? [])
       : await paperclipCloudConnectorCapabilitiesFromEnv();
-    return appWithPaperclipCloudConnectorAvailability(app, profiles);
+    return appWithThinkingMachCloudConnectorAvailability(app, profiles);
   }
   let nextGitHubContinuitySweepAt = 0;
   const vercelConnect =
@@ -3350,12 +3350,12 @@ export function toolAccessService(
   }
 
   function tokenBrokerAllowedPrivateHosts(): Set<string> {
-    const configured = (process.env.PAPERCLIP_TOKEN_BROKER_ALLOWED_HOSTS ?? "")
+    const configured = (process.env.THINKINGMACH_TOKEN_BROKER_ALLOWED_HOSTS ?? "")
       .split(/[,\s]+/)
       .map(normalizeTokenBrokerAllowedHost)
       .filter((host): host is string => host !== null);
     const pagesApiHost = normalizeTokenBrokerAllowedHost(
-      process.env.PAPERCLIP_PAGES_API_URL ?? "",
+      process.env.THINKINGMACH_PAGES_API_URL ?? "",
     );
     if (pagesApiHost) configured.push(pagesApiHost);
     return new Set(configured);
@@ -3411,14 +3411,14 @@ export function toolAccessService(
   /**
    * OAuth endpoint scheme/transport gate (PAP-17099).
    *
-   * Every OAuth endpoint Paperclip acts on is attacker-influenced: discovered
+   * Every OAuth endpoint ThinkingMach acts on is attacker-influenced: discovered
    * metadata, a `WWW-Authenticate` hint, a pasted config, or a gallery default.
    * The authorization endpoint is the sharpest one because it is handed to the
    * operator's browser as a top-level navigation, so `javascript:`/`data:` there
    * would run in the board's origin. `checkOAuthEndpointUrl` is the single place
    * that decides; loopback `http:` is accepted only under the same
    * local-development policy that governs private remote endpoints, and
-   * Paperclip's own origin is exempt from the transport rule because a
+   * ThinkingMach's own origin is exempt from the transport rule because a
    * first-party endpoint (the smoke-lab fixture) is served exactly as the board
    * itself is.
    */
@@ -3433,14 +3433,14 @@ export function toolAccessService(
   }
 
   /**
-   * Origins that are Paperclip itself: this deployment's configured public URL,
+   * Origins that are ThinkingMach itself: this deployment's configured public URL,
    * plus the callback origin of the request in hand when there is one. Only the
    * plaintext-transport rule is relaxed for these.
    */
   function firstPartyOrigins(candidate?: string | null): string[] {
     const configured =
-      process.env.PAPERCLIP_PUBLIC_URL?.trim() ||
-      process.env.PAPERCLIP_AUTH_PUBLIC_BASE_URL?.trim() ||
+      process.env.THINKINGMACH_PUBLIC_URL?.trim() ||
+      process.env.THINKINGMACH_AUTH_PUBLIC_BASE_URL?.trim() ||
       process.env.BETTER_AUTH_URL?.trim() ||
       process.env.BETTER_AUTH_BASE_URL?.trim() ||
       null;
@@ -3468,7 +3468,7 @@ export function toolAccessService(
     return origins;
   }
 
-  /** Throws unless `value` is an endpoint Paperclip may use (and navigate to). */
+  /** Throws unless `value` is an endpoint ThinkingMach may use (and navigate to). */
   function assertOAuthEndpointUrl(
     kind: OAuthEndpointKind,
     value: unknown,
@@ -3515,8 +3515,8 @@ export function toolAccessService(
   function trustedRuntimeHost() {
     return (
       options.trustedLocalStdioRuntimeHost ??
-      process.env.PAPERCLIP_TRUSTED_MCP_RUNTIME_HOST ??
-      process.env.PAPERCLIP_TOOL_RUNTIME_TRUSTED_HOST ??
+      process.env.THINKINGMACH_TRUSTED_MCP_RUNTIME_HOST ??
+      process.env.THINKINGMACH_TOOL_RUNTIME_TRUSTED_HOST ??
       null
     );
   }
@@ -4274,7 +4274,7 @@ export function toolAccessService(
       readConfigString(config, "tokenExchangeUrl") ??
       readConfigString(config, "pagesTokenExchangeUrl");
     if (url) return url;
-    const pagesApiBase = process.env.PAPERCLIP_PAGES_API_URL?.trim();
+    const pagesApiBase = process.env.THINKINGMACH_PAGES_API_URL?.trim();
     if (isPages && pagesApiBase)
       return new URL(
         "/v1/tokens/exchange",
@@ -4535,7 +4535,7 @@ export function toolAccessService(
         description:
           "Tool gateway calls are timing out or being runtime-deferred at an elevated rate.",
         firstResponderAction:
-          "Check upstream MCP health, Paperclip runtime capacity, and recent gateway audit failures before retrying workloads.",
+          "Check upstream MCP health, ThinkingMach runtime capacity, and recent gateway audit failures before retrying workloads.",
         runbookSection,
       }),
       runtimeAlert({
@@ -5976,7 +5976,7 @@ export function toolAccessService(
    *
    * 1. Provenance — the key sits in the `tool_app.` namespace only the
    *    connect/reconnect/OAuth paths mint, and the row is a company-scoped
-   *    Paperclip secret rather than a per-user credential.
+   *    ThinkingMach secret rather than a per-user credential.
    * 2. Exclusivity — nothing outside this connection references it: no
    *    `company_secret_bindings` row from another target, and no other
    *    connection or connection grant naming the same secret id.
@@ -6883,7 +6883,7 @@ export function toolAccessService(
       response = await sendToolsList(headers);
       if (
         response.status === 401 &&
-        isPaperclipCloudConnectorStrategy(oauthConfig(connection).strategy)
+        isThinkingMachCloudConnectorStrategy(oauthConfig(connection).strategy)
       ) {
         const grant = await vaultGrantForConnection(connection, actor);
         if (grant) {
@@ -6986,7 +6986,7 @@ export function toolAccessService(
     }
     if (!isRailwayConnection(connection)) return descriptors;
     if (descriptors.some((tool) => normalizeRailwayToolName(tool.name).startsWith(RAILWAY_TOOL_PREFIX))) {
-      throw unprocessable("Railway advertised a reserved Paperclip action name. Refresh is blocked pending review.", { code: "railway_tool_name_collision" });
+      throw unprocessable("Railway advertised a reserved ThinkingMach action name. Refresh is blocked pending review.", { code: "railway_tool_name_collision" });
     }
     let apiStatus = "available";
     let apiMessage = "Direct Railway service, log, and deployment tools are available.";
@@ -8414,7 +8414,7 @@ export function toolAccessService(
     provider: string,
     suffix: "CLIENT_ID" | "CLIENT_SECRET",
   ) {
-    return `PAPERCLIP_TOOL_OAUTH_${provider.replace(/[^a-z0-9]+/gi, "_").toUpperCase()}_${suffix}`;
+    return `THINKINGMACH_TOOL_OAUTH_${provider.replace(/[^a-z0-9]+/gi, "_").toUpperCase()}_${suffix}`;
   }
 
   function oauthClientConfig(provider: string) {
@@ -8425,11 +8425,11 @@ export function toolAccessService(
       clientSecretEnv,
       clientId:
         process.env[clientIdEnv] ??
-        process.env.PAPERCLIP_TOOL_OAUTH_CLIENT_ID ??
+        process.env.THINKINGMACH_TOOL_OAUTH_CLIENT_ID ??
         null,
       clientSecret:
         process.env[clientSecretEnv] ??
-        process.env.PAPERCLIP_TOOL_OAUTH_CLIENT_SECRET ??
+        process.env.THINKINGMACH_TOOL_OAUTH_CLIENT_SECRET ??
         null,
     };
   }
@@ -9068,7 +9068,7 @@ export function toolAccessService(
         "OAuth provider endpoints are not configured for this app",
       );
     }
-    // A gallery default is Paperclip's own data, but it is still a URL that ends
+    // A gallery default is ThinkingMach's own data, but it is still a URL that ends
     // up as a browser navigation, and the metadata branch above reads the same
     // untrusted document a generic connection does. Both go through the gate.
     return {
@@ -9545,7 +9545,7 @@ export function toolAccessService(
 
     const host = new URL(input.redirectUri).host;
     const requestedMetadata = {
-      client_name: `Paperclip (${host})`,
+      client_name: `ThinkingMach (${host})`,
       redirect_uris: [input.redirectUri],
       grant_types: [
         "authorization_code",
@@ -9556,7 +9556,7 @@ export function toolAccessService(
       ],
       response_types: ["code"],
       token_endpoint_auth_method: tokenEndpointAuthMethod,
-      // RFC 7591: Paperclip's callback is a server-side HTTPS endpoint, so this
+      // RFC 7591: ThinkingMach's callback is a server-side HTTPS endpoint, so this
       // is a `web` client, not a `native` one. Some authorization servers reject
       // an https redirect URI when the default (`web`) is left implicit, and
       // others apply native-client redirect rules without it.
@@ -9597,7 +9597,7 @@ export function toolAccessService(
       maxLength: MAX_OAUTH_DCR_CLIENT_SECRET_LENGTH,
     });
     // Some authorization servers add provider-owned metadata to the registered
-    // client. Paperclip still uses only the exact redirect, grant and response
+    // client. ThinkingMach still uses only the exact redirect, grant and response
     // types it requested, so accept bounded supersets while requiring every
     // requested value to remain present. Hugging Face, for example, adds the
     // device-code grant to an otherwise valid authorization-code registration.
@@ -9610,8 +9610,8 @@ export function toolAccessService(
     // RFC 7591 registration responses do not consistently echo every accepted
     // request field. Supabase, for example, returns only the client material and
     // redirect URIs. Redirect binding remains mandatory; omitted grant/response
-    // metadata inherits the values Paperclip requested. Additional provider-owned
-    // values do not widen Paperclip's behavior because they are never persisted as
+    // metadata inherits the values ThinkingMach requested. Additional provider-owned
+    // values do not widen ThinkingMach's behavior because they are never persisted as
     // a flow choice or sent in authorization/token requests.
     assertOAuthDcrArray(record, "grant_types", requestedMetadata.grant_types, {
       allowAdditional: true,
@@ -9741,7 +9741,7 @@ export function toolAccessService(
 
   /**
    * Adopt a Client ID Metadata Document as this connection's client: the
-   * `client_id` *is* the https URL of Paperclip's published client metadata, so
+   * `client_id` *is* the https URL of ThinkingMach's published client metadata, so
    * there is nothing to register with the authorization server. Still recorded on
    * the connection so the issuer/resource/callback binding is enforced on reuse
    * exactly like a dynamically registered client.
@@ -9810,7 +9810,7 @@ export function toolAccessService(
   /**
    * How the client already stored on this connection was obtained. Anything
    * unrecognised (including connections written before this field existed) reads
-   * as `manual`, which is the conservative answer: Paperclip will not silently
+   * as `manual`, which is the conservative answer: ThinkingMach will not silently
    * re-register over client material it cannot prove it minted.
    */
   function storedOAuthClientRegistrationSource(
@@ -9844,7 +9844,7 @@ export function toolAccessService(
         : null;
     // Older interrupted setup flows could accidentally round-trip a DCR client
     // through the customer-client form and relabel it `manual`. Ownership is the
-    // durable proof that Paperclip minted that client. Force a fresh registration
+    // durable proof that ThinkingMach minted that client. Force a fresh registration
     // instead of preserving the damaged binding forever.
     if (source === "manual" && connection.ownership === "dcr") return false;
     // A URL client id that now resolves only to a private network is unusable by
@@ -9853,7 +9853,7 @@ export function toolAccessService(
     if (source === "cimd" && oauth.clientId !== clientIdMetadataDocumentUrl)
       return false;
     // A manually preregistered client was registered by the operator against
-    // Paperclip's callback, so it has no recorded callback until first use.
+    // ThinkingMach's callback, so it has no recorded callback until first use.
     const redirectMatches =
       source === "manual"
         ? oauth.clientRedirectUri === undefined ||
@@ -9942,7 +9942,7 @@ export function toolAccessService(
   }
 
   /**
-   * May Paperclip mint client material for this connection without an operator
+   * May ThinkingMach mint client material for this connection without an operator
    * pasting client credentials?
    *
    * A curated app opts in through its `ownershipModes`. A generic remote MCP
@@ -10023,7 +10023,7 @@ export function toolAccessService(
       typeof oauth.clientId === "string" &&
       oauth.clientId.trim()
     ) {
-      // Paperclip cannot re-register on the operator's behalf: the credentials
+      // ThinkingMach cannot re-register on the operator's behalf: the credentials
       // came from a console this deployment does not control.
       throw unprocessable(
         "This connection's sign-in details no longer match the server it points at. Re-enter the client ID and secret to continue.",
@@ -10180,9 +10180,9 @@ export function toolAccessService(
 
     // The token URL can come from a connection row written before the endpoint
     // gate existed, so a client secret / authorization code never leaves
-    // Paperclip without re-checking the transport it would leave over.
+    // ThinkingMach without re-checking the transport it would leave over.
     const tokenUrl = assertOAuthEndpointUrl("token", input.tokenUrl, {
-      // Paperclip's own callback origin, so a first-party token endpoint keeps
+      // ThinkingMach's own callback origin, so a first-party token endpoint keeps
       // working on a deployment that is itself served over plaintext HTTP.
       firstPartyOrigin: originOf(input.redirectUri),
     });
@@ -10989,7 +10989,7 @@ export function toolAccessService(
     if (
       connection.authKind === "oauth" &&
       connection.credentialSource === "paperclip_vault" &&
-      isPaperclipCloudConnectorStrategy(oauth.strategy)
+      isThinkingMachCloudConnectorStrategy(oauth.strategy)
     ) {
       const grantOauth = oauthGrantConfig(initialGrant);
       const expiresAt =
@@ -11075,7 +11075,7 @@ export function toolAccessService(
               });
             } catch (error) {
               if (
-                error instanceof PaperclipCloudConnectorError &&
+                error instanceof ThinkingMachCloudConnectorError &&
                 error.code === "REAUTHORIZATION_REQUIRED"
               ) {
                 await db
@@ -12238,7 +12238,7 @@ export function toolAccessService(
       const integration = vercelConnectIntegrationStatus();
       if (!integration.enabled || !integration.configured || !vercelConnect) {
         throw unprocessable(
-          "Vercel Connect setup is not available on this Paperclip instance",
+          "Vercel Connect setup is not available on this ThinkingMach instance",
           {
             code: "vercel_connect_unavailable",
           },
@@ -12316,7 +12316,7 @@ export function toolAccessService(
           .limit(1);
         if (connectorInUse) {
           throw conflict(
-            "App-subject Vercel connectors are dedicated to one Paperclip connection. Create or attach a separate connector in Vercel.",
+            "App-subject Vercel connectors are dedicated to one ThinkingMach connection. Create or attach a separate connector in Vercel.",
             {
               code: "vercel_connect_app_connector_in_use",
             },
@@ -12376,7 +12376,7 @@ export function toolAccessService(
           ...(galleryEntry.slug === "posthog" ? { safeDefault: true } : {}),
         }
       : { ...baseConfig, quarantineNewEntries: false, unverifiedServer: true };
-    if (method && isPaperclipCloudConnectorStrategy(method.oauthStrategy)) {
+    if (method && isThinkingMachCloudConnectorStrategy(method.oauthStrategy)) {
       const connectorProfile = method.connectorProfile;
       const profile = managedConnectorProfile(connectorProfile);
       if (!profile)
@@ -12399,7 +12399,7 @@ export function toolAccessService(
     }
     // A pasted URL or an explicitly customer-owned curated method may arrive
     // with a client the operator preregistered in the provider's console. Record
-    // the client id now; the secret becomes an encrypted Paperclip secret below.
+    // the client id now; the secret becomes an encrypted ThinkingMach secret below.
     if (input.oauthClient) {
       config.oauth = {
         clientId: input.oauthClient.clientId.trim(),
@@ -12506,7 +12506,7 @@ export function toolAccessService(
         : requestedGrantKind === "agent"
           ? "per_agent"
           : "shared";
-    const connectionOwnership = isPaperclipCloudConnectorStrategy(
+    const connectionOwnership = isThinkingMachCloudConnectorStrategy(
       method?.oauthStrategy,
     )
       ? "platform_shared"
@@ -12727,7 +12727,7 @@ export function toolAccessService(
         }
         if (!applicationRow) {
           throw conflict(
-            "Paperclip could not allocate a unique connection name",
+            "ThinkingMach could not allocate a unique connection name",
             {
               code: "tool_access_name_allocation_exhausted",
             },
@@ -13034,7 +13034,7 @@ export function toolAccessService(
             .where(eq(toolConnections.id, connectionRow.id));
           const endpoints = await discoverOAuthEndpoints(oauthConnection).catch(
             (discoveryError: unknown) => {
-              // "This server advertised an address Paperclip refuses to open" is a
+              // "This server advertised an address ThinkingMach refuses to open" is a
               // refusal, not a failed discovery: keep it instead of collapsing it
               // into the generic sign-in-required error.
               if (isOAuthEndpointRejection(discoveryError))
@@ -13959,7 +13959,7 @@ export function toolAccessService(
       throw conflict("Archived app connections cannot be reconnected");
     if (connection.credentialSource === "vercel_connect") {
       throw conflict(
-        "Manage this connector in Vercel Connect, then run a Paperclip health check to verify it.",
+        "Manage this connector in Vercel Connect, then run a ThinkingMach health check to verify it.",
         {
           code: "vercel_connect_managed_externally",
           manageUrl: vercelConnectIntegrationStatus().manageUrl,
@@ -14314,7 +14314,7 @@ export function toolAccessService(
     }
     if (
       galleryMethod &&
-      isPaperclipCloudConnectorStrategy(galleryMethod.oauthStrategy)
+      isThinkingMachCloudConnectorStrategy(galleryMethod.oauthStrategy)
     ) {
       const connectorProfile = galleryMethod.connectorProfile;
       const managedProfile = managedConnectorProfile(connectorProfile);
@@ -14324,7 +14324,7 @@ export function toolAccessService(
       const cloudConnector = currentCloudConnector();
       if (!cloudConnector) {
         throw unprocessable(
-          `${providerName} connections through Paperclip are not available on this instance yet`,
+          `${providerName} connections through ThinkingMach are not available on this instance yet`,
           {
             code: "paperclip_cloud_connector_unavailable",
           },
@@ -14381,7 +14381,7 @@ export function toolAccessService(
         state,
         companyId,
         connectionId: connection.id,
-        // Paperclip Cloud owns PKCE for this flow. The local state row remains the
+        // ThinkingMach Cloud owns PKCE for this flow. The local state row remains the
         // single-use browser correlator and never stores broker token material.
         codeVerifier: "paperclip-cloud-connector",
         createdByActorType: binding.actorType,
@@ -14466,7 +14466,7 @@ export function toolAccessService(
     // unvetted target.
     const authorizationUrl = new URL(
       assertOAuthEndpointUrl("authorization", endpoints.authorizationUrl, {
-        // Paperclip's own callback origin: a first-party authorization endpoint is
+        // ThinkingMach's own callback origin: a first-party authorization endpoint is
         // served however this deployment is served, plaintext LAN host included.
         firstPartyOrigin: originOf(input.redirectUri),
       }),
@@ -14487,7 +14487,7 @@ export function toolAccessService(
     // Curated definitions are an allowlist, not a suggestion. Never copy every
     // scope advertised by discovery into a provider consent screen: a curated
     // method either sends its reviewed hint or omits scope entirely. Generic
-    // MCP URLs retain discovery-first behavior because Paperclip has no manifest
+    // MCP URLs retain discovery-first behavior because ThinkingMach has no manifest
     // against which it could safely judge the caller's requested scope.
     const authorizationScopes = galleryMethod
       ? (requestedScopes ?? [])
@@ -14632,7 +14632,7 @@ export function toolAccessService(
         metadataUrl: endpoints.metadataUrl ?? null,
         // Curated apps persist only the reviewed scopes attached to this OAuth
         // state. Discovery metadata can advertise a provider's entire scope
-        // universe and must never silently become Paperclip's requested set.
+        // universe and must never silently become ThinkingMach's requested set.
         scopes: galleryMethod ? (requestedScopes ?? []) : endpoints.scopes,
         codeChallengeMethodsSupported:
           endpoints.codeChallengeMethodsSupported ?? [],
@@ -14798,7 +14798,7 @@ export function toolAccessService(
         result: {
           version: 1,
           outcome: "rejected",
-          // Paperclip's own words: the provider's explanation is untrusted and
+          // ThinkingMach's own words: the provider's explanation is untrusted and
           // this reason is rendered in the thread (PAP-17108).
           reason:
             "Authorization was declined or cancelled in the provider's window",
@@ -14944,7 +14944,7 @@ export function toolAccessService(
     return finished;
   }
 
-  async function completePaperclipCloudConnectorCallback(input: {
+  async function completeThinkingMachCloudConnectorCallback(input: {
     state: string;
     claimId?: string | null;
     error?: string | null;
@@ -15001,7 +15001,7 @@ export function toolAccessService(
     const cloudConnector = currentCloudConnector();
     if (!cloudConnector) {
       throw unprocessable(
-        `${providerName} connections through Paperclip are not available on this instance yet`,
+        `${providerName} connections through ThinkingMach are not available on this instance yet`,
         {
           code: "paperclip_cloud_connector_unavailable",
         },
@@ -15011,7 +15011,7 @@ export function toolAccessService(
     const subjectAgentId = stateRow.subjectAgentId;
     if (
       !method ||
-      !isPaperclipCloudConnectorStrategy(method.oauthStrategy) ||
+      !isThinkingMachCloudConnectorStrategy(method.oauthStrategy) ||
       (!subjectUserId && !subjectAgentId)
     ) {
       throw badRequest(
@@ -15324,7 +15324,7 @@ export function toolAccessService(
       }
     });
     // The transaction above committed the connection's lifecycle write; a
-    // Paperclip Cloud connector callback is the managed variant of an OAuth
+    // ThinkingMach Cloud connector callback is the managed variant of an OAuth
     // callback completion.
     emitConnectionUpdated(connection, preCloudCallbackLifecycle, "oauth_callback");
     if (githubMetadata) {
@@ -15650,7 +15650,7 @@ export function toolAccessService(
     actor?: ActorInfo;
   }): Promise<ConnectToolAppResult> {
     // Binding first, outcome second: the provider's report of a failure is only
-    // acted on once the callback is bound to a state Paperclip issued and to the
+    // acted on once the callback is bound to a state ThinkingMach issued and to the
     // actor that started the flow, so an unsolicited callback cannot drive any
     // path here. Consuming the state up front is what makes a denial terminal —
     // a refused request must not stay completable by a later code (PAP-17109).
@@ -16879,7 +16879,7 @@ export function toolAccessService(
 
     peekOAuthState,
 
-    completePaperclipCloudConnectorCallback,
+    completeThinkingMachCloudConnectorCallback,
 
     completeVercelConnectCallback,
 
@@ -17247,7 +17247,7 @@ export function toolAccessService(
       ]);
       const repositories = new Map<
         string,
-        import("@paperclipai/shared").ProjectRepository
+        import("@thinkingmach/shared").ProjectRepository
       >();
       let connectionCount = 0;
       let failedConnectionCount = 0;
@@ -17997,10 +17997,10 @@ export function toolAccessService(
           }
         }
       } else if (
-        isPaperclipCloudConnectorStrategy(oauthConfig(connection).strategy)
+        isThinkingMachCloudConnectorStrategy(oauthConfig(connection).strategy)
       ) {
         // Google revocation is client-wide for a user. The managed Workspace
-        // profiles intentionally share one Paperclip-owned client, so revoking
+        // profiles intentionally share one ThinkingMach-owned client, so revoking
         // one token here could invalidate unrelated Gmail, Drive, and Calendar
         // grants. A per-profile removal is therefore local-only. A future
         // provider-level disconnect must warn that it removes every profile.
@@ -20334,7 +20334,7 @@ export function toolAccessService(
             .sort()
             .map((key) => {
               warnings.push(
-                `Header ${key} will be stored as a Paperclip secret before activation.`,
+                `Header ${key} will be stored as a ThinkingMach secret before activation.`,
               );
               return {
                 configPath: `headers.${key}`,
@@ -20357,7 +20357,7 @@ export function toolAccessService(
         }
         if (typeof server.command === "string") {
           warnings.push(
-            "Imported stdio commands stay draft-only unless mapped to an approved Paperclip template.",
+            "Imported stdio commands stay draft-only unless mapped to an approved ThinkingMach template.",
           );
           return {
             name,

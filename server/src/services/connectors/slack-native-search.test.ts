@@ -5,7 +5,7 @@ import {
   slackSearchActionToken,
 } from "./slack-search-context.js";
 import type { SlackTaskAuthority } from "./slack-authority.js";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 const authority = {
   endpoint: { providerAccountId: "T1" },
   botToken: "bot-token",

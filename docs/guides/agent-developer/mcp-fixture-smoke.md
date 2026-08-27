@@ -1,6 +1,6 @@
 # MCP Fixture Smoke Harness
 
-Paperclip's MCP permission work uses deterministic fixture servers so policy
+ThinkingMach's MCP permission work uses deterministic fixture servers so policy
 logic can be tested without real customer credentials or live integrations.
 
 Run the local smoke:
@@ -10,7 +10,7 @@ pnpm smoke:mcp-fixtures
 ```
 
 The runner starts one local stdio fixture and one remote-style HTTP fixture,
-checks the local Paperclip `/api/health` endpoint when available, then exercises:
+checks the local ThinkingMach `/api/health` endpoint when available, then exercises:
 
 - allow and deny decisions
 - approval-gated writes
@@ -91,7 +91,7 @@ US-7, with:
 pnpm test:e2e:mcp-user-stories -- --include-gated
 ```
 
-The browser side uses the same `PAPERCLIP_PLAYWRIGHT_CHANNEL` override as the
+The browser side uses the same `THINKINGMACH_PLAYWRIGHT_CHANNEL` override as the
 rest of `tests/e2e`. In minimal containers, install the Playwright system
-dependencies or point `PAPERCLIP_PLAYWRIGHT_CHANNEL` at the managed branch
+dependencies or point `THINKINGMACH_PLAYWRIGHT_CHANNEL` at the managed branch
 service's known-good Chromium wrapper before running the browser smoke.

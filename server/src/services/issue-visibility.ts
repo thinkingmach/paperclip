@@ -1,6 +1,6 @@
 import { nonIdleSlackIssueCondition } from "./slack-conversation-state.js";
 import { and, isNull, type SQL } from "drizzle-orm";
-import { issues } from "@paperclipai/db";
+import { issues } from "@thinkingmach/db";
 
 export function visibleIssueCondition(): SQL {
   return and(isNull(issues.hiddenAt), isNull(issues.harnessKind))!;

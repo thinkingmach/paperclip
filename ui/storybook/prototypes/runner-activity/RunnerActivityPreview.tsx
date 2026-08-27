@@ -60,7 +60,7 @@ const entries: Entry[] = [
     kind: "activity",
     id: "mcp",
     tool: "mcp__github__get_pull_request",
-    target: "paperclipai/paperclip · #13229",
+    target: "thinkingmach/paperclip · #13229",
     detail:
       "Read the previous task-feed performance changes to preserve stable row identity.",
   },

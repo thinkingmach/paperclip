@@ -75,7 +75,7 @@ outbox.
 Run the credential-free, isolated browser suite:
 
 ```sh
-PAPERCLIP_E2E_PORT=3222 pnpm exec playwright test -c tests/e2e/connection-reviews.config.ts
+THINKINGMACH_E2E_PORT=3222 pnpm exec playwright test -c tests/e2e/connection-reviews.config.ts
 ```
 
 This starts a dedicated embedded database/server and local MCP fixture, configures
@@ -89,7 +89,7 @@ scripted process adapter; these results do not prove model-runner behavior.
 Run the opt-in, local model-runner matrix with the harness's normal credentials:
 
 ```sh
-PAPERCLIP_RUNNER_E2E_CONNECTION_REVIEWS=1 pnpm test:e2e:runner -- --suite connection-reviews
+THINKINGMACH_RUNNER_E2E_CONNECTION_REVIEWS=1 pnpm test:e2e:runner -- --suite connection-reviews
 ```
 
 The 16 cells cover approve, decline, always allow, and restart/resume for native
@@ -98,7 +98,7 @@ settings come from the existing runner catalog. This flag does not expand the
 normal hosted/Daytona matrix. The fixture MCP provider is real HTTP but is not
 Notion; live Notion evidence must be reported separately.
 
-For a real Notion test, start `paperclipai test-drive` from this checkout using
+For a real Notion test, start `thinkingmach test-drive` from this checkout using
 valid provider credentials, verify its process checkout/port ownership, connect
 Notion normally, set an available read-only search/list action to Ask human, and
 perform the same approve/decline/always-allow journeys for all four profiles.
@@ -108,7 +108,7 @@ credentials or account/provider access are untested dependencies, never a pass.
 ## Storybook
 
 ```sh
-pnpm --filter @paperclipai/ui exec storybook dev -p 6018 -c storybook/.storybook --no-open --ci
+pnpm --filter @thinkingmach/ui exec storybook dev -p 6018 -c storybook/.storybook --no-open --ci
 ```
 
 Open **Chat & Comments / Connection Reviews**. The production task thread/card and

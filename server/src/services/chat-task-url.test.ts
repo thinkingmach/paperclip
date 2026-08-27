@@ -19,9 +19,9 @@ afterEach(() => {
   vi.mocked(readConfigFile).mockReturnValue(null);
 });
 
-describe("external Paperclip task links", () => {
+describe("external ThinkingMach task links", () => {
   it("resolves a newly claimed Cloud origin at use time ahead of pool configuration", () => {
-    vi.stubEnv("PAPERCLIP_AUTH_PUBLIC_BASE_URL", "https://pool.example");
+    vi.stubEnv("THINKINGMACH_AUTH_PUBLIC_BASE_URL", "https://pool.example");
     expect(publicChatTaskUrl("issue-1")).toBe("https://pool.example/issues/issue-1");
     vi.mocked(runtimeCanonicalOrigin).mockReturnValue("https://vanity.example");
     expect(publicChatTaskUrl("issue-1")).toBe("https://vanity.example/issues/issue-1");
@@ -63,29 +63,29 @@ describe("external Paperclip task links", () => {
           publicBaseUrl: baseUrl,
         }),
       ).toBe(
-        "Maya stopped before completing this turn. Open the task in Paperclip for details.",
+        "Maya stopped before completing this turn. Open the task in ThinkingMach for details.",
       );
     },
   );
 
   it("does not use webhook ingress as the question or confirmation destination", () => {
     for (const name of [
-      "PAPERCLIP_PUBLIC_URL",
-      "PAPERCLIP_AUTH_PUBLIC_BASE_URL",
+      "THINKINGMACH_PUBLIC_URL",
+      "THINKINGMACH_AUTH_PUBLIC_BASE_URL",
       "BETTER_AUTH_URL",
       "BETTER_AUTH_BASE_URL",
-      "PAPERCLIP_MANAGED_RUNTIME_PUBLIC_URL",
+      "THINKINGMACH_MANAGED_RUNTIME_PUBLIC_URL",
     ])
       vi.stubEnv(name, "");
-    vi.stubEnv("PAPERCLIP_CHAT_WEBHOOK_PUBLIC_URL", "https://ingress.example");
+    vi.stubEnv("THINKINGMACH_CHAT_WEBHOOK_PUBLIC_URL", "https://ingress.example");
     expect(publicChatInteractionTaskUrl("issue-1")).toBeNull();
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "http://127.0.0.1:3103");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "http://127.0.0.1:3103");
     expect(publicChatInteractionTaskUrl("issue-1")).toBeNull();
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "https://board.example");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "https://board.example");
     expect(publicChatInteractionTaskUrl("issue-1")).toBe(
       "https://board.example/issues/issue-1",
     );
-    vi.stubEnv("PAPERCLIP_AUTH_PUBLIC_BASE_URL", "https://canonical.example");
+    vi.stubEnv("THINKINGMACH_AUTH_PUBLIC_BASE_URL", "https://canonical.example");
     expect(publicChatInteractionTaskUrl("issue-1")).toBe(
       "https://canonical.example/issues/issue-1",
     );
@@ -93,14 +93,14 @@ describe("external Paperclip task links", () => {
 
   it("uses the configured board origin ahead of the managed-runtime fallback", () => {
     for (const name of [
-      "PAPERCLIP_PUBLIC_URL",
-      "PAPERCLIP_AUTH_PUBLIC_BASE_URL",
+      "THINKINGMACH_PUBLIC_URL",
+      "THINKINGMACH_AUTH_PUBLIC_BASE_URL",
       "BETTER_AUTH_URL",
       "BETTER_AUTH_BASE_URL",
     ])
       vi.stubEnv(name, "");
     vi.stubEnv(
-      "PAPERCLIP_MANAGED_RUNTIME_PUBLIC_URL",
+      "THINKINGMACH_MANAGED_RUNTIME_PUBLIC_URL",
       "https://managed.example",
     );
     vi.mocked(readConfigFile).mockReturnValue({
@@ -111,7 +111,7 @@ describe("external Paperclip task links", () => {
       "https://configured.example/issues/issue-1",
     );
 
-    vi.stubEnv("PAPERCLIP_PUBLIC_URL", "https://environment.example");
+    vi.stubEnv("THINKINGMACH_PUBLIC_URL", "https://environment.example");
     expect(publicChatInteractionTaskUrl("issue-1")).toBe(
       "https://environment.example/issues/issue-1",
     );

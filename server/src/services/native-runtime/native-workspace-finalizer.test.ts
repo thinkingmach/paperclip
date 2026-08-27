@@ -21,7 +21,7 @@ import {
   issueRecoveryActions,
   projects,
   workspaceOperations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { resumeNativeWorkspaceFinalization } from "./native-workspace-finalizer.js";
 

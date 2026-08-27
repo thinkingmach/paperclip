@@ -35,7 +35,7 @@
           "prompt": "consent"
         }
       },
-      "guidanceMd": "Sign in to Railway and select the workspaces your agents may use. Paperclip adds direct service, deployment, and bounded log tools when Railway accepts the connection for API access. Container commands require the separate SSH setup on the connection. Project tokens are not supported by Railway's hosted connection.",
+      "guidanceMd": "Sign in to Railway and select the workspaces your agents may use. ThinkingMach adds direct service, deployment, and bounded log tools when Railway accepts the connection for API access. Container commands require the separate SSH setup on the connection. Project tokens are not supported by Railway's hosted connection.",
       "riskTier": "S4",
       "label": "Connect Railway",
       "consoleLinks": {
@@ -46,8 +46,8 @@
       "warnings": [
         "Railway enforces the workspaces selected at consent. Selected actions start Allowed; choose Ask first for operations you want to approve.",
         "Logs and container commands can expose application data and secrets. Grant access only to agents trusted with the selected services.",
-        "The general Railway agent and committing staged changes are unavailable because their internal changes cannot be individually reviewed in Paperclip.",
-        "Live Railway qualification is pending. If Railway rejects API access, reconnect with the required permissions; Paperclip never falls back to another credential."
+        "The general Railway agent and committing staged changes are unavailable because their internal changes cannot be individually reviewed in ThinkingMach.",
+        "Live Railway qualification is pending. If Railway rejects API access, reconnect with the required permissions; ThinkingMach never falls back to another credential."
       ],
       "requiredResourceFilters": [
         "workspace",

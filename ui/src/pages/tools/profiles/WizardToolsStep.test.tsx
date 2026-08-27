@@ -3,7 +3,7 @@
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
 import { flushSync } from "react-dom";
-import type { ToolCatalogEntry } from "@paperclipai/shared";
+import type { ToolCatalogEntry } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AdvancedRule, WizardSelections } from "./profile-model";
 import { WizardToolsStep } from "./WizardToolsStep";

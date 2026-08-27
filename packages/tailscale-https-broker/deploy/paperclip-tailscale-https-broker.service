@@ -1,5 +1,5 @@
 [Unit]
-Description=Paperclip Tailscale HTTPS broker
+Description=ThinkingMach Tailscale HTTPS broker
 After=tailscaled.service
 Requires=tailscaled.service
 

@@ -1,7 +1,7 @@
 import { finished, pipeline } from "node:stream/promises";
 import { Router } from "express";
 import { z } from "zod";
-import { AGENT_PALETTE_IDS, AGENT_AVATAR_SIZES, CHARACTER_STATES, appearanceForPalette, type AgentAvatarSize } from "@paperclipai/shared";
+import { AGENT_PALETTE_IDS, AGENT_AVATAR_SIZES, CHARACTER_STATES, appearanceForPalette, type AgentAvatarSize } from "@thinkingmach/shared";
 import { AvatarAdmissionError, createAgentAvatarService } from "../services/agent-avatars.js";
 import { createStorageProviderFromConfig } from "../storage/provider-registry.js";
 import { loadConfig } from "../config.js";

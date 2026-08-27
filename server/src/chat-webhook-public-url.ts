@@ -19,6 +19,6 @@ export function parseChatWebhookPublicBaseUrl(
     // Never include an operator-supplied URL: it could contain credentials.
   }
   throw new Error(
-    "PAPERCLIP_CHAT_WEBHOOK_PUBLIC_URL must be an HTTPS origin without credentials, a path, query, or fragment",
+    "THINKINGMACH_CHAT_WEBHOOK_PUBLIC_URL must be an HTTPS origin without credentials, a path, query, or fragment",
   );
 }

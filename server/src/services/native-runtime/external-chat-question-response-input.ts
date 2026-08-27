@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { agents, heartbeatRuns, issues, type Db } from "@paperclipai/db";
+import { agents, heartbeatRuns, issues, type Db } from "@thinkingmach/db";
 import type { NativeInteractionResponseEnvelope } from "../../vendor/paperclip-runner/index.js";
 import {
   authorizeChatConversationForBoundRun,

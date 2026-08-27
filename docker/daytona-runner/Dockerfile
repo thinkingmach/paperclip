@@ -28,27 +28,27 @@ COPY cli/package.json ./cli/package.json
 # The complete resolved lock (including transitive integrity hashes) is reviewed.
 # Reject registry-time drift BEFORE installing packages or running lifecycle code.
 # Refresh this digest together with source/provider dependency changes.
-ARG PAPERCLIP_RUNNER_LOCK_SHA256=57b298aceebc48bb94ea0593347348256475da7b2fddb77025d9e57cc8759420
+ARG THINKINGMACH_RUNNER_LOCK_SHA256=57b298aceebc48bb94ea0593347348256475da7b2fddb77025d9e57cc8759420
 RUN pnpm install --resolution-only --ignore-scripts --no-frozen-lockfile \
-    && printf '%s  pnpm-lock.yaml\n' "${PAPERCLIP_RUNNER_LOCK_SHA256}" > /tmp/provider-lock.sha256 \
+    && printf '%s  pnpm-lock.yaml\n' "${THINKINGMACH_RUNNER_LOCK_SHA256}" > /tmp/provider-lock.sha256 \
     && sha256sum -c /tmp/provider-lock.sha256 \
-    && pnpm install --frozen-lockfile --filter '@paperclipai/paperclip-runner...'
-ARG PAPERCLIP_RUNNER_SOURCE_REVISION
-RUN test -n "${PAPERCLIP_RUNNER_SOURCE_REVISION}"
-RUN pnpm --filter @paperclipai/paperclip-runner build:typescript \
-    && PAPERCLIP_RUNNER_SOURCE_REVISION="${PAPERCLIP_RUNNER_SOURCE_REVISION}" \
+    && pnpm install --frozen-lockfile --filter '@thinkingmach/paperclip-runner...'
+ARG THINKINGMACH_RUNNER_SOURCE_REVISION
+RUN test -n "${THINKINGMACH_RUNNER_SOURCE_REVISION}"
+RUN pnpm --filter @thinkingmach/paperclip-runner build:typescript \
+    && THINKINGMACH_RUNNER_SOURCE_REVISION="${THINKINGMACH_RUNNER_SOURCE_REVISION}" \
       node packages/paperclip-runner/scripts/build-provider-pack.mjs /provider-pack \
     && chmod -R a+rX /provider-pack
 
 # Fleet sandbox base image. Keep this section aligned with
-# paperclipai/paperclip-cloud/fleet-sandbox-image/Dockerfile. The only Paperclip
+# thinkingmach/paperclip-cloud/fleet-sandbox-image/Dockerfile. The only ThinkingMach
 # runner-specific addition is /usr/local/bin/paperclip-runnerd below.
 FROM daytonaio/sandbox:0.8.0@sha256:eadf88e4391072b7ad4bed27d9cadfc9fe9d8ed375d9219d34c2ccb518f213e3
 
 USER root
 
-ENV PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT=/opt/paperclip-runner/provider-pack
-ENV PATH=${PAPERCLIP_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin:/usr/local/share/nvm/current/bin:/usr/local/python/current/bin:/usr/local/py-utils/bin:${PATH}
+ENV THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT=/opt/paperclip-runner/provider-pack
+ENV PATH=${THINKINGMACH_RUNNER_PROVIDER_PACK_ROOT}/node_modules/.bin:/usr/local/share/nvm/current/bin:/usr/local/python/current/bin:/usr/local/py-utils/bin:${PATH}
 
 # Share the pack's latest stable Codex, Claude and OpenCode with every adapter.
 # Never add a second CLI version to work around a runner compatibility pin.
@@ -104,10 +104,10 @@ RUN set -eu; for cli in codex claude opencode; do \
 # Keep revision-dependent metadata below the stable agent CLI installation
 # layers. A source-only image miss can then reuse those expensive layers from
 # the trusted registry cache.
-ARG PAPERCLIP_RUNNER_CONTENT_ID
-ARG PAPERCLIP_RUNNER_SOURCE_REVISION
-RUN test -n "${PAPERCLIP_RUNNER_CONTENT_ID}" \
-    && test -n "${PAPERCLIP_RUNNER_SOURCE_REVISION}"
+ARG THINKINGMACH_RUNNER_CONTENT_ID
+ARG THINKINGMACH_RUNNER_SOURCE_REVISION
+RUN test -n "${THINKINGMACH_RUNNER_CONTENT_ID}" \
+    && test -n "${THINKINGMACH_RUNNER_SOURCE_REVISION}"
 
 RUN set -eu; \
     printf '%s\n' 'export PATH=/opt/paperclip-runner/provider-pack/node_modules/.bin:$PATH' \
@@ -140,5 +140,5 @@ RUN /bin/sh -lc 'set -eu; \
     test "$(claude-agent-acp --version)" = "0.73.0"; \
     test "$(codex-acp --version)" = "@agentclientprotocol/codex-acp 1.6.2"'
 
-LABEL io.paperclip.runner.content-id="${PAPERCLIP_RUNNER_CONTENT_ID}" \
-      org.opencontainers.image.revision="${PAPERCLIP_RUNNER_SOURCE_REVISION}"
+LABEL io.paperclip.runner.content-id="${THINKINGMACH_RUNNER_CONTENT_ID}" \
+      org.opencontainers.image.revision="${THINKINGMACH_RUNNER_SOURCE_REVISION}"

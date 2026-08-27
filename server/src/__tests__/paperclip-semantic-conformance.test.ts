@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { createDb } from "@paperclipai/db";
+import { createDb } from "@thinkingmach/db";
 import {
   CAPABILITY_HIGH_RISK_SEMANTIC_VECTORS,
   CAPABILITY_SEMANTIC_CONFORMANCE_IDS,
@@ -12,16 +12,16 @@ import {
   startEmbeddedPostgresTestDatabase,
 } from "./helpers/embedded-postgres.js";
 import {
-  PaperclipProductionSemanticConformanceAdapter,
-  seedPaperclipSemanticConformance,
-  type PaperclipSemanticConformanceIds,
+  ThinkingMachProductionSemanticConformanceAdapter,
+  seedThinkingMachSemanticConformance,
+  type ThinkingMachSemanticConformanceIds,
 } from "./helpers/paperclip-semantic-conformance.js";
 
 vi.hoisted(() => {
-  process.env.PAPERCLIP_HOME = "/tmp/paperclip-semantic-conformance-home";
-  process.env.PAPERCLIP_INSTANCE_ID = "semantic-conformance";
-  process.env.PAPERCLIP_LOG_DIR = "/tmp/paperclip-semantic-conformance-home/logs";
-  process.env.PAPERCLIP_IN_WORKTREE = "false";
+  process.env.THINKINGMACH_HOME = "/tmp/paperclip-semantic-conformance-home";
+  process.env.THINKINGMACH_INSTANCE_ID = "semantic-conformance";
+  process.env.THINKINGMACH_LOG_DIR = "/tmp/paperclip-semantic-conformance-home/logs";
+  process.env.THINKINGMACH_IN_WORKTREE = "false";
 });
 
 const embeddedSupport = await getEmbeddedPostgresTestSupport();
@@ -31,12 +31,12 @@ if (!embeddedSupport.supported) {
   console.warn(`Skipping semantic production conformance: ${embeddedSupport.reason ?? "unsupported host"}`);
 }
 
-describeEmbedded("Paperclip semantic mock/production conformance", () => {
+describeEmbedded("ThinkingMach semantic mock/production conformance", () => {
   let temporary: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
   let mock: CapabilityMockSemanticConformanceAdapter | null = null;
 
   const base = CAPABILITY_SEMANTIC_CONFORMANCE_IDS;
-  const ids: PaperclipSemanticConformanceIds = {
+  const ids: ThinkingMachSemanticConformanceIds = {
     companyId: base.companyId,
     actorId: base.actorId,
     foreignCompanyId: "20000000-0000-4000-8000-000000000002",
@@ -62,7 +62,7 @@ describeEmbedded("Paperclip semantic mock/production conformance", () => {
   beforeAll(async () => {
     temporary = await startEmbeddedPostgresTestDatabase("paperclip-semantic-conformance-");
     const db = createDb(temporary.connectionString);
-    await seedPaperclipSemanticConformance(db, ids);
+    await seedThinkingMachSemanticConformance(db, ids);
     mock = await CapabilityMockSemanticConformanceAdapter.create();
   }, 30_000);
 
@@ -73,7 +73,7 @@ describeEmbedded("Paperclip semantic mock/production conformance", () => {
 
   it("matches authorization, state, audit, retry, document, continuation, and terminal semantics", async () => {
     if (!temporary || !mock) throw new Error("semantic_conformance_fixture_not_started");
-    const production = await PaperclipProductionSemanticConformanceAdapter.create(
+    const production = await ThinkingMachProductionSemanticConformanceAdapter.create(
       createDb(temporary.connectionString),
       ids,
     );

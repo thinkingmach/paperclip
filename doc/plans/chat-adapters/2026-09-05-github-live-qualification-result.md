@@ -14,7 +14,7 @@ qualified live.
 
 ## 2026-09-07 current live checkpoint
 
-On `95cbbd08e`, the user-authorized PEM import connected **Paperclip Maya E2E
+On `95cbbd08e`, the user-authorized PEM import connected **ThinkingMach Maya E2E
 0906** (App ID `4853886`, installation `159668881`) to endpoint
 `e516ceb3-397c-4a28-9640-1b2779515fb9`. The installation is restricted to two
 private disposable repositories. The operator's `cryppadotta` identity is
@@ -23,7 +23,7 @@ linked to the local Board account through the private confirmation flow.
 The App now sends signed webhooks through stable Tailscale Funnel origin
 `https://dottas-macbook-pro.tail29c1aa.ts.net:10000`. Only provider webhook
 ingress is public; the board remains local/private. The temporary Cloudflare
-tunnel was stopped after a real signed issue comment reached Paperclip.
+tunnel was stopped after a real signed issue comment reached ThinkingMach.
 
 - [Issue 1](https://github.com/cryppadotta/paperclip-chat-e2e-enabled/issues/1)
   created CHA-1 before identity linking and received the expected safe guest
@@ -36,9 +36,9 @@ tunnel was stopped after a real signed issue comment reached Paperclip.
   `1325329e3` repairs the typed ACP terminal-error classification. The later
   response-selection repair described below is separately required.
 - [Disabled-repository issue 1](https://github.com/cryppadotta/paperclip-chat-e2e-disabled/issues/1#issuecomment-5571234021)
-  produced a GitHub webhook response **200 / ignored**, with no Paperclip
+  produced a GitHub webhook response **200 / ignored**, with no ThinkingMach
   conversation or task. Provider installation access did not override the
-  Paperclip allowlist.
+  ThinkingMach allowlist.
 
 At `2026-09-07T13:45Z`, on `1325329e3` plus the final-response selection,
 receipt, and scheduler working-tree changes, an unmentioned follow-up in
@@ -90,7 +90,7 @@ branch `qa/chat-review-0907`, commit
 
 The PR's main conversation received human comment `5572099126` and one
 [bot reply `5572100025`](https://github.com/cryppadotta/paperclip-chat-e2e-enabled/pull/3#issuecomment-5572100025)
-containing exactly `GH-PR-LEVEL-0907-OK`. Paperclip bound provider thread
+containing exactly `GH-PR-LEVEL-0907-OK`. ThinkingMach bound provider thread
 `github:cryppadotta/paperclip-chat-e2e-enabled:3` to conversation
 `6f313c48-e684-421f-a730-dd68112c1e2c` and task
 `5329b4bf-6b16-40d5-ad69-65bcbeac2ab3`. Run
@@ -102,7 +102,7 @@ comment control during this walkthrough. The test therefore used **Comment on
 this file** followed by **Add single comment**. Human review comment
 `3950666444` received one
 [bot reply `3950666803`](https://github.com/cryppadotta/paperclip-chat-e2e-enabled/pull/3/changes#r3950666803)
-containing exactly `GH-PR-REVIEW-0907-OK`. Paperclip bound the distinct provider
+containing exactly `GH-PR-REVIEW-0907-OK`. ThinkingMach bound the distinct provider
 thread `github:cryppadotta/paperclip-chat-e2e-enabled:3:rc:3950666444` to
 conversation `241f99a5-54ff-4bef-a0e7-313d69bf72b2` and task
 `860c7878-f1a6-498d-995c-6feaa735eb27`. Run
@@ -113,12 +113,12 @@ publication at `14:33:30.445Z` both settled through provider message
 than producing duplicates.
 
 This proves that a real PR main conversation and a real GitHub review-comment
-thread on the same PR bind to different Paperclip conversations and tasks, and
+thread on the same PR bind to different ThinkingMach conversations and tasks, and
 that both can return an exact agent response. It does **not** qualify a
 line-specific review comment: the exercised GitHub control was file-level. The
 review reply also appeared only after a page reload. Its roughly 73-second
 latency was dominated by a 72-second model turn (`ensure_session` was about
-433 ms), not Paperclip queueing or provider transport; the result was correct,
+433 ms), not ThinkingMach queueing or provider transport; the result was correct,
 but that wait remains a user-experience risk and prevents calling this path
 fully production-ready.
 
@@ -128,25 +128,25 @@ GitHub's native comment composer does not deliver uploaded bytes to the App.
 It first hosts the upload and writes a reference into the comment body. In the
 current GitHub UI, an image may appear as an HTML `<img src="https://github.com/user-attachments/assets/…">`
 element rather than Markdown image syntax; a general file appears as a
-Markdown link to `https://github.com/user-attachments/files/…`. Paperclip
+Markdown link to `https://github.com/user-attachments/files/…`. ThinkingMach
 retains a bounded set of safe HTTPS destinations in the normalized task text,
 but deliberately does not fetch or store those provider-hosted bytes. GitHub's
 [anonymized-URL rules](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls)
 also mean the URL itself can be a capability, so it remains ordinary external
-text rather than being republished as a Paperclip-owned attachment.
+text rather than being republished as a ThinkingMach-owned attachment.
 
 The inverse direction is also link-only. The GitHub App issue-comment and
 pull-review-comment APIs accept a Markdown body, but expose no attachment-byte
 upload field. Using GitHub CLI's `--attach` workaround would require repository
 push access, which is intentionally outside this chat connection's Issues and
-Pull requests permissions. Paperclip therefore must not claim that a checked
+Pull requests permissions. ThinkingMach therefore must not claim that a checked
 Board file was uploaded to GitHub. It now publishes an explicit limitation and,
 only when the Board has a safe externally configured URL, an authenticated
-Paperclip task link. A private/local Board produces a private-task notice with
+ThinkingMach task link. A private/local Board produces a private-task notice with
 no unusable localhost or webhook-ingress URL.
 
 The task banner presents this provider-specific boundary before send: checked
-files remain on the Paperclip task, while GitHub receives the authenticated
+files remain on the ThinkingMach task, while GitHub receives the authenticated
 task link or the private-task notice. Focused adapter coverage exercises both
 GitHub's native HTML image form and Markdown file-link form while asserting
 that neither becomes a native attachment. Integration coverage asserts both
@@ -199,15 +199,15 @@ below are historical, not descriptions of the current login or credential state.
 
 The evidence boundary is unchanged but is now quantified more precisely:
 
-- The archived endpoint `4e87c64e-7d0b-497d-85d2-6eb8820340fc` is genuine historical transport proof. One GitHub issue mapped to one Paperclip task; two inbound issue comments were recorded; an exact webhook redelivery folded into the existing delivery; and six outbound publications reached GitHub in one attempt each.
+- The archived endpoint `4e87c64e-7d0b-497d-85d2-6eb8820340fc` is genuine historical transport proof. One GitHub issue mapped to one ThinkingMach task; two inbound issue comments were recorded; an exact webhook redelivery folded into the existing delivery; and six outbound publications reached GitHub in one attempt each.
 - The repository used for that historical proof was deleted during its authorized cleanup. Its former provider URL now returns HTTP 404, so it cannot be opened as current visual evidence and must not be cited as proof of the present source revision.
-- Four agent runs in that historical task failed closed because the principal was unlinked and the instance had no low-trust isolation environment. That is a Paperclip governance boundary, not a GitHub transport failure, and it must not be presented as successful agent execution.
-- The current draft endpoint whose id begins `a31` contains only a Paperclip-generated webhook secret. It has no verified GitHub App identity, private key, installation, repository, signed ping, conversation, or task.
+- Four agent runs in that historical task failed closed because the principal was unlinked and the instance had no low-trust isolation environment. That is a ThinkingMach governance boundary, not a GitHub transport failure, and it must not be presented as successful agent execution.
+- The current draft endpoint whose id begins `a31` contains only a ThinkingMach-generated webhook secret. It has no verified GitHub App identity, private key, installation, repository, signed ping, conversation, or task.
 - Current setup is stopped at GitHub's **Confirm access** MFA challenge. That is an external account gate, not an implementation defect. Current-source live qualification cannot resume until the account owner completes that challenge and creates/installs the disposable App.
 
 ### Release decision at this checkpoint
 
-GitHub remains a release blocker for the five-provider claim. The current browser session is still stopped at the six-digit sudo-mode MFA prompt, before App creation, key generation, installation, signed ping, or any issue/PR/review webhook. Deterministic browser, integration, signature, lifecycle, concurrency, and permission tests establish implementation coverage only; they do not convert the historical deleted-repository run into current-source provider evidence. A temporary tunnel response would prove only that Paperclip's route is reachable, not that a durable production callback, GitHub App identity, or real event round trip is qualified.
+GitHub remains a release blocker for the five-provider claim. The current browser session is still stopped at the six-digit sudo-mode MFA prompt, before App creation, key generation, installation, signed ping, or any issue/PR/review webhook. Deterministic browser, integration, signature, lifecycle, concurrency, and permission tests establish implementation coverage only; they do not convert the historical deleted-repository run into current-source provider evidence. A temporary tunnel response would prove only that ThinkingMach's route is reachable, not that a durable production callback, GitHub App identity, or real event round trip is qualified.
 
 ## Historical setup-run evidence and blocker
 
@@ -219,11 +219,11 @@ The current endpoint is back in the honest pre-connect state: `draft`, at the pr
 
 ### Pre-connect secret trap found and healed
 
-The live setup attempt exposed a control-plane defect before GitHub credentials existed. Regenerating Paperclip's webhook secret was treated as rotation of a configured App, which moved the endpoint to `attention` and asked the operator to reconnect credentials that had never been supplied. That was a false degraded state, not a provider failure.
+The live setup attempt exposed a control-plane defect before GitHub credentials existed. Regenerating ThinkingMach's webhook secret was treated as rotation of a configured App, which moved the endpoint to `attention` and asked the operator to reconnect credentials that had never been supplied. That was a false degraded state, not a provider failure.
 
 The committed fix distinguishes first-time setup from live credential rotation:
 
-1. Paperclip generates a random 32-byte webhook secret server-side, vaults it through endpoint-owned secret references, returns the plaintext once from the board-authenticated setup-secret route, and marks the response `Cache-Control: no-store`.
+1. ThinkingMach generates a random 32-byte webhook secret server-side, vaults it through endpoint-owned secret references, returns the plaintext once from the board-authenticated setup-secret route, and marks the response `Cache-Control: no-store`.
 2. Normal endpoint reads expose only `webhookSecretConfigured`; they never return the secret. The setup UI presents a read-only one-time copy value, then shows only configured state after refresh.
 3. Generating or replacing a secret before any App identity/App credentials exist keeps—or heals—the endpoint to `draft` / provider setup with unchecked connection health. It clears any verification for the superseded secret but does not pretend a live App was degraded.
 4. Rotating the secret after an App is configured remains fail-closed: it disables the runtime and requires the operator to update GitHub and reconnect.
@@ -236,18 +236,18 @@ The signed setup-ping path also accepts a correctly signed GitHub `ping` before 
 
 The branch includes the following GitHub safety and concurrency behavior. These are code and local-test observations, not live GitHub qualification:
 
-1. **Immutable App identity:** Paperclip binds the endpoint to the numeric App registration identity returned by GitHub, separately from the operator-entered App ID used to sign the App JWT. Reconnect and first-setup recovery from `attention` both revalidate an already claimed identity; credentials for a different App are rejected with `chat_bot_identity_changed`, including after a crash between identity claim and secret persistence.
-2. **Signed setup-ping state and UI gating:** only a `ping` whose `X-Hub-Signature-256` validates against the current Paperclip-generated webhook secret sets `webhookVerifiedAt`. Missing or invalid signatures return HTTP 401. The setup UI polls this safe timestamp, displays waiting/verified state, and keeps **Connect and verify** disabled until the signed ping has arrived.
+1. **Immutable App identity:** ThinkingMach binds the endpoint to the numeric App registration identity returned by GitHub, separately from the operator-entered App ID used to sign the App JWT. Reconnect and first-setup recovery from `attention` both revalidate an already claimed identity; credentials for a different App are rejected with `chat_bot_identity_changed`, including after a crash between identity claim and secret persistence.
+2. **Signed setup-ping state and UI gating:** only a `ping` whose `X-Hub-Signature-256` validates against the current ThinkingMach-generated webhook secret sets `webhookVerifiedAt`. Missing or invalid signatures return HTTP 401. The setup UI polls this safe timestamp, displays waiting/verified state, and keeps **Connect and verify** disabled until the signed ping has arrived.
 3. **Fail-closed secret rotation:** generating a replacement webhook secret clears the prior verification timestamp, removes the active runtime, degrades/disables the connection, and returns setup to the provider-update step. Reconnect remains blocked until GitHub sends a correctly signed ping using the new secret. Concurrent rotation/reconnect paths are serialized so stale credentials cannot overwrite the rotated secret.
 4. **Atomic first-resource admission:** the first addressed setup repository is admitted inside the endpoint's serialized transaction. Concurrent root mentions from two initially disabled repositories can enable only one repository and create only its one conversation/task; the other repository remains disabled rather than racing through the first-resource exception.
-5. **Runtime singleflight:** concurrent webhooks that arrive while a configured GitHub runtime is cold share one initialization promise. Paperclip installs one runtime and both requests proceed through it instead of racing duplicate adapter instances.
+5. **Runtime singleflight:** concurrent webhooks that arrive while a configured GitHub runtime is cold share one initialization promise. ThinkingMach installs one runtime and both requests proceed through it instead of racing duplicate adapter instances.
 6. **Complete repository inventory:** GitHub installation-repository discovery follows successive 100-item pages, so an installation with more than 100 repositories is not silently truncated. Installation discovery likewise scans every page before enforcing the one-active-installation invariant.
 7. **Retryable subscription without duplicate task state:** if the provider thread subscription fails after the task, external comment, wakeup request, and message link commit, the delivery remains retryable. A retry reuses those durable idempotent records, attempts the subscription again, and does not create another task, comment, or wakeup.
 8. **Lifecycle revalidation:** installation creation or unsuspension re-authenticates the exact stored App identity and rechecks required permissions and events before recovery. App-ID, permission, or event drift fails closed: the endpoint moves to attention, the connection/runtime is disabled, resources and conversations remain unavailable, and the lifecycle delivery stays diagnosable/retryable rather than restoring access optimistically.
-9. **Stable repository identity:** repository rename or transfer is reconciled through GitHub's immutable numeric repository ID. Paperclip preserves the resource, conversation, task, allowlist choice, and follow-up route while updating mutable owner/name coordinates and provider URLs; a conflicting dual-coordinate binding fails closed.
-10. **Cold-start response budget:** the provider ingress deadline begins before runtime initialization. A signed webhook that cannot finish cold adapter startup inside the provider budget returns promptly and proceeds only through bounded durable retry instead of consuming GitHub's delivery timeout before Paperclip begins accounting for it.
+9. **Stable repository identity:** repository rename or transfer is reconciled through GitHub's immutable numeric repository ID. ThinkingMach preserves the resource, conversation, task, allowlist choice, and follow-up route while updating mutable owner/name coordinates and provider URLs; a conflicting dual-coordinate binding fails closed.
+10. **Cold-start response budget:** the provider ingress deadline begins before runtime initialization. A signed webhook that cannot finish cold adapter startup inside the provider budget returns promptly and proceeds only through bounded durable retry instead of consuming GitHub's delivery timeout before ThinkingMach begins accounting for it.
 11. **Provider-global App ownership:** the immutable numeric App registration
-    id has one live Paperclip endpoint even if GitHub transfers the App to a
+    id has one live ThinkingMach endpoint even if GitHub transfers the App to a
     different owner. Setup claims that id through a database uniqueness fence
     before persisting App credentials; concurrent cross-company attempts leave
     credentials only on the winner and do not reveal the owning company,
@@ -263,13 +263,13 @@ At the September 6 checkpoint, App registration and current-build provider deliv
 
 ## Historical-run scope
 
-- Paperclip base used for the live run: `5da649986016e4010da8156f83f5bfc9c0128be4`
+- ThinkingMach base used for the live run: `5da649986016e4010da8156f83f5bfc9c0128be4`
 - Reconciled release base after the run: `342c01fee`
 - Chat SDK / GitHub adapter: `4.39.0`
 - Provider: GitHub.com, disposable personal-account App and private repository
-- Paperclip endpoint: `4e87c64e-7d0b-497d-85d2-6eb8820340fc` (archived during cleanup)
+- ThinkingMach endpoint: `4e87c64e-7d0b-497d-85d2-6eb8820340fc` (archived during cleanup)
 - External conversation: `github:cryppadotta/paperclip-chat-e2e-enabled:issue:1`
-- Paperclip task: `9ad34556-30b5-47a1-b207-ba666d8d897e`
+- ThinkingMach task: `9ad34556-30b5-47a1-b207-ba666d8d897e`
 
 No token, webhook secret, private key, cookie, password, or one-time identity-link URL is recorded here.
 
@@ -277,13 +277,13 @@ No token, webhook secret, private key, cookie, password, or one-time identity-li
 
 The GitHub bring-your-own-App path passed the following core live round trip on `5da649986016e4010da8156f83f5bfc9c0128be4`:
 
-1. Paperclip generated and stored the webhook secret without exposing it through normal endpoint reads.
+1. ThinkingMach generated and stored the webhook secret without exposing it through normal endpoint reads.
 2. A private GitHub App was created with Issues and Pull requests set to read/write and only the selectable `issue_comment` and `pull_request_review_comment` events requested. GitHub supplied installation lifecycle events automatically.
-3. The App was installed on one selected private repository. Paperclip discovered that repository disabled by default.
-4. A mention sent before Paperclip access was enabled was durably filtered with `Destination is not enabled in Paperclip`.
-5. After enabling the repository, a root GitHub issue comment mentioning the immutable App bot created exactly one Paperclip conversation and one task.
+3. The App was installed on one selected private repository. ThinkingMach discovered that repository disabled by default.
+4. A mention sent before ThinkingMach access was enabled was durably filtered with `Destination is not enabled in ThinkingMach`.
+5. After enabling the repository, a root GitHub issue comment mentioning the immutable App bot created exactly one ThinkingMach conversation and one task.
 6. A non-mention follow-up in the same GitHub issue remained in the subscribed conversation.
-7. An explicit Paperclip board publication produced a GitHub bot reply and reached `published` state.
+7. An explicit ThinkingMach board publication produced a GitHub bot reply and reached `published` state.
 8. The setup test completed with endpoint status `active` and health message `Connected`.
 
 GitHub accepted all qualified webhook deliveries with HTTP 200 once a public relay was available. The initial Tailscale hostname was tailnet-only, so the run used a temporary TLS relay and then shut it down.
@@ -295,10 +295,10 @@ The isolated test instance had no sandbox workspace provider. Its automatic low-
 ## Cleanup
 
 - Closed the disposable GitHub issue.
-- Archived the Paperclip chat endpoint, which retired its endpoint-owned secrets but did not change any GitHub App registration, installation, repository grant, or webhook setting.
+- Archived the ThinkingMach chat endpoint, which retired its endpoint-owned secrets but did not change any GitHub App registration, installation, repository grant, or webhook setting.
 - Separately deleted all four disposable GitHub Apps in GitHub after qualifying the provider form and manifest paths.
 - Deleted the explicitly disposable private repository `paperclip-chat-e2e-enabled`.
-- Stopped the temporary registration server, public relay, and isolated Paperclip process.
+- Stopped the temporary registration server, public relay, and isolated ThinkingMach process.
 
 ## Historical local regression evidence
 

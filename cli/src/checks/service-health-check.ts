@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { PaperclipConfig } from "../config/schema.js";
-import { resolvePaperclipInstanceId } from "../config/home.js";
+import type { ThinkingMachConfig } from "../config/schema.js";
+import { resolveThinkingMachInstanceId } from "../config/home.js";
 import { readInstallManifest, resolveInstallStorePaths } from "../install-store.js";
 import {
   detectServiceManager,
@@ -15,11 +15,11 @@ import type { CheckResult } from "./index.js";
 type HealthResult = { ok: boolean; version: string | null; error?: string };
 type ServiceCheckDependencies = {
   detect: (instanceId: string) => Promise<ServiceManagerDetection>;
-  probe: (config: PaperclipConfig) => Promise<HealthResult>;
+  probe: (config: ThinkingMachConfig) => Promise<HealthResult>;
   shimPresent: (executablePath: string) => Promise<boolean>;
 };
 
-async function probeHealth(config: PaperclipConfig): Promise<HealthResult> {
+async function probeHealth(config: ThinkingMachConfig): Promise<HealthResult> {
   try {
     const response = await fetch(buildLocalHealthUrl(config.server.host, config.server.port), {
       signal: AbortSignal.timeout(2_000),
@@ -41,10 +41,10 @@ async function probeHealth(config: PaperclipConfig): Promise<HealthResult> {
 }
 
 export async function serviceHealthChecks(
-  config: PaperclipConfig,
+  config: ThinkingMachConfig,
   dependencies: Partial<ServiceCheckDependencies> = {},
 ): Promise<CheckResult[]> {
-  if (process.env.PAPERCLIP_SERVICE_MANAGED === "1") return [];
+  if (process.env.THINKINGMACH_SERVICE_MANAGED === "1") return [];
 
   const deps: ServiceCheckDependencies = {
     detect: (instanceId) => detectServiceManager({ instanceId }),
@@ -52,7 +52,7 @@ export async function serviceHealthChecks(
     shimPresent: (executablePath) => isExecutableFile(executablePath),
     ...dependencies,
   };
-  const instanceId = resolvePaperclipInstanceId();
+  const instanceId = resolveThinkingMachInstanceId();
   const detection = await deps.detect(instanceId);
   if (!detection.supported) {
     return [{ name: "Background service", status: "pass", message: detection.reason }];
@@ -84,7 +84,7 @@ export async function serviceHealthChecks(
           name: "Service definition",
           status: "fail",
           message: `Missing or drifted definition at ${manager.definitionPath}`,
-          repairHint: "Run `paperclipai service install` to regenerate the service definition",
+          repairHint: "Run `thinkingmach service install` to regenerate the service definition",
         },
   );
 
@@ -103,21 +103,21 @@ export async function serviceHealthChecks(
             message: `${status.serviceName} cannot start: no executable exists at ${serviceExecutable}`,
             repairHint:
               path.resolve(serviceExecutable) === path.resolve(resolveInstallStorePaths().shimPath)
-                ? "Run `paperclipai install` to restore the managed payload and shim, then `paperclipai service start`"
-                : `Restore the executable at ${serviceExecutable}, or unset PAPERCLIP_SHIM_PATH and run \`paperclipai install\` followed by \`paperclipai service install\` to re-point the service at the managed shim`,
+                ? "Run `thinkingmach install` to restore the managed payload and shim, then `thinkingmach service start`"
+                : `Restore the executable at ${serviceExecutable}, or unset THINKINGMACH_SHIM_PATH and run \`thinkingmach install\` followed by \`thinkingmach service install\` to re-point the service at the managed shim`,
           }
         : health.ok
           ? {
               name: "Service runtime",
               status: "fail",
-              message: `${status.serviceName} is inactive but the configured port is serving another Paperclip process`,
-              repairHint: "Run `paperclipai service start`, or stop the conflicting foreground process first",
+              message: `${status.serviceName} is inactive but the configured port is serving another ThinkingMach process`,
+              repairHint: "Run `thinkingmach service start`, or stop the conflicting foreground process first",
             }
           : {
               name: "Service runtime",
               status: "fail",
               message: `${status.serviceName} is ${status.detail ?? "inactive"}`,
-              repairHint: "Run `paperclipai service start`; inspect `paperclipai service logs` if it does not stay up",
+              repairHint: "Run `thinkingmach service start`; inspect `thinkingmach service logs` if it does not stay up",
             },
   );
 
@@ -131,14 +131,14 @@ export async function serviceHealthChecks(
           name: "Service health",
           status: "fail",
           message: health.error ?? "Health endpoint did not report ok",
-          repairHint: "Inspect `paperclipai service status` and `paperclipai service logs`",
+          repairHint: "Inspect `thinkingmach service status` and `thinkingmach service logs`",
         }
       : expectedVersion && health.version !== expectedVersion
         ? {
             name: "Service version",
             status: "fail",
             message: `Running ${health.version ?? "unknown"}; managed install is ${expectedVersion}`,
-            repairHint: "Run `paperclipai service restart --expected-version " + expectedVersion + "`",
+            repairHint: "Run `thinkingmach service restart --expected-version " + expectedVersion + "`",
           }
         : status.active
           ? {
@@ -158,7 +158,7 @@ export async function serviceHealthChecks(
       name: "Service linger",
       status: "warn",
       message: "Start-on-login is enabled but systemd user lingering is off",
-      repairHint: "Re-run `paperclipai service install --enable-linger` if the service must survive logout",
+      repairHint: "Re-run `thinkingmach service install --enable-linger` if the service must survive logout",
     });
   }
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Agent, FeedbackVote, IssueComment } from "@paperclipai/shared";
+import type { Agent, FeedbackVote, IssueComment } from "@thinkingmach/shared";
 import type { TranscriptEntry } from "@/adapters";
 import type { LiveRunForIssue } from "@/api/heartbeats";
 import { CommentThread } from "@/components/CommentThread";
@@ -384,7 +384,7 @@ const issueChatComments: IssueChatComment[] = [
     id: "comment-issue-agent",
     authorAgentId: codexAgent.id,
     authorUserId: null,
-    body: "I kept the existing component contracts and added fixtures with realistic Paperclip work: checkout, comments, linked runs, and review feedback.\n\nFlaky CI lives in https://github.com/acme/web/pull/242 — re-running. Plain control link: https://random.example.com/path stays undecorated.",
+    body: "I kept the existing component contracts and added fixtures with realistic ThinkingMach work: checkout, comments, linked runs, and review feedback.\n\nFlaky CI lives in https://github.com/acme/web/pull/242 — re-running. Plain control link: https://random.example.com/path stays undecorated.",
     createdAt: new Date("2026-04-20T13:50:00.000Z"),
     runId: "run-issue-chat-01",
     runAgentId: codexAgent.id,
@@ -396,7 +396,7 @@ const issueChatComments: IssueChatComment[] = [
     authorUserId: null,
     runId: "run-issue-chat-01",
     runAgentId: codexAgent.id,
-    body: "Paperclip needs a disposition before this issue can continue.",
+    body: "ThinkingMach needs a disposition before this issue can continue.",
     presentation: {
       kind: "system_notice",
       tone: "warning",
@@ -474,7 +474,7 @@ const issueThreadNoticeReviewComments: IssueChatComment[] = [
     authorUserId: null,
     runId: "run-notice-source",
     runAgentId: codexAgent.id,
-    body: "Paperclip needs a disposition before this issue can continue.",
+    body: "ThinkingMach needs a disposition before this issue can continue.",
     presentation: {
       kind: "system_notice",
       tone: "warning",
@@ -999,7 +999,7 @@ function ChatCommentsStories() {
           <h1 className="mt-2 text-3xl font-semibold tracking-tight">Threaded work conversations</h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
             Fixture-backed coverage for classic issue comments, embedded run chat, and the assistant-style issue chat
-            surface. The scenarios use Paperclip operational content with mixed authors, system timeline events,
+            surface. The scenarios use ThinkingMach operational content with mixed authors, system timeline events,
             markdown, code blocks, @mentions, links, queued comments, tool calls, and streaming run output.
           </p>
         </section>

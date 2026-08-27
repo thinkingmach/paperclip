@@ -1561,11 +1561,11 @@ describe("ACPX installation integrity", () => {
           `const module = await import(${JSON.stringify(moduleUrl)});`,
           `const credentials = await import(${JSON.stringify(credentialModuleUrl)});`,
           `const profile = ${JSON.stringify(fixture.profile)};`,
-          `const credential = await credentials.stageManagedCodexCredential({ agentHomeDirectory: ${JSON.stringify(credentialHome)}, environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"original"}' } });`,
+          `const credential = await credentials.stageManagedCodexCredential({ agentHomeDirectory: ${JSON.stringify(credentialHome)}, environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"original"}' } });`,
           `const paths = new Map(${JSON.stringify([...fixture.paths])});`,
           "const installation = await module.verifyQualifiedAcpxInstallation(profile, (name) => paths.get(name));",
           "const lease = await installation.openCommand();",
-          `const provider = lease.spawn([], { env: { ...process.env, PAPERCLIP_PROVIDER_PID_FILE: ${JSON.stringify(pidFile)} } }, { credentialFenceFds: credential.lifetimeFenceFds, activateCredentialFenceOwner: (pid) => credential.activateLifetimeOwner(pid) });`,
+          `const provider = lease.spawn([], { env: { ...process.env, THINKINGMACH_PROVIDER_PID_FILE: ${JSON.stringify(pidFile)} } }, { credentialFenceFds: credential.lifetimeFenceFds, activateCredentialFenceOwner: (pid) => credential.activateLifetimeOwner(pid) });`,
           "await module.awaitVerifiedAcpxProviderOwnership(provider);",
           'process.send?.({ type: "ready", guardianPid: provider.pid });',
           "process.stdin.resume();",
@@ -1596,7 +1596,7 @@ describe("ACPX installation integrity", () => {
             stageManagedCodexCredential({
               agentHomeDirectory: credentialHome,
               environment: {
-                PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
+                THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
               },
             }),
           ).rejects.toThrow("already has an active lease");
@@ -1619,7 +1619,7 @@ describe("ACPX installation integrity", () => {
             contender = await stageManagedCodexCredential({
               agentHomeDirectory: credentialHome,
               environment: {
-                PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
+                THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
               },
             });
             return true;
@@ -1660,11 +1660,11 @@ describe("ACPX installation integrity", () => {
           `const module = await import(${JSON.stringify(moduleUrl)});`,
           `const credentials = await import(${JSON.stringify(credentialModuleUrl)});`,
           `const profile = ${JSON.stringify(fixture.profile)};`,
-          `const credential = await credentials.stageManagedCodexCredential({ agentHomeDirectory: ${JSON.stringify(credentialHome)}, environment: { PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"original"}' } });`,
+          `const credential = await credentials.stageManagedCodexCredential({ agentHomeDirectory: ${JSON.stringify(credentialHome)}, environment: { THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"original"}' } });`,
           `const paths = new Map(${JSON.stringify([...fixture.paths])});`,
           "const installation = await module.verifyQualifiedAcpxInstallation(profile, (name) => paths.get(name));",
           "const lease = await installation.openCommand();",
-          `const provider = lease.spawn([], { env: { ...process.env, PAPERCLIP_PROVIDER_PID_FILE: ${JSON.stringify(pidFile)} } }, { credentialFenceFds: credential.lifetimeFenceFds, activateCredentialFenceOwner: (pid) => credential.activateLifetimeOwner(pid) });`,
+          `const provider = lease.spawn([], { env: { ...process.env, THINKINGMACH_PROVIDER_PID_FILE: ${JSON.stringify(pidFile)} } }, { credentialFenceFds: credential.lifetimeFenceFds, activateCredentialFenceOwner: (pid) => credential.activateLifetimeOwner(pid) });`,
           "await module.awaitVerifiedAcpxProviderOwnership(provider);",
           'process.send?.({ type: "ready", guardianPid: provider.pid });',
           "process.stdin.resume();",
@@ -1697,7 +1697,7 @@ describe("ACPX installation integrity", () => {
         const contender = await stageManagedCodexCredential({
           agentHomeDirectory: credentialHome,
           environment: {
-            PAPERCLIP_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
+            THINKINGMACH_ACPX_CODEX_AUTH_JSON_SECRET: '{"owner":"contender"}',
           },
         });
         await contender.close();
@@ -1736,7 +1736,7 @@ describe("ACPX installation integrity", () => {
       );
       const guardian = (await installation.openCommand()).spawn(
         [],
-        { env: { ...process.env, PAPERCLIP_PROVIDER_PID_FILE: pidFile } },
+        { env: { ...process.env, THINKINGMACH_PROVIDER_PID_FILE: pidFile } },
         {
           credentialFenceFds: [fenceFds[0]!, fenceFds[1]!],
           activateCredentialFenceOwner: async () => undefined,
@@ -1792,7 +1792,7 @@ describe("ACPX installation integrity", () => {
       );
       const provider = (await installation.openCommand()).spawn(
         [],
-        { env: { ...process.env, PAPERCLIP_PROVIDER_PID_FILE: pidFile } },
+        { env: { ...process.env, THINKINGMACH_PROVIDER_PID_FILE: pidFile } },
         {
           credentialFenceFds: [fenceFds[0]!, fenceFds[1]!],
           activateCredentialFenceOwner: async () => undefined,
@@ -1836,7 +1836,7 @@ describe("ACPX installation integrity", () => {
       );
       const guardian = (await installation.openCommand()).spawn(
         [],
-        { env: { ...process.env, PAPERCLIP_PROVIDER_PID_FILE: pidFile } },
+        { env: { ...process.env, THINKINGMACH_PROVIDER_PID_FILE: pidFile } },
         {
           credentialFenceFds: [fenceFds[0]!, fenceFds[1]!],
           activateCredentialFenceOwner: async () => undefined,
@@ -1928,7 +1928,7 @@ async function persistentInstallationFixture() {
   const command = [
     "#!/usr/bin/env node",
     'const fs = require("node:fs");',
-    "fs.writeFileSync(process.env.PAPERCLIP_PROVIDER_PID_FILE, String(process.pid));",
+    "fs.writeFileSync(process.env.THINKINGMACH_PROVIDER_PID_FILE, String(process.pid));",
     "setInterval(() => undefined, 1_000);",
   ].join("\n");
   await writeFile(fixture.commandPath, command);

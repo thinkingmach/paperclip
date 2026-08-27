@@ -11,12 +11,12 @@ import {
   issueRecoveryActions,
   issues,
   nativeRunFinalizations,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type {
   ControlPlanePort,
   NativeExecutionInputV1,
   PrpEvent,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 
 const provider = vi.hoisted(() => ({ execute: vi.fn() }));
@@ -27,9 +27,9 @@ vi.mock("../../vendor/paperclip-runner/index.js", async (importOriginal) => ({
   executeNativeSession: provider.execute,
 }));
 
-import { executePaperclipNativeSession } from "./native-session-executor.js";
+import { executeThinkingMachNativeSession } from "./native-session-executor.js";
 import { buildNativeCompletionContract } from "./completion-contracts.js";
-import { PaperclipControlPlanePort } from "./paperclip-control-plane-port.js";
+import { ThinkingMachControlPlanePort } from "./paperclip-control-plane-port.js";
 import { prepareNativeHeartbeatRun } from "./prepare-native-run.js";
 
 describe("native provider capacity failure persistence", () => {
@@ -203,7 +203,7 @@ describe("native provider capacity failure persistence", () => {
       if (replayed) {
         // Model a controller crash after the event commit but before its
         // observational callback or failure coordinator could run.
-        const priorPort = new PaperclipControlPlanePort(db, {
+        const priorPort = new ThinkingMachControlPlanePort(db, {
           companyId,
           issueId,
           runId,
@@ -234,7 +234,7 @@ describe("native provider capacity failure persistence", () => {
           },
         );
       await expect(
-        executePaperclipNativeSession({
+        executeThinkingMachNativeSession({
           db,
           execution,
           runnerInstanceId: native.runnerInstanceId,

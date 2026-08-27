@@ -3,7 +3,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { IssueRecoveryAction } from "@paperclipai/shared";
+import type { IssueRecoveryAction } from "@thinkingmach/shared";
 import { WorkspaceExportRecovery } from "./WorkspaceExportRecovery";
 const retry = vi.hoisted(() => vi.fn());
 vi.mock("../api/issues", () => ({ issuesApi: { retryWorkspaceExport: retry } }));

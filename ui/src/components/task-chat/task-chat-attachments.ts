@@ -5,17 +5,9 @@
  * ("[name](/api/attachments/<id>/content)") so posted bubbles can render them
  * as the same chips instead of bare links.
  */
-import {
-  FileArchive,
-  FileAudio,
-  FileCode,
-  FileSpreadsheet,
-  FileText,
-  FileVideo,
-  File as FileIcon,
-} from "lucide-react";
+import { FileArchive, FileAudio, FileCode, FileSpreadsheet, FileText, FileVideo, File as FileIcon,  } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { IssueAttachment } from "@paperclipai/shared";
+import type { IssueAttachment } from "@thinkingmach/shared";
 
 export interface FileKind {
   icon: LucideIcon;

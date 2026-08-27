@@ -69,7 +69,7 @@ export interface CompleteControlPlaneRunInput {
 /**
  * The only control-plane surface the standalone runner may call.
  *
- * Production Paperclip implements this port in a later integration phase. The
+ * Production ThinkingMach implements this port in a later integration phase. The
  * runner package never imports the server, UI, or database that sits behind it.
  */
 export interface ControlPlanePort {

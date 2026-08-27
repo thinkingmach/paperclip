@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { eq, and } from "drizzle-orm";
-import { activityLog, agents, companies, createDb, heartbeatRuns, issues, issueComments } from "@paperclipai/db";
+import { activityLog, agents, companies, createDb, heartbeatRuns, issues, issueComments } from "@thinkingmach/db";
 import { startEmbeddedPostgresTestDatabase } from "../../__tests__/helpers/embedded-postgres.js";
 import { issueService } from "../issues.js";
-import { PaperclipRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
+import { ThinkingMachRunnerToolAuthority } from "./paperclip-runner-tool-authority.js";
 
 describe("runner task reassignment", () => {
   let temporary: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>>;
@@ -31,7 +31,7 @@ describe("runner task reassignment", () => {
     const enqueueWakeup = vi.fn().mockResolvedValue({ id: randomUUID() });
     const stopTaskForReassignment = vi.fn().mockResolvedValue(undefined);
     const binding = { companyId, agentId, issueId, runId, enqueueWakeup, stopTaskForReassignment };
-    const authority = new PaperclipRunnerToolAuthority(db, binding);
+    const authority = new ThinkingMachRunnerToolAuthority(db, binding);
     const call = { tool: "reassign_task", callId: "handoff", arguments: { taskId: targetId, assigneeActorId: nextId, expectedAssigneeActorId: agentId, expectedStatusVersion: 0, reason: "Engineer owns implementation; retain the existing plan.", idempotencyKey: "handoff" } };
     const target = async () => (await db.select().from(issues).where(eq(issues.id, targetId)))[0]!;
     return { companyId, agentId, nextId, issueId, targetId, runId, authority, binding, call, target, enqueueWakeup, stopTaskForReassignment };
@@ -62,7 +62,7 @@ describe("runner task reassignment", () => {
     const replacement = randomUUID();
     await db.insert(heartbeatRuns).values({ id: replacement, companyId: f.companyId, agentId: f.agentId, nativeIssueId: f.issueId, runtimeMode: "native", status: "running", invocationSource: "assignment", triggerDetail: "system" });
     await db.update(issues).set({ executionRunId: replacement }).where(eq(issues.id, f.issueId));
-    await expect(new PaperclipRunnerToolAuthority(db, { ...f.binding, runId: replacement }).execute(f.call)).resolves.toEqual(receipt);
+    await expect(new ThinkingMachRunnerToolAuthority(db, { ...f.binding, runId: replacement }).execute(f.call)).resolves.toEqual(receipt);
     expect((await f.target()).statusVersion).toBe(1);
   });
 

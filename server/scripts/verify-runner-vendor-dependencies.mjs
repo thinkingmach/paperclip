@@ -69,7 +69,7 @@ export async function findRunnerExternalPackages(entryPoints) {
     if (!existsSync(entryPoint)) {
       throw new Error(
         `paperclip-runner vendor check: expected build output at ${entryPoint}. ` +
-          `Run "pnpm --filter @paperclipai/paperclip-runner build" first.`,
+          `Run "pnpm --filter @thinkingmach/paperclip-runner build" first.`,
       );
     }
   }

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   listCursorSkills,
   syncCursorSkills,
-} from "@paperclipai/adapter-cursor-local/server";
+} from "@thinkingmach/adapter-cursor-local/server";
 
 async function makeTempDir(prefix: string): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
@@ -19,7 +19,7 @@ async function createSkillDir(root: string, name: string) {
 }
 
 describe("cursor local skill sync", () => {
-  const paperclipKey = "paperclipai/paperclip/paperclip";
+  const paperclipKey = "thinkingmach/paperclip/paperclip";
   const cleanupDirs = new Set<string>();
 
   afterEach(async () => {
@@ -27,7 +27,7 @@ describe("cursor local skill sync", () => {
     cleanupDirs.clear();
   });
 
-  it("defaults and installs the operational Paperclip skill in the Cursor skills home", async () => {
+  it("defaults and installs the operational ThinkingMach skill in the Cursor skills home", async () => {
     const home = await makeTempDir("paperclip-cursor-skill-sync-");
     cleanupDirs.add(home);
 
@@ -71,7 +71,7 @@ describe("cursor local skill sync", () => {
     expect((await fs.lstat(path.join(home, ".cursor", "skills", "paperclip"))).isSymbolicLink()).toBe(true);
   });
 
-  it("recognizes company-library runtime skills supplied outside the bundled Paperclip directory", async () => {
+  it("recognizes company-library runtime skills supplied outside the bundled ThinkingMach directory", async () => {
     const home = await makeTempDir("paperclip-cursor-runtime-skills-home-");
     const runtimeSkills = await makeTempDir("paperclip-cursor-runtime-skills-src-");
     cleanupDirs.add(home);
@@ -88,7 +88,7 @@ describe("cursor local skill sync", () => {
         env: {
           HOME: home,
         },
-        paperclipRuntimeSkills: [
+        thinkingmachRuntimeSkills: [
           {
             key: "paperclip",
             runtimeName: "paperclip",

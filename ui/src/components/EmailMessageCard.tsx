@@ -5,7 +5,7 @@ import type {
   EmailMessage,
   EmailPublicationSummary,
   EmailThreadSummary,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { emailApi } from "@/api/email";
 import { issuesApi } from "@/api/issues";
 import { useChatConnectorsEnabled } from "@/hooks/useChatConnectorsEnabled";

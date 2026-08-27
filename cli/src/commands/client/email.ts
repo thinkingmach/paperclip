@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { Command } from "commander";
-import { emailSendSchema } from "@paperclipai/shared";
+import { emailSendSchema } from "@thinkingmach/shared";
 import {
   addCommonClientOptions,
   resolveCommandContext,

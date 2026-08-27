@@ -5,7 +5,7 @@ import { startRunnerApiTestServer } from "./helpers/runner-api-server.js";
 describe("connection eval real-server fixtures", () => {
   let server: Awaited<ReturnType<typeof startRunnerApiTestServer>>;
   beforeAll(async () => {
-    vi.stubEnv("PAPERCLIP_AGENT_JWT_SECRET", randomUUID());
+    vi.stubEnv("THINKINGMACH_AGENT_JWT_SECRET", randomUUID());
     server = await startRunnerApiTestServer();
   }, 60_000);
   afterAll(async () => { await server?.close(); vi.unstubAllEnvs(); });

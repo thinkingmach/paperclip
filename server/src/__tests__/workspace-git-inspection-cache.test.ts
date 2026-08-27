@@ -1,4 +1,4 @@
-import type { ExecutionWorkspace } from "@paperclipai/shared";
+import type { ExecutionWorkspace } from "@thinkingmach/shared";
 import { afterEach, expect, it, vi } from "vitest";
 import { createWorkspaceGitInspectionCache } from "../services/workspace-git-inspection-cache.js";
 

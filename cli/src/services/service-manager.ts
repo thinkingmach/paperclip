@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { resolvePaperclipHomeDir, resolvePaperclipInstanceId } from "../config/home.js";
+import { resolveThinkingMachHomeDir, resolveThinkingMachInstanceId } from "../config/home.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -74,11 +74,11 @@ function escapeRegExp(value: string): string {
 }
 
 export function resolveServiceShimPath(homeDir = os.homedir()): string {
-  return process.env.PAPERCLIP_SHIM_PATH?.trim() || path.join(homeDir, ".local", "bin", "paperclipai");
+  return process.env.THINKINGMACH_SHIM_PATH?.trim() || path.join(homeDir, ".local", "bin", "thinkingmach");
 }
 
 // The installed definition, not the current environment, is the truth
-// about what the service executes: PAPERCLIP_SHIM_PATH may have changed
+// about what the service executes: THINKINGMACH_SHIM_PATH may have changed
 // or been unset since the definition was written.
 function unescapeSystemd(value: string): string {
   return value.replace(/\\\\|\\"|\$\$|%%/g, (m) =>
@@ -117,16 +117,16 @@ export async function isExecutableFile(filePath: string): Promise<boolean> {
 }
 
 export function systemdServiceName(instanceId: string): string {
-  return instanceId === "default" ? "paperclipai.service" : `paperclipai-${instanceId}.service`;
+  return instanceId === "default" ? "thinkingmach.service" : `thinkingmach-${instanceId}.service`;
 }
 
 export function launchdServiceName(instanceId: string): string {
-  return instanceId === "default" ? "ing.paperclip.paperclipai" : `ing.paperclip.paperclipai.${instanceId}`;
+  return instanceId === "default" ? "ing.paperclip.thinkingmach" : `ing.paperclip.thinkingmach.${instanceId}`;
 }
 
 export function renderSystemdUnit(input: { instanceId: string; shimPath: string; homeDir: string }): string {
   return `[Unit]
-Description=Paperclip AI (${escapeSystemd(input.instanceId)})
+Description=ThinkingMach AI (${escapeSystemd(input.instanceId)})
 After=network.target
 StartLimitIntervalSec=60
 StartLimitBurst=5
@@ -135,9 +135,9 @@ StartLimitBurst=5
 Type=notify
 NotifyAccess=all
 ExecStart="${escapeSystemd(input.shimPath)}" run --instance "${escapeSystemd(input.instanceId)}"
-Environment="PAPERCLIP_SERVICE_MANAGED=1"
-Environment="PAPERCLIP_INSTANCE_ID=${escapeSystemd(input.instanceId)}"
-Environment="PAPERCLIP_HOME=${escapeSystemd(input.homeDir)}"
+Environment="THINKINGMACH_SERVICE_MANAGED=1"
+Environment="THINKINGMACH_INSTANCE_ID=${escapeSystemd(input.instanceId)}"
+Environment="THINKINGMACH_HOME=${escapeSystemd(input.homeDir)}"
 WorkingDirectory=%h
 Restart=always
 RestartSec=5
@@ -161,9 +161,9 @@ export function renderLaunchdPlist(input: { instanceId: string; shimPath: string
   </array>
   <key>EnvironmentVariables</key>
   <dict>
-    <key>PAPERCLIP_SERVICE_MANAGED</key><string>1</string>
-    <key>PAPERCLIP_INSTANCE_ID</key><string>${escapeXml(input.instanceId)}</string>
-    <key>PAPERCLIP_HOME</key><string>${escapeXml(input.homeDir)}</string>
+    <key>THINKINGMACH_SERVICE_MANAGED</key><string>1</string>
+    <key>THINKINGMACH_INSTANCE_ID</key><string>${escapeXml(input.instanceId)}</string>
+    <key>THINKINGMACH_HOME</key><string>${escapeXml(input.homeDir)}</string>
   </dict>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
@@ -206,7 +206,7 @@ export class SystemdServiceManager implements ServiceManager {
   readonly serviceName: string;
   readonly definitionPath: string;
 
-  constructor(readonly instanceId: string, private readonly runner: CommandRunner = defaultCommandRunner, private readonly homeDir = resolvePaperclipHomeDir(), private readonly shimPath = resolveServiceShimPath(), userHomeDir = os.homedir()) {
+  constructor(readonly instanceId: string, private readonly runner: CommandRunner = defaultCommandRunner, private readonly homeDir = resolveThinkingMachHomeDir(), private readonly shimPath = resolveServiceShimPath(), userHomeDir = os.homedir()) {
     this.serviceName = systemdServiceName(instanceId);
     this.definitionPath = path.join(userHomeDir, ".config", "systemd", "user", this.serviceName);
   }
@@ -281,7 +281,7 @@ export class LaunchdServiceManager implements ServiceManager {
   private readonly stdoutPath: string;
   private readonly stderrPath: string;
 
-  constructor(readonly instanceId: string, private readonly runner: CommandRunner = defaultCommandRunner, private readonly homeDir = resolvePaperclipHomeDir(), private readonly shimPath = resolveServiceShimPath(), userHomeDir = os.homedir()) {
+  constructor(readonly instanceId: string, private readonly runner: CommandRunner = defaultCommandRunner, private readonly homeDir = resolveThinkingMachHomeDir(), private readonly shimPath = resolveServiceShimPath(), userHomeDir = os.homedir()) {
     this.serviceName = launchdServiceName(instanceId);
     this.definitionPath = path.join(userHomeDir, "Library", "LaunchAgents", `${this.serviceName}.plist`);
     const logDir = path.join(homeDir, "instances", instanceId, "logs");
@@ -346,23 +346,23 @@ export class LaunchdServiceManager implements ServiceManager {
 export type ServiceManagerDetection = { supported: true; manager: ServiceManager } | { supported: false; reason: string };
 
 export async function detectServiceManager(input: { instanceId?: string; platform?: NodeJS.Platform; runner?: CommandRunner } = {}): Promise<ServiceManagerDetection> {
-  const instanceId = resolvePaperclipInstanceId(input.instanceId);
+  const instanceId = resolveThinkingMachInstanceId(input.instanceId);
   const platform = input.platform ?? process.platform;
   const runner = input.runner ?? defaultCommandRunner;
   if (platform === "darwin") return { supported: true, manager: new LaunchdServiceManager(instanceId, runner) };
-  if (platform !== "linux") return { supported: false, reason: `Service management is not supported on ${platform}. Use paperclipai run instead.` };
+  if (platform !== "linux") return { supported: false, reason: `Service management is not supported on ${platform}. Use thinkingmach run instead.` };
   try {
     await runner("systemctl", ["--user", "show-environment"]);
     return { supported: true, manager: new SystemdServiceManager(instanceId, runner) };
   } catch {
-    return { supported: false, reason: "No usable systemd user manager was detected (common in containers and WSL1). Use paperclipai run instead." };
+    return { supported: false, reason: "No usable systemd user manager was detected (common in containers and WSL1). Use thinkingmach run instead." };
   }
 }
 
 export async function assertForegroundRunAllowed(instanceId: string, force = false, detector: typeof detectServiceManager = detectServiceManager): Promise<void> {
-  if (force || process.env.PAPERCLIP_SERVICE_MANAGED === "1") return;
+  if (force || process.env.THINKINGMACH_SERVICE_MANAGED === "1") return;
   const detection = await detector({ instanceId });
   if (!detection.supported) return;
   const status = await detection.manager.status();
-  if (status.active) throw new Error(`Paperclip instance '${instanceId}' is already running as ${status.serviceName}. Use 'paperclipai service status --instance ${instanceId}' or pass --force to bypass this safety check.`);
+  if (status.active) throw new Error(`ThinkingMach instance '${instanceId}' is already running as ${status.serviceName}. Use 'thinkingmach service status --instance ${instanceId}' or pass --force to bypass this safety check.`);
 }

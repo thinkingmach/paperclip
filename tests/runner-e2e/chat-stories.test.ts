@@ -67,7 +67,7 @@ describe("active chat follow-up oracle", () => {
       expect(cell.suite.manualOnly).toBe(true);
       expect(cell.profile.generation).toBe("native");
       expect(cell.environment.id).toBe("local");
-      expect(buildRunnerE2EProcessEnvironment({}, [cell]).PAPERCLIP_RUNNER_API_TOOLS_ENABLED).toBeUndefined();
+      expect(buildRunnerE2EProcessEnvironment({}, [cell]).THINKINGMACH_RUNNER_API_TOOLS_ENABLED).toBeUndefined();
     }
   });
 });

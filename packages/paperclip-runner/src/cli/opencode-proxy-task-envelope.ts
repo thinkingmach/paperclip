@@ -19,20 +19,20 @@ export function openCodeProxyTaskEnvelope(params: Record<string, unknown>) {
         .map((value) => value.trim())
     : [];
   return createCodexTaskEnvelope({
-    objective: "Complete the provider turn supplied by Paperclip Runner.",
+    objective: "Complete the provider turn supplied by ThinkingMach Runner.",
     ...(revision && criterionIds.length > 0
       ? {
           contractRevision: revision,
           criteria: criterionIds.map((id) => ({
             id,
-            requirement: `Satisfy the Paperclip completion criterion ${id}.`,
+            requirement: `Satisfy the ThinkingMach completion criterion ${id}.`,
           })),
         }
       : {}),
     constraints: [
       text(params.baseInstructions, "Complete only the supplied task."),
       "Work only inside the supplied working directory.",
-      "Use Paperclip MCP tools for semantic operations.",
+      "Use ThinkingMach MCP tools for semantic operations.",
     ],
   });
 }

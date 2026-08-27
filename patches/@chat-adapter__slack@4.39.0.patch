@@ -36,7 +36,7 @@ index b80888b6d87e8ad429d18cc955c4c5048a55722a..081e3b1664d3e65d1decf82bbf314909
 +    await this.chat.processSlashCommand(event, options);
 +    return Response.json({
 +      response_type: "ephemeral",
-+      text: "Paperclip received this command."
++      text: "ThinkingMach received this command."
 +    });
    }
    /**

@@ -38,7 +38,7 @@ function makeArtifact(overrides: Partial<CompanyArtifact> = {}): CompanyArtifact
     openPath: "/files/art-1.png",
     downloadPath: "/files/art-1.png?download=1",
     issue: { id: "issue-1", identifier: "PAP-10306", title: "Landing visuals" },
-    project: { id: "proj-1", name: "Paperclip App" },
+    project: { id: "proj-1", name: "ThinkingMach App" },
     createdByAgent: { id: "agent-1", name: "ClaudeCoder" },
     // Local, not UTC: the card renders "Last edited" from the local calendar
     // day, and noon UTC is already the 2nd at UTC+14.

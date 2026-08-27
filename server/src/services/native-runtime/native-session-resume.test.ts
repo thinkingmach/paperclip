@@ -22,14 +22,14 @@ import {
   heartbeatRuns,
   issues,
   nativeRunResults,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { describe, expect, it, vi } from "vitest";
 import {
   CodexAppServerDriver,
   HarnessDriverBackend,
   createCodexTaskEnvelope,
   createRunnerdCodexTransport as createCapabilityRunnerdCodexTransport,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -52,7 +52,7 @@ import {
   retainedNativeCleanupJournalMatches,
 } from "./native-session-executor.js";
 import * as publicationSignals from "../chat-publication-reconciliation.js";
-import { PaperclipControlPlanePort } from "./paperclip-control-plane-port.js";
+import { ThinkingMachControlPlanePort } from "./paperclip-control-plane-port.js";
 import {
   LIST_CHAT_ATTACHMENTS_TOOL_DEFINITION,
   REUSE_CHAT_ATTACHMENT_TOOL_DEFINITION,
@@ -546,7 +546,7 @@ const recoveryFakeCodex = resolve(
       });
       expect(normalized.sourceEventId).toBe(`${runnerInstanceId}:${runId}:1`);
       expect(normalized.payload).not.toHaveProperty("processId");
-      const port = new PaperclipControlPlanePort(db, {
+      const port = new ThinkingMachControlPlanePort(db, {
         companyId,
         issueId,
         agentId,
@@ -682,7 +682,7 @@ const recoveryFakeCodex = resolve(
     const bin = join(scratch, "bin");
     const workspace = join(scratch, "workspace");
     const sourceHome = join(scratch, "source-home");
-    const previousStateBase = process.env.PAPERCLIP_RUNNER_STATE_DIR;
+    const previousStateBase = process.env.THINKINGMACH_RUNNER_STATE_DIR;
     const server = createServer();
     let firstSession: NativeSession | undefined;
     const runnerDiagnostics: string[] = [];
@@ -690,7 +690,7 @@ const recoveryFakeCodex = resolve(
       runnerDiagnostics.push(chunk.slice(-4_096));
       if (runnerDiagnostics.length > 32) runnerDiagnostics.shift();
     };
-    process.env.PAPERCLIP_RUNNER_STATE_DIR = stateBase;
+    process.env.THINKINGMACH_RUNNER_STATE_DIR = stateBase;
     try {
       await Promise.all(
         [bin, workspace, sourceHome].map((path) =>
@@ -963,7 +963,7 @@ const recoveryFakeCodex = resolve(
       });
       let continuity: Record<string, unknown> | undefined;
       const controlPlaneInstanceId = randomUUID();
-      const port = new PaperclipControlPlanePort(db, {
+      const port = new ThinkingMachControlPlanePort(db, {
         companyId,
         issueId,
         runId: currentRunId,
@@ -1159,8 +1159,8 @@ const recoveryFakeCodex = resolve(
       server.closeAllConnections();
       await new Promise<void>((done) => server.close(() => done()));
       if (previousStateBase === undefined)
-        delete process.env.PAPERCLIP_RUNNER_STATE_DIR;
-      else process.env.PAPERCLIP_RUNNER_STATE_DIR = previousStateBase;
+        delete process.env.THINKINGMACH_RUNNER_STATE_DIR;
+      else process.env.THINKINGMACH_RUNNER_STATE_DIR = previousStateBase;
       await database.cleanup();
       await rm(scratch, { recursive: true, force: true });
     }
@@ -1749,7 +1749,7 @@ describe("rebindNativeSessionCheckpoint", () => {
       );
       expect(result.execution.task.prompt).toContain("Full task instructions");
       expect(result.execution.task.prompt).not.toContain(
-        "Paperclip Resume Delta",
+        "ThinkingMach Resume Delta",
       );
       expect(result.execution.task.prompt).not.toContain("Compact context");
     },
@@ -1791,7 +1791,7 @@ describe("rebindNativeSessionCheckpoint", () => {
           task: {
             ...current.task,
             prompt: options.resumedSession
-              ? "Paperclip Resume Delta"
+              ? "ThinkingMach Resume Delta"
               : "Full task instructions",
           },
         };
@@ -1818,7 +1818,7 @@ describe("rebindNativeSessionCheckpoint", () => {
         "sha256:b64efcd063a575925aa95dbd2a20953386eaa760f05b0e0e73b4ae04a97679b0",
     },
   ])(
-    "refreshes retained $contract without changing the Paperclip task or prior history",
+    "refreshes retained $contract without changing the ThinkingMach task or prior history",
     ({ retainedFingerprint }) => {
       expect(NATIVE_TOOL_CONTRACT_FINGERPRINT).not.toBe(retainedFingerprint);
       const prior = previousRun({
@@ -1841,8 +1841,8 @@ describe("rebindNativeSessionCheckpoint", () => {
             task: {
               ...current.task,
               prompt: options.resumedSession
-                ? "Paperclip Resume Delta"
-                : "Full context for the same Paperclip task",
+                ? "ThinkingMach Resume Delta"
+                : "Full context for the same ThinkingMach task",
             },
           };
         },
@@ -1860,9 +1860,9 @@ describe("rebindNativeSessionCheckpoint", () => {
         execution(currentRunId).workspace,
       );
       expect(result.execution.task.prompt).toBe(
-        "Full context for the same Paperclip task",
+        "Full context for the same ThinkingMach task",
       );
-      // No deletion/reset of the existing provider checkpoint or Paperclip history.
+      // No deletion/reset of the existing provider checkpoint or ThinkingMach history.
       expect(prior).toEqual(priorSnapshot);
       expect(prior.runnerProfileJson.sessionCheckpoint.sessionId).toBe(
         "provider-thread-123",
@@ -2327,7 +2327,7 @@ describe("buildNativeExecutionInput wake projection", () => {
         workMode: "standard",
       },
       taskPrompt: [
-        "Paperclip task context:",
+        "ThinkingMach task context:",
         `- Title: ${JSON.stringify(staleRootTitle)}`,
         "Latest wake comment:",
         "```text",
@@ -2557,7 +2557,7 @@ describe("buildNativeExecutionInput wake projection", () => {
     expect(
       JSON.stringify([codex, opencode, claudeManaged, agentCore, acpx]),
     ).not.toMatch(
-      /OPENAI_API_KEY|ANTHROPIC_API_KEY|AWS_SECRET_ACCESS_KEY|PAPERCLIP_API_KEY/,
+      /OPENAI_API_KEY|ANTHROPIC_API_KEY|AWS_SECRET_ACCESS_KEY|THINKINGMACH_API_KEY/,
     );
   });
 
@@ -2572,7 +2572,7 @@ describe("buildNativeExecutionInput wake projection", () => {
         description: "Use the child result.",
         workMode: "standard",
       },
-      taskPrompt: "Paperclip task context:\n- Issue: DOT-146",
+      taskPrompt: "ThinkingMach task context:\n- Issue: DOT-146",
       wakePayload: {
         reason: "issue_children_completed",
         issue: {
@@ -2627,14 +2627,14 @@ describe("buildNativeExecutionInput wake projection", () => {
     expect(input.task.prompt).not.toContain("Execution contract:");
     expect(input.task.prompt).not.toContain("Use child issues");
     // Full bootstrap stays available if provider recovery fails after admission.
-    expect(input.task.prompt).toContain("## Paperclip Wake Payload");
+    expect(input.task.prompt).toContain("## ThinkingMach Wake Payload");
     expect(input.task.prompt).toContain("reason: issue_children_completed");
     expect(input.task.prompt).toContain("DOT-147 Build utility (done)");
     expect(input.task.prompt).toContain(
       "Created three files and passed 7/7 tests.",
     );
     expect(input.task.prompt).toContain(
-      "Paperclip task context:\n- Issue: DOT-146",
+      "ThinkingMach task context:\n- Issue: DOT-146",
     );
     expect(input.task.prompt).not.toContain("Use the child result.");
   });

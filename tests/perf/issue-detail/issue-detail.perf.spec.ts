@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { chromium, expect, test, type Browser, type BrowserContext, type Page } from "@playwright/test";
 
-const requestedRuns = Number(process.env.PAPERCLIP_ISSUE_PERF_RUNS ?? 5);
+const requestedRuns = Number(process.env.THINKINGMACH_ISSUE_PERF_RUNS ?? 5);
 const RUNS = Number.isFinite(requestedRuns) ? Math.max(5, Math.floor(requestedRuns)) : 5;
 const OUTPUT_DIR = path.resolve(process.cwd(), "test-results/issue-detail-perf");
 const PAGE_READY_TIMEOUT_MS = 90_000;
@@ -133,7 +133,7 @@ async function configureProfile(context: BrowserContext, page: Page, profile: Pr
 
 async function installVitalObserver(page: Page, cold: boolean): Promise<void> {
   await page.addInitScript(({ coldStart }) => {
-    if (coldStart) window.__PAPERCLIP_ISSUE_DETAIL_NAVIGATE_START__ = 0;
+    if (coldStart) window.__THINKINGMACH_ISSUE_DETAIL_NAVIGATE_START__ = 0;
     (window as Window & { __issuePerfLcp?: number }).__issuePerfLcp = undefined;
     try {
       new PerformanceObserver((list) => {
@@ -251,7 +251,7 @@ async function runScenario(browser: Browser, baseURL: string, seedData: Seed, pr
     await expect(issueLink).toBeVisible({ timeout: PAGE_READY_TIMEOUT_MS });
     network.clear();
     await page.evaluate(() => {
-      window.__PAPERCLIP_ISSUE_DETAIL_NAVIGATE_START__ = performance.now();
+      window.__THINKINGMACH_ISSUE_DETAIL_NAVIGATE_START__ = performance.now();
     });
     await issueLink.click();
   } else {

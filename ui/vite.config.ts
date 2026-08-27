@@ -11,7 +11,7 @@ const apiProxy = createApiProxy();
 
 export default defineConfig(({ mode }) => ({
   define: {
-    __PAPERCLIP_BUILD_COMMIT__: JSON.stringify(
+    __THINKINGMACH_BUILD_COMMIT__: JSON.stringify(
       readBrowserBuildCommit(__dirname),
     ),
   },

@@ -4,7 +4,7 @@ import path from "node:path";
 import express from "express";
 import request from "supertest";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { healthRoutes } from "../routes/health.js";
 import {
   WORKSPACE_EXECUTION_WORKSPACE_COMPANY_ID_ENV_KEY,
@@ -18,7 +18,7 @@ import {
 
 const tempDirs: string[] = [];
 const envKeys = [
-  "PAPERCLIP_CONFIG",
+  "THINKINGMACH_CONFIG",
   WORKSPACE_HANDOFF_KEY_ENV_KEY,
   WORKSPACE_READINESS_TOKEN_ENV_KEY,
   WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY,
@@ -96,7 +96,7 @@ afterEach(() => {
 describe("GET /api/health workspace readiness", () => {
   it("exposes readiness to a board actor of a managed workspace", async () => {
     setEnv({
-      PAPERCLIP_CONFIG: createSeededWorkspace(),
+      THINKINGMACH_CONFIG: createSeededWorkspace(),
       [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "handoff-key",
       [WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY]: "ews-1",
       [WORKSPACE_EXECUTION_WORKSPACE_COMPANY_ID_ENV_KEY]: "company-1",
@@ -115,7 +115,7 @@ describe("GET /api/health workspace readiness", () => {
 
   it("keeps public health redacted for an anonymous caller", async () => {
     setEnv({
-      PAPERCLIP_CONFIG: createSeededWorkspace(),
+      THINKINGMACH_CONFIG: createSeededWorkspace(),
       [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "handoff-key",
       [WORKSPACE_READINESS_TOKEN_ENV_KEY]: "probe-token",
       [WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY]: "ews-1",
@@ -129,7 +129,7 @@ describe("GET /api/health workspace readiness", () => {
 
   it("accepts the derived probe token on an otherwise redacted response", async () => {
     setEnv({
-      PAPERCLIP_CONFIG: createSeededWorkspace(),
+      THINKINGMACH_CONFIG: createSeededWorkspace(),
       [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "handoff-key",
       [WORKSPACE_READINESS_TOKEN_ENV_KEY]: "probe-token",
       [WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY]: "ews-1",
@@ -152,7 +152,7 @@ describe("GET /api/health workspace readiness", () => {
 
   it("rejects a wrong probe token without leaking readiness", async () => {
     setEnv({
-      PAPERCLIP_CONFIG: createSeededWorkspace(),
+      THINKINGMACH_CONFIG: createSeededWorkspace(),
       [WORKSPACE_HANDOFF_KEY_ENV_KEY]: "handoff-key",
       [WORKSPACE_READINESS_TOKEN_ENV_KEY]: "probe-token",
       [WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY]: "ews-1",
@@ -169,7 +169,7 @@ describe("GET /api/health workspace readiness", () => {
     const dir = mkdtempSync(path.join(os.tmpdir(), "paperclip-health-primary-"));
     tempDirs.push(dir);
     writeFileSync(path.join(dir, "config.json"), "{}\n", "utf8");
-    setEnv({ PAPERCLIP_CONFIG: path.join(dir, "config.json") });
+    setEnv({ THINKINGMACH_CONFIG: path.join(dir, "config.json") });
     delete process.env[WORKSPACE_HANDOFF_KEY_ENV_KEY];
     delete process.env[WORKSPACE_EXECUTION_WORKSPACE_ID_ENV_KEY];
     const response = await request(createApp("board")).get("/api/health").expect(200);

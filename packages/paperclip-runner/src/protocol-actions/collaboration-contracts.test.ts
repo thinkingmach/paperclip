@@ -1,12 +1,12 @@
 import Ajv2020 from "ajv/dist/2020.js";
 import { describe, expect, it } from "vitest";
 
-import { PAPERCLIP_COLLABORATION_PROTOCOL_ACTIONS } from "./collaboration.js";
+import { THINKINGMACH_COLLABORATION_PROTOCOL_ACTIONS } from "./collaboration.js";
 
-describe("collaboration Paperclip protocol action contracts", () => {
+describe("collaboration ThinkingMach protocol action contracts", () => {
   const ajv = new Ajv2020({ allErrors: true, allowUnionTypes: true, strict: false });
 
-  it.each(PAPERCLIP_COLLABORATION_PROTOCOL_ACTIONS.map((action) => [action.id, action] as const))(
+  it.each(THINKINGMACH_COLLABORATION_PROTOCOL_ACTIONS.map((action) => [action.id, action] as const))(
     "%s has immutable metadata and schema-valid examples",
     (operationId, action) => {
       expect(action.canonical.operationId).toBe(operationId);

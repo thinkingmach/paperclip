@@ -1,12 +1,12 @@
 import { and, eq, inArray } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { agentWakeupRequests, agents, heartbeatRuns, issues } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
+import { agentWakeupRequests, agents, heartbeatRuns, issues } from "@thinkingmach/db";
 import {
   isUuidLike,
   type IssueCommentMetadata,
   type IssueCommentPresentation,
   type RunLivenessState,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { withRecoveryContext } from "./status-only-context.js";
 import {
   agentLinkRow,
@@ -20,9 +20,9 @@ export const FINISH_SUCCESSFUL_RUN_HANDOFF_REASON = "finish_successful_run_hando
 export const SUCCESSFUL_RUN_MISSING_STATE_REASON = "successful_run_missing_state";
 export const DEFAULT_MAX_SUCCESSFUL_RUN_HANDOFF_ATTEMPTS = 1;
 export const SUCCESSFUL_RUN_HANDOFF_REQUIRED_NOTICE_BODY =
-  "Paperclip needs a disposition before this issue can continue.";
+  "ThinkingMach needs a disposition before this issue can continue.";
 export const SUCCESSFUL_RUN_HANDOFF_EXHAUSTED_NOTICE_BODY =
-  "Paperclip could not resolve this issue's missing disposition automatically. The source assignment is unchanged and a board decision is required.";
+  "ThinkingMach could not resolve this issue's missing disposition automatically. The source assignment is unchanged and a board decision is required.";
 export const LEGACY_SUCCESSFUL_RUN_HANDOFF_NOTICE_PREFIXES = [
   "## This issue still needs a next step",
   "## Successful run missing issue disposition",
@@ -417,7 +417,7 @@ export function buildSuccessfulRunHandoffInstruction(input: {
       : []),
     "",
     "## What happened",
-    "Your last run on this issue ended successfully, but the issue is still `in_progress` and has no valid disposition — Paperclip cannot tell whether the work is finished, blocked, or unfinished.",
+    "Your last run on this issue ended successfully, but the issue is still `in_progress` and has no valid disposition — ThinkingMach cannot tell whether the work is finished, blocked, or unfinished.",
     ...(report
       ? [
           "",
@@ -436,7 +436,7 @@ export function buildSuccessfulRunHandoffInstruction(input: {
       : []),
     "",
     "## Your options",
-    "Choose **exactly one** outcome and perform the matching Paperclip action:",
+    "Choose **exactly one** outcome and perform the matching ThinkingMach action:",
     "",
     "**Is the issue finished?**",
     "1. Mark it `done` (scope complete) or `cancelled` (intentionally stopped).",

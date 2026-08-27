@@ -214,7 +214,7 @@ describe("secret validators", () => {
             externalRef: "arn:aws:secretsmanager:us-east-1:123456789012:secret:prod/openai",
             name: "OpenAI API key",
             key: "OPENAI_API_KEY",
-            description: "  Operator-entered Paperclip description  ",
+            description: "  Operator-entered ThinkingMach description  ",
             providerMetadata: { name: "prod/openai" },
           },
         ],
@@ -224,7 +224,7 @@ describe("secret validators", () => {
       secrets: [
         expect.objectContaining({
           key: "OPENAI_API_KEY",
-          description: "Operator-entered Paperclip description",
+          description: "Operator-entered ThinkingMach description",
         }),
       ],
     });

@@ -115,7 +115,7 @@ export const apiResponseReadingTask: RunnerTaskFixture = {
   // Delivered files render as an attachment card, which can replace the finish summary.
   buildVisibleMarker: () => "api-response-proof.txt",
   buildPrompt: nonce => [
-    "Inspect diagnostic evidence task {{API_RESPONSE_SOURCE_ID}} using the Paperclip API tools.",
+    "Inspect diagnostic evidence task {{API_RESPONSE_SOURCE_ID}} using the ThinkingMach API tools.",
     "Discover GET /api/issues/{id}, call it for that task, and retain the returned response artifact.",
     "Read the saved artifact through GET /api/assets/{assetId}/content with responseText: {offsetBytes:0,limitBytes:8192}.",
     "Continue using responseText.nextOffsetBytes until null. Extract the Evidence code at the end of its description.",

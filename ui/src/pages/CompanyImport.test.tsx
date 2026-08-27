@@ -4,7 +4,7 @@ import { webcrypto } from "node:crypto";
 import type { ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { CompanyPortabilityImportResult, CompanyPortabilityPreviewResult } from "@paperclipai/shared";
+import type { CompanyPortabilityImportResult, CompanyPortabilityPreviewResult } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import type { CompanyImportJobAccepted } from "../api/companies";
@@ -92,7 +92,7 @@ vi.mock("../context/BreadcrumbContext", () => ({
 vi.mock("../context/CompanyContext", () => ({
   useCompany: () => ({
     selectedCompanyId: "company-1",
-    selectedCompany: { id: "company-1", name: "Paperclip" },
+    selectedCompany: { id: "company-1", name: "ThinkingMach" },
     setSelectedCompanyId: mockSetSelectedCompanyId,
   }),
   useOptionalCompany: () => null,
@@ -1096,7 +1096,7 @@ describe("CompanyImport", () => {
     });
   });
 
-  it("hides Paperclip Runner import configuration while its experimental flag is off", async () => {
+  it("hides ThinkingMach Runner import configuration while its experimental flag is off", async () => {
     mockAdaptersApi.list.mockResolvedValue([
       { type: "claude_local", disabled: false },
       { type: "codex_local", disabled: false },
@@ -1110,7 +1110,7 @@ describe("CompanyImport", () => {
     }
   });
 
-  it("offers Paperclip Runner import configuration after its experimental flag is enabled", async () => {
+  it("offers ThinkingMach Runner import configuration after its experimental flag is enabled", async () => {
     mockAdaptersApi.list.mockResolvedValue([
       { type: "claude_local", disabled: false },
       { type: "codex_local", disabled: false },

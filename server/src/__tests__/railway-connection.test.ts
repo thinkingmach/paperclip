@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { agents, approvals, companies, companyMemberships, companySecrets, connectionGrants, createDb, heartbeatRuns, issues, toolCatalogEntries, toolActionRequests, toolConnections, toolPolicies, toolProfileBindings, toolProfiles, toolAccessAuditEvents } from "@paperclipai/db";
+import { agents, approvals, companies, companyMemberships, companySecrets, connectionGrants, createDb, heartbeatRuns, issues, toolCatalogEntries, toolActionRequests, toolConnections, toolPolicies, toolProfileBindings, toolProfiles, toolAccessAuditEvents } from "@thinkingmach/db";
 import { toolAccessService } from "../services/tool-access.js";
 import { createToolGatewayService } from "../services/tool-gateway.js";
 import { RAILWAY_API_URL, RAILWAY_MCP_URL, RAILWAY_QUERIES } from "../services/railway.js";
@@ -84,7 +84,7 @@ const initialTools = [
     expect(after.find((r) => r.toolName === "new-tool")?.status).toBe("quarantined");
     expect(JSON.stringify(await f.service.getConnection(f.connectionId))).not.toContain(token);
     f.setTools([{ name: "paperclip_railway_restart" }]);
-    await expect(f.service.refreshCatalog(f.connectionId, actor)).rejects.toThrow("Railway advertised a reserved Paperclip action");
+    await expect(f.service.refreshCatalog(f.connectionId, actor)).rejects.toThrow("Railway advertised a reserved ThinkingMach action");
   });
 
   it("keeps direct operations unavailable when API acceptance fails and reports refresh failure safely", async () => {

@@ -8,7 +8,7 @@ export class AcpxApprovalRequiredError extends Error {
   readonly code = "approval_required";
   constructor() {
     super(
-      "Approval required. This operation is not an automatically allowed Paperclip action, " +
+      "Approval required. This operation is not an automatically allowed ThinkingMach action, " +
       "and this runner has no interactive approval handler. Review the operation and " +
       "update the agent's permission setting before retrying.",
     );
@@ -20,15 +20,15 @@ export class AcpxApprovalRequiredError extends Error {
 // automatic provider permission. These operations implement the bounded plan,
 // task, and handoff workflow; governance decisions, generic APIs, and workspace
 // controls deliberately stay outside it. Asking a human does not approve work.
-const AUTOMATIC_PAPERCLIP_WORKFLOW_ACTIONS = new Set([
+const AUTOMATIC_THINKINGMACH_WORKFLOW_ACTIONS = new Set([
   "report_progress", "answer_status_question", "write_document",
   "request_human_input", "register_deliverable", "finish_task", "block_task",
   "request_review", "create_task", "reassign_task", "set_dependencies",
   "create_project", "request_approval",
 ]);
 
-/** Exact SDK rules for the run's runner-owned Paperclip MCP connection. */
-export function claudePaperclipPermissionRules(
+/** Exact SDK rules for the run's runner-owned ThinkingMach MCP connection. */
+export function claudeThinkingMachPermissionRules(
   tools: readonly Readonly<Record<string, unknown>>[],
   mode: NativeAcpxPermissionMode,
 ): string[] {
@@ -36,7 +36,7 @@ export function claudePaperclipPermissionRules(
   const names = tools.flatMap((tool) => {
     if (typeof tool.name !== "string") return [];
     const name = canonicalRunnerToolName(tool.name);
-    // Effects come from Paperclip's implementation catalog, never tool hints
+    // Effects come from ThinkingMach's implementation catalog, never tool hints
     // or the provider's permission-request metadata. Unknown operations stay
     // subject to approval even when their names or annotations claim a read.
     const action = paperclipSemanticAction(name);
@@ -50,7 +50,7 @@ export function claudePaperclipPermissionRules(
     // authenticated bridge and controller still validate run authority,
     // company scope, claims, task mode, and governed-action approvals.
     return isRead || (action && (
-      mode === "approve-paperclip" && AUTOMATIC_PAPERCLIP_WORKFLOW_ACTIONS.has(name)
+      mode === "approve-paperclip" && AUTOMATIC_THINKINGMACH_WORKFLOW_ACTIONS.has(name)
     ))
       ? [`mcp__paperclip__${name}`]
       : [];
@@ -86,7 +86,7 @@ export function acpxRuntimePermissionPolicy(
   if (mode === "deny-all") return { defaultAction: "deny" };
   // ACPX derives permission kinds from provider-originated requests. Until the
   // host can bind a request to independent authority, no kind is safe to
-  // auto-approve here. Assigned Paperclip actions are allowed earlier at the
+  // auto-approve here. Assigned ThinkingMach actions are allowed earlier at the
   // Claude SDK dispatch boundary. Other requests require an approval handler.
   return { defaultAction: "escalate" };
 }
@@ -105,7 +105,7 @@ export function decideAcpxPermission(
   if (mode === "approve-all") return "allow_once";
   // inferredKind and raw semantic/MCP metadata both originate outside the
   // runner trust boundary. Neither can grant local semantic authority.
-  // Assigned Paperclip actions use exact SDK rules on the runner-owned MCP
+  // Assigned ThinkingMach actions use exact SDK rules on the runner-owned MCP
   // connection. Anything reaching this fallback still requires approval.
   return "delegate";
 }

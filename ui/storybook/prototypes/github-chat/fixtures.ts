@@ -43,7 +43,7 @@ export const prompts = {
   "Updated commits":
     "The PR head changed from {{previous_head_sha}} to {{head_sha}}. Review the current changes, revisit prior findings, and publish new findings without duplicating existing comments.",
   "Reopened or ready":
-    "This PR is now {{event_action}}. Review its current head {{head_sha}} and continue this Paperclip task.",
+    "This PR is now {{event_action}}. Review its current head {{head_sha}} and continue this ThinkingMach task.",
   Mention:
     "Respond to {{sender}} in this GitHub conversation. If they request a review, inspect the current PR and use the review tools. For ordinary questions, reply without changing its rating.",
   "Follow-up comment":

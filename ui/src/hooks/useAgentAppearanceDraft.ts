@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { agentAppearanceSchema, randomAgentAppearance } from "@paperclipai/shared";
+import { agentAppearanceSchema, randomAgentAppearance } from "@thinkingmach/shared";
 
 /** Non-secret visual identity, retained across navigation and company changes. */
 export function useAgentAppearanceDraft(draftKey: string) {

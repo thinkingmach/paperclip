@@ -39,6 +39,6 @@ typechecks and build pass. Both explicit planning controls passed in campaign
 mismatch, with one additional duplicate model response. Those failures remain
 recorded. After a fixture-only plain-text correction, both wording pairs passed
 in campaign 35806360797 (4/4). See the
-[measurement report](https://github.com/paperclipai/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/EXPLICIT-WORK-MODE-2026-09-22.md).
+[measurement report](https://github.com/thinkingmach/paperclip-evals/blob/ce3e5afcd4a1184650f586a2b5b8be5874c66c8b/experiments/2026-09-lifecycle-authority/EXPLICIT-WORK-MODE-2026-09-22.md).
 The historical remaining-findings inventory is retained in
 [the continuation plan](2026-09-22-legacy-continuation-authority.md).

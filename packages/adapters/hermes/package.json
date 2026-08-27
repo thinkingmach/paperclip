@@ -1,19 +1,19 @@
 {
-  "name": "@paperclipai/hermes-paperclip-adapter",
-  "version": "0.3.1",
-  "description": "Paperclip adapters for Hermes Agent local CLI and Hermes Gateway HTTP/SSE runs",
+  "name": "@thinkingmach/hermes-paperclip-adapter",
+  "version": "0.3.3",
+  "description": "ThinkingMach adapters for Hermes Agent local CLI and Hermes Gateway HTTP/SSE runs",
   "type": "module",
   "license": "MIT",
-  "author": "Paperclip",
+  "author": "ThinkingMach",
   "repository": {
     "type": "git",
-    "url": "https://github.com/paperclipai/paperclip",
+    "url": "https://github.com/thinkingmach/paperclip",
     "directory": "packages/adapters/hermes"
   },
   "bugs": {
-    "url": "https://github.com/paperclipai/paperclip/issues"
+    "url": "https://github.com/thinkingmach/paperclip/issues"
   },
-  "homepage": "https://github.com/paperclipai/paperclip/tree/master/packages/adapters/hermes#readme",
+  "homepage": "https://github.com/thinkingmach/paperclip/tree/master/packages/adapters/hermes#readme",
   "keywords": [
     "paperclip",
     "hermes",
@@ -99,7 +99,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@paperclipai/adapter-utils": "workspace:*",
+    "@thinkingmach/adapter-utils": "workspace:*",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {

@@ -18,7 +18,7 @@ import {
   toolProfiles,
   toolProfileBindings,
   toolConnectionInstalls,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import type { RuntimeToolsTokenClaims } from "../runtime-tools-token.js";
 import { connectionIntentService } from "../services/connection-intents.js";
 import { issueThreadInteractionService } from "../services/issue-thread-interactions.js";

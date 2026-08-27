@@ -1,30 +1,30 @@
 ---
 name: paperclip-page
 description: >
-  Publish static HTML pages and asset folders to the Paperclip S3/CloudFront page
+  Publish static HTML pages and asset folders to the ThinkingMach S3/CloudFront page
   host. Use when asked to deploy, host, or share a persistent page, viewer,
   prototype, report, or static site without here.now.
 ---
 
-# Paperclip Page
+# ThinkingMach Page
 
-Use this skill to publish a static directory to the configured Paperclip pages
-host, for example `https://pages.paperclip.ing/<slug>/`.
+Use this skill to publish a static directory to the configured ThinkingMach pages
+host, for example `https://pages.thinkingmach.com/<slug>/`.
 
 ## Requirements
 
 - Source directory contains `index.html` at its root.
 - `aws` CLI v2, `curl`, and `jq` are available on PATH for live publishes.
 - Environment variables are configured:
-  - `PAPERCLIP_PAGE_BUCKET`
-  - `PAPERCLIP_PAGE_BASE_URL`
+  - `THINKINGMACH_PAGE_BUCKET`
+  - `THINKINGMACH_PAGE_BASE_URL`
   - `AWS_REGION`
-  - `PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID` and `PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY`
-    with the page-uploader credentials from Paperclip Secrets
+  - `THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID` and `THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY`
+    with the page-uploader credentials from ThinkingMach Secrets
 - Optional environment variables:
-  - `PAPERCLIP_PAGE_DEFAULT_PREFIX`
-  - `PAPERCLIP_PAGE_AWS_PROFILE` (alternative to the namespaced key pair)
-  - `PAPERCLIP_PAGE_AWS_SESSION_TOKEN` (only together with the namespaced key
+  - `THINKINGMACH_PAGE_DEFAULT_PREFIX`
+  - `THINKINGMACH_PAGE_AWS_PROFILE` (alternative to the namespaced key pair)
+  - `THINKINGMACH_PAGE_AWS_SESSION_TOKEN` (only together with the namespaced key
     pair)
 
 Do not bind the page-uploader credentials as global `AWS_ACCESS_KEY_ID` /
@@ -32,7 +32,7 @@ Do not bind the page-uploader credentials as global `AWS_ACCESS_KEY_ID` /
 every AWS SDK, so global names silently replace the host identity for every
 process in the agent run. The namespaced variables scope the uploader identity
 to this helper only. The ambient credential chain still works as a fallback
-when none of the `PAPERCLIP_PAGE_AWS_*` credential variables are set.
+when none of the `THINKINGMACH_PAGE_AWS_*` credential variables are set.
 
 ## Workflow
 
@@ -90,7 +90,7 @@ overwriting another page.
 - `Found symlink`: replace symlinks with real files before publishing.
 - `AccessDenied`: confirm the uploader IAM policy allows `ListBucket`,
   `GetObject`, and `PutObject` for the configured bucket/prefix, and that the
-  agent received the Paperclip Secrets.
+  agent received the ThinkingMach Secrets.
 - Public URL verification failed: check CloudFront deployment/DNS, object
   existence, and that the distribution uses HTTPS with the private S3 REST
   origin.

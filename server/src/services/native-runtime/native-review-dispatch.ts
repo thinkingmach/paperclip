@@ -1,4 +1,4 @@
-import { agentWakeupRequests, heartbeatRuns, issues, type Db } from "@paperclipai/db";
+import { agentWakeupRequests, heartbeatRuns, issues, type Db } from "@thinkingmach/db";
 import { and, eq } from "drizzle-orm";
 import type { PgUpdateSetSource } from "drizzle-orm/pg-core";
 import { claimNativeReviewExecutionLock, readNativeReviewAssignmentContext } from "./native-review-participant.js";

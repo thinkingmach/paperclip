@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  findPaperclipConfigKeyWarnings,
-  mergePaperclipConfig,
+  findThinkingMachConfigKeyWarnings,
+  mergeThinkingMachConfig,
   paperclipConfigSchema,
 } from "./config-schema.js";
 
@@ -108,7 +108,7 @@ describe("paperclip config schema", () => {
       },
     });
 
-    const merged = mergePaperclipConfig(source, update);
+    const merged = mergeThinkingMachConfig(source, update);
 
     expect(merged.server.port).toBe(3200);
     expect(merged.server.serverExtension).toBe("keep");
@@ -118,7 +118,7 @@ describe("paperclip config schema", () => {
   });
 
   it("warns about likely misspellings while leaving arbitrary extensions alone", () => {
-    expect(findPaperclipConfigKeyWarnings({
+    expect(findThinkingMachConfigKeyWarnings({
       servr: {},
       server: {
         ports: 3100,

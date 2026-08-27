@@ -41,7 +41,7 @@ function resultFor(
     },
     matcherResults: [
       {
-        matcher: { kind: "message_contains", expected: "PAPERCLIP_E2E_OK" },
+        matcher: { kind: "message_contains", expected: "THINKINGMACH_E2E_OK" },
         passed: status === "passed",
         detail: status === "passed" ? "matched" : "marker missing",
       },

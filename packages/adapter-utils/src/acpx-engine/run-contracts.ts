@@ -14,10 +14,10 @@
 import type { AcpRuntime, AcpRuntimeHandle } from "acpx/runtime";
 import type {
   AdapterExecutionTarget,
-  AdapterExecutionTargetPaperclipBridgeHandle,
+  AdapterExecutionTargetThinkingMachBridgeHandle,
   AdapterExecutionTargetProcessSessionBridgeHandle,
   PreparedAdapterExecutionTargetRuntime,
-} from "@paperclipai/adapter-utils/execution-target";
+} from "@thinkingmach/adapter-utils/execution-target";
 import type { WorkspaceRestoreOutcome } from "../workspace-restore-merge.js";
 
 // ---------------------------------------------------------------------------
@@ -114,13 +114,13 @@ export interface StagingLeaseResource {
 }
 
 /**
- * Maps each resource id to its payload. The `control_bridge` is the Paperclip
+ * Maps each resource id to its payload. The `control_bridge` is the ThinkingMach
  * control-plane bridge; the `agent_bridge` is the agent process-session bridge.
  */
 export interface RunResourcePayloads {
   readonly acp_runtime: AcpRuntimeResource;
   readonly staged_runtime: StagedRuntimeResource;
-  readonly control_bridge: AdapterExecutionTargetPaperclipBridgeHandle;
+  readonly control_bridge: AdapterExecutionTargetThinkingMachBridgeHandle;
   readonly agent_bridge: AdapterExecutionTargetProcessSessionBridgeHandle;
   readonly managed_home: ManagedHomeResource;
   readonly staging_lease: StagingLeaseResource;
@@ -345,7 +345,7 @@ export interface PlacedWorkspace {
 
 /** The transport handles the site started for the run. */
 export interface RunSiteTransport {
-  readonly controlBridge: AdapterExecutionTargetPaperclipBridgeHandle | null;
+  readonly controlBridge: AdapterExecutionTargetThinkingMachBridgeHandle | null;
   readonly agentBridge: AdapterExecutionTargetProcessSessionBridgeHandle | null;
 }
 
@@ -425,8 +425,8 @@ export interface McpServerIdentity {
   readonly connectionId: string;
 }
 
-/** The Paperclip Claude settings the fingerprint reads. */
-export interface PaperclipClaudeSettingsIdentity {
+/** The ThinkingMach Claude settings the fingerprint reads. */
+export interface ThinkingMachClaudeSettingsIdentity {
   readonly allow: readonly string[];
   readonly additionalDirectories: readonly string[];
   readonly defaultMode: string;
@@ -452,7 +452,7 @@ export interface SessionFingerprintIdentity {
   readonly additionalSourcesIdentity: Record<string, unknown>;
   readonly skillsIdentity: Record<string, unknown>;
   readonly skillPromptInstructions: string;
-  readonly paperclipClaudeSettings: PaperclipClaudeSettingsIdentity | null;
+  readonly thinkingmachClaudeSettings: ThinkingMachClaudeSettingsIdentity | null;
   readonly mcpServers: readonly McpServerIdentity[];
   readonly secretManifestHash: string;
   readonly adapterEnvHash: string;

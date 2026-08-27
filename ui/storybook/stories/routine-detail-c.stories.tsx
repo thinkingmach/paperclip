@@ -8,7 +8,7 @@ import type {
   RoutineDetail as RoutineDetailType,
   RoutineTrigger,
   RoutineVariable,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { Badge } from "@/components/ui/badge";
 import { RunButton } from "@/components/AgentActionButtons";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";

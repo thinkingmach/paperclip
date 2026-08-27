@@ -3,7 +3,7 @@ import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { RunnerGoalProjection } from "@paperclipai/shared";
+import type { RunnerGoalProjection } from "@thinkingmach/shared";
 import { issuesApi } from "@/api/issues";
 import { queryKeys } from "@/lib/queryKeys";
 import { RunnerGoalWidget, useRunnerGoalControl } from "./RunnerGoalWidget";

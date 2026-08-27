@@ -7,7 +7,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import { isUuidLike, type EnvSecretRefBinding } from "@paperclipai/shared";
+import { isUuidLike, type EnvSecretRefBinding } from "@thinkingmach/shared";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -77,7 +77,7 @@ export interface JsonSchemaNode {
   readOnly?: boolean;
   writeOnly?: boolean;
 
-  // Paperclip extensions
+  // ThinkingMach extensions
   /**
    * When true, the field is hidden behind an "Advanced options" disclosure
    * in the top-level `JsonSchemaForm`. Defaults to false (essential).
@@ -708,7 +708,7 @@ const SecretField = React.memo(({
       label={label}
       description={
         description ||
-        "Pick an existing organization secret, or paste a raw value (Paperclip will store it as a secret on save)."
+        "Pick an existing organization secret, or paste a raw value (ThinkingMach will store it as a secret on save)."
       }
       required={isRequired}
       error={error}

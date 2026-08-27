@@ -81,11 +81,11 @@ were captured by the execution tool: baseline 103.48 s, candidate 83.97 s.
 Run from `packages/paperclip-runner`:
 
 ```sh
-PAPERCLIP_FINAL_BURST_BENCHMARK=1 PAPERCLIP_FINAL_BURST_REPETITIONS=3 PAPERCLIP_FINAL_BURST_BINARY=/tmp/paperclip-final-burst-cargo.YoIBsw/baseline-paperclip-runnerd pnpm exec vitest run src/live/runnerd-final-output-burst.benchmark.test.ts
-PAPERCLIP_FINAL_BURST_BENCHMARK=1 PAPERCLIP_FINAL_BURST_REPETITIONS=3 PAPERCLIP_FINAL_BURST_BINARY=/tmp/paperclip-final-burst-cargo.YoIBsw/release/paperclip-runnerd pnpm exec vitest run src/live/runnerd-final-output-burst.benchmark.test.ts
+THINKINGMACH_FINAL_BURST_BENCHMARK=1 THINKINGMACH_FINAL_BURST_REPETITIONS=3 THINKINGMACH_FINAL_BURST_BINARY=/tmp/paperclip-final-burst-cargo.YoIBsw/baseline-paperclip-runnerd pnpm exec vitest run src/live/runnerd-final-output-burst.benchmark.test.ts
+THINKINGMACH_FINAL_BURST_BENCHMARK=1 THINKINGMACH_FINAL_BURST_REPETITIONS=3 THINKINGMACH_FINAL_BURST_BINARY=/tmp/paperclip-final-burst-cargo.YoIBsw/release/paperclip-runnerd pnpm exec vitest run src/live/runnerd-final-output-burst.benchmark.test.ts
 ```
 
-Without `PAPERCLIP_FINAL_BURST_BINARY`, the test selects the existing staged
+Without `THINKINGMACH_FINAL_BURST_BINARY`, the test selects the existing staged
 runner (or the existing debug runner if none is staged). It never builds one.
 Every invocation copies the selected binary into a private fixture directory,
 checks its SHA before and after, and uses an explicit empty Codex home and no

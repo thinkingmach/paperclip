@@ -68,7 +68,7 @@ describe("migration snapshot drift", () => {
 
     expect(
       statements,
-      `${file} no longer matches src/schema. Run \`pnpm --filter @paperclipai/db generate\` and commit the migration it emits; do not hand-edit the snapshot.`,
+      `${file} no longer matches src/schema. Run \`pnpm --filter @thinkingmach/db generate\` and commit the migration it emits; do not hand-edit the snapshot.`,
     ).toEqual([]);
   });
 });

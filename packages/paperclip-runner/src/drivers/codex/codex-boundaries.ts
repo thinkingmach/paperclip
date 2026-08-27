@@ -68,7 +68,7 @@ export function validateCodexWorkingDirectory(
   if (resolved === parse(resolved).root) {
     throw new Error("Codex working directory cannot be a filesystem root");
   }
-  const configuredRoot = environment.PAPERCLIP_WORKSPACE_CWD;
+  const configuredRoot = environment.THINKINGMACH_WORKSPACE_CWD;
   const hostHome = canonicalConfiguredPath(environment.HOME);
   if (hostHome && pathContains(resolved, hostHome)) {
     throw new Error("Codex working directory cannot contain the host HOME");
@@ -101,6 +101,7 @@ export function validateCodexWorkingDirectory(
       throw new Error("Codex working directory cannot overlap host CODEX_HOME");
     }
   }
+
   if (configuredRoot !== undefined && configuredRoot.trim().length > 0) {
     const root = canonicalConfiguredPath(configuredRoot)!;
     const pathFromRoot = relative(root, resolved);
@@ -133,7 +134,7 @@ function validateRemoteRunnerWorkingDirectory(
   if (workingDirectory === posix.parse(workingDirectory).root) {
     throw new Error("Codex working directory cannot be a filesystem root");
   }
-  const configuredRoot = environment.PAPERCLIP_WORKSPACE_CWD?.trim();
+  const configuredRoot = environment.THINKINGMACH_WORKSPACE_CWD?.trim();
   if (!configuredRoot) {
     throw new Error(
       "Remote Codex working directory requires an assigned workspace",

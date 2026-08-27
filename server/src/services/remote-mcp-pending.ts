@@ -1,5 +1,5 @@
 import { redactEventPayload, redactSensitiveText } from "../redaction.js";
-import { checkOAuthEndpointUrl, type ToolUpstreamPending } from "@paperclipai/shared";
+import { checkOAuthEndpointUrl, type ToolUpstreamPending } from "@thinkingmach/shared";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;

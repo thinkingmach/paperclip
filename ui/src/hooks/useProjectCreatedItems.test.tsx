@@ -3,7 +3,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ActivityEvent, Project } from "@paperclipai/shared";
+import type { ActivityEvent, Project } from "@thinkingmach/shared";
 import { projectsApi } from "@/api/projects";
 import { queryKeys } from "@/lib/queryKeys";
 import { useProjectCreatedItems } from "./useProjectCreatedItems";

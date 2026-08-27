@@ -9,22 +9,22 @@ import {
   resolveDefaultSecretsKeyFilePath as resolveSharedDefaultSecretsKeyFilePath,
   resolveDefaultStorageDir as resolveSharedDefaultStorageDir,
   resolveHomeAwarePath,
-  resolvePaperclipConfigPathForInstance,
-  resolvePaperclipHomeDir,
-  resolvePaperclipInstanceId,
-  resolvePaperclipInstanceRoot,
-} from "@paperclipai/shared/home-paths";
+  resolveThinkingMachConfigPathForInstance,
+  resolveThinkingMachHomeDir,
+  resolveThinkingMachInstanceId,
+  resolveThinkingMachInstanceRoot,
+} from "@thinkingmach/shared/home-paths";
 
 export {
   expandHomePrefix,
   resolveHomeAwarePath,
-  resolvePaperclipHomeDir,
-  resolvePaperclipInstanceId,
-  resolvePaperclipInstanceRoot,
+  resolveThinkingMachHomeDir,
+  resolveThinkingMachInstanceId,
+  resolveThinkingMachInstanceRoot,
 };
 
 export function resolveDefaultConfigPath(): string {
-  return resolvePaperclipConfigPathForInstance();
+  return resolveThinkingMachConfigPathForInstance();
 }
 
 export function resolveDefaultEmbeddedPostgresDir(): string {
@@ -52,7 +52,7 @@ export function resolveDefaultAgentWorkspaceDir(agentId: string): string {
   if (!PATH_SEGMENT_RE.test(trimmed)) {
     throw new Error(`Invalid agent id for workspace path '${agentId}'.`);
   }
-  return path.resolve(resolvePaperclipInstanceRoot(), "workspaces", trimmed);
+  return path.resolve(resolveThinkingMachInstanceRoot(), "workspaces", trimmed);
 }
 
 function sanitizeFriendlyPathSegment(value: string | null | undefined, fallback = "_default"): string {
@@ -85,7 +85,7 @@ export function resolveManagedProjectWorkspaceDir(input: {
     throw new Error("Managed project workspace path requires companyId and projectId.");
   }
   return path.resolve(
-    resolvePaperclipInstanceRoot(),
+    resolveThinkingMachInstanceRoot(),
     "projects",
     sanitizeFriendlyPathSegment(companyId, "company"),
     sanitizeFriendlyPathSegment(projectId, "project"),

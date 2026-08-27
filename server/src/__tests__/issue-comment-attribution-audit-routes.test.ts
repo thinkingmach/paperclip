@@ -13,17 +13,17 @@ import {
   heartbeatRuns,
   issueComments,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
 } from "./helpers/embedded-postgres.js";
 
 vi.hoisted(() => {
-  process.env.PAPERCLIP_HOME = "/tmp/paperclip-test-home";
-  process.env.PAPERCLIP_INSTANCE_ID = "vitest";
-  process.env.PAPERCLIP_LOG_DIR = "/tmp/paperclip-test-home/logs";
-  process.env.PAPERCLIP_IN_WORKTREE = "false";
+  process.env.THINKINGMACH_HOME = "/tmp/paperclip-test-home";
+  process.env.THINKINGMACH_INSTANCE_ID = "vitest";
+  process.env.THINKINGMACH_LOG_DIR = "/tmp/paperclip-test-home/logs";
+  process.env.THINKINGMACH_IN_WORKTREE = "false";
 });
 
 vi.mock("../services/issue-assignment-wakeup.js", () => ({

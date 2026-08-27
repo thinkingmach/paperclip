@@ -5,7 +5,7 @@ connections, open Apps → AgentMail, select which humans and agents may use the
 credential, then enter an API key. In the saved connection’s Permissions page,
 choose **Give an agent an email address**. The three-step wizard selects an agent,
 creates or attaches an address, and reviews the setup. Selecting an agent outside
-the current allowed list adds that agent when setup completes. Every provider thread in that inbox has one Paperclip task. Subjects are
+the current allowed list adds that agent when setup completes. Every provider thread in that inbox has one ThinkingMach task. Subjects are
 not identifiers. The same email delivered to two connected inboxes creates two
 independent tasks.
 
@@ -13,16 +13,16 @@ Setup accepts an AgentMail API key or the saved company credential from another
 AgentMail connection. Organization and pod keys create an inbox-scoped runtime
 key. An existing inbox-scoped key can connect only its own inbox. Credentials
 are vaulted and resolved by the server; they are not passed to agents. An inbox
-can have only one non-archived Paperclip endpoint across the instance.
+can have only one non-archived ThinkingMach endpoint across the instance.
 
 Verified custom domains are selectable after checking the API key. Complete DNS
-setup in [AgentMail](https://docs.agentmail.to/custom-domains). Paperclip does not
+setup in [AgentMail](https://docs.agentmail.to/custom-domains). ThinkingMach does not
 register domains or manage DNS.
 
 The setup and Permissions page warn that an unrestricted inbox can receive mail
-from anyone. Configure sender allowlists in AgentMail; Paperclip does not manage
+from anyone. Configure sender allowlists in AgentMail; ThinkingMach does not manage
 or verify them. AgentMail controls new-message and reply lists separately. The
-wizard recommends Paperclip’s existing **Low-trust review** preset and lets the
+wizard recommends ThinkingMach’s existing **Low-trust review** preset and lets the
 operator configure a project or root-task boundary. Incoming tasks are placed
 inside that boundary. Low-trust execution also requires isolated workspaces and an active sandbox
 environment selected for the agent; setup rejects an unavailable runtime. New
@@ -40,7 +40,7 @@ with an Authorization header, keeping the provider key out of the connection URL
 ([provider handshake](https://www.agentmail.to/docs/api-reference/websockets/websockets)). The service holds a
 renewable database lease, subscribes to the connected inbox, and reconnects with
 backoff. Webhook mode needs the configured public HTTPS webhook base URL. Setup
-registers a Paperclip-owned webhook. The raw request body is verified using Svix
+registers a ThinkingMach-owned webhook. The raw request body is verified using Svix
 before the inbox is admitted to the shared durable delivery queue.
 The API key needs inbox-scoped `webhook_create`, `webhook_read`, and
 `webhook_delete` permissions in addition to mail access. AgentMail's
@@ -67,7 +67,7 @@ mailbox import and no assumption of WebSocket replay.
 
 Incoming mail wakes the selected agent through its normal task execution path,
 including its configured permissions and budget controls. The external sender
-is recorded in the email envelope; an email address never grants Paperclip
+is recorded in the email envelope; an email address never grants ThinkingMach
 membership or board authority.
 
 ## Explicit email actions
@@ -83,11 +83,11 @@ switch. The agent uses an explicit email action; task messages themselves are
 not sent as email. Reply uses Reply-To when present, otherwise the sender;
 reply-all must be requested.
 Bcc is retained in the originating envelope but is not copied to reply inputs.
-Remote email images are not rendered. Attachments use Paperclip's content-type,
+Remote email images are not rendered. Attachments use ThinkingMach's content-type,
 size, company, and task bounds.
 
 An agent must own the inbox, be assigned the source task, and supply the running
-source task's `X-Paperclip-Run-Id` at acceptance. Board actions require company
+source task's `X-ThinkingMach-Run-Id` at acceptance. Board actions require company
 write access. Configured action policies apply to both. Authority is checked
 again when the durable send executes. A new conversation creates its child task
 and immutable send intent in one transaction before contacting AgentMail.
@@ -147,11 +147,11 @@ also expose these operations. The CLI uses the same authenticated
 operations and inherits the agent run ID:
 
 ```sh
-paperclipai email inboxes
-paperclipai email thread "$PAPERCLIP_TASK_ID"
-paperclipai email send --file email-request.json
-paperclipai email reply --file email-reply.json
-paperclipai email delivery '<publication-uuid>'
+thinkingmach email inboxes
+thinkingmach email thread "$THINKINGMACH_TASK_ID"
+thinkingmach email send --file email-request.json
+thinkingmach email reply --file email-reply.json
+thinkingmach email delivery '<publication-uuid>'
 ```
 
 A `202` response includes task, conversation, and publication IDs immediately.
@@ -160,7 +160,7 @@ Delivery callbacks update that publication and do not create new correspondence.
 Retries reuse the same immutable request and provider idempotency key. The worker
 stops automatic retries after 23 hours, conservatively inside AgentMail's 24-hour
 deduplication window. An uncertain receipt can be resolved by matching its
-provider message ID and Paperclip publication header, or by an operator confirming
+provider message ID and ThinkingMach publication header, or by an operator confirming
 that it was not sent. The latter marks it failed; any resend is a new explicit
 action. Do not change an idempotency key just because a request timed out.
 
@@ -169,9 +169,9 @@ action. Do not change an idempotency key just because a request timed out.
 Reconnect preserves inbox and task identity. Pause stops intake and sending.
 Disconnect archives the local endpoint and removes its credential bindings,
 unreferenced vaulted credentials, and only the webhook/runtime key created by
-Paperclip. It never deletes the provider inbox or task history. If a revoked key
+ThinkingMach. It never deletes the provider inbox or task history. If a revoked key
 prevents provider cleanup, local disconnection still completes and reports that
-Paperclip's provider registrations need cleanup in AgentMail.
+ThinkingMach's provider registrations need cleanup in AgentMail.
 
 Connection settings show state, receiving mode, catch-up time and errors. Tasks
 show publication failures and uncertain delivery resolution. Delivery admission,
@@ -202,7 +202,7 @@ Provider references: [inboxes](https://docs.agentmail.to/inboxes),
 
 ### Sandbox execution
 
-AgentMail runs in the Paperclip control plane using its vaulted credentials. It
+AgentMail runs in the ThinkingMach control plane using its vaulted credentials. It
 is a REST connection, not a local-stdio MCP server. The connection health check
 validates the key against AgentMail; it does not launch a local command or discover
 MCP tools.

@@ -974,7 +974,7 @@ async function integrateImportedGitHead(input: {
         localDir: input.localDir,
         currentHead,
         importedHead: input.importedHead,
-        syncLabel: "Paperclip SSH sync",
+        syncLabel: "ThinkingMach SSH sync",
       });
       try {
         await runLocalGit(input.localDir, ["update-ref", headRef, graftCommit, currentHead], {
@@ -1016,7 +1016,7 @@ async function integrateImportedGitHead(input: {
         "-p",
         input.importedHead,
         "-m",
-        `Paperclip SSH sync merge ${input.importedHead.slice(0, 12)}`,
+        `ThinkingMach SSH sync merge ${input.importedHead.slice(0, 12)}`,
       ],
       {
         timeout: 60_000,
@@ -1159,10 +1159,10 @@ async function isSshEnvLabFixtureProcess(state: Pick<SshEnvLabFixtureState, "pid
 }
 
 export async function getSshEnvLabSupport(): Promise<SshEnvLabSupport> {
-  if (process.platform === "darwin" && process.env.PAPERCLIP_ENABLE_DARWIN_SSH_ENV_LAB !== "1") {
+  if (process.platform === "darwin" && process.env.THINKINGMACH_ENABLE_DARWIN_SSH_ENV_LAB !== "1") {
     return {
       supported: false,
-      reason: "SSH env-lab fixture is disabled on macOS; set PAPERCLIP_ENABLE_DARWIN_SSH_ENV_LAB=1 to opt in.",
+      reason: "SSH env-lab fixture is disabled on macOS; set THINKINGMACH_ENABLE_DARWIN_SSH_ENV_LAB=1 to opt in.",
     };
   }
 
@@ -1215,7 +1215,7 @@ export async function runSshCommand(
     // Mirror buildSshSpawnTarget: source the login profiles first, then run
     // `env KEY=VAL cmd` so user-supplied identity overrides win over anything a
     // profile re-exports. The SSH target is an operator-configured host, not a
-    // Paperclip sandbox image, so it can expose `node` or an agent CLI only
+    // ThinkingMach sandbox image, so it can expose `node` or an agent CLI only
     // through a login profile; a non-login SSH command would miss that PATH.
     // Source `/etc/profile` first so a host that exposes the PATH through
     // `/etc/profile.d` scripts still resolves node and the agent CLI.
@@ -1279,7 +1279,7 @@ export async function buildSshSpawnTarget(input: {
   const remoteCommandParts = [shellQuote(input.command), ...input.args.map((arg) => shellQuote(arg))].join(" ");
   // Source the login profiles first, then run `env KEY=VAL cmd` so
   // user-supplied identity overrides win over anything a profile re-exports.
-  // The SSH target is an operator-configured host, not a Paperclip sandbox
+  // The SSH target is an operator-configured host, not a ThinkingMach sandbox
   // image, so it can expose `node` or an agent CLI only through a login
   // profile; a non-login SSH command would miss that PATH. Source
   // `/etc/profile` first so a host that exposes the PATH through

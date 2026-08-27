@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { afterEach, describe, expect, it } from "vitest";
-import { createTestHarness } from "@paperclipai/plugin-sdk/testing";
+import { createTestHarness } from "@thinkingmach/plugin-sdk/testing";
 import manifest from "../src/manifest.js";
 import plugin, { resolveDefaultBaseRef } from "../src/worker.js";
 
@@ -21,7 +21,7 @@ async function createGitWorkspace() {
   await fs.mkdir(path.join(root, "src"), { recursive: true });
   await git(root, ["init"]);
   await git(root, ["config", "user.email", "paperclip@example.com"]);
-  await git(root, ["config", "user.name", "Paperclip Test"]);
+  await git(root, ["config", "user.name", "ThinkingMach Test"]);
   await fs.writeFile(path.join(root, "src/app.ts"), "export const value = 1;\n");
   await git(root, ["add", "src/app.ts"]);
   await git(root, ["commit", "-m", "initial"]);

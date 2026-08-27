@@ -25,13 +25,13 @@ context and server-side ownership checks.
 1. **Every connection has exactly one durable credential authority.** The
    default is `company_secrets`: connections store secret refs and redacted
    metadata. A reviewed remote MCP connection may explicitly use Vercel Connect;
-   then Vercel stores the durable provider credential and Paperclip stores only
+   then Vercel stores the durable provider credential and ThinkingMach stores only
    an external connector ref plus allow-listed grant metadata. Mixed vault and
    external refs are invalid. Raw OAuth access tokens, refresh tokens, API keys,
    app private keys, webhook secrets, and runtime bearers must not live in
    connection config, plugin config, issue comments, activity logs, exports, or
    agent-visible payloads.
-2. **Connection operations are company-scoped and brokered by Paperclip.**
+2. **Connection operations are company-scoped and brokered by ThinkingMach.**
    Agents do not receive long-lived provider credentials. Plugin/provider code
    receives the minimum resolved material for a single invocation.
 3. **Complete mediation is mandatory.** Tool calls, sync jobs, webhooks, catalog
@@ -71,7 +71,7 @@ context and server-side ownership checks.
   and connector-service relay routing state.
 - Governance state: catalog entries, risk classes, quarantine state, profiles,
   bindings, policies, action requests, and trust rules.
-- Paperclip objects mutated by integrations: issues, comments, documents,
+- ThinkingMach objects mutated by integrations: issues, comments, documents,
   projects, goals, activity rows, plugin entities, work products, and artifacts.
 - Agent runtime capability surface: the exact tools exposed into a heartbeat.
 - Audit trail: call events, action-request decisions, secret access events,
@@ -227,9 +227,9 @@ Required controls:
 - Route webhook payloads only to the owning company/connection. Ignore request
   body ids until the signed/provider-authenticated envelope resolves the
   connection.
-- Apply resource filters before storing external mappings or mutating Paperclip.
+- Apply resource filters before storing external mappings or mutating ThinkingMach.
 - For revoked/disabled connections, acknowledge where provider semantics require
-  it, log the filtered/drop outcome, and do not mutate Paperclip state.
+  it, log the filtered/drop outcome, and do not mutate ThinkingMach state.
 
 ### Import, Export, And Portability
 
@@ -307,8 +307,8 @@ Redaction and agent safety:
 - Remote MCP providers remain supply-chain and prompt-injection surfaces. Use
   narrow default profiles, schema hashing, changed-tool quarantine, and
   board-supervised rollout.
-- Provider OAuth/app-installation scopes may be broader than Paperclip resource
-  filters. Paperclip must enforce the narrower internal filter.
+- Provider OAuth/app-installation scopes may be broader than ThinkingMach resource
+  filters. ThinkingMach must enforce the narrower internal filter.
 - High-risk writes still need good UX. Prefer provider-side dry-run or draft
   semantics, clear action names, and narrow explicit provider policy where an
   Allowed new-connection default would be unsafe.

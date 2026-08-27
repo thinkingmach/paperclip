@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { CornerUpLeft, Folder, KeyRound, Plus } from "lucide-react";
-import type { CompanySecret, SecretStatus } from "@paperclipai/shared";
+import type { CompanySecret, SecretStatus } from "@thinkingmach/shared";
 import {
   SearchableSelect,
   type SearchableSelectGroup,

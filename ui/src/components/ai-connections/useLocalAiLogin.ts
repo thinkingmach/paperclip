@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { AiConnectionLoginIntent, LocalAiLoginAttempt, LocalAiLoginStatus } from "@paperclipai/shared";
+import type { AiConnectionLoginIntent, LocalAiLoginAttempt, LocalAiLoginStatus } from "@thinkingmach/shared";
 import { aiConnectionsApi } from "@/api/ai-connections";
 
 /** Every authentication host uses the same local credential check and login lifecycle. */

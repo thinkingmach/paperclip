@@ -1,7 +1,7 @@
 /**
  * Server-side client for the least-privilege Tailscale HTTPS host broker.
  *
- * The Paperclip server process holds NO Tailscale operator authority. Its only
+ * The ThinkingMach server process holds NO Tailscale operator authority. Its only
  * way to publish a same-number HTTPS-to-loopback listener is to ask the broker
  * over its Unix domain socket. This client speaks the exact versioned,
  * length-prefixed, byte-bounded wire protocol implemented by the broker's

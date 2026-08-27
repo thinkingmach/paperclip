@@ -1,6 +1,6 @@
 /**
  * Default dedicated port allowlist for the broker. Kept numerically in sync
- * with `@paperclipai/shared` `runtime-exposure/ports` so the broker and the
+ * with `@thinkingmach/shared` `runtime-exposure/ports` so the broker and the
  * runtime allocator agree, but inlined here so the broker stays deployable as a
  * standalone host service without a workspace dependency graph.
  */

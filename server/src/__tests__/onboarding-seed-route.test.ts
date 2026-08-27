@@ -9,7 +9,7 @@ import {
   goals,
   issues,
   projects,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { onboardingSeedRoutes } from "../routes/onboarding-seed.js";
 import { logActivity } from "../services/activity-log.js";
 import {
@@ -91,11 +91,11 @@ describeEmbeddedPostgres("POST /api/companies/:companyId/onboarding-seed", () =>
     expect(companyAgents[0]?.adapterConfig).toMatchObject({
       paperclipSkillSync: {
         desiredSkills: expect.arrayContaining([
-          "paperclipai/paperclip/paperclip",
-          "paperclipai/paperclip/paperclip-board",
-          "paperclipai/paperclip/paperclip-converting-plans-to-tasks",
-          "paperclipai/paperclip/paperclip-create-agent",
-          "paperclipai/paperclip/para-memory-files",
+          "thinkingmach/paperclip/paperclip",
+          "thinkingmach/paperclip/paperclip-board",
+          "thinkingmach/paperclip/paperclip-converting-plans-to-tasks",
+          "thinkingmach/paperclip/paperclip-create-agent",
+          "thinkingmach/paperclip/para-memory-files",
         ]),
       },
     });
@@ -123,8 +123,8 @@ describeEmbeddedPostgres("POST /api/companies/:companyId/onboarding-seed", () =>
   });
 
   it("keeps server-seeded onboarding on a legacy adapter when native runner is requested", async () => {
-    const previous = process.env.PAPERCLIP_ONBOARDING_SEED_ADAPTER_TYPE;
-    process.env.PAPERCLIP_ONBOARDING_SEED_ADAPTER_TYPE = "paperclip_runner";
+    const previous = process.env.THINKINGMACH_ONBOARDING_SEED_ADAPTER_TYPE;
+    process.env.THINKINGMACH_ONBOARDING_SEED_ADAPTER_TYPE = "paperclip_runner";
     try {
       const { companyId, app } = await seedCompany();
 
@@ -136,9 +136,9 @@ describeEmbeddedPostgres("POST /api/companies/:companyId/onboarding-seed", () =>
       expect(companyAgents[0]?.adapterType).toBe("claude_local");
     } finally {
       if (previous === undefined) {
-        delete process.env.PAPERCLIP_ONBOARDING_SEED_ADAPTER_TYPE;
+        delete process.env.THINKINGMACH_ONBOARDING_SEED_ADAPTER_TYPE;
       } else {
-        process.env.PAPERCLIP_ONBOARDING_SEED_ADAPTER_TYPE = previous;
+        process.env.THINKINGMACH_ONBOARDING_SEED_ADAPTER_TYPE = previous;
       }
     }
   });

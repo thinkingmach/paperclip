@@ -21,8 +21,8 @@ import {
   principalPermissionGrants,
   routines,
   routineTriggers,
-} from "@paperclipai/db";
-import { readPaperclipSkillSyncPreference } from "@paperclipai/adapter-utils/server-utils";
+} from "@thinkingmach/db";
+import { readThinkingMachSkillSyncPreference } from "@thinkingmach/adapter-utils/server-utils";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -159,7 +159,7 @@ describeEmbeddedPostgres("built-in agents", () => {
     const companyId = randomUUID();
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "ThinkingMach",
       issuePrefix: issuePrefix(companyId),
       defaultResponsibleUserId: "responsible-user",
       requireBoardApprovalForNewAgents: options.requireApproval ?? true,
@@ -633,13 +633,13 @@ describeEmbeddedPostgres("built-in agents", () => {
     const [skill] = await db
       .select()
       .from(companySkills)
-      .where(eq(companySkills.key, "paperclipai/bundled/paperclip-operations/reflection-coach"));
+      .where(eq(companySkills.key, "thinkingmach/bundled/paperclip-operations/reflection-coach"));
     expect(skill).toMatchObject({
-      key: "paperclipai/bundled/paperclip-operations/reflection-coach",
+      key: "thinkingmach/bundled/paperclip-operations/reflection-coach",
       slug: "reflection-coach",
     });
-    expect(readPaperclipSkillSyncPreference(state.agent!.adapterConfig as Record<string, unknown>).desiredSkills).toContain(
-      "paperclipai/bundled/paperclip-operations/reflection-coach",
+    expect(readThinkingMachSkillSyncPreference(state.agent!.adapterConfig as Record<string, unknown>).desiredSkills).toContain(
+      "thinkingmach/bundled/paperclip-operations/reflection-coach",
     );
 
     const [routine] = await db.select().from(routines).where(eq(routines.companyId, companyId));
@@ -1147,12 +1147,12 @@ describeEmbeddedPostgres("built-in agents", () => {
     const [skill] = await db
       .select()
       .from(companySkills)
-      .where(eq(companySkills.key, "paperclipai/bundled/paperclip-operations/reflection-coach"));
+      .where(eq(companySkills.key, "thinkingmach/bundled/paperclip-operations/reflection-coach"));
     expect(skill).toMatchObject({
-      key: "paperclipai/bundled/paperclip-operations/reflection-coach",
+      key: "thinkingmach/bundled/paperclip-operations/reflection-coach",
       slug: "reflection-coach",
     });
-    expect(readPaperclipSkillSyncPreference(state.agent!.adapterConfig).desiredSkills).toContain(skill!.key);
+    expect(readThinkingMachSkillSyncPreference(state.agent!.adapterConfig).desiredSkills).toContain(skill!.key);
 
     const [routine] = await db.select().from(routines).where(eq(routines.companyId, companyId));
     expect(routine).toMatchObject({
@@ -1218,12 +1218,12 @@ describeEmbeddedPostgres("built-in agents", () => {
     const [skill] = await db
       .select()
       .from(companySkills)
-      .where(eq(companySkills.key, "paperclipai/bundled/paperclip-operations/summarize-status"));
+      .where(eq(companySkills.key, "thinkingmach/bundled/paperclip-operations/summarize-status"));
     expect(skill).toMatchObject({
-      key: "paperclipai/bundled/paperclip-operations/summarize-status",
+      key: "thinkingmach/bundled/paperclip-operations/summarize-status",
       slug: "summarize-status",
     });
-    expect(readPaperclipSkillSyncPreference(state.agent!.adapterConfig).desiredSkills).toContain(skill!.key);
+    expect(readThinkingMachSkillSyncPreference(state.agent!.adapterConfig).desiredSkills).toContain(skill!.key);
 
     const [routine] = await db
       .select()

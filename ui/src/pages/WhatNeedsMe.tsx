@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, Inbox } from "lucide-react";
-import type { Agent, AttentionItem, AttentionSubject } from "@paperclipai/shared";
+import type { Agent, AttentionItem, AttentionSubject } from "@thinkingmach/shared";
 import { useNavigate, useSearchParams } from "@/lib/router";
 import { attentionApi } from "../api/attention";
 import { agentsApi } from "../api/agents";

@@ -125,7 +125,7 @@ describe("Codex ACPX runtime adapter", () => {
       cwd: "/workspace",
       sessionOptions: {
         model: "gpt-5.6-sol",
-        systemPrompt: { append: "Use Paperclip tools." },
+        systemPrompt: { append: "Use ThinkingMach tools." },
       },
     });
     expect(
@@ -170,8 +170,8 @@ describe("Codex ACPX runtime adapter", () => {
 
       expect(runtimeOptions?.spawnEnvironment?.()).toEqual({
         PATH: "/verified/bin",
-        PAPERCLIP_ACPX_ISOLATED_CONTEXT: "1",
-        PAPERCLIP_ACPX_TASK_TOOL_BRIDGE_URL: "",
+        THINKINGMACH_ACPX_ISOLATED_CONTEXT: "1",
+        THINKINGMACH_ACPX_TASK_TOOL_BRIDGE_URL: "",
       });
       expect(runtime.ensureSession).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -187,7 +187,7 @@ describe("Codex ACPX runtime adapter", () => {
     async (binding) => {
       const options = openOptions(fakeCommand());
       options.profile = resolveQualifiedAcpxProfile("claude", "claude-sonnet-5");
-      options.launchEnvironment = { PAPERCLIP_ACPX_TASK_TOOL_BRIDGE_URL: "http://untrusted.invalid/mcp" };
+      options.launchEnvironment = { THINKINGMACH_ACPX_TASK_TOOL_BRIDGE_URL: "http://untrusted.invalid/mcp" };
       options.mcpServers = binding === "absent" ? [] : [{
         name: "paperclip", url: "http://127.0.0.1:3210/mcp",
         bearerToken: "bridge-secret", runnerOwned: binding === "runner-owned",
@@ -202,8 +202,8 @@ describe("Codex ACPX runtime adapter", () => {
         },
       });
       expect(runtimeOptions?.spawnEnvironment?.()).toEqual({
-        PAPERCLIP_ACPX_ISOLATED_CONTEXT: "1",
-        PAPERCLIP_ACPX_TASK_TOOL_BRIDGE_URL: binding === "runner-owned" ? "http://127.0.0.1:3210/mcp" : "",
+        THINKINGMACH_ACPX_ISOLATED_CONTEXT: "1",
+        THINKINGMACH_ACPX_TASK_TOOL_BRIDGE_URL: binding === "runner-owned" ? "http://127.0.0.1:3210/mcp" : "",
       });
     },
   );
@@ -2789,7 +2789,7 @@ function openOptions(
     // supplies both live credential-quorum listener descriptors.
     credentialFenceFds: [42, 43] as const,
     activateCredentialFenceOwner: async () => undefined,
-    systemInstructions: "Use Paperclip tools.",
+    systemInstructions: "Use ThinkingMach tools.",
     mcpServers: [],
     retainFailedAdmissionCleanup: vi.fn(),
   };

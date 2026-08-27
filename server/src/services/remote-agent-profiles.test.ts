@@ -1,4 +1,4 @@
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@thinkingmach/db";
 import { describe, expect, it } from "vitest";
 
 import {

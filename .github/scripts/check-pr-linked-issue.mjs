@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const ISSUE_PATTERNS = [
   /(?:fixes|closes|resolves|refs)\s+#\d+/i,
-  /(?:^|[\s(])https:\/\/github\.com\/paperclipai\/paperclip\/issues\/\d+(?=$|[\s),:;!?]|[.](?![\w-]))/i,
+  /(?:^|[\s(])https:\/\/github\.com\/thinkingmach\/paperclip\/issues\/\d+(?=$|[\s),:;!?]|[.](?![\w-]))/i,
   /(?<!\w)#\d+/,
 ];
 
@@ -33,7 +33,7 @@ const TEMPLATE_FIELDS = {
     ['What happened', 'What happened?'],
     ['Expected behavior', 'Expected behaviour'],
     ['Steps to reproduce', 'Reproduction steps', 'Repro steps'],
-    ['Paperclip version', 'Paperclip version or commit', 'Version or commit', 'Version/commit'],
+    ['ThinkingMach version', 'ThinkingMach version or commit', 'Version or commit', 'Version/commit'],
     ['Deployment mode'],
   ],
   feature: [
@@ -185,7 +185,7 @@ export function checkLinkedIssue(body, prTitle = '') {
       'No linked issue or inline issue description found — either tag an existing issue ' +
       'with `Fixes #NNN` / `Closes #NNN` / `Refs #NNN`, or describe the underlying issue ' +
       'inline in the PR body following one of our issue templates ' +
-      '(https://github.com/paperclipai/paperclip/tree/master/.github/ISSUE_TEMPLATE). ' +
+      '(https://github.com/thinkingmach/paperclip/tree/master/.github/ISSUE_TEMPLATE). ' +
       'See CONTRIBUTING.md → "Link Issues or Describe Them In-PR".',
     ],
   };

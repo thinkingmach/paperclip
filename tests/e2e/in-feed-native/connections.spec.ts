@@ -25,13 +25,13 @@ for (const journey of ['connect', 'decline', 'restart'] as const) test(`fresh na
   });
   try {
     const port = await listenOnFetchAllowedPort(fixture);
-    const env = { ...process.env, IN_FEED_FIXTURE_KEY: 'not-a-real-model-key', NODE_ENV: 'test', PAPERCLIP_TEST_CONNECTION_DELIVERY_HOLD: journey === 'restart' ? '1' : '0', PATH: `${root}/tests/e2e/fixtures/in-feed-bin:${process.env.PATH}` };
+    const env = { ...process.env, IN_FEED_FIXTURE_KEY: 'not-a-real-model-key', NODE_ENV: 'test', THINKINGMACH_TEST_CONNECTION_DELIVERY_HOLD: journey === 'restart' ? '1' : '0', PATH: `${root}/tests/e2e/fixtures/in-feed-bin:${process.env.PATH}` };
     delete env.DATABASE_URL; delete env.DATABASE_MIGRATION_URL;
     processHandle = spawn(process.execPath, ['cli/node_modules/tsx/dist/cli.mjs', 'cli/src/index.ts', 'test-drive', '--harness', 'codex', '--api-key-env', 'IN_FEED_FIXTURE_KEY', '--company-name', 'In-feed native fixture', '--no-browser'], { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
     processHandle.stdout!.on('data', (chunk) => { logs += chunk.toString(); });
     processHandle.stderr!.on('data', (chunk) => { logs += chunk.toString(); });
-    await expect.poll(() => logs.match(/Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/)?.[1], { timeout: 100_000 }).toBeTruthy();
-    let base = logs.match(/Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
+    await expect.poll(() => logs.match(/ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/)?.[1], { timeout: 100_000 }).toBeTruthy();
+    let base = logs.match(/ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
     const api = async (path: string, method = 'GET', data?: unknown) => {
       const response = await page.request.fetch(`${base}/api${path}`, { method, data });
       expect(response.ok(), await response.text()).toBeTruthy(); return response.json();
@@ -55,11 +55,11 @@ for (const journey of ['connect', 'decline', 'restart'] as const) test(`fresh na
     await page.goto(base + prefix + '/dashboard');
     await expect(page.getByText('No runs yet').first()).toBeVisible();
     await page.goto(base + prefix + '/company/settings/instance/experimental');
-    await page.getByRole('switch', { name: 'Toggle Paperclip Runner experimental setting' }).click();
+    await page.getByRole('switch', { name: 'Toggle ThinkingMach Runner experimental setting' }).click();
     await expect.poll(async () => (await api('/instance/settings/experimental')).enableNativeRunner).toBe(true);
     await page.goto(base + prefix + `/agents/${agent.id}/configuration`);
     await page.getByRole('button', { name: 'Codex', exact: true }).click();
-    await page.getByRole('button', { name: /Paperclip Runner/ }).click();
+    await page.getByRole('button', { name: /ThinkingMach Runner/ }).click();
     await page.getByRole('button', { name: 'Save', exact: true }).first().click();
     await expect.poll(async () => (await api(`/agents/${agent.id}`)).adapterType).toBe('paperclip_runner');
     const nativeAgent = await api(`/agents/${agent.id}`);
@@ -127,11 +127,11 @@ for (const journey of ['connect', 'decline', 'restart'] as const) test(`fresh na
       const exit = new Promise<void>((done) => processHandle!.once('exit', () => done()));
       process.kill(-processHandle!.pid!, 'SIGTERM'); await exit;
       logs = '';
-      processHandle = spawn(process.execPath, ['cli/node_modules/tsx/dist/cli.mjs', 'cli/src/index.ts', 'test-drive', '--harness', 'codex', '--api-key-env', 'IN_FEED_FIXTURE_KEY', '--data-dir', dataDir, '--no-browser'], { cwd: root, env: { ...env, PAPERCLIP_TEST_CONNECTION_DELIVERY_HOLD: '0' }, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
+      processHandle = spawn(process.execPath, ['cli/node_modules/tsx/dist/cli.mjs', 'cli/src/index.ts', 'test-drive', '--harness', 'codex', '--api-key-env', 'IN_FEED_FIXTURE_KEY', '--data-dir', dataDir, '--no-browser'], { cwd: root, env: { ...env, THINKINGMACH_TEST_CONNECTION_DELIVERY_HOLD: '0' }, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
       processHandle.stdout!.on('data', (chunk) => { logs += chunk.toString(); });
       processHandle.stderr!.on('data', (chunk) => { logs += chunk.toString(); });
-      await expect.poll(() => logs.match(/Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/)?.[1], { timeout: 100_000 }).toBeTruthy();
-      base = logs.match(/Paperclip is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
+      await expect.poll(() => logs.match(/ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/)?.[1], { timeout: 100_000 }).toBeTruthy();
+      base = logs.match(/ThinkingMach is ready at (http:\/\/127\.0\.0\.1:\d+)/)![1]!;
       expect((await api('/companies'))[0].id).toBe(company.id);
       const taskId = (await api(`/companies/${company.id}/issues`))[0].id;
       await page.goto(base + prefix + '/issues/' + taskId);

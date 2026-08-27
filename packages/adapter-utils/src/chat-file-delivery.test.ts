@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { paperclipChatFilePreparationDelivery } from "./chat-file-delivery.js";
-import { renderPaperclipWakePrompt } from "./server-utils.js";
+import { renderThinkingMachWakePrompt } from "./server-utils.js";
 
 function chatWake(provider: unknown) {
   return {
@@ -31,7 +31,7 @@ describe("chat file preparation delivery contract", () => {
       });
       expect(delivery.guidance).toContain("cannot upload file bytes");
       expect(delivery.guidance).toContain(
-        "must be opened there with Paperclip access",
+        "must be opened there with ThinkingMach access",
       );
       expect(delivery.guidance).toContain("do not say it is attached");
       expect(delivery.guidance).toContain(
@@ -86,7 +86,7 @@ describe("chat file preparation delivery contract", () => {
     (provider) => {
       for (const resumedSession of [false, true]) {
         for (const overflow of [false, true]) {
-          const prompt = renderPaperclipWakePrompt(
+          const prompt = renderThinkingMachWakePrompt(
             {
               ...chatWake(provider),
               ...(overflow
@@ -122,7 +122,7 @@ describe("chat file preparation delivery contract", () => {
       },
       chatWake("irc"),
     ]) {
-      expect(renderPaperclipWakePrompt(wake)).not.toContain(
+      expect(renderThinkingMachWakePrompt(wake)).not.toContain(
         "File-delivery contract:",
       );
     }

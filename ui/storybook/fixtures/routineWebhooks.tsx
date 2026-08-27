@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { ActivityEvent, Issue, RoutineDetail as RoutineDetailData, RoutineRunSummary, RoutineTrigger } from "@paperclipai/shared";
+import type { ActivityEvent, Issue, RoutineDetail as RoutineDetailData, RoutineRunSummary, RoutineTrigger } from "@thinkingmach/shared";
 import { PluginLauncherProvider } from "@/plugins/launchers";
 import { routinesApi } from "@/api/routines";
 import { issuesApi } from "@/api/issues";

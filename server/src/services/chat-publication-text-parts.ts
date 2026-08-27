@@ -5,7 +5,7 @@ import {
   parseMarkdown,
   stringifyMarkdown,
 } from "chat";
-import type { SafeChatPublicationPayload } from "@paperclipai/shared";
+import type { SafeChatPublicationPayload } from "@thinkingmach/shared";
 
 type NativeTextProvider = "slack" | "github" | "microsoft-teams";
 export interface NativePublicationTextPart {

@@ -257,7 +257,7 @@ export function describeIssueWriteDenial(
           `This request arrived without a valid run, so it could not be contained.`,
         whoCanAct: `${actor}, once the request carries its own run id.`,
         sanctionedPath:
-          `Send the \`X-Paperclip-Run-Id\` header with your current run (\`$PAPERCLIP_RUN_ID\`) ` +
+          `Send the \`X-ThinkingMach-Run-Id\` header with your current run (\`$THINKINGMACH_RUN_ID\`) ` +
           `and retry.`,
 
       };

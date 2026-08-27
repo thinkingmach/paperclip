@@ -1,18 +1,18 @@
 # Chat Adapters Research Notes
 
 **Date:** 2026-09-03
-**Paperclip implementation base:** `8430bd897f01dd4b91e0970efffb71b97e5a2685`
+**ThinkingMach implementation base:** `8430bd897f01dd4b91e0970efffb71b97e5a2685`
 **Earlier planning references:** `origin/master` was initially observed at `b872cd3d1b404bdaff70af493a2973ceb7e5d6ec`, then refreshed through `112ef5beecf518ce9e0cbbead3eac297c09fc775`, `b84964e5a2fa8b1e6498a1ccb471f6adba97d470`, `7b094724e65c04949706df638d497afb02c84b62`, and `d593463ab6394cd356bf27448ea28bad8cccf4ec`; the implementation branch is rebased onto the SHA above.
 **Vercel Chat SDK snapshot:** `51322dde8f4aafd8a7fc7a20cbfd7ae45cafaa5c`, package `chat@4.39.0`
 **OpenTag snapshot:** `6a770d862349f8e996c23c145aef6d6275914a23`
 
 ## Research question
 
-How should Paperclip place its existing agents inside Slack and other external communication systems while preserving Paperclip tasks, runs, permissions, and governance as the source of truth?
+How should ThinkingMach place its existing agents inside Slack and other external communication systems while preserving ThinkingMach tasks, runs, permissions, and governance as the source of truth?
 
-## Paperclip baseline
+## ThinkingMach baseline
 
-Paperclip is already task/comment-centric rather than a generic chatbot. It has:
+ThinkingMach is already task/comment-centric rather than a generic chatbot. It has:
 
 - company-scoped agents with independent runtime adapters;
 - single-assignee tasks, atomic checkout, wakeups, active-run handling, and liveness recovery;
@@ -21,7 +21,7 @@ Paperclip is already task/comment-centric rather than a generic chatbot. It has:
 - Apps v2 connection, secret, identity, permission, review, test, and activity surfaces;
 - first-party Apps, route, job, settings, and UI infrastructure suitable for a native chat-adapters subsystem.
 
-That means a channel integration should not create another agent runtime or conversational database. Its job is to translate external events into governed Paperclip task operations and translate safe Paperclip output back into the provider.
+That means a channel integration should not create another agent runtime or conversational database. Its job is to translate external events into governed ThinkingMach task operations and translate safe ThinkingMach output back into the provider.
 
 ## Vercel Chat SDK
 
@@ -39,17 +39,17 @@ Sources: [repository](https://github.com/vercel/chat), [adapter catalog](https:/
 
 The pinned catalog includes official packages for Slack, Teams, Google Chat, Discord, GitHub, Linear, Notion, Telegram, WhatsApp Business Cloud, Twilio, X/XChat, Messenger, Instagram, and Web. It also lists vendor-official or community integrations for Liveblocks, Resend email, Sendblue/iMessage, Zernio, Matrix, Webex, WhatsApp bridges, Lark, Velt, Kapso, Novu, Linq, Photon, Dial, Weixin, LINE, and others.
 
-The catalog should seed Paperclip setup metadata, but it is not a compatibility guarantee. Paperclip must maintain its own reviewed registry with pinned package/version, maturity, deployment compatibility, and feature-test results.
+The catalog should seed ThinkingMach setup metadata, but it is not a compatibility guarantee. ThinkingMach must maintain its own reviewed registry with pinned package/version, maturity, deployment compatibility, and feature-test results.
 
-### What Paperclip must not delegate
+### What ThinkingMach must not delegate
 
-Chat SDK's subscription, queue, lock, and history abstractions are bot-building conveniences. Paperclip needs stronger durable delivery, task binding, actor authorization, audit, and outbox semantics. A Paperclip state adapter should implement the SDK contract on Paperclip-owned records while leaving Paperclip's delivery ledger authoritative.
+Chat SDK's subscription, queue, lock, and history abstractions are bot-building conveniences. ThinkingMach needs stronger durable delivery, task binding, actor authorization, audit, and outbox semantics. A ThinkingMach state adapter should implement the SDK contract on ThinkingMach-owned records while leaving ThinkingMach's delivery ledger authoritative.
 
 ### Thread topology and GitHub
 
-Chat SDK normalizes provider threads, but Paperclip must choose what a thread means. The selected model is Hermes-style for channel products: a root `@bot` mention on Slack, Discord, or a compatible Teams channel creates/opens a native provider thread; that thread owns exactly one Paperclip issue for the endpoint; all later conversation stays inside it without repeated mentions. This keeps the channel timeline readable and gives Paperclip a stable task boundary.
+Chat SDK normalizes provider threads, but ThinkingMach must choose what a thread means. The selected model is Hermes-style for channel products: a root `@bot` mention on Slack, Discord, or a compatible Teams channel creates/opens a native provider thread; that thread owns exactly one ThinkingMach issue for the endpoint; all later conversation stays inside it without repeated mentions. This keeps the channel timeline readable and gives ThinkingMach a stable task boundary.
 
-GitHub joins the first supported group through its official Chat SDK adapter. Its issue, pull-request, or discussion already is the native conversation thread, so an addressed comment binds that existing thread to one Paperclip issue instead of creating a second GitHub thread. Telegram uses a stable chat/topic boundary where nested threads are unavailable. These differences belong in adapter capabilities, not provider-name conditionals in orchestration code.
+GitHub joins the first supported group through its official Chat SDK adapter. Its issue, pull-request, or discussion already is the native conversation thread, so an addressed comment binds that existing thread to one ThinkingMach issue instead of creating a second GitHub thread. Telegram uses a stable chat/topic boundary where nested threads are unavailable. These differences belong in adapter capabilities, not provider-name conditionals in orchestration code.
 
 ## OpenTag
 
@@ -64,7 +64,7 @@ OpenTag is a complete Channels SDK starter rather than a general control plane. 
 - diagnostics that distinguish declared channel, platform setup, environment, runtime connectivity, and live delivery;
 - explicit warnings about competing runtimes claiming the same delivery identity.
 
-OpenTag binds one visible persona (`AGENT_DISPLAY_NAME`) to one AG-UI agent URL. It does not solve Paperclip's company, multi-agent, task, permissions, budget, or audit model. Its managed Intelligence service owns provider credentials, delivery, state, and concurrency; Paperclip must own those controls itself or through an optional relay that does not become the business authority.
+OpenTag binds one visible persona (`AGENT_DISPLAY_NAME`) to one AG-UI agent URL. It does not solve ThinkingMach's company, multi-agent, task, permissions, budget, or audit model. Its managed Intelligence service owns provider credentials, delivery, state, and concurrency; ThinkingMach must own those controls itself or through an optional relay that does not become the business authority.
 
 ## Claude Tag
 
@@ -72,7 +72,7 @@ Source: [Introducing Claude Tag](https://www.anthropic.com/news/introducing-clau
 
 Claude Tag presents one shared `@Claude` identity inside a selected Slack channel. People tag it with tasks; it breaks work into stages, uses connected tools/data/codebases, and replies in a Slack thread. Anthropic describes that channel identity as multiplayer: one Claude shares the channel context and conversation with everyone.
 
-That is appropriate for a single product persona. It does not match Paperclip's core identity model, where a company has many independently configured agents with separate roles, runtimes, permissions, managers, and budgets. Paperclip should therefore expose each selected agent as its own provider bot identity. The shared unit is the channel, not a merged Paperclip agent.
+That is appropriate for a single product persona. It does not match ThinkingMach's core identity model, where a company has many independently configured agents with separate roles, runtimes, permissions, managers, and budgets. ThinkingMach should therefore expose each selected agent as its own provider bot identity. The shared unit is the channel, not a merged ThinkingMach agent.
 
 ## Slack Add to Slack
 
@@ -80,22 +80,22 @@ Source: [Slack's Add to Slack announcement](https://slack.com/blog/news/add-to-s
 
 Slack describes Add to Slack as a standardized authorization and deployment bridge from agent builders into a workspace, with platform-handled multi-tenant permission scoping and centralized Slack governance. The examples emphasize individual agents with their own identities, permissions, and audit trails living beside teammates.
 
-This validates a future managed provisioning path, but Paperclip cannot depend on it initially:
+This validates a future managed provisioning path, but ThinkingMach cannot depend on it initially:
 
 - it is Slack-specific while the architecture must cover many providers;
-- it simplifies installation, not Paperclip task/run/permission semantics;
-- provider workspace permission inheritance does not replace Paperclip authorization;
-- self-hosted Paperclip still needs BYO credentials and private-network relay options.
+- it simplifies installation, not ThinkingMach task/run/permission semantics;
+- provider workspace permission inheritance does not replace ThinkingMach authorization;
+- self-hosted ThinkingMach still needs BYO credentials and private-network relay options.
 
 ## One bot per agent versus shared bot
 
-| Model                                    | Strength                                                                              | Failure in Paperclip                                                                             | Decision                                            |
+| Model                                    | Strength                                                                              | Failure in ThinkingMach                                                                             | Decision                                            |
 | ---------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
 | One shared bot dispatches to many agents | One installation and credential set                                                   | Hidden addressing grammar, ambiguous identity, mixed permissions/audit, unclear output ownership | Do not use for v1                                   |
-| One bot identity per Paperclip agent     | Native addressing, visible role, clean task ownership, separate permissions and audit | More provider installations and credential lifecycle                                             | Adopt                                               |
-| One fixed product persona                | Simple, Claude Tag/OpenTag-like experience                                            | Does not expose the Paperclip company roster                                                     | Allow only as one ordinary Paperclip agent endpoint |
+| One bot identity per ThinkingMach agent     | Native addressing, visible role, clean task ownership, separate permissions and audit | More provider installations and credential lifecycle                                             | Adopt                                               |
+| One fixed product persona                | Simple, Claude Tag/OpenTag-like experience                                            | Does not expose the ThinkingMach company roster                                                     | Allow only as one ordinary ThinkingMach agent endpoint |
 
-Within a shared Slack channel, `@Researcher` and `@Engineer` are separate apps. A root mention creates the native thread and one issue owned by the addressed endpoint; human replies in that thread continue it without another mention. If a second Paperclip bot participates through an explicit route, Paperclip records a separate related single-assignee issue and guarded route provenance rather than stealing or sharing the first issue.
+Within a shared Slack channel, `@Researcher` and `@Engineer` are separate apps. A root mention creates the native thread and one issue owned by the addressed endpoint; human replies in that thread continue it without another mention. If a second ThinkingMach bot participates through an explicit route, ThinkingMach records a separate related single-assignee issue and guarded route provenance rather than stealing or sharing the first issue.
 
 ## Provider shape taxonomy
 
@@ -112,17 +112,17 @@ The UI should not clone a wizard for every adapter or expose these patterns as o
 
 ## Minimum-setup findings
 
-- **Slack:** a customer-owned App created from a prepared manifest is the required first-release path; the operator installs it, then copies the Bot User OAuth Token and Signing Secret. Add to Slack remains an optional convenience when Paperclip participates in Slack's agent-deployment program and cannot gate release. Slack documents [shareable app-manifest URLs](https://docs.slack.dev/app-manifests/configuring-apps-with-app-manifests/) and the [install/token/signing-secret sequence](https://api.slack.com/tutorials/tracks/app-home-and-modals).
-- **GitHub:** a customer-owned GitHub App is the required path. Paperclip generates and stores the webhook secret, exposes it once for copying to GitHub, and then accepts the App ID and private-key PEM. Repository selection remains GitHub's installation step. The App Manifest exchange remains a possible future convenience, not a release dependency.
-- **Microsoft Teams:** the portable first-release path uses a customer-owned single-tenant Entra App, Azure Bot, and the three identity values entered in Paperclip. No provisioning helper is shipped or required. See the [Teams registration quickstart](https://learn.microsoft.com/en-us/microsoftteams/platform/teams-sdk/get-started/quickstart-register).
-- **Discord:** the portable first-release path uses a customer-owned application bot with Application ID, Server ID, and write-only bot token. Paperclip generates the least-privilege server-pinned `bot` install URL and verifies Message Content Intent, server membership, and effective channel permissions. Discord's outbound Gateway transport requires no public callback or interactions key.
+- **Slack:** a customer-owned App created from a prepared manifest is the required first-release path; the operator installs it, then copies the Bot User OAuth Token and Signing Secret. Add to Slack remains an optional convenience when ThinkingMach participates in Slack's agent-deployment program and cannot gate release. Slack documents [shareable app-manifest URLs](https://docs.slack.dev/app-manifests/configuring-apps-with-app-manifests/) and the [install/token/signing-secret sequence](https://api.slack.com/tutorials/tracks/app-home-and-modals).
+- **GitHub:** a customer-owned GitHub App is the required path. ThinkingMach generates and stores the webhook secret, exposes it once for copying to GitHub, and then accepts the App ID and private-key PEM. Repository selection remains GitHub's installation step. The App Manifest exchange remains a possible future convenience, not a release dependency.
+- **Microsoft Teams:** the portable first-release path uses a customer-owned single-tenant Entra App, Azure Bot, and the three identity values entered in ThinkingMach. No provisioning helper is shipped or required. See the [Teams registration quickstart](https://learn.microsoft.com/en-us/microsoftteams/platform/teams-sdk/get-started/quickstart-register).
+- **Discord:** the portable first-release path uses a customer-owned application bot with Application ID, Server ID, and write-only bot token. ThinkingMach generates the least-privilege server-pinned `bot` install URL and verifies Message Content Intent, server membership, and effective channel permissions. Discord's outbound Gateway transport requires no public callback or interactions key.
 - **Telegram:** BotFather's `/newbot` flow and returned token cannot be removed. Telegram bots also cannot initiate a conversation, so the smallest proof is: paste the token, open the bot, tap Start, and send one private message. See the [BotFather tutorial](https://core.telegram.org/bots/tutorial) and [Telegram bot introduction](https://core.telegram.org/bots).
 
 These findings produce a strict UI rule: if an operator cannot act on information during the current setup phase, omit it. Automatic credential storage, transport selection, capabilities, and successful checks belong outside onboarding.
 
-## Feature-to-Paperclip mapping
+## Feature-to-ThinkingMach mapping
 
-| Chat SDK feature           | Paperclip source/target               | Required guard                                       |
+| Chat SDK feature           | ThinkingMach source/target               | Required guard                                       |
 | -------------------------- | ------------------------------------- | ---------------------------------------------------- |
 | Mention/subscribed message | Task create/comment/wakeup            | Endpoint/resource activation policy                  |
 | Reaction                   | Receipt or explicit reaction event    | Self/loop suppression and capability check           |
@@ -133,8 +133,8 @@ These findings produce a strict UI rule: if an operator cannot act on informatio
 | File                       | Issue attachment/work product         | Bounded download, type/hash/sanitize                 |
 | DM                         | Conversation-bound task               | DM policy and stable provider identity               |
 | Ephemeral reply            | Denial/link/receipt                   | DM or safe normal-message fallback                   |
-| Overlapping messages       | Comment queue or steer/new run        | Paperclip task/run concurrency remains authoritative |
+| Overlapping messages       | Comment queue or steer/new run        | ThinkingMach task/run concurrency remains authoritative |
 
 ## Resulting recommendation
 
-Adopt Chat SDK below a native Paperclip channel control plane. Reuse the current `/apps` catalog, connection wizard shell, single-agent selector, and connector-detail navigation. Onboarding asks only for purpose when ambiguous, the agent, and the provider invite/handoff; reviewed defaults create the endpoint, while Channels, Access, Behavior, Conversations, and Activity remain editable afterward. Implement chat adapters directly in Paperclip with a Paperclip-backed Chat SDK state adapter, durable ingress/outbox, provider-thread provisioning, explicit identity linking, sponsored restricted guests, and endpoint-bound issues. Begin with Slack, Teams, Discord, Telegram, and GitHub, but generate setup and capability UI from a reviewed adapter registry so every later adapter is an enablement exercise rather than an architectural fork.
+Adopt Chat SDK below a native ThinkingMach channel control plane. Reuse the current `/apps` catalog, connection wizard shell, single-agent selector, and connector-detail navigation. Onboarding asks only for purpose when ambiguous, the agent, and the provider invite/handoff; reviewed defaults create the endpoint, while Channels, Access, Behavior, Conversations, and Activity remain editable afterward. Implement chat adapters directly in ThinkingMach with a ThinkingMach-backed Chat SDK state adapter, durable ingress/outbox, provider-thread provisioning, explicit identity linking, sponsored restricted guests, and endpoint-bound issues. Begin with Slack, Teams, Discord, Telegram, and GitHub, but generate setup and capability UI from a reviewed adapter registry so every later adapter is an enablement exercise rather than an architectural fork.

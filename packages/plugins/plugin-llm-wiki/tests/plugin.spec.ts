@@ -2,13 +2,13 @@ import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createTestHarness } from "@paperclipai/plugin-sdk/testing";
-import type { Agent, Issue, PluginManagedRoutineResolution, Project } from "@paperclipai/plugin-sdk";
+import { createTestHarness } from "@thinkingmach/plugin-sdk/testing";
+import type { Agent, Issue, PluginManagedRoutineResolution, Project } from "@thinkingmach/plugin-sdk";
 import manifest, {
   CURSOR_WINDOW_ROUTINE_KEY,
   INDEX_REFRESH_ROUTINE_KEY,
   NIGHTLY_LINT_ROUTINE_KEY,
-  PAPERCLIP_DISTILL_SKILL_KEY,
+  THINKINGMACH_DISTILL_SKILL_KEY,
   WIKI_MAINTAINER_AGENT_KEY,
   WIKI_MAINTAINER_SKILL_CANONICAL_KEY,
   WIKI_MAINTAINER_SKILL_KEY,
@@ -34,8 +34,8 @@ import { OPERATION_ORIGIN_KIND, type WikiSkillResource } from "../src/wiki.js";
 
 const COMPANY_ID = "11111111-1111-4111-8111-111111111111";
 const OTHER_COMPANY_ID = "99999999-9999-4999-8999-999999999999";
-const ORIGINAL_DEPLOYMENT_MODE = process.env.PAPERCLIP_DEPLOYMENT_MODE;
-const ORIGINAL_DEPLOYMENT_EXPOSURE = process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE;
+const ORIGINAL_DEPLOYMENT_MODE = process.env.THINKINGMACH_DEPLOYMENT_MODE;
+const ORIGINAL_DEPLOYMENT_EXPOSURE = process.env.THINKINGMACH_DEPLOYMENT_EXPOSURE;
 type TestBridgeGlobal = typeof globalThis & {
   __paperclipPluginBridge__?: {
     sdkUi?: Record<string, unknown>;
@@ -101,14 +101,14 @@ let mockPageMetadataByPath: Record<string, {
 
 beforeEach(() => {
   if (ORIGINAL_DEPLOYMENT_MODE == null) {
-    delete process.env.PAPERCLIP_DEPLOYMENT_MODE;
+    delete process.env.THINKINGMACH_DEPLOYMENT_MODE;
   } else {
-    process.env.PAPERCLIP_DEPLOYMENT_MODE = ORIGINAL_DEPLOYMENT_MODE;
+    process.env.THINKINGMACH_DEPLOYMENT_MODE = ORIGINAL_DEPLOYMENT_MODE;
   }
   if (ORIGINAL_DEPLOYMENT_EXPOSURE == null) {
-    delete process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE;
+    delete process.env.THINKINGMACH_DEPLOYMENT_EXPOSURE;
   } else {
-    process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE = ORIGINAL_DEPLOYMENT_EXPOSURE;
+    process.env.THINKINGMACH_DEPLOYMENT_EXPOSURE = ORIGINAL_DEPLOYMENT_EXPOSURE;
   }
   mockPathname = "/PAP/wiki";
   mockSearch = "";
@@ -460,14 +460,14 @@ beforeEach(() => {
 
 afterEach(() => {
   if (ORIGINAL_DEPLOYMENT_MODE == null) {
-    delete process.env.PAPERCLIP_DEPLOYMENT_MODE;
+    delete process.env.THINKINGMACH_DEPLOYMENT_MODE;
   } else {
-    process.env.PAPERCLIP_DEPLOYMENT_MODE = ORIGINAL_DEPLOYMENT_MODE;
+    process.env.THINKINGMACH_DEPLOYMENT_MODE = ORIGINAL_DEPLOYMENT_MODE;
   }
   if (ORIGINAL_DEPLOYMENT_EXPOSURE == null) {
-    delete process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE;
+    delete process.env.THINKINGMACH_DEPLOYMENT_EXPOSURE;
   } else {
-    process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE = ORIGINAL_DEPLOYMENT_EXPOSURE;
+    process.env.THINKINGMACH_DEPLOYMENT_EXPOSURE = ORIGINAL_DEPLOYMENT_EXPOSURE;
   }
   delete (globalThis as TestBridgeGlobal).__paperclipPluginBridge__;
 });
@@ -567,7 +567,7 @@ function paperclipIssue(overrides: Partial<Issue> = {}): Issue {
     goalId: null,
     parentId: null,
     title: "Design event ingestion controls",
-    description: "Decide which Paperclip issues, comments, and documents can be ingested into the wiki.",
+    description: "Decide which ThinkingMach issues, comments, and documents can be ingested into the wiki.",
     status: "todo",
     workMode: "standard",
     priority: "medium",
@@ -656,7 +656,7 @@ function mockPersistedWikiSpace(harness: ReturnType<typeof createTestHarness>, s
 
 describe("LLM Wiki plugin scaffold", () => {
   it("declares standalone plugin surfaces without core wiki coupling", () => {
-    expect(manifest.id).toBe("paperclipai.plugin-llm-wiki");
+    expect(manifest.id).toBe("thinkingmach.plugin-llm-wiki");
     expect(manifest.entrypoints.worker).toBe("./dist/worker.js");
     expect(manifest.entrypoints.ui).toBe("./dist/ui");
     expect(manifest.database?.namespaceSlug).toBe("llm_wiki");
@@ -816,7 +816,7 @@ describe("LLM Wiki plugin scaffold", () => {
       context: { companyId: COMPANY_ID, companyPrefix: "PAP" },
     } as never));
 
-    expect(markup).toContain("Issues table · project-1 · plugin:paperclipai.plugin-llm-wiki:operation");
+    expect(markup).toContain("Issues table · project-1 · plugin:thinkingmach.plugin-llm-wiki:operation");
     expect(markup).not.toContain("Recent runs");
     expect(markup).not.toContain(">Operations</h2>");
   });
@@ -1645,7 +1645,7 @@ Duplicate headings receive stable suffixes.
     ]);
   });
 
-  it("does not ingest Paperclip events until operator controls enable them", async () => {
+  it("does not ingest ThinkingMach events until operator controls enable them", async () => {
     const harness = createTestHarness({ manifest });
     const issue = paperclipIssue();
     harness.seed({ issues: [issue] });
@@ -1668,7 +1668,7 @@ Duplicate headings receive stable suffixes.
     expect(harness.dbExecutes.some((execute) => execute.sql.includes("wiki_operations"))).toBe(false);
   });
 
-  it("records enabled Paperclip issue events as cursor observations without creating ingest operations", async () => {
+  it("records enabled ThinkingMach issue events as cursor observations without creating ingest operations", async () => {
     const harness = createTestHarness({ manifest });
     const issue = paperclipIssue();
     harness.seed({ issues: [issue] });
@@ -1714,7 +1714,7 @@ Duplicate headings receive stable suffixes.
     ]));
   });
 
-  it("preserves Paperclip event ingestion sources when only enabled changes", async () => {
+  it("preserves ThinkingMach event ingestion sources when only enabled changes", async () => {
     const harness = createTestHarness({ manifest });
 
     await plugin.definition.setup(harness.ctx);
@@ -1749,7 +1749,7 @@ Duplicate headings receive stable suffixes.
     });
   });
 
-  it("keeps Paperclip event cursor observations company scoped and ignores plugin-operation issues", async () => {
+  it("keeps ThinkingMach event cursor observations company scoped and ignores plugin-operation issues", async () => {
     const harness = createTestHarness({ manifest });
     const visibleIssue = paperclipIssue({ projectId: "77777777-7777-4777-8777-777777777777" });
     const otherCompanyIssue = paperclipIssue({
@@ -1800,7 +1800,7 @@ Duplicate headings receive stable suffixes.
     ]));
   });
 
-  it("routes Paperclip issue, comment, and document event cursors only to the default space", async () => {
+  it("routes ThinkingMach issue, comment, and document event cursors only to the default space", async () => {
     const harness = createTestHarness({ manifest });
     const issue = paperclipIssue({ projectId: "77777777-7777-4777-8777-777777777777" });
     harness.seed({ issues: [issue] });
@@ -1846,7 +1846,7 @@ Duplicate headings receive stable suffixes.
     expect(String(cursorWrites[2].params?.[9])).toContain('"lastSourceKind":"documents"');
   });
 
-  it("routes Paperclip events into an explicitly enabled shared non-default space", async () => {
+  it("routes ThinkingMach events into an explicitly enabled shared non-default space", async () => {
     const harness = createTestHarness({ manifest });
     const project = existingProject();
     const issue = paperclipIssue({ projectId: project.id });
@@ -1940,7 +1940,7 @@ Duplicate headings receive stable suffixes.
     expect(nonDefaultCursorWrites).toHaveLength(1);
   });
 
-  it("assembles deterministic Paperclip source bundles with issue, document, and comment provenance", async () => {
+  it("assembles deterministic ThinkingMach source bundles with issue, document, and comment provenance", async () => {
     const harness = createTestHarness({ manifest });
     const root = paperclipIssue({
       id: "77777777-7777-4777-8777-777777777781",
@@ -2212,13 +2212,13 @@ Duplicate headings receive stable suffixes.
     })).rejects.toThrow("whole-company backfill is not allowed");
   });
 
-  it("records estimated Paperclip distillation cost without refusing on legacy cost config", async () => {
+  it("records estimated ThinkingMach distillation cost without refusing on legacy cost config", async () => {
     const harness = createTestHarness({
       manifest,
       config: {
-        maxPaperclipRoutineRunCostCents: 1,
-        maxPaperclipDistillationTaskCostCents: 1,
-        maxPaperclipDistillationProjectCostCents: 1,
+        maxThinkingMachRoutineRunCostCents: 1,
+        maxThinkingMachDistillationTaskCostCents: 1,
+        maxThinkingMachDistillationProjectCostCents: 1,
         paperclipCostCentsPerThousandSourceCharacters: 100,
       },
     });
@@ -2292,7 +2292,7 @@ Duplicate headings receive stable suffixes.
     expect(result.operation.issue.assigneeAgentId).toBe(wikiMaintainerAgent().id);
     expect(result.operation.issue.assigneeAdapterOverrides).toBeNull();
     expect(result.operation.issue.description).toContain("Prompt source: LLM Wiki plugin action `distill-paperclip-now`");
-    expect(result.operation.issue.description).toContain(`Required skill: use the installed \`${PAPERCLIP_DISTILL_SKILL_KEY}\` skill`);
+    expect(result.operation.issue.description).toContain(`Required skill: use the installed \`${THINKINGMACH_DISTILL_SKILL_KEY}\` skill`);
     expect(result.operation.issue.description).toContain("Do not hardcode a single project");
     expect(result.operation.issue.description).not.toContain(`Source project ID: ${project.id}`);
     const workItemInsert = harness.dbExecutes.find((execute) =>
@@ -2381,7 +2381,7 @@ Duplicate headings receive stable suffixes.
     expect(String(cursorWrites[0]?.params?.[9])).toContain('"configuredBy":"enable-active-projects"');
   });
 
-  it("backfills only the selected Paperclip project and date window", async () => {
+  it("backfills only the selected ThinkingMach project and date window", async () => {
     const harness = createTestHarness({ manifest });
     const project = existingProject();
     const inWindow = paperclipIssue({
@@ -2440,7 +2440,7 @@ Duplicate headings receive stable suffixes.
     expect(String(workItemInsert?.params?.[9])).toContain('"backfillStartAt":"2026-04-01T00:00:00Z"');
   });
 
-  it("generates review-required Paperclip project page patches with provenance, index, and log updates", async () => {
+  it("generates review-required ThinkingMach project page patches with provenance, index, and log updates", async () => {
     const harness = createTestHarness({ manifest });
     const project = existingProject();
     const issue = paperclipIssue({
@@ -2577,7 +2577,7 @@ Duplicate headings receive stable suffixes.
     expect(combinedPatchContents).not.toContain("sk-patchsecretdocumentvalue1234567890");
   });
 
-  it("auto-applies Paperclip project page patches by default when policy allows and records page bindings", async () => {
+  it("auto-applies ThinkingMach project page patches by default when policy allows and records page bindings", async () => {
     const harness = createTestHarness({ manifest });
     const project = existingProject();
     const issue = paperclipIssue({
@@ -2641,9 +2641,9 @@ Duplicate headings receive stable suffixes.
     ]));
   });
 
-  it("refuses auto-apply Paperclip project page patches in authenticated/public deployments", async () => {
-    process.env.PAPERCLIP_DEPLOYMENT_MODE = "authenticated";
-    process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE = "public";
+  it("refuses auto-apply ThinkingMach project page patches in authenticated/public deployments", async () => {
+    process.env.THINKINGMACH_DEPLOYMENT_MODE = "authenticated";
+    process.env.THINKINGMACH_DEPLOYMENT_EXPOSURE = "public";
     const harness = createTestHarness({ manifest, config: { autoApplyIngestPatches: true } });
     const project = existingProject();
     const issue = paperclipIssue({
@@ -2693,7 +2693,7 @@ Duplicate headings receive stable suffixes.
     );
   });
 
-  it("refuses stale project page hashes before writing generated Paperclip pages", async () => {
+  it("refuses stale project page hashes before writing generated ThinkingMach pages", async () => {
     const harness = createTestHarness({ manifest, config: { autoApplyIngestPatches: true } });
     const project = existingProject();
     const issue = paperclipIssue({
@@ -2733,7 +2733,7 @@ Duplicate headings receive stable suffixes.
     expect(writes).toHaveLength(0);
   });
 
-  it("skips low-signal Paperclip source windows without proposing wiki writes", async () => {
+  it("skips low-signal ThinkingMach source windows without proposing wiki writes", async () => {
     const harness = createTestHarness({ manifest });
     const project = existingProject();
     const issue = paperclipIssue({
@@ -3027,7 +3027,7 @@ Duplicate headings receive stable suffixes.
     expect(harness.dbExecutes.some((execute) => execute.sql.includes("wiki_sources"))).toBe(true);
   });
 
-  it("preserves manual source ingest for non-default spaces while refusing Paperclip distillation there", async () => {
+  it("preserves manual source ingest for non-default spaces while refusing ThinkingMach distillation there", async () => {
     const harness = createTestHarness({ manifest });
     const writes: Array<{ path: string; contents: string }> = [];
     harness.ctx.localFolders.writeTextAtomic = async (_companyId, _folderKey, relativePath, contents) => {
@@ -3089,10 +3089,10 @@ Duplicate headings receive stable suffixes.
       companyId: COMPANY_ID,
       spaceSlug: created.space.slug,
       projectId: existingProject().id,
-    })).rejects.toThrow("Paperclip ingestion policy denied queue");
+    })).rejects.toThrow("ThinkingMach ingestion policy denied queue");
   });
 
-  it("fails closed for direct Paperclip ingestion actions against restricted spaces", async () => {
+  it("fails closed for direct ThinkingMach ingestion actions against restricted spaces", async () => {
     const harness = createTestHarness({ manifest });
     harness.seed({
       agents: [wikiMaintainerAgent()],
@@ -3139,7 +3139,7 @@ Duplicate headings receive stable suffixes.
       companyId: COMPANY_ID,
       spaceSlug: created.space.slug,
       projectId: existingProject().id,
-    })).rejects.toThrow("Paperclip ingestion policy denied queue");
+    })).rejects.toThrow("ThinkingMach ingestion policy denied queue");
 
     const operations = await harness.ctx.issues.list({
       companyId: COMPANY_ID,
@@ -3149,7 +3149,7 @@ Duplicate headings receive stable suffixes.
     expect(harness.dbExecutes.some((execute) => execute.sql.includes("paperclip_distillation_work_items"))).toBe(false);
   });
 
-  it("re-checks Paperclip ingestion policy at execution time for queued work", async () => {
+  it("re-checks ThinkingMach ingestion policy at execution time for queued work", async () => {
     const harness = createTestHarness({ manifest });
     const project = existingProject();
     const issue = paperclipIssue({
@@ -3199,12 +3199,12 @@ Duplicate headings receive stable suffixes.
     await expect(harness.performAction("create-paperclip-distillation-run", {
       companyId: COMPANY_ID,
       projectId: project.id,
-    })).rejects.toThrow("personal spaces cannot ingest Paperclip sources");
+    })).rejects.toThrow("personal spaces cannot ingest ThinkingMach sources");
     expect(harness.dbExecutes.some((execute) =>
       execute.sql.includes("paperclip_distillation_runs") && execute.sql.includes("'source_ready'"))).toBe(false);
   });
 
-  it("queues Paperclip ingestion backfills for every selected project scope", async () => {
+  it("queues ThinkingMach ingestion backfills for every selected project scope", async () => {
     const harness = createTestHarness({ manifest });
     await plugin.definition.setup(harness.ctx);
 
@@ -3237,7 +3237,7 @@ Duplicate headings receive stable suffixes.
     expect(harness.dbExecutes.filter((execute) => execute.sql.includes("paperclip_distillation_work_items"))).toHaveLength(2);
   });
 
-  it("rejects oversized Paperclip ingestion profile and source-scope payloads", async () => {
+  it("rejects oversized ThinkingMach ingestion profile and source-scope payloads", async () => {
     const harness = createTestHarness({ manifest });
 
     await plugin.definition.setup(harness.ctx);
@@ -3246,7 +3246,7 @@ Duplicate headings receive stable suffixes.
       enabled: true,
       maxCharacters: 20001,
       sources: { issues: true },
-    })).rejects.toThrow("maxCharacters exceeds the hard Paperclip ingestion cap");
+    })).rejects.toThrow("maxCharacters exceeds the hard ThinkingMach ingestion cap");
 
     await expect(harness.performAction("enable-paperclip-distillation-active-projects", {
       companyId: COMPANY_ID,
@@ -3263,7 +3263,7 @@ Duplicate headings receive stable suffixes.
       companyId: COMPANY_ID,
       projectId: "77777777-7777-4777-8777-777777777777",
       maxCharacters: 60001,
-    })).rejects.toThrow("maxCharacters exceeds the hard Paperclip ingestion cap");
+    })).rejects.toThrow("maxCharacters exceeds the hard ThinkingMach ingestion cap");
   });
 
   it("keeps default-space files at the root and isolates managed spaces under slug prefixes", async () => {

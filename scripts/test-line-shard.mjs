@@ -4,7 +4,7 @@ import path from "node:path";
 function validateTests(tests, file) {
   assert.ok(Array.isArray(tests) && tests.length > 0, "Vitest must collect at least one test");
   for (const test of tests) {
-    assert.equal(test.projectName, "@paperclipai/server", "unexpected test project");
+    assert.equal(test.projectName, "@thinkingmach/server", "unexpected test project");
     assert.equal(path.resolve(test.file), path.resolve(file), "unexpected test file");
     assert.ok(typeof test.name === "string" && test.name.length > 0, "missing test name");
     assert.ok(Number.isSafeInteger(test.location?.line) && test.location.line > 0, "missing test source line");

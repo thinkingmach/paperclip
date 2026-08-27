@@ -4,8 +4,8 @@ import { formatDatabaseBackupResult, runDatabaseBackup } from "./backup-lib.js";
 import {
   expandHomePrefix,
   resolveDefaultBackupDir,
-  resolvePaperclipConfigPathForInstance,
-} from "@paperclipai/shared/home-paths";
+  resolveThinkingMachConfigPathForInstance,
+} from "@thinkingmach/shared/home-paths";
 
 type PartialConfig = {
   database?: {
@@ -65,7 +65,7 @@ function resolveRetentionDays(config: PartialConfig | null): number {
 }
 
 async function main() {
-  const configPath = resolvePaperclipConfigPathForInstance();
+  const configPath = resolveThinkingMachConfigPathForInstance();
   const config = readConfig(configPath);
   const connectionString = resolveConnectionString(config);
   const backupDir = resolveBackupDir(config);

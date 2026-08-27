@@ -1,6 +1,6 @@
 # Generator Workflows
 
-Use this reference when the request is to generate Paperclip capsule graphics, capsule identicons, or reusable visual assets.
+Use this reference when the request is to generate ThinkingMach capsule graphics, capsule identicons, or reusable visual assets.
 
 ## Source Precedence
 
@@ -55,7 +55,7 @@ Behavior:
 
 ## Mirrored Graphic Generator Contract
 
-Use this when the task needs reproducible generated capsule art beyond the small embedded website tool. The contract here is intentionally mirrored into Paperclip so agents can proceed if the original prototype repository is renamed, deleted, or private.
+Use this when the task needs reproducible generated capsule art beyond the small embedded website tool. The contract here is intentionally mirrored into ThinkingMach so agents can proceed if the original prototype repository is renamed, deleted, or private.
 
 Known modes/templates:
 
@@ -78,13 +78,13 @@ Useful controls:
 - Background controls including images.
 - PNG and SVG export.
 
-If an implementation needs source code, prefer the Paperclip website embedded generator or a Paperclip-owned tool. Use any external prototype link only as optional historical context, not as required task input.
+If an implementation needs source code, prefer the ThinkingMach website embedded generator or a ThinkingMach-owned tool. Use any external prototype link only as optional historical context, not as required task input.
 
 Palette caution:
 
 - The `duotones` palette matches the website 12-preset capsule palette.
-- Experimental palettes such as vaporwave, cyberpunk, ocean, and jewel are generator options, not canonical Paperclip brand palettes.
-- Do not use experimental palettes when the request asks for strict Paperclip brand work.
+- Experimental palettes such as vaporwave, cyberpunk, ocean, and jewel are generator options, not canonical ThinkingMach brand palettes.
+- Do not use experimental palettes when the request asks for strict ThinkingMach brand work.
 
 ## Deterministic Identicon / Profile Pill
 
@@ -107,7 +107,7 @@ Capsule artifact
 - Density / count / dimensions:
 - Motion / gradient angle:
 - Output: SVG | PNG | HTML | MP4 | WebM
-- Divergence from canonical Paperclip rendering:
+- Divergence from canonical ThinkingMach rendering:
 ```
 
 ## Review Checklist

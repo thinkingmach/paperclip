@@ -7,7 +7,7 @@ import {
   BannerText,
   Button,
   ReplayControls,
-} from "@paperclipai/paperclip-runner/react";
+} from "@thinkingmach/paperclip-runner/react";
 import type { CapabilityRunArtifact, CapabilityScenarioIndexEntry } from "@paperclip-runner-local/capability";
 
 import { ASSERTION_CLASS_LABEL, groupLabel, PARITY_TONE } from "../labels.js";

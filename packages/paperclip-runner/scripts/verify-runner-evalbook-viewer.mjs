@@ -24,7 +24,7 @@ for (const entry of await readdir(join(root, "attempts"), {
     html.match(
       /<script type="application\/json" id="paperclip-eval-report">([^<]*)<\/script>/u,
     )?.[1] ??
-    html.match(/window\.__PAPERCLIP_EVAL_REPORT__=(.*?);<\/script>/su)?.[1];
+    html.match(/window\.__THINKINGMACH_EVAL_REPORT__=(.*?);<\/script>/su)?.[1];
   assert.ok(encoded, `Attempt lacks canonical viewer payload: ${route}`);
   const payload = JSON.parse(encoded);
   const messages = payload.view.turns

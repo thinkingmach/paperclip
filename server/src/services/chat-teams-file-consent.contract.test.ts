@@ -55,7 +55,7 @@ function invoke(action: "accept" | "decline") {
 
 // Real pinned adapter HTTP bridge + Microsoft Teams App router. Only its
 // service-token validator is replaced. This is NOT live tenant/JWT proof or
-// Paperclip DB authorization. No request may contact any external service.
+// ThinkingMach DB authorization. No request may contact any external service.
 describe("pinned Teams file-consent invoke boundary", () => {
   afterEach(() => {
     vi.restoreAllMocks();

@@ -55,7 +55,7 @@ follow-up all succeeded on the same provider thread.
 - A separate warning about missing system bubblewrap remained visible.
   Codex used its bundled copy. The change does not suppress that warning.
 
-The sandbox was deleted after evidence collection. Remote Paperclip UI and
+The sandbox was deleted after evidence collection. Remote ThinkingMach UI and
 remote Rust execution were not tested.
 
 ## Hook trust and experience limits

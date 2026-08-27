@@ -1,14 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  CheckCircle2,
-  Clock,
-  Loader2,
-  Plug,
-  RotateCcw,
-  XCircle,
-} from "lucide-react";
-import type { ConnectionIntentInteraction } from "@paperclipai/shared";
+import { CheckCircle2, Clock, Loader2, Plug, RotateCcw, XCircle,  } from "lucide-react";
+import type { ConnectionIntentInteraction } from "@thinkingmach/shared";
 import { connectionIntentsApi } from "@/api/connection-intents";
 import { AiConnectionCredentialStep } from "@/components/ai-connections/AiConnectionCredentialStep";
 import { AI_PROVIDERS } from "@/components/ai-connections/model";

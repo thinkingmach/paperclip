@@ -1,7 +1,7 @@
 import type {
   RunPresentationDecision,
   RunPresentationSource,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 
 export const HEARTBEAT_RUN_RESULT_SUMMARY_MAX_CHARS = 500;
 export const HEARTBEAT_RUN_RESULT_OUTPUT_MAX_CHARS = 4_096;
@@ -125,7 +125,7 @@ export const CHAT_RUN_PRESENTATION_AUTHORIZATION_REASON =
   "allow_chat_run_presentation";
 
 export type RunPresentationCommentAction = "reuse" | "create" | "none";
-export type { RunPresentationDecision } from "@paperclipai/shared";
+export type { RunPresentationDecision } from "@thinkingmach/shared";
 
 export interface ResolvedHeartbeatRunResponse {
   text: string | null;

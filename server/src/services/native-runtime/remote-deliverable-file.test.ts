@@ -4,7 +4,7 @@ import { link, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { CommandManagedRuntimeRunner } from "@paperclipai/adapter-utils/command-managed-runtime";
+import type { CommandManagedRuntimeRunner } from "@thinkingmach/adapter-utils/command-managed-runtime";
 import { MAX_REMOTE_DELIVERABLE_BYTES, readVerifiedRemoteWorkspaceFile } from "./remote-deliverable-file.js";
 
 const digest = (body: Buffer) => createHash("sha256").update(body).digest("hex");

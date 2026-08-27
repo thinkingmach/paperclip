@@ -24,12 +24,12 @@ import {
   issues,
   projects,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   githubCommitSchema,
   type GitHubReviewEventContext,
   type GitHubReviewPolicy,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { HttpError, conflict, forbidden, notFound } from "../errors.js";
 import {
   githubBotRepositoryToken,
@@ -1157,7 +1157,7 @@ export function githubChatReviewService(db: Db, fetchImpl = fetch) {
               ? ` · [Review history](${board}/apps/chat/${source.endpoint.id}/reviews)`
               : "";
             const summary = projectSafeChatPublicationText(
-              `## Paperclip Review — ${assessment.complete ? `${assessment.score}/5` : "Incomplete"}\n\n${assessment.summary}\n\n${assessment.rationale}\n\nReviewed commit: \`${review.headSha}\`\n\nCoverage: ${assessment.coverage.reviewedPaths.length} files.\n${assessment.coverage.limitations.join("\n")}\n\nTask: ${taskLink} · ${runLink}${historyLink}`,
+              `## ThinkingMach Review — ${assessment.complete ? `${assessment.score}/5` : "Incomplete"}\n\n${assessment.summary}\n\n${assessment.rationale}\n\nReviewed commit: \`${review.headSha}\`\n\nCoverage: ${assessment.coverage.reviewedPaths.length} files.\n${assessment.coverage.limitations.join("\n")}\n\nTask: ${taskLink} · ${runLink}${historyLink}`,
             );
             const summaryMarker = marker(
               "review",
@@ -1273,7 +1273,7 @@ export function githubChatReviewService(db: Db, fetchImpl = fetch) {
                 app?: { id?: number };
               }>;
             }>(
-              `/commits/${review.headSha}/check-runs?check_name=Paperclip%20Review&per_page=100`,
+              `/commits/${review.headSha}/check-runs?check_name=ThinkingMach%20Review&per_page=100`,
             );
             const check = checks.check_runs.find(
               (item) =>
@@ -1288,7 +1288,7 @@ export function githubChatReviewService(db: Db, fetchImpl = fetch) {
             }>(check ? `/check-runs/${check.id}` : "/check-runs", {
               method: check ? "PATCH" : "POST",
               body: {
-                name: "Paperclip Review",
+                name: "ThinkingMach Review",
                 head_sha: review.headSha,
                 external_id: `${source.endpoint.id}:${source.number}:${review.headSha}`,
                 ...(board ? { details_url: `${board}/issues/${source.issue.id}` } : {}),

@@ -1,5 +1,5 @@
 import { AiConnectionField } from "./ai-connections/AiConnectionField";
-import { aiConnectionBindingSchema } from "@paperclipai/shared";
+import { aiConnectionBindingSchema } from "@thinkingmach/shared";
 import { testAgentSetup } from "@/lib/test-agent-setup";
 import { setupEfforts } from "../lib/agent-setup-fields";
 import { RuntimeTestCard } from "./RuntimeTestCard";
@@ -18,8 +18,8 @@ import type {
   EnvBinding,
   EnvSecretRefBinding,
   Environment,
-} from "@paperclipai/shared";
-import { AGENT_DEFAULT_MAX_CONCURRENT_RUNS, supportedEnvironmentDriversForAdapter, isValidBrowserCode, ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
+} from "@thinkingmach/shared";
+import { AGENT_DEFAULT_MAX_CONCURRENT_RUNS, supportedEnvironmentDriversForAdapter, isValidBrowserCode, ADAPTER_AUTH_MISSING_CHECK_CODE } from "@thinkingmach/shared";
 import type { AdapterModel } from "../api/agents";
 import { agentsApi } from "../api/agents";
 import { ApiError } from "../api/client";
@@ -30,12 +30,12 @@ import { assetsApi } from "../api/assets";
 import {
   DEFAULT_CODEX_LOCAL_BYPASS_APPROVALS_AND_SANDBOX,
   DEFAULT_CODEX_LOCAL_MODEL,
-} from "@paperclipai/adapter-codex-local";
-import { DEFAULT_CLAUDE_LOCAL_MODEL } from "@paperclipai/adapter-claude-local";
-import { DEFAULT_CURSOR_LOCAL_MODEL } from "@paperclipai/adapter-cursor-local";
-import { DEFAULT_GEMINI_LOCAL_MODEL } from "@paperclipai/adapter-gemini-local";
-import { DEFAULT_KIMI_LOCAL_MODEL } from "@paperclipai/adapter-kimi-local";
-import { DEFAULT_OPENCODE_LOCAL_MODEL } from "@paperclipai/adapter-opencode-local";
+} from "@thinkingmach/adapter-codex-local";
+import { DEFAULT_CLAUDE_LOCAL_MODEL } from "@thinkingmach/adapter-claude-local";
+import { DEFAULT_CURSOR_LOCAL_MODEL } from "@thinkingmach/adapter-cursor-local";
+import { DEFAULT_GEMINI_LOCAL_MODEL } from "@thinkingmach/adapter-gemini-local";
+import { DEFAULT_KIMI_LOCAL_MODEL } from "@thinkingmach/adapter-kimi-local";
+import { DEFAULT_OPENCODE_LOCAL_MODEL } from "@thinkingmach/adapter-opencode-local";
 import {
   Popover,
   PopoverContent,
@@ -97,14 +97,14 @@ import { codexReasoningEffortOptions } from "../lib/codex-reasoning-effort";
 
 /* ---- Create mode values ---- */
 
-// Canonical type lives in @paperclipai/adapter-utils; re-exported here
+// Canonical type lives in @thinkingmach/adapter-utils; re-exported here
 // so existing imports from this file keep working.
-export type { CreateConfigValues } from "@paperclipai/adapter-utils";
+export type { CreateConfigValues } from "@thinkingmach/adapter-utils";
 import {
-  PAPERCLIP_RUNNER_PERMISSION_CAPABILITIES,
+  THINKINGMACH_RUNNER_PERMISSION_CAPABILITIES,
   paperclipRunnerTransitionConfig,
   type CreateConfigValues,
-} from "@paperclipai/adapter-utils";
+} from "@thinkingmach/adapter-utils";
 import { Badge } from "@/components/ui/badge";
 
 /* ---- Props ---- */
@@ -176,7 +176,7 @@ export function supportsAdapterModelRefresh(adapterType: string): boolean {
   return adapterType === "claude_local" || adapterType === "codex_local" || adapterType === "paperclip_runner" || adapterType === "opencode_local";
 }
 
-export function resolvePaperclipRunnerTransitionModel(
+export function resolveThinkingMachRunnerTransitionModel(
   previousAdapterType: string,
   previousModel: unknown,
 ): string {
@@ -884,7 +884,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
   const inheritedEnvironmentLabel = instanceDefaultEnvironment
     ? environmentDisplayLabel(instanceDefaultEnvironment)
     : managedSandboxOnly
-      ? "Paperclip Computer"
+      ? "ThinkingMach Computer"
       : "Local";
 
   const runnerProvider = adapterType === "paperclip_runner"
@@ -1633,7 +1633,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                             : t === "cursor"
                               ? DEFAULT_CURSOR_LOCAL_MODEL
                             : t === "paperclip_runner"
-                              ? resolvePaperclipRunnerTransitionModel(adapterType, config.model)
+                              ? resolveThinkingMachRunnerTransitionModel(adapterType, config.model)
                               : "",
                         effort: "",
                         modelReasoningEffort: "",
@@ -2127,7 +2127,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
               <div className="mt-3 flex items-start gap-2 rounded-md border border-border bg-background/60 px-3 py-2 text-xs text-foreground">
                 <Bug className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 <span>
-                  Raw tracing is on for future runs. Paperclip keeps at most 64 MiB per run and automatically deletes it after 24 hours.
+                  Raw tracing is on for future runs. ThinkingMach keeps at most 64 MiB per run and automatically deletes it after 24 hours.
                 </span>
               </div>
             ) : null}
@@ -2264,7 +2264,7 @@ export type AdapterLoginDescriptor = {
 // correctly, and the first thing to rot would have been the timeout and
 // cleanup paths, which are the ones nobody exercises by hand.
 export type AdapterLoginPanelProps = AdapterLoginDescriptor & {
-  aiConnection?: import("@paperclipai/shared").AiConnectionLoginIntent;
+  aiConnection?: import("@thinkingmach/shared").AiConnectionLoginIntent;
   onStored?: (storedSessionId: string) => void;
   onApplyStored?: () => void;
   // Applies the non-secret Codex account-binding claim from an authenticated

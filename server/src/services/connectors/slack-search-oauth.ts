@@ -1,4 +1,4 @@
-import { slackSearchConfigSchema } from "@paperclipai/shared";
+import { slackSearchConfigSchema } from "@thinkingmach/shared";
 import { SLACK_NATIVE_SEARCH_LIMITATION } from "./slack-native-search.js";
 import { syncConnectionCredentialBindings } from "../connection-credential-bindings.js";
 import { randomBytes } from "node:crypto";
@@ -12,7 +12,7 @@ import {
   toolConnections,
   toolOauthStates,
   type Db,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import { z } from "zod";
 import {
   badRequest,
@@ -540,7 +540,7 @@ export function slackSearchOAuthService(
         typeof user.access_token !== "string"
       )
         throw forbidden(
-          "Authorize the same Slack user and workspace that you linked in Paperclip",
+          "Authorize the same Slack user and workspace that you linked in ThinkingMach",
         );
       const scopes = String(user.scope ?? "").split(",");
       if (

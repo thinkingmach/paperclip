@@ -43,7 +43,7 @@ describe("resolveNativeRuntimeMode", () => {
     }
   });
 
-  it("rejects a fresh Paperclip Runner start while the rollout flag is disabled", () => {
+  it("rejects a fresh ThinkingMach Runner start while the rollout flag is disabled", () => {
     expect(() => resolveNativeRuntimeMode({
       ...eligible,
       enabled: false,
@@ -52,7 +52,7 @@ describe("resolveNativeRuntimeMode", () => {
     }));
   });
 
-  it("rejects unknown Paperclip Runner providers", () => {
+  it("rejects unknown ThinkingMach Runner providers", () => {
     expect(() => resolveNativeRuntimeMode({
       ...eligible,
       runtimeConfig: {},

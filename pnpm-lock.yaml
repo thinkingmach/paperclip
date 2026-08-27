@@ -16,25 +16,25 @@ overrides:
 
 patchedDependencies:
   '@agentclientprotocol/claude-agent-acp@0.73.0':
-    hash: riqgguivxjxydoydnzpedjy5au
+    hash: 557vai2qoeky5wv545ho6bf3ua
     path: patches/@agentclientprotocol__claude-agent-acp@0.73.0.patch
   '@agentclientprotocol/codex-acp@1.6.2':
-    hash: rt7c5otjh4is5hljadvoq7qcem
+    hash: xhejoa6iau5llmeurnnvixilou
     path: patches/@agentclientprotocol__codex-acp@1.6.2.patch
   '@chat-adapter/discord@4.39.0':
-    hash: nywlhls7dd4npegrgax7jqdbxa
+    hash: vbvuumbdrz3qrcogfh26rfqhcq
     path: patches/@chat-adapter__discord@4.39.0.patch
   '@chat-adapter/github@4.39.0':
     hash: x25bk7vvljpm57viwan5qoaddi
     path: patches/@chat-adapter__github@4.39.0.patch
   '@chat-adapter/slack@4.39.0':
-    hash: 226jj24akljccsfbw7bcxujz4u
+    hash: yjrgqhhlhkxake4nf7xfbowree
     path: patches/@chat-adapter__slack@4.39.0.patch
   '@chat-adapter/teams@4.39.0':
     hash: jfm44m5wrw3jrn2jijafzk7s5a
     path: patches/@chat-adapter__teams@4.39.0.patch
   '@chat-adapter/telegram@4.39.0':
-    hash: wl4uiwewrapxf5u6ksnm7elv44
+    hash: 7ewszlw4vrhw3uouinjqufzaia
     path: patches/@chat-adapter__telegram@4.39.0.patch
   '@discordjs/ws@1.2.3':
     hash: vbylpnnxt5av2zdnuqmf6hjyjy
@@ -80,49 +80,49 @@ importers:
       '@clack/prompts':
         specifier: ^1.7.0
         version: 1.7.0
-      '@paperclipai/adapter-claude-local':
+      '@thinkingmach/adapter-claude-local':
         specifier: workspace:*
         version: link:../packages/adapters/claude-local
-      '@paperclipai/adapter-codex-local':
+      '@thinkingmach/adapter-codex-local':
         specifier: workspace:*
         version: link:../packages/adapters/codex-local
-      '@paperclipai/adapter-cursor-cloud':
+      '@thinkingmach/adapter-cursor-cloud':
         specifier: workspace:*
         version: link:../packages/adapters/cursor-cloud
-      '@paperclipai/adapter-cursor-local':
+      '@thinkingmach/adapter-cursor-local':
         specifier: workspace:*
         version: link:../packages/adapters/cursor-local
-      '@paperclipai/adapter-gemini-local':
+      '@thinkingmach/adapter-gemini-local':
         specifier: workspace:*
         version: link:../packages/adapters/gemini-local
-      '@paperclipai/adapter-grok-local':
+      '@thinkingmach/adapter-grok-local':
         specifier: workspace:*
         version: link:../packages/adapters/grok-local
-      '@paperclipai/adapter-kimi-local':
+      '@thinkingmach/adapter-kimi-local':
         specifier: workspace:*
         version: link:../packages/adapters/kimi-local
-      '@paperclipai/adapter-openclaw-gateway':
+      '@thinkingmach/adapter-openclaw-gateway':
         specifier: workspace:*
         version: link:../packages/adapters/openclaw-gateway
-      '@paperclipai/adapter-opencode-local':
+      '@thinkingmach/adapter-opencode-local':
         specifier: workspace:*
         version: link:../packages/adapters/opencode-local
-      '@paperclipai/adapter-pi-local':
+      '@thinkingmach/adapter-pi-local':
         specifier: workspace:*
         version: link:../packages/adapters/pi-local
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../packages/adapter-utils
-      '@paperclipai/db':
+      '@thinkingmach/db':
         specifier: workspace:*
         version: link:../packages/db
-      '@paperclipai/hermes-paperclip-adapter':
+      '@thinkingmach/hermes-paperclip-adapter':
         specifier: workspace:*
         version: link:../packages/adapters/hermes
-      '@paperclipai/server':
+      '@thinkingmach/server':
         specifier: workspace:*
         version: link:../server
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../packages/shared
       commander:
@@ -153,7 +153,7 @@ importers:
 
   packages/adapter-utils:
     dependencies:
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../shared
       acpx:
@@ -174,14 +174,14 @@ importers:
     dependencies:
       '@agentclientprotocol/claude-agent-acp':
         specifier: ^0.73.0
-        version: 0.73.0(patch_hash=riqgguivxjxydoydnzpedjy5au)(@anthropic-ai/sdk@0.121.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))
+        version: 0.73.0(patch_hash=557vai2qoeky5wv545ho6bf3ua)(@anthropic-ai/sdk@0.121.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))
       '@anthropic-ai/sdk':
         specifier: 0.121.0
         version: 0.121.0(zod@4.4.3)
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../../shared
       picocolors:
@@ -199,11 +199,11 @@ importers:
     dependencies:
       '@agentclientprotocol/codex-acp':
         specifier: ^1.6.2
-        version: 1.6.2(patch_hash=rt7c5otjh4is5hljadvoq7qcem)
-      '@paperclipai/adapter-utils':
+        version: 1.6.2(patch_hash=xhejoa6iau5llmeurnnvixilou)
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../../shared
       picocolors:
@@ -222,7 +222,7 @@ importers:
       '@cursor/sdk':
         specifier: ^1.0.28
         version: 1.0.28
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -238,7 +238,7 @@ importers:
 
   packages/adapters/cursor-local:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -254,7 +254,7 @@ importers:
 
   packages/adapters/gemini-local:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -270,10 +270,10 @@ importers:
 
   packages/adapters/grok-local:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../../shared
       picocolors:
@@ -289,7 +289,7 @@ importers:
 
   packages/adapters/hermes:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -308,7 +308,7 @@ importers:
 
   packages/adapters/hermes-gateway:
     dependencies:
-      '@paperclipai/hermes-paperclip-adapter':
+      '@thinkingmach/hermes-paperclip-adapter':
         specifier: workspace:*
         version: link:../hermes
     devDependencies:
@@ -324,7 +324,7 @@ importers:
 
   packages/adapters/kimi-local:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -340,7 +340,7 @@ importers:
 
   packages/adapters/openclaw-gateway:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -362,7 +362,7 @@ importers:
 
   packages/adapters/opencode-local:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -378,7 +378,7 @@ importers:
 
   packages/adapters/pi-local:
     dependencies:
-      '@paperclipai/adapter-utils':
+      '@thinkingmach/adapter-utils':
         specifier: workspace:*
         version: link:../../adapter-utils
       picocolors:
@@ -394,7 +394,7 @@ importers:
 
   packages/db:
     dependencies:
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../shared
       drizzle-orm:
@@ -469,7 +469,7 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.30.0
         version: 1.30.0(zod@4.4.3)
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../shared
       zod:
@@ -499,10 +499,10 @@ importers:
     dependencies:
       '@agentclientprotocol/claude-agent-acp':
         specifier: 0.73.0
-        version: 0.73.0(patch_hash=riqgguivxjxydoydnzpedjy5au)(@anthropic-ai/sdk@0.121.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))
+        version: 0.73.0(patch_hash=557vai2qoeky5wv545ho6bf3ua)(@anthropic-ai/sdk@0.121.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))
       '@agentclientprotocol/codex-acp':
         specifier: 1.6.2
-        version: 1.6.2(patch_hash=rt7c5otjh4is5hljadvoq7qcem)
+        version: 1.6.2(patch_hash=xhejoa6iau5llmeurnnvixilou)
       '@openai/codex':
         specifier: 0.156.0
         version: 0.156.0
@@ -528,12 +528,12 @@ importers:
         specifier: ^1.4.2
         version: 1.8.0
     devDependencies:
-      '@paperclipai/paperclip-eval-kernel':
-        specifier: workspace:*
-        version: link:../paperclip-eval-kernel
       '@playwright/test':
         specifier: ^1.61.1
         version: 1.62.1
+      '@thinkingmach/paperclip-eval-kernel':
+        specifier: workspace:*
+        version: link:../paperclip-eval-kernel
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
@@ -570,7 +570,7 @@ importers:
 
   packages/plugins/create-paperclip-plugin:
     dependencies:
-      '@paperclipai/plugin-sdk':
+      '@thinkingmach/plugin-sdk':
         specifier: workspace:*
         version: link:../sdk
     devDependencies:
@@ -583,7 +583,7 @@ importers:
 
   packages/plugins/examples/plugin-authoring-smoke-example:
     dependencies:
-      '@paperclipai/plugin-sdk':
+      '@thinkingmach/plugin-sdk':
         specifier: workspace:*
         version: link:../../sdk
     devDependencies:
@@ -632,7 +632,7 @@ importers:
       '@lezer/highlight':
         specifier: ^1.2.1
         version: 1.2.3
-      '@paperclipai/plugin-sdk':
+      '@thinkingmach/plugin-sdk':
         specifier: workspace:*
         version: link:../../sdk
       codemirror:
@@ -663,7 +663,7 @@ importers:
 
   packages/plugins/examples/plugin-hello-world-example:
     dependencies:
-      '@paperclipai/plugin-sdk':
+      '@thinkingmach/plugin-sdk':
         specifier: workspace:*
         version: link:../../sdk
     devDependencies:
@@ -688,10 +688,10 @@ importers:
 
   packages/plugins/examples/plugin-kitchen-sink-example:
     dependencies:
-      '@paperclipai/plugin-sdk':
+      '@thinkingmach/plugin-sdk':
         specifier: workspace:*
         version: link:../../sdk
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../../../shared
     devDependencies:
@@ -719,7 +719,7 @@ importers:
 
   packages/plugins/paperclip-plugin-fake-sandbox:
     dependencies:
-      '@paperclipai/plugin-sdk':
+      '@thinkingmach/plugin-sdk':
         specifier: workspace:*
         version: link:../sdk
     devDependencies:
@@ -735,15 +735,15 @@ importers:
 
   packages/plugins/plugin-llm-wiki:
     devDependencies:
-      '@paperclipai/plugin-sdk':
-        specifier: workspace:*
-        version: link:../sdk
       '@rollup/plugin-node-resolve':
         specifier: ^16.0.1
         version: 16.0.3(rollup@4.63.1)
       '@rollup/plugin-typescript':
         specifier: ^12.1.2
         version: 12.3.0(rollup@4.63.1)(tslib@2.8.1)(typescript@7.0.2)
+      '@thinkingmach/plugin-sdk':
+        specifier: workspace:*
+        version: link:../sdk
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
@@ -774,12 +774,12 @@ importers:
 
   packages/plugins/plugin-workspace-diff:
     dependencies:
-      '@paperclipai/plugin-sdk':
-        specifier: workspace:*
-        version: link:../sdk
       '@pierre/diffs':
         specifier: ^1.3.6
         version: 1.3.6(@shikijs/themes@4.4.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@thinkingmach/plugin-sdk':
+        specifier: workspace:*
+        version: link:../sdk
     devDependencies:
       '@types/node':
         specifier: ^24.0.0
@@ -808,7 +808,7 @@ importers:
 
   packages/plugins/sdk:
     dependencies:
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../../shared
       zod:
@@ -846,7 +846,7 @@ importers:
 
   packages/skills-catalog:
     dependencies:
-      '@paperclipai/shared':
+      '@thinkingmach/shared':
         specifier: workspace:*
         version: link:../shared
     devDependencies:
@@ -879,19 +879,19 @@ importers:
         version: 3.1122.0
       '@chat-adapter/discord':
         specifier: 4.39.0
-        version: 4.39.0(patch_hash=nywlhls7dd4npegrgax7jqdbxa)(zod@4.4.3)
+        version: 4.39.0(patch_hash=vbvuumbdrz3qrcogfh26rfqhcq)(zod@4.4.3)
       '@chat-adapter/github':
         specifier: 4.39.0
         version: 4.39.0(patch_hash=x25bk7vvljpm57viwan5qoaddi)(zod@4.4.3)
       '@chat-adapter/slack':
         specifier: 4.39.0
-        version: 4.39.0(patch_hash=226jj24akljccsfbw7bcxujz4u)(zod@4.4.3)
+        version: 4.39.0(patch_hash=yjrgqhhlhkxake4nf7xfbowree)(zod@4.4.3)
       '@chat-adapter/teams':
         specifier: 4.39.0
         version: 4.39.0(patch_hash=jfm44m5wrw3jrn2jijafzk7s5a)(zod@4.4.3)
       '@chat-adapter/telegram':
         specifier: 4.39.0
-        version: 4.39.0(patch_hash=wl4uiwewrapxf5u6ksnm7elv44)(zod@4.4.3)
+        version: 4.39.0(patch_hash=7ewszlw4vrhw3uouinjqufzaia)(zod@4.4.3)
       '@discordjs/ws':
         specifier: 1.2.3
         version: 1.2.3(patch_hash=vbylpnnxt5av2zdnuqmf6hjyjy)
@@ -901,60 +901,60 @@ importers:
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.1
-      '@paperclipai/adapter-claude-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/claude-local
-      '@paperclipai/adapter-codex-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/codex-local
-      '@paperclipai/adapter-cursor-cloud':
-        specifier: workspace:*
-        version: link:../packages/adapters/cursor-cloud
-      '@paperclipai/adapter-cursor-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/cursor-local
-      '@paperclipai/adapter-gemini-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/gemini-local
-      '@paperclipai/adapter-grok-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/grok-local
-      '@paperclipai/adapter-kimi-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/kimi-local
-      '@paperclipai/adapter-openclaw-gateway':
-        specifier: workspace:*
-        version: link:../packages/adapters/openclaw-gateway
-      '@paperclipai/adapter-opencode-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/opencode-local
-      '@paperclipai/adapter-pi-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/pi-local
-      '@paperclipai/adapter-utils':
-        specifier: workspace:*
-        version: link:../packages/adapter-utils
-      '@paperclipai/db':
-        specifier: workspace:*
-        version: link:../packages/db
-      '@paperclipai/hermes-paperclip-adapter':
-        specifier: workspace:*
-        version: link:../packages/adapters/hermes
-      '@paperclipai/plugin-sdk':
-        specifier: workspace:*
-        version: link:../packages/plugins/sdk
-      '@paperclipai/shared':
-        specifier: workspace:*
-        version: link:../packages/shared
-      '@paperclipai/skills-catalog':
-        specifier: workspace:*
-        version: link:../packages/skills-catalog
       '@photon-ai/advanced-imessage':
         specifier: 2.1.0
         version: 2.1.0(@grpc/grpc-js@1.14.4)(nice-grpc-common@2.0.4)(nice-grpc@2.1.17)
+      '@thinkingmach/adapter-claude-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/claude-local
+      '@thinkingmach/adapter-codex-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/codex-local
+      '@thinkingmach/adapter-cursor-cloud':
+        specifier: workspace:*
+        version: link:../packages/adapters/cursor-cloud
+      '@thinkingmach/adapter-cursor-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/cursor-local
+      '@thinkingmach/adapter-gemini-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/gemini-local
+      '@thinkingmach/adapter-grok-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/grok-local
+      '@thinkingmach/adapter-kimi-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/kimi-local
+      '@thinkingmach/adapter-openclaw-gateway':
+        specifier: workspace:*
+        version: link:../packages/adapters/openclaw-gateway
+      '@thinkingmach/adapter-opencode-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/opencode-local
+      '@thinkingmach/adapter-pi-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/pi-local
+      '@thinkingmach/adapter-utils':
+        specifier: workspace:*
+        version: link:../packages/adapter-utils
+      '@thinkingmach/db':
+        specifier: workspace:*
+        version: link:../packages/db
+      '@thinkingmach/hermes-paperclip-adapter':
+        specifier: workspace:*
+        version: link:../packages/adapters/hermes
+      '@thinkingmach/plugin-sdk':
+        specifier: workspace:*
+        version: link:../packages/plugins/sdk
+      '@thinkingmach/shared':
+        specifier: workspace:*
+        version: link:../packages/shared
+      '@thinkingmach/skills-catalog':
+        specifier: workspace:*
+        version: link:../packages/skills-catalog
       '@vercel/connect':
         specifier: 0.6.1
-        version: 0.6.1(@chat-adapter/slack@4.39.0(patch_hash=226jj24akljccsfbw7bcxujz4u)(zod@4.4.3))(better-auth@1.7.2(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(kysely@0.29.5)(pg@8.18.0)(postgres@3.4.9(patch_hash=sryle6qd5qfmnxvoebal4gashi)))(pg@8.18.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(jsdom@30.0.1(@noble/hashes@2.4.0))(tsx@4.23.12)))
+        version: 0.6.1(@chat-adapter/slack@4.39.0(patch_hash=yjrgqhhlhkxake4nf7xfbowree)(zod@4.4.3))(better-auth@1.7.2(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(kysely@0.29.5)(pg@8.18.0)(postgres@3.4.9(patch_hash=sryle6qd5qfmnxvoebal4gashi)))(pg@8.18.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(jsdom@30.0.1(@noble/hashes@2.4.0))(tsx@4.23.12)))
       acorn:
         specifier: 8.18.0
         version: 8.18.0
@@ -1040,7 +1040,7 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
-      '@paperclipai/paperclip-runner':
+      '@thinkingmach/paperclip-runner':
         specifier: workspace:*
         version: link:../packages/paperclip-runner
       '@types/express':
@@ -1109,45 +1109,6 @@ importers:
       '@mdxeditor/editor':
         specifier: ^4.2.3
         version: 4.2.3(@codemirror/language@6.12.4)(@lezer/highlight@1.2.3)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)(yjs@13.6.32)
-      '@paperclipai/adapter-claude-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/claude-local
-      '@paperclipai/adapter-codex-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/codex-local
-      '@paperclipai/adapter-cursor-cloud':
-        specifier: workspace:*
-        version: link:../packages/adapters/cursor-cloud
-      '@paperclipai/adapter-cursor-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/cursor-local
-      '@paperclipai/adapter-gemini-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/gemini-local
-      '@paperclipai/adapter-grok-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/grok-local
-      '@paperclipai/adapter-kimi-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/kimi-local
-      '@paperclipai/adapter-openclaw-gateway':
-        specifier: workspace:*
-        version: link:../packages/adapters/openclaw-gateway
-      '@paperclipai/adapter-opencode-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/opencode-local
-      '@paperclipai/adapter-pi-local':
-        specifier: workspace:*
-        version: link:../packages/adapters/pi-local
-      '@paperclipai/adapter-utils':
-        specifier: workspace:*
-        version: link:../packages/adapter-utils
-      '@paperclipai/hermes-paperclip-adapter':
-        specifier: workspace:*
-        version: link:../packages/adapters/hermes
-      '@paperclipai/shared':
-        specifier: workspace:*
-        version: link:../packages/shared
       '@radix-ui/react-slot':
         specifier: ^1.3.3
         version: 1.3.3(@types/react@19.2.18)(react@19.2.8)
@@ -1157,6 +1118,45 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.102.8
         version: 5.102.8(react@19.2.8)
+      '@thinkingmach/adapter-claude-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/claude-local
+      '@thinkingmach/adapter-codex-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/codex-local
+      '@thinkingmach/adapter-cursor-cloud':
+        specifier: workspace:*
+        version: link:../packages/adapters/cursor-cloud
+      '@thinkingmach/adapter-cursor-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/cursor-local
+      '@thinkingmach/adapter-gemini-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/gemini-local
+      '@thinkingmach/adapter-grok-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/grok-local
+      '@thinkingmach/adapter-kimi-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/kimi-local
+      '@thinkingmach/adapter-openclaw-gateway':
+        specifier: workspace:*
+        version: link:../packages/adapters/openclaw-gateway
+      '@thinkingmach/adapter-opencode-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/opencode-local
+      '@thinkingmach/adapter-pi-local':
+        specifier: workspace:*
+        version: link:../packages/adapters/pi-local
+      '@thinkingmach/adapter-utils':
+        specifier: workspace:*
+        version: link:../packages/adapter-utils
+      '@thinkingmach/hermes-paperclip-adapter':
+        specifier: workspace:*
+        version: link:../packages/adapters/hermes
+      '@thinkingmach/shared':
+        specifier: workspace:*
+        version: link:../packages/shared
       '@xterm/addon-fit':
         specifier: ^0.11.0
         version: 0.11.0
@@ -1218,9 +1218,6 @@ importers:
         specifier: 13.6.32
         version: 13.6.32
     devDependencies:
-      '@paperclipai/plugin-sdk':
-        specifier: workspace:*
-        version: link:../packages/plugins/sdk
       '@sentry/browser':
         specifier: 10.71.0
         version: 10.71.0
@@ -1236,6 +1233,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12))
+      '@thinkingmach/plugin-sdk':
+        specifier: workspace:*
+        version: link:../packages/plugins/sdk
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
@@ -7656,7 +7656,6 @@ packages:
 
   opencode-ai@1.18.32:
     resolution: {integrity: sha512-SCrZWdq44y/EoH2+fE4HLcXS+DzpVqHPzmXk3p2RrufYy8LWvpfhRhKtijb5ktvx8r94ScqToqwHxR0BwS65OQ==}
-    cpu: [arm64, x64]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -9018,7 +9017,7 @@ snapshots:
 
   '@adobe/css-tools@4.5.0': {}
 
-  '@agentclientprotocol/claude-agent-acp@0.73.0(patch_hash=riqgguivxjxydoydnzpedjy5au)(@anthropic-ai/sdk@0.121.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))':
+  '@agentclientprotocol/claude-agent-acp@0.73.0(patch_hash=557vai2qoeky5wv545ho6bf3ua)(@anthropic-ai/sdk@0.121.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))':
     dependencies:
       '@agentclientprotocol/sdk': 1.4.0(zod@4.4.3)
       '@anthropic-ai/claude-agent-sdk': 0.3.280(@anthropic-ai/sdk@0.121.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))(zod@4.4.3)
@@ -9027,7 +9026,7 @@ snapshots:
       - '@anthropic-ai/sdk'
       - '@modelcontextprotocol/sdk'
 
-  '@agentclientprotocol/codex-acp@1.6.2(patch_hash=rt7c5otjh4is5hljadvoq7qcem)':
+  '@agentclientprotocol/codex-acp@1.6.2(patch_hash=xhejoa6iau5llmeurnnvixilou)':
     dependencies:
       '@agentclientprotocol/sdk': 1.4.0(zod@4.4.3)
       '@openai/codex': 0.156.0
@@ -9546,7 +9545,7 @@ snapshots:
 
   '@bufbuild/protobuf@2.15.0': {}
 
-  '@chat-adapter/discord@4.39.0(patch_hash=nywlhls7dd4npegrgax7jqdbxa)(zod@4.4.3)':
+  '@chat-adapter/discord@4.39.0(patch_hash=vbvuumbdrz3qrcogfh26rfqhcq)(zod@4.4.3)':
     dependencies:
       '@chat-adapter/shared': 4.39.0(zod@4.4.3)
       chat: 4.39.0(zod@4.4.3)
@@ -9582,7 +9581,7 @@ snapshots:
       - workflow
       - zod
 
-  '@chat-adapter/slack@4.39.0(patch_hash=226jj24akljccsfbw7bcxujz4u)(zod@4.4.3)':
+  '@chat-adapter/slack@4.39.0(patch_hash=yjrgqhhlhkxake4nf7xfbowree)(zod@4.4.3)':
     dependencies:
       '@chat-adapter/shared': 4.39.0(zod@4.4.3)
       '@slack/socket-mode': 2.0.7
@@ -9612,7 +9611,7 @@ snapshots:
       - workflow
       - zod
 
-  '@chat-adapter/telegram@4.39.0(patch_hash=wl4uiwewrapxf5u6ksnm7elv44)(zod@4.4.3)':
+  '@chat-adapter/telegram@4.39.0(patch_hash=7ewszlw4vrhw3uouinjqufzaia)(zod@4.4.3)':
     dependencies:
       '@chat-adapter/shared': 4.39.0(zod@4.4.3)
       chat: 4.39.0(zod@4.4.3)
@@ -13220,11 +13219,11 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/connect@0.6.1(@chat-adapter/slack@4.39.0(patch_hash=226jj24akljccsfbw7bcxujz4u)(zod@4.4.3))(better-auth@1.7.2(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(kysely@0.29.5)(pg@8.18.0)(postgres@3.4.9(patch_hash=sryle6qd5qfmnxvoebal4gashi)))(pg@8.18.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(jsdom@30.0.1(@noble/hashes@2.4.0))(tsx@4.23.12)))':
+  '@vercel/connect@0.6.1(@chat-adapter/slack@4.39.0(patch_hash=yjrgqhhlhkxake4nf7xfbowree)(zod@4.4.3))(better-auth@1.7.2(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(kysely@0.29.5)(pg@8.18.0)(postgres@3.4.9(patch_hash=sryle6qd5qfmnxvoebal4gashi)))(pg@8.18.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(jsdom@30.0.1(@noble/hashes@2.4.0))(tsx@4.23.12)))':
     dependencies:
       '@vercel/oidc': 3.8.2
     optionalDependencies:
-      '@chat-adapter/slack': 4.39.0(patch_hash=226jj24akljccsfbw7bcxujz4u)(zod@4.4.3)
+      '@chat-adapter/slack': 4.39.0(patch_hash=yjrgqhhlhkxake4nf7xfbowree)(zod@4.4.3)
       better-auth: 1.7.2(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(kysely@0.29.5)(pg@8.18.0)(postgres@3.4.9(patch_hash=sryle6qd5qfmnxvoebal4gashi)))(pg@8.18.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(jsdom@30.0.1(@noble/hashes@2.4.0))(tsx@4.23.12))
 
   '@vercel/oidc@3.8.2':

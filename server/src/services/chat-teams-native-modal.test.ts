@@ -1,4 +1,4 @@
-import type { AskUserQuestionsInteraction } from "@paperclipai/shared";
+import type { AskUserQuestionsInteraction } from "@thinkingmach/shared";
 import type { ModalResponse } from "chat";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -200,7 +200,7 @@ function invoke(
 }
 
 // This crosses the real pinned HTTP bridge, Teams event dispatch, adapter and
-// Chat SDK into Paperclip's callbacks. Only the instance JWT check is replaced;
+// Chat SDK into ThinkingMach's callbacks. Only the instance JWT check is replaced;
 // this is not Microsoft tenant authentication, DB authorization or live proof.
 describe("Teams native task module adapter-to-runtime boundary", () => {
   const runtimes: ChatSdkEndpointRuntime[] = [];
@@ -303,7 +303,7 @@ describe("Teams native task module adapter-to-runtime boundary", () => {
     return { runtime, check, dispatch, onMessage };
   }
 
-  it("round-trips the Paperclip form through task/fetch and task/submit with exact opaque fields and source", async () => {
+  it("round-trips the ThinkingMach form through task/fetch and task/submit with exact opaque fields and source", async () => {
     const form = questionForm();
     const onAction = vi.fn<ActionCallback>(async ({ event }) => {
       await event.openModal(form.modal);

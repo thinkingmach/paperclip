@@ -2,19 +2,19 @@ export const baseSha = "d593463ab6394cd356bf27448ea28bad8cccf4ec";
 
 const sharedAnnotations = {
   overview: [
-    "The endpoint keeps one Paperclip agent and one provider-native bot identity together.",
+    "The endpoint keeps one ThinkingMach agent and one provider-native bot identity together.",
     "Installation and delivery health are summarized before any configuration detail.",
     "Every safe capability available to this provider is included automatically; this is status, not a set of switches.",
     "Test, pause, reconnect, and remove remain ordinary connector lifecycle actions."
   ],
   access: [
     "The endpoint sponsor supplies the maximum authority available to unlinked external people.",
-    "Linked provider identities act as their current Paperclip users and retain ordinary permission checks.",
+    "Linked provider identities act as their current ThinkingMach users and retain ordinary permission checks.",
     "Unlinked people use the restricted sponsored-guest profile and cannot perform governance actions.",
     "Provider identity and scope details make effective authority explainable and auditable."
   ],
   conversations: [
-    "Each row names the provider-native conversation boundary and its single Paperclip issue.",
+    "Each row names the provider-native conversation boundary and its single ThinkingMach issue.",
     "Participants, assigned agent, state, and last activity make live bindings scannable.",
     "Open in provider and Open task take an operator to either side of the binding.",
     "Detach preserves history and publication records; a later activation creates or claims a new binding."
@@ -33,13 +33,13 @@ export const providers = [
     setupTitle: "Invite Maya to Slack",
     setupSubtitle: "Create or select one Slack app, install it, and verify the workspace connection.",
     setupSections: [
-      { title: "Agent and Slack identity", intro: "This endpoint represents exactly one Paperclip agent.", rows: [
-        ["Paperclip agent", "Maya · Support engineer", "Change agent"],
+      { title: "Agent and Slack identity", intro: "This endpoint represents exactly one ThinkingMach agent.", rows: [
+        ["ThinkingMach agent", "Maya · Support engineer", "Change agent"],
         ["Slack bot", "Maya · @maya · avatar preview", "Preview"]
       ]},
-      { title: "Choose delivery", intro: "Paperclip generates the callback address before the Slack app is created.", rows: [
-        ["Recommended", "Direct signed webhook for cloud or public self-hosted Paperclip.", "Direct webhook"],
-        ["Private Paperclip", "Use the outbound authenticated relay when this instance is not publicly reachable.", "Use relay"],
+      { title: "Choose delivery", intro: "ThinkingMach generates the callback address before the Slack app is created.", rows: [
+        ["Recommended", "Direct signed webhook for cloud or public self-hosted ThinkingMach.", "Direct webhook"],
+        ["Private ThinkingMach", "Use the outbound authenticated relay when this instance is not publicly reachable.", "Use relay"],
         ["Slack alternative", "Socket Mode uses an app token and one persistent listener.", "Advanced"]
       ]},
       { title: "Create and install the Slack app", intro: "The generated manifest contains the exact URLs, events, scopes, interactivity, and command declarations.", rows: [
@@ -47,7 +47,7 @@ export const providers = [
         ["2. Install to workspace", "Slack owns workspace approval, OAuth, and Enterprise Grid policy.", "Open Slack"],
         ["3. Invite Maya", "Add @maya to each channel where people should be able to start work.", "Instructions"]
       ]},
-      { title: "Connect credentials", intro: "Paperclip stores secret references, never raw values in endpoint configuration.", rows: [
+      { title: "Connect credentials", intro: "ThinkingMach stores secret references, never raw values in endpoint configuration.", rows: [
         ["Bot or OAuth token", "Secret ref · slack/maya-bot ·•••• 8F2A", "Replace"],
         ["Signing secret", "Secret ref · slack/maya-signing ·•••• 0C91", "Replace"],
         ["App token", "Required only when Socket Mode is selected.", "Not set"]
@@ -59,9 +59,9 @@ export const providers = [
       ]}
     ],
     setupAnnotations: [
-      "Agent and native bot identity are the first and only Paperclip binding decision.",
+      "Agent and native bot identity are the first and only ThinkingMach binding decision.",
       "Direct webhook is the default; relay and Socket Mode are explicit deployment alternatives.",
-      "Paperclip provides a manifest, while Slack owns app creation, approval, installation, and channel invitation.",
+      "ThinkingMach provides a manifest, while Slack owns app creation, approval, installation, and channel invitation.",
       "Tokens and signing secrets are masked secret references with independent rotation.",
       "Activation follows specific identity, signature, scope, event, interactivity, and membership checks."
     ],
@@ -76,7 +76,7 @@ export const providers = [
         ["Ingress", "Verified direct webhook · p95 acknowledgement 420 ms", "Healthy"],
         ["Credentials", "Bot token and signing secret", "No drift"]
       ]},
-      { title: "Available automatically", intro: "Paperclip always uses the richest safe Slack behavior permitted by this installation.", rows: [
+      { title: "Available automatically", intro: "ThinkingMach always uses the richest safe Slack behavior permitted by this installation.", rows: [
         ["Conversation", "Root mention creates a native thread; subscribed replies continue the same issue.", "Included"],
         ["Output", "Reaction receipt, native streaming or post/edit, safe milestones, final reply.", "Included"],
         ["Rich interaction", "Block Kit, buttons, selects, modals, slash commands, emoji, and stop.", "Included"],
@@ -88,18 +88,18 @@ export const providers = [
       ]}
     ],
     settingsSections: [
-      { title: "Conversation reach", intro: "Paperclip can narrow reach but cannot exceed Slack installation and channel membership.", rows: [
+      { title: "Conversation reach", intro: "ThinkingMach can narrow reach but cannot exceed Slack installation and channel membership.", rows: [
         ["Workspace", "Acme · T02ACME", "Change install"],
         ["Allowed channels", "#customer-support, #incidents", "2 channels"],
         ["Direct messages", "People in this workspace may start a task in DM.", "Allowed"]
       ]},
       { title: "Task boundaries", intro: "Slack's native thread is the task boundary for channel work.", rows: [
-        ["New channel work", "A root @maya mention creates the Slack thread and one Paperclip issue.", "Fixed"],
+        ["New channel work", "A root @maya mention creates the Slack thread and one ThinkingMach issue.", "Fixed"],
         ["Bound-thread replies", "Human replies continue without another mention.", "Subscribed"],
         ["Existing thread", "The first @maya mention may claim an unbound thread once.", "Allow"],
         ["Direct messages", "One active issue; New task starts another.", "Active task"]
       ]},
-      { title: "Security and delivery", intro: "Paperclip reports the deployment-selected path; it is not an endpoint setting.", rows: [
+      { title: "Security and delivery", intro: "ThinkingMach reports the deployment-selected path; it is not an endpoint setting.", rows: [
         ["Delivery path", "Selected from instance reachability and verified continuously.", "Automatic"],
         ["Credential rotation", "Replace token or signing-secret references without changing bindings.", "Manage secrets"],
         ["Installation drift", "Pause affected resources when membership, scopes, or OAuth are revoked.", "Automatic"]
@@ -115,7 +115,7 @@ export const providers = [
         ["Sponsor", "Dana · Company admin", "Change sponsor"],
         ["Endpoint scope", "Support project · #customer-support and #incidents", "View scope"]
       ]},
-      { title: "Linked Slack people", intro: "Linked identities act as their mapped Paperclip users.", rows: [
+      { title: "Linked Slack people", intro: "Linked identities act as their mapped ThinkingMach users.", rows: [
         ["Ari Chen · U0184", "ari@acme.com · Member · confirmed Sep 3", "Revoke"],
         ["Sam Rivera · U0191", "sam@acme.com · Viewer · confirmed Sep 4", "Revoke"],
         ["Link another person", "Send an expiring sign-in and company-confirmation link.", "Create link"]
@@ -149,7 +149,7 @@ export const providers = [
     setupSubtitle: "Install a least-privilege GitHub App on the repositories where people will talk to Maya.",
     setupSections: [
       { title: "Agent and GitHub identity", intro: "This chat endpoint is separate from any GitHub code/tool connection.", rows: [
-        ["Paperclip agent", "Maya · Support engineer", "Change agent"],
+        ["ThinkingMach agent", "Maya · Support engineer", "Change agent"],
         ["Purpose", "People mention Maya in issues and pull requests.", "Chat only"],
         ["GitHub App identity", "paperclip-maya[bot] · avatar preview", "Preview"]
       ]},
@@ -158,7 +158,7 @@ export const providers = [
         ["Authentication", "GitHub App with installation-scoped credentials.", "Recommended"],
         ["Enterprise Server", "Add a verified API and web base URL when selected.", "Not used"]
       ]},
-      { title: "Create the GitHub App", intro: "Paperclip supplies exact webhook and least-privilege permission values.", rows: [
+      { title: "Create the GitHub App", intro: "ThinkingMach supplies exact webhook and least-privilege permission values.", rows: [
         ["Webhook URL and secret", "Public endpoint plus generated high-entropy secret reference.", "Copy values"],
         ["Repository permissions", "Issues write · Pull requests write · Metadata read.", "Copy list"],
         ["Events", "Issue comments and pull-request review comments.", "Copy list"]
@@ -166,7 +166,7 @@ export const providers = [
       { title: "Install on repositories", intro: "GitHub owns organization approval and repository selection.", rows: [
         ["1. Register app", "Create the app using the values above.", "Open GitHub"],
         ["2. Install app", "Choose Acme and only the repositories where chat is allowed.", "Open install"],
-        ["3. Add credentials", "App ID and private key are stored as Paperclip secret references.", "Add secrets"]
+        ["3. Add credentials", "App ID and private key are stored as ThinkingMach secret references.", "Add secrets"]
       ]},
       { title: "Verify and activate", intro: "Code access is intentionally absent from this connection.", rows: [
         ["Webhook", "Signature, delivery ID, and subscribed event verified.", "Passed"],
@@ -178,8 +178,8 @@ export const providers = [
     setupAnnotations: [
       "The endpoint is explicitly chat-only; repository code/tool credentials stay separate.",
       "GitHub App is the production default, with host and Enterprise Server handled before registration.",
-      "Paperclip gives the operator exact webhook, permission, and event values in one vertical sequence.",
-      "GitHub owns organization approval and repository selection; Paperclip stores only secret references.",
+      "ThinkingMach gives the operator exact webhook, permission, and event values in one vertical sequence.",
+      "GitHub owns organization approval and repository selection; ThinkingMach stores only secret references.",
       "Verification proves delivery and installation while confirming that broad code permissions were not granted."
     ],
     overviewSections: [
@@ -193,10 +193,10 @@ export const providers = [
         ["Webhook", "Signature verified · delivery IDs deduplicated", "Healthy"],
         ["Permissions", "Issues and Pull requests write · Metadata read", "Current"]
       ]},
-      { title: "Available automatically", intro: "Paperclip uses every safe interaction GitHub exposes for this chat connection.", rows: [
+      { title: "Available automatically", intro: "ThinkingMach uses every safe interaction GitHub exposes for this chat connection.", rows: [
         ["Conversation", "Issue, PR conversation, and inline review-thread mentions.", "Included"],
         ["Output", "Reaction receipt, GFM response, coarse edit-in-place progress, final comment.", "Included"],
-        ["Files and actions", "Ingest safe linked attachments; publish artifacts and governed actions as Paperclip links.", "Included"],
+        ["Files and actions", "Ingest safe linked attachments; publish artifacts and governed actions as ThinkingMach links.", "Included"],
         ["Fallback", "Unsupported stream, DM, ephemeral, modal, or button behavior becomes text plus a link.", "Automatic"]
       ]},
       { title: "Lifecycle", intro: "Operate the App installation without conflating it with tool access.", rows: [
@@ -205,7 +205,7 @@ export const providers = [
       ]}
     ],
     settingsSections: [
-      { title: "Repository reach", intro: "Paperclip can only narrow repositories selected in the GitHub App installation.", rows: [
+      { title: "Repository reach", intro: "ThinkingMach can only narrow repositories selected in the GitHub App installation.", rows: [
         ["Installation", "Acme organization · installation 48219", "Change install"],
         ["Allowed repositories", "acme/api, acme/web", "2 repositories"],
         ["Conversation surfaces", "Issues, PR conversations, and inline review threads.", "All supported"]
@@ -231,7 +231,7 @@ export const providers = [
         ["Sponsor", "Dana · Company admin", "Change sponsor"],
         ["Endpoint scope", "Support project · acme/api and acme/web", "View scope"]
       ]},
-      { title: "Linked GitHub people", intro: "The durable GitHub numeric user ID is linked after Paperclip authentication.", rows: [
+      { title: "Linked GitHub people", intro: "The durable GitHub numeric user ID is linked after ThinkingMach authentication.", rows: [
         ["arichen · 184201", "ari@acme.com · Member · confirmed Sep 3", "Revoke"],
         ["sam-r · 194118", "sam@acme.com · Viewer · confirmed Sep 4", "Revoke"],
         ["Link another person", "Create an expiring company-confirmation link.", "Create link"]
@@ -264,8 +264,8 @@ export const providers = [
     setupTitle: "Invite Maya to Microsoft Teams",
     setupSubtitle: "Register the bot, package the Teams app, install it to the intended scopes, and verify delivery.",
     setupSections: [
-      { title: "Agent and Teams identity", intro: "One Teams bot application represents exactly one Paperclip agent.", rows: [
-        ["Paperclip agent", "Maya · Support engineer", "Change agent"],
+      { title: "Agent and Teams identity", intro: "One Teams bot application represents exactly one ThinkingMach agent.", rows: [
+        ["ThinkingMach agent", "Maya · Support engineer", "Change agent"],
         ["Teams bot", "Maya · app and avatar preview", "Preview"],
         ["Messaging endpoint", "https://chat.paperclip.app/in/••••/teams", "Copy"]
       ]},
@@ -277,7 +277,7 @@ export const providers = [
       { title: "Register and package the Teams app", intro: "Teams Developer CLI is the shortest supported handoff; manual registration remains available.", rows: [
         ["1. Verify tenant policy", "Custom app upload or tenant-admin distribution must be allowed.", "Open policy"],
         ["2. Create app and bot", "Use the copied endpoint and generated manifest values.", "Copy command"],
-        ["3. Download app package", "Paperclip validates scopes, IDs, endpoint, and package consistency.", "Download"]
+        ["3. Download app package", "ThinkingMach validates scopes, IDs, endpoint, and package consistency.", "Download"]
       ]},
       { title: "Install in Teams", intro: "Microsoft owns tenant approval and the personal, team, channel, or group-chat installation.", rows: [
         ["Install link", "Open the Teams client installation flow.", "Open Teams"],
@@ -294,8 +294,8 @@ export const providers = [
     setupAnnotations: [
       "The selected agent, Teams identity, and copyable public endpoint lead the setup.",
       "Cloud, tenant mode, and exactly one bot-authentication strategy are chosen before registration.",
-      "Paperclip provides CLI, manifest, and package values in a conventional top-to-bottom handoff.",
-      "Tenant approval and installation happen in Microsoft Teams; Paperclip keeps the draft if admin action is required.",
+      "ThinkingMach provides CLI, manifest, and package values in a conventional top-to-bottom handoff.",
+      "Tenant approval and installation happen in Microsoft Teams; ThinkingMach keeps the draft if admin action is required.",
       "Verification separates registration, manifest, endpoint, installation, and doctor checks without requesting broad Graph consent."
     ],
     overviewSections: [
@@ -309,7 +309,7 @@ export const providers = [
         ["Bot endpoint", "Authenticated activity delivery", "Healthy"],
         ["Identity", "Federated workload identity · single tenant", "Healthy"]
       ]},
-      { title: "Available automatically", intro: "Paperclip uses the richest safe Teams behavior available in the current conversation scope.", rows: [
+      { title: "Available automatically", intro: "ThinkingMach uses the richest safe Teams behavior available in the current conversation scope.", rows: [
         ["Conversation", "Channel post threads plus explicit active-task behavior in DMs and group chats.", "Included"],
         ["Output", "DM-native streaming; buffered or edited channel/group responses and safe milestones.", "Included"],
         ["Rich interaction", "Adaptive Cards, buttons, task modules, files, reactions, and typing.", "Included"],
@@ -321,7 +321,7 @@ export const providers = [
       ]}
     ],
     settingsSections: [
-      { title: "Tenant and conversation reach", intro: "Paperclip narrows the scopes where the Teams app is installed.", rows: [
+      { title: "Tenant and conversation reach", intro: "ThinkingMach narrows the scopes where the Teams app is installed.", rows: [
         ["Tenant", "Acme · 0f3c••••", "Change install"],
         ["Teams and channels", "Support / General", "1 channel"],
         ["Personal scope", "Allow installed users to start work in a DM.", "Allowed"],
@@ -382,8 +382,8 @@ export const providers = [
     setupTitle: "Invite Maya to Telegram",
     setupSubtitle: "Create one BotFather bot, choose a delivery mode, add it to chats, and verify privacy behavior.",
     setupSections: [
-      { title: "Agent and Telegram identity", intro: "One Telegram username represents exactly one Paperclip agent.", rows: [
-        ["Paperclip agent", "Maya · Support engineer", "Change agent"],
+      { title: "Agent and Telegram identity", intro: "One Telegram username represents exactly one ThinkingMach agent.", rows: [
+        ["ThinkingMach agent", "Maya · Support engineer", "Change agent"],
         ["Telegram bot", "Maya · @maya_acme_bot · avatar/about preview", "Preview"]
       ]},
       { title: "Create the bot with BotFather", intro: "Telegram owns username uniqueness, profile, group eligibility, and token issuance.", rows: [
@@ -393,10 +393,10 @@ export const providers = [
       ]},
       { title: "Choose delivery", intro: "Webhook and polling are mutually exclusive.", rows: [
         ["Production", "HTTPS webhook with Telegram secret-token verification.", "Webhook"],
-        ["Private Paperclip", "Use the outbound relay to reach the same verified webhook handler.", "Use relay"],
-        ["Local development", "One long-running poller; Paperclip removes any webhook first.", "Advanced"]
+        ["Private ThinkingMach", "Use the outbound relay to reach the same verified webhook handler.", "Use relay"],
+        ["Local development", "One long-running poller; ThinkingMach removes any webhook first.", "Advanced"]
       ]},
-      { title: "Connect token and chats", intro: "The bot token is a Paperclip secret reference and can be rotated independently.", rows: [
+      { title: "Connect token and chats", intro: "The bot token is a ThinkingMach secret reference and can be rotated independently.", rows: [
         ["Bot token", "Secret ref · telegram/maya-bot ·•••• 471A", "Replace"],
         ["Webhook URL and secret", "Generated endpoint and secret-token header value.", "Copy"],
         ["Add Maya to chats", "Invite the bot to groups or forums; topic administration is optional.", "Instructions"]
@@ -426,7 +426,7 @@ export const providers = [
         ["Ingress", "Verified webhook · zero pending updates", "Healthy"],
         ["Bot policy", "Privacy on · may join groups", "Current"]
       ]},
-      { title: "Available automatically", intro: "Paperclip uses every safe Telegram capability valid for the current chat type.", rows: [
+      { title: "Available automatically", intro: "ThinkingMach uses every safe Telegram capability valid for the current chat type.", rows: [
         ["Conversation", "DM/group active task plus stable forum-topic binding.", "Included"],
         ["Output", "Typing or reaction receipt, throttled post/edit, private-chat draft previews when available.", "Included"],
         ["Rich interaction", "Inline callback and URL buttons, Markdown rendering, documents and media groups.", "Included"],
@@ -449,11 +449,11 @@ export const providers = [
         ["Ordinary group", "@maya activates; replies to Maya or new mentions continue.", "Addressed"],
         ["Forum topic", "Stable message_thread_id maps one topic to one issue.", "Topic"]
       ]},
-      { title: "BotFather policy and delivery", intro: "Paperclip reports the deployment-selected path; it is not an endpoint preference.", rows: [
+      { title: "BotFather policy and delivery", intro: "ThinkingMach reports the deployment-selected path; it is not an endpoint preference.", rows: [
         ["Delivery path", "Selected from instance reachability and verified continuously.", "Automatic"],
         ["Privacy mode", "Remain on so unrelated group traffic is not consumed.", "Required"],
         ["Token rotation", "Replace the secret reference after rotating with BotFather.", "Manage secret"],
-        ["Delivery changes", "Paperclip drains pending updates if instance delivery changes.", "Automatic"]
+        ["Delivery changes", "ThinkingMach drains pending updates if instance delivery changes.", "Automatic"]
       ]}
     ],
     settingsAnnotations: [
@@ -476,7 +476,7 @@ export const providers = [
         ["Governance", "No approvals, budgets, hiring, permissions, connection management, or reassignment.", "Denied"]
       ]},
       { title: "Telegram identity rules", intro: "Forwarded messages, anonymous admins, and bots require explicit handling.", rows: [
-        ["Anonymous/forwarded actor", "Do not infer a Paperclip user when a stable sender identity is absent.", "Restricted"],
+        ["Anonymous/forwarded actor", "Do not infer a ThinkingMach user when a stable sender identity is absent.", "Restricted"],
         ["Other bots", "Ignore unless an explicit endpoint route and loop guards permit the message.", "Ignored"]
       ]}
     ],

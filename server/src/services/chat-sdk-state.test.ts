@@ -1,7 +1,7 @@
 import type { QueueEntry } from "chat";
 import { describe, expect, it } from "vitest";
 import {
-  createPaperclipChatSdkState,
+  createThinkingMachChatSdkState,
   type ChatSdkStateCompareAndSetInput,
   type ChatSdkStateDeleteInput,
   type ChatSdkStatePersistence,
@@ -55,7 +55,7 @@ class MemoryCasPersistence implements ChatSdkStatePersistence {
 function fixture(now: Date = new Date("2026-09-04T12:00:00.000Z")) {
   const persistence = new MemoryCasPersistence();
   let currentTime = now;
-  const state = createPaperclipChatSdkState({
+  const state = createThinkingMachChatSdkState({
     companyId: "company-1",
     endpointId: "endpoint-1",
     persistence,
@@ -70,7 +70,7 @@ function fixture(now: Date = new Date("2026-09-04T12:00:00.000Z")) {
   };
 }
 
-describe("PaperclipChatSdkStateAdapter", () => {
+describe("ThinkingMachChatSdkStateAdapter", () => {
   it("requires Chat SDK lifecycle connection before state operations", async () => {
     const { state } = fixture();
     await expect(state.get("key")).rejects.toThrow("is not connected");
@@ -174,7 +174,7 @@ describe("PaperclipChatSdkStateAdapter", () => {
 
   it("rejects unversioned state and oversized values", async () => {
     const persistence = new MemoryCasPersistence();
-    const state = createPaperclipChatSdkState({
+    const state = createThinkingMachChatSdkState({
       companyId: "company-1",
       endpointId: "endpoint-1",
       persistence,
@@ -185,7 +185,7 @@ describe("PaperclipChatSdkStateAdapter", () => {
       "byte limit",
     );
 
-    const valid = createPaperclipChatSdkState({
+    const valid = createThinkingMachChatSdkState({
       companyId: "company-1",
       endpointId: "endpoint-1",
       persistence,

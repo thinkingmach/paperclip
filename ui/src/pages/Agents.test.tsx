@@ -4,13 +4,13 @@ import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Agent, Environment, EnvironmentCapabilities } from "@paperclipai/shared";
+import type { Agent, Environment, EnvironmentCapabilities } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ToastProvider } from "../context/ToastContext";
 import type { BuiltInAgentState } from "../api/builtInAgents";
 import { Agents } from "./Agents";
 import { Agents as ProductionAgents } from "./Agents.production";
-import type { AgentOrgChainHealth } from "@paperclipai/shared";
+import type { AgentOrgChainHealth } from "@thinkingmach/shared";
 
 const mockRouterState = vi.hoisted(() => ({
   pathname: "/agents/all",
@@ -148,7 +148,7 @@ function makeBuiltInAgentState(overrides: Partial<BuiltInAgentState> = {}): Buil
       displayName: "Briefs Agent",
       featureKeys: ["Briefs"],
       shortPurpose: "Generates briefs.",
-      defaultInstructions: "You are Paperclip's built-in Briefs agent.",
+      defaultInstructions: "You are ThinkingMach's built-in Briefs agent.",
       defaultRole: "engineer",
     },
     status: "ready",
@@ -481,7 +481,7 @@ describe("Agents", () => {
     mockAgentsApi.list.mockResolvedValue([
       makeAgent({
         id: "agent-mobile",
-        name: "Paperclip Engineer With A Much Longer Display Name",
+        name: "ThinkingMach Engineer With A Much Longer Display Name",
         title: "Software Engineer With A Much Longer Specialty Title",
         urlKey: "paperclip-engineer-long",
       }),
@@ -500,21 +500,21 @@ describe("Agents", () => {
     await flushReact();
     await flushReact();
 
-    const row = findAgentRow(container, "Paperclip Engineer With A Much Longer Display Name");
+    const row = findAgentRow(container, "ThinkingMach Engineer With A Much Longer Display Name");
     expect(row).not.toBeNull();
     expect(row?.querySelector(".sm\\:hidden")).toBeNull();
     expect(row?.querySelector(".hidden.sm\\:flex")).not.toBeNull();
     expect(row?.querySelector(".flex-1.hidden.\\@5xl\\:block")).not.toBeNull();
     expect(row?.classList.contains("text-foreground/55")).toBe(false);
     expect(row?.classList.contains("sm:text-foreground/55")).toBe(true);
-    const name = row?.querySelector("span[title='Paperclip Engineer With A Much Longer Display Name']");
+    const name = row?.querySelector("span[title='ThinkingMach Engineer With A Much Longer Display Name']");
     const subtitle = Array.from(row?.querySelectorAll("p") ?? []).find((node) =>
       node.textContent?.includes("Software Engineer With A Much Longer Specialty Title"),
     );
     expect(name?.classList.contains("truncate")).toBe(true);
     expect(subtitle).toBeDefined();
     expect(subtitle?.classList.contains("truncate")).toBe(true);
-    const actions = row?.querySelector('button[aria-label="Open actions for Paperclip Engineer With A Much Longer Display Name"]');
+    const actions = row?.querySelector('button[aria-label="Open actions for ThinkingMach Engineer With A Much Longer Display Name"]');
     expect(actions).toBeNull();
     expect(row?.textContent).not.toContain("Assign Task");
     expect(row?.textContent).not.toContain("Run Heartbeat");
@@ -637,7 +637,7 @@ describe("Agents", () => {
     await flushReact();
 
     expect(container.textContent).toContain("Dev Laptop");
-    expect(container.textContent).toContain("Paperclip host");
+    expect(container.textContent).toContain("ThinkingMach host");
   });
 
   it("reserves the environment column while environment metadata is loading", async () => {
@@ -965,7 +965,7 @@ describe("Agents", () => {
     expect(container.textContent).toContain("Built-in");
     expect(container.textContent).toContain("Briefs Agent");
     expect(container.textContent).not.toContain("Regular Agent");
-    expect(container.querySelector('[title="Ships with Paperclip"]')).toBeNull();
+    expect(container.querySelector('[title="Ships with ThinkingMach"]')).toBeNull();
     expect(mockRouterState.navigate).not.toHaveBeenCalledWith("/agents/all", { replace: true });
   });
 

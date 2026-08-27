@@ -110,7 +110,7 @@ describe("proposed connector events against the real TelemetryClient", () => {
   });
 
   it("environment suppression resolves telemetry off under CI and opt-out flags", () => {
-    vi.stubEnv("PAPERCLIP_TELEMETRY_DISABLED", "1");
+    vi.stubEnv("THINKINGMACH_TELEMETRY_DISABLED", "1");
     expect(resolveTelemetryConfig().enabled).toBe(false);
     vi.unstubAllEnvs();
 

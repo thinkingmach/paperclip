@@ -1,4 +1,4 @@
-import type { IssueStatus } from "@paperclipai/shared";
+import type { IssueStatus } from "@thinkingmach/shared";
 import type { LiveRunForIssue } from "../api/heartbeats";
 
 function isLiveRunStatus(status: string): boolean {

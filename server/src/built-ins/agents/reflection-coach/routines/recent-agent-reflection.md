@@ -59,7 +59,7 @@ This routine is **paused by default** and spends no tokens until an operator ena
    - `recent_active` — agents with completed/in-review/blocked issue activity within the last `{{lookbackDays}}` days.
    - `all` — every non-terminated agent in the company.
    - `explicit` — only agents named in the run inputs.
-   Cap the set at `{{maxTargetAgents}}`. Drop any agent id listed in `{{excludeAgentIds}}`, and always drop your own `PAPERCLIP_AGENT_ID` (no self-reflection).
+   Cap the set at `{{maxTargetAgents}}`. Drop any agent id listed in `{{excludeAgentIds}}`, and always drop your own `THINKINGMACH_AGENT_ID` (no self-reflection).
 2. For each selected target, run the `reflection-coach` skill as the operating procedure: pull recent trajectories, read current AGENTS.md and assigned skills, cluster evidence-backed patterns, and draft the smallest durable change.
 3. Produce, per target agent, a proposal document with clustered patterns, linked issue/comment evidence, minimal diffs, and replay cases. Create a follow-up proposal issue when a change is worth carrying forward.
 

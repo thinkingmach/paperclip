@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { AgentAppearance, AgentAvatarSize, CharacterState } from "@paperclipai/shared";
+import type { AgentAppearance, AgentAvatarSize, CharacterState } from "@thinkingmach/shared";
 import type { StorageProvider } from "../storage/types.js";
 import { createInviteRateLimiter } from "./invite-rate-limit.js";
 import { createAgentAvatarPool } from "./agent-avatar-pool.js";

@@ -16,7 +16,7 @@ export const runtimeExposureConfigSchema = z
     type: runtimeExposureProviderSchema,
     hostname: z.literal("auto"),
     publicPort: z.literal("same"),
-    includePaperclipViteHmr: z.boolean(),
+    includeThinkingMachViteHmr: z.boolean(),
     failurePolicy: runtimeExposureFailurePolicySchema,
   })
   .strict();
@@ -71,7 +71,7 @@ export const DEFAULT_TAILSCALE_HTTPS_EXPOSURE: RuntimeExposureConfigInput = {
   type: "tailscale_https",
   hostname: "auto",
   publicPort: "same",
-  includePaperclipViteHmr: true,
+  includeThinkingMachViteHmr: true,
   failurePolicy: "fail_closed",
 };
 
@@ -109,7 +109,7 @@ const RUNTIME_EXPOSURE_CONFIG_KEYS = [
   "type",
   "hostname",
   "publicPort",
-  "includePaperclipViteHmr",
+  "includeThinkingMachViteHmr",
   "failurePolicy",
 ] as const;
 

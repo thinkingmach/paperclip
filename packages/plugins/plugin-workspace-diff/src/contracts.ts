@@ -1,4 +1,4 @@
-import { z } from "@paperclipai/plugin-sdk";
+import { z } from "@thinkingmach/plugin-sdk";
 
 export const workspaceDiffViewSchema = z.enum(["working-tree", "head"]);
 

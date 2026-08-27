@@ -13,7 +13,7 @@ describe("external object references", () => {
   it("extracts external urls without changing internal issue reference behavior", () => {
     expect(
       findExternalObjectUrlMatches(
-        "See PAP-1, /issues/PAP-2, https://paperclip.ing/PAP/issues/PAP-3, and https://github.com/acme/app/pull/4.",
+        "See PAP-1, /issues/PAP-2, https://thinkingmach.com/PAP/issues/PAP-3, and https://github.com/acme/app/pull/4.",
       ),
     ).toEqual([{ index: 70, length: 34, matchedText: "https://github.com/acme/app/pull/4" }]);
   });

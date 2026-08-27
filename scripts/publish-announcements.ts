@@ -10,7 +10,7 @@ import { validateAnnouncementAnimation } from "../server/src/services/announceme
 
 export function announcementPublishPrefix(staging?: string, hostPrefix?: string) {
   if (hostPrefix !== undefined && !/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(hostPrefix)) {
-    throw new Error("Invalid PAPERCLIP_PAGE_DEFAULT_PREFIX: use lowercase path segments without leading or trailing slashes");
+    throw new Error("Invalid THINKINGMACH_PAGE_DEFAULT_PREFIX: use lowercase path segments without leading or trailing slashes");
   }
   const prefix = staging === undefined ? "announcements/v1" : `announcements/staging/${announcementIdSchema.parse(staging)}/v1`;
   return hostPrefix ? `${hostPrefix}/${prefix}` : prefix;
@@ -73,30 +73,30 @@ export function announcementUploadArgs(bucket: string, file: Awaited<ReturnType<
 
 async function main() {
   const { sourceDirectory, staging, publish } = parseAnnouncementPublishArgs(process.argv.slice(2));
-  const hostPrefix = process.env.PAPERCLIP_PAGE_DEFAULT_PREFIX;
+  const hostPrefix = process.env.THINKINGMACH_PAGE_DEFAULT_PREFIX;
   const prepared = await prepareAnnouncementPublish(sourceDirectory, staging, hostPrefix);
-  const bucket = process.env.PAPERCLIP_PAGE_BUCKET;
-  const baseUrl = process.env.PAPERCLIP_PAGE_BASE_URL?.replace(/\/+$/, "") ?? "https://pages.paperclip.ing";
+  const bucket = process.env.THINKINGMACH_PAGE_BUCKET;
+  const baseUrl = process.env.THINKINGMACH_PAGE_BASE_URL?.replace(/\/+$/, "") ?? "https://pages.thinkingmach.com";
   const url = `${baseUrl}/${announcementPublishPrefix(staging, hostPrefix)}/current.json`;
   const parsed = new URL(url);
   if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.search || parsed.hash) throw new Error("Invalid public base URL");
   console.log(JSON.stringify({ mode: publish ? "publish" : "dry-run", target: staging ? `staging/${staging}` : "production", bucket: bucket ?? "(unset)", url, announcementId: prepared.manifest.announcement?.id ?? null, files: prepared.files }, null, 2));
   if (!publish) return;
-  if (!bucket) throw new Error("Set PAPERCLIP_PAGE_BUCKET before publishing");
+  if (!bucket) throw new Error("Set THINKINGMACH_PAGE_BUCKET before publishing");
   const env = { ...process.env };
-  const key = env.PAPERCLIP_PAGE_AWS_ACCESS_KEY_ID;
-  const secret = env.PAPERCLIP_PAGE_AWS_SECRET_ACCESS_KEY;
+  const key = env.THINKINGMACH_PAGE_AWS_ACCESS_KEY_ID;
+  const secret = env.THINKINGMACH_PAGE_AWS_SECRET_ACCESS_KEY;
   if (Boolean(key) !== Boolean(secret)) throw new Error("Set both namespaced page uploader credential variables");
   if (key && secret) {
     env.AWS_ACCESS_KEY_ID = key;
     env.AWS_SECRET_ACCESS_KEY = secret;
     delete env.AWS_SESSION_TOKEN;
-    if (env.PAPERCLIP_PAGE_AWS_SESSION_TOKEN) env.AWS_SESSION_TOKEN = env.PAPERCLIP_PAGE_AWS_SESSION_TOKEN;
-  } else if (env.PAPERCLIP_PAGE_AWS_PROFILE) {
+    if (env.THINKINGMACH_PAGE_AWS_SESSION_TOKEN) env.AWS_SESSION_TOKEN = env.THINKINGMACH_PAGE_AWS_SESSION_TOKEN;
+  } else if (env.THINKINGMACH_PAGE_AWS_PROFILE) {
     delete env.AWS_ACCESS_KEY_ID;
     delete env.AWS_SECRET_ACCESS_KEY;
     delete env.AWS_SESSION_TOKEN;
-    env.AWS_PROFILE = env.PAPERCLIP_PAGE_AWS_PROFILE;
+    env.AWS_PROFILE = env.THINKINGMACH_PAGE_AWS_PROFILE;
   }
   // Only validated files, assets before manifest; credentials are scoped to AWS.
   for (const file of prepared.files) execFileSync("aws", announcementUploadArgs(bucket, file), { env, stdio: "pipe" });

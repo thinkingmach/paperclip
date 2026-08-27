@@ -6,7 +6,7 @@ import {
   AGGREGATOR_NAMES,
   type ConnectionSearchResultItem,
   type RemoteMcpConnectorId,
-} from "@paperclipai/shared";
+} from "@thinkingmach/shared";
 import { RemoteMcpAccountChoice } from "@/features/connections/remote-mcp/RemoteMcpAccountChoice";
 import { QuestionForm } from "@/components/task-chat/QuestionForm";
 import { RemoteMcpConnectionReview } from "../prototypes/RemoteMcpConnectionReview";

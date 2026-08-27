@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Issue, IssueBlockerAttention } from "@paperclipai/shared";
+import type { Issue, IssueBlockerAttention } from "@thinkingmach/shared";
 import {
   resolveInboxIssueBlockerAttention,
   resolveIssueLiveDescendantCount,

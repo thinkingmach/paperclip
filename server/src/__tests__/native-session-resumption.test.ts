@@ -25,7 +25,7 @@ import {
   statusDecisionEffects,
   statusDecisions,
   workAssessments,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   type NativeExecutionInputV1,
   type NativeExecutionInput,
@@ -33,7 +33,7 @@ import {
   type NativeSessionBackend,
   type PersistedNativeSession,
   type PrpEvent,
-} from "@paperclipai/paperclip-runner";
+} from "@thinkingmach/paperclip-runner";
 import {
   CONTROL_PLANE_CONFORMANCE_RESULT,
   CONTROL_PLANE_CONFORMANCE_TERMINAL,
@@ -445,7 +445,7 @@ describe("P6-25 pre-result native session recovery", () => {
         },
       }));
       const heartbeat = heartbeatService(db, {
-        runtimeEnv: { PAPERCLIP_INSTANCE_ID: "observed-owner-test" },
+        runtimeEnv: { THINKINGMACH_INSTANCE_ID: "observed-owner-test" },
         nativeSessionBackendFactory: backendFactory,
       });
 
@@ -966,7 +966,7 @@ describe.each(["unchanged", "newer_active", "stale_idle"] as const)(
         await drainHeartbeatRunsToQuiescence(
           db,
           heartbeatService(db, {
-            runtimeEnv: { PAPERCLIP_INSTANCE_ID: "phase6-recovery-test" },
+            runtimeEnv: { THINKINGMACH_INSTANCE_ID: "phase6-recovery-test" },
             nativeSessionBackendFactory: () => backend,
           }),
         );
@@ -1093,7 +1093,7 @@ describe.each(["unchanged", "newer_active", "stale_idle"] as const)(
         return input.binding.runId === runId ? backend : freshBackend(input);
       });
       const heartbeat = heartbeatService(db, {
-        runtimeEnv: { PAPERCLIP_INSTANCE_ID: "phase6-recovery-test" },
+        runtimeEnv: { THINKINGMACH_INSTANCE_ID: "phase6-recovery-test" },
         nativeSessionBackendFactory: backendFactory,
       });
       if (newerRequest) {
@@ -1373,7 +1373,7 @@ describe.each(["unchanged", "newer_active", "stale_idle"] as const)(
           .where(eq(statusDecisions.issueId, issueId)),
       ).resolves.toHaveLength(1);
 
-      // The persisted Paperclip Runner run above remains recoverable while the
+      // The persisted ThinkingMach Runner run above remains recoverable while the
       // flag is off. Switching the agent back to a direct adapter now proves a
       // fresh run ignores the stale native profile and stays on the legacy path.
       await db

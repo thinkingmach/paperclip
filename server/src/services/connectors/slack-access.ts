@@ -1,5 +1,5 @@
 import { and, eq, sql } from "drizzle-orm";
-import { chatActions, chatEndpointResources, type Db } from "@paperclipai/db";
+import { chatActions, chatEndpointResources, type Db } from "@thinkingmach/db";
 import { HttpError, forbidden, unprocessable } from "../../errors.js";
 import type { SlackTaskAuthority } from "./slack-authority.js";
 import {

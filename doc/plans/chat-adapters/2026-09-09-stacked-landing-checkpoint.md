@@ -12,7 +12,7 @@ live hardening is represented by its own follow-up PR.
 - Captured all 29 modified/new implementation and qualification-document paths
   using an alternate Git index. All 29 working-file hashes matched the snapshot.
   The original checkout's HEAD and empty staging area were unchanged.
-- Landing worktree: `/Users/dotta/paperclipai/branches/chat-adapters-landing-20260909`.
+- Landing worktree: `/Users/dotta/thinkingmach/branches/chat-adapters-landing-20260909`.
 - Initial landing branch: `codex/chat-adapters-landing-20260909`.
 - Origin master at snapshot: `5acf56658bff7eeb12438a6fdcae5f4d2fe1e90e`.
 - Ignored live runtime, credentials, databases, generated packages, and the
@@ -25,7 +25,7 @@ The user explicitly authorized the separate landing worktree and superseded the
 earlier no-new-worktree/no-PR-tending constraints for this lane. James owns
 reconciliation, exactly two coherent stacked PRs under 500 changed files each,
 fresh exact-head Greptile 5/5, required checks, and dependency-ordered merges.
-The existing PR is https://github.com/paperclipai/paperclip/pull/13038; it had 526
+The existing PR is https://github.com/thinkingmach/paperclip/pull/13038; it had 526
 changed files and conflicts at this checkpoint. Preserve its review context
 where practical. Do not merge based on old review scores or narrow local tests.
 
@@ -53,7 +53,7 @@ untouched.
 
 ## Subsequent checkpoint — 13:52 UTC
 
-Base PR [#13092](https://github.com/paperclipai/paperclip/pull/13092) is open
+Base PR [#13092](https://github.com/thinkingmach/paperclip/pull/13092) is open
 with 45 changed files. Master reconciliation has exposed additional native
 goal/integrity and PRP-v2 warm-authorization/state-retention defects. James owns
 their landing-only regressions; neither the initial PR head nor historical
@@ -152,11 +152,11 @@ have not been pushed over the landing branch. Exactly two coherent PRs under
 
 ## Subsequent checkpoint — 17:39 UTC
 
-The user merged runner prerequisite [#13092](https://github.com/paperclipai/paperclip/pull/13092)
+The user merged runner prerequisite [#13092](https://github.com/thinkingmach/paperclip/pull/13092)
 and explicitly required **two remaining chat PRs**; the runner does not count
-toward those two. The chat foundation is [#13100](https://github.com/paperclipai/paperclip/pull/13100),
+toward those two. The chat foundation is [#13100](https://github.com/thinkingmach/paperclip/pull/13100),
 143 files at `1c3c34c9b5d8dcc0a732beefcb683712b1d9bf8b`. The integration remains
-[#13038](https://github.com/paperclipai/paperclip/pull/13038), 370 files at
+[#13038](https://github.com/thinkingmach/paperclip/pull/13038), 370 files at
 `21d3f81f990e419634df765043795e328dd8f6b9`, stacked on the foundation. Neither
 has merged. The foundation does not mount routes or activate providers.
 

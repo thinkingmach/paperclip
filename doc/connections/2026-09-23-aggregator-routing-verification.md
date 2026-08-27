@@ -3,8 +3,8 @@
 ## Scope and environment
 
 Branch: `codex/connection-aggregator-fallback`, fresh worktree based on master
-`b41ccf097`. Local macOS; isolated Paperclip database and browser contexts per
-Product E2E attempt. Real OpenAI-backed Paperclip agents used the public product
+`b41ccf097`. Local macOS; isolated ThinkingMach database and browser contexts per
+Product E2E attempt. Real OpenAI-backed ThinkingMach agents used the public product
 APIs and browser UI. The Arcade MCP endpoint was a deterministic local fixture,
 not an Arcade production account. No production credentials or customer records
 were included in fixtures or evidence.

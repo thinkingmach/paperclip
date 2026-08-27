@@ -4,11 +4,11 @@ import { SecretProviderClientError } from "../secrets/types.js";
 
 describe("awsSecretsManagerProvider", () => {
   const previousEnv = {
-    PAPERCLIP_SECRETS_AWS_REGION: process.env.PAPERCLIP_SECRETS_AWS_REGION,
+    THINKINGMACH_SECRETS_AWS_REGION: process.env.THINKINGMACH_SECRETS_AWS_REGION,
     AWS_REGION: process.env.AWS_REGION,
     AWS_DEFAULT_REGION: process.env.AWS_DEFAULT_REGION,
-    PAPERCLIP_SECRETS_AWS_DEPLOYMENT_ID: process.env.PAPERCLIP_SECRETS_AWS_DEPLOYMENT_ID,
-    PAPERCLIP_SECRETS_AWS_KMS_KEY_ID: process.env.PAPERCLIP_SECRETS_AWS_KMS_KEY_ID,
+    THINKINGMACH_SECRETS_AWS_DEPLOYMENT_ID: process.env.THINKINGMACH_SECRETS_AWS_DEPLOYMENT_ID,
+    THINKINGMACH_SECRETS_AWS_KMS_KEY_ID: process.env.THINKINGMACH_SECRETS_AWS_KMS_KEY_ID,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_SESSION_TOKEN: process.env.AWS_SESSION_TOKEN,
@@ -30,7 +30,7 @@ describe("awsSecretsManagerProvider", () => {
     }
   });
 
-  it("creates Paperclip-managed AWS secrets without persisting plaintext in provider material", async () => {
+  it("creates ThinkingMach-managed AWS secrets without persisting plaintext in provider material", async () => {
     const calls: Array<{ op: string; input: Record<string, unknown> }> = [];
     const provider = createAwsSecretsManagerProvider({
       config: {
@@ -92,11 +92,11 @@ describe("awsSecretsManagerProvider", () => {
   });
 
   it("creates AWS secrets from selected provider vault config without deployment env fallback", async () => {
-    delete process.env.PAPERCLIP_SECRETS_AWS_REGION;
+    delete process.env.THINKINGMACH_SECRETS_AWS_REGION;
     delete process.env.AWS_REGION;
     delete process.env.AWS_DEFAULT_REGION;
-    delete process.env.PAPERCLIP_SECRETS_AWS_DEPLOYMENT_ID;
-    delete process.env.PAPERCLIP_SECRETS_AWS_KMS_KEY_ID;
+    delete process.env.THINKINGMACH_SECRETS_AWS_DEPLOYMENT_ID;
+    delete process.env.THINKINGMACH_SECRETS_AWS_KMS_KEY_ID;
     delete process.env.AWS_ACCESS_KEY_ID;
     delete process.env.AWS_SECRET_ACCESS_KEY;
     delete process.env.AWS_SESSION_TOKEN;
@@ -283,7 +283,7 @@ describe("awsSecretsManagerProvider", () => {
           SecretId:
             "arn:aws:secretsmanager:us-east-1:123456789012:secret:paperclip/prod-use1/company-1/openai-api-key",
           SecretString: "rotated-secret-value",
-          VersionStages: ["PAPERCLIP_PENDING"],
+          VersionStages: ["THINKINGMACH_PENDING"],
         },
       },
     ]);
@@ -363,7 +363,7 @@ describe("awsSecretsManagerProvider", () => {
     expect(prepared.valueSha256).toBeTruthy();
   });
 
-  it("rejects linked external references under the Paperclip-managed namespace", async () => {
+  it("rejects linked external references under the ThinkingMach-managed namespace", async () => {
     const provider = createAwsSecretsManagerProvider({
       config: {
         region: "us-east-1",
@@ -383,7 +383,7 @@ describe("awsSecretsManagerProvider", () => {
           "arn:aws:secretsmanager:us-east-1:123456789012:secret:paperclip/prod-use1/company-2/openai-api-key",
         providerVersionRef: "linked-version-7",
       }),
-    ).rejects.toThrow(/Paperclip-managed namespace/i);
+    ).rejects.toThrow(/ThinkingMach-managed namespace/i);
   });
 
   it("writes new values through to externally referenced AWS secrets as AWSCURRENT", async () => {
@@ -460,7 +460,7 @@ describe("awsSecretsManagerProvider", () => {
     expect(prepared.material.source).toBe("external_reference");
   });
 
-  it("rejects external value writes under the Paperclip-managed namespace", async () => {
+  it("rejects external value writes under the ThinkingMach-managed namespace", async () => {
     const provider = createAwsSecretsManagerProvider({
       config: {
         region: "us-east-1",
@@ -480,7 +480,7 @@ describe("awsSecretsManagerProvider", () => {
           "arn:aws:secretsmanager:us-east-1:123456789012:secret:paperclip/prod-use1/company-2/openai-api-key",
         value: "new-value",
       }),
-    ).rejects.toThrow(/Paperclip-managed namespace/i);
+    ).rejects.toThrow(/ThinkingMach-managed namespace/i);
   });
 
   it("restores the previous AWSCURRENT version when an external value write is rolled back", async () => {
@@ -688,7 +688,7 @@ describe("awsSecretsManagerProvider", () => {
       provider: "aws_secrets_manager",
       nextToken: "next-page",
       sampledSecretCount: 1,
-      skippedForeignPaperclipSampleCount: 1,
+      skippedForeignThinkingMachSampleCount: 1,
       candidates: [
         expect.objectContaining({
           displayName: "AWS production",
@@ -702,7 +702,7 @@ describe("awsSecretsManagerProvider", () => {
           }),
           signals: expect.objectContaining({
             paperclipManagedSampleCount: 1,
-            skippedForeignPaperclipSampleCount: 1,
+            skippedForeignThinkingMachSampleCount: 1,
           }),
         }),
       ],
@@ -713,7 +713,7 @@ describe("awsSecretsManagerProvider", () => {
 
   it("redacts AWS provider exception text when remote listing fails", async () => {
     const rawProviderMessage =
-      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/Paperclip is not authorized to perform secretsmanager:ListSecrets on arn:aws:secretsmanager:us-east-1:123456789012:secret:prod/openai";
+      "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/prod/ThinkingMach is not authorized to perform secretsmanager:ListSecrets on arn:aws:secretsmanager:us-east-1:123456789012:secret:prod/openai";
     const provider = createAwsSecretsManagerProvider({
       config: {
         region: "us-east-1",
@@ -875,17 +875,17 @@ describe("awsSecretsManagerProvider", () => {
   });
 
   it("warns when AWS provider configuration is incomplete and blocks managed writes", async () => {
-    delete process.env.PAPERCLIP_SECRETS_AWS_REGION;
+    delete process.env.THINKINGMACH_SECRETS_AWS_REGION;
     delete process.env.AWS_REGION;
     delete process.env.AWS_DEFAULT_REGION;
-    delete process.env.PAPERCLIP_SECRETS_AWS_DEPLOYMENT_ID;
-    delete process.env.PAPERCLIP_SECRETS_AWS_KMS_KEY_ID;
+    delete process.env.THINKINGMACH_SECRETS_AWS_DEPLOYMENT_ID;
+    delete process.env.THINKINGMACH_SECRETS_AWS_KMS_KEY_ID;
 
     const provider = createAwsSecretsManagerProvider();
     const health = await provider.healthCheck();
 
     expect(health.status).toBe("warn");
-    expect(health.message).toContain("missing PAPERCLIP_SECRETS_AWS_REGION");
+    expect(health.message).toContain("missing THINKINGMACH_SECRETS_AWS_REGION");
     expect(health.warnings).toEqual(
       expect.arrayContaining([
         expect.stringContaining("Missing required non-secret AWS provider config"),
@@ -895,9 +895,9 @@ describe("awsSecretsManagerProvider", () => {
     );
     expect(health.details).toMatchObject({
       missingConfig: [
-        "PAPERCLIP_SECRETS_AWS_REGION or AWS_REGION/AWS_DEFAULT_REGION",
-        "PAPERCLIP_SECRETS_AWS_DEPLOYMENT_ID",
-        "PAPERCLIP_SECRETS_AWS_KMS_KEY_ID",
+        "THINKINGMACH_SECRETS_AWS_REGION or AWS_REGION/AWS_DEFAULT_REGION",
+        "THINKINGMACH_SECRETS_AWS_DEPLOYMENT_ID",
+        "THINKINGMACH_SECRETS_AWS_KMS_KEY_ID",
       ],
       credentialSource: "AWS SDK default credential provider chain",
     });
@@ -911,10 +911,10 @@ describe("awsSecretsManagerProvider", () => {
           version: 1,
         },
       }),
-    ).rejects.toThrow(/PAPERCLIP_SECRETS_AWS_REGION|AWS_REGION/i);
+    ).rejects.toThrow(/THINKINGMACH_SECRETS_AWS_REGION|AWS_REGION/i);
   });
 
-  it("deletes only Paperclip-managed AWS secrets", async () => {
+  it("deletes only ThinkingMach-managed AWS secrets", async () => {
     const calls: Array<{ op: string; input: Record<string, unknown> }> = [];
     const provider = createAwsSecretsManagerProvider({
       config: {
@@ -1009,7 +1009,7 @@ describe("awsSecretsManagerProvider", () => {
     ]);
   });
 
-  it("archives pending Paperclip-managed AWS versions without deleting the secret", async () => {
+  it("archives pending ThinkingMach-managed AWS versions without deleting the secret", async () => {
     const calls: Array<{ op: string; input: Record<string, unknown> }> = [];
     const provider = createAwsSecretsManagerProvider({
       config: {
@@ -1068,7 +1068,7 @@ describe("awsSecretsManagerProvider", () => {
         input: {
           SecretId:
             "arn:aws:secretsmanager:us-east-1:123456789012:secret:paperclip/prod-use1/company-1/openai-api-key",
-          VersionStage: "PAPERCLIP_PENDING",
+          VersionStage: "THINKINGMACH_PENDING",
           RemoveFromVersionId: "aws-version-2",
         },
       },

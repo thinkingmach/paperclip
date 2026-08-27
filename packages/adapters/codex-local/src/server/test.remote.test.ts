@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { AdapterExecutionTarget } from "@paperclipai/adapter-utils/execution-target";
+import type { AdapterExecutionTarget } from "@thinkingmach/adapter-utils/execution-target";
 
 const {
   ensureAdapterExecutionTargetDirectory,
@@ -82,9 +82,9 @@ const {
   };
 });
 
-vi.mock("@paperclipai/adapter-utils/execution-target", async () => {
-  const actual = await vi.importActual<typeof import("@paperclipai/adapter-utils/execution-target")>(
-    "@paperclipai/adapter-utils/execution-target",
+vi.mock("@thinkingmach/adapter-utils/execution-target", async () => {
+  const actual = await vi.importActual<typeof import("@thinkingmach/adapter-utils/execution-target")>(
+    "@thinkingmach/adapter-utils/execution-target",
   );
   return {
     ...actual,
@@ -123,8 +123,8 @@ describe("codex remote environment diagnostics", () => {
     // scratch locations so no test ever reads or writes the real ~/.codex or
     // the real instance tree.
     vi.stubEnv("CODEX_HOME", await makeScratchDir("paperclip-test-shared-codex-"));
-    vi.stubEnv("PAPERCLIP_HOME", await makeScratchDir("paperclip-test-instance-"));
-    vi.stubEnv("PAPERCLIP_INSTANCE_ID", "default");
+    vi.stubEnv("THINKINGMACH_HOME", await makeScratchDir("paperclip-test-instance-"));
+    vi.stubEnv("THINKINGMACH_INSTANCE_ID", "default");
   });
 
   afterEach(async () => {
@@ -389,7 +389,7 @@ describe("codex remote environment diagnostics", () => {
     // — otherwise the Test and real runs authenticate with different
     // credentials and can disagree in both directions.
     const perAgentHome = path.join(
-      process.env.PAPERCLIP_HOME!,
+      process.env.THINKINGMACH_HOME!,
       "instances",
       "default",
       "companies",

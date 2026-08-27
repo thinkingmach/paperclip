@@ -1,4 +1,4 @@
-import { APP_STORE_DEFINITIONS, appSupportsCatalogSetup } from "@paperclipai/shared";
+import { APP_STORE_DEFINITIONS, appSupportsCatalogSetup } from "@thinkingmach/shared";
 import { describe, expect, it } from "vitest";
 import {
   MCP_DIRECT_OAUTH_CONNECT_SLUGS,

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { FolderGit2, GitFork } from "lucide-react";
-import type { CompanySkillDetail } from "@paperclipai/shared";
+import type { CompanySkillDetail } from "@thinkingmach/shared";
 import { Link } from "@/lib/router";
 import { companySkillsApi } from "@/api/companySkills";
 import { queryKeys } from "@/lib/queryKeys";

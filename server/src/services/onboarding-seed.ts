@@ -1,11 +1,11 @@
 import { and, eq, ne, sql } from "drizzle-orm";
-import type { Db } from "@paperclipai/db";
-import { agents, companyOnboardingSeeds, goals, issues, projects } from "@paperclipai/db";
-import type { ApplyOnboardingSeed } from "@paperclipai/shared";
-import { writePaperclipSkillSyncPreference } from "@paperclipai/adapter-utils/server-utils";
+import type { Db } from "@thinkingmach/db";
+import { agents, companyOnboardingSeeds, goals, issues, projects } from "@thinkingmach/db";
+import type { ApplyOnboardingSeed } from "@thinkingmach/shared";
+import { writeThinkingMachSkillSyncPreference } from "@thinkingmach/adapter-utils/server-utils";
 import { findActiveServerAdapter } from "../adapters/registry.js";
 import { agentService } from "./agents.js";
-import { PAPERCLIP_CORE_SKILL_KEYS } from "./company-skills.js";
+import { THINKINGMACH_CORE_SKILL_KEYS } from "./company-skills.js";
 import { goalService } from "./goals.js";
 import { projectService } from "./projects.js";
 import { issueService } from "./issues.js";
@@ -34,8 +34,8 @@ const SEEDED_AGENT_ROLE = "ceo";
 const FALLBACK_SEEDED_AGENT_ADAPTER_TYPE = "claude_local";
 
 function seededAgentAdapterType() {
-  const configured = process.env.PAPERCLIP_ONBOARDING_SEED_ADAPTER_TYPE?.trim()
-    || process.env.PAPERCLIP_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE?.trim()
+  const configured = process.env.THINKINGMACH_ONBOARDING_SEED_ADAPTER_TYPE?.trim()
+    || process.env.THINKINGMACH_TEAMS_CATALOG_DEFAULT_ADAPTER_TYPE?.trim()
     || FALLBACK_SEEDED_AGENT_ADAPTER_TYPE;
   // Server-seeded onboarding deliberately stays on a direct adapter. Native
   // runner rollout is an explicit post-onboarding configuration choice.
@@ -55,9 +55,9 @@ function seededAgentAdapterType() {
 function seededAgentAdapterConfig(adapterType: string): Record<string, unknown> {
   const adapter = findActiveServerAdapter(adapterType);
   if (!adapter?.listSkills && !adapter?.syncSkills) return {};
-  return writePaperclipSkillSyncPreference(
+  return writeThinkingMachSkillSyncPreference(
     {},
-    PAPERCLIP_CORE_SKILL_KEYS.map((key) => ({ key, versionId: null })),
+    THINKINGMACH_CORE_SKILL_KEYS.map((key) => ({ key, versionId: null })),
   );
 }
 

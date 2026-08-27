@@ -63,9 +63,9 @@ export function publicChatView(artifact, evalCase) {
   // Only the dedicated mock eval boundary can publish recorded conversation.
   // Early infrastructure failures still receive a viewer with an honest notice.
   const isolated =
-    network?.realPaperclipRequests === 0 &&
-    Array.isArray(network?.childPaperclipEnvironmentKeys) &&
-    network.childPaperclipEnvironmentKeys.length === 0;
+    network?.realThinkingMachRequests === 0 &&
+    Array.isArray(network?.childThinkingMachEnvironmentKeys) &&
+    network.childThinkingMachEnvironmentKeys.length === 0;
   const source =
     isolated &&
     artifact.issueThread?.schema === "paperclip.capability.issue-thread-view.v1"
@@ -178,7 +178,7 @@ export function publicChatView(artifact, evalCase) {
       agentLabel: "Recorded agent",
       runnerLabel: "Recorded runner",
       runnerAttached: false,
-      controlPlaneLabel: "Mock Paperclip",
+      controlPlaneLabel: "Mock ThinkingMach",
       controlPlaneTooltip: PUBLIC_CHAT_NOTICE,
       replaySource: "live",
     },

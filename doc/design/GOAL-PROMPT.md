@@ -5,7 +5,7 @@ Paste everything inside the code block below into Claude Code after typing `/goa
 v3: condensed under the /goal 4,000-character limit (v2 was 4,648 and got rejected). The paste block now carries only mission + DONE-WHEN + guardrails; the full phase spec lives in the "Phase spec" section below, which the run reads from this file on disk.
 
 ```
-Refactor Paperclip's UI so every visual value flows through the single
+Refactor ThinkingMach's UI so every visual value flows through the single
 existing token layer, with provably zero visual change, working only in
 this git worktree on branch design/token-extraction. Never touch master
 or other working trees. DESIGN.md at the repo root is the source of

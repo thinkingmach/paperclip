@@ -14,7 +14,7 @@ for required_command in apt-cache apt-get dpkg dpkg-deb; do
   fi
 done
 
-rootless_cache_base="${PAPERCLIP_RUNNER_BROWSER_DEPS_DIR:-${PAPERCLIP_RUN_SCRATCH_DIR:-${XDG_CACHE_HOME:-${HOME:?HOME is not set}/.cache}/paperclip-runner/playwright-libs}}"
+rootless_cache_base="${THINKINGMACH_RUNNER_BROWSER_DEPS_DIR:-${THINKINGMACH_RUN_SCRATCH_DIR:-${XDG_CACHE_HOME:-${HOME:?HOME is not set}/.cache}/paperclip-runner/playwright-libs}}"
 debian_architecture="$(dpkg --print-architecture)"
 rootless_deps_dir="$rootless_cache_base/$debian_architecture"
 rootless_marker="$rootless_deps_dir/.complete-v2"

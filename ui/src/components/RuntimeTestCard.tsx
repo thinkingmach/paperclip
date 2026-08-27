@@ -5,7 +5,7 @@ import {
   Play,
   ChevronRight,
 } from "lucide-react";
-import type { AdapterEnvironmentTestResult } from "@paperclipai/shared";
+import type { AdapterEnvironmentTestResult } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 export type TestState = "idle" | "running" | "pass" | "fail";

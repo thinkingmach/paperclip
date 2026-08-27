@@ -9,13 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SystemNotice } from "@/components/SystemNotice";
 import { systemNoticeFixtures } from "@/fixtures/systemNoticeFixtures";
 import { cn } from "@/lib/utils";
-import {
-  CircleDashed,
-  FlaskConical,
-  Layers,
-  ListChecks,
-  Sparkles,
-} from "lucide-react";
+import { CircleDashed, FlaskConical, Layers, ListChecks, Sparkles,  } from "lucide-react";
 
 function LabSection({
   id,
@@ -152,7 +146,7 @@ export function SystemNoticeUxLab() {
               First-class system notice treatment
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
-              Replaces the current pattern where a Paperclip-authored warning renders inside a user-style
+              Replaces the current pattern where a ThinkingMach-authored warning renders inside a user-style
               chat bubble. The notice is one container, system-styled, with hidden-by-default operational
               metadata. Tone is conveyed by icon, label, and color together so it stays accessible.
             </p>
@@ -241,9 +235,9 @@ export function SystemNoticeUxLab() {
           <SystemNotice
             tone="danger"
             label="System alert"
-            source={{ label: "Paperclip", href: "/PAP/agents" }}
+            source={{ label: "ThinkingMach", href: "/PAP/agents" }}
             timestamp="2026-05-04T16:48:00.000Z"
-            body="Paperclip could not resolve this issue's missing disposition automatically. The source assignment is unchanged and a board decision is required."
+            body="ThinkingMach could not resolve this issue's missing disposition automatically. The source assignment is unchanged and a board decision is required."
             metadata={[
               {
                 title: "Recovery owner",
@@ -322,7 +316,7 @@ export function SystemNoticeUxLab() {
             </div>
             <p className="px-1 text-xs text-muted-foreground">
               Author reads as <span className="font-medium text-foreground">You</span> even though the
-              author is the Paperclip system. Two containers stack the warning inside a user-style
+              author is the ThinkingMach system. Two containers stack the warning inside a user-style
               bubble, and operational evidence is always visible.
             </p>
           </div>

@@ -12,7 +12,7 @@ const DISK_CHECK_INTERVAL_BYTES = 1024 * 1024;
 
 /** A capacity floor, not a total filename budget. Leave room for the host. */
 export function assertWorkspaceManifestDiskSpace(directory: string, requiredBytes = 0): number {
-  const configured = Number(process.env.PAPERCLIP_WORKSPACE_MANIFEST_MIN_FREE_BYTES);
+  const configured = Number(process.env.THINKINGMACH_WORKSPACE_MANIFEST_MIN_FREE_BYTES);
   const minimum = Number.isSafeInteger(configured) && configured >= 64 * 1024 * 1024
     ? configured : 256 * 1024 * 1024;
   const stat = nodeFs.statfsSync(directory, { bigint: true });

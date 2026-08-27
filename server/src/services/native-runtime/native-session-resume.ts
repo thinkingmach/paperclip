@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { and, desc, eq, inArray, ne } from "drizzle-orm";
-import { heartbeatRunEvents, heartbeatRuns, type Db } from "@paperclipai/db";
+import { heartbeatRunEvents, heartbeatRuns, type Db } from "@thinkingmach/db";
 import type {
   NativeExecutionInput,
   PersistedNativeSession,

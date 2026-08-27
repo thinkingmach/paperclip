@@ -1,14 +1,14 @@
 I’d make this **built-in first, then an explicit choice of external provider**. The provider question belongs between connection search and the existing setup card.
 
-One detail: Jira already exists in Paperclip’s catalog, so it should take the built-in path. We’ll use a fixture service absent from Paperclip’s catalog to test fallback reliably.
+One detail: Jira already exists in ThinkingMach’s catalog, so it should take the built-in path. We’ll use a fixture service absent from ThinkingMach’s catalog to test fallback reliably.
 
 1. **Define the routing rules**
 
    | Search outcome | Agent behavior |
    |---|---|
-   | Matching Paperclip connection is ready | Use it. |
-   | Paperclip supports the service but needs setup | Show the existing connection card directly. |
-   | No matching Paperclip connector | Find supported aggregator routes and ask which provider to use. |
+   | Matching ThinkingMach connection is ready | Use it. |
+   | ThinkingMach supports the service but needs setup | Show the existing connection card directly. |
+   | No matching ThinkingMach connector | Find supported aggregator routes and ask which provider to use. |
    | Nothing supports it | Explain that no supported connection was found. |
    | An administrator denied access | Explain the restriction; don’t route around it through an aggregator. |
 
@@ -20,7 +20,7 @@ One detail: Jira already exists in Paperclip’s catalog, so it should take the 
 
    Example, assuming two providers have verified support:
 
-   > Paperclip doesn’t have a built-in connection for Example CRM. You can connect through Composio or Arcade. These are external services that will handle the connection and requests to Example CRM. Which would you like to use?
+   > ThinkingMach doesn’t have a built-in connection for Example CRM. You can connect through Composio or Arcade. These are external services that will handle the connection and requests to Example CRM. Which would you like to use?
 
    Options:
 
@@ -98,7 +98,7 @@ One detail: Jira already exists in Paperclip’s catalog, so it should take the 
 
 `connection_request` already returns an `instruction`; add the same pattern to `connections_search`.
 
-For aggregator results, return a Paperclip-authored instruction such as:
+For aggregator results, return a ThinkingMach-authored instruction such as:
 
 > No built-in connection matches this service. Ask the user to choose Composio or Arcade using `ask_user_questions`. Explain that these are external services, list Composio first, and include “None for now.” Wait for their answer before requesting the selected connection. Do not claim the underlying app is connected yet.
 

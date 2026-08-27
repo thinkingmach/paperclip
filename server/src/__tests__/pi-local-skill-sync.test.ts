@@ -5,14 +5,14 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   listPiSkills,
   syncPiSkills,
-} from "@paperclipai/adapter-pi-local/server";
+} from "@thinkingmach/adapter-pi-local/server";
 
 async function makeTempDir(prefix: string): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
 }
 
 describe("pi local skill sync", () => {
-  const paperclipKey = "paperclipai/paperclip/paperclip";
+  const paperclipKey = "thinkingmach/paperclip/paperclip";
   const cleanupDirs = new Set<string>();
 
   afterEach(async () => {
@@ -20,7 +20,7 @@ describe("pi local skill sync", () => {
     cleanupDirs.clear();
   });
 
-  it("defaults and installs the operational Paperclip skill in the Pi skills home", async () => {
+  it("defaults and installs the operational ThinkingMach skill in the Pi skills home", async () => {
     const home = await makeTempDir("paperclip-pi-skill-sync-");
     cleanupDirs.add(home);
 

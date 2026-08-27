@@ -19,9 +19,9 @@ export default defineConfig({
     launchOptions: {
       // Hosts without the Playwright chromium system libraries can point at a
       // preinstalled Chromium instead of running `pnpm verify:rootless`.
-      ...(process.env.PAPERCLIP_RUNNER_CHROMIUM_PATH === undefined
+      ...(process.env.THINKINGMACH_RUNNER_CHROMIUM_PATH === undefined
         ? {}
-        : { executablePath: process.env.PAPERCLIP_RUNNER_CHROMIUM_PATH }),
+        : { executablePath: process.env.THINKINGMACH_RUNNER_CHROMIUM_PATH }),
     },
   },
   webServer: [

@@ -15,7 +15,7 @@ function fixture(t) {
   const dir = mkdtempSync(path.join(os.tmpdir(), "migrator-artifact-test-"));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
   for (const name of ["db", "shared"]) {
-    const bytes = Buffer.from(JSON.stringify(previewManifest({ name: `@paperclipai/${name}`, dependencies: {} }, sha)));
+    const bytes = Buffer.from(JSON.stringify(previewManifest({ name: `@thinkingmach/${name}`, dependencies: {} }, sha)));
     const header = Buffer.alloc(512);
     header.write("package/package.json"); header.write(bytes.length.toString(8).padStart(11, "0"), 124, 11); header[156] = 48;
     // A real tar header, so npm can install this fixture as well as inspect it.
@@ -28,11 +28,11 @@ function fixture(t) {
   const manifest = buildBundle(dir, sha, { exec: (cmd, args, options) => {
     assert.equal(cmd, "npm"); assert.ok(args.includes("--ignore-scripts"));
     const localRoot = JSON.parse(readFileSync(path.join(options.cwd, "package.json")));
-    assert.deepEqual(localRoot.dependencies, { "@paperclipai/db": "file:db.tgz", "@paperclipai/shared": "file:shared.tgz" });
+    assert.deepEqual(localRoot.dependencies, { "@thinkingmach/db": "file:db.tgz", "@thinkingmach/shared": "file:shared.tgz" });
     const packages = { "": localRoot };
-    for (const name of ["db", "shared"]) packages[`node_modules/@paperclipai/${name}`] = {
+    for (const name of ["db", "shared"]) packages[`node_modules/@thinkingmach/${name}`] = {
       version: versionFor(sha), integrity: descriptor(readFileSync(path.join(dir, `${name}.tgz`)), "tgz").integrity,
-      resolved: `file:${name}.tgz`, ...(name === "db" ? { dependencies: { "@paperclipai/shared": versionFor(sha) } } : {}),
+      resolved: `file:${name}.tgz`, ...(name === "db" ? { dependencies: { "@thinkingmach/shared": versionFor(sha) } } : {}),
     };
     writeFileSync(path.join(options.cwd, "package-lock.json"), JSON.stringify({ lockfileVersion: 3, packages }));
   } });
@@ -73,13 +73,13 @@ test("lockfile rejects mutable, foreign, linked, and mismatched dependencies", (
   const { dir, manifest } = fixture(t);
   const lock = JSON.parse(readFileSync(path.join(dir, "package-lock.json")));
   for (const mutate of [
-    (l) => { l.packages[""].dependencies["@paperclipai/db"] = "latest"; },
-    (l) => { l.packages["node_modules/@paperclipai/shared"].version = "0.0.0"; },
-    (l) => { l.packages["node_modules/@paperclipai/db"].link = true; },
+    (l) => { l.packages[""].dependencies["@thinkingmach/db"] = "latest"; },
+    (l) => { l.packages["node_modules/@thinkingmach/shared"].version = "0.0.0"; },
+    (l) => { l.packages["node_modules/@thinkingmach/db"].link = true; },
     (l) => { l.packages["node_modules/evil"] = { inBundle: true }; },
     (l) => { l.packages["node_modules/evil"] = { integrity: manifest.packages.db.integrity, resolved: "https://evil.invalid/pkg.tgz" }; },
     (l) => { l.packages["node_modules/evil"] = { integrity: "sha1-weak", resolved: "https://registry.npmjs.org/pkg.tgz" }; },
-    (l) => { l.packages["node_modules/a/node_modules/@paperclipai/shared"] = l.packages["node_modules/@paperclipai/shared"]; },
+    (l) => { l.packages["node_modules/a/node_modules/@thinkingmach/shared"] = l.packages["node_modules/@thinkingmach/shared"]; },
   ]) {
     const bad = structuredClone(lock); mutate(bad); assert.throws(() => assertLockfile(bad, manifest));
   }
@@ -120,17 +120,17 @@ test("real npm ci installs the new pair from pinned archives with an empty cache
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   t.after(() => new Promise((resolve) => server.close(resolve)));
   const base = `http://127.0.0.1:${server.address().port}`;
-  for (const name of ["db", "shared"]) lock.packages[`node_modules/@paperclipai/${name}`].resolved = `${base}/${name}.tgz`;
-  writeFileSync(path.join(dir, "package.json"), JSON.stringify({ name: "paperclip-migrator-install-root", version: "0.0.0", private: true, dependencies: { "@paperclipai/db": versionFor(sha) } }));
+  for (const name of ["db", "shared"]) lock.packages[`node_modules/@thinkingmach/${name}`].resolved = `${base}/${name}.tgz`;
+  writeFileSync(path.join(dir, "package.json"), JSON.stringify({ name: "paperclip-migrator-install-root", version: "0.0.0", private: true, dependencies: { "@thinkingmach/db": versionFor(sha) } }));
   writeFileSync(path.join(dir, "package-lock.json"), JSON.stringify(lock));
   await promisify(execFile)("npm", ["ci", "--update-notifier=false", "--ignore-scripts", "--no-audit", "--no-fund", "--registry", base, "--cache", path.join(dir, "empty-cache")], { cwd: dir, timeout: 60_000 });
   assert.deepEqual(requests.sort(), ["/db.tgz", "/shared.tgz"]);
-  for (const name of ["db", "shared"]) assert.equal(JSON.parse(readFileSync(path.join(dir, `node_modules/@paperclipai/${name}/package.json`))).version, manifest.packageVersion);
+  for (const name of ["db", "shared"]) assert.equal(JSON.parse(readFileSync(path.join(dir, `node_modules/@thinkingmach/${name}/package.json`))).version, manifest.packageVersion);
 });
 
 test("AWS trust is master-only and publication policy cannot overwrite objects", () => {
   const read = (name) => JSON.parse(readFileSync(new URL(`../.github/cloud-migrator-deploy/${name}.json`, import.meta.url)));
-  assert.equal(read("trust-policy").Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"], "repo:paperclipai/paperclip:ref:refs/heads/master");
+  assert.equal(read("trust-policy").Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"], "repo:thinkingmach/paperclip:ref:refs/heads/master");
   const policy = read("upload-policy").Statement;
   assert.deepEqual(policy.map((s) => s.Action), ["s3:PutObject", "s3:ListBucket"]);
   assert.equal(policy[0].Condition.StringEquals["s3:if-none-match"], "*");

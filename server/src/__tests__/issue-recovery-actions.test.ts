@@ -24,14 +24,14 @@ import {
   issueThreadInteractions,
   workspaceOperations,
   issues,
-} from "@paperclipai/db";
+} from "@thinkingmach/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
 } from "./helpers/embedded-postgres.js";
 import { errorHandler } from "../middleware/index.js";
 import { issueRoutes } from "../routes/issues.js";
-import { buildPaperclipWakePayload, heartbeatService } from "../services/heartbeat.js";
+import { buildThinkingMachWakePayload, heartbeatService } from "../services/heartbeat.js";
 import { deliverReconciledExecutions } from "../services/execution-recovery-resolution.js";
 import { workspaceOperationService, isNativeWorkspaceFinalizationOperationActive } from "../services/workspace-operations.js";
 import { issueRecoveryActionService } from "../services/issue-recovery-actions.js";
@@ -1757,7 +1757,7 @@ describeEmbeddedPostgres("issue recovery actions", () => {
       maxAttempts: 3,
     });
 
-    const payload = await buildPaperclipWakePayload({
+    const payload = await buildThinkingMachWakePayload({
       db,
       companyId,
       contextSnapshot: {

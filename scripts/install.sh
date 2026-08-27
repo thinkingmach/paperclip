@@ -6,7 +6,7 @@ MIN_NODE_MINOR=11
 MIN_NODE_PATCH=0
 MIN_NODE_VERSION="${MIN_NODE_MAJOR}.${MIN_NODE_MINOR}.${MIN_NODE_PATCH}"
 DEFAULT_NODE_MAJOR=24
-PAPERCLIP_PACKAGE="paperclipai"
+THINKINGMACH_PACKAGE="thinkingmach"
 PUBLIC_NPM_REGISTRY="https://registry.npmjs.org"
 HOMEBREW_INSTALL_COMMIT="99e13e96cbbdc1ac1ac09c0a40b450bf219ef3aa"
 HOMEBREW_INSTALL_SHA256="99287f194a8b3c9e6b0203a11a5fa54518be57209343e6bb954dec4635796d9d"
@@ -32,28 +32,28 @@ fi
 
 usage() {
   cat <<'EOF'
-Install Paperclip on macOS, Linux, or WSL2.
+Install ThinkingMach on macOS, Linux, or WSL2.
 
 Usage:
-  curl -fsSLO https://paperclip.ing/install.sh
+  curl -fsSLO https://thinkingmach.com/install.sh
   bash install.sh [options]
-  curl -fsSL https://paperclip.ing/install.sh | bash -s -- --no-prompt [options]
+  curl -fsSL https://thinkingmach.com/install.sh | bash -s -- --no-prompt [options]
 
 Options:
   --canary                 Install the canary channel
   --version <version>      Install an exact published version
   --no-onboard             Do not start onboarding after installation
   --no-prompt              Run non-interactively
-  --install-service        Install the per-user Paperclip service
+  --install-service        Install the per-user ThinkingMach service
   --dry-run                Print the install plan without changing files
   --verbose                Enable verbose installer output
   -h, --help               Show this help
 
-Every option also has a PAPERCLIP_INSTALL_* environment equivalent, for example
-PAPERCLIP_INSTALL_VERSION=2026.722.0 and PAPERCLIP_INSTALL_NO_PROMPT=1.
+Every option also has a THINKINGMACH_INSTALL_* environment equivalent, for example
+THINKINGMACH_INSTALL_VERSION=2026.722.0 and THINKINGMACH_INSTALL_NO_PROMPT=1.
 
-To install from a git branch, tag, or commit, use the Paperclip CLI directly:
-npx paperclipai install --ref <ref>
+To install from a git branch, tag, or commit, use the ThinkingMach CLI directly:
+npx thinkingmach install --ref <ref>
 EOF
 }
 
@@ -93,15 +93,15 @@ cleanup() {
 
 trap cleanup EXIT
 
-CANARY="$(parse_bool PAPERCLIP_INSTALL_CANARY "${PAPERCLIP_INSTALL_CANARY:-}")"
-VERSION="${PAPERCLIP_INSTALL_VERSION:-}"
-REF="${PAPERCLIP_INSTALL_REF:-}"
-REPO="${PAPERCLIP_INSTALL_REPO:-}"
-NO_ONBOARD="$(parse_bool PAPERCLIP_INSTALL_NO_ONBOARD "${PAPERCLIP_INSTALL_NO_ONBOARD:-}")"
-NO_PROMPT="$(parse_bool PAPERCLIP_INSTALL_NO_PROMPT "${PAPERCLIP_INSTALL_NO_PROMPT:-}")"
-INSTALL_SERVICE="$(parse_bool PAPERCLIP_INSTALL_INSTALL_SERVICE "${PAPERCLIP_INSTALL_INSTALL_SERVICE:-}")"
-DRY_RUN="$(parse_bool PAPERCLIP_INSTALL_DRY_RUN "${PAPERCLIP_INSTALL_DRY_RUN:-}")"
-VERBOSE="$(parse_bool PAPERCLIP_INSTALL_VERBOSE "${PAPERCLIP_INSTALL_VERBOSE:-}")"
+CANARY="$(parse_bool THINKINGMACH_INSTALL_CANARY "${THINKINGMACH_INSTALL_CANARY:-}")"
+VERSION="${THINKINGMACH_INSTALL_VERSION:-}"
+REF="${THINKINGMACH_INSTALL_REF:-}"
+REPO="${THINKINGMACH_INSTALL_REPO:-}"
+NO_ONBOARD="$(parse_bool THINKINGMACH_INSTALL_NO_ONBOARD "${THINKINGMACH_INSTALL_NO_ONBOARD:-}")"
+NO_PROMPT="$(parse_bool THINKINGMACH_INSTALL_NO_PROMPT "${THINKINGMACH_INSTALL_NO_PROMPT:-}")"
+INSTALL_SERVICE="$(parse_bool THINKINGMACH_INSTALL_INSTALL_SERVICE "${THINKINGMACH_INSTALL_INSTALL_SERVICE:-}")"
+DRY_RUN="$(parse_bool THINKINGMACH_INSTALL_DRY_RUN "${THINKINGMACH_INSTALL_DRY_RUN:-}")"
+VERBOSE="$(parse_bool THINKINGMACH_INSTALL_VERBOSE "${THINKINGMACH_INSTALL_VERBOSE:-}")"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -165,7 +165,7 @@ if [ "$CANARY" = "1" ] && [ -n "$VERSION" ]; then
 fi
 
 if [ -n "$REF" ] || [ -n "$REPO" ]; then
-  fail "git-ref installs are not supported by install.sh; run 'npx paperclipai install --ref <ref>' instead"
+  fail "git-ref installs are not supported by install.sh; run 'npx thinkingmach install --ref <ref>' instead"
 fi
 
 if { [ ! -t 0 ] || [ ! -t 1 ]; } && [ "$NO_PROMPT" != "1" ]; then
@@ -360,11 +360,11 @@ else
   log "Installed Node.js $(node --version)"
 fi
 
-PACKAGE_SPEC="$PAPERCLIP_PACKAGE@latest"
+PACKAGE_SPEC="$THINKINGMACH_PACKAGE@latest"
 if [ "$CANARY" = "1" ]; then
-  PACKAGE_SPEC="$PAPERCLIP_PACKAGE@canary"
+  PACKAGE_SPEC="$THINKINGMACH_PACKAGE@canary"
 elif [ -n "$VERSION" ]; then
-  PACKAGE_SPEC="$PAPERCLIP_PACKAGE@$VERSION"
+  PACKAGE_SPEC="$THINKINGMACH_PACKAGE@$VERSION"
 fi
 
 INSTALL_ARGS=(install)
@@ -373,12 +373,12 @@ INSTALL_ARGS=(install)
 [ "$NO_PROMPT" = "1" ] && INSTALL_ARGS+=(--yes)
 ensure_temp_dir
 NPM_USERCONFIG="$TEMP_DIR/npmrc"
-printf 'registry=%s\n@paperclipai:registry=%s\n' "$PUBLIC_NPM_REGISTRY" "$PUBLIC_NPM_REGISTRY" >"$NPM_USERCONFIG"
+printf 'registry=%s\n@thinkingmach:registry=%s\n' "$PUBLIC_NPM_REGISTRY" "$PUBLIC_NPM_REGISTRY" >"$NPM_USERCONFIG"
 chmod 600 "$NPM_USERCONFIG"
 NPM_ENV=(env "NPM_CONFIG_REGISTRY=$PUBLIC_NPM_REGISTRY" "npm_config_registry=$PUBLIC_NPM_REGISTRY" "NPM_CONFIG_USERCONFIG=$NPM_USERCONFIG" "npm_config_userconfig=$NPM_USERCONFIG")
 INSTALL_COMMAND=("${NPM_ENV[@]}" npx --yes "--registry=$PUBLIC_NPM_REGISTRY" "$PACKAGE_SPEC" "${INSTALL_ARGS[@]}")
 
-log "Delegating to the Paperclip CLI"
+log "Delegating to the ThinkingMach CLI"
 if [ "$DRY_RUN" = "1" ]; then
   print_command "${INSTALL_COMMAND[@]}"
   exit 0
@@ -388,23 +388,23 @@ print_command "${INSTALL_COMMAND[@]}"
 "${INSTALL_COMMAND[@]}"
 
 if [ "$INSTALL_SERVICE" = "1" ]; then
-  log "Installing the Paperclip service"
+  log "Installing the ThinkingMach service"
   print_command "${NPM_ENV[@]}" npx --yes "--registry=$PUBLIC_NPM_REGISTRY" "$PACKAGE_SPEC" service install
   "${NPM_ENV[@]}" npx --yes "--registry=$PUBLIC_NPM_REGISTRY" "$PACKAGE_SPEC" service install
 fi
 
 if [ "$NO_ONBOARD" = "0" ] && [ -t 0 ] && [ -t 1 ]; then
-  if command -v paperclipai >/dev/null 2>&1; then
-    exec paperclipai onboard
-  elif [ -x "${HOME:-}/.local/bin/paperclipai" ]; then
-    exec "${HOME}/.local/bin/paperclipai" onboard
+  if command -v thinkingmach >/dev/null 2>&1; then
+    exec thinkingmach onboard
+  elif [ -x "${HOME:-}/.local/bin/thinkingmach" ]; then
+    exec "${HOME}/.local/bin/thinkingmach" onboard
   else
-    fail "Paperclip was installed, but 'paperclipai' is not available on PATH. Open a new shell and run 'paperclipai onboard'."
+    fail "ThinkingMach was installed, but 'thinkingmach' is not available on PATH. Open a new shell and run 'thinkingmach onboard'."
   fi
 fi
 
 if [ "$NO_ONBOARD" = "0" ]; then
-  log "Installation complete. Next: paperclipai onboard"
+  log "Installation complete. Next: thinkingmach onboard"
 else
   log "Installation complete."
 fi

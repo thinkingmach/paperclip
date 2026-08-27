@@ -1,1 +1,1 @@
-export { formatStdoutEvent } from "@paperclipai/hermes-paperclip-adapter/gateway/cli";
+export { formatStdoutEvent } from "@thinkingmach/hermes-paperclip-adapter/gateway/cli";

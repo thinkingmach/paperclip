@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ToolConnectionAccessSummary, ToolConnectionTestAgent } from "@paperclipai/shared";
+import type { ToolConnectionAccessSummary, ToolConnectionTestAgent } from "@thinkingmach/shared";
 import { Button } from "@/components/ui/button";
 import { queryKeys } from "@/lib/queryKeys";
 import { RemoteMcpConnectionSetup } from "@/features/connections/remote-mcp/RemoteMcpConnectionSetup";
@@ -112,7 +112,7 @@ export function RemoteMcpConnectionReview({ provider, scenario = "journey", inli
       }));
     },
     reconnect: () => edit({ step: "connect", connectStatus: "idle", notice: "Reconnect this connection. Saved agent access and tool permissions will be retained." }),
-    disconnect: () => { clearTimers(); edit({ connected: false, token: "", headers: [], url: "", notice: "Connection credentials revoked. Further calls through Paperclip are blocked." }); },
+    disconnect: () => { clearTimers(); edit({ connected: false, token: "", headers: [], url: "", notice: "Connection credentials revoked. Further calls through ThinkingMach are blocked." }); },
   };
   const reset = () => { clearTimers(); client.clear(); setState(initialReviewState(provider, scenario)); setCalls(0); setExternal(null); setConnectOutcome("success"); setCallOutcome("success"); };
 

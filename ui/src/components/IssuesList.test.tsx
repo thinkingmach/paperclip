@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Issue, Project } from "@paperclipai/shared";
+import type { Issue, Project } from "@thinkingmach/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   IssuesList,
@@ -750,7 +750,7 @@ describe("IssuesList", () => {
     });
     const project = {
       id: "project-1",
-      name: "Paperclip App",
+      name: "ThinkingMach App",
       color: null,
       workspaces: [{ id: "project-workspace-1", name: "Primary workspace" }],
       primaryWorkspace: { id: "project-workspace-1" },
